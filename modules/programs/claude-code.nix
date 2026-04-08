@@ -7,6 +7,7 @@
 let
   inherit (lib)
     literalExpression
+    mkChangedOptionModule
     mkOption
     nameValuePair
     optionalAttrs
@@ -54,6 +55,24 @@ let
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
+
+  imports = [
+    (mkChangedOptionModule
+      [ "programs" "claude-code" "memory" "text" ]
+      [ "programs" "claude-code" "context" ]
+      (config: lib.getAttrFromPath [ "programs" "claude-code" "memory" "text" ] config)
+    )
+    (mkChangedOptionModule
+      [ "programs" "claude-code" "memory" "source" ]
+      [ "programs" "claude-code" "context" ]
+      (config: lib.getAttrFromPath [ "programs" "claude-code" "memory" "source" ] config)
+    )
+    (mkChangedOptionModule
+      [ "programs" "claude-code" "skillsDir" ]
+      [ "programs" "claude-code" "skills" ]
+      (config: lib.getAttrFromPath [ "programs" "claude-code" "skillsDir" ] config)
+    )
+  ];
 
   options.programs.claude-code = {
     enable = lib.mkEnableOption "Claude Code, Anthropic's official CLI";
@@ -135,6 +154,22 @@ in
         includeCoAuthoredBy = false;
       };
       description = "JSON configuration for Claude Code settings.json";
+    };
+
+    context = mkOption {
+      type = lib.types.either lib.types.lines lib.types.path;
+      default = "";
+      description = ''
+        Global context for Claude Code.
+
+        The value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured content is written to
+        {file}`~/.claude/CLAUDE.md`.
+      '';
+      example = literalExpression "./claude-memory.md";
     };
 
     plugins = lib.mkOption {
@@ -266,36 +301,6 @@ in
       };
     };
 
-    memory = {
-      text = mkOption {
-        type = lib.types.nullOr lib.types.lines;
-        default = null;
-        description = ''
-          Inline memory content for CLAUDE.md.
-          This option is mutually exclusive with memory.source.
-        '';
-        example = ''
-          # Project Memory
-
-          ## Current Task
-          Implementing enhanced claude-code module for home-manager.
-
-          ## Key Files
-          - claude-code.nix: Main module implementation
-        '';
-      };
-
-      source = mkOption {
-        type = lib.types.nullOr lib.types.path;
-        default = null;
-        description = ''
-          Path to a file containing memory content for CLAUDE.md.
-          This option is mutually exclusive with memory.text.
-        '';
-        example = literalExpression "./claude-memory.md";
-      };
-    };
-
     rules = mkContentOption {
       description = ''
         Modular rule files for Claude Code.
@@ -378,13 +383,34 @@ in
       '';
     };
 
-    skills = mkContentOption {
+    skills = mkOption {
+      type = lib.types.either (lib.types.attrsOf (
+        lib.types.oneOf [
+          lib.types.lines
+          lib.types.path
+          lib.types.str
+        ]
+      )) lib.types.path;
+      default = { };
       description = ''
         Custom skills for Claude Code.
-        The attribute name becomes the skill directory name, and the value is either:
+
+        This option can be either:
+        - An attribute set defining skills
+        - A path to a directory containing skill folders
+
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
         - Inline content as a string (creates .claude/skills/<name>/SKILL.md)
         - A path to a file (creates .claude/skills/<name>/SKILL.md)
         - A path to a directory (creates .claude/skills/<name>/ with all files)
+
+        This also accepts Nix store paths, for example a skill directory
+        from a package.
+
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. The directory is
+        symlinked to {file}`~/.claude/skills/`.
       '';
       example = literalExpression ''
         {
@@ -409,17 +435,11 @@ in
                 text = pdf.pages[0].extract_text()
             ```
           ''';
+
+          # A skill can also be a subdirectory within a package source (store path)
+          beads = "''${pkgs.beads.src}/claude-plugin/skills/beads";
         }
       '';
-    };
-
-    skillsDir = mkDirOption {
-      description = ''
-        Path to a directory containing skill directories for Claude Code.
-        Each skill directory should contain a SKILL.md entrypoint file.
-        Skill directories from this path will be symlinked to .claude/skills/.
-      '';
-      example = literalExpression "./skills";
     };
 
     lspServers = mkOption {
@@ -494,6 +514,9 @@ in
     let
       mkSourceEntry = content: if lib.isPath content then { source = content; } else { text = content; };
 
+      isStorePathString = content: builtins.isString content && lib.hasPrefix builtins.storeDir content;
+      isPathLikeContent = content: lib.isPath content || isStorePathString content;
+
       mkMarkdownEntries =
         subdir: attrs:
         lib.mapAttrs' (
@@ -515,13 +538,15 @@ in
 
       mkSkillEntry =
         name: content:
-        if lib.isPath content && lib.pathIsDirectory content then
+        if isPathLikeContent content && lib.pathIsDirectory content then
           nameValuePair ".claude/skills/${name}" {
             source = content;
             recursive = true;
           }
         else
-          nameValuePair ".claude/skills/${name}/SKILL.md" (mkSourceEntry content);
+          nameValuePair ".claude/skills/${name}/SKILL.md" (
+            if isPathLikeContent content then { source = content; } else { text = content; }
+          );
 
       mkMarketplaceEntry = name: content: {
         source = {
@@ -547,7 +572,6 @@ in
             "agents"
             "commands"
             "hooks"
-            "skills"
           ];
 
           mkExclusiveAssertion = inline: {
@@ -563,8 +587,8 @@ in
             message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured";
           }
           {
-            assertion = !(cfg.memory.text != null && cfg.memory.source != null);
-            message = "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`";
+            assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+            message = "`programs.claude-code.skills` must be a directory when set to a path";
           }
         ]
         ++ map mkExclusiveAssertion exclusiveInlineDirNames;
@@ -633,12 +657,16 @@ in
               }
             );
           })
-          (lib.mkIf (cfg.memory.text != null) {
-            ".claude/CLAUDE.md".text = cfg.memory.text;
-          })
-          (lib.mkIf (cfg.memory.source != null) {
-            ".claude/CLAUDE.md".source = cfg.memory.source;
-          })
+          (
+            if lib.isPath cfg.context then
+              {
+                ".claude/CLAUDE.md".source = cfg.context;
+              }
+            else
+              (lib.mkIf (cfg.context != "") {
+                ".claude/CLAUDE.md".text = cfg.context;
+              })
+          )
           (lib.mkIf (cfg.marketplaces != { }) {
             ".claude/plugins/known_marketplaces.json".source =
               jsonFormat.generate "claude-code-known-marketplaces.json" (
@@ -652,9 +680,14 @@ in
           (mkRecursiveDirAttrs "commands" cfg.commandsDir)
           (mkRecursiveDirAttrs "hooks" cfg.hooksDir)
           (mkRecursiveDirAttrs "rules" cfg.rulesDir)
-          (mkRecursiveDirAttrs "skills" cfg.skillsDir)
+          (lib.mkIf (lib.isPath cfg.skills) {
+            ".claude/skills" = {
+              source = cfg.skills;
+              recursive = true;
+            };
+          })
           (mkTextEntries "hooks" cfg.hooks)
-          (lib.mapAttrs' mkSkillEntry cfg.skills)
+          (lib.optionalAttrs (builtins.isAttrs cfg.skills) (lib.mapAttrs' mkSkillEntry cfg.skills))
           (mkMarkdownEntries "output-styles" cfg.outputStyles)
         ];
       };
