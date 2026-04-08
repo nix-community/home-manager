@@ -69,7 +69,7 @@ in
       '';
     };
 
-    keymap = mkOption {
+    keymapSet = mkOption {
       type = types.nullOr (
         types.enum [
           "inkscape"
@@ -91,20 +91,34 @@ in
       '';
     };
 
-    keymapXml = mkOption {
-      type = types.nullOr types.lines;
-      default = null;
-      example = ''
-        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <keys name="default">
-          <bind key="F2" action="node-tool" display="true"/>
-          <bind key="F1" action="select-tool" display="true"/>
-        </keys>
+    keymap = mkOption {
+      type = types.attrsOf xmlFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          keys = {
+            "@name" = "default";
+            bind = [
+              {
+                "@key" = "F1";
+                "@action" = "select-tool";
+                "@display" = "true";
+              }
+              {
+                "@key" = "F2";
+                "@action" = "node-tool";
+                "@display" = "true";
+              }
+            ];
+          };
+        }
       '';
       description = ''
         Custom keyboard shortcut XML written verbatim to
         {file}`$XDG_CONFIG_HOME/inkscape/keys/default.xml`.
+
         Takes precedence over {option}`programs.inkscape.keymap`.
+        Same XML writing logic as settings.
       '';
     };
 
