@@ -47,3 +47,6 @@ b4752b0eda6302b92a6d5dd554c83f188bc3ae6d
 
 # Treewide remove noops
 f2f1076c1f789595c2a2b18b76466fbd691025dd
+
+# Treewide statix cleanup
+01ea51d7065e0ab06a09df9db4d1c17f6eb2675f
