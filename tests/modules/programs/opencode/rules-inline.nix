@@ -1,7 +1,7 @@
 {
   programs.opencode = {
     enable = true;
-    rules = ''
+    context = ''
       # TypeScript Project Rules
 
       ## External File Loading

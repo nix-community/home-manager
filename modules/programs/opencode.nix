@@ -50,6 +50,10 @@ in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
 
+  imports = [
+    (lib.mkRenamedOptionModule [ "programs" "opencode" "rules" ] [ "programs" "opencode" "context" ])
+  ];
+
   options.programs.opencode = {
     enable = mkEnableOption "opencode";
 
@@ -156,15 +160,18 @@ in
       };
     };
 
-    rules = lib.mkOption {
+    context = lib.mkOption {
       type = lib.types.either lib.types.lines lib.types.path;
       default = "";
       description = ''
-         You can provide global custom instructions to opencode.
-         The value is either:
-         - Inline content as a string
-         - A path to a file containing the content
-        This value is written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
+        Global context for OpenCode.
+
+        The value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured content is written to
+        {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
       '';
       example = lib.literalExpression ''
         '''
@@ -278,24 +285,24 @@ in
       )) lib.types.path;
       default = { };
       description = ''
-        Custom agent skills for opencode.
+        Custom skills for OpenCode.
 
-        This option can either be:
+        This option can be either:
         - An attribute set defining skills
-        - A path to a directory containing multiple skill folders
+        - A path to a directory containing skill folders
 
-        If an attribute set is used, the attribute name becomes the skill directory name,
-        and the value is either:
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
         - Inline content as a string (creates `opencode/skills/<name>/SKILL.md`)
         - A path to a file (creates `opencode/skills/<name>/SKILL.md`)
         - A path to a directory (creates `opencode/skills/<name>/` with all files)
 
-        This also accepts Nix store paths (e.g., source from a package), allowing you to
-        reference subdirectories within a package source.
+        This also accepts Nix store paths, for example a skill directory
+        from a package.
 
-        If a path is used, it is expected to contain one folder per skill name, each
-        containing a {file}`SKILL.md`. The directory is symlinked to
-        {file}`$XDG_CONFIG_HOME/opencode/skills/`.
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. The directory is
+        symlinked to {file}`$XDG_CONFIG_HOME/opencode/skills/`.
 
         See <https://opencode.ai/docs/skills/> for the documentation.
       '';
@@ -469,11 +476,11 @@ in
       };
 
       "opencode/AGENTS.md" = (
-        if lib.isPath cfg.rules then
-          { source = cfg.rules; }
+        if lib.isPath cfg.context then
+          { source = cfg.context; }
         else
-          (mkIf (cfg.rules != "") {
-            text = cfg.rules;
+          (mkIf (cfg.context != "") {
+            text = cfg.context;
           })
       );
 
