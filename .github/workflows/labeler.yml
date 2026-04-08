@@ -24,7 +24,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          COUNT=$(gh pr diff $PR_NUMBER --name-only | grep '^modules/' | wc -l)
+          COUNT=$(gh api "repos/${{ github.repository }}/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename' | grep '^modules/' | wc -l || echo 0)
+          echo "Found $COUNT changed module files."
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
       - uses: actions/labeler@v6
