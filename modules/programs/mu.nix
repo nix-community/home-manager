@@ -35,7 +35,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.KarlJoad ];
+  meta.maintainers = [ lib.maintainers.ravenjoad ];
 
   options = {
     programs.mu = {
