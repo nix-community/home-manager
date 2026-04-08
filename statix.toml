@@ -1,7 +1,6 @@
 disabled = [
   "bool_comparison",
   "bool_simplification",
-  "collapsible_let_in",
   "deprecated_is_null",
   "deprecated_to_path",
   "empty_list_concat",

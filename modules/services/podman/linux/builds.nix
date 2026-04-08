@@ -70,8 +70,7 @@ let
       source = podman-lib.removeBlankLines src.text;
       resourceType = "build";
     };
-in
-let
+
   buildDefinitionType = types.submodule (
     { name, ... }:
     {

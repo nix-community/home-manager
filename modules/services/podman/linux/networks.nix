@@ -87,8 +87,6 @@ let
     resourceType = "network";
   };
 
-in
-let
   networkDefinitionType = types.submodule {
     options = {
 
