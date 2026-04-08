@@ -337,7 +337,7 @@ let
       };
     };
   };
-  defaultProfile = if cfg.profiles ? default then cfg.profiles.default else { };
+  defaultProfile = cfg.profiles.default or { };
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {

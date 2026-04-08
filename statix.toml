@@ -13,6 +13,5 @@ disabled = [
   "repeated_keys",
   "redundant_pattern_bind",
   "unquoted_uri",
-  "useless_has_attr",
   "useless_parens",
 ]
