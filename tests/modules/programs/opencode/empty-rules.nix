@@ -1,7 +1,7 @@
 {
   programs.opencode = {
     enable = true;
-    rules = "";
+    context = "";
   };
   nmt.script = ''
     assertPathNotExists home-files/.config/opencode/AGENTS.md
