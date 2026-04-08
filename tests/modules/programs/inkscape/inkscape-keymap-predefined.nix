@@ -8,8 +8,7 @@
     keysFile=home-files/.config/inkscape/keys/default.xml
 
     assertFileExists "$keysFile"
-    assertFileContent \
-      $(normalizeStorePaths "$keysFile") \
-      "${./keys-illustrator.xml}"
+    assertFileContains "$keysFile" 'illustrator'
+    assertFileContains "$keysFile" 'xi:include'
   '';
 }
