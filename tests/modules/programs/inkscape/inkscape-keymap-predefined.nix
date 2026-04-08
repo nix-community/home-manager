@@ -1,7 +1,7 @@
 {
   programs.inkscape = {
     enable = true;
-    keymap = "illustrator";
+    keymapSet = "illustrator";
   };
 
   nmt.script = ''
