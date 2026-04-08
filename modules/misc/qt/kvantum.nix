@@ -14,6 +14,7 @@ let
     mkIf
     mkOption
     types
+    mkPackageOption
     ;
 
   kvconfigFormat = pkgs.formats.ini {
@@ -32,6 +33,17 @@ in
 {
   options.qt.kvantum = {
     enable = mkEnableOption "Kvantum configuration";
+    package = mkPackageOption pkgs.kdePackages "qtstyleplugin-kvantum" { nullable = true; };
+
+    qt5 = {
+      enable = mkEnableOption "Kvantum Qt5 support";
+      package = mkPackageOption pkgs.libsForQt5 "qtstyleplugin-kvantum" {
+        nullable = true;
+        extraDescription = ''
+          The package to use for Kvantum Qt5 support.
+        '';
+      };
+    };
 
     settings = mkOption {
       type = types.submodule {
@@ -117,6 +129,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = mkIf (cfg.package != null) [
+      cfg.package
+      (mkIf (cfg.qt5.enable && cfg.qt5.package != null) cfg.qt5.package)
+    ];
+
     xdg.configFile = {
       "Kvantum" = mkIf (cfg.themes != [ ]) {
         recursive = true;
