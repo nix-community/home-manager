@@ -218,7 +218,7 @@ in
       };
 
       sideloadInitLua = mkOption {
-        type =  types.bool;
+        type = types.bool;
         default = false;
         description = ''
           Whether to sideload the content of {var}`initLua` without generating a {file}`init.lua`.
