@@ -13,6 +13,9 @@ import subprocess
 import sys
 from typing import Final
 
+MAX_REVIEWERS: Final[int] = 6
+MAX_MAINTAINERS_THRESHOLD: Final[int] = 10
+
 # Configure logging to output to stderr
 logging.basicConfig(
     level=logging.INFO,
@@ -268,21 +271,36 @@ def main() -> None:
     # --- 3. Determine new reviewers to add ---
     reviewers_to_add: set[str] = set()
     if not no_changed_files and maintainers:
-        users_to_exclude = {args.pr_author} | past_reviewers | pending_reviewers | manually_removed
-        potential_reviewers = maintainers - users_to_exclude
+        if len(maintainers) > MAX_MAINTAINERS_THRESHOLD:
+            logging.info(
+                "Number of maintainers (%d) exceeds threshold (%d). Skipping automated reviewer requests for this large PR.",
+                len(maintainers),
+                MAX_MAINTAINERS_THRESHOLD,
+            )
+        else:
+            users_to_exclude = {args.pr_author} | past_reviewers | pending_reviewers | manually_removed
+            potential_reviewers = maintainers - users_to_exclude
 
-        reviewers_to_add = {
-            user for user in potential_reviewers if is_collaborator(args.owner, args.repo, user)
-        }
+            reviewers_to_add = {
+                user for user in potential_reviewers if is_collaborator(args.owner, args.repo, user)
+            }
 
-        non_collaborators = potential_reviewers - reviewers_to_add
-        if non_collaborators:
-            logging.warning("Ignoring non-collaborators: %s", ", ".join(non_collaborators))
+            non_collaborators = potential_reviewers - reviewers_to_add
+            if non_collaborators:
+                logging.warning("Ignoring non-collaborators: %s", ", ".join(non_collaborators))
 
-        manually_removed_maintainers = reviewers_to_add & manually_removed
-        if manually_removed_maintainers:
-            logging.info("Not re-adding manually removed maintainers: %s", ", ".join(manually_removed_maintainers))
-            reviewers_to_add -= manually_removed
+            manually_removed_maintainers = reviewers_to_add & manually_removed
+            if manually_removed_maintainers:
+                logging.info("Not re-adding manually removed maintainers: %s", ", ".join(manually_removed_maintainers))
+                reviewers_to_add -= manually_removed
+
+            if len(reviewers_to_add) > MAX_REVIEWERS:
+                logging.info(
+                    "Limiting reviewers to add from %d to %d.",
+                    len(reviewers_to_add),
+                    MAX_REVIEWERS,
+                )
+                reviewers_to_add = set(list(sorted(reviewers_to_add))[:MAX_REVIEWERS])
 
     if reviewers_to_add:
         if args.dry_run:
