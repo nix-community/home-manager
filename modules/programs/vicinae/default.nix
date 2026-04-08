@@ -158,35 +158,33 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
-      {
-        assertion = cfg.systemd.enable -> cfg.package != null;
-        message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
-      }
-      {
-        assertion = !cfg.useLayerShell -> !versionPost0_17;
-        message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
-      }
-    ];
+  config =
+    let
+      themeFiles = lib.mapAttrs' (
+        name: theme:
+        lib.nameValuePair "vicinae/themes/${name}.${if themeIsToml then "toml" else "json"}" {
+          source = (if themeIsToml then tomlFormat else jsonFormat).generate "vicinae-${name}-theme" theme;
+        }
+      ) cfg.themes;
+    in
+    lib.mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
+        {
+          assertion = cfg.systemd.enable -> cfg.package != null;
+          message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
+        }
+        {
+          assertion = !cfg.useLayerShell -> !versionPost0_17;
+          message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
+        }
+      ];
 
-    lib.vicinae = vicinaeLib;
+      lib.vicinae = vicinaeLib;
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg =
-      let
-        themeFormat = if themeIsToml then tomlFormat else jsonFormat;
-        themeExtension = if themeIsToml then "toml" else "json";
-        themeFiles = lib.mapAttrs' (
-          name: theme:
-          lib.nameValuePair "vicinae/themes/${name}.${themeExtension}" {
-            source = themeFormat.generate "vicinae-${name}-theme" theme;
-          }
-        ) cfg.themes;
-      in
-      {
+      xdg = {
         configFile = {
           "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "vicinae-settings" cfg.settings;
@@ -204,38 +202,39 @@ in
           // lib.optionalAttrs themeIsToml themeFiles;
       };
 
-    home.activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
-      lib.hm.dag.entryAfter [ "installPackages" ] ''
-        verboseEcho "Refreshing the vicinae app list"
-        run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps
-      ''
-    );
+      home.activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
+        lib.hm.dag.entryAfter [ "installPackages" ] ''
+          verboseEcho "Refreshing the vicinae app list"
+          run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps
+        ''
+      );
 
-    systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
-      Unit = {
-        Description = "Vicinae server daemon";
-        Documentation = [ "https://docs.vicinae.com" ];
-        After = [ cfg.systemd.target ];
-        PartOf = [ cfg.systemd.target ];
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
-        Restart = "always";
-        RestartSec = 5;
-        KillMode = "process";
-        EnvironmentFile = lib.mkIf (!versionPost0_17) (
-          pkgs.writeText "vicinae-env" ''
-            USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
-          ''
-        );
-        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [
-          config.xdg.configFile.${settingsPath}.source
-        ];
-      };
-      Install = lib.mkIf cfg.systemd.autoStart {
-        WantedBy = [ cfg.systemd.target ];
+      systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
+        Unit = {
+          Description = "Vicinae server daemon";
+          Documentation = [ "https://docs.vicinae.com" ];
+          After = [ cfg.systemd.target ];
+          PartOf = [ cfg.systemd.target ];
+          X-Restart-Triggers =
+            lib.optional (cfg.settings != { }) config.xdg.configFile.${settingsPath}.source
+            ++ map (themeFile: themeFile.source) (lib.attrValues themeFiles)
+            ++ cfg.extensions;
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
+          Restart = "always";
+          RestartSec = 5;
+          KillMode = "process";
+          EnvironmentFile = lib.mkIf (!versionPost0_17) (
+            pkgs.writeText "vicinae-env" ''
+              USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
+            ''
+          );
+        };
+        Install = lib.mkIf cfg.systemd.autoStart {
+          WantedBy = [ cfg.systemd.target ];
+        };
       };
     };
-  };
 }

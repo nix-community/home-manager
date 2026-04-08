@@ -7,10 +7,13 @@ KillMode=process
 Restart=always
 RestartSec=5
 Type=simple
-X-Restart-Triggers=/nix/store/00000000000000000000000000000000-vicinae-settings
 
 [Unit]
 After=graphical-session.target
 Description=Vicinae server daemon
 Documentation=https://docs.vicinae.com
 PartOf=graphical-session.target
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-vicinae-settings
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-vicinae-catppuccin-mocha-theme
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-cdnjs
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-test-extension
