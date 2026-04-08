@@ -3,7 +3,6 @@ disabled = [
   "bool_simplification",
   "deprecated_is_null",
   "deprecated_to_path",
-  "empty_list_concat",
   "empty_inherit",
   "empty_let_in",
   "empty_pattern",

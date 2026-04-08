@@ -229,8 +229,7 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."i3status/config".text = lib.concatStringsSep "\n" (
-      [ ]
-      ++ lib.optional (cfg.general != { }) (formatModule "general" cfg.general)
+      lib.optional (cfg.general != { }) (formatModule "general" cfg.general)
       ++ map formatOrder (sortAttrNamesByPosition lib.lessThan enabledModules)
       ++ lib.mapAttrsToList formatModule (lib.mapAttrs (n: v: v.settings) enabledModules)
     );
