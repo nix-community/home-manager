@@ -85,8 +85,7 @@ in
 
     xdg.configFile."zathura/zathurarc".text =
       lib.concatStringsSep "\n" (
-        [ ]
-        ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
+        lib.optional (cfg.extraConfig != "") cfg.extraConfig
         ++ lib.mapAttrsToList formatLine cfg.options
         ++ lib.mapAttrsToList formatMapLine cfg.mappings
       )
