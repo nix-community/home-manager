@@ -22,6 +22,13 @@ in
     lib.maintainers.delafthi
   ];
 
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "codex" "custom-instructions" ]
+      [ "programs" "codex" "context" ]
+    )
+  ];
+
   options.programs.codex = {
     enable = lib.mkEnableOption "Lightweight coding agent that runs in your terminal";
 
@@ -75,9 +82,18 @@ in
         }
       '';
     };
-    custom-instructions = lib.mkOption {
-      type = lib.types.lines;
-      description = "Define custom guidance for the agents; this value is written to {file}~/.codex/AGENTS.md";
+    context = lib.mkOption {
+      type = lib.types.either lib.types.lines lib.types.path;
+      description = ''
+        Global context for Codex.
+
+        The value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured content is written to
+        {file}`CODEX_HOME/AGENTS.md`.
+      '';
       default = "";
       example = lib.literalExpression ''
         '''
@@ -93,20 +109,21 @@ in
       description = ''
         Custom skills for Codex.
 
-        This option can either be:
+        This option can be either:
         - An attribute set defining skills
-        - A path to a directory containing multiple skill folders
+        - A path to a directory containing skill folders
 
-        If an attribute set is used, the attribute name becomes the skill directory name,
-        and the value is either:
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
         - Inline content as a string (creates a generated skill directory at {file}`<skills-dir>/<name>/`)
         - A path to a file (creates a generated skill directory at {file}`<skills-dir>/<name>/`)
         - A path to a directory (symlinks {file}`<skills-dir>/<name>/` to that directory)
 
-        If a path is used, it is expected to contain one folder per skill name, each
-        containing a {file}`SKILL.md`. Each top-level skill entry is symlinked into
-        {file}`<skills-dir>/`, leaving {file}`<skills-dir>/` itself as a normal
-        directory so unmanaged skills can coexist.
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. Each top-level
+        skill entry is symlinked into {file}`<skills-dir>/`, leaving
+        {file}`<skills-dir>/` itself as a normal directory so unmanaged
+        skills can coexist.
 
         The skills target directory depends on Codex version:
         - {file}`~/.agents/skills` for Codex >= 0.94.0
@@ -251,9 +268,13 @@ in
           "${configDir}/${configFileName}" = lib.mkIf (mergedSettings != { }) {
             source = settingsFormat.generate "codex-config" mergedSettings;
           };
-          "${configDir}/AGENTS.md" = lib.mkIf (cfg.custom-instructions != "") {
-            text = cfg.custom-instructions;
-          };
+          "${configDir}/AGENTS.md" =
+            if lib.isPath cfg.context then
+              { source = cfg.context; }
+            else
+              lib.mkIf (cfg.context != "") {
+                text = cfg.context;
+              };
         }
         // lib.mapAttrs' mkSkillEntry skillSources
         // lib.mapAttrs' mkRuleEntry cfg.rules;
