@@ -1,7 +1,7 @@
 {
   programs.claude-code = {
     enable = true;
-    skillsDir = ./skills;
+    skills = ./skills;
   };
 
   nmt.script = ''

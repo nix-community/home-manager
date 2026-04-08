@@ -6,8 +6,8 @@
   claude-code-mcp-lsp = ./mcp-lsp.nix;
   claude-code-mcp-integration = ./mcp-integration.nix;
   claude-code-assertion = ./assertion.nix;
-  claude-code-memory-management = ./memory-management.nix;
-  claude-code-memory-from-source = ./memory-from-source.nix;
+  claude-code-context-inline = ./memory-management.nix;
+  claude-code-context-path = ./memory-from-source.nix;
   claude-code-rules-dir = ./rules-dir.nix;
   claude-code-rules-path = ./rules-path.nix;
   claude-code-agents-dir = ./agents-dir.nix;
@@ -18,6 +18,8 @@
   claude-code-agents-path = ./agents-path.nix;
   claude-code-commands-path = ./commands-path.nix;
   claude-code-skills-path = ./skills-path.nix;
+  claude-code-legacy-memory-text = ./legacy-memory-text.nix;
+  claude-code-legacy-memory-source-and-skills-dir = ./legacy-memory-source-and-skills-dir.nix;
   claude-code-mixed-content = ./mixed-content.nix;
   claude-code-output-styles = ./output-styles.nix;
   claude-code-output-styles-not-set = ./output-styles-not-set.nix;
