@@ -109,7 +109,21 @@ in
 
       withPython3 = mkOption {
         type = types.bool;
-        default = true;
+        inherit
+          (lib.hm.deprecations.mkStateVersionOptionDefault {
+            inherit (config.home) stateVersion;
+            since = "26.05";
+            optionPath = [
+              "programs"
+              "neovim"
+              "withPython3"
+            ];
+            legacy.value = true;
+            current.value = false;
+          })
+          default
+          defaultText
+          ;
         description = ''
           Enable Python 3 provider. Set to `true` to
           use Python 3 plugins.
@@ -117,8 +131,22 @@ in
       };
 
       withRuby = mkOption {
-        type = types.nullOr types.bool;
-        default = false;
+        type = types.bool;
+        inherit
+          (lib.hm.deprecations.mkStateVersionOptionDefault {
+            inherit (config.home) stateVersion;
+            since = "26.05";
+            optionPath = [
+              "programs"
+              "neovim"
+              "withRuby"
+            ];
+            legacy.value = true;
+            current.value = false;
+          })
+          default
+          defaultText
+          ;
         description = ''
           Enable ruby provider.
         '';

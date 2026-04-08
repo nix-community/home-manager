@@ -451,6 +451,12 @@
     github = "pedorich-n";
     githubId = 15573098;
   };
+  philip-730 = {
+    name = "Philip Amendolia";
+    email = "philip.amendolia@gmail.com";
+    github = "philip-730";
+    githubId = 116534928;
+  };
   pltanton = {
     name = "pltanton";
     email = "plotnikovanton@gmail.com";

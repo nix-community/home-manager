@@ -1,6 +1,9 @@
 {
   wezterm-example-setting = ./example-setting.nix;
   wezterm-empty-setting = ./empty-setting.nix;
+  wezterm-settings = ./settings.nix;
+  wezterm-settings-with-extra-config = ./settings-with-extra-config.nix;
+  wezterm-settings-extra-config-direct = ./settings-extra-config-direct.nix;
 
   wezterm-bash-integration-default = ./bash-integration-default.nix;
   wezterm-bash-integration-disabled = ./bash-integration-disabled.nix;
