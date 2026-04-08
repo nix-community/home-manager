@@ -215,13 +215,6 @@
     name = "Justin Lovinger";
     source = "nixpkgs";
   };
-  KarlJoad = {
-    email = "karl@hallsby.com";
-    github = "KarlJoad";
-    githubId = 34152449;
-    name = "Karl Hallsby";
-    source = "nixpkgs";
-  };
   KiaraGrouwstra = {
     email = "cinereal@riseup.net";
     github = "KiaraGrouwstra";
@@ -1930,6 +1923,13 @@
     name = "Phani Rithvij";
     source = "nixpkgs";
   };
+  philip-730 = {
+    email = "philip.amendolia@gmail.com";
+    github = "philip-730";
+    githubId = 116534928;
+    name = "Philip Amendolia";
+    source = "home-manager";
+  };
   philocalyst = {
     email = "milestheperson@posteo.net";
     github = "philocalyst";
@@ -2010,6 +2010,13 @@
     githubId = 57323869;
     name = "Rasmus Kirk";
     source = "home-manager";
+  };
+  ravenjoad = {
+    email = "raven@hallsby.com";
+    github = "ravenjoad";
+    githubId = 34152449;
+    name = "Raven Hallsby";
+    source = "nixpkgs";
   };
   rcerc = {
     email = "88944439+rcerc@users.noreply.github.com";
