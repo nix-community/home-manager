@@ -7,6 +7,7 @@
 
 let
   xml = import ./xml.nix { inherit lib; };
+  xmlFormat = pkgs.formats.xml { };
 
   cfg = config.programs.inkscape;
 
@@ -32,20 +33,21 @@ in
         "inkscape/preferences.xml".text = xml.preferencesToXml cfg.settings;
       })
 
-      (lib.mkIf (cfg.keymap != null || cfg.keymapXml != null) {
-        "inkscape/keys/default.xml".text =
-          if cfg.keymapXml != null then
-            cfg.keymapXml
+      (lib.mkIf (cfg.keymap != { } || cfg.keymapSet != null) {
+        "inkscape/keys/default.xml".source = xmlFormat.generate "default.xml" (
+          if cfg.keymap != { } then
+            cfg.keymap
           else
-            lib.concatStringsSep "\n" [
-              ''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>''
-              ''<keys name="default">''
-              "<xi:include"
-              ''href="${cfg.package}/share/inkscape/keys/${cfg.keymap}.xml"''
-              ''xmlns:xi="http://www.w3.org/2001/XInclude"/>''
-              "</keys>"
-              ""
-            ];
+            {
+              keys = {
+                "@name" = "default";
+                "xi:include" = {
+                  "@href" = "${cfg.package}/share/inkscape/keys/${cfg.keymapSet}.xml";
+                  "@xmlns:xi" = "http://www.w3.org/2001/XInclude";
+                };
+              };
+            }
+        );
       })
 
       (mkConfigFiles "templates" cfg.templates)
