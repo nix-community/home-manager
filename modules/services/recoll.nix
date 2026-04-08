@@ -123,7 +123,7 @@ in
     };
 
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = ''
         The configuration to be written at {file}`$RECOLL_CONFDIR/recoll.conf`.

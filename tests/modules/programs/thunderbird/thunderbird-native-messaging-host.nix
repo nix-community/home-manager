@@ -6,7 +6,7 @@
   ...
 }:
 let
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
   nativeHostsDir =
     if isDarwin then "Library/Mozilla/NativeMessagingHosts" else ".mozilla/native-messaging-hosts";
 in

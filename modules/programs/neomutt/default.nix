@@ -326,7 +326,7 @@ let
   notmuchSection =
     account:
     let
-      virtualMailboxes = account.notmuch.neomutt.virtualMailboxes;
+      inherit (account.notmuch.neomutt) virtualMailboxes;
     in
     ''
       # notmuch section

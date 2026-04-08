@@ -166,7 +166,7 @@ let
     in
     {
       assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
-      dependencies = src.dependencies;
+      inherit (src) dependencies;
       resourceType = "container";
       serviceName = "podman-${src.attrs.Container.ContainerName}"; # generated service name: 'podman-<name>.service'
       source = podman-lib.removeBlankLines src.text;

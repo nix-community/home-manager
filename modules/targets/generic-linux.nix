@@ -9,7 +9,7 @@ let
 
   cfg = config.targets.genericLinux;
 
-  profileDirectory = config.home.profileDirectory;
+  inherit (config.home) profileDirectory;
 
   nixPkg = if config.nix.package == null then pkgs.nix else config.nix.package;
 

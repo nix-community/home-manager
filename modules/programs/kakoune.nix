@@ -543,7 +543,7 @@ let
 
   kakouneWithPlugins = pkgs.wrapKakoune cfg.package {
     configure = {
-      plugins = cfg.plugins;
+      inherit (cfg) plugins;
     };
   };
 

@@ -34,7 +34,7 @@ in
       };
 
       settings = lib.mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
         default = { };
         example = lib.literalExpression ''
           {

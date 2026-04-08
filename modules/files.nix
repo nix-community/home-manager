@@ -30,14 +30,16 @@ let
     in
     sortedFiles;
 
-  fileOverlapResolution = config.home.fileOverlapResolution;
+  inherit (config.home) fileOverlapResolution homeDirectory;
 
-  homeDirectory = config.home.homeDirectory;
-
-  fileType =
-    (import lib/file-type.nix {
-      inherit homeDirectory lib pkgs;
-    }).fileType;
+  inherit
+    (
+      (import lib/file-type.nix {
+        inherit homeDirectory lib pkgs;
+      })
+    )
+    fileType
+    ;
 
   sourceStorePath =
     file:

@@ -93,7 +93,7 @@ let
       [ "[[${name}]]" ]
       ++ mapAttrsToList (n: v: n + "=" + v) (
         {
-          address = address;
+          inherit address;
           realname = realName;
           sendmail_command = optionalString (alot.sendMailCommand != null) alot.sendMailCommand;
         }

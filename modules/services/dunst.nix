@@ -162,7 +162,7 @@ in
         themes = [
           cfg.iconTheme
         ]
-        ++ optional useCustomTheme (hicolorTheme // { size = cfg.iconTheme.size; });
+        ++ optional useCustomTheme (hicolorTheme // { inherit (cfg.iconTheme) size; });
 
         categories = [
           "actions"

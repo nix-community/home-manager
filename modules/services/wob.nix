@@ -29,7 +29,7 @@ in
     package = mkPackageOption pkgs "wob" { nullable = true; };
 
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       example = literalExpression ''
         {

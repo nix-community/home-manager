@@ -2,7 +2,7 @@
 
 let
 
-  backups = config.programs.borgmatic.backups;
+  inherit (config.programs.borgmatic) backups;
 
 in
 {

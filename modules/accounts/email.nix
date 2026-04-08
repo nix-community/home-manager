@@ -535,7 +535,7 @@ let
 
       config = lib.mkMerge [
         {
-          name = name;
+          inherit name;
           maildir = lib.mkOptionDefault { path = "${name}"; };
         }
 

@@ -216,7 +216,7 @@ in
     };
 
     launchd.agents.aerospace = {
-      enable = cfg.launchd.enable;
+      inherit (cfg.launchd) enable;
       config = {
         Program = "${cfg.package}/Applications/AeroSpace.app/Contents/MacOS/AeroSpace";
         KeepAlive = cfg.launchd.keepAlive;

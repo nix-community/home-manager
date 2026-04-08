@@ -21,7 +21,7 @@ in
     package = lib.mkPackageOption pkgs "earthly" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Configuration written to ~/.earthly/config.yml file.

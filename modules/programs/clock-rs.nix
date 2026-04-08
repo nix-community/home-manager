@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "clock-rs" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = "The configuration file to be used for clock-rs";
       example = lib.literalExpression ''

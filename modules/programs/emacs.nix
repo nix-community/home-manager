@@ -22,7 +22,7 @@ let
     in
     epkgs.overrideScope cfg.overrides;
 
-  emacsWithPackages = emacsPackages.emacsWithPackages;
+  inherit (emacsPackages) emacsWithPackages;
 
   extraPackages =
     epkgs:

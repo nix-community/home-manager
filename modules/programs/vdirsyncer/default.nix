@@ -35,7 +35,7 @@ let
     filterAttrs (_: v: v != null) (
       (getAttrs [ "type" "fileExt" "encoding" ] a.local)
       // {
-        path = a.local.path;
+        inherit (a.local) path;
         postHook =
           if a.vdirsyncer.postHook != null then
             (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook + "/bin/post-hook")

@@ -169,7 +169,7 @@ let
                           devicesWithSecrets = lib.pipe folder.devices [
                             (lib.filter (device: (builtins.isAttrs device) && device ? encryptionPasswordFile))
                             (map (device: {
-                              deviceId = device.deviceId;
+                              inherit (device) deviceId;
                               variableName = "secret_${builtins.hashString "sha256" device.encryptionPasswordFile}";
                               secretPath = device.encryptionPasswordFile;
                             }))

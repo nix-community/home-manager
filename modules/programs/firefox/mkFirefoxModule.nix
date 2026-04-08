@@ -113,9 +113,7 @@ let
     let
       containerToIdentity = _: container: {
         userContextId = container.id;
-        name = container.name;
-        icon = container.icon;
-        color = container.color;
+        inherit (container) color icon name;
         public = true;
       };
     in
@@ -178,7 +176,7 @@ let
     let
       # The configuration expected by the Firefox wrapper.
       fcfg = {
-        enableGnomeExtensions = cfg.enableGnomeExtensions;
+        inherit (cfg) enableGnomeExtensions;
       };
 
       # A bit of hackery to force a config into the wrapper.
@@ -1062,14 +1060,13 @@ in
               };
 
               "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
-                enable = profile.search.enable;
-                force = profile.search.force;
+                inherit (profile.search) enable force;
                 source = profile.search.file;
               };
 
               "${cfg.profilesPath}/${profile.path}/handlers.json" = mkIf (profile.handlers.enable) {
                 source = profile.handlers.configFile;
-                force = profile.handlers.force;
+                inherit (profile.handlers) force;
               };
 
               "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {

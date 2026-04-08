@@ -27,7 +27,7 @@ in
     package = mkPackageOption pkgs "pgcli" { nullable = true; };
 
     settings = mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       example = literalExpression ''
         {

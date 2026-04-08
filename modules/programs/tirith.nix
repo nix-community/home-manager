@@ -30,7 +30,7 @@ in
     };
 
     policy = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

@@ -51,7 +51,7 @@ in
       };
 
       settings = mkOption {
-        type = iniFormat.type;
+        inherit (iniFormat) type;
         default = { };
         description = ''
           Configuration written to

@@ -109,7 +109,7 @@ in
       };
 
       userSettings = mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = { };
         example = literalExpression ''
           {
@@ -130,7 +130,7 @@ in
       };
 
       userKeymaps = mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = [ ];
         example = literalExpression ''
           [
@@ -148,7 +148,7 @@ in
       };
 
       userTasks = mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = [ ];
         example = literalExpression ''
           [
@@ -168,7 +168,7 @@ in
       };
 
       userDebug = mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = [ ];
         example = literalExpression ''
           [

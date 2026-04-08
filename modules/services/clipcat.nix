@@ -33,7 +33,7 @@ in
       '';
     };
     daemonSettings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = {
         daemonize = true;
       };
@@ -59,7 +59,7 @@ in
       '';
     };
     ctlSettings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {
@@ -79,7 +79,7 @@ in
       '';
     };
     menuSettings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {

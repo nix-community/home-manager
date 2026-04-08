@@ -21,7 +21,7 @@ in
     enable = lib.mkEnableOption "Vesktop, an alternate client for Discord with Vencord built-in";
     package = lib.mkPackageOption pkgs "vesktop" { nullable = true; };
     settings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       description = ''
         Vesktop settings written to
@@ -64,7 +64,7 @@ in
           ]);
       };
       settings = lib.mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = { };
         description = ''
           Vencord settings written to

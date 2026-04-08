@@ -26,7 +26,7 @@ in
           options = {
 
             blocks = mkOption {
-              type = settingsFormat.type;
+              inherit (settingsFormat) type;
               default = [
                 { block = "cpu"; }
                 {
@@ -93,7 +93,7 @@ in
             };
 
             settings = mkOption {
-              type = settingsFormat.type;
+              inherit (settingsFormat) type;
               default = { };
               description = ''
                 Any extra options to add to i3status-rust
@@ -259,14 +259,14 @@ in
             theme =
               if lib.versionAtLeast cfg.package.version "0.30.0" then
                 {
-                  theme = cfgBar.theme;
+                  inherit (cfgBar) theme;
                 }
               else
                 cfgBar.theme;
             icons =
               if lib.versionAtLeast cfg.package.version "0.30.0" then
                 {
-                  icons = cfgBar.icons;
+                  inherit (cfgBar) icons;
                 }
               else
                 cfgBar.icons;

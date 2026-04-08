@@ -272,7 +272,7 @@ in
     home.packages = [ cfg.finalPackage ];
 
     launchd.agents.sketchybar = {
-      enable = cfg.service.enable;
+      inherit (cfg.service) enable;
       config = {
         Program = lib.getExe cfg.finalPackage;
         ProcessType = "Interactive";

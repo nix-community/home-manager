@@ -20,7 +20,7 @@ in
     package = lib.mkPackageOption pkgs "pqiv" { };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/pqivrc`. See

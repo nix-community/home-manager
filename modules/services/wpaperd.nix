@@ -40,7 +40,7 @@ in
     package = lib.mkPackageOption pkgs "wpaperd" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

@@ -25,7 +25,7 @@ in
     package = mkPackageOption pkgs "onlyoffice-desktopeditors" { nullable = true; };
 
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         UITheme = "theme-contrast-dark";

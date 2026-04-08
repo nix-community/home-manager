@@ -253,7 +253,7 @@ let
             }
             // lib.optionalAttrs (cfg.plasmaSupport or false) {
               plasmaSupport = true;
-              kdePackages = pkgs.kdePackages;
+              inherit (pkgs) kdePackages;
             }
           )
         else

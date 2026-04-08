@@ -19,7 +19,7 @@ in
     enable = lib.mkEnableOption "EditorConfig home configuration file";
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$HOME/.editorconfig`.

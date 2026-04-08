@@ -26,7 +26,7 @@ in
       enable = lib.mkEnableOption "infat";
       package = lib.mkPackageOption pkgs "infat" { nullable = true; };
       settings = lib.mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
         default = { };
         example = lib.literalExpression ''
           {

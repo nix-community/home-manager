@@ -532,8 +532,7 @@ in
     package = mkOption {
       type = with types; nullOr package;
       default = pkgs.sway.override {
-        extraSessionCommands = cfg.extraSessionCommands;
-        extraOptions = cfg.extraOptions;
+        inherit (cfg) extraOptions extraSessionCommands;
         withBaseWrapper = cfg.wrapperFeatures.base;
         withGtkWrapper = cfg.wrapperFeatures.gtk;
       };

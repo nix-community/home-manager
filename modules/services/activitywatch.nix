@@ -77,7 +77,7 @@ let
         };
 
         settings = mkOption {
-          type = watcherSettingsFormat.type;
+          inherit (watcherSettingsFormat) type;
           default = { };
           example = {
             timeout = 300;
@@ -154,7 +154,7 @@ in
         Configuration for `aw-server-rust` to be generated at
         {file}`$XDG_CONFIG_HOME/activitywatch/aw-server-rust/config.toml`.
       '';
-      type = watcherSettingsFormat.type;
+      inherit (watcherSettingsFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

@@ -27,13 +27,13 @@ in
 
     settings = {
       containers = lib.mkOption {
-        type = toml.type;
+        inherit (toml) type;
         default = { };
         description = "containers.conf configuration";
       };
 
       storage = lib.mkOption {
-        type = toml.type;
+        inherit (toml) type;
         description = "storage.conf configuration";
       };
 

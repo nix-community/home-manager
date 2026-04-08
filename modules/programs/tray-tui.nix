@@ -22,7 +22,7 @@ in
     enable = mkEnableOption "tray-tui";
     package = mkPackageOption pkgs "tray-tui" { nullable = true; };
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         sorting = false;

@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs [ "python3Packages" "aria2p" ] { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         key_bindings = {

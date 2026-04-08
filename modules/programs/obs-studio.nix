@@ -37,7 +37,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.finalPackage ];
     programs.obs-studio.finalPackage = pkgs.wrapOBS.override { obs-studio = cfg.package; } {
-      plugins = cfg.plugins;
+      inherit (cfg) plugins;
     };
   };
 }

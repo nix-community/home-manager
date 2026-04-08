@@ -27,7 +27,7 @@ in
     enable = mkEnableOption "element-desktop";
     package = mkPackageOption pkgs "element-desktop" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {

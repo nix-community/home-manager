@@ -257,7 +257,7 @@ let
       else
         {
           use-system-font = false;
-          font = pcfg.font;
+          inherit (pcfg) font;
         }
     )
     // (
@@ -271,7 +271,7 @@ let
             use-theme-colors = false;
             foreground-color = pcfg.colors.foregroundColor;
             background-color = pcfg.colors.backgroundColor;
-            palette = pcfg.colors.palette;
+            inherit (pcfg.colors) palette;
           }
           // lib.optionalAttrs (pcfg.allowBold != null) {
             allow-bold = pcfg.allowBold;
