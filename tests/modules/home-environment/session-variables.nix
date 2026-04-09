@@ -12,6 +12,7 @@ let
     export LOCALE_ARCHIVE_2_27="${config.i18n.glibcLocales}/lib/locale/locale-archive"
     export V1="v1"
     export V2="v2-v1"
+    export XDG_BIN_HOME="/home/hm-user/.local/bin"
     export XDG_CACHE_HOME="/home/hm-user/.cache"
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
@@ -26,6 +27,7 @@ let
 
     export V1="v1"
     export V2="v2-v1"
+    export XDG_BIN_HOME="/home/hm-user/.local/bin"
     export XDG_CACHE_HOME="/home/hm-user/.cache"
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
