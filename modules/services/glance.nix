@@ -74,15 +74,31 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.glance" pkgs lib.platforms.linux)
-    ];
-
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."glance/glance.yml".source = settingsFile;
+    xdg.configFile."glance/glance.yml" = {
+      source = settingsFile;
+      onChange = mkIf pkgs.stdenv.hostPlatform.isDarwin ''
+        /bin/launchctl kickstart -k "gui/$(id -u)/org.nix-community.home.glance" 2>/dev/null || true
+      '';
+    };
 
-    systemd.user.services.glance = lib.mkIf (cfg.package != null) {
+    launchd.agents.glance = mkIf (cfg.package != null) {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          (getExe cfg.package)
+          "--config"
+          configFilePath
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/glance.err";
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/glance.log";
+      };
+    };
+
+    systemd.user.services.glance = mkIf (cfg.package != null) {
       Unit = {
         Description = "Glance feed dashboard server";
         PartOf = [ "graphical-session.target" ];
