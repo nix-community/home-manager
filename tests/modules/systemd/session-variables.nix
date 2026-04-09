@@ -13,6 +13,7 @@
       LOCALE_ARCHIVE_2_27=${config.i18n.glibcLocales}/lib/locale/locale-archive
       V_int=1
       V_str=2
+      XDG_BIN_HOME=/home/hm-user/.local/bin
       XDG_CACHE_HOME=/home/hm-user/.cache
       XDG_CONFIG_HOME=/home/hm-user/.config
       XDG_DATA_HOME=/home/hm-user/.local/share
