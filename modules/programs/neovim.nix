@@ -245,6 +245,14 @@ in
         '';
       };
 
+      sideloadInitLua = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to sideload the content of {var}`initLua` without generating a {file}`init.lua`.
+        '';
+      };
+
       initLua = mkOption {
         type = types.lines;
         default = "";
@@ -495,13 +503,6 @@ in
               opt = [ ];
             };
           };
-
-      # This is a hack to avoid breaking config for users that dont want an init.lua to get generated
-      # See https://github.com/nix-community/home-manager/pull/8734
-      # we basically check if the generated wrapper lua config has any user-set config
-      # if not HM avoids creating an init.lua
-      # this makes the logic harder to understand and maintain so hopefully we can find a way out
-      wrapperHasUserConfig = wrappedNeovim'.luaRcContent != wrappedNeovim'.providerLuaRc;
     in
     {
       programs.neovim = {
@@ -530,9 +531,9 @@ in
 
       programs.neovim.extraPackages = mkIf cfg.autowrapRuntimeDeps vimPackageInfo.runtimeDeps;
 
-      programs.neovim.extraWrapperArgs = mkIf (!wrapperHasUserConfig) [
+      programs.neovim.extraWrapperArgs = mkIf (cfg.sideloadInitLua && cfg.initLua != "") [
         "--add-flags"
-        ''--cmd 'lua dofile("${pkgs.writeText "wrapper-init-lua" wrappedNeovim'.luaRcContent}")' ''
+        ''--cmd 'lua dofile("${pkgs.writeText "wrapper-init-lua" cfg.initLua}")' ''
       ];
 
       programs.neovim.initLua =
@@ -550,7 +551,7 @@ in
               null;
         in
         lib.mkMerge [
-          (lib.mkIf wrapperHasUserConfig (
+          (lib.mkIf (wrappedNeovim'.luaRcContent != "") (
             # we want it to appear rather early
             lib.mkOrder 200 wrappedNeovim'.luaRcContent
           ))
@@ -577,6 +578,7 @@ in
         ++ [
           {
             "nvim/init.lua" = mkIf (cfg.initLua != "") {
+              enable = !cfg.sideloadInitLua;
               text = cfg.initLua;
             };
 
