@@ -517,12 +517,6 @@
     github = "silmarp";
     githubId = 67292496;
   };
-  vortriz = {
-    name = "Rishi Vora";
-    email = "vorarishi22+nix@gmail.com";
-    github = "Vortriz";
-    githubId = 97402159;
-  };
   zorrobert = {
     name = "zorrobert";
     email = "118135271+zorrobert@users.noreply.github.com";

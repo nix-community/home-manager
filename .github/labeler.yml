@@ -660,7 +660,6 @@
           - modules/programs/fuzzel.nix
           - modules/programs/hyprlock.nix
           - modules/programs/kickoff.nix
-          - modules/programs/niriswitcher.nix
           - modules/programs/onagre.nix
           - modules/programs/sway-easyfocus.nix
           - modules/programs/swaylock.nix
