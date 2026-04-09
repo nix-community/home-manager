@@ -16,6 +16,8 @@ let
   jsonFormat = pkgs.formats.json { };
 
   serverModule = lib.types.submodule {
+    freeformType = jsonFormat.type;
+
     options = {
       command = mkOption {
         type = lib.types.nullOr lib.types.str;
@@ -103,17 +105,6 @@ let
     };
   };
 
-  # Transform typed server to JSON representation.
-  # envFiles is intentionally excluded — it is a HM-only abstraction.
-  toJsonServer =
-    _name: server:
-    lib.optionalAttrs (server.command != null) { inherit (server) command; }
-    // lib.optionalAttrs (server.args != [ ]) { inherit (server) args; }
-    // lib.optionalAttrs (server.env != { }) { inherit (server) env; }
-    // lib.optionalAttrs (server.url != null) { inherit (server) url; }
-    // lib.optionalAttrs (server.headers != { }) { inherit (server) headers; }
-    // lib.optionalAttrs server.disabled { disabled = true; };
-
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -180,7 +171,7 @@ in
 
     xdg.configFile = mkIf (cfg.servers != { }) {
       "mcp/mcp.json".source = jsonFormat.generate "mcp.json" {
-        mcpServers = lib.mapAttrs toJsonServer cfg.servers;
+        mcpServers = cfg.servers;
       };
     };
   };
