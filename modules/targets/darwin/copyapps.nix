@@ -55,7 +55,10 @@ in
               return 0
             }
 
-            if ! ensureAppManagement; then
+            # If the directory is a symlink it was most likely created by linkApps
+            # and will be migrated later so we can't test for the App Management
+            # permission and we probably don't need it to do the migration anyway.
+            if [[ ! -L '${cfg.directory}' ]] && ! ensureAppManagement; then
               if [[ "$(/bin/launchctl managername)" != Aqua ]]; then
                 # It is possible to grant the App Management permission to `sshd-keygen-wrapper`, however
                 # there are many pitfalls like requiring the primary user to grant the permission and to
