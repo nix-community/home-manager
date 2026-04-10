@@ -22,7 +22,7 @@ in
     package = lib.mkPackageOption pkgs "giff" { nullable = true; };
 
     settings = mkOption {
-      type = pkgs.formats.toml;
+      type = tomlFormat.type;
 
       default = { };
 
