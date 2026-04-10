@@ -46,7 +46,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."giff/config.toml" = lib.mkIf (cfg.options != { }) {
+    xdg.configFile."giff/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "giff-config" cfg.options;
     };
   };
