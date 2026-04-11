@@ -30,7 +30,7 @@ let
     if lib.isList v then
       concatStringsSep " " (map toString v)
     else if lib.isBool v then
-      (if v then "true" else "false")
+      lib.boolToString v
     else
       toString v;
 in
