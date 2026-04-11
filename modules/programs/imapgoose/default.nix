@@ -40,9 +40,7 @@ in
 
   options = {
     programs.imapgoose = {
-      enable = lib.mkEnableOption "synchronization using ImapGoose" // {
-        default = false;
-      };
+      enable = lib.mkEnableOption "synchronization using ImapGoose";
 
       package = lib.mkPackageOption pkgs "imapgoose" { };
 
