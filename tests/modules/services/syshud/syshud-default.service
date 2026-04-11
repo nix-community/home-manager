@@ -2,7 +2,6 @@
 WantedBy=graphical-session.target
 
 [Service]
-Environment=PATH=$PATH:@syshud@/bin
 ExecStart=@syshud@/bin/syshud
 Restart=always
 RestartSec=10
