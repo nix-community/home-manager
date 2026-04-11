@@ -19,18 +19,18 @@ in
 
     frequency = lib.mkOption {
       type = lib.types.str;
-      default = "*:0/5";
+      default = "hourly";
       example = "hourly";
       description = ''
-        How often to run imapgoose on Linux. This value is passed to the systemd
+        How often to run imapgoose. This value is passed to the systemd
         timer configuration as the {option}`OnCalendar` option. See
         {manpage}`systemd.time(7)` for more information about the format.
-      '';
+
+        '' + lib.hm.darwin.intervalDocumentation;
     };
 
-
     preExec = lib.mkOption {
-      type = lib.types.lines;
+      type = lib.types.nullOr lib.types.lines;
       default = null;
       example = "mkdir -p ~/mail";
       description = "Optional command to run before each imapgoose invocation.";

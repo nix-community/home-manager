@@ -33,13 +33,21 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.darwin.assertInterval "services.imapgoose.frequency" cfg.frequency pkgs)
+    ];
+
     launchd.agents.imapgoose = {
       enable = true;
       config = {
         ProgramArguments = programArguments;
-        StartInterval = cfg.startInterval;
         ProcessType = "Background";
+        Nice = 19;
+        LowPriorityIO = true;
+        StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.frequency;
         RunAtLoad = true;
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/imapgoose/launchd-stdout.log";
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/imapgoose/launchd-stderr.log";
       };
     };
   };
