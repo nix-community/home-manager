@@ -16,7 +16,7 @@
 
   services.imapgoose = {
     enable = true;
-    startInterval = 300;
+    frequency = "hourly";
   };
 
   nmt.script =
