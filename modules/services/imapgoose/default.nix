@@ -30,7 +30,7 @@ in
 
 
     preExec = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
+      type = lib.types.lines;
       default = null;
       example = "mkdir -p ~/mail";
       description = "Optional command to run before each imapgoose invocation.";
