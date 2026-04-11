@@ -80,9 +80,6 @@ in
 
       Service = {
         ExecStart = lib.getExe cfg.package;
-        Environment = [
-          "PATH=$PATH:${lib.makeBinPath [ cfg.package ]}"
-        ];
         Restart = "always";
         RestartSec = 10;
       };
