@@ -28,15 +28,6 @@ in
       '';
     };
 
-    startInterval = lib.mkOption {
-      type = lib.types.ints.positive;
-      default = 300;
-      example = 600;
-      description = ''
-        How often to run imapgoose on Darwin, in seconds. This maps to the
-        launchd {option}`StartInterval` key.
-      '';
-    };
 
     preExec = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
