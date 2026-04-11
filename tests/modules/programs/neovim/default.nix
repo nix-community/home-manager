@@ -9,4 +9,5 @@
   neovim-extra-lua-init = ./extra-lua-init.nix;
   neovim-extra-lua-default = ./extra-lua-default.nix;
   neovim-extra-lua-empty-plugin = ./extra-lua-empty-plugin.nix;
+  neovim-plugin-type-warning = ./plugin-type-warning.nix;
 }

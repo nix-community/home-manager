@@ -56,9 +56,8 @@ in
         first time we sign in, and we need that data into these settings for the
         correct functionality of the application.
 
-        This a temporary inconvenience, however, as nheko has plans to move the
-        authentication stuff into the local database they currently use. Once
-        this happens, this will no longer be an issue.
+        This a temporary inconvenience, however, as nheko has plans to [move the
+        authentication stuff into the secret storage](https://github.com/Nheko-Reborn/nheko/issues/1591).
       '';
     };
   };

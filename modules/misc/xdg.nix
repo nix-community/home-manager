@@ -7,6 +7,7 @@
 
 let
   inherit (lib)
+    mkAfter
     mkOptionDefault
     mkIf
     mkOption
@@ -29,6 +30,7 @@ let
   defaultConfigHome = "${config.home.homeDirectory}/.config";
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
   defaultStateHome = "${config.home.homeDirectory}/.local/state";
+  defaultBinHome = "${config.home.homeDirectory}/.local/bin";
 
   getEnvFallback =
     name: fallback:
@@ -102,6 +104,17 @@ in
       '';
     };
 
+    binHome = mkOption {
+      type = types.path;
+      defaultText = "~/.local/bin";
+      apply = toString;
+      description = ''
+        Absolute path to directory holding user-specific executables.
+
+        Sets `XDG_BIN_HOME` for the user if `xdg.enable` is set `true`.
+      '';
+    };
+
     stateFile = mkOption {
       type = fileType "xdg.stateFile" "<varname>xdg.stateHome</varname>" cfg.stateHome;
       default = { };
@@ -121,12 +134,22 @@ in
         Sets `XDG_STATE_HOME` for the user if `xdg.enable` is set `true`.
       '';
     };
+
+    localBinInPath = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to add {option}`xdg.binHome` to {env}`PATH` when
+        {option}`xdg.enable` is enabled.
+      '';
+    };
   };
 
   config = lib.mkMerge [
     (
       let
         variables = {
+          XDG_BIN_HOME = cfg.binHome;
           XDG_CACHE_HOME = cfg.cacheHome;
           XDG_CONFIG_HOME = cfg.configHome;
           XDG_DATA_HOME = cfg.dataHome;
@@ -137,10 +160,13 @@ in
         xdg.cacheHome = mkOptionDefault defaultCacheHome;
         xdg.configHome = mkOptionDefault defaultConfigHome;
         xdg.dataHome = mkOptionDefault defaultDataHome;
+        xdg.binHome = mkOptionDefault defaultBinHome;
         xdg.stateHome = mkOptionDefault defaultStateHome;
 
         home.sessionVariables = variables;
         systemd.user.sessionVariables = variables;
+
+        home.sessionPath = mkIf cfg.localBinInPath (mkAfter [ cfg.binHome ]);
       }
     )
 
@@ -149,6 +175,7 @@ in
       xdg.cacheHome = mkOptionDefault (getEnvFallback "XDG_CACHE_HOME" defaultCacheHome);
       xdg.configHome = mkOptionDefault (getEnvFallback "XDG_CONFIG_HOME" defaultConfigHome);
       xdg.dataHome = mkOptionDefault (getEnvFallback "XDG_DATA_HOME" defaultDataHome);
+      xdg.binHome = mkOptionDefault (getEnvFallback "XDG_BIN_HOME" defaultBinHome);
       xdg.stateHome = mkOptionDefault (getEnvFallback "XDG_STATE_HOME" defaultStateHome);
     })
 
@@ -157,6 +184,7 @@ in
       xdg.cacheHome = mkOptionDefault defaultCacheHome;
       xdg.configHome = mkOptionDefault defaultConfigHome;
       xdg.dataHome = mkOptionDefault defaultDataHome;
+      xdg.binHome = mkOptionDefault defaultBinHome;
       xdg.stateHome = mkOptionDefault defaultStateHome;
     })
 

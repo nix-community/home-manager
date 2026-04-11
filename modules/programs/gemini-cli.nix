@@ -18,6 +18,21 @@ in
 
     package = lib.mkPackageOption pkgs "gemini-cli" { nullable = true; };
 
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.gemini-cli.settings.mcpServers`.
+
+        Note: Any servers already present in
+        {option}`programs.gemini-cli.settings.mcpServers`
+        is not overridden by servers present under the same
+        name in {option}`programs.mcp.servers`
+      '';
+    };
+
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -158,10 +173,52 @@ in
         ```
       '';
     };
+
+    skills = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      example = lib.literalExpression ''
+        {
+          xlsx = ./skills/xlsx/SKILL.md;
+          data-analysis = ./skills/data-analysis;
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+        }
+      '';
+      description = ''
+        An attribute set of skill files to create in `~/.gemini/skills`.
+        The attribute name becomes the directory name.
+        The value is either inline content or a path to a file or directory.
+        If the path points to a directory, all files under that directory are symlinked to `~/.gemini/skills/<attrname>/`.
+        If the path points to a file, that file is symlinked to `~/.gemini/skills/<attrname>/SKILL.md`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
+      {
+        programs.gemini-cli.settings.mcpServers = lib.mkIf (
+          cfg.enableMcpIntegration && config.programs.mcp.enable
+        ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+      }
       {
         home = {
           packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -199,6 +256,20 @@ in
                 tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
           }
         ) cfg.policies;
+      }
+      {
+        home.file = lib.mapAttrs' (
+          n: v:
+          if lib.isPath v && lib.pathIsDirectory v then
+            lib.nameValuePair ".gemini/skills/${n}" {
+              source = v;
+              recursive = true;
+            }
+          else
+            lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
+              if lib.isPath v then { source = v; } else { text = v; }
+            )
+        ) cfg.skills;
       }
     ]
   );
