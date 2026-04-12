@@ -53,6 +53,16 @@ in
       '';
     };
 
+    enableXonshIntegration = mkOption {
+      default = true;
+      type = types.bool;
+      description = ''
+        Whether to enable Atuin's Xonsh integration.
+
+        If enabled, this will bind the up-arrow key to open the Atuin history.
+      '';
+    };
+
     flags = mkOption {
       default = [ ];
       type = types.listOf types.str;
@@ -228,6 +238,11 @@ in
               }
             '';
           };
+
+          programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+            execx($(${cfg.package}/bin/atuin init xonsh))
+          '';
+
         }
 
         (mkIf config.home.preferXdgDirectories {
