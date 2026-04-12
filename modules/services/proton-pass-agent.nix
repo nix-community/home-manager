@@ -93,6 +93,7 @@ in
         };
         Service = {
           ExecStart = lib.concatStringsSep " " cmd;
+          Restart = "on-failure";
           KeyringMode = "shared";
         };
       };
@@ -105,11 +106,7 @@ in
             "-c"
             (lib.concatStringsSep " " cmd)
           ];
-          KeepAlive = {
-            Crashed = true;
-            SuccessfulExit = false;
-          };
-          ProcessType = "Background";
+          KeepAlive = true;
           RunAtLoad = true;
           StandardOutPath = "${config.home.homeDirectory}/Library/Logs/Proton Pass CLI/ssh-agent-stdout.log";
           StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/Proton Pass CLI/ssh-agent-stderr.log";
