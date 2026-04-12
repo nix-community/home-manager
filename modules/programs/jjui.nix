@@ -23,12 +23,8 @@ in
 
     configDir = mkOption {
       type = lib.types.str;
-      default =
-        let
-          dir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
-        in
-        "${dir}/jjui";
-      defaultText = lib.literalExpression "Darwin: \"Library/Application Support/jjui\" \nLinux: \${config.xdg.configHome}/jjui";
+      default = "${config.xdg.configHome}/jjui";
+      defaultText = lib.literalExpression "\${config.xdg.configHome}/jjui";
       example = lib.literalExpression "\${config.home.homeDirectory}/.jjui";
       description = ''
         The directory to contain jjui configuration files.
