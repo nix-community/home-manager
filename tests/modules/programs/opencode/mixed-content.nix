@@ -71,10 +71,10 @@
       ${./test-agent.md}
 
     # Tools
-    assertFileExists home-files/.config/opencode/tool/inline-tool.ts
-    assertFileExists home-files/.config/opencode/tool/path-tool.ts
+    assertFileExists home-files/.config/opencode/tools/inline-tool.ts
+    assertFileExists home-files/.config/opencode/tools/path-tool.ts
 
-    assertFileContent home-files/.config/opencode/tool/path-tool.ts \
+    assertFileContent home-files/.config/opencode/tools/path-tool.ts \
       ${./test-tool.ts}
 
     # Skills

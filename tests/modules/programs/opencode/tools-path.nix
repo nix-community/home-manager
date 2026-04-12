@@ -6,8 +6,8 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/tool/test-tool.ts
-    assertFileContent home-files/.config/opencode/tool/test-tool.ts \
+    assertFileExists home-files/.config/opencode/tools/test-tool.ts
+    assertFileContent home-files/.config/opencode/tools/test-tool.ts \
       ${./test-tool.ts}
   '';
 }
