@@ -11,6 +11,7 @@ let
     "aider-chat"
     "alacritty"
     "alot"
+    "amp-cli"
     "antidote"
     "anvil-editor"
     "aria2"
