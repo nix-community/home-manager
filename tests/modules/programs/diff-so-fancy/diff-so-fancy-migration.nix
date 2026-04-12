@@ -24,8 +24,10 @@
   nmt.script = ''
     # Git config should contain diff-so-fancy configuration (backward compatibility)
     assertFileExists home-files/.config/git/config
-    assertFileContains home-files/.config/git/config '[core]'
-    assertFileRegex home-files/.config/git/config 'pager = .*/diff-so-fancy.*less'
+    assertFileContains home-files/.config/git/config '[pager]'
+    assertFileRegex home-files/.config/git/config 'diff = .*/diff-so-fancy.*less'
+    assertFileRegex home-files/.config/git/config 'log = .*/diff-so-fancy.*less'
+    assertFileRegex home-files/.config/git/config 'show = .*/diff-so-fancy.*less'
     assertFileContains home-files/.config/git/config '[interactive]'
     assertFileRegex home-files/.config/git/config 'diffFilter = .*/diff-so-fancy --patch'
     assertFileContains home-files/.config/git/config '[diff-so-fancy]'
