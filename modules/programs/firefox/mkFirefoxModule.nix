@@ -57,7 +57,7 @@ let
       lib.nameValuePair "Profile${toString profile.id}" {
         Name = profile.name;
         Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
-        IsRelative = 1;
+        IsRelative = if profile.absolutePath then 0 else 1;
         Default = if profile.isDefault then 1 else 0;
       }
     )
@@ -517,7 +517,7 @@ in
               path = mkOption {
                 type = types.str;
                 default = name;
-                description = "Profile path.";
+                description = "Profile path. To use an absolute path, set `programs.firefox.profiles.<name>.absolutePath` to true, because paths in Firefox are relative by default unless explicitly specified.";
               };
 
               isDefault = mkOption {
@@ -525,6 +525,12 @@ in
                 default = config.id == 0;
                 defaultText = "true if profile ID is 0";
                 description = "Whether this is a default profile.";
+              };
+
+              absolutePath = mkOption {
+                type = types.bool;
+                default = false;
+                description = "Whether this profile uses an absolute path.";
               };
 
               search = mkOption {
