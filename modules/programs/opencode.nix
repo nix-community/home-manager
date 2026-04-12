@@ -206,11 +206,11 @@ in
 
         If an attribute set is used, the attribute name becomes the command filename,
         and the value is either:
-        - Inline content as a string (creates `opencode/command/<name>.md`)
-        - A path to a file (creates `opencode/command/<name>.md`)
+        - Inline content as a string (creates `opencode/commands/<name>.md`)
+        - A path to a file (creates `opencode/commands/<name>.md`)
 
         If a path is used, it is expected to contain command files.
-        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/command/`.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/commands/`.
       '';
       example = lib.literalExpression ''
         {
@@ -477,7 +477,7 @@ in
           })
       );
 
-      "opencode/command" = mkIf (lib.isPath cfg.commands) {
+      "opencode/commands" = mkIf (lib.isPath cfg.commands) {
         source = cfg.commands;
         recursive = true;
       };
@@ -505,7 +505,7 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.commands) (
       lib.mapAttrs' (
         name: content:
-        lib.nameValuePair "opencode/command/${name}.md" (
+        lib.nameValuePair "opencode/commands/${name}.md" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.commands
