@@ -365,11 +365,11 @@ in
 
         If an attribute set is used, the attribute name becomes the tool filename,
         and the value is either:
-        - Inline content as a string (creates `opencode/tool/<name>.ts`)
-        - A path to a file (creates `opencode/tool/<name>.ts` or `opencode/tool/<name>.js`)
+        - Inline content as a string (creates `opencode/tools/<name>.ts`)
+        - A path to a file (creates `opencode/tools/<name>.ts` or `opencode/tools/<name>.js`)
 
         If a path is used, it is expected to contain tool files.
-        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/tool/`.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/tools/`.
 
         See <https://opencode.ai/docs/tools/> for the documentation.
       '';
@@ -494,7 +494,7 @@ in
         recursive = true;
       };
 
-      "opencode/tool" = mkIf (lib.isPath cfg.tools) {
+      "opencode/tools" = mkIf (lib.isPath cfg.tools) {
         source = cfg.tools;
         recursive = true;
       };
@@ -528,7 +528,7 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.tools) (
       lib.mapAttrs' (
         name: content:
-        lib.nameValuePair "opencode/tool/${name}.ts" (
+        lib.nameValuePair "opencode/tools/${name}.ts" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.tools
