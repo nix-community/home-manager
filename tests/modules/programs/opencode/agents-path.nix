@@ -6,8 +6,8 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/agent/test-agent.md
-    assertFileContent home-files/.config/opencode/agent/test-agent.md \
+    assertFileExists home-files/.config/opencode/agents/test-agent.md
+    assertFileContent home-files/.config/opencode/agents/test-agent.md \
       ${./test-agent.md}
   '';
 }

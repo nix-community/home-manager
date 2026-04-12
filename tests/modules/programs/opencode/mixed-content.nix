@@ -64,10 +64,10 @@
       ${./test-command.md}
 
     # Agents
-    assertFileExists home-files/.config/opencode/agent/inline-agent.md
-    assertFileExists home-files/.config/opencode/agent/path-agent.md
+    assertFileExists home-files/.config/opencode/agents/inline-agent.md
+    assertFileExists home-files/.config/opencode/agents/path-agent.md
 
-    assertFileContent home-files/.config/opencode/agent/path-agent.md \
+    assertFileContent home-files/.config/opencode/agents/path-agent.md \
       ${./test-agent.md}
 
     # Tools
