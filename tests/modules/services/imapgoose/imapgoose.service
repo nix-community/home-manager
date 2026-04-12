@@ -1,0 +1,6 @@
+[Service]
+ExecStart=@imapgoose@/bin/imapgoose -c /home/hm-user/.config/imapgoose/config.scfg
+Type=oneshot
+
+[Unit]
+Description=imapgoose mail synchronization
