@@ -1,4 +1,3 @@
-{ ... }:
 {
   programs.feedr.enable = false;
 

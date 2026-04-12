@@ -12,12 +12,12 @@ in
   meta.maintainers = with lib.maintainers; [ drupol ];
 
   options.programs.feedr = {
-    enable = lib.mkEnableOption "A feature-rich terminal-based RSS/Atom feed reader written in Rust.";
+    enable = lib.mkEnableOption "Feedr, a feature-rich terminal-based RSS/Atom feed reader written in Rust";
 
     package = lib.mkPackageOption pkgs "feedr" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
