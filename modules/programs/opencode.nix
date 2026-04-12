@@ -243,11 +243,11 @@ in
 
         If an attribute set is used, the attribute name becomes the agent filename,
         and the value is either:
-        - Inline content as a string (creates `opencode/agent/<name>.md`)
-        - A path to a file (creates `opencode/agent/<name>.md`)
+        - Inline content as a string (creates `opencode/agents/<name>.md`)
+        - A path to a file (creates `opencode/agents/<name>.md`)
 
         If a path is used, it is expected to contain agent files.
-        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/agent/`.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/agents/`.
       '';
       example = lib.literalExpression ''
         {
@@ -482,7 +482,7 @@ in
         recursive = true;
       };
 
-      "opencode/agent" = mkIf (lib.isPath cfg.agents) {
+      "opencode/agents" = mkIf (lib.isPath cfg.agents) {
         source = cfg.agents;
         recursive = true;
       };
@@ -513,7 +513,7 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.agents) (
       lib.mapAttrs' (
         name: content:
-        lib.nameValuePair "opencode/agent/${name}.md" (
+        lib.nameValuePair "opencode/agents/${name}.md" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.agents
