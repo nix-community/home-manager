@@ -368,6 +368,7 @@ in
                   }
                   { name = "patdiff"; }
                   { name = "riff"; }
+                  { name = "diffnav"; }
                 ]
               );
             in
