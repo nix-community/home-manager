@@ -57,10 +57,10 @@
   };
   nmt.script = ''
     # Commands
-    assertFileExists home-files/.config/opencode/command/inline-command.md
-    assertFileExists home-files/.config/opencode/command/path-command.md
+    assertFileExists home-files/.config/opencode/commands/inline-command.md
+    assertFileExists home-files/.config/opencode/commands/path-command.md
 
-    assertFileContent home-files/.config/opencode/command/path-command.md \
+    assertFileContent home-files/.config/opencode/commands/path-command.md \
       ${./test-command.md}
 
     # Agents
