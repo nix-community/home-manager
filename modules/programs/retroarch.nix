@@ -6,8 +6,6 @@
 }:
 let
   cfg = config.programs.retroarch;
-
-  enabledCores = lib.filterAttrs (_: core: core.enable) cfg.cores;
 in
 {
   meta.maintainers = [
@@ -77,15 +75,63 @@ in
         for available configuration options.
       '';
     };
+
+    coreSettings = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      example = {
+        mgba_solar_sensor_level = "0";
+        snes9x_aspect = "4:3";
+        snes9x_overscan = "enabled";
+        snes9x_region = "auto";
+      };
+      description = ''
+        Core-specific configuration settings.
+        Keys are often prefixed with the core's name.
+
+        See <https://docs.libretro.com/guides/core-list/>
+        for available configuration options.
+      '';
+    };
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.retroarch.finalPackage = (
-      cfg.package.wrapper {
-        inherit (cfg) settings;
-        cores = lib.mapAttrsToList (_: core: core.package) enabledCores;
+  config = lib.mkIf cfg.enable (
+    let
+      attrsToText = lib.flip lib.pipe [
+        (lib.mapAttrsToList (n: v: "${n} = \"${v}\""))
+        lib.naturalSort
+        lib.concatLines
+      ];
+      configDir =
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          "Library/Application Support/RetroArch"
+        else
+          "${config.xdg.configHome}/retroarch";
+      enabledCores = lib.filterAttrs (_: core: core.enable) cfg.cores;
+    in
+    lib.mkMerge [
+      {
+        programs.retroarch.finalPackage = (
+          cfg.package.wrapper {
+            inherit (cfg) settings;
+            cores = lib.mapAttrsToList (_: core: core.package) enabledCores;
+          }
+        );
+        home.packages = [ cfg.finalPackage ];
       }
-    );
-    home.packages = [ cfg.finalPackage ];
-  };
+      (lib.mkIf (cfg.coreSettings != { }) {
+        assertions = [
+          {
+            assertion = cfg.settings.global_core_options or null == "true";
+            message = ''
+              `programs.retroarch.settings.global_core_options` must be set to "true"
+              when `programs.retroarch.coreSettings` is defined.
+            '';
+          }
+        ];
+        home.file."${configDir}/retroarch-core-options.cfg".text = attrsToText cfg.coreSettings;
+        programs.retroarch.settings.global_core_options = lib.mkDefault "true";
+      })
+    ]
+  );
 }
