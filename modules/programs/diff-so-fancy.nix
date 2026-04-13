@@ -137,12 +137,8 @@ in
               dsfCommand = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
               pagerCommand = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.pagerOpts}";
             in
-            {
-              pager = {
-                diff = pagerCommand;
-                log = pagerCommand;
-                show = pagerCommand;
-              };
+            lib.hm.git.diffPagerConfig pagerCommand
+            // {
               interactive.diffFilter = "${dsfCommand} --patch";
               diff-so-fancy = cfg.settings;
             };
