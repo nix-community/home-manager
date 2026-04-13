@@ -452,13 +452,6 @@
     name = "Vincent Breitmoser";
     source = "nixpkgs";
   };
-  Vortriz = {
-    email = "vorarishi22+nix@gmail.com";
-    github = "Vortriz";
-    githubId = 97402159;
-    name = "Rishi Vora";
-    source = "nixpkgs";
-  };
   WGUNDERWOOD = {
     email = "wg.underwood13@gmail.com";
     github = "WGUNDERWOOD";
@@ -2380,6 +2373,13 @@
     github = "xlambein";
     githubId = 5629059;
     name = "Xavier Lambein";
+    source = "nixpkgs";
+  };
+  yaaaarn = {
+    email = "30006414+yaaaarn@users.noreply.github.com";
+    github = "yaaaarn";
+    githubId = 30006414;
+    name = "yarncat";
     source = "nixpkgs";
   };
   yethal = {
