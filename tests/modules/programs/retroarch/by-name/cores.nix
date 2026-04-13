@@ -1,7 +1,5 @@
 { config, pkgs, ... }:
 {
-  imports = [ ./stubs.nix ];
-
   programs.retroarch = {
     enable = true;
     cores = {

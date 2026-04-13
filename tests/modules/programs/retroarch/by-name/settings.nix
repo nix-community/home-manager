@@ -1,7 +1,4 @@
-{ pkgs, ... }:
-{
-  imports = [ ./stubs.nix ];
-
+_: {
   programs.retroarch = {
     enable = true;
     settings = {
