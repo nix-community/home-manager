@@ -11,6 +11,8 @@ let
 
   homeManagerPackage = config.programs.home-manager.package;
 
+  switchExtraFlags = lib.strings.concatStringsSep " " cfg.switchExtraFlags;
+
   autoUpgradeApp = pkgs.writeShellApplication {
     name = "home-manager-auto-upgrade";
     text =
@@ -26,14 +28,14 @@ let
           echo "Update flake inputs"
           nix flake update
           echo "Upgrade Home Manager"
-          home-manager switch --flake .
+          home-manager switch --flake . ${switchExtraFlags}
         ''
       else
         ''
           echo "Update Nix's channels"
           nix-channel --update
           echo "Upgrade Home Manager"
-          home-manager switch
+          home-manager switch ${switchExtraFlags}
         '';
     runtimeInputs = with pkgs; [
       homeManagerPackage
@@ -74,6 +76,15 @@ in
         defaultText = lib.literalExpression ''"''${config.xdg.configHome}/home-manager"'';
         example = "/home/user/dotfiles";
         description = "The directory of the flake to update.";
+      };
+
+      switchExtraFlags = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = lib.literalExpression ''[ "--specialisation" "foo" ]'';
+        description = ''
+          Extra flags to pass to `home-manager switch`.
+        '';
       };
     };
   };
