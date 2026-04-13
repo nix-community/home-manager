@@ -46,6 +46,22 @@ let
       lib.listToAttrs (lib.mapAttrsToList transformMcpServer config.programs.mcp.servers)
     else
       { };
+
+  packageWithExtraPackages =
+    if cfg.package != null && cfg.extraPackages != [ ] then
+      pkgs.symlinkJoin {
+        inherit (cfg.package) meta;
+        name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+        paths = [ cfg.package ];
+        preferLocalBuild = true;
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/opencode \
+            --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+        '';
+      }
+    else
+      cfg.package;
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
@@ -58,6 +74,13 @@ in
     enable = mkEnableOption "opencode";
 
     package = mkPackageOption pkgs "opencode" { nullable = true; };
+
+    extraPackages = mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.uv ]";
+      description = "Extra packages available to OpenCode.";
+    };
 
     enableMcpIntegration = mkOption {
       type = lib.types.bool;
@@ -446,7 +469,7 @@ in
         ''
       ];
 
-    home.packages = mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = mkIf (packageWithExtraPackages != null) [ packageWithExtraPackages ];
 
     xdg.configFile = {
       "opencode/opencode.json" = mkIf (cfg.settings != { } || transformedMcpServers != { }) {
@@ -577,7 +600,7 @@ in
         };
 
         Service = {
-          ExecStart = "${lib.getExe cfg.package} serve ${lib.escapeShellArgs webCfg.extraArgs}";
+          ExecStart = "${lib.getExe packageWithExtraPackages} serve ${lib.escapeShellArgs webCfg.extraArgs}";
           Restart = "always";
           RestartSec = 5;
         }
@@ -598,7 +621,7 @@ in
           ProgramArguments =
             let
               programArguments = [
-                (lib.getExe cfg.package)
+                (lib.getExe packageWithExtraPackages)
                 "serve"
               ]
               ++ webCfg.extraArgs;
