@@ -1,13 +1,11 @@
 {
   config,
-  lib,
-  pkgs,
   ...
 }:
 
 {
   nixpkgs.overlays = [
-    (self: super: {
+    (_self: super: {
       darwin = super.darwin // {
         DarwinTools = config.lib.test.mkStubPackage {
           name = "DarwinTools";

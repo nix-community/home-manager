@@ -1,4 +1,3 @@
-{ config, ... }:
 {
   home.stateVersion = "25.05"; # <= 25.11
   programs.password-store = {

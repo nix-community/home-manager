@@ -9,7 +9,7 @@ let
     ;
 
   cfg = config.accounts.email;
-  enabledAccounts = lib.filterAttrs (n: v: v.enable) cfg.accounts;
+  enabledAccounts = lib.filterAttrs (_n: v: v.enable) cfg.accounts;
 
   gpgModule = types.submodule {
     options = {

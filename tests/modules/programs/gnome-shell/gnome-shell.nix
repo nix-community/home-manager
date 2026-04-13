@@ -43,7 +43,7 @@ let
 in
 {
   nixpkgs.overlays = [
-    (final: prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
+    (_final: _prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
   ];
 
   programs.gnome-shell.enable = true;

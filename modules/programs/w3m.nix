@@ -350,7 +350,7 @@ in
     mkIf cfg.enable {
       assertions = [
         {
-          assertion = (lib.filterAttrs (k: v: !isNull v.text && !isNull v.source) cfg.cgiBin) == { };
+          assertion = (lib.filterAttrs (_k: v: !isNull v.text && !isNull v.source) cfg.cgiBin) == { };
           message = "Cannot specify both `.text` and `.source` options for `programs.w3m.cgiBin` scripts.";
         }
       ];

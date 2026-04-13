@@ -251,7 +251,7 @@ let
     let
       inherit (contact) id;
     in
-    lib.filterAttrs (n: v: v != null) (
+    lib.filterAttrs (_n: v: v != null) (
       {
         "ldap_2.servers.contact_${id}.description" = contact.name;
         "ldap_2.servers.contact_${id}.filename" = "contact_${id}.sqlite"; # this is needed for carddav to work
@@ -970,7 +970,7 @@ in
 
                   # Append the default local folder name "account1".
                   # See https://github.com/nix-community/home-manager/issues/5031.
-                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId) ++ [
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (_name: value: value) accountNameToId) ++ [
                     "account1"
                   ];
                 in
@@ -989,7 +989,7 @@ in
 
                   accountsOrderIds = map (a: accountNameToId."${a}" or a) profile.calendarAccountsOrder;
 
-                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId);
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (_name: value: value) accountNameToId);
                 in
                 lib.optionals (calendarAccounts != [ ]) (
                   accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
@@ -1045,7 +1045,7 @@ in
         }
       )
       ++ (mapAttrsToList (
-        name: profile:
+        name: _profile:
         let
           emailAccountsWithFilters = (
             filter (a: a.thunderbird.messageFilters != [ ]) (

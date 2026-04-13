@@ -13,7 +13,7 @@ let
     lib.mapAttrsToList (n: v: if v.isDefault then n else null) cfg.libraries
   );
 
-  settingsIni = (lib.mapAttrs (n: v: v.settings) cfg.libraries) // {
+  settingsIni = (lib.mapAttrs (_n: v: v.settings) cfg.libraries) // {
     settings =
       cfg.settings
       // lib.optionalAttrs (cfg.libraries != { }) {

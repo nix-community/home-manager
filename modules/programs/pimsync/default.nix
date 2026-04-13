@@ -113,7 +113,7 @@
 
       accountSettings = calendarConfig ++ contactConfig;
 
-      localStorageDir = name: acc: lib.attrsets.getAttrFromPath [ "local" "path" ] acc;
+      localStorageDir = _name: acc: lib.attrsets.getAttrFromPath [ "local" "path" ] acc;
 
       calendarLocalStorageDirs = lib.mapAttrsToList localStorageDir calendarAccounts;
       contactLocalStorageDirs = lib.mapAttrsToList localStorageDir contactAccounts;

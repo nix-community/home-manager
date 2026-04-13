@@ -11,7 +11,7 @@ includes = [ "*.nix" ]
 
 [formatter.deadnix]
 command = "deadnix"
-options = [ "--edit", "--no-lambda-arg", "--no-lambda-pattern-names" ]
+options = [ "--edit" ]
 includes = [ "*.nix" ]
 
 [formatter.nixf-diagnose]

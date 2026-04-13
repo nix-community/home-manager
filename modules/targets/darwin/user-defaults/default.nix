@@ -20,9 +20,11 @@ let
         domain: attrs:
         "run /usr/bin/defaults ${cliFlags} import ${lib.escapeShellArg domain} ${toDefaultsFile domain attrs}";
 
-      nonNullDefaults = lib.mapAttrs (domain: attrs: (lib.filterAttrs (n: v: v != null) attrs)) settings;
+      nonNullDefaults = lib.mapAttrs (
+        _domain: attrs: (lib.filterAttrs (_n: v: v != null) attrs)
+      ) settings;
 
-      writableDefaults = lib.filterAttrs (domain: attrs: attrs != { }) nonNullDefaults;
+      writableDefaults = lib.filterAttrs (_domain: attrs: attrs != { }) nonNullDefaults;
     in
     lib.mapAttrsToList toActivationCmd writableDefaults;
 

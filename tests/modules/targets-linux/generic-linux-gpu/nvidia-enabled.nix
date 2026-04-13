@@ -19,7 +19,7 @@ let
   customPkgs = pkgs // {
     linuxPackages = pkgs.linuxPackages // {
       nvidiaPackages = pkgs.linuxPackages.nvidiaPackages // {
-        mkDriver = args: lib.makeOverridable (_: mockNvidiaDriver) { };
+        mkDriver = _args: lib.makeOverridable (_: mockNvidiaDriver) { };
       };
     };
   };

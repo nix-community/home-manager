@@ -57,7 +57,7 @@ let
     options =
       let
         opt =
-          name: type:
+          _name: type:
           mkOption {
             type = types.nullOr type;
             default = null;

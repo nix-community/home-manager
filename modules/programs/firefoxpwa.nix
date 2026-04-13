@@ -16,7 +16,7 @@ let
   mkUlidAssertions =
     path:
     lib.concatMap (
-      { name, value }:
+      { name, ... }:
       let
         length = 26;
         allowed = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";

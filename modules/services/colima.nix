@@ -245,7 +245,7 @@ in
             "${cfg.colimaHomeDir}/${profileName}/colima.yaml" = {
               source = yamlFormat.generate "colima.yaml" profile.settings;
             };
-          }) (lib.filterAttrs (name: profile: profile.settings != { }) cfg.profiles)
+          }) (lib.filterAttrs (_name: profile: profile.settings != { }) cfg.profiles)
         );
 
         sessionVariables = {

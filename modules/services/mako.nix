@@ -19,8 +19,8 @@ let
     let
       formatValue = v: if builtins.isBool v then if v then "true" else "false" else toString v;
 
-      globalSettings = lib.filterAttrs (n: v: !(lib.isAttrs v)) config;
-      sectionSettings = lib.filterAttrs (n: v: lib.isAttrs v) config;
+      globalSettings = lib.filterAttrs (_n: v: !(lib.isAttrs v)) config;
+      sectionSettings = lib.filterAttrs (_n: v: lib.isAttrs v) config;
 
       globalLines = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (k: v: "${k}=${formatValue v}") globalSettings

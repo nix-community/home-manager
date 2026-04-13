@@ -48,7 +48,7 @@ in
       };
 
       extraPackages = mkOption {
-        default = self: [ ];
+        default = _self: [ ];
         defaultText = "self: []";
         example = literalExpression ''
           haskellPackages: [
