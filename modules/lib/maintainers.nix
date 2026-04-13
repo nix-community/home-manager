@@ -284,6 +284,12 @@
     github = "kalhauge";
     githubId = 1182166;
   };
+  kayskayskays = {
+    name = "Kays";
+    email = "115312476+kayskayskays@users.noreply.github.com";
+    github = "kayskayskays";
+    githubId = 115312476;
+  };
   kmaasrud = {
     name = "Knut Magnus Aasrud";
     email = "km@aasrud.com";
