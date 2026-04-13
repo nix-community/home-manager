@@ -657,8 +657,14 @@ let
         (mkIf (config.flavor == "mailbox.org") {
           userName = mkDefault config.address;
           folders.inbox = mkDefault "INBOX";
-          imap.host = "imap.mailbox.org";
-          smtp.host = "smtp.mailbox.org";
+          imap = {
+            host = "imap.mailbox.org";
+            port = 993;
+          };
+          smtp = {
+            host = "smtp.mailbox.org";
+            port = 465;
+          };
         })
 
         (mkIf (config.flavor == "migadu.com") {
