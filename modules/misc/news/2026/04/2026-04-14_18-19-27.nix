@@ -1,8 +1,9 @@
+{ config, ... }:
 {
   time = "2026-04-14T12:49:27+00:00";
   # condition = pkgs.stdenv.hostPlatform.isLinux;
   # condition = config.programs.neovim.enable;
-  condition = true;
+  condition = config.programs.yazi.enable;
   # if behavior changed, explain how to restore previous behavior.
   message = ''
     Added new option for yazi: programs.yazi.vfs
