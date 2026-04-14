@@ -1,0 +1,18 @@
+{
+  "bundleId": "com.knollsoft.Rectangle",
+  "defaults": {},
+  "shortcuts": {
+    "leftHalf": {
+      "keyCode": 123,
+      "modifierFlags": 1835008
+    },
+    "maximize": {
+      "keyCode": 46,
+      "modifierFlags": 1179648
+    },
+    "rightHalf": {
+      "keyCode": 124,
+      "modifierFlags": 1835008
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "bundleId": "com.knollsoft.Rectangle",
+  "defaults": {
+    "gapSize": {
+      "float": 8.0
+    },
+    "launchOnLogin": {
+      "bool": true
+    },
+    "windowSnapping": {
+      "int": 1
+    }
+  },
+  "shortcuts": {}
+}
