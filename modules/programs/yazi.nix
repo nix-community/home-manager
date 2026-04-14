@@ -153,6 +153,30 @@ in
       '';
     };
 
+    vfs = mkOption {
+      inherit (tomlFormat) type;
+      default = { };
+      example = literalExpression ''
+        {
+          services = {
+            my-server = {
+              host = "1.2.3.4";
+              port = 22;
+              type = "sftp";
+              user = "root";
+            };
+          };
+        }
+      '';
+      description = ''
+        Configuration written to
+        {file}`$XDG_CONFIG_HOME/yazi/vfs.toml`.
+
+        See <https://yazi-rs.github.io/docs/configuration/vfs>
+        for the full list of options
+      '';
+    };
+
     initLua = mkOption {
       type = with types; nullOr (either path lines);
       default = null;
@@ -282,6 +306,9 @@ in
       };
       "yazi/theme.toml" = mkIf (cfg.theme != { }) {
         source = tomlFormat.generate "yazi-theme" cfg.theme;
+      };
+      "yazi/vfs.toml" = mkIf (cfg.vfs != { }) {
+        source = tomlFormat.generate "yazi-vfs" cfg.vfs;
       };
       "yazi/init.lua" = mkIf (cfg.initLua != null) (
         if builtins.isPath cfg.initLua then
