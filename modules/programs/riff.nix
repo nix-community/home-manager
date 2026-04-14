@@ -92,13 +92,8 @@ in
             let
               riffExe = baseNameOf (lib.getExe cfg.package);
             in
-            {
-              pager = {
-                diff = riffExe;
-                log = riffExe;
-                show = riffExe;
-              };
-
+            lib.hm.git.diffPagerConfig riffExe
+            // {
               interactive.diffFilter = "${riffExe} --color=on";
             };
         };
