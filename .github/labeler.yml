@@ -1,3 +1,6 @@
+"release":
+  - base-branch:
+      - '^release-.*'
 "ai":
   - changed-files:
       - any-glob-to-any-file:
