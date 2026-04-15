@@ -9,6 +9,7 @@
 lib.mkIf config.test.enableBig {
   programs.neovim = {
     enable = true;
+    withRuby = false;
     extraConfig = ''
       let g:hmExtraConfig='HM_EXTRA_CONFIG'
     '';
@@ -17,6 +18,7 @@ lib.mkIf config.test.enableBig {
       {
         plugin = vim-commentary;
         # testing viml config
+        type = "viml";
         config = ''
           let g:hmPlugins='HM_PLUGINS_CONFIG'
         '';
