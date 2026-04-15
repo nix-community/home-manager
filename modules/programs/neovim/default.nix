@@ -21,7 +21,7 @@ let
 
   inherit
     (
-      (import ../lib/file-type.nix {
+      (import ../../lib/file-type.nix {
         inherit (config.home) homeDirectory;
         inherit lib pkgs;
       })
@@ -50,6 +50,7 @@ in
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
   imports = [
+    ./fennel.nix
     (lib.mkRenamedOptionModule
       [ "programs" "neovim" "extraLuaConfig" ]
       [ "programs" "neovim" "initLua" ]
