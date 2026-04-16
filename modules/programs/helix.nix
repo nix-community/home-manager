@@ -233,6 +233,9 @@ in
 
     xdg.configFile =
       let
+        pkillPrefix = if pkgs.stdenv.hostPlatform.isDarwin then "/usr" else pkgs.procps;
+        onChange = "${pkillPrefix}/bin/pkill -u $USER -x -USR1 '(hx|\.hx-wrapped)' || true";
+
         settings =
           let
             hasSettings = cfg.settings != { };
@@ -240,6 +243,7 @@ in
           in
           {
             "helix/config.toml" = mkIf (hasSettings || hasExtraConfig) {
+              inherit onChange;
               source =
                 let
                   configFile = tomlFormat.generate "config.toml" cfg.settings;
@@ -252,6 +256,7 @@ in
                 '';
             };
             "helix/languages.toml" = mkIf (cfg.languages != { }) {
+              inherit onChange;
               source = tomlFormat.generate "helix-languages-config" cfg.languages;
             };
             "helix/ignore" = mkIf (cfg.ignores != [ ]) {
@@ -262,6 +267,7 @@ in
         themes = lib.mapAttrs' (
           n: v:
           lib.nameValuePair "helix/themes/${n}.toml" {
+            inherit onChange;
             source =
               if lib.isString v then
                 pkgs.writeText "helix-theme-${n}" v
