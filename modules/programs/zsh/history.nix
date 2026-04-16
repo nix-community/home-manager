@@ -23,20 +23,12 @@ in
         { config, ... }:
         {
           options = {
-            append = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                If set, zsh sessions will append their history list to the history
-                file, rather than replace it. Thus, multiple parallel zsh sessions
-                will all have the new entries from their history lists added to the
-                history file, in the order that they exit.
+            append = mkEnableOption ''
+              appending zsh session history to the history file instead of replacing it.
+              Thus, multiple parallel zsh sessions will all have the new entries from their history lists added to the history file, in the order that they exit.
 
-                This file will still be periodically re-written to trim it when the
-                number of lines grows 20% beyond the value specified by
-                `programs.zsh.history.save`.
-              '';
-            };
+              This file will still be periodically re-written to trim it when the number of lines grows 20% beyond the value specified by `programs.zsh.history.save`
+            '';
 
             size = mkOption {
               type = types.int;

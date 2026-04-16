@@ -8,6 +8,7 @@
 let
   inherit (lib)
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -33,17 +34,12 @@ in
 
   options = {
     services.udiskie = {
-      enable = lib.mkEnableOption "" // {
-        description = ''
-          Whether to enable the udiskie mount daemon.
+      enable = mkEnableOption ''
+        the udiskie mount daemon.
 
-          Note, if you use NixOS then you must add
-          `services.udisks2.enable = true`
-          to your system configuration. Otherwise mounting will fail because
-          the Udisk2 DBus service is not found.
-        '';
-      };
-
+        Note: if you use NixOS then you must add `services.udisks2.enable = true` to your system configuration.
+        Otherwise mounting will fail because the Udisk2 DBus service is not found
+      '';
       package = lib.mkPackageOption pkgs "udiskie" { };
 
       settings = mkOption {

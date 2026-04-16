@@ -165,16 +165,11 @@ in
 {
   options = {
     programs.alot = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Whether to enable the Alot mail user agent. Alot uses the
-          Notmuch email system and will therefore be automatically
-          enabled for each email account that is managed by Notmuch.
-        '';
-      };
+      enable = lib.mkEnableOption ''
+        the Alot mail user agent. Alot uses the
+        Notmuch email system and will therefore be automatically
+        enabled for each email account that is managed by Notmuch.
+      '';
 
       package = lib.mkPackageOption pkgs "alot" { nullable = true; };
 

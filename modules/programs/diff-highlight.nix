@@ -49,17 +49,13 @@ in
       '';
     };
 
-    enableGitIntegration = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable git integration for diff-highlight.
+    enableGitIntegration = mkEnableOption ''
+      git integration for diff-highlight.
 
-        When enabled, diff-highlight will be configured as git's pager for
-        {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
-        filter for interactive staging.
-      '';
-    };
+      When enabled, diff-highlight will be configured as git's pager for
+      {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
+      filter for interactive staging.
+    '';
   };
 
   config =

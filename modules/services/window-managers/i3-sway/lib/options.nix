@@ -596,15 +596,11 @@ in
           '';
         };
 
-        forceWrapping = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Whether to force focus wrapping in tabbed or stacked containers.
+        forceWrapping = mkEnableOption ''
+          forcing focus wrapping in tabbed or stacked containers.
 
-            This option is deprecated, use {option}`focus.wrapping` instead.
-          '';
-        };
+          DEPRECATED, USE {option}`focus.wrapping` INSTEAD
+        '';
 
         mouseWarping = mkOption {
           type =
@@ -674,17 +670,11 @@ in
     '';
   };
 
-  workspaceAutoBackAndForth = mkOption {
-    type = types.bool;
-    default = false;
-    example = true;
-    description = ''
-      Assume you are on workspace "1: www" and switch to "2: IM" using
-      mod+2 because somebody sent you a message. You don’t need to remember
-      where you came from now, you can just press $mod+2 again to switch
-      back to "1: www".
-    '';
-  };
+  workspaceAutoBackAndForth = mkEnableOption ''
+    switching back to the previous workspace when selecting the current one again.
+
+    Assume you are on workspace "1: www" and switch to "2: IM" using mod+2 because somebody sent you a message. You don’t need to remember where you came from now, you can just press $mod+2 again to switch back to "1: www"
+  '';
 
   keycodebindings = mkOption {
     type = types.attrsOf (types.nullOr types.str);

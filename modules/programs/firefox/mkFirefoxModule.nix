@@ -561,16 +561,11 @@ in
                 description = "Declarative handlers configuration for MIME types and URL schemes.";
               };
 
-              containersForce = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Whether to force replace the existing containers configuration.
-                  This is recommended since ${appName} will replace the symlink on
-                  every launch, but note that you'll lose any existing configuration
-                  by enabling this.
-                '';
-              };
+              containersForce = mkEnableOption ''
+                force-replacing the existing containers configuration.
+
+                This is recommended since ${appName} will replace the symlink on every launch, but note that you'll lose any existing configuration
+              '';
 
               containers = mkOption {
                 type = types.attrsOf (
@@ -699,34 +694,18 @@ in
                             '';
                           };
 
-                          force = mkOption {
-                            description = ''
-                              Whether to override all previous firefox settings.
-
-                              This is required when using `settings`.
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
+                          force = mkEnableOption ''
+                            overriding all previous firefox settings.
+                            This is required when using `settings`
+                          '';
 
                           exhaustivePermissions = mkEnableOption "requiring explicit permission authorization for all configured extensions from {option}`${moduleName}.profiles.<profile>.extensions.packages` in {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`";
 
-                          exactPermissions = mkOption {
-                            description = ''
-                              When enabled,
-                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
-                              must specify the exact set of permissions that the
-                              extension will request.
+                          exactPermissions = mkEnableOption ''
+                            requiring {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions` to specify the exact set extension of permission sets that the extension will request.
 
-                              This means that if the authorized permissions are
-                              broader than what the extension requests, the
-                              assertion will fail.
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
+                            This means that if the authorized permissions are broader than what the extension requests, the assertion will fail.
+                          '';
 
                           settings = mkOption {
                             default = { };

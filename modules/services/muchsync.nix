@@ -11,6 +11,7 @@ let
   inherit (lib)
     escapeShellArg
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -52,24 +53,14 @@ let
       };
 
       local = {
-        checkForModifiedFiles = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Check for locally modified files.
-            Without this option, muchsync assumes that files in a maildir are
-            never edited.
+        checkForModifiedFiles = mkEnableOption ''
+          checking for locally modified files.
+          Without this option, muchsync assumes that files in a maildir are never edited.
 
-            {option}`checkForModifiedFiles` disables certain
-            optimizations so as to make muchsync at least check the timestamp on
-            every file, which will detect modified files at the cost of a longer
-            startup time.
+          {option}`checkForModifiedFiles` disables certain optimizations so as to make muchsync at least check the timestamp on every file, which will detect modified files at the cost of a longer startup time.
 
-            This option is useful if your software regularly modifies the
-            contents of mail files (e.g., because you are running offlineimap
-            with "synclabels = yes").
-          '';
-        };
+          This option is useful if your software regularly modifies the contents of mail files (e.g., because you are running offlineimap with "synclabels = yes")
+        '';
 
         importNew = mkOption {
           type = types.bool;
@@ -103,24 +94,14 @@ let
           '';
         };
 
-        checkForModifiedFiles = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Check for modified files on the remote side.
-            Without this option, muchsync assumes that files in a maildir are
-            never edited.
+        checkForModifiedFiles = mkEnableOption ''
+          Checking for modified files on the remote side.
+          Without this option, muchsync assumes that files in a maildir are never edited.
 
-            {option}`checkForModifiedFiles` disables certain
-            optimizations so as to make muchsync at least check the timestamp on
-            every file, which will detect modified files at the cost of a longer
-            startup time.
+          {option}`checkForModifiedFiles` disables certain optimizations so as to make muchsync at least check the timestamp on every file, which will detect modified files at the cost of a longer startup time.
 
-            This option is useful if your software regularly modifies the
-            contents of mail files (e.g., because you are running offlineimap
-            with "synclabels = yes").
-          '';
-        };
+          This option is useful if your software regularly modifies the contents of mail files (e.g., because you are running offlineimap with "synclabels = yes")
+        '';
 
         importNew = mkOption {
           type = types.bool;

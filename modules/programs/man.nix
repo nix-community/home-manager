@@ -44,20 +44,16 @@ in
         '';
       };
 
-      generateCaches = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to generate the manual page index caches using
-          {manpage}`mandb(8)`. This allows searching for a page or
-          keyword using utilities like {manpage}`apropos(1)`.
+      generateCaches = lib.mkEnableOption ''
+        the generation of the manual page index caches using
+        {manpage}`mandb(8)`. This allows searching for a page or
+        keyword using utilities like {manpage}`apropos(1)`.
 
-          This feature is disabled by default because it slows down
-          building. If you don't mind waiting a few more seconds when
-          Home Manager builds a new generation, you may safely enable
-          this option.
-        '';
-      };
+        This feature is disabled by default because it slows down
+        building. If you don't mind waiting a few more seconds when
+        Home Manager builds a new generation, you may safely enable
+        this option.
+      '';
     };
   };
 

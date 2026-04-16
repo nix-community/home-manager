@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     optional
     optionalAttrs
     types
@@ -51,7 +52,7 @@ in
   meta.maintainers = [ lib.maintainers.tadfisher ];
 
   options.services.emacs = {
-    enable = lib.mkEnableOption "the Emacs daemon";
+    enable = mkEnableOption "the Emacs daemon";
 
     package = mkOption {
       type = types.package;
@@ -76,7 +77,7 @@ in
     };
 
     client = {
-      enable = lib.mkEnableOption "generation of Emacs client desktop file";
+      enable = mkEnableOption "the generation of Emacs client desktop file";
       arguments = mkOption {
         type = with types; listOf str;
         default = [ "-c" ];
@@ -90,7 +91,7 @@ in
     # socket path, though allowing for such is not easy to do as systemd socket
     # units don't perform variable expansion for 'ListenStream'.
     socketActivation = {
-      enable = lib.mkEnableOption "systemd socket activation for the Emacs service";
+      enable = mkEnableOption "the systemd socket activation for the Emacs service";
     };
 
     startWithUserSession = mkOption {
@@ -107,16 +108,11 @@ in
       '';
     };
 
-    defaultEditor = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Whether to configure {command}`emacsclient` as the default
-        editor using the {env}`EDITOR` and {env}`VISUAL`
-        environment variables.
-      '';
-    };
+    defaultEditor = mkEnableOption ''
+      the configuration of {command}`emacsclient` as the default
+      editor using the {env}`EDITOR` and {env}`VISUAL`
+      environment variables.
+    '';
   };
 
   config = mkIf cfg.enable {

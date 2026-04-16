@@ -10,6 +10,7 @@ let
     mkIf
     mkMerge
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -61,7 +62,7 @@ in
 
   options = {
     programs.zed-editor = {
-      enable = lib.mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
+      enable = mkEnableOption "Zed, the high performance, multiplayer code editor from the creators of Atom and Tree-sitter";
 
       package = lib.mkPackageOption pkgs "zed-editor" { nullable = true; };
 
@@ -200,33 +201,19 @@ in
         '';
       };
 
-      installRemoteServer = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Whether to symlink the Zed's remote server binary to the expected
-          location. This allows remotely connecting to this system from a
-          distant Zed client.
+      installRemoteServer = mkEnableOption ''
+        symlinking the Zed's remote server binary to the expected location. This allows remotely connecting to this system from a distant Zed client.
 
-          For more information, consult the
-          ["Remote Server" section](https://wiki.nixos.org/wiki/Zed#Remote_Server)
-          in the wiki.
-        '';
-      };
+        For more information, consult the
+        ["Remote Server" section](https://wiki.nixos.org/wiki/Zed#Remote_Server)
+        in the wiki
+      '';
 
-      enableMcpIntegration = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to integrate the MCP server config from
-          {option}`programs.mcp.servers` into
-          {option}`programs.zed-editor.userSettings.context_servers`.
+      enableMcpIntegration = mkEnableOption ''
+        MCP server config integrations from {option}`programs.mcp.servers` into {option}`programs.zed-editor.userSettings.context_servers`.
 
-          Note: Settings defined in {option}`programs.zed-editor.userSettings.context_servers`
-          will take precedence over the generated MCP configuration.
-        '';
-      };
+        Note: Settings defined in {option}`programs.zed-editor.userSettings.context_servers` will take precedence over the generated MCP configuration
+      '';
 
       themes = mkOption {
         description = ''

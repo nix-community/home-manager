@@ -10,6 +10,7 @@ let
 
   inherit (lib)
     mkOption
+    mkEnableOption
     types
     ;
 in
@@ -23,7 +24,7 @@ in
   ];
 
   options.programs.delta = {
-    enable = lib.mkEnableOption "delta, a syntax highlighter for git diffs";
+    enable = mkEnableOption "delta, a syntax highlighter for git diffs";
 
     package = lib.mkPackageOption pkgs "delta" { };
 
@@ -54,27 +55,19 @@ in
       '';
     };
 
-    enableGitIntegration = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable git integration for delta.
+    enableGitIntegration = mkEnableOption ''
+      git integration for delta.
 
-        When enabled, delta will be configured as git's pager for
-        {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
-        filter for interactive staging.
-      '';
-    };
+      When enabled, delta will be configured as git's pager for
+      {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
+      filter for interactive staging.
+    '';
 
-    enableJujutsuIntegration = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable jujutsu integration for delta.
+    enableJujutsuIntegration = mkEnableOption ''
+      jujutsu integration for delta.
 
-        When enabled, delta will be configured as jujutsus's pager, diff filter, and merge tool.
-      '';
-    };
+      When enabled, delta will be configured as jujutsus's pager, diff filter, and merge tool.
+    '';
 
     finalPackage = mkOption {
       type = types.package;

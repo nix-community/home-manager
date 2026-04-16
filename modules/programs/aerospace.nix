@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
   cfg = config.programs.aerospace;
 
   tomlFormat = pkgs.formats.toml { };
@@ -59,40 +59,37 @@ in
   ];
 
   options.programs.aerospace = {
-    enable = lib.mkEnableOption "AeroSpace window manager";
+    enable = mkEnableOption "AeroSpace window manager";
 
     package = lib.mkPackageOption pkgs "aerospace" { nullable = true; };
 
     launchd = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Configure the launchd agent to manage the AeroSpace process.
+      enable = mkEnableOption ''
+        the configuration of the launchd agent to manage the AeroSpace process.
 
-          The first time this is enabled, macOS will prompt you to allow this background
-          item in System Settings.
+        The first time this is enabled, macOS will prompt you to allow this background
+        item in System Settings.
 
-          You can verify the service is running correctly from your terminal.
-          Run: `launchctl list | grep aerospace`
+        You can verify the service is running correctly from your terminal.
+        Run: `launchctl list | grep aerospace`
 
-          - A running process will show a Process ID (PID) and a status of 0, for example:
-            `12345	0	org.nix-community.home.aerospace`
+        - A running process will show a Process ID (PID) and a status of 0, for example:
+          `12345	0	org.nix-community.home.aerospace`
 
-          - If the service has crashed or failed to start, the PID will be a dash and the
-            status will be a non-zero number, for example:
-            `-	1	org.nix-community.home.aerospace`
+        - If the service has crashed or failed to start, the PID will be a dash and the
+          status will be a non-zero number, for example:
+          `-	1	org.nix-community.home.aerospace`
 
-          In case of failure, check the logs with `cat /tmp/aerospace.err.log`.
+        In case of failure, check the logs with `cat /tmp/aerospace.err.log`.
 
-          For more detailed service status, run `launchctl print gui/$(id -u)/org.nix-community.home.aerospace`.
+        For more detailed service status, run `launchctl print gui/$(id -u)/org.nix-community.home.aerospace`.
 
-          NOTE: Enabling this option will configure AeroSpace to **not** manage its own
-          launchd agent. Specifically, it will set `start-at-login = false` and
-          `after-login-command = []` in the configuration file, as those are now handled
-          by Home Manager and launchd instead.
-        '';
-      };
+        NOTE: Enabling this option will configure AeroSpace to **not** manage its own
+        launchd agent. Specifically, it will set `start-at-login = false` and
+        `after-login-command = []` in the configuration file, as those are now handled
+        by Home Manager and launchd instead.
+      '';
+
       keepAlive = mkOption {
         type = types.bool;
         default = true;

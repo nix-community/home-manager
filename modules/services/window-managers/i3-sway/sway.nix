@@ -320,32 +320,20 @@ let
         description = "The sway command to execute on state changes";
       };
 
-      locked = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Unless the flag --locked is set, the command
-          will not be run when a screen locking program
-          is active. If there is a matching binding with
-          and without --locked, the one with will be preferred
-          when locked and the one without will be
-          preferred when unlocked.
-        '';
-      };
+      locked = mkEnableOption ''
+        running the command when a screen locking program is active.
 
-      reload = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          If the --reload flag is given, the binding will
-          also be executed when the config is reloaded.
-          toggle bindings will not be executed on reload.
-          The --locked flag will operate as normal so if
-          the config is reloaded while locked and
-          --locked is not given, the binding will not be
-          executed.
-        '';
-      };
+        Otherwise, the command will not be run when a screen locking program is active.
+        If there is a matching binding with and without `--locked`, the one with will be preferred when locked and the one without will be preferred when unlocked
+      '';
+
+      reload = mkEnableOption ''
+        executing the binding when the config is reloaded.
+
+        The binding will also be executed when the config is reloaded.
+        Toggle bindings will not be executed on reload.
+        The `--locked` flag will operate as normal so if the config is reloaded while locked and `--locked` is not given, the binding will not be executed
+      '';
     };
   };
 

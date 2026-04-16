@@ -298,17 +298,14 @@ in
       '';
     };
 
-    assumeXdg = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether Home Manager should assume that Nix is configured to use XDG
-        base directories. Note that this doesn't change the behavior of Nix. To
-        do that, set nix.settings.use-xdg-base-directories instead. This option
-        is intended for settings in which use-xdg-base-directories is set
-        globally or nix.conf is unmanaged by Home Manager.
-      '';
-    };
+    assumeXdg = mkEnableOption ''
+      assuming that Nix is configured to use XDG base directories.
+
+      Note that this doesn't change the behavior of Nix.
+      To do that, set {option}`nix.settings.use-xdg-base-directories` instead.
+
+      This option is intended for settings in which use-xdg-base-directories is set globally or nix.conf is unmanaged by Home Manager
+    '';
 
     useXdg = mkOption {
       type = types.bool;

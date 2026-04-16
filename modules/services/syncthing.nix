@@ -330,9 +330,7 @@ in
 
   options = {
     services.syncthing = {
-      enable = lib.mkEnableOption ''
-        Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
-      '';
+      enable = mkEnableOption "Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.";
 
       cert = mkOption {
         type = with types; nullOr str;
@@ -517,14 +515,11 @@ in
                         '';
                       };
 
-                      autoAcceptFolders = mkOption {
-                        type = types.bool;
-                        default = false;
-                        description = ''
-                          Automatically create or share folders that this device advertises at the default path.
-                          See <https://docs.syncthing.net/users/config.html?highlight=autoaccept#config-file-format>.
-                        '';
-                      };
+                      autoAcceptFolders = mkEnableOption ''
+                        Automatically creating or sharing folders that this device advertises at the default path.
+
+                        See <https://docs.syncthing.net/users/config.html?highlight=autoaccept#config-file-format>
+                      '';
 
                     };
                   }
@@ -717,17 +712,10 @@ in
                           });
                       };
 
-                      copyOwnershipFromParent = mkOption {
-                        type = types.bool;
-                        default = false;
-                        description = ''
-                          On Unix systems, tries to copy file/folder ownership from
-                          the parent directory (the directory it’s located in).
-                          Requires running Syncthing as a privileged user, or
-                          granting it additional capabilities (e.g. CAP_CHOWN on
-                          Linux).
-                        '';
-                      };
+                      copyOwnershipFromParent = mkEnableOption ''
+                        copying file/folder ownership from the parent directory (the directory it's located in) on Unix.
+                        Requires running Syncthing as a privileged user, or granting it additional capabilities (e.g. CAP_CHOWN on Linux)
+                      '';
                     };
                   }
                 )

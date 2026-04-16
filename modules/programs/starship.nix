@@ -9,6 +9,7 @@ let
     literalExpression
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -23,7 +24,7 @@ in
   meta.maintainers = [ ];
 
   options.programs.starship = {
-    enable = lib.mkEnableOption "starship";
+    enable = mkEnableOption "starship";
 
     package = lib.mkPackageOption pkgs "starship" { };
 
@@ -94,18 +95,11 @@ in
       '';
     };
 
-    enableTransience = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        The TransientPrompt feature of Starship replaces previous prompts with a
-        custom string. This is only a valid option for the Fish shell.
+    enableTransience = mkEnableOption ''
+      The TransientPrompt feature of Starship which replaces previous prompts with a custom string. This is only a valid option for the Fish shell.
 
-        For documentation on how to change the default replacement string and
-        for more information visit
-        https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
-      '';
-    };
+      For documentation on how to change the default replacement string and for more information visit https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
+    '';
 
     configPath = mkOption {
       type = lib.types.str;

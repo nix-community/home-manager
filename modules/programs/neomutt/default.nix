@@ -455,16 +455,12 @@ in
         default = true;
       };
 
-      unmailboxes = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Set `unmailboxes *` at the start of account configurations.
-          It removes previous sidebar mailboxes when sourcing an account configuration.
+      unmailboxes = mkEnableOption ''
+        setting `unmailboxes *` at the start of account configurations.
+        It removes previous sidebar mailboxes when sourcing an account configuration.
 
-          See <http://www.mutt.org/doc/manual/#mailboxes> for more information.
-        '';
-      };
+        See <http://www.mutt.org/doc/manual/#mailboxes> for more information
+      '';
 
       extraConfig = mkOption {
         type = types.lines;

@@ -224,16 +224,13 @@ in
 
       enableDebug = mkEnableOption "debug logging";
 
-      enableInspect = mkOption {
-        type = bool;
-        default = false;
-        example = true;
-        description = ''
-          Inspect objects and find their CSS classes, experiment with live CSS styles, and lookup the current value of CSS properties.
+      enableInspect = mkEnableOption ''
+        the GTK inspector.
 
-          See <https://developer.gnome.org/documentation/tools/inspector.html>
-        '';
-      };
+        Inspect objects and find their CSS classes, experiment with live CSS styles, and lookup the current value of CSS properties.
+
+        See <https://developer.gnome.org/documentation/tools/inspector.html>
+      '';
 
       targets = mkOption {
         type = with lib.types; listOf str;

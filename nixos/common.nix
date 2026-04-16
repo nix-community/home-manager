@@ -145,17 +145,12 @@ in
 
     verbose = mkEnableOption "verbose output on activation";
 
-    enableLegacyProfileManagement = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable legacy profile management during activation. When
-        enabled, the Home Manager activation will produce a per-user
-        `home-manager` Nix profile, just like in the standalone installation of
-        Home Manager. Typically, this is not desired when Home Manager is
-        embedded in the system configuration.
-      '';
-    };
+    enableLegacyProfileManagement = mkEnableOption ''
+      legacy profile management during activation.
+
+      When enabled, the Home Manager activation will produce a per-user `home-manager` Nix profile, just like in the standalone installation of Home Manager.
+      Typically, this is not desired when Home Manager is embedded in the system configuration
+    '';
 
     users = mkOption {
       type = types.attrsOf hmModule;

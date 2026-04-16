@@ -56,18 +56,12 @@ let
       '';
     };
 
-    ignore_empty_history = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Work around a Gmail API quirk where an empty change history
-        is sometimes returned.
+    ignore_empty_history = mkEnableOption ''
+      ignoring empty Gmail change history responses.
 
-        See this
-        [GitHub issue](https://github.com/gauteh/lieer/issues/120)
-        for more details.
-      '';
-    };
+      Work around a Gmail API quirk where an empty change history is sometimes returned.
+      See this [GitHub issue](https://github.com/gauteh/lieer/issues/120) for more details
+    '';
 
     ignore_remote_labels = mkOption {
       type = types.listOf types.str;

@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   supportedBrowsers = {
     chromium = "Chromium";
@@ -26,12 +31,8 @@ let
       isProprietaryChrome = lib.hasPrefix "Google Chrome" name;
     in
     {
-      enable = mkOption {
+      enable = mkEnableOption name // {
         inherit visible;
-        type = types.bool;
-        default = false;
-        example = true;
-        description = "Whether to enable ${name}.";
       };
 
       package = mkOption {
