@@ -34,7 +34,7 @@ let
 
   inherit
     (
-      (import lib/file-type.nix {
+      (import ./lib/file-type.nix {
         inherit homeDirectory lib pkgs;
       })
     )
