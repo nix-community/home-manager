@@ -8,6 +8,7 @@ let
   inherit (lib)
     literalExpression
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -801,11 +802,7 @@ in
       package = lib.mkPackageOption pkgs "syncthing" { };
 
       tray = {
-        enable = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether to enable a syncthing tray service.";
-        };
+        enable = mkEnableOption "a syncthing tray service";
 
         command = mkOption {
           type = types.str;

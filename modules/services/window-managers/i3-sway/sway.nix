@@ -12,6 +12,7 @@ let
     mapAttrsToList
     mkIf
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -194,14 +195,7 @@ let
         '';
       };
 
-      bindkeysToCode = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Whether to make use of {option}`--to-code` in keybindings.
-        '';
-      };
+      bindkeysToCode = mkEnableOption "using {option}`--to-code` in keybindings";
 
       input = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
@@ -527,7 +521,7 @@ in
     ];
 
   options.wayland.windowManager.sway = {
-    enable = lib.mkEnableOption "sway wayland compositor";
+    enable = mkEnableOption "sway wayland compositor";
 
     package = mkOption {
       type = with types; nullOr package;
@@ -618,7 +612,7 @@ in
         '';
       };
 
-      xdgAutostart = lib.mkEnableOption ''
+      xdgAutostart = mkEnableOption ''
         autostart of applications using
         {manpage}`systemd-xdg-autostart-generator(8)`
       '';

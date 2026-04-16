@@ -5,6 +5,7 @@ let
     concatStringsSep
     mkIf
     mkOption
+    mkEnableOption
     optionalString
     types
     ;
@@ -145,14 +146,7 @@ in
         '';
       };
 
-      distributedBuilds = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to distribute builds to the machines listed in
-          {option}`nix.buildMachines`.
-        '';
-      };
+      distributedBuilds = mkEnableOption "distributing builds to the machines listed in {option}`nix.buildMachines`";
     };
   };
 

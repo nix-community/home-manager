@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.services.xsuspender;
 
@@ -85,11 +85,7 @@ let
         default = null;
       };
 
-      onlyOnBattery = mkOption {
-        description = "Whether to enable process suspend only on battery.";
-        type = types.bool;
-        default = false;
-      };
+      onlyOnBattery = mkEnableOption "process suspend only on battery";
 
       autoSuspendOnBattery = mkOption {
         description = ''
@@ -140,11 +136,7 @@ in
         };
       };
 
-      debug = mkOption {
-        description = "Whether to enable debug output.";
-        type = types.bool;
-        default = false;
-      };
+      debug = mkEnableOption "debug output";
 
       iniContent = mkOption {
         inherit (iniFormat) type;

@@ -14,6 +14,7 @@ let
     isString
     mkIf
     mkOption
+    mkEnableOption
     optionalString
     types
     ;
@@ -86,7 +87,7 @@ let
 
   sidebarModule = types.submodule {
     options = {
-      enable = lib.mkEnableOption "sidebar support";
+      enable = mkEnableOption "sidebar support";
 
       width = mkOption {
         type = types.int;
@@ -389,7 +390,7 @@ in
 {
   options = {
     programs.neomutt = {
-      enable = lib.mkEnableOption "the NeoMutt mail client";
+      enable = mkEnableOption "the NeoMutt mail client";
 
       package = lib.mkPackageOption pkgs "neomutt" { };
 
@@ -425,11 +426,7 @@ in
         description = "Sorting method on messages.";
       };
 
-      vimKeys = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Enable vim-like bindings.";
-      };
+      vimKeys = mkEnableOption "vim-like bindings";
 
       checkStatsInterval = mkOption {
         type = types.nullOr types.int;
@@ -450,13 +447,11 @@ in
         description = "Extra configuration appended to the end.";
       };
 
-      changeFolderWhenSourcingAccount =
-        lib.mkEnableOption "changing the folder when sourcing an account"
-        // {
-          default = true;
-        };
+      changeFolderWhenSourcingAccount = mkEnableOption "changing the folder when sourcing an account" // {
+        default = true;
+      };
 
-      sourcePrimaryAccount = lib.mkEnableOption "source the primary account by default" // {
+      sourcePrimaryAccount = mkEnableOption "sourcing the primary account by default" // {
         default = true;
       };
 

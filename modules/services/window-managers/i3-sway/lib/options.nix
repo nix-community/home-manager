@@ -7,7 +7,12 @@
   capitalModuleName ? moduleName,
 }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   isI3 = moduleName == "i3";
   isSway = !isI3;
@@ -54,11 +59,7 @@ let
         description = "Command that will be executed on startup.";
       };
 
-      always = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to run command on each ${moduleName} restart.";
-      };
+      always = mkEnableOption "running command on each ${moduleName} restart";
     }
     // lib.optionalAttrs isI3 {
       notification = mkOption {

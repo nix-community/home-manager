@@ -27,7 +27,6 @@ let
     str
     enum
     lines
-    bool
     attrs
     ;
 
@@ -133,17 +132,9 @@ in
           '';
         };
 
-        hideIcons = mkOption {
-          type = bool;
-          default = false;
-          description = "Hide match and plugin info icons.";
-        };
+        hideIcons = mkEnableOption "hiding match and plugin info icons";
 
-        ignoreExclusiveZones = mkOption {
-          type = bool;
-          default = false;
-          description = "Ignore exclusive zones, eg. Waybar.";
-        };
+        ignoreExclusiveZones = mkEnableOption "ignoring exclusive zones, eg. Waybar";
 
         layer = mkOption {
           type = enum [
@@ -156,23 +147,11 @@ in
           description = "Layer shell layer (background, bottom, top or overlay).";
         };
 
-        hidePluginInfo = mkOption {
-          type = bool;
-          default = false;
-          description = "Hide the plugin info panel.";
-        };
+        hidePluginInfo = mkEnableOption "hiding the plugin info panel";
 
-        closeOnClick = mkOption {
-          type = bool;
-          default = false;
-          description = "Close window when a click outside the main box is received.";
-        };
+        closeOnClick = mkEnableOption "closing the window when a click outside the main box is received";
 
-        showResultsImmediately = mkOption {
-          type = bool;
-          default = false;
-          description = "Show search results immediately when Anyrun starts.";
-        };
+        showResultsImmediately = mkEnableOption "showing search results immediately when Anyrun starts";
 
         maxEntries = mkOption {
           type = nullOr int;

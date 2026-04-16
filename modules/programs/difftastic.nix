@@ -109,13 +109,7 @@ in
     };
 
     jujutsu = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable jujutsu integration for difftastic.
-        '';
-      };
+      enable = mkEnableOption "jujutsu integration for difftastic";
     };
   };
 

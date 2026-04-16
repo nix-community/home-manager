@@ -1,18 +1,12 @@
 { lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 in
 {
   options.khal = {
-    enable = lib.mkEnableOption "khal access";
+    enable = mkEnableOption "khal access";
 
-    readOnly = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Keep khal from making any changes to this account.
-      '';
-    };
+    readOnly = mkEnableOption "read-only mode for this account";
 
     color = mkOption {
       type = types.nullOr types.str;

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.gnome-terminal;
 
@@ -70,11 +70,7 @@ let
 
   profileSubModule = types.submodule {
     options = {
-      default = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Whether this should be the default profile.";
-      };
+      default = mkEnableOption "this being the default profile";
 
       visibleName = mkOption {
         type = types.str;
@@ -150,11 +146,7 @@ let
         '';
       };
 
-      loginShell = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Run command as a login shell.";
-      };
+      loginShell = mkEnableOption "running command as a login shell";
 
       backspaceBinding = mkOption {
         default = "ascii-delete";
@@ -331,7 +323,7 @@ in
 
   options = {
     programs.gnome-terminal = {
-      enable = lib.mkEnableOption "Gnome Terminal";
+      enable = mkEnableOption "Gnome Terminal";
 
       package = lib.mkPackageOption pkgs "gnome-terminal" { nullable = true; };
 

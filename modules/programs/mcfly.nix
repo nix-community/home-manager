@@ -10,6 +10,7 @@ let
     optionalString
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -66,7 +67,7 @@ in
   ];
 
   options.programs.mcfly = {
-    enable = lib.mkEnableOption "mcfly";
+    enable = mkEnableOption "mcfly";
 
     package = lib.mkPackageOption pkgs "mcfly" { };
 
@@ -125,15 +126,9 @@ in
       '';
     };
 
-    fzf.enable = lib.mkEnableOption "McFly fzf integration";
+    fzf.enable = mkEnableOption "McFly fzf integration";
 
-    enableLightTheme = mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether to enable light mode theme.
-      '';
-    };
+    enableLightTheme = mkEnableOption "light mode theme";
 
     fuzzySearchFactor = mkOption {
       default = 0;

@@ -7,7 +7,12 @@
 let
   cfg = config.programs.zsh;
 
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   inherit (import ./lib.nix { inherit config lib; }) dotDirAbs mkShellVarPathStr;
 in
@@ -73,32 +78,11 @@ in
               '';
             };
 
-            ignoreAllDups = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                If a new command line being added to the history list
-                duplicates an older one, the older command is removed
-                from the list (even if it is not the previous event).
-              '';
-            };
+            ignoreAllDups = mkEnableOption "removing older duplicate commands when a duplicate is added to history";
 
-            saveNoDups = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Do not write duplicate entries into the history file.
-              '';
-            };
+            saveNoDups = mkEnableOption "ignoring duplicate entries in the history file";
 
-            findNoDups = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Do not display a line previously found in the history
-                file.
-              '';
-            };
+            findNoDups = mkEnableOption "hiding history lines that were previously found";
 
             ignoreSpace = mkOption {
               type = types.bool;
@@ -109,17 +93,9 @@ in
               '';
             };
 
-            expireDuplicatesFirst = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Expire duplicates first.";
-            };
+            expireDuplicatesFirst = mkEnableOption "expiring duplicate history entries first";
 
-            extended = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Save timestamp into the history file.";
-            };
+            extended = mkEnableOption "saving timestamps into the history file";
 
             share = mkOption {
               type = types.bool;
@@ -132,7 +108,7 @@ in
 
       historySubstringSearchModule = types.submodule {
         options = {
-          enable = lib.mkEnableOption "history substring search";
+          enable = mkEnableOption "history substring search";
           searchUpKey = mkOption {
             type = with types; either (listOf str) str;
             default = [ "^[[A" ];

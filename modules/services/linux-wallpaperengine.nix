@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.services.linux-wallpaperengine;
 in
@@ -13,7 +13,7 @@ in
   meta.maintainers = [ lib.hm.maintainers.ckgxrg ];
 
   options.services.linux-wallpaperengine = {
-    enable = lib.mkEnableOption "linux-wallpaperengine, an implementation of Wallpaper Engine functionality";
+    enable = mkEnableOption "linux-wallpaperengine, an implementation of Wallpaper Engine functionality";
 
     package = lib.mkPackageOption pkgs "linux-wallpaperengine" { };
 
@@ -82,11 +82,7 @@ in
             };
 
             audio = {
-              silent = mkOption {
-                type = types.bool;
-                default = false;
-                description = "Mutes all sound of the wallpaper.";
-              };
+              silent = mkEnableOption "muting all wallpaper sound";
 
               automute = mkOption {
                 type = types.bool;

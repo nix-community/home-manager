@@ -9,6 +9,7 @@ let
     concatStringsSep
     mkIf
     mkOption
+    mkEnableOption
     mkRenamedOptionModule
     types
     ;
@@ -43,13 +44,7 @@ let
   };
 
   settingsOpts = {
-    drop_non_existing_label = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Allow missing labels on the Gmail side to be dropped.
-      '';
-    };
+    drop_non_existing_label = mkEnableOption "allowing missing labels on the Gmail side to be dropped";
 
     file_extension = mkOption {
       type = types.str;
@@ -114,13 +109,7 @@ let
       '';
     };
 
-    replace_slash_with_dot = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Replace '/' with '.' in Gmail labels.
-      '';
-    };
+    replace_slash_with_dot = mkEnableOption "replacing '/' with '.' in Gmail labels";
 
     timeout = mkOption {
       type = types.ints.unsigned;
@@ -132,7 +121,7 @@ let
   };
 
   syncOpts = {
-    enable = lib.mkEnableOption "lieer synchronization service";
+    enable = mkEnableOption "lieer synchronization service";
 
     frequency = mkOption {
       type = types.str;
@@ -149,7 +138,7 @@ let
   };
 
   lieerOpts = {
-    enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
+    enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
@@ -242,7 +231,7 @@ in
 
   options = {
     programs.lieer = {
-      enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
+      enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
       package = lib.mkPackageOption pkgs "lieer" { };
     };

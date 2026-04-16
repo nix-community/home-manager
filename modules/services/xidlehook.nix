@@ -74,19 +74,9 @@ in
 
     detect-sleep = mkEnableOption "detecting when the system wakes up from a suspended state and resetting the idle timer";
 
-    not-when-fullscreen = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = "Disable locking when a fullscreen application is in use.";
-    };
+    not-when-fullscreen = mkEnableOption "disabling locking when a fullscreen application is in use";
 
-    not-when-audio = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = "Disable locking when audio is playing.";
-    };
+    not-when-audio = mkEnableOption "disabling locking when audio is playing";
 
     once = mkEnableOption "running the program once and exiting";
 

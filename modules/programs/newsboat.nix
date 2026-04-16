@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.newsboat;
   wrapQuote = x: ''"${x}"'';
@@ -44,7 +49,7 @@ in
 
   options = {
     programs.newsboat = {
-      enable = lib.mkEnableOption "the Newsboat feed reader";
+      enable = mkEnableOption "the Newsboat feed reader";
 
       package = lib.mkPackageOption pkgs "newsboat" { nullable = true; };
 
@@ -105,13 +110,7 @@ in
         description = "How many threads to use for updating the feeds.";
       };
 
-      autoReload = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable automatic reloading while newsboat is running.
-        '';
-      };
+      autoReload = mkEnableOption "automatically reloading while newsboat is running";
 
       reloadTime = mkOption {
         type = types.nullOr types.int;
@@ -144,10 +143,10 @@ in
       };
 
       autoFetchArticles = {
-        enable = lib.mkEnableOption "automatic article fetcher timer";
+        enable = mkEnableOption "automatic article fetcher timer";
 
-        onCalendar = lib.mkOption {
-          type = lib.types.str;
+        onCalendar = mkOption {
+          type = types.str;
           default = "daily";
           example = "weekly";
           description = ''
@@ -159,10 +158,10 @@ in
       };
 
       autoVacuum = {
-        enable = lib.mkEnableOption "automatic cleaning of the newsboat cache";
+        enable = mkEnableOption "automatic cleaning of the newsboat cache";
 
-        onCalendar = lib.mkOption {
-          type = lib.types.str;
+        onCalendar = mkOption {
+          type = types.str;
           default = "weekly";
           example = "monthly";
           description = ''

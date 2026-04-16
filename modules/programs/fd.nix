@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 in
 {
   meta.maintainers = [ lib.maintainers.uncenter ];
 
   options.programs.fd = {
-    enable = lib.mkEnableOption "fd, a simple, fast and user-friendly alternative to {command}`find`";
+    enable = mkEnableOption "fd, a simple, fast and user-friendly alternative to {command}`find`";
 
     ignores = mkOption {
       type = types.listOf types.str;
@@ -23,13 +23,7 @@ in
       description = "List of paths that should be globally ignored.";
     };
 
-    hidden = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Search hidden files and directories ({option}`--hidden` argument).
-      '';
-    };
+    hidden = mkEnableOption "searching hidden files and directories ({option}`--hidden` argument)";
 
     extraOptions = mkOption {
       type = types.listOf types.str;

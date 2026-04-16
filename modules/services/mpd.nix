@@ -5,20 +5,19 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.services.mpd;
 in
 {
   options = {
     services.mpd = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable MPD, the music player daemon.
-        '';
-      };
+      enable = mkEnableOption "MPD, the music player daemon";
 
       package = lib.mkPackageOption pkgs "mpd" { };
 

@@ -24,6 +24,7 @@ let
     mkMerge
     mkOption
     mkOptionDefault
+    mkEnableOption
     optionalString
     optional
     setAttrByPath
@@ -200,14 +201,9 @@ let
 in
 {
   options = setAttrByPath modulePath {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Whether to enable ${appName}.${optionalString (description != null) " ${description}"}
-      '';
-    };
+    enable = mkEnableOption ''
+      ${appName}.${optionalString (description != null) " ${description}"}
+    '';
 
     package = mkOption {
       type = with types; nullOr package;
@@ -714,18 +710,7 @@ in
                             type = types.bool;
                           };
 
-                          exhaustivePermissions = mkOption {
-                            description = ''
-                              When enabled, the user must authorize requested
-                              permissions for all extensions from
-                              {option}`${moduleName}.profiles.<profile>.extensions.packages`
-                              in
-                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
+                          exhaustivePermissions = mkEnableOption "requiring explicit permission authorization for all configured extensions from {option}`${moduleName}.profiles.<profile>.extensions.packages` in {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`";
 
                           exactPermissions = mkOption {
                             description = ''
@@ -788,15 +773,7 @@ in
                                       for a list of relevant permissions.
                                     '';
                                   };
-                                  force = mkOption {
-                                    type = types.bool;
-                                    default = false;
-                                    example = true;
-                                    description = ''
-                                      Forcibly override any existing configuration for
-                                      this extension.
-                                    '';
-                                  };
+                                  force = mkEnableOption "forcibly overriding existing configuration for this extension";
                                 };
                               }
                             );
@@ -922,16 +899,7 @@ in
       description = "Attribute set of ${appName} profiles.";
     };
 
-    enableGnomeExtensions = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable the GNOME Shell native host connector. Note, you
-        also need to set the NixOS option
-        `services.gnome.gnome-browser-connector.enable` to
-        `true`.
-      '';
-    };
+    enableGnomeExtensions = mkEnableOption "the GNOME Shell native host connector. Note: you also need to set the NixOS option {option}`services.gnome.gnome-browser-connector.enable` to `true`";
 
     pkcs11Modules = mkOption {
       type = types.listOf types.package;

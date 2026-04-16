@@ -10,6 +10,7 @@ let
     literalExpression
     mapAttrsToList
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -116,35 +117,11 @@ let
         '';
       };
 
-      forwardX11 = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Specifies whether X11 connections will be automatically redirected
-          over the secure channel and {env}`DISPLAY` set.
-        '';
-      };
+      forwardX11 = mkEnableOption "automatic X11 connection forwarding over the secure channel and {env}`DISPLAY` set";
 
-      forwardX11Trusted = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Specifies whether remote X11 clients will have full access to the
-          original X11 display.
-        '';
-      };
+      forwardX11Trusted = mkEnableOption "trusted X11 forwarding with full access to the original X11 display";
 
-      identitiesOnly = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Specifies that ssh should only use the authentication
-          identity explicitly configured in the
-          {file}`~/.ssh/config` files or passed on the
-          ssh command-line, even if {command}`ssh-agent`
-          offers more identities.
-        '';
-      };
+      identitiesOnly = mkEnableOption "only using the authentication identity explicitly configured in the {file}`~/.ssh/config` files or passed on the ssh command-line, even if {command}`ssh-agent` offers more identities";
 
       identityFile = mkOption {
         type = with types; either (listOf str) (nullOr str);
@@ -486,7 +463,7 @@ in
     } renamedOptions;
 
   options.programs.ssh = {
-    enable = lib.mkEnableOption "SSH client configuration";
+    enable = mkEnableOption "SSH client configuration";
 
     package = lib.mkPackageOption pkgs "openssh" {
       nullable = true;

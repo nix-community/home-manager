@@ -9,6 +9,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     optional
     optionalString
     types
@@ -184,7 +185,7 @@ in
 
   options = {
     services.gpg-agent = {
-      enable = lib.mkEnableOption "GnuPG private key agent";
+      enable = mkEnableOption "GnuPG private key agent";
 
       defaultCacheTtl = mkOption {
         type = types.nullOr types.int;
@@ -226,13 +227,7 @@ in
         '';
       };
 
-      enableSshSupport = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to use the GnuPG key agent for SSH keys.
-        '';
-      };
+      enableSshSupport = mkEnableOption "the use of the GnuPG key agent for SSH keys";
 
       sshKeys = mkOption {
         type = types.nullOr (types.listOf types.str);
@@ -242,22 +237,9 @@ in
         '';
       };
 
-      enableExtraSocket = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable extra socket of the GnuPG key agent (useful for GPG
-          Agent forwarding).
-        '';
-      };
+      enableExtraSocket = mkEnableOption "extra socket of the GnuPG key agent (useful for GPG Agent forwarding)";
 
-      verbose = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to produce verbose output.
-        '';
-      };
+      verbose = mkEnableOption "verbose output";
 
       grabKeyboardAndMouse = mkOption {
         type = types.bool;

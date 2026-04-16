@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.urxvt;
 in
 {
   options.programs.urxvt = {
-    enable = lib.mkEnableOption "rxvt-unicode terminal emulator";
+    enable = mkEnableOption "rxvt-unicode terminal emulator";
 
     package = lib.mkPackageOption pkgs "rxvt-unicode" { };
 
@@ -109,18 +109,10 @@ in
         description = "Whether to scroll to bottom on keyboard input.";
       };
 
-      scrollOnOutput = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to scroll to bottom on TTY output.";
-      };
+      scrollOnOutput = mkEnableOption "scrolling to bottom on TTY output";
     };
 
-    transparent = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether to enable pseudo-transparency.";
-    };
+    transparent = mkEnableOption "pseudo-transparency";
 
     shading = mkOption {
       type = types.ints.between 0 200;

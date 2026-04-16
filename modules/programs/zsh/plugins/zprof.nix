@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkEnableOption;
 
   cfg = config.programs.zsh;
 in
@@ -13,15 +13,7 @@ in
     (lib.mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
   ];
 
-  options.programs.zsh.zprof = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Enable zprof in your zshrc.
-      '';
-    };
-  };
+  options.programs.zsh.zprof.enable = mkEnableOption "zprof in your zshrc";
 
   config = lib.mkIf cfg.zprof.enable {
     programs.zsh.initContent = lib.mkMerge [

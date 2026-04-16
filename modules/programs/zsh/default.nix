@@ -195,11 +195,7 @@ in
         };
 
         autosuggestion = {
-          enable = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Enable zsh autosuggestions";
-          };
+          enable = mkEnableOption "zsh autosuggestions";
 
           highlight = mkOption {
             type = types.nullOr types.str;

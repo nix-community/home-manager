@@ -19,14 +19,7 @@ in
   meta.maintainers = [ lib.maintainers.justinlovinger ];
 
   options.programs.dircolors = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to manage {file}`.dir_colors`
-        and set `LS_COLORS`.
-      '';
-    };
+    enable = lib.mkEnableOption "the management of {file}`.dir_colors` and set `LS_COLORS`";
 
     package = lib.mkPackageOption pkgs "dircolors" { default = "coreutils"; };
 

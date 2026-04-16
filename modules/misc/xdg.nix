@@ -11,6 +11,7 @@ let
     mkOptionDefault
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -42,7 +43,7 @@ let
 in
 {
   options.xdg = {
-    enable = lib.mkEnableOption "management of XDG base directories";
+    enable = mkEnableOption "management of XDG base directories";
 
     cacheFile = mkOption {
       type = fileType "xdg.cacheFile" "{var}`xdg.cacheHome`" cfg.cacheHome;
@@ -135,14 +136,7 @@ in
       '';
     };
 
-    localBinInPath = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to add {option}`xdg.binHome` to {env}`PATH` when
-        {option}`xdg.enable` is enabled.
-      '';
-    };
+    localBinInPath = mkEnableOption "adding {option}`xdg.binHome` to {env}`PATH` when {option}`xdg.enable` is enabled";
   };
 
   config = lib.mkMerge [

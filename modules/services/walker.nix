@@ -77,12 +77,7 @@ in
       description = "The custom theme used by walker. Setting this option overrides `settings.theme`.";
     };
 
-    systemd.enable = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = "Whatever to enable Walker's Systemd Unit.";
-    };
+    systemd.enable = mkEnableOption "Walker's systemd unit";
   };
 
   config = mkIf cfg.enable (mkMerge [

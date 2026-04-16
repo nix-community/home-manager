@@ -13,7 +13,6 @@ let
     mkIf
     mkOption
     optionalAttrs
-    types
     ;
 
   cfg = config.services.davmail;
@@ -33,12 +32,7 @@ in
 
     package = lib.mkPackageOption pkgs "davmail" { };
 
-    imitateOutlook = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether DavMail pretends to be Outlook.";
-      example = true;
-    };
+    imitateOutlook = mkEnableOption "DavMail pretending to be Outlook";
 
     settings = mkOption {
       inherit (javaProperties) type;

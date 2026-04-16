@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib) mkIf mkOption mkEnableOption;
 
   cfg = config.programs.kubecolor;
   yamlFormat = pkgs.formats.yaml { };
@@ -15,18 +15,11 @@ in
   meta.maintainers = with lib.maintainers; [ ajgon ];
 
   options.programs.kubecolor = {
-    enable = lib.mkEnableOption "kubecolor - Colorize your kubectl output";
+    enable = mkEnableOption "kubecolor - Colorize your kubectl output";
 
     package = lib.mkPackageOption pkgs "kubecolor" { };
 
-    enableAlias = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        When set to true, it will create an alias for kubectl pointing to
-        kubecolor, thus making kubecolor the default kubectl client.
-      '';
-    };
+    enableAlias = mkEnableOption "a kubectl alias pointing to kubecolor, thus making kubecolor the default kubectl client";
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf types;
+  inherit (lib) mkEnableOption mkIf types;
 
   cfg = config.programs.z-lua;
 
@@ -22,7 +22,7 @@ in
   meta.maintainers = [ ];
 
   options.programs.z-lua = {
-    enable = lib.mkEnableOption "z.lua";
+    enable = mkEnableOption "z.lua";
 
     package = lib.mkPackageOption pkgs "z-lua" { };
 
@@ -45,13 +45,7 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableAliases = lib.mkOption {
-      default = false;
-      type = types.bool;
-      description = ''
-        Whether to enable recommended z.lua aliases.
-      '';
-    };
+    enableAliases = mkEnableOption "recommended z.lua aliases";
   };
 
   config = mkIf cfg.enable {

@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.accounts.calendar;
 
@@ -91,14 +91,7 @@ let
           '';
         };
 
-        primary = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Whether this is the primary account. Only one account may be
-            set as primary.
-          '';
-        };
+        primary = mkEnableOption "marking this as the primary account. Only one account may be set as primary";
 
         primaryCollection = mkOption {
           type = types.nullOr types.str;

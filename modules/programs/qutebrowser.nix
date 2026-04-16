@@ -11,6 +11,7 @@ let
     mapAttrsToList
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -63,7 +64,7 @@ let
 in
 {
   options.programs.qutebrowser = {
-    enable = lib.mkEnableOption "qutebrowser";
+    enable = mkEnableOption "qutebrowser";
 
     package = lib.mkPackageOption pkgs "qutebrowser" { nullable = true; };
 
@@ -75,13 +76,7 @@ in
       '';
     };
 
-    loadAutoconfig = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Load settings configured via the GUI.
-      '';
-    };
+    loadAutoconfig = mkEnableOption "loading settings configured via the GUI";
 
     searchEngines = mkOption {
       type = types.attrsOf types.str;

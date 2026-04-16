@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.mujmap;
 
@@ -54,14 +54,7 @@ let
     };
 
   tagsOpts = {
-    lowercase = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        If true, translate all mailboxes to lowercase names when mapping to notmuch
-        tags.
-      '';
-    };
+    lowercase = mkEnableOption "lowercasing mailbox names when mapping to notmuch tags";
 
     directory_separator = mkOption {
       type = types.str;
@@ -239,7 +232,7 @@ let
   };
 
   mujmapOpts = {
-    enable = lib.mkEnableOption "mujmap JMAP synchronization for notmuch";
+    enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
 
     notmuchSetupWarning = mkOption {
       type = types.bool;
@@ -279,7 +272,7 @@ in
 
   options = {
     programs.mujmap = {
-      enable = lib.mkEnableOption "mujmap Gmail synchronization for notmuch";
+      enable = mkEnableOption "mujmap Gmail synchronization for notmuch";
 
       package = lib.mkPackageOption pkgs "mujmap" { };
     };

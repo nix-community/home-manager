@@ -6,7 +6,12 @@
 }:
 
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   inherit (config.home) stateVersion;
 
@@ -555,11 +560,7 @@ in
       '';
     };
 
-    home.preferXdgDirectories = lib.mkEnableOption "" // {
-      description = ''
-        Whether to make programs use XDG directories whenever supported.
-      '';
-    };
+    home.preferXdgDirectories = mkEnableOption "making programs use XDG directories whenever supported";
   };
 
   config = {

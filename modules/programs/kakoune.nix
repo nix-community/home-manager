@@ -69,13 +69,7 @@ let
         '';
       };
 
-      once = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Remove the hook after running it once.
-        '';
-      };
+      once = mkEnableOption "removing the hook after running it once";
 
       group = mkOption {
         type = types.nullOr types.str;
@@ -181,13 +175,7 @@ let
         '';
       };
 
-      alignWithTabs = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Use tabs for the align command.
-        '';
-      };
+      alignWithTabs = mkEnableOption "using tabs for the align command";
 
       autoInfo = mkOption {
         type = types.nullOr (
@@ -273,13 +261,7 @@ let
         type = types.nullOr (
           types.submodule {
             options = {
-              setTitle = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Change the title of the terminal emulator.
-                '';
-              };
+              setTitle = mkEnableOption "changing terminal emulator title";
 
               statusLine = mkOption {
                 type = types.enum [
@@ -305,13 +287,7 @@ let
                 '';
               };
 
-              enableMouse = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Whether to enable mouse support.
-                '';
-              };
+              enableMouse = mkEnableOption "mouse support";
 
               shiftFunctionKeys = mkOption {
                 type = types.nullOr types.ints.unsigned;
@@ -331,15 +307,7 @@ let
         '';
       };
 
-      showMatching = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Highlight the matching char of the character under the
-          selections' cursor using the `MatchingChar`
-          face.
-        '';
-      };
+      showMatching = mkEnableOption "highlighting the matching char of the character under the selections' cursor using the `MatchingChar` face";
 
       wrapLines = mkOption {
         type = types.nullOr (
@@ -347,21 +315,9 @@ let
             options = {
               enable = mkEnableOption "the wrap lines highlighter";
 
-              word = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Wrap at word boundaries instead of codepoint boundaries.
-                '';
-              };
+              word = mkEnableOption "wrapping at word boundaries instead of codepoint boundaries";
 
-              indent = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Preserve line indentation when wrapping.
-                '';
-              };
+              indent = mkEnableOption "preserving line indentation when wrapping";
 
               maxWidth = mkOption {
                 type = types.nullOr types.ints.unsigned;
@@ -396,21 +352,9 @@ let
             options = {
               enable = mkEnableOption "the number lines highlighter";
 
-              relative = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Show line numbers relative to the main cursor line.
-                '';
-              };
+              relative = mkEnableOption "relative line numbers";
 
-              highlightCursor = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Highlight the cursor line with a separate face.
-                '';
-              };
+              highlightCursor = mkEnableOption "highlighting the cursor line with a separate face";
 
               separator = mkOption {
                 type = types.nullOr types.str;
@@ -664,15 +608,7 @@ in
         description = "kakoune configuration options.";
       };
 
-      defaultEditor = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to configure {command}`kak` as the default
-          editor using the {env}`EDITOR` and {env}`VISUAL`
-          environment variables.
-        '';
-      };
+      defaultEditor = mkEnableOption "configuring {command}`kak` as the default editor using the {env}`EDITOR` and {env}`VISUAL` environment variables";
 
       extraConfig = mkOption {
         type = types.lines;

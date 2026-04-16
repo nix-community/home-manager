@@ -9,6 +9,7 @@ let
     concatStringsSep
     literalExpression
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -94,7 +95,7 @@ in
 {
   options = {
     programs.vim = {
-      enable = lib.mkEnableOption "Vim";
+      enable = mkEnableOption "Vim";
 
       plugins = mkOption {
         type = with types; listOf (either str package);
@@ -157,15 +158,7 @@ in
         example = "pkgs.vim";
       };
 
-      defaultEditor = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to configure {command}`vim` as the default
-          editor using the {env}`EDITOR` and {env}`VISUAL`
-          environment variables.
-        '';
-      };
+      defaultEditor = mkEnableOption "configuring {command}`vim` as the default editor using the {env}`EDITOR` and {env}`VISUAL` environment variables";
     };
   };
 

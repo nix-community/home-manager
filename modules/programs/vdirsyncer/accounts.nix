@@ -1,12 +1,12 @@
 { lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   collection = types.either types.str (types.listOf types.str);
 in
 {
   options.vdirsyncer = {
-    enable = lib.mkEnableOption "synchronization using vdirsyncer";
+    enable = mkEnableOption "synchronization using vdirsyncer";
 
     urlCommand = mkOption {
       type = types.nullOr (types.listOf types.str);
@@ -118,14 +118,7 @@ in
       '';
     };
 
-    useVcard4 = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Specifies whether vdirsyncer should request vCards in version 4.0.
-        If set to `false` then vdirsyncer will default to version 3.0.
-      '';
-    };
+    useVcard4 = mkEnableOption "requesting vCard version 4.0. Else, uses vCard version 3.0";
 
     verify = mkOption {
       type = types.nullOr types.path;
