@@ -24,7 +24,8 @@ let
     vicmd = "bindkey -a";
   };
 
-  inherit (import ./lib.nix { inherit config lib; }) homeDir dotDirAbs dotDirRel;
+  zshLib = import ./lib.nix { inherit config lib; };
+  inherit (zshLib) homeDir dotDirAbs dotDirRel;
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -478,6 +479,8 @@ in
         }
 
         {
+          lib.zsh = zshLib;
+
           home.packages = [
             cfg.package
           ]
