@@ -93,7 +93,7 @@ let
       [ "[[${name}]]" ]
       ++ mapAttrsToList (n: v: n + "=" + v) (
         {
-          address = address;
+          inherit address;
           realname = realName;
           sendmail_command = optionalString (alot.sendMailCommand != null) alot.sendMailCommand;
         }
@@ -138,7 +138,7 @@ let
         submoduleToAttrs = m: lib.filterAttrs (name: v: name != "_module" && v != null) m;
       in
       lib.generators.toINI { mkSectionName = mk2ndLevelSectionName; } (
-        lib.mapAttrs (name: x: submoduleToAttrs x) cfg.tags
+        lib.mapAttrs (_name: submoduleToAttrs) cfg.tags
       )
     )
     + ''

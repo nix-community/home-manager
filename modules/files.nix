@@ -30,14 +30,16 @@ let
     in
     sortedFiles;
 
-  fileOverlapResolution = config.home.fileOverlapResolution;
+  inherit (config.home) fileOverlapResolution homeDirectory;
 
-  homeDirectory = config.home.homeDirectory;
-
-  fileType =
-    (import lib/file-type.nix {
-      inherit homeDirectory lib pkgs;
-    }).fileType;
+  inherit
+    (
+      (import ./lib/file-type.nix {
+        inherit homeDirectory lib pkgs;
+      })
+    )
+    fileType
+    ;
 
   sourceStorePath =
     file:
@@ -98,7 +100,7 @@ in
       (
         let
           dups = lib.attrNames (
-            lib.filterAttrs (n: v: v > 1) (
+            lib.filterAttrs (_n: v: v > 1) (
               lib.foldAttrs (acc: v: acc + v) 0 (map (v: { ${v.target} = 1; }) cfg)
             )
           );

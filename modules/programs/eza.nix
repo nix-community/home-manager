@@ -107,7 +107,7 @@ in
     package = lib.mkPackageOption pkgs "eza" { nullable = true; };
 
     theme = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Written to {file}`$XDG_CONFIG_HOME/eza/theme.yml`

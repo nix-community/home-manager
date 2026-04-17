@@ -78,7 +78,7 @@ in
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     keymap = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = literalExpression ''
         {
@@ -105,7 +105,7 @@ in
     };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = literalExpression ''
         {
@@ -130,7 +130,7 @@ in
     };
 
     theme = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = literalExpression ''
         {

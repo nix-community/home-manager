@@ -72,7 +72,7 @@ in
     };
 
     keyBindings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
 
       default = { };
 
@@ -104,7 +104,7 @@ in
     };
 
     theme = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
 
       default = {
         useCustomTheme = false;
@@ -144,14 +144,12 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."clipse/config.json".source = jsonFormat.generate "settings" {
-      allowDuplicates = cfg.allowDuplicates;
+      inherit (cfg) allowDuplicates imageDisplay keyBindings;
       historyFile = "clipboard_history.json";
       maxHistory = cfg.historySize;
       logFile = "clipse.log";
       themeFile = "custom_theme.json";
       tempDir = "tmp_files";
-      keyBindings = cfg.keyBindings;
-      imageDisplay = cfg.imageDisplay;
     };
 
     xdg.configFile."clipse/custom_theme.json".source = jsonFormat.generate "theme" cfg.theme;

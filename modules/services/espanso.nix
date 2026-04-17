@@ -83,7 +83,7 @@ in
       };
 
       configs = mkOption {
-        type = yaml.type;
+        inherit (yaml) type;
         default = {
           default = { };
         };
@@ -106,7 +106,7 @@ in
       };
 
       matches = mkOption {
-        type = yaml.type;
+        inherit (yaml) type;
         default = {
           default.matches = [ ];
         };

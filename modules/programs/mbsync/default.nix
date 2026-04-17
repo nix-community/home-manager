@@ -27,20 +27,20 @@ let
   # Given a SINGLE group's channels attribute set, return true if ANY of the channel's
   # patterns use the invalidOption attribute set value name.
   channelInvalidOption =
-    channels: invalidOption: any (c: c) (mapAttrsToList (c: lib.hasAttr invalidOption) channels);
+    channels: invalidOption: any (c: c) (mapAttrsToList (_c: lib.hasAttr invalidOption) channels);
 
   # Given a SINGLE account's groups attribute set, return true if ANY of the account's group's channel's patterns use the invalidOption attribute set value name.
   groupInvalidOption =
     groups: invalidOption:
     any (g: g) (
-      mapAttrsToList (groupName: groupVals: channelInvalidOption groupVals.channels invalidOption) groups
+      mapAttrsToList (_groupName: groupVals: channelInvalidOption groupVals.channels invalidOption) groups
     );
 
   # Given all accounts (ensure that accounts passed in here ARE mbsync-using accounts)
   # return true if ANY of the account's groups' channels' patterns use the
   # invalidOption attribute set value name.
   accountInvalidOption =
-    accounts: invalidOption:
+    _accounts: invalidOption:
     any (a: a) (map (account: groupInvalidOption account.mbsync.groups invalidOption) mbsyncAccounts);
 
   genTlsConfig =
@@ -203,16 +203,14 @@ let
       genChannelStrings =
         groupName: channels:
         lib.optionals (channels != { }) (
-          mapAttrsToList (channelName: info: genChannelString groupName info) channels
+          mapAttrsToList (_channelName: info: genChannelString groupName info) channels
         );
       # Given a group, return a string that configures all the channels within
       # the group.
       genGroupsChannels = group: concatStringsSep "\n" (genChannelStrings group.name group.channels);
       # Generate all channel configurations for all groups for this account.
     in
-    concatStringsSep "\n" (
-      lib.remove "" (mapAttrsToList (name: group: genGroupsChannels group) groups)
-    );
+    concatStringsSep "\n" (lib.remove "" (mapAttrsToList (_name: genGroupsChannels) groups));
 
   # Given the attr set of groups, return a string which maps channels to groups
   genAccountGroups =
@@ -221,7 +219,7 @@ let
       # Given the name of the group and the attribute set of channels, make
       # make "Channel <grpName>-<chnName>" for each channel to list os strings
       genChannelStrings =
-        groupName: channels: mapAttrsToList (name: info: "Channel ${groupName}-${name}") channels;
+        groupName: channels: mapAttrsToList (name: _info: "Channel ${groupName}-${name}") channels;
       # Take in 1 group, if the group has channels specified, construct the
       # "Group <grpName>" header and each of the channels.
       genGroupChannelString =
@@ -234,7 +232,7 @@ let
       # Given set of groups, generates list of strings, where each string is one
       # of the groups and its constituent channels.
       genGroupsStrings = mapAttrsToList (
-        name: info: concatStringsSep "\n" (genGroupChannelString groups.${name})
+        name: _info: concatStringsSep "\n" (genGroupChannelString groups.${name})
       ) groups;
       # Join all non-empty groups.
       combined = concatStringsSep "\n\n" (lib.remove "" genGroupsStrings) + "\n";
@@ -250,7 +248,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.KarlJoad ];
+  meta.maintainers = [ lib.maintainers.ravenjoad ];
 
   options = {
     programs.mbsync = {

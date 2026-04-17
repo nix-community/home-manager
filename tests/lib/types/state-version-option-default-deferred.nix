@@ -67,7 +67,7 @@ let
 in
 {
   options.test.values = lib.mapAttrs (
-    name: case:
+    _name: case:
     lib.mkOption {
       type = attrSetOfString;
       default = { };
@@ -114,12 +114,12 @@ in
       };
 
       asserts.warnings.expected = lib.flatten (
-        lib.mapAttrsToList (name: case: lib.optional case.expectedWarn case.default.warning) cases
+        lib.mapAttrsToList (_name: case: lib.optional case.expectedWarn case.default.warning) cases
       );
     };
 
     warnings = lib.flatten (
-      lib.mapAttrsToList (name: case: lib.optional case.default.shouldWarn case.default.warning) cases
+      lib.mapAttrsToList (_name: case: lib.optional case.default.shouldWarn case.default.warning) cases
     );
 
     home.file."result.txt".text = ''

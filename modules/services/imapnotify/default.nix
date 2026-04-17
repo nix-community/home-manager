@@ -96,7 +96,7 @@ let
           else
             143;
 
-        toJSON = builtins.toJSON;
+        inherit (builtins) toJSON;
       in
       toJSON (
         {

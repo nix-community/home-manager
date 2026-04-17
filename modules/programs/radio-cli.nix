@@ -22,7 +22,7 @@ in
     enable = mkEnableOption "radio-cli";
     package = mkPackageOption pkgs "radio-cli" { nullable = true; };
     settings = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = {
         config_version = "2.3.0";

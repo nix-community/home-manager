@@ -14,3 +14,17 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "ci:"
+  - package-ecosystem: "nix"
+    directory: "/"
+    target-branch: "master"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "flake:"
+  - package-ecosystem: "nix"
+    directory: "/"
+    target-branch: "release-25.11"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "flake:"

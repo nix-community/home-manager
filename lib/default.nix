@@ -1,6 +1,6 @@
 { lib }:
 {
-  hm = (import ../modules/lib/stdlib-extended.nix lib).hm;
+  inherit ((import ../modules/lib/stdlib-extended.nix lib)) hm;
 
   homeManagerConfiguration =
     {

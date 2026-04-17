@@ -104,7 +104,7 @@ in
 
     services.tldr-update = mkIf cfg.enableAutoUpdates {
       enable = true;
-      package = cfg.package;
+      inherit (cfg) package;
     };
   };
 }

@@ -43,7 +43,7 @@ in
     package = lib.mkPackageOption pkgs "k9s" { nullable = true; };
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/k9s/config.yaml` (linux)
@@ -80,7 +80,7 @@ in
     };
 
     aliases = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Aliases written to {file}`$XDG_CONFIG_HOME/k9s/aliases.yaml` (linux)
@@ -96,7 +96,7 @@ in
     };
 
     hotKeys = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Hotkeys written to {file}`$XDG_CONFIG_HOME/k9s/hotkeys.yaml` (linux)
@@ -115,7 +115,7 @@ in
     };
 
     plugins = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Plugins written to {file}`$XDG_CONFIG_HOME/k9s/plugins.yaml (linux)`
@@ -147,7 +147,7 @@ in
     };
 
     views = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Resource column views written to

@@ -20,7 +20,7 @@ in
     package = lib.mkPackageOption pkgs "mr" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$HOME/.mrconfig`

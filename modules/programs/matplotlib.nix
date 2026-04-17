@@ -54,8 +54,7 @@ in
   config = mkIf cfg.enable {
     xdg.configFile."matplotlib/matplotlibrc".text =
       lib.concatStringsSep "\n" (
-        [ ]
-        ++ lib.mapAttrsToList (formatLine "") cfg.config
+        lib.mapAttrsToList (formatLine "") cfg.config
         ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
       )
       + "\n";

@@ -34,7 +34,7 @@
           importantFields = filterAttrs isImportantField attrs;
           withoutImportantFields = fields: removeAttrs fields (attrNames importantFields);
 
-          allSections = filterAttrs (n: v: isAttrs v || isList v) attrs;
+          allSections = filterAttrs (_n: v: isAttrs v || isList v) attrs;
           sections = withoutImportantFields allSections;
 
           mkSection =
@@ -57,7 +57,7 @@
             inherit indent;
           };
 
-          allFields = filterAttrs (n: v: !(isAttrs v || isList v)) attrs;
+          allFields = filterAttrs (_n: v: !(isAttrs v || isList v)) attrs;
           fields = withoutImportantFields allFields;
         in
         mkFields importantFields
@@ -67,7 +67,7 @@
     toHyprconf' initialIndent attrs;
 
   toKDL =
-    { }:
+    _:
     let
       inherit (lib)
         concatStringsSep
@@ -223,7 +223,7 @@
     '';
 
   toSCFG =
-    { }:
+    _:
     let
       inherit (lib) concatStringsSep any;
       inherit (builtins) typeOf replaceStrings elem;

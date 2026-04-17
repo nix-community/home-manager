@@ -57,24 +57,24 @@
   };
   nmt.script = ''
     # Commands
-    assertFileExists home-files/.config/opencode/command/inline-command.md
-    assertFileExists home-files/.config/opencode/command/path-command.md
+    assertFileExists home-files/.config/opencode/commands/inline-command.md
+    assertFileExists home-files/.config/opencode/commands/path-command.md
 
-    assertFileContent home-files/.config/opencode/command/path-command.md \
+    assertFileContent home-files/.config/opencode/commands/path-command.md \
       ${./test-command.md}
 
     # Agents
-    assertFileExists home-files/.config/opencode/agent/inline-agent.md
-    assertFileExists home-files/.config/opencode/agent/path-agent.md
+    assertFileExists home-files/.config/opencode/agents/inline-agent.md
+    assertFileExists home-files/.config/opencode/agents/path-agent.md
 
-    assertFileContent home-files/.config/opencode/agent/path-agent.md \
+    assertFileContent home-files/.config/opencode/agents/path-agent.md \
       ${./test-agent.md}
 
     # Tools
-    assertFileExists home-files/.config/opencode/tool/inline-tool.ts
-    assertFileExists home-files/.config/opencode/tool/path-tool.ts
+    assertFileExists home-files/.config/opencode/tools/inline-tool.ts
+    assertFileExists home-files/.config/opencode/tools/path-tool.ts
 
-    assertFileContent home-files/.config/opencode/tool/path-tool.ts \
+    assertFileContent home-files/.config/opencode/tools/path-tool.ts \
       ${./test-tool.ts}
 
     # Skills

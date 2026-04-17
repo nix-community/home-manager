@@ -8,7 +8,7 @@
 
     config.keybindings =
       let
-        modifier = config.xsession.windowManager.i3.config.modifier;
+        inherit (config.xsession.windowManager.i3.config) modifier;
       in
       lib.mkOptionDefault {
         "${modifier}+Left" = "overridden-command";

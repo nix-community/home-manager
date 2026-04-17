@@ -26,7 +26,7 @@ in
     package = lib.mkPackageOption pkgs "numbat" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         intro-banner = "short";

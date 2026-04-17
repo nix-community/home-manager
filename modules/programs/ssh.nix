@@ -616,10 +616,7 @@ in
             sortedMatchBlocks = lib.hm.dag.topoSort (lib.removeAttrs cfg.matchBlocks [ "*" ]);
             sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
             matchBlocks =
-              if sortedMatchBlocks ? result then
-                sortedMatchBlocks.result
-              else
-                abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
+              sortedMatchBlocks.result or (abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}");
 
             defaultHostBlock = cfg.matchBlocks."*" or null;
           in
@@ -638,10 +635,10 @@ in
 
         warnings =
           mapAttrsToList
-            (n: v: ''
+            (n: _v: ''
               The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
               The match option takes precedence.'')
-            (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
+            (lib.filterAttrs (_n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
       }
       (lib.mkIf cfg.enableDefaultConfig {
         warnings = [

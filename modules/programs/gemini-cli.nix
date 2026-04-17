@@ -18,6 +18,21 @@ in
 
     package = lib.mkPackageOption pkgs "gemini-cli" { nullable = true; };
 
+    enableMcpIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.gemini-cli.settings.mcpServers`.
+
+        Note: Any servers already present in
+        {option}`programs.gemini-cli.settings.mcpServers`
+        is not overridden by servers present under the same
+        name in {option}`programs.mcp.servers`
+      '';
+    };
+
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -145,9 +160,14 @@ in
         }
       '';
       description = ''
-        An attribute set of context files to create in `~/.gemini/`.
-        The attribute name becomes the filename with `.md` extension automatically added.
-        The value is either inline content or a path to a file.
+        Global context(s) for gemini-cli.
+
+        The attribute name becomes the filename, with a {file}`.md`
+        extension added automatically. Each value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured files are written to {file}`~/.gemini/`.
 
         Note: You can customize which context file names gemini-cli looks for by setting
         `settings.context.fileName`. For example:
@@ -158,10 +178,62 @@ in
         ```
       '';
     };
+
+    skills = lib.mkOption {
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          xlsx = ./skills/xlsx/SKILL.md;
+          data-analysis = ./skills/data-analysis;
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+        }
+      '';
+      description = ''
+        Custom skills for gemini-cli.
+
+        This option can be either:
+        - An attribute set defining skills
+        - A path to a directory containing skill folders
+
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
+        - Inline content as a string (creates `~/.gemini/skills/<name>/SKILL.md`)
+        - A path to a file (creates `~/.gemini/skills/<name>/SKILL.md`)
+        - A path to a directory (symlinks `~/.gemini/skills/<name>/` to that directory)
+
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. The directory is
+        symlinked to {file}`~/.gemini/skills/`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
+      {
+        programs.gemini-cli.settings.mcpServers = lib.mkIf (
+          cfg.enableMcpIntegration && config.programs.mcp.enable
+        ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+      }
       {
         home = {
           packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -199,6 +271,37 @@ in
                 tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
           }
         ) cfg.policies;
+      }
+      {
+        assertions = [
+          {
+            assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+            message = "`programs.gemini-cli.skills` must be a directory when set to a path";
+          }
+        ];
+      }
+      {
+        home.file =
+          if lib.isPath cfg.skills then
+            {
+              ".gemini/skills" = {
+                source = cfg.skills;
+                recursive = true;
+              };
+            }
+          else
+            lib.mapAttrs' (
+              n: v:
+              if lib.isPath v && lib.pathIsDirectory v then
+                lib.nameValuePair ".gemini/skills/${n}" {
+                  source = v;
+                  recursive = true;
+                }
+              else
+                lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
+                  if lib.isPath v then { source = v; } else { text = v; }
+                )
+            ) cfg.skills;
       }
     ]
   );

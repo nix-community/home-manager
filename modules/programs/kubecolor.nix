@@ -31,7 +31,7 @@ in
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = lib.literalExpression ''
         kubectl = lib.getExe pkgs.kubectl

@@ -22,7 +22,7 @@ in
     enable = mkEnableOption "sway-easyfocus";
     package = mkPackageOption pkgs "sway-easyfocus" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = {
         chars = "fjghdkslaemuvitywoqpcbnxz";

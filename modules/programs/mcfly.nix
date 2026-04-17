@@ -73,7 +73,7 @@ in
     mcflyFzfPackage = lib.mkPackageOption pkgs "mcfly-fzf" { };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

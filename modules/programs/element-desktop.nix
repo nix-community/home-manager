@@ -27,7 +27,7 @@ in
     enable = mkEnableOption "element-desktop";
     package = mkPackageOption pkgs "element-desktop" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {
@@ -112,7 +112,7 @@ in
       in
       defaultConfig
       // (lib.mapAttrs' (
-        name: value:
+        name: _value:
         lib.nameValuePair "${prefix}/Element-${name}/config.json" {
           source = (formatter.generate "element-desktop-${name}" cfg.profiles."${name}");
         }

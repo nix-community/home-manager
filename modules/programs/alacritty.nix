@@ -34,7 +34,7 @@ in
       };
 
       settings = lib.mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
         default = { };
         example = lib.literalExpression ''
           {
@@ -99,7 +99,7 @@ in
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
       source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs (
-        finalAttrs: prevAttrs: {
+        _finalAttrs: prevAttrs: {
           buildCommand = lib.concatStringsSep "\n" [
             prevAttrs.buildCommand
             # TODO: why is this needed? Is there a better way to retain escape sequences?

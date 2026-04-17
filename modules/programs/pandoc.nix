@@ -45,7 +45,7 @@ in
     };
 
     defaults = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = literalExpression ''
         {

@@ -169,7 +169,7 @@ in
   config =
     let
       directories =
-        (lib.filterAttrs (n: v: !isNull v) {
+        (lib.filterAttrs (_n: v: !isNull v) {
           DESKTOP = cfg.desktop;
           DOCUMENTS = cfg.documents;
           DOWNLOAD = cfg.download;

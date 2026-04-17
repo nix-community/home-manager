@@ -1,4 +1,3 @@
-{ ... }:
 {
   config = {
     programs.fish = {

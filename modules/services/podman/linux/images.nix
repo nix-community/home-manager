@@ -65,8 +65,7 @@ let
     source = podman-lib.removeBlankLines (createQuadletSource name imageDef);
     resourceType = "image";
   };
-in
-let
+
   imageDefinitionType = types.submodule (
     { name, ... }:
     {

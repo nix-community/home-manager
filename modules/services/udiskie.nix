@@ -47,7 +47,7 @@ in
       package = lib.mkPackageOption pkgs "udiskie" { };
 
       settings = mkOption {
-        type = yaml.type;
+        inherit (yaml) type;
         default = { };
         example = lib.literalExpression ''
           {
@@ -112,7 +112,7 @@ in
     xdg.configFile."udiskie/config.yml".source = yaml.generate "udiskie-config.yml" (mergeSets [
       {
         program_options = {
-          automount = cfg.automount;
+          inherit (cfg) automount;
           tray =
             if cfg.tray == "always" then
               true
@@ -120,7 +120,7 @@ in
               false
             else
               "auto";
-          notify = cfg.notify;
+          inherit (cfg) notify;
         };
       }
       cfg.settings

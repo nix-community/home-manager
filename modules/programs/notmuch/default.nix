@@ -41,8 +41,7 @@ let
     };
 
     new = {
-      ignore = cfg.new.ignore;
-      tags = cfg.new.tags;
+      inherit (cfg.new) ignore tags;
     };
 
     user =

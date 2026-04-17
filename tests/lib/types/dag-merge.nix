@@ -16,7 +16,7 @@ let
     types
     ;
 
-  dag = lib.hm.dag;
+  inherit (lib.hm) dag;
 
   result =
     let

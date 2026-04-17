@@ -78,8 +78,6 @@ let
     resourceType = "volume";
   };
 
-in
-let
   volumeDefinitionType = types.submodule (
     { name, ... }:
     {

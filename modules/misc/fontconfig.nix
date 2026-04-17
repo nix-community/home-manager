@@ -13,7 +13,7 @@ let
 
   cfg = config.fonts.fontconfig;
 
-  profileDirectory = config.home.profileDirectory;
+  inherit (config.home) profileDirectory;
 
   fontConfigFileType = lib.types.submodule (
     { name, ... }:
@@ -337,7 +337,7 @@ in
       };
 
     xdg.configFile = lib.mapAttrs' (
-      name: config:
+      _name: config:
       lib.nameValuePair "fontconfig/conf.d/${toString config.priority}-hm-${config.label}.conf" {
         inherit (config) enable text;
         source = lib.mkIf (config.source != null) config.source;

@@ -23,7 +23,7 @@ in
     enable = mkEnableOption "trippy";
     package = mkPackageOption pkgs "trippy" { nullable = true; };
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         theme-colors = {

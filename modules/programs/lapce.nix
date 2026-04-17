@@ -30,7 +30,7 @@ let
       '';
     };
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/lapce/settings.toml`.
@@ -115,7 +115,7 @@ let
       '';
     };
     keymaps = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = [ ];
       description = ''
         Keymaps written to {file}`$XDG_CONFIG_HOME/lapce/keymaps.toml`.
@@ -231,7 +231,7 @@ in
       {
         configFile = {
           "${dir}/settings.toml".source = settingsFormat.generate "settings.toml" cfg.settings;
-          "${dir}/keymaps.toml".source = settingsFormat.generate "keymaps.toml" { keymaps = cfg.keymaps; };
+          "${dir}/keymaps.toml".source = settingsFormat.generate "keymaps.toml" { inherit (cfg) keymaps; };
         };
         dataFile."${dir}/plugins".source = pluginsFromRegistry cfg.plugins;
       };

@@ -1,9 +1,7 @@
 {
   programs.claude-code = {
     enable = true;
-    memory = {
-      source = ./expected-memory.md;
-    };
+    context = ./expected-memory.md;
   };
 
   nmt.script = ''

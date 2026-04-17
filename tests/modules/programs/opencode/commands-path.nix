@@ -6,8 +6,8 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/command/test-command.md
-    assertFileContent home-files/.config/opencode/command/test-command.md \
+    assertFileExists home-files/.config/opencode/commands/test-command.md
+    assertFileContent home-files/.config/opencode/commands/test-command.md \
       ${./test-command.md}
   '';
 }

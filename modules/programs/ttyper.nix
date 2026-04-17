@@ -24,7 +24,7 @@ in
     package = lib.mkPackageOption pkgs "ttyper" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/ttyper/config.toml`.

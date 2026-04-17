@@ -19,7 +19,7 @@ in
     server.enable = lib.mkEnableOption "Foot terminal server";
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to

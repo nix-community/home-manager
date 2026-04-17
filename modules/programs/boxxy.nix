@@ -111,7 +111,7 @@ in
     ];
 
     home.file = lib.mkIf (cfg.rules != [ ]) {
-      "${configPath}".source = settingsFormat.generate "boxxy-config.yaml" { rules = cfg.rules; };
+      "${configPath}".source = settingsFormat.generate "boxxy-config.yaml" { inherit (cfg) rules; };
     };
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];

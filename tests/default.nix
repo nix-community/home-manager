@@ -47,7 +47,7 @@ let
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
     let
-      inner = self: super: {
+      inner = _self: _super: {
         inherit (pkgs)
           coreutils
           crudini
@@ -84,12 +84,12 @@ let
     # TODO: fix darwin stdenv stubbing
     if isDarwin then
       let
-        rawPkgs = lib.makeExtensible (final: pkgs);
+        rawPkgs = lib.makeExtensible (_final: pkgs);
       in
       builtins.traceVerbose "eval scrubbed darwin nixpkgs" (rawPkgs.extend darwinScrublist)
     else
       let
-        rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
+        rawScrubbedPkgs = lib.makeExtensible (_final: scrubDerivations pkgs);
       in
       builtins.traceVerbose "eval scrubbed nixpkgs" (rawScrubbedPkgs.extend whitelist);
 
@@ -152,8 +152,8 @@ let
       )
     ];
 
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
-  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 import nmtSrc {
   inherit lib pkgs modules;

@@ -17,7 +17,7 @@ in
     package = lib.mkPackageOption pkgs "git-cliff" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

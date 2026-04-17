@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -64,8 +63,8 @@ let
       # There's a possibility of attributes with attrsets overriding other
       # top-level attributes with non-attrsets so we're forcing the attrsets to
       # come last.
-      _config = lib.mapAttrsToList convert (lib.filterAttrs (k: v: !isAttrs v) attr);
-      _config' = lib.mapAttrsToList convert (lib.filterAttrs (k: v: isAttrs v) attr);
+      _config = lib.mapAttrsToList convert (lib.filterAttrs (_k: v: !isAttrs v) attr);
+      _config' = lib.mapAttrsToList convert (lib.filterAttrs (_k: isAttrs) attr);
       config = _config ++ _config';
     in
     lib.concatStringsSep "\n" config;
@@ -73,30 +72,28 @@ let
   # A specific type for Recoll config format. Taken from `pkgs.formats`
   # implementation from nixpkgs. See the 'Nix-representable formats' from the
   # NixOS manual for more information.
-  recollConfFormat =
-    { }:
-    {
-      type =
-        with types;
-        let
-          valueType =
-            nullOr (oneOf [
-              bool
-              float
-              int
-              path
-              str
-              (attrsOf valueType)
-              (listOf valueType)
-            ])
-            // {
-              description = "Recoll config value";
-            };
-        in
-        attrsOf valueType;
+  recollConfFormat = _: {
+    type =
+      with types;
+      let
+        valueType =
+          nullOr (oneOf [
+            bool
+            float
+            int
+            path
+            str
+            (attrsOf valueType)
+            (listOf valueType)
+          ])
+          // {
+            description = "Recoll config value";
+          };
+      in
+      attrsOf valueType;
 
-      generate = name: value: pkgs.writeText name (toRecollConf { } value);
-    };
+    generate = name: value: pkgs.writeText name (toRecollConf { } value);
+  };
 
   # The actual object we're going to use for this module. This is for the sake
   # of consistency (and dogfooding the settings format implementation).
@@ -123,7 +120,7 @@ in
     };
 
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = ''
         The configuration to be written at {file}`$RECOLL_CONFDIR/recoll.conf`.

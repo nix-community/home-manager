@@ -10,4 +10,5 @@
   neovim-extra-lua-empty-plugin = ./extra-lua-empty-plugin.nix;
 
   neovim-sideload-init-lua = ./sideload-init-lua.nix;
+  neovim-plugin-type-warning = ./plugin-type-warning.nix;
 }

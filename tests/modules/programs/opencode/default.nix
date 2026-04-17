@@ -1,9 +1,9 @@
 {
   opencode-settings = ./settings.nix;
   opencode-empty-settings = ./empty-settings.nix;
-  opencode-rules-inline = ./rules-inline.nix;
-  opencode-rules-path = ./rules-path.nix;
-  opencode-empty-rules = ./empty-rules.nix;
+  opencode-context-inline = ./rules-inline.nix;
+  opencode-context-path = ./rules-path.nix;
+  opencode-empty-context = ./empty-rules.nix;
   opencode-agents-inline = ./agents-inline.nix;
   opencode-commands-inline = ./commands-inline.nix;
   opencode-agents-path = ./agents-path.nix;
@@ -22,6 +22,7 @@
   opencode-themes-inline = ./themes-inline.nix;
   opencode-themes-path = ./themes-path.nix;
   opencode-themes-bulk-directory = ./themes-bulk-directory.nix;
+  opencode-legacy-rules = ./legacy-rules.nix;
   opencode-mcp-integration = ./mcp-integration.nix;
   opencode-mcp-integration-with-override = ./mcp-integration-with-override.nix;
   opencode-web-service = ./web-service.nix;

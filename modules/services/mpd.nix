@@ -195,7 +195,7 @@ in
           musicDirectory = lib.mkOptionDefault "${config.home.homeDirectory}/music";
         })
 
-        { generatedConfig = generatedConfig; }
+        { inherit generatedConfig; }
       ];
 
       systemd.user = {

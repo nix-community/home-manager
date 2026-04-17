@@ -182,7 +182,7 @@ in
     };
 
     finalSettings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       internal = true;
       readOnly = true;
       default = {

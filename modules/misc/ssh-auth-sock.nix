@@ -10,13 +10,11 @@ let
       type = lib.types.str;
     };
 
-  initSubmodule =
-    { config, ... }:
-    {
-      options.bash = mkShellInitOption "bash";
-      options.fish = mkShellInitOption "fish";
-      options.nushell = mkShellInitOption "nushell";
-    };
+  initSubmodule = {
+    options.bash = mkShellInitOption "bash";
+    options.fish = mkShellInitOption "fish";
+    options.nushell = mkShellInitOption "nushell";
+  };
 
   # Preserve $SSH_AUTH_SOCK only if it stems from a forwarded agent which
   # is the case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.

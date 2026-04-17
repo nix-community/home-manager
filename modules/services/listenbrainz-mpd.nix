@@ -24,7 +24,7 @@ in
     package = mkPackageOption pkgs "listenbrainz-mpd" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration for listenbrainz-mpd written to

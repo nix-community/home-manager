@@ -19,7 +19,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
   transformMcpServer = name: server: {
-    name = name;
+    inherit name;
     value = {
       enabled = !(server.disabled or false);
     }
@@ -27,9 +27,9 @@ let
       if server ? url then
         {
           type = "remote";
-          url = server.url;
+          inherit (server) url;
         }
-        // (lib.optionalAttrs (server ? headers) { headers = server.headers; })
+        // (lib.optionalAttrs (server ? headers) { inherit (server) headers; })
       else if server ? command then
         {
           type = "local";
@@ -49,6 +49,10 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
+
+  imports = [
+    (lib.mkRenamedOptionModule [ "programs" "opencode" "rules" ] [ "programs" "opencode" "context" ])
+  ];
 
   options.programs.opencode = {
     enable = mkEnableOption "opencode";
@@ -156,15 +160,18 @@ in
       };
     };
 
-    rules = lib.mkOption {
+    context = lib.mkOption {
       type = lib.types.either lib.types.lines lib.types.path;
       default = "";
       description = ''
-         You can provide global custom instructions to opencode.
-         The value is either:
-         - Inline content as a string
-         - A path to a file containing the content
-        This value is written to {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
+        Global context for OpenCode.
+
+        The value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured content is written to
+        {file}`$XDG_CONFIG_HOME/opencode/AGENTS.md`.
       '';
       example = lib.literalExpression ''
         '''
@@ -206,11 +213,11 @@ in
 
         If an attribute set is used, the attribute name becomes the command filename,
         and the value is either:
-        - Inline content as a string (creates `opencode/command/<name>.md`)
-        - A path to a file (creates `opencode/command/<name>.md`)
+        - Inline content as a string (creates `opencode/commands/<name>.md`)
+        - A path to a file (creates `opencode/commands/<name>.md`)
 
         If a path is used, it is expected to contain command files.
-        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/command/`.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/commands/`.
       '';
       example = lib.literalExpression ''
         {
@@ -243,11 +250,11 @@ in
 
         If an attribute set is used, the attribute name becomes the agent filename,
         and the value is either:
-        - Inline content as a string (creates `opencode/agent/<name>.md`)
-        - A path to a file (creates `opencode/agent/<name>.md`)
+        - Inline content as a string (creates `opencode/agents/<name>.md`)
+        - A path to a file (creates `opencode/agents/<name>.md`)
 
         If a path is used, it is expected to contain agent files.
-        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/agent/`.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/agents/`.
       '';
       example = lib.literalExpression ''
         {
@@ -278,24 +285,24 @@ in
       )) lib.types.path;
       default = { };
       description = ''
-        Custom agent skills for opencode.
+        Custom skills for OpenCode.
 
-        This option can either be:
+        This option can be either:
         - An attribute set defining skills
-        - A path to a directory containing multiple skill folders
+        - A path to a directory containing skill folders
 
-        If an attribute set is used, the attribute name becomes the skill directory name,
-        and the value is either:
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
         - Inline content as a string (creates `opencode/skills/<name>/SKILL.md`)
         - A path to a file (creates `opencode/skills/<name>/SKILL.md`)
         - A path to a directory (creates `opencode/skills/<name>/` with all files)
 
-        This also accepts Nix store paths (e.g., source from a package), allowing you to
-        reference subdirectories within a package source.
+        This also accepts Nix store paths, for example a skill directory
+        from a package.
 
-        If a path is used, it is expected to contain one folder per skill name, each
-        containing a {file}`SKILL.md`. The directory is symlinked to
-        {file}`$XDG_CONFIG_HOME/opencode/skills/`.
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. The directory is
+        symlinked to {file}`$XDG_CONFIG_HOME/opencode/skills/`.
 
         See <https://opencode.ai/docs/skills/> for the documentation.
       '';
@@ -358,11 +365,11 @@ in
 
         If an attribute set is used, the attribute name becomes the tool filename,
         and the value is either:
-        - Inline content as a string (creates `opencode/tool/<name>.ts`)
-        - A path to a file (creates `opencode/tool/<name>.ts` or `opencode/tool/<name>.js`)
+        - Inline content as a string (creates `opencode/tools/<name>.ts`)
+        - A path to a file (creates `opencode/tools/<name>.ts` or `opencode/tools/<name>.js`)
 
         If a path is used, it is expected to contain tool files.
-        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/tool/`.
+        The directory is symlinked to {file}`$XDG_CONFIG_HOME/opencode/tools/`.
 
         See <https://opencode.ai/docs/tools/> for the documentation.
       '';
@@ -469,25 +476,25 @@ in
       };
 
       "opencode/AGENTS.md" = (
-        if lib.isPath cfg.rules then
-          { source = cfg.rules; }
+        if lib.isPath cfg.context then
+          { source = cfg.context; }
         else
-          (mkIf (cfg.rules != "") {
-            text = cfg.rules;
+          (mkIf (cfg.context != "") {
+            text = cfg.context;
           })
       );
 
-      "opencode/command" = mkIf (lib.isPath cfg.commands) {
+      "opencode/commands" = mkIf (lib.isPath cfg.commands) {
         source = cfg.commands;
         recursive = true;
       };
 
-      "opencode/agent" = mkIf (lib.isPath cfg.agents) {
+      "opencode/agents" = mkIf (lib.isPath cfg.agents) {
         source = cfg.agents;
         recursive = true;
       };
 
-      "opencode/tool" = mkIf (lib.isPath cfg.tools) {
+      "opencode/tools" = mkIf (lib.isPath cfg.tools) {
         source = cfg.tools;
         recursive = true;
       };
@@ -505,7 +512,7 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.commands) (
       lib.mapAttrs' (
         name: content:
-        lib.nameValuePair "opencode/command/${name}.md" (
+        lib.nameValuePair "opencode/commands/${name}.md" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.commands
@@ -513,7 +520,7 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.agents) (
       lib.mapAttrs' (
         name: content:
-        lib.nameValuePair "opencode/agent/${name}.md" (
+        lib.nameValuePair "opencode/agents/${name}.md" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.agents
@@ -521,7 +528,7 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.tools) (
       lib.mapAttrs' (
         name: content:
-        lib.nameValuePair "opencode/tool/${name}.ts" (
+        lib.nameValuePair "opencode/tools/${name}.ts" (
           if lib.isPath content then { source = content; } else { text = content; }
         )
       ) cfg.tools

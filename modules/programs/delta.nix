@@ -60,7 +60,9 @@ in
       description = ''
         Whether to enable git integration for delta.
 
-        When enabled, delta will be configured as git's pager and diff filter.
+        When enabled, delta will be configured as git's pager for
+        {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
+        filter for interactive staging.
       '';
     };
 
@@ -127,8 +129,8 @@ in
           let
             deltaCommand = lib.getExe cfg.package;
           in
-          {
-            core.pager = deltaCommand;
+          lib.hm.git.diffPagerConfig deltaCommand
+          // {
             interactive.diffFilter = "${deltaCommand} --color-only";
             delta = cfg.options;
           };

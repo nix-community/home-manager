@@ -94,7 +94,7 @@ in
       file."${configPath}" = lib.mkIf (cfg.custom_adapters != [ ]) {
         source = (pkgs.formats.json { }).generate "ripgrep-all" {
           "$schema" = "./config.schema.json";
-          custom_adapters = map (lib.filterAttrs (n: v: v != null)) cfg.custom_adapters;
+          custom_adapters = map (lib.filterAttrs (_n: v: v != null)) cfg.custom_adapters;
         };
       };
     };

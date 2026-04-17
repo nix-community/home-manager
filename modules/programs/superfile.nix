@@ -62,7 +62,7 @@ in
     zoxidePackage = mkPackageOption pkgs "zoxide" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/superfile/config.toml`
@@ -77,7 +77,7 @@ in
     };
 
     hotkeys = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Hotkey configuration written to {file}`$XDG_CONFIG_HOME/superfile/hotkeys.toml`

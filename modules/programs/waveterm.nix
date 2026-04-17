@@ -23,7 +23,7 @@ in
     enable = mkEnableOption "waveterm";
     package = mkPackageOption pkgs "waveterm" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = {
         "app:dismissarchitecturewarning" = false;
@@ -45,7 +45,7 @@ in
     };
 
     themes = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = {
         default-dark = {
@@ -82,7 +82,7 @@ in
     };
 
     bookmarks = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = {
         "bookmark@google" = {

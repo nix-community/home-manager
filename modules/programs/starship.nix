@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.starship;
 
@@ -21,6 +26,13 @@ in
     enable = lib.mkEnableOption "starship";
 
     package = lib.mkPackageOption pkgs "starship" { };
+
+    extraPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.jj-starship ]";
+      description = "Extra packages available to starship.";
+    };
 
     settings = mkOption {
       inherit (tomlFormat) type;
@@ -107,7 +119,22 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages = [ cfg.package ];
+      packages =
+        if cfg.extraPackages != [ ] then
+          [
+            (pkgs.symlinkJoin {
+              name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+              paths = [ cfg.package ];
+              preferLocalBuild = true;
+              nativeBuildInputs = [ pkgs.makeWrapper ];
+              postBuild = ''
+                wrapProgram $out/bin/starship \
+                  --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+              '';
+            })
+          ]
+        else
+          [ cfg.package ];
 
       sessionVariables.STARSHIP_CONFIG = cfg.configPath;
 

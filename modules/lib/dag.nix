@@ -86,10 +86,10 @@ in
   topoSort =
     dag:
     let
-      dagBefore = dag: name: builtins.attrNames (filterAttrs (n: v: builtins.elem name v.before) dag);
+      dagBefore = dag: name: builtins.attrNames (filterAttrs (_n: v: builtins.elem name v.before) dag);
       normalizedDag = mapAttrs (n: v: {
         name = n;
-        data = v.data;
+        inherit (v) data;
         after = v.after ++ dagBefore dag n;
       }) dag;
       before = a: b: builtins.elem a.name b.after;

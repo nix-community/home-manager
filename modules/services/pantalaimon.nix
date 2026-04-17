@@ -19,7 +19,7 @@ in
       package = lib.mkPackageOption pkgs "pantalaimon" { };
 
       settings = lib.mkOption {
-        type = iniFmt.type;
+        inherit (iniFmt) type;
         default = { };
         defaultText = lib.literalExpression "{ }";
         example = lib.literalExpression ''

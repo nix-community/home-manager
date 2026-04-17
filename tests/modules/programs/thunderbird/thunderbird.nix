@@ -186,7 +186,7 @@
 
   nmt.script =
     let
-      isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+      inherit (pkgs.stdenv.hostPlatform) isDarwin;
       configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
       profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
       platform = if isDarwin then "darwin" else "linux";

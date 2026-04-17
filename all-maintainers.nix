@@ -215,13 +215,6 @@
     name = "Justin Lovinger";
     source = "nixpkgs";
   };
-  KarlJoad = {
-    email = "karl@hallsby.com";
-    github = "KarlJoad";
-    githubId = 34152449;
-    name = "Karl Hallsby";
-    source = "nixpkgs";
-  };
   KiaraGrouwstra = {
     email = "cinereal@riseup.net";
     github = "KiaraGrouwstra";
@@ -457,13 +450,6 @@
     githubId = 27813;
     matrix = "@Valodim:stratum0.org";
     name = "Vincent Breitmoser";
-    source = "nixpkgs";
-  };
-  Vortriz = {
-    email = "vorarishi22+nix@gmail.com";
-    github = "Vortriz";
-    githubId = 97402159;
-    name = "Rishi Vora";
     source = "nixpkgs";
   };
   WGUNDERWOOD = {
@@ -1930,6 +1916,13 @@
     name = "Phani Rithvij";
     source = "nixpkgs";
   };
+  philip-730 = {
+    email = "philip.amendolia@gmail.com";
+    github = "philip-730";
+    githubId = 116534928;
+    name = "Philip Amendolia";
+    source = "home-manager";
+  };
   philocalyst = {
     email = "milestheperson@posteo.net";
     github = "philocalyst";
@@ -2010,6 +2003,13 @@
     githubId = 57323869;
     name = "Rasmus Kirk";
     source = "home-manager";
+  };
+  ravenjoad = {
+    email = "raven@hallsby.com";
+    github = "ravenjoad";
+    githubId = 34152449;
+    name = "Raven Hallsby";
+    source = "nixpkgs";
   };
   rcerc = {
     email = "88944439+rcerc@users.noreply.github.com";
@@ -2373,6 +2373,13 @@
     github = "xlambein";
     githubId = 5629059;
     name = "Xavier Lambein";
+    source = "nixpkgs";
+  };
+  yaaaarn = {
+    email = "30006414+yaaaarn@users.noreply.github.com";
+    github = "yaaaarn";
+    githubId = 30006414;
+    name = "yarncat";
     source = "nixpkgs";
   };
   yethal = {

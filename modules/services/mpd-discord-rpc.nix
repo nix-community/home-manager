@@ -16,7 +16,7 @@ in
     enable = lib.mkEnableOption "the mpd-discord-rpc service";
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

@@ -188,7 +188,7 @@ in
     in
     if allQuadletsSameType then
       ''
-        ${concatStringsSep "\n" (map (quadlet: formatServiceName quadlet) quadlets)}
+        ${concatStringsSep "\n" (map formatServiceName quadlets)}
       ''
     else
       abort ''

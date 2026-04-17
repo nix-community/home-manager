@@ -26,9 +26,9 @@ in
   config = {
     programs.sbt = {
       enable = true;
-      plugins = plugins;
-      credentials = credentials;
-      repositories = repositories;
+      inherit plugins;
+      inherit credentials;
+      inherit repositories;
       baseUserConfigPath = ".config/sbt";
       package = pkgs.writeScriptBin "sbt" "";
     };

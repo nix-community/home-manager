@@ -1,5 +1,3 @@
-{ config, lib, ... }:
-
 {
   targets.genericLinux.gpu = {
     enable = true;

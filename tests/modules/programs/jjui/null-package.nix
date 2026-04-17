@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }:
@@ -16,7 +15,7 @@
 
     nmt.script =
       let
-        configDir = if !pkgs.stdenv.isDarwin then ".config/jjui" else "Library/Application Support/jjui";
+        configDir = ".config/jjui";
       in
       ''
         assertFileContent \

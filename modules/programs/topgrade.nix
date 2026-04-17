@@ -19,7 +19,7 @@ in
     package = lib.mkPackageOption pkgs "topgrade" { };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       defaultText = lib.literalExpression "{ }";
       example = lib.literalExpression ''

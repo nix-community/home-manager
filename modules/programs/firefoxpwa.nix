@@ -16,7 +16,7 @@ let
   mkUlidAssertions =
     path:
     lib.concatMap (
-      { name, value }:
+      { name, ... }:
       let
         length = 26;
         allowed = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
@@ -49,7 +49,7 @@ in
     package = lib.mkPackageOption pkgs "firefoxpwa" { nullable = true; };
 
     settings = lib.mkOption {
-      type = jsonFmt.type;
+      inherit (jsonFmt) type;
       default = { };
       description = ''
         Settings to be written to the configuration file. See
@@ -147,7 +147,7 @@ in
                           };
                         };
                         settings = lib.mkOption {
-                          type = jsonFmt.type;
+                          inherit (jsonFmt) type;
                           default = { };
                           description = ''
                             Settings for this site. See
@@ -166,12 +166,12 @@ in
                           ulid = name;
                           profile = profile.name;
                           config = {
-                            name = config.name;
+                            inherit (config) name;
                             document_url = config.url;
                             manifest_url = config.manifestUrl;
                           };
                           manifest = {
-                            name = config.name;
+                            inherit (config) name;
                             start_url = config.url;
                           };
                         };
@@ -181,7 +181,7 @@ in
                 );
               };
               settings = lib.mkOption {
-                type = jsonFmt.type;
+                inherit (jsonFmt) type;
                 default = { };
                 description = ''
                   Settings for this profile. See
@@ -193,7 +193,7 @@ in
 
             config.settings = {
               ulid = name;
-              name = config.name;
+              inherit (config) name;
               sites = builtins.attrNames config.sites;
             };
           }
@@ -239,7 +239,7 @@ in
       lib.mapAttrsToList (name: site: {
         "FFPWA-${name}" = lib.mkIf site.desktopEntry.enable {
           inherit (site.desktopEntry) icon categories;
-          name = site.settings.manifest.name;
+          inherit (site.settings.manifest) name;
           exec = "firefoxpwa site launch ${name} --protocol %u";
           terminal = false;
         };

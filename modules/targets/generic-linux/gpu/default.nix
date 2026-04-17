@@ -93,7 +93,7 @@
       # This builds the driver archive downloaded from download.nvidia.com
       nvidia =
         (cfg.packages.linuxPackages.nvidiaPackages.mkDriver {
-          version = cfg.nvidia.version;
+          inherit (cfg.nvidia) version;
           sha256_64bit = cfg.nvidia.sha256;
           sha256_aarch64 = cfg.nvidia.sha256;
           useSettings = false;

@@ -1,6 +1,11 @@
 { lib, ... }:
 {
   imports = [
+    (lib.mkRemovedOptionModule [ "programs" "niriswitcher" "enable" ] ''
+      The niriswitcher module has been removed because the upstream project
+      has been archived.
+    '')
+
     (lib.mkRemovedOptionModule [ "programs" "glab" "enable" ] ''
       The glab module has been removed because changes are needed upstream to
       support mixing declarative and stateful configurations. See #8066.

@@ -127,7 +127,7 @@ let
       };
 
       config = {
-        name = name;
+        inherit name;
       };
     };
 

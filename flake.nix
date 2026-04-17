@@ -210,7 +210,7 @@
         legacyPackages = forAllPkgs (
           pkgs:
           let
-            system = pkgs.stdenv.hostPlatform.system;
+            inherit (pkgs.stdenv.hostPlatform) system;
           in
           (buildTests system)
           // (integrationTestPackages system)

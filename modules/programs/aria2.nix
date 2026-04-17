@@ -26,7 +26,7 @@ in
     package = lib.mkPackageOption pkgs "aria2" { nullable = true; };
 
     settings = lib.mkOption {
-      type = keyValueFormat.type;
+      inherit (keyValueFormat) type;
       default = { };
       description = ''
         Options to add to {file}`aria2.conf` file.

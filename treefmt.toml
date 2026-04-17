@@ -5,9 +5,13 @@ tree-root-file = "release.json"
 command = "nixfmt"
 includes = [ "*.nix" ]
 
+[formatter.statix]
+command = "treefmt-statix"
+includes = [ "*.nix" ]
+
 [formatter.deadnix]
 command = "deadnix"
-options = [ "--edit", "--no-lambda-arg", "--no-lambda-pattern-names" ]
+options = [ "--edit" ]
 includes = [ "*.nix" ]
 
 [formatter.nixf-diagnose]

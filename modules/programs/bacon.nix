@@ -26,7 +26,7 @@ in
     package = lib.mkPackageOption pkgs "bacon" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       example = {
         jobs.default = {

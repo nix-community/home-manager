@@ -22,7 +22,7 @@ let
     in
     epkgs.overrideScope cfg.overrides;
 
-  emacsWithPackages = emacsPackages.emacsWithPackages;
+  inherit (emacsPackages) emacsWithPackages;
 
   extraPackages =
     epkgs:
@@ -69,7 +69,7 @@ in
       };
 
       extraPackages = mkOption {
-        default = self: [ ];
+        default = _self: [ ];
         type = lib.hm.types.selectorFunction;
         defaultText = "epkgs: []";
         example = literalExpression "epkgs: [ epkgs.emms epkgs.magit ]";
@@ -81,7 +81,7 @@ in
       };
 
       overrides = mkOption {
-        default = self: super: { };
+        default = _self: _super: { };
         type = lib.hm.types.overlayFunction;
         defaultText = "self: super: {}";
         example = literalExpression ''

@@ -2,7 +2,6 @@
   lib,
   options,
   pkgs,
-  config,
   ...
 }:
 

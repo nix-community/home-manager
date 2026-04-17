@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "shikane" { };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

@@ -25,7 +25,7 @@ in
     package = mkPackageOption pkgs "hyprshell" { nullable = true; };
 
     settings = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       description = ''
         Configuration settings for hyprshell. All the available

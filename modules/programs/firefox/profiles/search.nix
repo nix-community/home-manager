@@ -49,7 +49,7 @@ let
     }
     // (removeAttrs input [ "icon" ])
     // optionalAttrs (input ? icon || input ? iconMapObj) {
-      iconMapObj = mapAttrs (name: iconUrl) (
+      iconMapObj = mapAttrs (_name: iconUrl) (
         (optionalAttrs (input ? icon) {
           # Convenience to specify single icon instead of map
           "16" = input.icon;

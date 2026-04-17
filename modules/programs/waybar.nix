@@ -24,7 +24,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
   mkMargin =
-    name:
+    _name:
     mkOption {
       type = types.nullOr types.int;
       default = null;
@@ -118,7 +118,7 @@ let
         };
 
         modules = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           visible = false;
           default = null;
           description = "Modules configuration.";

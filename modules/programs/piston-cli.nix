@@ -17,7 +17,7 @@ in
     package = lib.mkPackageOption pkgs "piston-cli" { };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

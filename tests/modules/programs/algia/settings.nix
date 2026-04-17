@@ -1,11 +1,4 @@
 {
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-
-{
   programs.algia = {
     enable = true;
     settings = {

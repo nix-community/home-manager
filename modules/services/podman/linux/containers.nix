@@ -69,7 +69,7 @@ let
             let
               quadletName = extractQuadletReference type value;
               quadletsOfType = lib.filterAttrs (
-                n: v: v.quadletData.resourceType == type
+                _n: v: v.quadletData.resourceType == type
               ) cfg.internal.builtQuadlets;
             in
             if (lib.hasAttr quadletName quadletsOfType) then
@@ -166,7 +166,7 @@ let
     in
     {
       assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
-      dependencies = src.dependencies;
+      inherit (src) dependencies;
       resourceType = "container";
       serviceName = "podman-${src.attrs.Container.ContainerName}"; # generated service name: 'podman-<name>.service'
       source = podman-lib.removeBlankLines src.text;
