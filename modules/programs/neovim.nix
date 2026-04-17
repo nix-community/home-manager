@@ -264,7 +264,12 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Whether to sideload the content of {var}`initLua` without generating a {file}`init.lua`.
+          Enable to avoid writing the content of {var}`initLua` to the default
+          location {file}`$XDG_CONFIG_HOME/.nvim/init.lua` and load it through
+          neovim wrapper arguments instead.
+
+
+          This is useful if you want to manage your own {file}`init.lua` imperatively.
         '';
       };
 
