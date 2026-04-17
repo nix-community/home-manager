@@ -5,8 +5,7 @@
   message = ''
     Added new option for yazi: programs.yazi.vfs
 
-    Yazi has a vfs.toml in it's config directory to manage
-    virtual file systems. The conifguration can now be managed with
-    programs.yazi.vfs
+    Yazi provides a vfs.toml config file to manage virtual file systems,
+    which can now be managed with programs.yazi.vfs
   '';
 }
