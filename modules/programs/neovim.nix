@@ -265,7 +265,7 @@ in
         default = false;
         description = ''
           Enable to avoid writing the content of {var}`initLua` to the default
-          location {file}`$XDG_CONFIG_HOME/.nvim/init.lua` and load it through
+          location {file}`$XDG_CONFIG_HOME/nvim/init.lua` and load it through
           neovim wrapper arguments instead.
 
 
