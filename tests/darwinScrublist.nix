@@ -62,6 +62,7 @@ let
     "git-credential-oauth"
     "git-lfs"
     "git-worktree-switcher"
+    "github-copilot-cli"
     "gitMinimal"
     "gnupg"
     "go"

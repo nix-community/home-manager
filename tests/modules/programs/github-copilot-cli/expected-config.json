@@ -1,0 +1,8 @@
+{
+  "firstLaunchAt": "1970-01-01T00:00:00.000Z",
+  "model": "claude-sonnet-4-5",
+  "theme": "dark",
+  "trusted_folders": [
+    "/home/user/projects"
+  ]
+}
