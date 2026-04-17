@@ -411,7 +411,7 @@ in
       (mkIf (cfg.environment != { }) (mkOrder 580 (toKittyEnv cfg.environment)))
     ];
 
-    progarms.kitty.diffConfig.extraConfig = mkMerge [
+    programs.kitty.diffConfig.extraConfig = mkMerge [
       (mkIf (cfg.diffConfig.settings != { }) (mkOrder 510 (toKittyConfig cfg.diffConfig.settings)))
       (mkIf (cfg.diffConfig.keybindings != { }) (
         mkOrder 520 (toKittyKeybindings cfg.diffConfig.keybindings)
