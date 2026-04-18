@@ -10,6 +10,8 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
+  meta.maintainers = [ lib.maintainers.rachitvrma ];
+
   options.programs.wlr-which-key = {
     enable = lib.mkEnableOption "wlr-which-key";
 

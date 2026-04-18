@@ -1997,6 +1997,12 @@
     name = "prescientmoon";
     source = "home-manager";
   };
+  rachitvrma = {
+    name = "Rachit Kumar Verma";
+    github = "rachitvrma";
+    githubId = 155641117;
+    email = "rachitve6h2g@users.noreply.github.com";
+  };
   rasmus-kirk = {
     email = "mail@rasmuskirk.com";
     github = "rasmus-kirk";
