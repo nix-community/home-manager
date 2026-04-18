@@ -597,23 +597,23 @@ in
             vault:
             builtins.all (
               snippet:
-              (snippet.source == null || snippet.text == null) && (snippet.source != null || snippet.text != null)
+              (snippet.source != null && snippet.text == null) || (snippet.source == null && snippet.text != null)
             ) (lib.lists.optionals (vault.settings.cssSnippets != null) vault.settings.cssSnippets)
           ) (builtins.attrValues cfg.vaults);
-          message = "Each CSS snippet must have one of 'source' or 'text' set";
+          message = "Each CSS snippet must have exactly one of 'source' or 'text' set";
         }
         {
           assertion = builtins.all (
             vault:
             builtins.all
-              (file: (file.source == null || file.text == null) && (file.source != null || file.text != null))
+              (file: (file.source != null && file.text == null) || (file.source == null && file.text != null))
               (
                 lib.lists.optionals (vault.settings.extraFiles != null) (
                   builtins.attrValues vault.settings.extraFiles
                 )
               )
           ) (builtins.attrValues cfg.vaults);
-          message = "Each extra file must have one of 'source' or 'text' set";
+          message = "Each extra file must have exactly one of 'source' or 'text' set";
         }
       ];
     };
