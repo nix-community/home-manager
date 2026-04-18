@@ -14,6 +14,8 @@ let
     types
     ;
 
+  settingsFormat = pkgs.formats.json { };
+
   cfg = config.programs.obsidian;
 
   corePluginsList = [
@@ -50,10 +52,6 @@ let
     "zk-prefixer"
   ];
 
-  appSettingsType = with types; nullOr (attrsOf anything);
-
-  appearanceSettingsType = with types; nullOr (attrsOf anything);
-
   corePluginsOptions = {
     options = {
       enable = mkOption {
@@ -68,7 +66,7 @@ let
       };
 
       settings = mkOption {
-        type = with types; nullOr (attrsOf anything);
+        inherit (settingsFormat) type;
         description = "Plugin settings to include.";
         default = null;
       };
@@ -94,7 +92,7 @@ let
       };
 
       settings = mkOption {
-        type = with types; nullOr (attrsOf anything);
+        inherit (settingsFormat) type;
         description = "Settings to include in the plugin's `data.json`.";
         default = null;
       };
@@ -224,7 +222,7 @@ in
 
           Vault-specific settings take priority and will override these, if set.
         '';
-        type = appSettingsType;
+        inherit (settingsFormat) type;
         default = null;
       };
 
@@ -234,7 +232,7 @@ in
 
           Vault-specific settings take priority and will override these, if set.
         '';
-        type = appearanceSettingsType;
+        inherit (settingsFormat) type;
         default = null;
       };
 
@@ -321,14 +319,14 @@ in
               settings = {
                 app = mkOption {
                   description = "Settings to write to app.json.";
-                  type = appSettingsType;
+                  inherit (settingsFormat) type;
                   default = cfg.defaultSettings.app;
                   defaultText = literalExpression "config.programs.obsidian.defaultSettings.app";
                 };
 
                 appearance = mkOption {
                   description = "Settings to write to appearance.json.";
-                  type = appearanceSettingsType;
+                  inherit (settingsFormat) type;
                   default = cfg.defaultSettings.appearance;
                   defaultText = literalExpression "config.programs.obsidian.defaultSettings.appearance";
                 };
@@ -406,7 +404,7 @@ in
               lib.lists.optionals (vault.settings.app != null) [
                 {
                   name = "${vault.target}/.obsidian/app.json";
-                  value.source = (pkgs.formats.json { }).generate "app.json" vault.settings.app;
+                  value.source = settingsFormat.generate "app.json" vault.settings.app;
                 }
               ];
 
@@ -422,7 +420,7 @@ in
                   {
                     name = "${vault.target}/.obsidian/appearance.json";
                     value = {
-                      source = (pkgs.formats.json { }).generate "appearance.json" (
+                      source = settingsFormat.generate "appearance.json" (
                         (lib.attrsets.optionalAttrs (vault.settings.appearance != null) vault.settings.appearance)
                         // (lib.attrsets.optionalAttrs (vault.settings.cssSnippets != null) {
                           enabledCssSnippets = map (snippet: snippet.name) (
@@ -450,7 +448,7 @@ in
                 [
                   {
                     name = "${vault.target}/.obsidian/core-plugins.json";
-                    value.source = (pkgs.formats.json { }).generate "core-plugins.json" (
+                    value.source = settingsFormat.generate "core-plugins.json" (
                       builtins.listToAttrs (
                         map (name: {
                           inherit name;
@@ -462,7 +460,7 @@ in
                 ]
                 ++ map (plugin: {
                   name = "${vault.target}/.obsidian/${plugin.name}.json";
-                  value.source = (pkgs.formats.json { }).generate "${plugin.name}.json" plugin.settings;
+                  value.source = settingsFormat.generate "${plugin.name}.json" plugin.settings;
                 }) (builtins.filter (plugin: plugin.settings != null) vault.settings.corePlugins)
               );
 
@@ -472,7 +470,7 @@ in
                 [
                   {
                     name = "${vault.target}/.obsidian/community-plugins.json";
-                    value.source = (pkgs.formats.json { }).generate "community-plugins.json" (
+                    value.source = settingsFormat.generate "community-plugins.json" (
                       map getManifest (builtins.filter (plugin: plugin.enable) vault.settings.communityPlugins)
                     );
                   }
@@ -486,7 +484,7 @@ in
                 }) vault.settings.communityPlugins
                 ++ map (plugin: {
                   name = "${vault.target}/.obsidian/plugins/${getManifest plugin}/data.json";
-                  value.source = (pkgs.formats.json { }).generate "data.json" plugin.settings;
+                  value.source = settingsFormat.generate "data.json" plugin.settings;
                 }) (builtins.filter (plugin: plugin.settings != null) vault.settings.communityPlugins)
               );
 
@@ -521,7 +519,7 @@ in
               lib.lists.optionals (vault.settings.hotkeys != null) [
                 {
                   name = "${vault.target}/.obsidian/hotkeys.json";
-                  value.source = (pkgs.formats.json { }).generate "hotkeys.json" vault.settings.hotkeys;
+                  value.source = settingsFormat.generate "hotkeys.json" vault.settings.hotkeys;
                 }
               ];
 
@@ -565,7 +563,7 @@ in
               else
                 "${config.xdg.configHome}/obsidian";
 
-            template = (pkgs.formats.json { }).generate "obsidian.json" {
+            template = settingsFormat.generate "obsidian.json" {
               vaults = builtins.listToAttrs (
                 map (vault: {
                   name = builtins.substring 0 16 (builtins.hashString "md5" vault.target);
