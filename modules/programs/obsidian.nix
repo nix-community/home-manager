@@ -391,7 +391,7 @@ in
         let
           manifest = builtins.fromJSON (builtins.readFile "${item.pkg}/manifest.json");
         in
-        manifest.id or manifest.name;
+        item.pkg.manifestId or manifest.id or manifest.name;
     in
     lib.mkIf cfg.enable {
       home = {
