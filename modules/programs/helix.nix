@@ -234,7 +234,7 @@ in
     xdg.configFile =
       let
         pkillPrefix = if pkgs.stdenv.hostPlatform.isDarwin then "/usr" else pkgs.procps;
-        onChange = "${pkillPrefix}/bin/pkill -u $USER -x -USR1 '(hx|\\.hx-wrapped)' || true";
+        onChange = "${pkillPrefix}/bin/pkill -USR1 -u $USER -x '(hx|\\.hx-wrapped)' || true";
 
         settings =
           let
