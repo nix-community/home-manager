@@ -41,6 +41,8 @@ in
     nvimBin="home-path/bin/nvim"
     export PATH="$TESTED/home-path/bin:$PATH"
     export HOME="$TMPDIR/hm-user"
+    # Load init.lua from $XDG_CONFIG_HOME/nvim/init.lua
+    export XDG_CONFIG_HOME="$TESTED/home-files/.config"
 
     assertBinaryContains() {
         local file="$TESTED/$1"
@@ -55,7 +57,8 @@ in
     assertNeovimExpr() {
         local var_name="$1"
         local expected_pattern="$2"
-        local output=$(nvim -i NONE --headless --cmd "echo $var_name" +q! 2>&1)
+        # Use -c to evaluate the expression after init.lua is loaded
+        local output=$(nvim -i NONE --headless -c "echo $var_name" +q! 2>&1)
         local exit_code=$?
 
         if [ $exit_code -ne 0 ]; then

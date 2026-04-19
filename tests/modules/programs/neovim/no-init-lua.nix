@@ -10,6 +10,8 @@
     withPython3 = true;
     withRuby = false;
 
+    sideloadInitLua = true;
+
     extraPython3Packages = (
       ps: with ps; [
         jedi
@@ -22,6 +24,10 @@
       vim-fugitive
       { plugin = vim-sensible; }
     ];
+
+    initLua = ''
+      -- initLua
+    '';
   };
   nmt.script = ''
     nvimFolder="home-files/.config/nvim"
