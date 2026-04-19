@@ -26,6 +26,7 @@
         XDG_MISC_DIR="/home/hm-user/Misc"
         XDG_MUSIC_DIR="/home/hm-user/Music"
         XDG_PICTURES_DIR="/home/hm-user/Pictures"
+        XDG_PROJECTS_DIR="/home/hm-user/Projects"
         XDG_PUBLICSHARE_DIR="/home/hm-user/Public"
         XDG_TEMPLATES_DIR="/home/hm-user/Templates"
         XDG_VIDEOS_DIR="/home/hm-user/Videos"
