@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.services.osmscout-server;
 in
@@ -14,17 +19,13 @@ in
 
   options = {
     services.osmscout-server = {
-      enable = lib.mkEnableOption "OSM Scout Server";
+      enable = mkEnableOption "OSM Scout Server";
 
       package = lib.mkPackageOption pkgs "osmscout-server" { };
 
       network = {
-        startWhenNeeded = mkOption {
-          type = types.bool;
+        startWhenNeeded = mkEnableOption "systemd socket activation" // {
           default = true;
-          description = ''
-            Enable systemd socket activation.
-          '';
         };
 
         listenAddress = mkOption {

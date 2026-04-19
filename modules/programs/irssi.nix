@@ -129,16 +129,12 @@ let
           };
 
           ssl = {
-            enable = mkOption {
-              type = types.bool;
+            enable = mkEnableOption "SSL" // {
               default = true;
-              description = "Whether SSL should be used.";
             };
 
-            verify = mkOption {
-              type = types.bool;
+            verify = mkEnableOption "SSL certificate verification" // {
               default = true;
-              description = "Whether the SSL certificate should be verified.";
             };
 
             certificateFile = mkOption {

@@ -95,14 +95,11 @@ let
         description = "Width of the sidebar";
       };
 
-      shortPath = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          By default sidebar shows the full path of the mailbox, but
-          with this enabled only the relative name is shown.
-        '';
-      };
+      shortPath =
+        mkEnableOption "showing only relative names instead of the full path in the sidebar"
+        // {
+          default = true;
+        };
 
       format = mkOption {
         type = types.str;

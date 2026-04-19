@@ -1,14 +1,17 @@
 { config, lib, ... }:
 let
-  inherit (lib) concatStringsSep mkOption types;
+  inherit (lib)
+    concatStringsSep
+    mkOption
+    mkEnableOption
+    types
+    ;
 in
 {
   options.test.asserts = {
     warnings = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "warning asserts" // {
         default = true;
-        description = "Whether warning asserts are enabled.";
       };
 
       expected = mkOption {
@@ -21,10 +24,8 @@ in
     };
 
     assertions = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "assertion asserts" // {
         default = true;
-        description = "Whether assertion asserts are enabled.";
       };
 
       expected = mkOption {

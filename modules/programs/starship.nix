@@ -84,16 +84,15 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableInteractive = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Only enable starship when the shell is interactive. This option is only
-        valid for the Fish shell.
+    enableInteractive =
+      mkEnableOption ''
+        Only enable starship when the shell is interactive. This option is only valid for the Fish shell.
 
         Some plugins require this to be set to `false` to function correctly.
-      '';
-    };
+      ''
+      // {
+        default = true;
+      };
 
     enableTransience = mkEnableOption ''
       The TransientPrompt feature of Starship which replaces previous prompts with a custom string. This is only a valid option for the Fish shell.

@@ -516,11 +516,9 @@ in
                 description = "Profile path.";
               };
 
-              isDefault = mkOption {
-                type = types.bool;
+              isDefault = mkEnableOption "this being the default profile" // {
                 default = config.id == 0;
                 defaultText = "true if profile ID is 0";
-                description = "Whether this is a default profile.";
               };
 
               search = mkOption {

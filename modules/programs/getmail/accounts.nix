@@ -30,15 +30,11 @@ in
 
     delete = mkEnableOption "deleting read messages from the server. Most users should either enable `delete` or disable `readAll`";
 
-    readAll = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Enable if you want to fetch all, even the read messages from the
-        server. Most users should either enable `delete` or
-        disable `readAll`.
-      '';
-    };
+    readAll =
+      mkEnableOption "fetching all messages including read ones. Most users should either enable `delete` or disable `readAll`"
+      // {
+        default = true;
+      };
 
   };
 }

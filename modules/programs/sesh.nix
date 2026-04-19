@@ -38,16 +38,12 @@ in
       '';
     };
 
-    enableAlias = mkOption {
-      type = types.bool;
+    enableAlias = mkEnableOption "a shell alias `s` to quickly launch sessions" // {
       default = true;
-      description = "Whether to enable a shell alias `s` to quickly launch sessions.";
     };
 
-    enableTmuxIntegration = mkOption {
-      type = types.bool;
+    enableTmuxIntegration = mkEnableOption "Tmux integration with sesh" // {
       default = true;
-      description = "Enable Tmux integration with sesh.";
     };
 
     tmuxKey = mkOption {
@@ -56,12 +52,8 @@ in
       description = "Keybinding for invoking sesh in Tmux.";
     };
 
-    icons = mkOption {
-      type = types.bool;
+    icons = mkEnableOption "displaying icons next to results ({option}`--icons` argument)" // {
       default = true;
-      description = ''
-        Display icons next to results ({option}`--icons` argument).
-      '';
     };
   };
 

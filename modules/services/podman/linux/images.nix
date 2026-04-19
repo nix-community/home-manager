@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     mkMerge
     types
     ;
@@ -70,10 +71,8 @@ let
     { name, ... }:
     {
       options = {
-        autoStart = mkOption {
-          type = types.bool;
+        autoStart = mkEnableOption "pulling the image on boot (requires user lingering)" // {
           default = true;
-          description = "Whether to pull the image on boot. Requires user lingering.";
         };
 
         authFile = mkOption {
@@ -142,11 +141,11 @@ let
           description = "FQIN of referenced Image when source is a file or directory archive.";
         };
 
-        tlsVerify = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Require HTTPS and verification of certificates when contacting registries.";
-        };
+        tlsVerify =
+          mkEnableOption "requiring HTTPS and certificate verification when contacting registries"
+          // {
+            default = true;
+          };
 
         username = mkOption {
           type = with types; nullOr str;

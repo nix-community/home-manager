@@ -66,15 +66,11 @@ in
         '';
       };
 
-      enableXinerama = mkOption {
-        default = true;
-        type = types.bool;
-        description = ''
-          Will place a separate image per screen when enabled,
-          otherwise a single image will be stretched across all
-          screens.
-        '';
-      };
+      enableXinerama =
+        mkEnableOption "placing a separate image per screen. Otherwise a single image will be stretched across all screens"
+        // {
+          default = true;
+        };
     };
   };
 

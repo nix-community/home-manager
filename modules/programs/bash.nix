@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     optionalAttrs
     types
     ;
@@ -40,31 +41,29 @@ in
 
   options = {
     programs.bash = {
-      enable = lib.mkEnableOption "GNU Bourne-Again SHell";
+      enable = mkEnableOption "GNU Bourne-Again SHell";
 
       package = lib.mkPackageOption pkgs "bash" {
         nullable = true;
         default = "bashInteractive";
       };
 
-      enableCompletion = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to enable Bash completion for all interactive Bash shells.
+      enableCompletion =
+        mkEnableOption ''
+          Bash completion for all interactive Bash shells.
 
-          Note, if you use NixOS or nix-darwin and do not have Bash completion
-          enabled in the system configuration, then make sure to add
+          Note: if you use NixOS or nix-darwin and do not have Bash completion enabled in the system configuration, then make sure to add
 
           ```nix
             environment.pathsToLink = [ "/share/bash-completion" ];
           ```
 
           to your system configuration to get completion for system packages.
-          Note, the legacy {file}`/etc/bash_completion.d` path is
-          not supported by Home Manager.
-        '';
-      };
+          Note: the legacy {file}`/etc/bash_completion.d` path is not supported by Home Manager
+        ''
+        // {
+          default = true;
+        };
 
       historySize = mkOption {
         type = types.nullOr types.int;

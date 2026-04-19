@@ -10,6 +10,7 @@ let
     mkIf
     mkRenamedOptionModule
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -49,7 +50,7 @@ in
     ];
 
   options.services.screen-locker = {
-    enable = lib.mkEnableOption "screen locker for X session";
+    enable = mkEnableOption "screen locker for X session";
 
     lockCmd = mkOption {
       type = types.str;
@@ -57,7 +58,7 @@ in
       example = "\${pkgs.i3lock}/bin/i3lock -n -c 000000";
     };
 
-    lockCmdEnv = lib.mkOption {
+    lockCmdEnv = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "XSECURELOCK_PAM_SERVICE=xsecurelock" ];
@@ -78,22 +79,17 @@ in
     };
 
     xautolock = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "xautolock for time-based locking" // {
         default = true;
-        description = "Use xautolock for time-based locking.";
       };
 
       package = lib.mkPackageOption pkgs "xautolock" { };
 
-      detectSleep = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to reset xautolock timers when awaking from sleep.
-          No effect if {option}`xautolock.enable` is false.
-        '';
-      };
+      detectSleep =
+        mkEnableOption "resetting xautolock timers when awaking from sleep. No effect if {option}`xautolock.enable` is false"
+        // {
+          default = true;
+        };
 
       extraOptions = mkOption {
         type = types.listOf types.str;

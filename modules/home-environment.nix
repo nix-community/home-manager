@@ -425,22 +425,21 @@ in
       description = "The derivation installing the user packages.";
     };
 
-    home.emptyActivationPath = mkOption {
-      internal = true;
-      type = types.bool;
-      default = lib.versionAtLeast stateVersion "22.11";
-      defaultText = literalExpression ''
-        false   for state version < 22.11,
-        true    for state version ≥ 22.11
-      '';
-      description = ''
-        Whether the activation script should start with an empty
-        {env}`PATH` variable. When `false` then the
-        user's {env}`PATH` will be accessible in the script. It is
-        recommended to keep this at `true` to avoid
-        uncontrolled use of tools found in PATH.
-      '';
-    };
+    home.emptyActivationPath =
+      mkEnableOption ''
+        starting the activation script with an empty {env}`PATH`.
+
+        When `false` then the user's {env}`PATH` will be accessible in the script.
+        It is recommended to keep this at `true` to avoid uncontrolled use of tools found in PATH
+      ''
+      // {
+        internal = true;
+        default = lib.versionAtLeast stateVersion "22.11";
+        defaultText = literalExpression ''
+          false   for state version < 22.11,
+          true    for state version ≥ 22.11
+        '';
+      };
 
     home.activation = mkOption {
       type = lib.hm.types.dagOf types.str;
@@ -505,17 +504,16 @@ in
       description = "The package containing the complete activation script.";
     };
 
-    home.activationGenerateGcRoot = mkOption {
-      internal = true;
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether the activation script should create a GC root to avoid being
-        garbage collected. Typically you want this but if you know for certain
-        that the Home Manager generation is referenced from some other GC root,
-        then it may be appropriate to not create our own root.
-      '';
-    };
+    home.activationGenerateGcRoot =
+      mkEnableOption ''
+        creating a GC root during activation to avoid being garbage collected.
+
+        Typically you want this but if you know for certain that the Home Manager generation is referenced from some other GC root, then it may be appropriate to not create our own root
+      ''
+      // {
+        internal = true;
+        default = true;
+      };
 
     home.extraActivationPath = mkOption {
       internal = true;
@@ -545,20 +543,18 @@ in
       '';
     };
 
-    home.enableNixpkgsReleaseCheck = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Determines whether to check for release version mismatch between Home
-        Manager and Nixpkgs. Using mismatched versions is likely to cause errors
-        and unexpected behavior. It is therefore highly recommended to use a
-        release of Home Manager that corresponds with your chosen release of
-        Nixpkgs.
+    home.enableNixpkgsReleaseCheck =
+      mkEnableOption ''
+        release version mismatch checks between Home Manager and Nixpkgs.
 
-        When this option is enabled and a mismatch is detected then a warning
-        will be printed when the user configuration is being built.
-      '';
-    };
+        Using mismatched versions is likely to cause errors and unexpected behavior.
+        It is therefore highly recommended to use a release of Home Manager that corresponds with your chosen release of Nixpkgs.
+
+        When this option is enabled and a mismatch is detected then a warning will be printed when the user configuration is being built
+      ''
+      // {
+        default = true;
+      };
 
     home.preferXdgDirectories = mkEnableOption "making programs use XDG directories whenever supported";
   };

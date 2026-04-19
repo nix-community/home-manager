@@ -84,16 +84,12 @@ in
             audio = {
               silent = mkEnableOption "muting all wallpaper sound";
 
-              automute = mkOption {
-                type = types.bool;
+              automute = mkEnableOption "automuting when another app is playing sound" // {
                 default = true;
-                description = "Automute when another app is playing sound.";
               };
 
-              processing = mkOption {
-                type = types.bool;
+              processing = mkEnableOption "audio processing for background" // {
                 default = true;
-                description = "Enables audio processing for background.";
               };
             };
           };

@@ -73,41 +73,23 @@ in
         description = "Extra packages available to Zed.";
       };
 
-      mutableUserSettings = mkOption {
-        type = types.bool;
+      mutableUserSettings = mkEnableOption "the mutation of user settings (settings.json) by zed" // {
         default = true;
-        example = false;
-        description = ''
-          Whether user settings (settings.json) can be updated by zed.
-        '';
       };
 
-      mutableUserKeymaps = mkOption {
-        type = types.bool;
+      mutableUserKeymaps = mkEnableOption "the mutation of user keymaps (keymap.json) by zed" // {
         default = true;
-        example = false;
-        description = ''
-          Whether user keymaps (keymap.json) can be updated by zed.
-        '';
       };
 
-      mutableUserTasks = mkOption {
-        type = types.bool;
+      mutableUserTasks = mkEnableOption "the mutation of user tasks (tasks.json) by zed" // {
         default = true;
-        example = false;
-        description = ''
-          Whether user tasks (tasks.json) can be updated by zed.
-        '';
       };
 
-      mutableUserDebug = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        description = ''
-          Whether user debug configurations (debug.json) can be updated by zed.
-        '';
-      };
+      mutableUserDebug =
+        mkEnableOption "the mutation of user debug configurations (debug.json) by zed"
+        // {
+          default = true;
+        };
 
       userSettings = mkOption {
         inherit (jsonFormat) type;

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkEnableOption types;
+  inherit (lib) mkOption mkEnableOption;
   cfg = config.programs.aerospace;
 
   tomlFormat = pkgs.formats.toml { };
@@ -90,10 +90,8 @@ in
         by Home Manager and launchd instead.
       '';
 
-      keepAlive = mkOption {
-        type = types.bool;
+      keepAlive = mkEnableOption "keeping the launchd service alive" // {
         default = true;
-        description = "Whether the launchd service should be kept alive.";
       };
     };
 

@@ -202,13 +202,8 @@ let
         '';
       };
 
-      checkHostIP = mkOption {
-        type = types.bool;
+      checkHostIP = mkEnableOption "checking the host IP address in the {file}`known_hosts` file" // {
         default = true;
-        description = ''
-          Check the host IP address in the
-          {file}`known_hosts` file.
-        '';
       };
 
       proxyCommand = mkOption {
@@ -527,15 +522,11 @@ in
       '';
     };
 
-    enableDefaultConfig = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
-      description = ''
-        Whether to enable or not the old default config values.
+    enableDefaultConfig =
+      mkEnableOption ''
+        the old default config values.
         This option will become deprecated in the future.
-        For an equivalent, copy and paste the following
-        code snippet in your config:
+        For an equivalent, copy and paste the following code snippet in your config:
 
         programs.ssh.matchBlocks."*" = {
           forwardAgent = false;
@@ -549,8 +540,10 @@ in
           controlPath = "~/.ssh/master-%r@%n:%p";
           controlPersist = "no";
         };
-      '';
-    };
+      ''
+      // {
+        default = true;
+      };
   };
 
   config = lib.mkIf cfg.enable (

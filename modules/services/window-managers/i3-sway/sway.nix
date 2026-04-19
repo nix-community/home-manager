@@ -530,16 +530,12 @@ in
     };
 
     systemd = {
-      enable = mkOption {
-        type = types.bool;
-        default = pkgs.stdenv.isLinux;
-        example = false;
-        description = ''
-          Whether to enable {file}`sway-session.target` on
-          sway startup. This links to
-          {file}`graphical-session.target`.
-          Some important environment variables will be imported to systemd
-          and dbus user environment before reaching the target, including
+      enable =
+        mkEnableOption ''
+          {file}`sway-session.target` on sway startup.
+          This links to {file}`graphical-session.target`.
+
+          Some important environment variables will be imported to systemd and dbus user environment before reaching the target, including :
           * {env}`DISPLAY`
           * {env}`WAYLAND_DISPLAY`
           * {env}`SWAYSOCK`
@@ -548,9 +544,12 @@ in
           * {env}`NIXOS_OZONE_WL`
           * {env}`XCURSOR_THEME`
           * {env}`XCURSOR_SIZE`
-          You can extend this list using the `systemd.variables` option.
-        '';
-      };
+
+          You can extend this list using the `systemd.variables` option
+        ''
+        // {
+          default = pkgs.stdenv.isLinux;
+        };
 
       variables = mkOption {
         type = types.listOf types.str;
@@ -606,13 +605,11 @@ in
       '';
     };
 
-    xwayland = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Enable xwayland, which is needed for the default configuration of sway.
-      '';
-    };
+    xwayland =
+      mkEnableOption "xwayland support, which is needed for the default configuration of sway"
+      // {
+        default = true;
+      };
 
     wrapperFeatures = mkOption {
       type = wrapperOptions;
@@ -663,11 +660,9 @@ in
       description = "Sway configuration options.";
     };
 
-    checkConfig = mkOption {
-      type = types.bool;
+    checkConfig = mkEnableOption "validating the generated config file" // {
       default = cfg.package != null;
       defaultText = lib.literalExpression "wayland.windowManager.sway.package != null";
-      description = "If enabled, validates the generated config file.";
     };
 
     extraConfig = mkOption {

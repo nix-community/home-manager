@@ -139,12 +139,8 @@ in
       '';
     };
 
-    enableDefaultBindings = mkOption {
-      type = types.bool;
+    enableDefaultBindings = mkEnableOption "loading default key bindings" // {
       default = true;
-      description = ''
-        Disable to prevent loading default key bindings.
-      '';
     };
 
     keyBindings = mkOption {

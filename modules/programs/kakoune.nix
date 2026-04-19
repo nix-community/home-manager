@@ -167,12 +167,8 @@ let
         '';
       };
 
-      incrementalSearch = mkOption {
-        type = types.bool;
+      incrementalSearch = mkEnableOption "executing search while typing" // {
         default = true;
-        description = ''
-          Execute a search as it is being typed.
-        '';
       };
 
       alignWithTabs = mkEnableOption "using tabs for the align command";

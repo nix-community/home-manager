@@ -72,12 +72,8 @@ let
       };
     }
     // lib.optionalAttrs (lib.elem browser plasmaSupportedBrowsers) {
-      plasmaSupport = mkOption {
+      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${name}" // {
         inherit visible;
-        type = types.bool;
-        default = false;
-        example = true;
-        description = "Whether to enable the 'Use QT' theme for ${name}.";
       };
     }
     // lib.optionalAttrs (!isProprietaryChrome) {

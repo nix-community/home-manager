@@ -82,8 +82,7 @@ in
 
       withPerl = mkEnableOption "the Perl provider. Set to `true` to use Perl plugins";
 
-      withPython3 = mkOption {
-        type = types.bool;
+      withPython3 = mkEnableOption "the Python 3 provider. Set to `true` to use Python 3 plugins" // {
         inherit
           (lib.hm.deprecations.mkStateVersionOptionDefault {
             inherit (config.home) stateVersion;
@@ -99,14 +98,9 @@ in
           default
           defaultText
           ;
-        description = ''
-          Enable Python 3 provider. Set to `true` to
-          use Python 3 plugins.
-        '';
       };
 
-      withRuby = mkOption {
-        type = types.bool;
+      withRuby = mkEnableOption "the Ruby provider" // {
         inherit
           (lib.hm.deprecations.mkStateVersionOptionDefault {
             inherit (config.home) stateVersion;
@@ -122,9 +116,6 @@ in
           default
           defaultText
           ;
-        description = ''
-          Enable ruby provider.
-        '';
       };
 
       extraPython3Packages = mkOption {
@@ -162,21 +153,13 @@ in
         '';
       };
 
-      autowrapRuntimeDeps = mkOption {
-        type = types.bool;
+      autowrapRuntimeDeps = mkEnableOption "automatically wrapping runtime dependencies of plugins" // {
         default = true;
-        description = ''
-          Whether to automatically wrap the binary with the runtime dependencies of the plugins.
-        '';
       };
 
-      waylandSupport = mkOption {
-        type = types.bool;
+      waylandSupport = mkEnableOption "Wayland clipboard support" // {
         default = pkgs.stdenv.isLinux;
         defaultText = literalExpression "pkgs.stdenv.isLinux";
-        description = ''
-          Whether to enable Wayland clipboard support.
-        '';
       };
 
       extraWrapperArgs = mkOption {

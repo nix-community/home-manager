@@ -388,27 +388,25 @@ in
         );
       };
 
-      overrideDevices = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to delete the devices which are not configured via the
-          [devices](#opt-services.syncthing.settings.devices) option.
-          If set to `false`, devices added via the web
-          interface will persist and will have to be deleted manually.
-        '';
-      };
+      overrideDevices =
+        mkEnableOption ''
+          deleting the devices which are not configured via the [devices](#opt-services.syncthing.settings.devices) option.
 
-      overrideFolders = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to delete the folders which are not configured via the
-          [folders](#opt-services.syncthing.settings.folders) option.
-          If set to `false`, folders added via the web
-          interface will persist and will have to be deleted manually.
-        '';
-      };
+          If set to `false`, devices added via the web interface will persist and will have to be deleted manually
+        ''
+        // {
+          default = true;
+        };
+
+      overrideFolders =
+        mkEnableOption ''
+          deleting the folders which are not configured via the [folders](#opt-services.syncthing.settings.folders) option.
+
+          If set to `false`, folders added via the web interface will persist and will have to be deleted manually
+        ''
+        // {
+          default = true;
+        };
 
       settings = mkOption {
         type = types.submodule {
@@ -552,15 +550,11 @@ in
                     freeformType = settingsFormat.type;
                     options = {
 
-                      enable = mkOption {
-                        type = types.bool;
-                        default = true;
-                        description = ''
-                          Whether to share this folder.
-                          This option is useful when you want to define all folders
-                          in one place, but not every machine should share all folders.
-                        '';
-                      };
+                      enable =
+                        mkEnableOption "sharing this folder. This option is useful when you want to define all folders in one place, but not every machine should share all folders"
+                        // {
+                          default = true;
+                        };
 
                       path = mkOption {
                         type = types.str // {

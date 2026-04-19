@@ -565,17 +565,17 @@ in
         '';
       };
 
-      darwinSetupWarning = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        visible = false;
-        readOnly = !isDarwin;
-        description = ''
-          Using programs.thunderbird.darwinSetupWarning is deprecated. The
-          module is compatible with all Thunderbird installations.
-        '';
-      };
+      darwinSetupWarning =
+        mkEnableOption ''
+          the deprecated Thunderbird Darwin setup warning.
+
+          Using programs.thunderbird.darwinSetupWarning is deprecated. The module is compatible with all Thunderbird installations
+        ''
+        // {
+          default = true;
+          visible = false;
+          readOnly = !isDarwin;
+        };
     };
 
     accounts.email.accounts = mkOption {
@@ -665,10 +665,8 @@ in
                         type = str;
                         description = "Name for the filter.";
                       };
-                      enabled = mkOption {
-                        type = bool;
+                      enabled = mkEnableOption "this filter" // {
                         default = true;
-                        description = "Whether this filter is currently active.";
                       };
                       type = mkOption {
                         type = str;

@@ -255,15 +255,11 @@ in
         description = "Set the default-shell tmux variable.";
       };
 
-      secureSocket = mkOption {
-        default = pkgs.stdenv.isLinux;
-        type = types.bool;
-        description = ''
-          Store tmux socket under {file}`/run`, which is more
-          secure than {file}`/tmp`, but as a downside it doesn't
-          survive user logout.
-        '';
-      };
+      secureSocket =
+        mkEnableOption "storing the tmux socket under {file}`/run`, which is more secure than {file}`/tmp`, but as a downside it doesn't survive user logout"
+        // {
+          default = pkgs.stdenv.isLinux;
+        };
 
       tmuxp.enable = mkEnableOption "tmuxp";
 

@@ -8,6 +8,7 @@ let
   inherit (lib)
     literalExpression
     mkIf
+    mkEnableOption
     mkOption
     types
     ;
@@ -25,33 +26,33 @@ in
 
   options = {
     programs.beets = {
-      enable = mkOption {
-        type = types.bool;
-        inherit
-          (lib.hm.deprecations.mkStateVersionOptionDefault {
-            inherit (config.home) stateVersion;
-            since = "19.03";
-            optionPath = [
-              "programs"
-              "beets"
-              "enable"
-            ];
-            legacy = {
-              value = cfg.settings != { };
-              text = "config.programs.beets.settings != { }";
-            };
-            current.value = false;
-          })
-          default
-          defaultText
-          ;
-        description = ''
-          Whether to enable the beets music library manager. This
-          defaults to `false` for state
-          version ≥ 19.03. For earlier versions beets is enabled if
-          {option}`programs.beets.settings` is non-empty.
-        '';
-      };
+      enable =
+        mkEnableOption ''
+          the beets music library manager.
+
+          This defaults to `false` for state version ≥ 19.03.
+          For earlier versions, beets is enabled if {option}`programs.beets.settings` is non-empty
+        ''
+        // {
+          inherit
+            (lib.hm.deprecations.mkStateVersionOptionDefault {
+              inherit (config.home) stateVersion;
+              since = "19.03";
+              optionPath = [
+                "programs"
+                "beets"
+                "enable"
+              ];
+              legacy = {
+                value = cfg.settings != { };
+                text = "config.programs.beets.settings != { }";
+              };
+              current.value = false;
+            })
+            default
+            defaultText
+            ;
+        };
 
       package = lib.mkPackageOption pkgs "beets" {
         example = "(pkgs.beets.override { pluginOverrides = { beatport.enable = false; }; })";
@@ -70,9 +71,9 @@ in
       };
 
       mpdIntegration = {
-        enableStats = lib.mkEnableOption "mpdstats plugin and service";
+        enableStats = mkEnableOption "mpdstats plugin and service";
 
-        enableUpdate = lib.mkEnableOption "mpdupdate plugin";
+        enableUpdate = mkEnableOption "mpdupdate plugin";
 
         host = mkOption {
           type = types.str;

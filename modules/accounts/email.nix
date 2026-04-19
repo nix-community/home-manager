@@ -78,12 +78,8 @@ let
 
   tlsModule = types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "TLS/SSL" // {
         default = true;
-        description = ''
-          Whether to enable TLS/SSL.
-        '';
       };
 
       useStartTls = mkEnableOption "STARTTLS";
@@ -363,15 +359,11 @@ let
 
         primary = mkEnableOption "marking this as the primary account. Only one account may be set as primary";
 
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether this account is enabled.  Potentially useful to allow
-            setting email configuration globally then enabling or disabling on
-            specific systems.
-          '';
-        };
+        enable =
+          mkEnableOption "this account. Potentially useful to allow setting email configuration globally then enabling or disabling on specific systems"
+          // {
+            default = true;
+          };
 
         flavor = mkOption {
           type = types.enum [

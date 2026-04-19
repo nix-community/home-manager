@@ -95,12 +95,8 @@ let
       '';
     };
 
-    remove_local_messages = mkOption {
-      type = types.bool;
+    remove_local_messages = mkEnableOption "removing local messages deleted on the remote" // {
       default = true;
-      description = ''
-        Remove local messages that have been deleted on the remote.
-      '';
     };
 
     replace_slash_with_dot = mkEnableOption "replacing '/' with '.' in Gmail labels";
@@ -134,17 +130,15 @@ let
   lieerOpts = {
     enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
-    notmuchSetupWarning = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Warn if Notmuch is not also enabled for this account.
+    notmuchSetupWarning =
+      mkEnableOption ''
+        warnings when Notmuch is not also enabled for this account.
 
-        This can safely be disabled if {command}`notmuch init`
-        has been used to configure this account outside of Home
-        Manager.
-      '';
-    };
+        This can safely be disabled if {command}`notmuch init` has been used to configure this account outside of Home Manager
+      ''
+      // {
+        default = true;
+      };
 
     settings = mkOption {
       type = types.submodule {

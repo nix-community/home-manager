@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     mkMerge
     types
     ;
@@ -83,16 +84,12 @@ let
     {
       options = {
 
-        autoStart = mkOption {
-          type = types.bool;
+        autoStart = mkEnableOption "creating the volume on boot" // {
           default = true;
-          description = "Whether to create the volume on boot.";
         };
 
-        copy = mkOption {
-          type = types.bool;
+        copy = mkEnableOption "copying image content at the volume mountpoint on first run" // {
           default = true;
-          description = "Copy content of the image located at the mountpoint of the volume on first run.";
         };
 
         description = mkOption {
@@ -160,14 +157,14 @@ let
           description = "The labels to apply to the volume.";
         };
 
-        preserve = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether the volume should be preserved if it is removed from the configuration.
+        preserve =
+          mkEnableOption ''
+            preserving the volume when removed from configuration.
             Setting this to false will cause the volume to be deleted if the volume is removed from the configuration
-          '';
-        };
+          ''
+          // {
+            default = true;
+          };
 
         type = mkOption {
           type = with types; nullOr str;

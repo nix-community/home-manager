@@ -63,16 +63,12 @@ in
         '';
       };
 
-      automount = mkOption {
-        type = types.bool;
+      automount = mkEnableOption "automatically mounting new devices" // {
         default = true;
-        description = "Whether to automatically mount new devices.";
       };
 
-      notify = mkOption {
-        type = types.bool;
+      notify = mkEnableOption "pop-up notifications" // {
         default = true;
-        description = "Whether to show pop-up notifications.";
       };
 
       tray = mkOption {

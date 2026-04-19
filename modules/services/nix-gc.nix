@@ -70,17 +70,11 @@ in
         '';
       };
 
-      persistent = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        description = ''
-          If true, the time when the service unit was last triggered is
-          stored on disk. When the timer is activated, the service unit is
-          triggered immediately if it would have been triggered at least once
-          during the time when the timer was inactive.
-        '';
-      };
+      persistent =
+        mkEnableOption "persisting nix-gc timer trigger times on disk. When the timer is activated, the service unit is triggered immediately if it would have been triggered at least once during the time when the timer was inactive"
+        // {
+          default = true;
+        };
     };
   };
 

@@ -196,14 +196,11 @@ let
       '';
     };
 
-    auto_create_new_mailboxes = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to create new mailboxes automatically on the server from notmuch
-        tags.
-      '';
-    };
+    auto_create_new_mailboxes =
+      mkEnableOption "creating new mailboxes automatically on the server from notmuch tags"
+      // {
+        default = true;
+      };
 
     cache_dir = mkOption {
       type = types.nullOr types.str;
@@ -234,16 +231,11 @@ let
   mujmapOpts = {
     enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
 
-    notmuchSetupWarning = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Warn if Notmuch is not also enabled for this account.
-
-        This can safely be disabled if {file}`mujmap.toml` is managed
-        outside of Home Manager.
-      '';
-    };
+    notmuchSetupWarning =
+      mkEnableOption "warnings when Notmuch is not also enabled for this account. This can safely be disabled if {file}`mujmap.toml` is managed outside of Home Manager"
+      // {
+        default = true;
+      };
 
     settings = mkOption {
       type = types.submodule {

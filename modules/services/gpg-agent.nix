@@ -241,27 +241,27 @@ in
 
       verbose = mkEnableOption "verbose output";
 
-      grabKeyboardAndMouse = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Tell the pinentry to grab the keyboard and mouse. This
-          option should in general be used to avoid X-sniffing
-          attacks. When disabled, this option passes
-          {option}`no-grab` setting to gpg-agent.
-        '';
-      };
+      grabKeyboardAndMouse =
+        mkEnableOption ''
+          pinentry grabbing keyboard and mouse.
 
-      enableScDaemon = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Make use of the scdaemon tool. This option has the effect of
-          enabling the ability to do smartcard operations. When
-          disabled, this option passes
-          {option}`disable-scdaemon` setting to gpg-agent.
-        '';
-      };
+          This option should in general be used to avoid X-sniffing attacks.
+          When disabled, this option passes {option}`no-grab` setting to gpg-agent
+        ''
+        // {
+          default = true;
+        };
+
+      enableScDaemon =
+        mkEnableOption ''
+          the scdaemon tool.
+
+          This option has the effect of enabling the ability to do smartcard operations.
+          When disabled, this option passes {option}`disable-scdaemon` setting to gpg-agent
+        ''
+        // {
+          default = true;
+        };
 
       noAllowExternalCache = mkEnableOption ''
         disabling external cache features in pinentry.

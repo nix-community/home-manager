@@ -61,13 +61,8 @@ in
               '';
             };
 
-            ignoreDups = mkOption {
-              type = types.bool;
+            ignoreDups = mkEnableOption "ignoring command duplicates of the previous history event" // {
               default = true;
-              description = ''
-                Do not enter command lines into the history list
-                if they are duplicates of the previous event.
-              '';
             };
 
             ignoreAllDups = mkEnableOption "removing older duplicate commands when a duplicate is added to history";
@@ -76,23 +71,16 @@ in
 
             findNoDups = mkEnableOption "hiding history lines that were previously found";
 
-            ignoreSpace = mkOption {
-              type = types.bool;
+            ignoreSpace = mkEnableOption "ignoring commands that start with a space in history" // {
               default = true;
-              description = ''
-                Do not enter command lines into the history list
-                if the first character is a space.
-              '';
             };
 
             expireDuplicatesFirst = mkEnableOption "expiring duplicate history entries first";
 
             extended = mkEnableOption "saving timestamps into the history file";
 
-            share = mkOption {
-              type = types.bool;
+            share = mkEnableOption "sharing command history between zsh sessions" // {
               default = true;
-              description = "Share command history between zsh sessions.";
             };
           };
         }

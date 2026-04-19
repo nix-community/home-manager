@@ -34,14 +34,11 @@ in
         { name, config, ... }:
         {
           options = {
-            enable = mkOption {
-              type = types.bool;
-              default = true;
-              description = ''
-                Whether this file should be generated. This option allows specific
-                files to be disabled.
-              '';
-            };
+            enable =
+              mkEnableOption "generating this file. This option allows specific files to be disabled"
+              // {
+                default = true;
+              };
             target = mkOption {
               type = types.str;
               apply =

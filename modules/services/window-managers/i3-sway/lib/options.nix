@@ -62,14 +62,14 @@ let
       always = mkEnableOption "running command on each ${moduleName} restart";
     }
     // lib.optionalAttrs isI3 {
-      notification = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to enable startup-notification support for the command.
-          See {option}`--no-startup-id` option description in the i3 user guide.
-        '';
-      };
+      notification =
+        mkEnableOption ''
+          startup-notification support for the command.
+          See {option}`--no-startup-id` option description in the i3 user guide
+        ''
+        // {
+          default = true;
+        };
 
       workspace = mkOption {
         type = types.nullOr types.str;
@@ -417,8 +417,7 @@ in
   window = mkOption {
     type = types.submodule {
       options = {
-        titlebar = mkOption {
-          type = types.bool;
+        titlebar = mkEnableOption "window titlebars" // {
           default =
             if lib.versionOlder stateVersion "23.05" then (isI3 && (cfg.config.gaps == null)) else true;
           defaultText =
@@ -432,7 +431,6 @@ in
                 true for state version ≥ 23.05
                 false for state version < 23.05
               '';
-          description = "Whether to show window titlebars.";
         };
 
         border = mkOption {
@@ -486,8 +484,7 @@ in
   floating = mkOption {
     type = types.submodule {
       options = {
-        titlebar = mkOption {
-          type = types.bool;
+        titlebar = mkEnableOption "floating window titlebars" // {
           default =
             if lib.versionOlder stateVersion "23.05" then (isI3 && (cfg.config.gaps == null)) else true;
           defaultText =
@@ -501,7 +498,6 @@ in
                 true for state version ≥ 23.05
                 false for state version < 23.05
               '';
-          description = "Whether to show floating window titlebars.";
         };
 
         border = mkOption {

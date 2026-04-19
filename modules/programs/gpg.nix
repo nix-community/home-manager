@@ -10,6 +10,7 @@ let
     mkDefault
     mkIf
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -160,7 +161,7 @@ let
 in
 {
   options.programs.gpg = {
-    enable = lib.mkEnableOption "GnuPG";
+    enable = mkEnableOption "GnuPG";
 
     package = lib.mkPackageOption pkgs "gnupg" {
       example = "pkgs.gnupg23";
@@ -246,35 +247,30 @@ in
       description = "Directory to store keychains and configuration.";
     };
 
-    mutableKeys = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        If set to `true`, you may manage your keyring as a user
-        using the `gpg` command. Upon activation, the keyring
-        will have managed keys added without overwriting unmanaged keys.
+    mutableKeys =
+      mkEnableOption ''
+        managing the keyring with the {command}`gpg` command.
 
-        If set to `false`, the path
-        {file}`$GNUPGHOME/pubring.kbx` will become an immutable
-        link to the Nix store, denying modifications.
-      '';
-    };
+        Upon activation, the keyring will have managed keys added without overwriting unmanaged keys.
 
-    mutableTrust = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        If set to `true`, you may manage trust as a user using
-        the {command}`gpg` command. Upon activation, trusted keys have
-        their trust set without overwriting unmanaged keys.
+        If set to `false`, the path {file}`$GNUPGHOME/pubring.kbx` will become an immutable link to the Nix store, denying modifications
+      ''
+      // {
+        default = true;
+      };
 
-        If set to `false`, the path
-        {file}`$GNUPGHOME/trustdb.gpg` will be
-        *overwritten* on each activation, removing trust for
-        any unmanaged keys. Be careful to make a backup of your old
-        {file}`trustdb.gpg` before switching to immutable trust!
-      '';
-    };
+    mutableTrust =
+      mkEnableOption ''
+        managing trust with the {command}`gpg` command.
+
+        Upon activation, trusted keys have their trust set without overwriting unmanaged keys.
+
+        If set to `false`, the path {file}`$GNUPGHOME/trustdb.gpg` will be *overwritten* on each activation, removing trust for any unmanaged keys.
+        Be careful to make a backup of your old {file}`trustdb.gpg` before switching to immutable trust
+      ''
+      // {
+        default = true;
+      };
 
     publicKeys = mkOption {
       type = types.listOf (types.submodule publicKeyOpts);

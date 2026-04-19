@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib) mkIf mkOption mkEnableOption;
 
   cfg = config.programs.jujutsu;
   tomlFormat = pkgs.formats.toml { };
@@ -38,17 +38,13 @@ in
     ];
 
   options.programs.jujutsu = {
-    enable = lib.mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
+    enable = mkEnableOption "a Git-compatible DVCS that is both simple and powerful";
 
     package = lib.mkPackageOption pkgs "jujutsu" { nullable = true; };
 
-    ediff = mkOption {
-      type = types.bool;
+    ediff = mkEnableOption "ediff as a merge tool" // {
       default = config.programs.emacs.enable;
       defaultText = lib.literalExpression "config.programs.emacs.enable";
-      description = ''
-        Enable ediff as a merge tool
-      '';
     };
 
     settings = mkOption {

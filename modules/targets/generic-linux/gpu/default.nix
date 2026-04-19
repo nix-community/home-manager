@@ -16,12 +16,9 @@
         ;
     in
     {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "GPU driver integration for non-NixOS systems" // {
         default = config.targets.genericLinux.enable && config.targets.genericLinux.nixGL.packages == null;
         defaultText = literalExpression "config.targets.genericLinux.enable && config.targets.genericLinux.nixGL.packages == null";
-        example = true;
-        description = "Whether to enable GPU driver integration for non-NixOS systems.";
       };
 
       packages = mkOption {

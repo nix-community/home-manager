@@ -74,9 +74,7 @@ let
 
   configModule = types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
-        description = "Whether to enable the output.";
+      enable = mkEnableOption "this output" // {
         default = true;
       };
 

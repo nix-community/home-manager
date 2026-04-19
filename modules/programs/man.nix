@@ -5,21 +5,17 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
   cfg = config.programs.man;
 in
 {
   options = {
     programs.man = {
-      enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to enable manual pages and the {command}`man`
-          command. This also includes "man" outputs of all
-          `home.packages`.
-        '';
-      };
+      enable =
+        mkEnableOption "manual pages and the {command}`man` command. This also includes 'man' outputs of all `home.packages`"
+        // {
+          default = true;
+        };
 
       package = mkOption {
         type = with types; nullOr package;

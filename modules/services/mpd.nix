@@ -21,14 +21,11 @@ in
 
       package = lib.mkPackageOption pkgs "mpd" { };
 
-      enableSessionVariables = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to set {env}`MPD_HOST` {env}`MPD_PORT` environment variables
-          according to {option}`services.mpd.network`.
-        '';
-      };
+      enableSessionVariables =
+        mkEnableOption "setting {env}`MPD_HOST` and {env}`MPD_PORT` environment variables according to {option}`services.mpd.network`"
+        // {
+          default = true;
+        };
 
       musicDirectory = mkOption {
         type = with types; either path str;
@@ -90,14 +87,9 @@ in
       };
 
       network = {
-        startWhenNeeded = mkOption {
-          type = types.bool;
-          default = false;
+        startWhenNeeded = mkEnableOption "systemd socket activation. This is only supported on Linux" // {
           visible = pkgs.stdenv.hostPlatform.isLinux;
           readOnly = pkgs.stdenv.hostPlatform.isDarwin;
-          description = ''
-            Enable systemd socket activation. This is only supported on Linux.
-          '';
         };
 
         listenAddress = mkOption {

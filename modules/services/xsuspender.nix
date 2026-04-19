@@ -70,14 +70,11 @@ let
         example = "echo resuming ...";
       };
 
-      sendSignals = mkOption {
-        description = ''
-          Whether to send SIGSTOP / SIGCONT signals or not.
-          If false just the exec scripts are run.
-        '';
-        type = types.bool;
-        default = true;
-      };
+      sendSignals =
+        mkEnableOption "sending SIGSTOP / SIGCONT signals. If false just the exec scripts are run"
+        // {
+          default = true;
+        };
 
       suspendSubtreePattern = mkOption {
         description = "Also suspend descendant processes that match this regex.";
@@ -87,14 +84,11 @@ let
 
       onlyOnBattery = mkEnableOption "process suspend only on battery";
 
-      autoSuspendOnBattery = mkOption {
-        description = ''
-          Whether to auto-apply rules when switching to battery
-          power even if the window(s) didn't just lose focus.
-        '';
-        type = types.bool;
-        default = true;
-      };
+      autoSuspendOnBattery =
+        mkEnableOption "auto-applying rules when switching to battery power even if the window(s) didn't just lose focus"
+        // {
+          default = true;
+        };
 
       downclockOnBattery = mkOption {
         description = ''
@@ -113,7 +107,7 @@ in
 
   options = {
     services.xsuspender = {
-      enable = lib.mkEnableOption "XSuspender";
+      enable = mkEnableOption "XSuspender";
 
       package = lib.mkPackageOption pkgs "xsuspender" { };
 

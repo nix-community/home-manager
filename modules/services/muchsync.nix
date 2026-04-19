@@ -44,12 +44,8 @@ let
         '';
       };
 
-      upload = mkOption {
-        type = types.bool;
+      upload = mkEnableOption "propagating local changes to the remote" // {
         default = true;
-        description = ''
-          Whether to propagate local changes to the remote.
-        '';
       };
 
       local = {
@@ -62,13 +58,8 @@ let
           This option is useful if your software regularly modifies the contents of mail files (e.g., because you are running offlineimap with "synclabels = yes")
         '';
 
-        importNew = mkOption {
-          type = types.bool;
+        importNew = mkEnableOption "running {command}`notmuch new` locally before synchronisation" // {
           default = true;
-          description = ''
-            Whether to begin the synchronisation by running
-            {command}`notmuch new` locally.
-          '';
         };
       };
 
@@ -103,14 +94,11 @@ let
           This option is useful if your software regularly modifies the contents of mail files (e.g., because you are running offlineimap with "synclabels = yes")
         '';
 
-        importNew = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to begin the synchronisation by running
-            {command}`notmuch new` on the remote side.
-          '';
-        };
+        importNew =
+          mkEnableOption "running {command}`notmuch new` on the remote side before synchronisation"
+          // {
+            default = true;
+          };
       };
     };
   };

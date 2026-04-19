@@ -1,6 +1,11 @@
 { pkgs, lib }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   primitive =
     with types;
@@ -180,7 +185,7 @@ let
 in
 {
   xsession.windowManager.bspwm = {
-    enable = lib.mkEnableOption "bspwm window manager";
+    enable = mkEnableOption "bspwm window manager";
 
     package = lib.mkPackageOption pkgs "bspwm" {
       example = "pkgs.bspwm-unstable";
@@ -226,18 +231,18 @@ in
       };
     };
 
-    alwaysResetDesktops = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        If set to `true`, desktops configured in {option}`monitors` will be reset
-        every time the config is run.
+    alwaysResetDesktops =
+      mkEnableOption ''
+        resetting configured desktops on every bspwm config run.
+
+        If set to `true`, desktops configured in {option}`monitors` will be reset every time the config is run.
 
         If set to `false`, desktops will only be configured the first time the config is run.
-        This is useful if you want to dynamically add desktops and you don't want them to be destroyed if you
-        re-run `bspwmrc`.
-      '';
-    };
+        This is useful if you want to dynamically add desktops and you don't want them to be destroyed if you re-run `bspwmrc`
+      ''
+      // {
+        default = true;
+      };
 
     rules = mkOption {
       type = types.attrsOf rule;
