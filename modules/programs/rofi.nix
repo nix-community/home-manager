@@ -82,7 +82,7 @@ let
     left = 8;
   };
 
-  primitive =
+  configValueType =
     with types;
     (oneOf [
       str
@@ -91,8 +91,12 @@ let
       rasiLiteral
     ]);
 
+  sectionType = with types; attrsOf (either configValueType (listOf configValueType));
+
   # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
-  configType = with types; (either (attrsOf (either primitive (listOf primitive))) str);
+  configType = with types; either sectionType str;
+
+  extraConfigType = with types; attrsOf (either sectionType configValueType);
 
   rasiLiteral =
     types.submodule {
@@ -133,6 +137,11 @@ let
       cfg.theme;
 
   modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
+
+  # Flat entries belong in `configuration { ... }`, while nested attrsets map
+  # to top-level Rasi sections such as `filebrowser { ... }`.
+  configurationExtraConfig = filterAttrs (_: v: !isAttrs v) cfg.extraConfig;
+  sectionExtraConfig = filterAttrs (_: isAttrs) cfg.extraConfig;
 in
 {
   meta.maintainers = [ ];
@@ -295,9 +304,12 @@ in
         {
           kb-primary-paste = "Control+V,Shift+Insert";
           kb-secondary-paste = "Control+v,Insert";
+          "run,drun" = {
+            display-name = "open:";
+          };
         }
       '';
-      type = configType;
+      type = extraConfigType;
       description = "Additional configuration to add.";
     };
 
@@ -344,23 +356,26 @@ in
     home.packages = [ cfg.finalPackage ];
 
     home.file."${cfg.configPath}".text =
-      toRasi {
-        configuration = (
-          {
-            inherit (cfg)
-              cycle
-              font
-              terminal
-              xoffset
-              yoffset
-              ;
-            location = (lib.getAttr cfg.location locationsMap);
-          }
-          // lib.optionalAttrs (modes != [ ]) { inherit modes; }
-          // cfg.extraConfig
-        );
+      toRasi (
+        {
+          configuration = (
+            {
+              inherit (cfg)
+                cycle
+                font
+                terminal
+                xoffset
+                yoffset
+                ;
+              location = (lib.getAttr cfg.location locationsMap);
+            }
+            // lib.optionalAttrs (modes != [ ]) { inherit modes; }
+            // configurationExtraConfig
+          );
+        }
+        // sectionExtraConfig
         # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
-      }
+      )
       + (lib.optionalString (themeName != null) (toRasi {
         "@theme" = themeName;
       }));

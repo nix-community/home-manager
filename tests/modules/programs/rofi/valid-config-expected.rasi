@@ -9,3 +9,13 @@ terminal: "/some/path";
 xoffset: 0;
 yoffset: 0;
 }
+
+filebrowser {
+directories-first: true;
+directory: "$HOME";
+sorting-method: "name";
+}
+
+run,drun {
+display-name: "open:";
+}
