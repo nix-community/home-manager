@@ -13,6 +13,7 @@ jobs:
       docs: ${{ steps.changes.outputs.docs }}
       format: ${{ steps.changes.outputs.format }}
       hm: ${{ steps.changes.outputs.hm }}
+      parse: ${{ steps.changes.outputs.parse }}
       tests: ${{ steps.changes.outputs.tests }}
     steps:
       - uses: actions/checkout@v6
@@ -39,6 +40,9 @@ jobs:
               - 'flake.lock'
               - 'flake.nix'
               - 'home-manager/**'
+            parse:
+              - '**/*.nix'
+              - 'flake.lock'
   tests:
     needs: changes
     strategy:
@@ -59,6 +63,12 @@ jobs:
       - name: Build docs
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
+      - name: Parse Nix files with latest nix
+        if: github.event_name == 'schedule' || needs.changes.outputs.parse == 'true'
+        run: nix build --show-trace .#ci-parse
+      - name: Parse Nix files with latest Lix
+        if: github.event_name == 'schedule' || needs.changes.outputs.parse == 'true'
+        run: nix build --show-trace .#ci-parse-lix
       - name: Format Check
         if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
         run: nix fmt -- --ci
@@ -91,6 +101,12 @@ jobs:
             echo "- ✅ **Format Check:** Triggered" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ☑️ **Format Check:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.changes.outputs.parse }}" == "true" ]]; then
+            echo "- ✅ **Nix Parse (nix + Lix):** Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ☑️ **Nix Parse (nix + Lix):** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
           fi
 
           if [[ "${{ needs.changes.outputs.hm }}" == "true" ]]; then
