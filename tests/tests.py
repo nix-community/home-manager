@@ -125,8 +125,7 @@ class TestRunner:
                 f"./tests#{test}", *nix_args
             ]
             try:
-                # For this command, we want output to go directly to the terminal
-                result = subprocess.run(cmd, check=True, cwd=self.repo_root, capture_output=True, text=True)
+                subprocess.run(cmd, check=True, cwd=self.repo_root, capture_output=True)
                 print(f"{SUCCESS_EMOJI} Test passed: {test}")
 
                 store_path = self._get_store_path(test, nix_args)
@@ -137,12 +136,14 @@ class TestRunner:
                 failed_tests.append(test)
                 print(f"{FAILURE_EMOJI} Test failed: {test}", file=sys.stderr)
 
+                stderr_text = None
                 if e.stderr:
-                    print(e.stderr, file=sys.stderr)
+                    stderr_text = e.stderr.decode(errors="replace")
+                    print(stderr_text, file=sys.stderr)
 
                 import re
-                if e.stderr:
-                    build_dir_match = re.search(r"keeping build directory '([^']+)'", e.stderr)
+                if stderr_text:
+                    build_dir_match = re.search(r"keeping build directory '([^']+)'", stderr_text)
                     if build_dir_match:
                         build_dir = build_dir_match.group(1)
                         try:
