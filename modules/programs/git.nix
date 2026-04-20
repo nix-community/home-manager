@@ -102,16 +102,28 @@ in
         };
 
         settings = mkOption {
-          type = gitIniType;
+          type = with types; either gitIniType (listOf gitIniType);
           default = { };
-          example = {
-            core = {
-              whitespace = "trailing-space,space-before-tab";
-            };
-            url."ssh://git@host".insteadOf = "otherhost";
-          };
+          example = [
+            {
+              core = {
+                whitespace = "trailing-space,space-before-tab";
+              };
+              url."ssh://git@host".insteadOf = "otherhost";
+            }
+            {
+              credential."https://example.com".helper = "";
+            }
+            {
+              credential."https://example.com".helper = "oauth";
+            }
+          ];
           description = ''
             Configuration written to {file}`$XDG_CONFIG_HOME/git/config`.
+            This may be either a single attrset of Git settings or an ordered
+            list of attrset fragments when repeated sections or explicit
+            ordering matter.
+
             See {manpage}`git-config(1)` for details.
           '';
         };
@@ -337,6 +349,14 @@ in
     );
 
   config = mkIf cfg.enable (
+    let
+      settingsFragments = lib.filter (fragment: fragment != { }) (
+        if builtins.isList cfg.settings then cfg.settings else [ ]
+      );
+      renderedIniFragments = lib.filter (text: lib.match "[[:space:]]*" text == null) (
+        [ (lib.generators.toGitINI cfg.iniContent) ] ++ map lib.generators.toGitINI settingsFragments
+      );
+    in
     lib.mkMerge [
       {
         home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
@@ -382,7 +402,7 @@ in
         ];
 
         xdg.configFile = {
-          "git/config".text = lib.generators.toGitINI cfg.iniContent;
+          "git/config".text = concatStringsSep "\n" renderedIniFragments;
 
           "git/ignore" = mkIf (cfg.ignores != [ ]) {
             text = concatStringsSep "\n" cfg.ignores + "\n";
@@ -479,7 +499,7 @@ in
         };
       })
 
-      (mkIf (cfg.settings != { }) {
+      (mkIf (!builtins.isList cfg.settings && cfg.settings != { }) {
         programs.git.iniContent = cfg.settings;
       })
 

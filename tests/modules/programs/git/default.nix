@@ -11,5 +11,9 @@
   git-with-lfs = ./git-with-lfs.nix;
   git-with-maintenance = ./git-with-maintenance.nix;
   git-settings-deprecations = ./git-settings-deprecations.nix;
+  git-settings-ordered-fragments = ./git-settings-ordered-fragments.nix;
+  git-settings-ordered-fragments-merge = ./git-settings-ordered-fragments-merge.nix;
+  git-settings-ordered-fragments-priority = ./git-settings-ordered-fragments-priority.nix;
+  git-credential-integrations = ./git-credential-integrations.nix;
   git-integration-assertion = ./git-integration-assertion.nix;
 }
