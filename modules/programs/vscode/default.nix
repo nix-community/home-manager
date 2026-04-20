@@ -125,32 +125,10 @@ let
 
   isPath = p: builtins.isPath p || lib.isStorePath p;
 
-  transformMcpServerForVscode =
-    name: server:
-    let
-      # Remove the disabled field from the server config
-      cleanServer = lib.filterAttrs (n: _v: n != "disabled") server;
-    in
-    {
-      inherit name;
-      value = {
-        enabled = !(server.disabled or false);
-      }
-      // (
-        if server ? url then
-          {
-            type = "http";
-          }
-          // cleanServer
-        else if server ? command then
-          {
-            type = "stdio";
-          }
-          // cleanServer
-        else
-          { }
-      );
-    };
+  transformMcpServerForVscode = name: server: {
+    inherit name;
+    value = lib.hm.mcp.transformMcpServer { inherit pkgs name server; };
+  };
 
   profileType = types.submodule {
     options = {
