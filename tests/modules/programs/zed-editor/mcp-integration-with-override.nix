@@ -43,7 +43,6 @@
         {
           "context_servers": {
             "custom-server": {
-              "enabled": false
             }
           },
         }
@@ -53,7 +52,6 @@
         {
           "context_servers": {
             "custom-server": {
-              "enabled": false,
               "headers": {
                 "Authorization": "Bearer token"
               },

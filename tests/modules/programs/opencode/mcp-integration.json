@@ -24,6 +24,9 @@
         "@modelcontextprotocol/server-everything"
       ],
       "enabled": true,
+      "environment": {
+        "NPM_TOKEN": "{file:/run/secrets/npm-token}"
+      },
       "type": "local"
     }
   }
