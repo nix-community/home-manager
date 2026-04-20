@@ -1,17 +1,22 @@
 {
   "mcpServers": {
     "context7": {
+      "disabled": false,
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
-      "serverUrl": "https://mcp.context7.com/mcp"
+      "url": "https://mcp.context7.com/mcp"
     },
     "everything": {
       "args": [
         "-y",
         "@modelcontextprotocol/server-everything"
       ],
-      "command": "npx"
+      "command": "npx",
+      "disabled": false,
+      "env": {
+        "NPM_TOKEN": "{file:/run/secrets/npm-token}"
+      }
     }
   }
 }
