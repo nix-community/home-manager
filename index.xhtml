@@ -629,7 +629,28 @@ flake.</p><p>For example, if you are using the unstable version of Nixpkgs or Ni
 then to generate and activate a basic configuration run the command</p><pre><code class="programlisting  shell">$ nix run home-manager/master -- init --switch
 </code></pre><p>For Nixpkgs or NixOS version 25.11 run</p><pre><code class="programlisting  shell">$ nix run home-manager/release-25.11 -- init --switch
 </code></pre><p>This will generate a <code class="literal">flake.nix</code> and a <code class="literal">home.nix</code> file in
-<code class="literal">~/.config/home-manager</code>, creating the directory if it does not exist.</p><p>If you omit the <code class="literal">--switch</code> option then the activation will not happen.
+<code class="literal">~/.config/home-manager</code>, creating the directory if it does not exist.</p><p>If you need to pass additional values from your flake to <code class="literal">home.nix</code> or any
+imported Home Manager modules, use <code class="literal">extraSpecialArgs</code> in the call to
+<code class="literal">home-manager.lib.homeManagerConfiguration</code>:</p><pre><code class="programlisting  nix">{
+  inputs = {
+    nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
+    home-manager.url = &quot;github:nix-community/home-manager&quot;;
+    home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
+  };
+
+  outputs = inputs@{ nixpkgs, home-manager, ... }: {
+    homeConfigurations.jdoe = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      extraSpecialArgs = { inherit inputs; };
+      modules = [ ./home.nix ];
+    };
+  };
+}
+</code></pre><p>Any attribute in <code class="literal">extraSpecialArgs</code> becomes a module argument, so <code class="literal">home.nix</code>
+or imported modules can declare arguments such as <code class="literal">{ inputs, ... }:</code>.</p><p>The lower-level mechanism behind this is <code class="literal">_module.args</code>. Set
+<code class="literal">_module.args.&lt;name&gt;</code> from inside a module only when you need to provide a
+module argument from within the module graph itself. For values that originate
+outside the module graph, such as flake inputs, prefer <code class="literal">extraSpecialArgs</code>.</p><p>If you omit the <code class="literal">--switch</code> option then the activation will not happen.
 This is useful if you want to inspect and edit the configuration before
 activating it.</p><pre><code class="programlisting  shell">$ nix run home-manager/$branch -- init
 $ # Edit files in ~/.config/home-manager
@@ -666,17 +687,22 @@ be as follows:</p><pre><code class="programlisting  nix">{
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.users.jdoe = ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
         ];
       };
     };
   };
 }
-</code></pre><p>The Home Manager configuration is then part of the NixOS configuration
+</code></pre><p>Use <code class="literal">home-manager.extraSpecialArgs</code> to pass arguments from your flake to
+<code class="literal">home.nix</code> and any imported Home Manager modules. For example, the
+configuration above makes the complete <code class="literal">inputs</code> attrset available to modules,
+so they can declare arguments such as <code class="literal">{ inputs, ... }:</code>.</p><p>The lower-level mechanism behind this is <code class="literal">_module.args</code>. Set
+<code class="literal">_module.args.&lt;name&gt;</code> from inside a module only when you need to provide a
+module argument from within the module graph itself. For values that originate
+outside the module graph, such as flake inputs, prefer
+<code class="literal">home-manager.extraSpecialArgs</code>.</p><p>The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate
 command for the system, such as
 <code class="literal">nixos-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">/etc/nixos</code> by</p><pre><code class="programlisting  shell">$ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
@@ -703,17 +729,22 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.users.jdoe = ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
         ];
       };
     };
   };
 }
-</code></pre><p>and it is also rebuilt with the nix-darwin generations. The rebuild
+</code></pre><p>Use <code class="literal">home-manager.extraSpecialArgs</code> to pass arguments from your flake to
+<code class="literal">home.nix</code> and any imported Home Manager modules. For example, the
+configuration above makes the complete <code class="literal">inputs</code> attrset available to modules,
+so they can declare arguments such as <code class="literal">{ inputs, ... }:</code>.</p><p>The lower-level mechanism behind this is <code class="literal">_module.args</code>. Set
+<code class="literal">_module.args.&lt;name&gt;</code> from inside a module only when you need to provide a
+module argument from within the module graph itself. For values that originate
+outside the module graph, such as flake inputs, prefer
+<code class="literal">home-manager.extraSpecialArgs</code>.</p><p>and it is also rebuilt with the nix-darwin generations. The rebuild
 command here may be <code class="literal">darwin-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre><code class="programlisting  shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 </code></pre>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-flake-parts-module" class="title" style="clear: both">flake-parts module   </h2>  </div> </div></div><p>When using <a class="link" href="https://flake.parts"  target="_top">flake-parts</a> you may wish to import Home
