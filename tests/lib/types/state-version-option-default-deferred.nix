@@ -63,6 +63,18 @@ let
       expectedWarn = true;
       expectedPriority = false;
     };
+    equalValues = {
+      default = mkDeferredDefault "equalValues" {
+        legacy.value = {
+          FOO = "same";
+        };
+        current.value = {
+          FOO = "same";
+        };
+      };
+      expectedWarn = false;
+      expectedPriority = false;
+    };
   };
 in
 {
@@ -111,6 +123,7 @@ in
         };
         priorityOnlyExplicit.BAR = "explicit";
         partial.BAR = "partial";
+        equalValues = { };
       };
 
       asserts.warnings.expected = lib.flatten (
@@ -140,6 +153,9 @@ in
       }
       partialFoo=${(effectiveValue cases.partial.default config.test.values.partial).FOO or ""}
       partialBar=${(effectiveValue cases.partial.default config.test.values.partial).BAR or ""}
+      equalValuesFoo=${
+        (effectiveValue cases.equalValues.default config.test.values.equalValues).FOO or ""
+      }
     '';
 
     nmt.script = ''
@@ -151,6 +167,7 @@ in
         priorityOnlyExplicitBar=explicit
         partialFoo=legacy
         partialBar=partial
+        equalValuesFoo=
       ''}
     '';
   };
