@@ -183,8 +183,19 @@ let
   browserConfig =
     browser: cfg:
     let
+      # Native messaging host manifests must follow the actual browser package
+      # directory layout, not just the Home Manager option namespace.
+      effectiveBrowser =
+        let
+          packageName =
+            if cfg.package == null then
+              browser
+            else
+              (cfg.package.pname or (builtins.parseDrvName cfg.package.name).name);
+        in
+        if builtins.hasAttr packageName supportedBrowsers then packageName else browser;
 
-      isProprietaryChrome = lib.hasPrefix "google-chrome" browser;
+      isProprietaryChrome = lib.hasPrefix "google-chrome" effectiveBrowser;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -200,9 +211,9 @@ let
 
       configDir =
         if pkgs.stdenv.isDarwin then
-          "Library/Application Support/" + (darwinDirs."${browser}" or browser)
+          "Library/Application Support/" + (darwinDirs."${effectiveBrowser}" or effectiveBrowser)
         else
-          "${config.xdg.configHome}/" + (linuxDirs."${browser}" or browser);
+          "${config.xdg.configHome}/" + (linuxDirs."${effectiveBrowser}" or effectiveBrowser);
 
       extensionJson =
         ext:
@@ -229,7 +240,7 @@ let
       };
 
       nativeMessagingHostsJoined = pkgs.symlinkJoin {
-        name = "${browser}-native-messaging-hosts";
+        name = "${effectiveBrowser}-native-messaging-hosts";
         paths = cfg.nativeMessagingHosts;
       };
 
@@ -262,15 +273,16 @@ let
       home.packages = lib.mkIf (cfg.finalPackage != null) [
         cfg.finalPackage
       ];
-      home.file = lib.optionalAttrs (!isProprietaryChrome) (
-        lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
+      home.file =
+        lib.optionalAttrs (!isProprietaryChrome) (
+          lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
+        )
         // {
           "${configDir}/NativeMessagingHosts" = lib.mkIf (cfg.nativeMessagingHosts != [ ]) {
             source = "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
             recursive = true;
           };
-        }
-      );
+        };
     };
 
 in
