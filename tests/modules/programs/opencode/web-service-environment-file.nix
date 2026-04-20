@@ -24,6 +24,7 @@
       ''
         serviceFile=home-files/.config/systemd/user/opencode-web.service
         assertFileExists "$serviceFile"
-        assertFileContent "$serviceFile" ${./web-service-environment-file.service}
+        serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
+        assertFileContent "$serviceFileNormalized" ${./web-service-environment-file.service}
       '';
 }
