@@ -25,6 +25,7 @@ let
     if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
+    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/usr/share/terminfo"
     export V1="v1"
     export V2="v2-v1"
     export XDG_BIN_HOME="/home/hm-user/.local/bin"
@@ -33,6 +34,8 @@ let
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
 
+    # reset TERM with new TERMINFO available (if any)
+    export TERM="$TERM"
   '';
 
   expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);

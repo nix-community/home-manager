@@ -13,5 +13,6 @@
     ./copyapps.nix
     ./linkapps.nix
     ./search.nix
+    ./terminfo.nix
   ];
 }
