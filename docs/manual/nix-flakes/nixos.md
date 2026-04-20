@@ -23,10 +23,8 @@ be as follows:
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.users.jdoe = ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
         ];
       };
@@ -34,6 +32,17 @@ be as follows:
   };
 }
 ```
+
+Use `home-manager.extraSpecialArgs` to pass arguments from your flake to
+`home.nix` and any imported Home Manager modules. For example, the
+configuration above makes the complete `inputs` attrset available to modules,
+so they can declare arguments such as `{ inputs, ... }:`.
+
+The lower-level mechanism behind this is `_module.args`. Set
+`_module.args.<name>` from inside a module only when you need to provide a
+module argument from within the module graph itself. For values that originate
+outside the module graph, such as flake inputs, prefer
+`home-manager.extraSpecialArgs`.
 
 The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate

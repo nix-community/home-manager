@@ -20,6 +20,36 @@ $ nix run home-manager/release-25.11 -- init --switch
 This will generate a `flake.nix` and a `home.nix` file in
 `~/.config/home-manager`, creating the directory if it does not exist.
 
+If you need to pass additional values from your flake to `home.nix` or any
+imported Home Manager modules, use `extraSpecialArgs` in the call to
+`home-manager.lib.homeManagerConfiguration`:
+
+``` nix
+{
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = inputs@{ nixpkgs, home-manager, ... }: {
+    homeConfigurations.jdoe = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      extraSpecialArgs = { inherit inputs; };
+      modules = [ ./home.nix ];
+    };
+  };
+}
+```
+
+Any attribute in `extraSpecialArgs` becomes a module argument, so `home.nix`
+or imported modules can declare arguments such as `{ inputs, ... }:`.
+
+The lower-level mechanism behind this is `_module.args`. Set
+`_module.args.<name>` from inside a module only when you need to provide a
+module argument from within the module graph itself. For values that originate
+outside the module graph, such as flake inputs, prefer `extraSpecialArgs`.
+
 If you omit the `--switch` option then the activation will not happen.
 This is useful if you want to inspect and edit the configuration before
 activating it.
