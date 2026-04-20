@@ -30,12 +30,14 @@
       ''
         serviceFile=LaunchAgents/org.nix-community.home.opencode-web.plist
         assertFileExists "$serviceFile"
-        assertFileContent "$serviceFile" ${./web-service.plist}
+        serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
+        assertFileContent "$serviceFileNormalized" ${./web-service.plist}
       ''
     else
       ''
         serviceFile=home-files/.config/systemd/user/opencode-web.service
         assertFileExists "$serviceFile"
-        assertFileContent "$serviceFile" ${./web-service.service}
+        serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
+        assertFileContent "$serviceFileNormalized" ${./web-service.service}
       '';
 }
