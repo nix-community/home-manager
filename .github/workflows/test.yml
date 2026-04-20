@@ -63,12 +63,9 @@ jobs:
       - name: Build docs
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
-      - name: Parse Nix files with latest nix
+      - name: Parse Nix files with nix and Lix
         if: github.event_name == 'schedule' || needs.changes.outputs.parse == 'true'
-        run: nix build --show-trace .#ci-parse
-      - name: Parse Nix files with latest Lix
-        if: github.event_name == 'schedule' || needs.changes.outputs.parse == 'true'
-        run: nix build --show-trace .#ci-parse-lix
+        run: nix build --show-trace --keep-going .#ci-parse .#ci-parse-lix
       - name: Format Check
         if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
         run: nix fmt -- --ci
