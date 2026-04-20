@@ -189,6 +189,11 @@
             default = hmPkg;
             home-manager = hmPkg;
 
+            ci-parse = pkgs.callPackage ./ci/parse.nix { nix = pkgs.nixVersions.latest; };
+            ci-parse-lix = pkgs.callPackage ./ci/parse.nix {
+              nix = pkgs.lixPackageSets.latest.lix;
+            };
+
             create-news-entry = pkgs.writeShellScriptBin "create-news-entry" ''
               ./modules/misc/news/create-news-entry.sh
             '';
