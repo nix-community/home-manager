@@ -25,6 +25,10 @@ let
     else
       "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
 
+  defaultGuiAddress = "127.0.0.1:8384";
+
+  hasCustomGuiAddress = cfg.guiAddress != defaultGuiAddress;
+
   # Syncthing supports serving the GUI over Unix sockets. If that happens, the
   # API is served over the Unix socket as well.  This function returns the correct
   # curl arguments for the address portion of the curl command for both network
@@ -288,7 +292,7 @@ let
         ''))
         (lib.concatStringsSep "\n")
       ])
-    + lib.optionalString (cfg.guiAddress != null) ''
+    + lib.optionalString hasCustomGuiAddress ''
       curl -X PATCH -d '{"address": "'${cfg.guiAddress}'"}' ${curlAddressArgs "/rest/config/gui"}
     ''
     + ''
@@ -300,7 +304,7 @@ let
     ''
   );
 
-  doUpdateConfig = cleanedConfig != { } || cfg.guiCredentials != null || cfg.guiAddress != null;
+  doUpdateConfig = cleanedConfig != { } || cfg.guiCredentials != null || hasCustomGuiAddress;
 
   defaultSyncthingArgs = [
     "${syncthing}"
@@ -771,7 +775,7 @@ in
 
       guiAddress = mkOption {
         type = types.str;
-        default = "127.0.0.1:8384";
+        default = defaultGuiAddress;
         description = ''
           The address to serve the web interface at.
         '';
