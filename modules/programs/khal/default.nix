@@ -236,21 +236,26 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."khal/config".text = lib.concatStringsSep "\n" (
-      [ "[calendars]" ]
-      ++ lib.mapAttrsToList genCalendarStr khalAccounts
-      ++ [
-        (lib.generators.toINI { } (
-          recursiveUpdate cfg.settings {
-            locale = definedAttrs (cfg.locale // { _module = null; });
-
-            default = lib.optionalAttrs (!isNull primaryAccount) {
+      let
+        settingsWithPrimaryDefaults =
+          cfg.settings
+          // lib.optionalAttrs (!isNull primaryAccount) {
+            default = recursiveUpdate {
               highlight_event_days = true;
               default_calendar =
                 if isNull primaryAccount.primaryCollection then
                   primaryAccount.name
                 else
                   primaryAccount.primaryCollection;
-            };
+            } (cfg.settings.default or { });
+          };
+      in
+      [ "[calendars]" ]
+      ++ lib.mapAttrsToList genCalendarStr khalAccounts
+      ++ [
+        (lib.generators.toINI { } (
+          recursiveUpdate settingsWithPrimaryDefaults {
+            locale = definedAttrs (cfg.locale // { _module = null; });
           }
         ))
       ]
