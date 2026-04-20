@@ -8,11 +8,8 @@ let
 
   expected = builtins.toFile "rbw-expected.json" ''
     {
-      "base_url": null,
       "email": "name@example.com",
-      "identity_url": null,
-      "lock_timeout": 3600,
-      "pinentry": null
+      "lock_timeout": 3600
     }
   '';
 in

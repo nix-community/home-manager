@@ -99,7 +99,7 @@ in
     home.packages = [ cfg.package ];
 
     home.file."${configDir}/rbw/config.json" = lib.mkIf (cfg.settings != null) {
-      source = jsonFormat.generate "rbw-config.json" cfg.settings;
+      source = jsonFormat.generate "rbw-config.json" (lib.filterAttrs (_: v: v != null) cfg.settings);
     };
   };
 }
