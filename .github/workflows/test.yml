@@ -10,6 +10,7 @@ permissions: {}
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       docs: ${{ steps.changes.outputs.docs }}
       format: ${{ steps.changes.outputs.format }}
@@ -46,6 +47,7 @@ jobs:
               - 'flake.lock'
   tests:
     needs: changes
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -61,6 +63,8 @@ jobs:
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.format == 'true'
         with:
           nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+          extra_nix_config: |
+            sandbox = true
       - name: Build docs
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
