@@ -53,7 +53,12 @@ class TestRunner:
         result = _run_command(cmd)
         return result.stdout.strip()
 
-    def discover_tests(self, integration: bool = False) -> list[str]:
+    def discover_tests(
+        self,
+        integration: bool = False,
+        *,
+        big_only: bool = False,
+    ) -> list[str]:
         """Discover available tests using 'nix eval'."""
         system = self.get_current_system()
         test_prefix = "integration-test-" if integration else "test-"
@@ -66,9 +71,54 @@ class TestRunner:
         cmd = [
             "nix", "eval", "--raw", f".#legacyPackages.{system}", "--apply", nix_apply_expr
         ]
-
         result = _run_command(cmd, cwd=self.repo_root)
-        return result.stdout.splitlines()
+        discovered = result.stdout.splitlines()
+
+        if integration:
+            if not big_only:
+                return discovered
+
+            print(
+                "⚠️ --big-only has no effect for integration tests; returning all discovered integration tests.",
+                file=sys.stderr,
+            )
+            return discovered
+
+        if not big_only:
+            return discovered
+
+        discovered_suffixes = {
+            test.removeprefix(test_prefix)
+            for test in discovered
+        }
+        modules_root = self.repo_root / "tests" / "modules"
+        big_test_suffixes = set()
+
+        for module_path in modules_root.rglob("*.nix"):
+            try:
+                content = module_path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+
+            if "config.test.enableBig" not in content:
+                continue
+
+            name_parts = list(module_path.relative_to(modules_root).with_suffix("").parts)
+            if name_parts and name_parts[-1] == "default":
+                name_parts = name_parts[:-1]
+            if not name_parts:
+                continue
+
+            for i in range(len(name_parts)):
+                candidate = "-".join(name_parts[i:])
+                if candidate in discovered_suffixes:
+                    big_test_suffixes.add(candidate)
+                    break
+
+        return [
+            test for test in discovered
+            if test.removeprefix(test_prefix) in big_test_suffixes
+        ]
 
     def filter_tests(self, tests: list[str], filters: list[str]) -> list[str]:
         """Filter tests based on a list of substrings."""
@@ -125,8 +175,7 @@ class TestRunner:
                 f"./tests#{test}", *nix_args
             ]
             try:
-                # For this command, we want output to go directly to the terminal
-                result = subprocess.run(cmd, check=True, cwd=self.repo_root, capture_output=True, text=True)
+                subprocess.run(cmd, check=True, cwd=self.repo_root, capture_output=True)
                 print(f"{SUCCESS_EMOJI} Test passed: {test}")
 
                 store_path = self._get_store_path(test, nix_args)
@@ -137,12 +186,14 @@ class TestRunner:
                 failed_tests.append(test)
                 print(f"{FAILURE_EMOJI} Test failed: {test}", file=sys.stderr)
 
+                stderr_text = None
                 if e.stderr:
-                    print(e.stderr, file=sys.stderr)
+                    stderr_text = e.stderr.decode(errors="replace")
+                    print(stderr_text, file=sys.stderr)
 
                 import re
-                if e.stderr:
-                    build_dir_match = re.search(r"keeping build directory '([^']+)'", e.stderr)
+                if stderr_text:
+                    build_dir_match = re.search(r"keeping build directory '([^']+)'", stderr_text)
                     if build_dir_match:
                         build_dir = build_dir_match.group(1)
                         try:
@@ -190,6 +241,10 @@ def main() -> None:
                 Run all tests matching 'alacritty'.
               %(prog)s -i firefox git
                 Interactively select from tests matching 'firefox' or 'git'.
+              %(prog)s --big-only
+                Run only tests enabled by `test.enableBig`.
+              %(prog)s --big-only -l
+                List only tests enabled by `test.enableBig`.
               %(prog)s -t
                 Run integration tests interactively.
               %(prog)s -- --show-trace
@@ -206,6 +261,9 @@ def main() -> None:
         '-t', '--integration', action='store_true', help='Discover and run integration tests.'
     )
     parser.add_argument(
+        '--big-only', action='store_true', help='Only run tests enabled by `test.enableBig`.'
+    )
+    parser.add_argument(
         'filters', nargs='*', help='Filter tests by name (partial matches work).'
     )
     parser.add_argument(
@@ -220,7 +278,7 @@ def main() -> None:
     runner = TestRunner()
     try:
         print(f"{INFO_EMOJI} Discovering tests...", file=sys.stderr)
-        all_tests = runner.discover_tests(integration=args.integration)
+        all_tests = runner.discover_tests(integration=args.integration, big_only=args.big_only)
         if not all_tests:
             print("No tests found for the current configuration.", file=sys.stderr)
             sys.exit(1)
