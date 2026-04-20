@@ -31,6 +31,15 @@ in
 
     package = lib.mkPackageOption pkgs "zellij" { };
 
+    finalPackage = mkOption {
+      type = types.package;
+      visible = false;
+      readOnly = true;
+      description = ''
+        The zellij package with all plugin dependencies.
+      '';
+    };
+
     layouts = lib.mkOption {
       type = types.attrsOf (
         types.oneOf [
@@ -137,6 +146,15 @@ in
         See <https://zellij.dev/documentation> for the full
         list of options.
       '';
+    };
+
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = lib.literalExpression ''
+        with pkgs.zellijPlugins; [ jbz vim-plugins-navigator zjstatus ]
+      '';
+      description = "List of Zellij plugins";
     };
 
     settings = lib.mkOption {
@@ -263,9 +281,23 @@ in
       shellIntegrationEnabled = (
         cfg.enableBashIntegration || cfg.enableZshIntegration || cfg.enableFishIntegration
       );
+      pluginsWithNames = lib.map (plugin: {
+        inherit plugin;
+        name = lib.removePrefix "zellij-" plugin.pname;
+      }) cfg.plugins;
+      pluginRuntimeDeps = lib.concatLists (
+        lib.map ({ plugin, ... }: plugin.runtimeDeps or [ ]) pluginsWithNames
+      );
     in
     mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home.packages = [ cfg.finalPackage ];
+      programs.zellij.finalPackage =
+        if pluginRuntimeDeps != [ ] then
+          cfg.package.override {
+            extraPackages = pluginRuntimeDeps;
+          }
+        else
+          cfg.package;
 
       # Zellij switched from yaml to KDL in version 0.32.0:
       # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
@@ -273,14 +305,15 @@ in
         {
 
           "zellij/config.yaml" =
-            mkIf ((lib.versionOlder cfg.package.version "0.32.0") && cfg.settings != { })
+            mkIf ((lib.versionOlder cfg.finalPackage.version "0.32.0") && cfg.settings != { })
               {
                 source = yamlFormat.generate "zellij.yaml" cfg.settings;
               };
           "zellij/config.kdl" =
             mkIf
               (
-                (lib.versionAtLeast cfg.package.version "0.32.0") && (cfg.settings != { } || cfg.extraConfig != "")
+                (lib.versionAtLeast cfg.finalPackage.version "0.32.0")
+                && (cfg.settings != { } || cfg.extraConfig != "")
               )
               {
                 text =
@@ -321,20 +354,57 @@ in
                 );
           }
         ) cfg.themes)
+
+        # on every plugin update, zellij asks for permissions again, because
+        # the plugin path has changed (=/nix/store path has changed)
+        # to avoid that, we symlink all plugins to `.config/zellij/plugins` and
+        # use those paths
+        (lib.listToAttrs (
+          lib.map (
+            { plugin, name }:
+            {
+              name = "zellij/plugins/${name}.wasm";
+              value.source = plugin;
+            }
+          ) pluginsWithNames
+        ))
       ];
+      programs.zellij.settings = {
+        # define plugin aliases
+        plugins = mkIf (pluginsWithNames != [ ]) (
+          lib.listToAttrs (
+            lib.map (
+              { name, ... }:
+              {
+                inherit name;
+                value._props.location = "file:${config.xdg.configHome}/zellij/plugins/${name}.wasm";
+              }
+            ) pluginsWithNames
+          )
+        );
+        # auto-load plugins on start
+        load_plugins = mkIf (pluginsWithNames != [ ]) {
+          _children = lib.map (
+            { name, ... }:
+            {
+              ${name} = [ ];
+            }
+          ) pluginsWithNames;
+        };
+      };
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval "$(${lib.getExe cfg.package} setup --generate-auto-start bash)"
+        eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start bash)"
       '';
 
       programs.zsh.initContent = mkIf cfg.enableZshIntegration (
         lib.mkOrder 200 ''
-          eval "$(${lib.getExe cfg.package} setup --generate-auto-start zsh)"
+          eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start zsh)"
         ''
       );
 
       programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        eval (${lib.getExe cfg.package} setup --generate-auto-start fish | string collect)
+        eval (${lib.getExe cfg.finalPackage} setup --generate-auto-start fish | string collect)
       '';
 
       home.sessionVariables = mkIf shellIntegrationEnabled {
