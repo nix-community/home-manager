@@ -18,28 +18,32 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  transformMcpServer = name: server: {
-    inherit name;
-    value = {
-      enabled = !(server.disabled or false);
-    }
-    // (
-      if server ? url then
-        {
-          type = "remote";
-          inherit (server) url;
-        }
-        // (lib.optionalAttrs (server ? headers) { inherit (server) headers; })
-      else if server ? command then
-        {
-          type = "local";
-          command = [ server.command ] ++ (server.args or [ ]);
-        }
-        // (lib.optionalAttrs (server ? env) { environment = server.env; })
-      else
-        { }
-    );
-  };
+  transformMcpServer =
+    name: server:
+    let
+      # Translate envFiles to opencode's native {file:...} substitution syntax
+      mergedEnv = lib.hm.mcp.mergeEnvFile server;
+    in
+    {
+      inherit name;
+      value = {
+        enabled = !server.disabled;
+      }
+      // (
+        if server.url != null then
+          {
+            type = "remote";
+            inherit (server) url;
+          }
+          // lib.optionalAttrs (server.headers != { }) { inherit (server) headers; }
+        else
+          {
+            type = "local";
+            command = [ server.command ] ++ server.args;
+          }
+          // lib.optionalAttrs (mergedEnv != { }) { environment = mergedEnv; }
+      );
+    };
 
   transformedMcpServers =
     if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
