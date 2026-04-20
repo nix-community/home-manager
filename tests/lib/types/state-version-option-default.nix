@@ -28,6 +28,18 @@ let
     legacy.value = "legacy";
     current.value = "new";
   };
+
+  equalDefault = lib.hm.deprecations.mkStateVersionOptionDefault {
+    stateVersion = "25.11";
+    since = "26.05";
+    optionPath = [
+      "test"
+      "values"
+      "equal"
+    ];
+    legacy.value = null;
+    current.value = null;
+  };
 in
 {
   options.test.values = {
@@ -50,6 +62,14 @@ in
     pinnedLegacy = lib.mkOption {
       type = lib.types.str;
       inherit (legacyDefault)
+        default
+        defaultText
+        ;
+    };
+
+    equal = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      inherit (equalDefault)
         default
         defaultText
         ;
@@ -77,6 +97,7 @@ in
       legacy=${config.test.values.legacy}
       new=${config.test.values.new}
       pinnedLegacy=${config.test.values.pinnedLegacy}
+      equal=${if config.test.values.equal == null then "null" else config.test.values.equal}
     '';
 
     test.asserts.evalWarnings.expected = [
@@ -95,6 +116,7 @@ in
         legacy=legacy
         new=new
         pinnedLegacy=legacy
+        equal=null
       ''}
     '';
   };

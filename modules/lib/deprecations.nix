@@ -193,6 +193,7 @@
       optionUsesDefaultPriority = canDeferWarning && optionInfo.highestPrio >= warningPriority;
 
       usingLegacyBranch = lib.versionOlder stateVersion since;
+      valuesEqual = legacy.value == current.value;
     in
     assert lib.assertMsg (!deferWarningToConfig || canDeferWarning) ''
       `lib.hm.deprecations.mkStateVersionOptionDefault` requires both `config` and `options`
@@ -200,7 +201,10 @@
     '';
     {
       default =
-        if usingLegacyBranch && !deferWarningToConfig then lib.warn warning legacy.value else current.value;
+        if usingLegacyBranch && !deferWarningToConfig && !valuesEqual then
+          lib.warn warning legacy.value
+        else
+          current.value;
       defaultText = lib.literalExpression ''
         if lib.versionAtLeast config.home.stateVersion "${since}" then ${currentText} else ${legacyText}
       '';
@@ -209,6 +213,7 @@
       shouldWarn =
         deferWarningToConfig
         && usingLegacyBranch
+        && !valuesEqual
         && (
           if lib.isFunction shouldWarn then
             shouldWarn { inherit optionInfo optionUsesDefaultPriority; }
