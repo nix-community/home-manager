@@ -18,8 +18,8 @@ let
   settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
 in
 {
-  meta.maintainers = [
-    lib.maintainers.delafthi
+  meta.maintainers = with lib.maintainers; [
+    delafthi
   ];
 
   imports = [
@@ -223,22 +223,20 @@ in
 
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
         lib.mapAttrs (
-          _name: server:
+          name: server:
           # NOTE: Convert shared programs.mcp fields to Codex config keys:
-          # - removeAttrs drops keys that Codex does not use directly
           # - "disabled" becomes inverse "enabled"
           # - "headers" is renamed to "http_headers"
+          # - "envFiles" are wrapped in a shell script that sets environment variables before exec
           # See: https://developers.openai.com/codex/mcp#other-configuration-options
-          (lib.removeAttrs server [
-            "disabled"
-            "headers"
-          ])
-          // (lib.optionalAttrs (server ? headers && !(server ? http_headers)) {
-            http_headers = server.headers;
+          (lib.hm.mcp.transformMcpServer {
+            inherit pkgs name server;
+            exclude = [
+              "headers"
+              "type"
+            ];
           })
-          // {
-            enabled = !(server.disabled or false);
-          }
+          // lib.optionalAttrs (server.headers != { }) { http_headers = server.headers; }
         ) config.programs.mcp.servers
       );
 

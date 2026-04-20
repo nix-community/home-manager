@@ -17,17 +17,10 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  mkMcpServer =
-    server:
-    (removeAttrs server [ "disabled" ])
-    // (optionalAttrs (server ? url) { type = "http"; })
-    // (optionalAttrs (server ? command) { type = "stdio"; })
-    // {
-      enabled = !(server.disabled or false);
-    };
-
-  transformedMcpServers = optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
-    lib.mapAttrs (_name: mkMcpServer) config.programs.mcp.servers
+  transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
+    lib.mapAttrs (
+      name: server: lib.hm.mcp.transformMcpServer { inherit pkgs name server; }
+    ) config.programs.mcp.servers # envFiles currently still need wrapping https://github.com/anthropics/claude-code/issues/28942
   );
 
   mkContentOption =
