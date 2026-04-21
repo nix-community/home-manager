@@ -80,6 +80,15 @@ in
 
         source.command = "${path} print";
         preview.command = ''${path} preview "{}"'';
+
+        actions.run = {
+          command = ''nix run {replace:s/\/ /#/g}'';
+          mode = "fork";
+        };
+        actions.shell = {
+          command = ''nix shell {replace:s/\/ /#/g}'';
+          mode = "execute";
+        };
       }
     );
   };
