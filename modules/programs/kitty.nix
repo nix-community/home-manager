@@ -346,6 +346,9 @@ in
           {file}`$XDG_CONFIG_HOME/kitty/diff.conf`. See
           <https://sw.kovidgoyal.net/kitty/kittens/diff/>
           for the documentation.
+
+          Configuration set through the `extraConfig` option will take
+          greater priority.
         '';
       };
       keybindings = mkOption {
@@ -358,6 +361,9 @@ in
         '';
         description = ''
           Mapping of keybindings to use inside kitty's diff tool.
+
+          Configuration set through the `extraConfig` options will take
+          greater priority.
         '';
       };
       extraConfig = mkOption {
