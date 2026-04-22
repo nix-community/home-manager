@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "flashspace" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
@@ -47,7 +47,7 @@ in
     };
 
     profiles = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
