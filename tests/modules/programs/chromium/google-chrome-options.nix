@@ -1,5 +1,11 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  extensionId = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
   nativeMessagingHost = config.lib.test.mkStubPackage {
     name = "native-messaging-host";
     buildScript = ''
@@ -43,6 +49,11 @@ in
       name = "google-chrome";
     };
     dictionaries = [ dictionary ];
+    extensions = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+      {
+        id = extensionId;
+      }
+    ];
     nativeMessagingHosts = [ nativeMessagingHost ];
   };
 
@@ -52,6 +63,11 @@ in
       name = "google-chrome-beta";
     };
     dictionaries = [ dictionary ];
+    extensions = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+      {
+        id = extensionId;
+      }
+    ];
     nativeMessagingHosts = [ nativeMessagingHost ];
   };
 
@@ -61,6 +77,11 @@ in
       name = "google-chrome-dev";
     };
     dictionaries = [ dictionary ];
+    extensions = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+      {
+        id = extensionId;
+      }
+    ];
     nativeMessagingHosts = [ nativeMessagingHost ];
   };
 
@@ -73,5 +94,29 @@ in
 
     assertFileExists "home-files/${chromeDevDir}/Dictionaries/en-US-9-0.bdic"
     assertFileExists "home-files/${chromeDevDir}/NativeMessagingHosts/com.example.test.json"
+
+    ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+      assertFileContent \
+        "home-files/${chromeDir}/External Extensions/${extensionId}.json" \
+        ${builtins.toFile "google-chrome-extension.json" (
+          builtins.toJSON {
+            external_update_url = "https://clients2.google.com/service/update2/crx";
+          }
+        )}
+      assertFileContent \
+        "home-files/${chromeBetaDir}/External Extensions/${extensionId}.json" \
+        ${builtins.toFile "google-chrome-beta-extension.json" (
+          builtins.toJSON {
+            external_update_url = "https://clients2.google.com/service/update2/crx";
+          }
+        )}
+      assertFileContent \
+        "home-files/${chromeDevDir}/External Extensions/${extensionId}.json" \
+        ${builtins.toFile "google-chrome-dev-extension.json" (
+          builtins.toJSON {
+            external_update_url = "https://clients2.google.com/service/update2/crx";
+          }
+        )}
+    ''}
   '';
 }

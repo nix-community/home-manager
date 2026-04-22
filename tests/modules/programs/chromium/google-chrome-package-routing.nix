@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   extensionId = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 in
@@ -17,10 +22,9 @@ in
         };
       })
     ];
-    extensions = [
+    extensions = lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       {
         id = extensionId;
-        updateUrl = "https://example.com/update.xml";
       }
     ];
   };
@@ -43,7 +47,15 @@ in
       assertFileExists "home-files/${chromeDir}/Dictionaries/en-US-9-0.bdic"
       assertPathNotExists "home-files/${chromiumDir}/Dictionaries/en-US-9-0.bdic"
 
-      assertPathNotExists "home-files/${chromeDir}/External Extensions/${extensionId}.json"
+      ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+        assertFileContent \
+          "home-files/${chromeDir}/External Extensions/${extensionId}.json" \
+          ${builtins.toFile "chromium-google-chrome-extension.json" (
+            builtins.toJSON {
+              external_update_url = "https://clients2.google.com/service/update2/crx";
+            }
+          )}
+      ''}
       assertPathNotExists "home-files/${chromiumDir}/External Extensions/${extensionId}.json"
     '';
 }

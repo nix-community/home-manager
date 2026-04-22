@@ -7,6 +7,8 @@
 let
   inherit (lib) literalExpression mkOption types;
 
+  chromeWebStoreUpdateUrl = "https://clients2.google.com/service/update2/crx";
+
   supportedBrowsers = {
     chromium = "Chromium";
     google-chrome = "Google Chrome";
@@ -22,9 +24,6 @@ let
 
   browserModule =
     browser: name: visible:
-    let
-      isProprietaryChrome = lib.hasPrefix "Google Chrome" name;
-    in
     {
       enable = mkOption {
         inherit visible;
@@ -107,18 +106,15 @@ let
         '';
       };
     }
-    // lib.optionalAttrs (!isProprietaryChrome) {
-      # Extensions do not work with Google Chrome
-      # see https://github.com/nix-community/home-manager/issues/1383
+    // {
       extensions = mkOption {
         inherit visible;
         type =
-          with types;
           let
-            extensionType = submodule {
+            extensionType = types.submodule {
               options = {
                 id = mkOption {
-                  type = strMatching "[a-zA-Z]{32}";
+                  type = types.strMatching "[a-zA-Z]{32}";
                   description = ''
                     The extension's ID from the Chrome Web Store url or the unpacked crx.
                   '';
@@ -126,32 +122,41 @@ let
                 };
 
                 updateUrl = mkOption {
-                  type = str;
-                  default = "https://clients2.google.com/service/update2/crx";
+                  type = types.str;
+                  default = chromeWebStoreUpdateUrl;
                   description = ''
-                    URL of the extension's update manifest XML file. Linux only.
+                    URL of the extension's update manifest XML file.
+
+                    Proprietary Google Chrome on macOS only supports the Chrome
+                    Web Store update URL.
                   '';
                 };
 
                 crxPath = mkOption {
-                  type = nullOr path;
+                  type = types.nullOr types.path;
                   default = null;
                   description = ''
-                    Path to the extension's crx file. Linux only.
+                    Path to the extension's crx file.
+
+                    Proprietary Google Chrome on macOS does not support local
+                    crx installation.
                   '';
                 };
 
                 version = mkOption {
-                  type = nullOr str;
+                  type = types.nullOr types.str;
                   default = null;
                   description = ''
-                    The extension's version, required for local installation. Linux only.
+                    The extension's version, required for local installation.
+
+                    Proprietary Google Chrome on macOS does not support local
+                    crx installation.
                   '';
                 };
               };
             };
           in
-          listOf (coercedTo str (v: { id = v; }) extensionType);
+          types.listOf (types.coercedTo types.str (v: { id = v; }) extensionType);
         default = [ ];
         example = literalExpression ''
           [
@@ -177,6 +182,9 @@ let
           `version` as explained in the
           [Chrome
           documentation](https://developer.chrome.com/docs/extensions/mv2/external_extensions).
+
+          Proprietary Google Chrome on macOS only supports extensions from the
+          Chrome Web Store.
         '';
       };
     };
@@ -197,6 +205,7 @@ let
         if builtins.hasAttr packageName supportedBrowsers then packageName else browser;
 
       isProprietaryChrome = lib.hasPrefix "google-chrome" effectiveBrowser;
+      supportsUserExtensions = !isProprietaryChrome || pkgs.stdenv.isDarwin;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -219,10 +228,9 @@ let
       extensionJson =
         ext:
         assert ext.crxPath != null -> ext.version != null;
-        with builtins;
         {
           name = "${configDir}/External Extensions/${ext.id}.json";
-          value.text = toJSON (
+          value.text = builtins.toJSON (
             if ext.crxPath != null then
               {
                 external_crx = ext.crxPath;
@@ -253,6 +261,21 @@ let
           assertion = !(cfg.package == null && cfg.commandLineArgs != [ ]);
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
+        {
+          assertion = !(isProprietaryChrome && pkgs.stdenv.isLinux && cfg.extensions != [ ]);
+          message = "Cannot set `extensions` for `${effectiveBrowser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
+        }
+        {
+          assertion =
+            !(
+              isProprietaryChrome
+              && pkgs.stdenv.isDarwin
+              && !builtins.all (
+                ext: ext.crxPath == null && ext.version == null && ext.updateUrl == chromeWebStoreUpdateUrl
+              ) cfg.extensions
+            );
+          message = "Cannot set `crxPath`, `version`, or a custom `updateUrl` for `${effectiveBrowser}` on Darwin. Google Chrome only supports Chrome Web Store external extensions there.";
+        }
       ];
 
       programs.${browser}.finalPackage =
@@ -275,7 +298,7 @@ let
         cfg.finalPackage
       ];
       home.file =
-        lib.optionalAttrs (!isProprietaryChrome) (lib.listToAttrs (map extensionJson cfg.extensions))
+        lib.optionalAttrs supportsUserExtensions (lib.listToAttrs (map extensionJson cfg.extensions))
         // lib.listToAttrs (map dictionary cfg.dictionaries)
         // {
           "${configDir}/NativeMessagingHosts" = lib.mkIf (cfg.nativeMessagingHosts != [ ]) {
@@ -287,29 +310,6 @@ let
 
 in
 {
-  # Extensions do not work with the proprietary Google Chrome version
-  # see https://github.com/nix-community/home-manager/issues/1383
-  imports =
-    map
-      (lib.flip lib.mkRemovedOptionModule "The `extensions` option does not work on Google Chrome anymore.")
-      [
-        [
-          "programs"
-          "google-chrome"
-          "extensions"
-        ]
-        [
-          "programs"
-          "google-chrome-beta"
-          "extensions"
-        ]
-        [
-          "programs"
-          "google-chrome-dev"
-          "extensions"
-        ]
-      ];
-
   options.programs = builtins.mapAttrs (
     browser: name: browserModule browser name (if browser == "chromium" then true else false)
   ) supportedBrowsers;
