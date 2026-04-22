@@ -79,6 +79,34 @@ let
         description = "Whether to enable the 'Use QT' theme for ${name}.";
       };
     }
+    // {
+      dictionaries = mkOption {
+        inherit visible;
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression ''
+          [
+            pkgs.hunspellDictsChromium.en_US
+          ]
+        '';
+        description = ''
+          List of ${name} dictionaries to install.
+        '';
+      };
+
+      nativeMessagingHosts = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression ''
+          [
+            pkgs.kdePackages.plasma-browser-integration
+          ]
+        '';
+        description = ''
+          List of ${name} native messaging hosts to install.
+        '';
+      };
+    }
     // lib.optionalAttrs (!isProprietaryChrome) {
       # Extensions do not work with Google Chrome
       # see https://github.com/nix-community/home-manager/issues/1383
@@ -149,33 +177,6 @@ let
           `version` as explained in the
           [Chrome
           documentation](https://developer.chrome.com/docs/extensions/mv2/external_extensions).
-        '';
-      };
-
-      dictionaries = mkOption {
-        inherit visible;
-        type = types.listOf types.package;
-        default = [ ];
-        example = literalExpression ''
-          [
-            pkgs.hunspellDictsChromium.en_US
-          ]
-        '';
-        description = ''
-          List of ${name} dictionaries to install.
-        '';
-      };
-
-      nativeMessagingHosts = mkOption {
-        type = types.listOf types.package;
-        default = [ ];
-        example = literalExpression ''
-          [
-            pkgs.kdePackages.plasma-browser-integration
-          ]
-        '';
-        description = ''
-          List of ${name} native messaging hosts to install.
         '';
       };
     };
@@ -274,9 +275,8 @@ let
         cfg.finalPackage
       ];
       home.file =
-        lib.optionalAttrs (!isProprietaryChrome) (
-          lib.listToAttrs ((map extensionJson cfg.extensions) ++ (map dictionary cfg.dictionaries))
-        )
+        lib.optionalAttrs (!isProprietaryChrome) (lib.listToAttrs (map extensionJson cfg.extensions))
+        // lib.listToAttrs (map dictionary cfg.dictionaries)
         // {
           "${configDir}/NativeMessagingHosts" = lib.mkIf (cfg.nativeMessagingHosts != [ ]) {
             source = "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
