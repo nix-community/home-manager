@@ -88,7 +88,7 @@ in
     services.home-manager.autoUpgrade = {
       enable = lib.mkEnableOption ''
         the Home Manager upgrade service that periodically updates your Nix
-        configuration before running `home-manager switch`
+        configuration by running `home-manager switch`
       '';
 
       frequency = lib.mkOption {
@@ -98,7 +98,7 @@ in
           The interval at which the Home Manager auto upgrade is run.
           This value is passed to the systemd timer configuration
           as the `OnCalendar` option.
-          The format is described in systemd.time(7).
+          The format is described in {manpage}`systemd.time(7)`.
         '';
       };
 
@@ -107,6 +107,10 @@ in
         default = false;
         description = ''
           Whether to use flake-based Home Manager configuration.
+
+          Flake URI uses FQDN, long, and short hostnames, and you must configure the corresponding user@host key in `homeConfigurations`. For example: user@hostname or user@host.example.com.
+
+          Also check `services.home-manager.autoUpgrade.flakeDir` option.
         '';
       };
 
@@ -117,6 +121,7 @@ in
         example = "/home/user/dotfiles";
         description = ''
           Directory containing flake.nix.
+          Also check `services.home-manager.autoUpgrade.useFlake` option.
         '';
       };
 
