@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   chromePackage =
     let
@@ -29,6 +34,20 @@ let
         };
     in
     mkPackage { name = "google-chrome"; };
+
+  plasmaBrowserIntegrationPackage = config.lib.test.mkStubPackage {
+    name = "plasma-browser-integration";
+    buildScript = ''
+      mkdir -p $out/etc/chromium/native-messaging-hosts
+      echo test > $out/etc/chromium/native-messaging-hosts/org.kde.plasma.browser_integration.json
+    '';
+  };
+
+  nativeHostsDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "Library/Application Support/Google/Chrome/NativeMessagingHosts"
+    else
+      ".config/google-chrome/NativeMessagingHosts";
 in
 {
   programs.google-chrome = {
@@ -39,6 +58,7 @@ in
       "--ignore-gpu-blocklist"
     ];
     plasmaSupport = true;
+    inherit plasmaBrowserIntegrationPackage;
   };
 
   nmt.script = ''
@@ -53,7 +73,20 @@ in
       "${config.programs.google-chrome.finalPackage}/override-info" \
       ${builtins.toFile "google-chrome-override-info" ''
         commandLineArgs=--enable-logging=stderr --ignore-gpu-blocklist
-        plasmaSupport=true
+        plasmaSupport=${lib.boolToString pkgs.stdenv.hostPlatform.isLinux}
       ''}
+
+    ${
+      if pkgs.stdenv.hostPlatform.isLinux then
+        ''
+          assertFileExists \
+            "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
+        ''
+      else
+        ''
+          assertPathNotExists \
+            "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
+        ''
+    }
   '';
 }

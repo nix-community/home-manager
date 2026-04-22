@@ -80,7 +80,19 @@ let
         type = types.bool;
         default = false;
         example = true;
-        description = "Whether to enable the 'Use QT' theme for ${name}.";
+        description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
+      };
+
+      plasmaBrowserIntegrationPackage = mkOption {
+        inherit visible;
+        type = types.package;
+        default = pkgs.kdePackages.plasma-browser-integration;
+        defaultText = literalExpression "pkgs.kdePackages.plasma-browser-integration";
+        example = literalExpression "pkgs.kdePackages.plasma-browser-integration";
+        description = ''
+          Package to use for the Plasma browser integration native messaging
+          host on Linux.
+        '';
       };
     }
     // {
@@ -103,7 +115,7 @@ let
         default = [ ];
         example = literalExpression ''
           [
-            pkgs.kdePackages.plasma-browser-integration
+            pkgs.keepassxc
           ]
         '';
         description = ''
@@ -257,9 +269,15 @@ let
         value.source = pkg;
       };
 
+      plasmaSupportEnabled = pkgs.stdenv.isLinux && (cfg.plasmaSupport or false);
+
+      nativeMessagingHosts = lib.unique (
+        cfg.nativeMessagingHosts ++ lib.optional plasmaSupportEnabled cfg.plasmaBrowserIntegrationPackage
+      );
+
       nativeMessagingHostsJoined = pkgs.symlinkJoin {
         name = "${effectiveBrowser}-native-messaging-hosts";
-        paths = cfg.nativeMessagingHosts;
+        paths = nativeMessagingHosts;
       };
 
     in
@@ -290,12 +308,12 @@ let
       programs.${browser}.finalPackage =
         if cfg.package == null then
           null
-        else if cfg.commandLineArgs != [ ] || (cfg.plasmaSupport or false) then
+        else if cfg.commandLineArgs != [ ] || plasmaSupportEnabled then
           cfg.package.override (
             lib.optionalAttrs (cfg.commandLineArgs != [ ]) {
               commandLineArgs = lib.concatStringsSep " " cfg.commandLineArgs;
             }
-            // lib.optionalAttrs (cfg.plasmaSupport or false) {
+            // lib.optionalAttrs plasmaSupportEnabled {
               plasmaSupport = true;
               inherit (pkgs) kdePackages;
             }
@@ -310,7 +328,7 @@ let
         lib.optionalAttrs supportsUserExtensions (lib.listToAttrs (map extensionJson cfg.extensions))
         // lib.listToAttrs (map dictionary cfg.dictionaries)
         // {
-          "${configDir}/NativeMessagingHosts" = lib.mkIf (cfg.nativeMessagingHosts != [ ]) {
+          "${configDir}/NativeMessagingHosts" = lib.mkIf (nativeMessagingHosts != [ ]) {
             source = "${nativeMessagingHostsJoined}/etc/chromium/native-messaging-hosts";
             recursive = true;
           };
