@@ -23,7 +23,7 @@ let
     defaultSubmodule
     ;
 
-  allKeyboards = cfg.keyboards // lib.optionalAttrs (cfg.default != null) { default = cfg.default; };
+  allKeyboards = cfg.keyboards // lib.optionalAttrs (cfg.default != null) { inherit (cfg) default; };
 in
 {
   meta.maintainers = with lib.maintainers; [ philocalyst ];

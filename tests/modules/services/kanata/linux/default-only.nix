@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   test.stubs.kanata = { };
 
   # No `keyboards` entries — just a standalone `default` config.

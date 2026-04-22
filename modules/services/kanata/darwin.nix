@@ -8,7 +8,7 @@
 let
   cfg = config.services.kanata;
 
-  allKeyboards = cfg.keyboards // lib.optionalAttrs (cfg.default != null) { default = cfg.default; };
+  allKeyboards = cfg.keyboards // lib.optionalAttrs (cfg.default != null) { inherit (cfg) default; };
 
   effectiveConfigFile =
     name: kbd:

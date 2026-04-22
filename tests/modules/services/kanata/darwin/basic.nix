@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+_: {
   test.stubs.kanata = { };
 
   services.kanata = {

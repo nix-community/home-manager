@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   test.stubs.kanata = { };
 
   services.kanata = {
