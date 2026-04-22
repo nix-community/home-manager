@@ -9,6 +9,7 @@
 }
 // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   chromium-google-chrome-extensions-linux = ./google-chrome-extensions-linux.nix;
+  chromium-ungoogled-chromium-extensions-linux = ./ungoogled-chromium-extensions-linux.nix;
 }
 // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
   chromium-google-chrome-dev-package-routing-darwin = ./google-chrome-dev-package-routing-darwin.nix;

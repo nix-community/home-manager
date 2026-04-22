@@ -183,6 +183,10 @@ let
           [Chrome
           documentation](https://developer.chrome.com/docs/extensions/mv2/external_extensions).
 
+          When using `pkgs.ungoogled-chromium` on Linux, prefer `crxPath` and
+          `version`. The default Chrome Web Store update URL is generally not
+          sufficient there.
+
           Proprietary Google Chrome on macOS only supports extensions from the
           Chrome Web Store.
         '';
