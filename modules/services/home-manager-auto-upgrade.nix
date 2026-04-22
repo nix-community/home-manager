@@ -42,7 +42,7 @@ let
   };
 in
 {
-  meta.maintainers = [ lib.maintainers.pinage404 ];
+  meta.maintainers = [ lib.hm.maintainers.soracat ];
 
   options = {
     services.home-manager.autoUpgrade = {
