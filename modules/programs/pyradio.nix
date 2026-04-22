@@ -85,11 +85,7 @@ in
               description = "Encoding of the station's metadata block.";
             };
 
-            forceHttp = mkOption {
-              type = bool;
-              default = false;
-              description = "If enabled, the connection is forced to use http (note when false it can either use http or https).";
-            };
+            forceHttp = mkEnableOption "forcing HTTP for the station connection (otherwise, it can either use http or https)";
 
             iconUrl = mkOption {
               type = str;

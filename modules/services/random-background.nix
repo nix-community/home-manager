@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.services.random-background;
 
@@ -25,17 +25,11 @@ in
 
   options = {
     services.random-background = {
-      enable = lib.mkEnableOption "" // {
-        description = ''
-          Whether to enable random desktop background.
+      enable = mkEnableOption ''
+        random desktop background.
 
-          Note, if you are using NixOS and have set up a custom
-          desktop manager session for Home Manager, then the session
-          configuration must have the `bgSupport`
-          option set to `true` or the background
-          image set by this module may be overwritten.
-        '';
-      };
+        Note: if you are using NixOS and have set up a custom desktop manager session for Home Manager, then the session configuration must have the `bgSupport` option set to `true` or the background image set by this module may be overwritten
+      '';
 
       package = lib.mkPackageOption pkgs "feh" { };
 
@@ -72,15 +66,11 @@ in
         '';
       };
 
-      enableXinerama = mkOption {
-        default = true;
-        type = types.bool;
-        description = ''
-          Will place a separate image per screen when enabled,
-          otherwise a single image will be stretched across all
-          screens.
-        '';
-      };
+      enableXinerama =
+        mkEnableOption "placing a separate image per screen. Otherwise a single image will be stretched across all screens"
+        // {
+          default = true;
+        };
     };
   };
 

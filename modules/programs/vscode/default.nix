@@ -10,6 +10,7 @@ let
     literalExpression
     mapAttrsToList
     mkOption
+    mkEnableOption
     mkIf
     optionalString
     types
@@ -380,7 +381,7 @@ in
       ];
 
   options.programs.vscode = {
-    enable = lib.mkEnableOption "Visual Studio Code";
+    enable = mkEnableOption "Visual Studio Code";
 
     package = lib.mkPackageOption pkgs "vscode" {
       nullable = true;
@@ -402,17 +403,13 @@ in
       '';
     };
 
-    mutableExtensionsDir = mkOption {
-      type = types.bool;
-      default = allProfilesExceptDefault == { };
-      defaultText = lib.literalExpression "(removeAttrs config.programs.vscode.profiles [ \"default\" ]) == { }";
-      example = false;
-      description = ''
-        Whether extensions can be installed or updated manually
-        or by Visual Studio Code. Mutually exclusive to
-        programs.vscode.profiles.
-      '';
-    };
+    mutableExtensionsDir =
+      mkEnableOption "installing and updating extensions manually or by Visual Studio Code. Mutually exclusive to programs.vscode.profiles"
+      // {
+        default = allProfilesExceptDefault == { };
+        defaultText = lib.literalExpression "(removeAttrs config.programs.vscode.profiles [ \"default\" ]) == { }";
+        example = false;
+      };
 
     nameShort = mkOption {
       type = types.str;

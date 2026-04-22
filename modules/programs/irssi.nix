@@ -10,6 +10,7 @@ let
     flip
     mapAttrsToList
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -84,11 +85,7 @@ let
         description = "Name of the channel.";
       };
 
-      autoJoin = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to join this channel on connect.";
-      };
+      autoJoin = mkEnableOption "joining this channel on connect";
     };
   };
 
@@ -132,16 +129,12 @@ let
           };
 
           ssl = {
-            enable = mkOption {
-              type = types.bool;
+            enable = mkEnableOption "SSL" // {
               default = true;
-              description = "Whether SSL should be used.";
             };
 
-            verify = mkOption {
-              type = types.bool;
+            verify = mkEnableOption "SSL certificate verification" // {
               default = true;
-              description = "Whether the SSL certificate should be verified.";
             };
 
             certificateFile = mkOption {
@@ -154,11 +147,7 @@ let
             };
           };
 
-          autoConnect = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Whether Irssi connects to the server on launch.";
-          };
+          autoConnect = mkEnableOption "connecting to the server on launch";
         };
 
         channels = mkOption {
@@ -167,14 +156,7 @@ let
           default = { };
         };
 
-        saslExternal = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Enable SASL external authentication. This requires setting a path in
-            [](#opt-programs.irssi.networks._name_.server.ssl.certificateFile).
-          '';
-        };
+        saslExternal = mkEnableOption "SASL external authentication. This requires setting a path in [](#opt-programs.irssi.networks._name_.server.ssl.certificateFile)";
       };
     }
   );
@@ -184,7 +166,7 @@ in
 
   options = {
     programs.irssi = {
-      enable = lib.mkEnableOption "the Irssi chat client";
+      enable = mkEnableOption "the Irssi chat client";
 
       package = lib.mkPackageOption pkgs "irssi" { nullable = true; };
 

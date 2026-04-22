@@ -5,21 +5,17 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
   cfg = config.programs.man;
 in
 {
   options = {
     programs.man = {
-      enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to enable manual pages and the {command}`man`
-          command. This also includes "man" outputs of all
-          `home.packages`.
-        '';
-      };
+      enable =
+        mkEnableOption "manual pages and the {command}`man` command. This also includes 'man' outputs of all `home.packages`"
+        // {
+          default = true;
+        };
 
       package = mkOption {
         type = with types; nullOr package;
@@ -44,20 +40,16 @@ in
         '';
       };
 
-      generateCaches = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to generate the manual page index caches using
-          {manpage}`mandb(8)`. This allows searching for a page or
-          keyword using utilities like {manpage}`apropos(1)`.
+      generateCaches = lib.mkEnableOption ''
+        the generation of the manual page index caches using
+        {manpage}`mandb(8)`. This allows searching for a page or
+        keyword using utilities like {manpage}`apropos(1)`.
 
-          This feature is disabled by default because it slows down
-          building. If you don't mind waiting a few more seconds when
-          Home Manager builds a new generation, you may safely enable
-          this option.
-        '';
-      };
+        This feature is disabled by default because it slows down
+        building. If you don't mind waiting a few more seconds when
+        Home Manager builds a new generation, you may safely enable
+        this option.
+      '';
     };
   };
 

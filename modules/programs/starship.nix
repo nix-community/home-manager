@@ -9,6 +9,7 @@ let
     literalExpression
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -23,7 +24,7 @@ in
   meta.maintainers = [ ];
 
   options.programs.starship = {
-    enable = lib.mkEnableOption "starship";
+    enable = mkEnableOption "starship";
 
     package = lib.mkPackageOption pkgs "starship" { };
 
@@ -83,29 +84,21 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableInteractive = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Only enable starship when the shell is interactive. This option is only
-        valid for the Fish shell.
+    enableInteractive =
+      mkEnableOption ''
+        Only enable starship when the shell is interactive. This option is only valid for the Fish shell.
 
         Some plugins require this to be set to `false` to function correctly.
-      '';
-    };
+      ''
+      // {
+        default = true;
+      };
 
-    enableTransience = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        The TransientPrompt feature of Starship replaces previous prompts with a
-        custom string. This is only a valid option for the Fish shell.
+    enableTransience = mkEnableOption ''
+      The TransientPrompt feature of Starship which replaces previous prompts with a custom string. This is only a valid option for the Fish shell.
 
-        For documentation on how to change the default replacement string and
-        for more information visit
-        https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
-      '';
-    };
+      For documentation on how to change the default replacement string and for more information visit https://starship.rs/advanced-config/#transientprompt-and-transientrightprompt-in-cmd
+    '';
 
     configPath = mkOption {
       type = lib.types.str;

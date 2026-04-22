@@ -9,6 +9,7 @@ let
     literalExpression
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -19,7 +20,7 @@ in
   meta.maintainers = [ lib.maintainers.Philipp-M ];
 
   options.programs.helix = {
-    enable = lib.mkEnableOption "helix text editor";
+    enable = mkEnableOption "helix text editor";
 
     package = lib.mkPackageOption pkgs "helix" { example = "pkgs.evil-helix"; };
 
@@ -44,15 +45,7 @@ in
       '';
     };
 
-    defaultEditor = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to configure {command}`hx` as the default
-        editor using the {env}`EDITOR` and {env}`VISUAL`
-        environment variables.
-      '';
-    };
+    defaultEditor = mkEnableOption "configuring {command}`hx` as the default editor using the {env}`EDITOR` and {env}`VISUAL` environment variables";
 
     settings = mkOption {
       inherit (tomlFormat) type;

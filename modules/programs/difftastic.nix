@@ -85,37 +85,23 @@ in
     };
 
     git = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable git integration for difftastic.
+      enable = mkEnableOption ''
+        git integration for difftastic.
 
-          When enabled, difftastic will be configured as git's external diff tool or difftool
-          depending on the value of {option}`programs.difftastic.git.diffToolMode`.
-        '';
-      };
+        When enabled, difftastic will be configured as git's external diff tool or difftool
+        depending on the value of {option}`programs.difftastic.git.diffToolMode`.
+      '';
 
-      diffToolMode = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to additionally configure difftastic as a git difftool.
+      diffToolMode = mkEnableOption ''
+        the additional configuration of difftastic as a git difftool.
 
-          When `false`, only `diff.external` is set (used for `git diff`).
-          When `true`, both `diff.external` and difftool config are set (supporting both `git diff` and `git difftool`).
-        '';
-      };
+        When `false`, only `diff.external` is set (used for `git diff`).
+        When `true`, both `diff.external` and difftool config are set (supporting both `git diff` and `git difftool`).
+      '';
     };
 
     jujutsu = {
-      enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable jujutsu integration for difftastic.
-        '';
-      };
+      enable = mkEnableOption "jujutsu integration for difftastic";
     };
   };
 

@@ -1,10 +1,10 @@
 { lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 in
 {
   options.getmail = {
-    enable = lib.mkEnableOption "the getmail mail retriever for this account";
+    enable = mkEnableOption "the getmail mail retriever for this account";
 
     destinationCommand = mkOption {
       type = types.nullOr types.str;
@@ -28,25 +28,13 @@ in
       '';
     };
 
-    delete = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Enable if you want to delete read messages from the server. Most
-        users should either enable `delete` or disable
-        `readAll`.
-      '';
-    };
+    delete = mkEnableOption "deleting read messages from the server. Most users should either enable `delete` or disable `readAll`";
 
-    readAll = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Enable if you want to fetch all, even the read messages from the
-        server. Most users should either enable `delete` or
-        disable `readAll`.
-      '';
-    };
+    readAll =
+      mkEnableOption "fetching all messages including read ones. Most users should either enable `delete` or disable `readAll`"
+      // {
+        default = true;
+      };
 
   };
 }

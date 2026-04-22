@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib)
-    types
     mkIf
     mkEnableOption
     mkPackageOption
@@ -47,18 +46,14 @@ in
         here: <https://trippy.rs/reference/configuration/>
       '';
     };
-    forceUserConfig = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
-      description = ''
-        Whatever to force trippy to use user's config through the -c flag.
-        This will prevent certain commands such as 'sudo' ignoring
-        the configured settings. This will only work if you have
-        'programs.<shell>.enable' (bash, zsh, fish, ...), depending
-        on your shell.
-      '';
-    };
+    forceUserConfig =
+      mkEnableOption ''
+        forcing trippy to use the user's config through the `-c` flag.
+        This will prevent certain commands such as 'sudo' ignoring the configured settings. This will only work if you have 'programs.<shell>.enable' (bash, zsh, fish, ...), depending on your shell.
+      ''
+      // {
+        default = true;
+      };
   };
 
   config = mkIf cfg.enable {

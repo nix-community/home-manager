@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib)
-    types
     mkIf
     mkEnableOption
     mkPackageOption
@@ -24,13 +23,8 @@ in
     enable = mkEnableOption "clipcat";
     package = mkPackageOption pkgs "clipcat" { };
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-    enableSystemdUnit = mkOption {
-      type = types.bool;
+    enableSystemdUnit = mkEnableOption "clipcat systemd unit" // {
       default = true;
-      example = false;
-      description = ''
-        Enable clipcat's Systemd Unit.
-      '';
     };
     daemonSettings = mkOption {
       inherit (formatter) type;

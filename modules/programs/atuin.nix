@@ -20,7 +20,12 @@ let
     else
       [ "daemon" ];
 
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -29,7 +34,7 @@ in
   ];
 
   options.programs.atuin = {
-    enable = lib.mkEnableOption "atuin";
+    enable = mkEnableOption "atuin";
 
     package = lib.mkPackageOption pkgs "atuin" { };
 
@@ -98,19 +103,12 @@ in
       '';
     };
 
-    forceOverwriteSettings = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        When enabled, force overwriting of the Atuin configuration file
-        ({file}`$XDG_CONFIG_HOME/atuin/config.toml`).
-        Any existing Atuin configuration will be lost.
+    forceOverwriteSettings = mkEnableOption ''
+      force overwriting of the Atuin configuration file ({file}`$XDG_CONFIG_HOME/atuin/config.toml`).
+      Any existing Atuin configuration will be lost.
 
-        Enabling this is useful when adding settings for the first time
-        because Atuin writes its default config file after every single
-        shell command, which can make it difficult to manually remove.
-      '';
-    };
+      Enabling this is useful when adding settings for the first time because Atuin writes its default config file after every single shell command, which can make it difficult to manually remove.
+    '';
 
     themes = mkOption {
       type = types.attrsOf (
@@ -143,7 +141,7 @@ in
     };
 
     daemon = {
-      enable = lib.mkEnableOption "Atuin daemon";
+      enable = mkEnableOption "Atuin daemon";
 
       logLevel = mkOption {
         default = null;

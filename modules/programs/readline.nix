@@ -1,6 +1,11 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.readline;
 
@@ -59,10 +64,8 @@ in
       '';
     };
 
-    includeSystemConfig = mkOption {
-      type = types.bool;
+    includeSystemConfig = mkEnableOption "including the system-wide readline configuration" // {
       default = true;
-      description = "Whether to include the system-wide configuration.";
     };
 
     extraConfig = mkOption {

@@ -20,11 +20,7 @@ in
         pkgsText = "pkgs.kdePackages";
       };
 
-      indicator = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Whether to enable kdeconnect-indicator service.";
-      };
+      indicator = lib.mkEnableOption "kdeconnect-indicator service";
     };
   };
 

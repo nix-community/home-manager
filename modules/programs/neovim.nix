@@ -69,61 +69,20 @@ in
       };
 
       # Aliases
-      viAlias = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Symlink {command}`vi` to {command}`nvim` binary.
-        '';
-      };
+      viAlias = mkEnableOption "symlinking {command}`vi` to {command}`nvim`";
 
-      vimAlias = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Symlink {command}`vim` to {command}`nvim` binary.
-        '';
-      };
+      vimAlias = mkEnableOption "symlinking {command}`vim` to {command}`nvim`";
 
-      vimdiffAlias = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Alias {command}`vimdiff` to {command}`nvim -d`.
-        '';
-      };
+      vimdiffAlias = mkEnableOption "aliasing {command}`vimdiff` to {command}`nvim -d`";
 
-      defaultEditor = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to configure {command}`nvim` as the default
-          editor using the {env}`EDITOR` and {env}`VISUAL`
-          environment variables.
-        '';
-      };
+      defaultEditor = mkEnableOption "configuring {command}`nvim` as the default editor using the {env}`EDITOR` and {env}`VISUAL` environment variables";
 
       # Providers & Runtimes
-      withNodeJs = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Enable node provider. Set to `true` to
-          use Node plugins.
-        '';
-      };
+      withNodeJs = mkEnableOption "the Node provider. Set to `true` to use Node plugins";
 
-      withPerl = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Enable perl provider. Set to `true` to
-          use Perl plugins.
-        '';
-      };
+      withPerl = mkEnableOption "the Perl provider. Set to `true` to use Perl plugins";
 
-      withPython3 = mkOption {
-        type = types.bool;
+      withPython3 = mkEnableOption "the Python 3 provider. Set to `true` to use Python 3 plugins" // {
         inherit
           (lib.hm.deprecations.mkStateVersionOptionDefault {
             inherit (config.home) stateVersion;
@@ -139,14 +98,9 @@ in
           default
           defaultText
           ;
-        description = ''
-          Enable Python 3 provider. Set to `true` to
-          use Python 3 plugins.
-        '';
       };
 
-      withRuby = mkOption {
-        type = types.bool;
+      withRuby = mkEnableOption "the Ruby provider" // {
         inherit
           (lib.hm.deprecations.mkStateVersionOptionDefault {
             inherit (config.home) stateVersion;
@@ -162,9 +116,6 @@ in
           default
           defaultText
           ;
-        description = ''
-          Enable ruby provider.
-        '';
       };
 
       extraPython3Packages = mkOption {
@@ -202,21 +153,13 @@ in
         '';
       };
 
-      autowrapRuntimeDeps = mkOption {
-        type = types.bool;
+      autowrapRuntimeDeps = mkEnableOption "automatically wrapping runtime dependencies of plugins" // {
         default = true;
-        description = ''
-          Whether to automatically wrap the binary with the runtime dependencies of the plugins.
-        '';
       };
 
-      waylandSupport = mkOption {
-        type = types.bool;
+      waylandSupport = mkEnableOption "Wayland clipboard support" // {
         default = pkgs.stdenv.isLinux;
         defaultText = literalExpression "pkgs.stdenv.isLinux";
-        description = ''
-          Whether to enable Wayland clipboard support.
-        '';
       };
 
       extraWrapperArgs = mkOption {

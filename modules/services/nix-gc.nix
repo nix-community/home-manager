@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkChangedOptionModule mkOption types;
+  inherit (lib)
+    mkChangedOptionModule
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.nix.gc;
 
@@ -23,15 +28,11 @@ in
 
   options = {
     nix.gc = {
-      automatic = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Automatically run the garbage collector at a specific time.
+      automatic = mkEnableOption ''
+        automatically running the garbage collector at a specific time.
 
-          Note: This will only garbage collect the current user's profiles.
-        '';
-      };
+        Note: This will only garbage collect the current user's profiles
+      '';
 
       dates = mkOption {
         type = with types; either singleLineStr (listOf str);
@@ -69,17 +70,11 @@ in
         '';
       };
 
-      persistent = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        description = ''
-          If true, the time when the service unit was last triggered is
-          stored on disk. When the timer is activated, the service unit is
-          triggered immediately if it would have been triggered at least once
-          during the time when the timer was inactive.
-        '';
-      };
+      persistent =
+        mkEnableOption "persisting nix-gc timer trigger times on disk. When the timer is activated, the service unit is triggered immediately if it would have been triggered at least once during the time when the timer was inactive"
+        // {
+          default = true;
+        };
     };
   };
 

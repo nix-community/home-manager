@@ -5,12 +5,7 @@
   ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkEnableOption
-    mkOption
-    types
-    ;
+  inherit (lib) mkIf mkEnableOption;
 
   cfg = config.programs.parallel;
 in
@@ -22,13 +17,7 @@ in
 
     package = lib.mkPackageOption pkgs "parallel-full" { nullable = true; };
 
-    will-cite = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Accept GNU Parallels citation policy: <https://www.gnu.org/software/parallel/parallel_design.html#citation-notice>
-      '';
-    };
+    will-cite = mkEnableOption "accepting GNU Parallel's citation policy: <https://www.gnu.org/software/parallel/parallel_design.html#citation-notice>";
   };
 
   config = mkIf cfg.enable {

@@ -28,15 +28,7 @@ in
       example = literalExpression "[ pkgs.rust-analyzer ]";
       description = "Extra package to add to fresh";
     };
-    defaultEditor = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to configure {command}`fresh` as the default
-        editor using the {env}`EDITOR` and {env}`VISUAL`
-        environment variables.
-      '';
-    };
+    defaultEditor = mkEnableOption "configuring {command}`fresh` as the default editor using the {env}`EDITOR` and {env}`VISUAL` environment variables";
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };

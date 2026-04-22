@@ -6,7 +6,12 @@
 }:
 
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.xdg.userDirs;
 
@@ -26,15 +31,11 @@ in
   ];
 
   options.xdg.userDirs = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to manage {file}`$XDG_CONFIG_HOME/user-dirs.dirs`.
+    enable = mkEnableOption ''
+      the management of {file}`$XDG_CONFIG_HOME/user-dirs.dirs`.
 
-        The generated file is read-only.
-      '';
-    };
+      The generated file is read-only.
+    '';
 
     package = lib.mkPackageOption pkgs "xdg-user-dirs" { nullable = true; };
 
@@ -139,7 +140,7 @@ in
       '';
     };
 
-    createDirectories = lib.mkEnableOption "automatic creation of the XDG user directories";
+    createDirectories = mkEnableOption "automatic creation of the XDG user directories";
 
     setSessionVariables = mkOption {
       type = with types; bool;

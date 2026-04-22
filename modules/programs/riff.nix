@@ -51,15 +51,11 @@ in
       '';
     };
 
-    enableGitIntegration = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable git integration for riff.
+    enableGitIntegration = mkEnableOption ''
+      git integration for riff.
 
-        When enabled, riff will be configured as git's pager for diff, log, and show commands.
-      '';
-    };
+      When enabled, riff will be configured as git's pager for diff, log, and show commands.
+    '';
   };
 
   config =

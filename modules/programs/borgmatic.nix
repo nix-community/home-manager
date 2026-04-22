@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.borgmatic;
 
@@ -149,17 +154,7 @@ let
             '';
           };
 
-          excludeHomeManagerSymlinks = mkOption {
-            type = types.bool;
-            description = ''
-              Whether to exclude Home Manager generated symbolic links from
-              the backups. This facilitates restoring the whole home
-              directory when the Nix store doesn't contain the latest
-              Home Manager generation.
-            '';
-            default = false;
-            example = true;
-          };
+          excludeHomeManagerSymlinks = mkEnableOption "excluding Home Manager generated symlinks from backups. This facilitates restoring the whole home directory when the Nix store doesn't contain the latest Home Manager generation";
 
           extraConfig = extraConfigOption;
         };
@@ -274,7 +269,7 @@ in
 
   options = {
     programs.borgmatic = {
-      enable = lib.mkEnableOption "Borgmatic";
+      enable = mkEnableOption "Borgmatic";
 
       package = lib.mkPackageOption pkgs "borgmatic" { nullable = true; };
 

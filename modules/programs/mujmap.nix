@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.mujmap;
 
@@ -54,14 +54,7 @@ let
     };
 
   tagsOpts = {
-    lowercase = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        If true, translate all mailboxes to lowercase names when mapping to notmuch
-        tags.
-      '';
-    };
+    lowercase = mkEnableOption "lowercasing mailbox names when mapping to notmuch tags";
 
     directory_separator = mkOption {
       type = types.str;
@@ -203,14 +196,11 @@ let
       '';
     };
 
-    auto_create_new_mailboxes = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to create new mailboxes automatically on the server from notmuch
-        tags.
-      '';
-    };
+    auto_create_new_mailboxes =
+      mkEnableOption "creating new mailboxes automatically on the server from notmuch tags"
+      // {
+        default = true;
+      };
 
     cache_dir = mkOption {
       type = types.nullOr types.str;
@@ -239,18 +229,13 @@ let
   };
 
   mujmapOpts = {
-    enable = lib.mkEnableOption "mujmap JMAP synchronization for notmuch";
+    enable = mkEnableOption "mujmap JMAP synchronization for notmuch";
 
-    notmuchSetupWarning = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Warn if Notmuch is not also enabled for this account.
-
-        This can safely be disabled if {file}`mujmap.toml` is managed
-        outside of Home Manager.
-      '';
-    };
+    notmuchSetupWarning =
+      mkEnableOption "warnings when Notmuch is not also enabled for this account. This can safely be disabled if {file}`mujmap.toml` is managed outside of Home Manager"
+      // {
+        default = true;
+      };
 
     settings = mkOption {
       type = types.submodule {
@@ -279,7 +264,7 @@ in
 
   options = {
     programs.mujmap = {
-      enable = lib.mkEnableOption "mujmap Gmail synchronization for notmuch";
+      enable = mkEnableOption "mujmap Gmail synchronization for notmuch";
 
       package = lib.mkPackageOption pkgs "mujmap" { };
     };

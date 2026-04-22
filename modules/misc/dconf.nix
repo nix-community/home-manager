@@ -47,24 +47,19 @@ in
 
   options = {
     dconf = {
-      enable = lib.mkOption {
-        type = types.bool;
-        # While technically dconf on darwin could work, our activation step
-        # requires dbus, which only *lightly* supports Darwin in general, and
-        # not at all in the way it's packaged in nixpkgs. Because of this, we
-        # just disable dconf for darwin hosts by default.
-        # In the future, if someone gets dbus working, this _could_ be
-        # re-enabled, unclear whether there's actual value in it though.
-        default = !pkgs.stdenv.hostPlatform.isDarwin;
-        visible = false;
-        description = ''
-          Whether to enable dconf settings.
-          Note, if you use NixOS then you must add
-          `programs.dconf.enable = true`
+      enable =
+        lib.mkEnableOption ''
+          dconf settings.
+
+          Note: if you use NixOS then you must add `programs.dconf.enable = true`
           to your system configuration. Otherwise you will see a systemd error
-          message when your configuration is activated.
-        '';
-      };
+          message when your configuration is activated
+        ''
+        // {
+          # While technically dconf on darwin could work, our activation step requires dbus, which only *lightly* supports Darwin in general, and not at all in the way it's packaged in nixpkgs. Because of this, we just disable dconf for darwin hosts by default. In the future, if someone gets dbus working, this _could_ be re-enabled, unclear whether there's actual value in it though.
+          default = !pkgs.stdenv.hostPlatform.isDarwin;
+          visible = false;
+        };
 
       settings = lib.mkOption {
         type = with types; attrsOf (attrsOf lib.hm.types.gvariant);

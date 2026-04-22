@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.xsession.windowManager.xmonad;
 
@@ -33,7 +38,7 @@ in
 {
   options = {
     xsession.windowManager.xmonad = {
-      enable = lib.mkEnableOption "xmonad window manager";
+      enable = mkEnableOption "xmonad window manager";
 
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
@@ -64,11 +69,7 @@ in
         '';
       };
 
-      enableContribAndExtras = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Enable xmonad-{contrib,extras} in xmonad.";
-      };
+      enableContribAndExtras = mkEnableOption "xmonad-{contrib,extras} in xmonad";
 
       config = mkOption {
         type = types.nullOr types.path;

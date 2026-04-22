@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.keychain;
 
@@ -21,7 +26,7 @@ in
   meta.maintainers = [ ];
 
   options.programs.keychain = {
-    enable = lib.mkEnableOption "keychain";
+    enable = mkEnableOption "keychain";
 
     package = lib.mkPackageOption pkgs "keychain" { };
 
@@ -72,12 +77,8 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    enableXsessionIntegration = mkOption {
+    enableXsessionIntegration = mkEnableOption "running keychain from {file}`~/.xsession`" // {
       default = true;
-      type = types.bool;
-      description = ''
-        Whether to run keychain from your {file}`~/.xsession`.
-      '';
     };
   };
 

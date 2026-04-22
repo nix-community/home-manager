@@ -12,8 +12,6 @@ let
     mkEnableOption
     mkIf
     mkPackageOption
-    mkOption
-    types
     ;
 in
 {
@@ -31,24 +29,18 @@ in
   ];
 
   options.programs.patdiff = {
-    enable = mkEnableOption "" // {
-      description = ''
-        Whether to enable the {command}`patdiff` differ.
-        See <https://opensource.janestreet.com/patdiff/>
-      '';
-    };
+    enable = mkEnableOption ''
+      the {command}`patdiff` differ.
+      See <https://opensource.janestreet.com/patdiff/>
+    '';
 
     package = mkPackageOption pkgs "patdiff" { };
 
-    enableGitIntegration = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable git integration for patdiff.
+    enableGitIntegration = mkEnableOption ''
+      git integration for patdiff.
 
-        When enabled, patdiff will be configured as git's external diff tool.
-      '';
-    };
+      When enabled, patdiff will be configured as git's external diff tool.
+    '';
   };
 
   config =

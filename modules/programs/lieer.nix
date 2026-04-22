@@ -9,6 +9,7 @@ let
     concatStringsSep
     mkIf
     mkOption
+    mkEnableOption
     mkRenamedOptionModule
     types
     ;
@@ -43,13 +44,7 @@ let
   };
 
   settingsOpts = {
-    drop_non_existing_label = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Allow missing labels on the Gmail side to be dropped.
-      '';
-    };
+    drop_non_existing_label = mkEnableOption "allowing missing labels on the Gmail side to be dropped";
 
     file_extension = mkOption {
       type = types.str;
@@ -61,18 +56,12 @@ let
       '';
     };
 
-    ignore_empty_history = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Work around a Gmail API quirk where an empty change history
-        is sometimes returned.
+    ignore_empty_history = mkEnableOption ''
+      ignoring empty Gmail change history responses.
 
-        See this
-        [GitHub issue](https://github.com/gauteh/lieer/issues/120)
-        for more details.
-      '';
-    };
+      Work around a Gmail API quirk where an empty change history is sometimes returned.
+      See this [GitHub issue](https://github.com/gauteh/lieer/issues/120) for more details
+    '';
 
     ignore_remote_labels = mkOption {
       type = types.listOf types.str;
@@ -106,21 +95,11 @@ let
       '';
     };
 
-    remove_local_messages = mkOption {
-      type = types.bool;
+    remove_local_messages = mkEnableOption "removing local messages deleted on the remote" // {
       default = true;
-      description = ''
-        Remove local messages that have been deleted on the remote.
-      '';
     };
 
-    replace_slash_with_dot = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Replace '/' with '.' in Gmail labels.
-      '';
-    };
+    replace_slash_with_dot = mkEnableOption "replacing '/' with '.' in Gmail labels";
 
     timeout = mkOption {
       type = types.ints.unsigned;
@@ -132,7 +111,7 @@ let
   };
 
   syncOpts = {
-    enable = lib.mkEnableOption "lieer synchronization service";
+    enable = mkEnableOption "lieer synchronization service";
 
     frequency = mkOption {
       type = types.str;
@@ -149,19 +128,17 @@ let
   };
 
   lieerOpts = {
-    enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
+    enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
-    notmuchSetupWarning = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Warn if Notmuch is not also enabled for this account.
+    notmuchSetupWarning =
+      mkEnableOption ''
+        warnings when Notmuch is not also enabled for this account.
 
-        This can safely be disabled if {command}`notmuch init`
-        has been used to configure this account outside of Home
-        Manager.
-      '';
-    };
+        This can safely be disabled if {command}`notmuch init` has been used to configure this account outside of Home Manager
+      ''
+      // {
+        default = true;
+      };
 
     settings = mkOption {
       type = types.submodule {
@@ -242,7 +219,7 @@ in
 
   options = {
     programs.lieer = {
-      enable = lib.mkEnableOption "lieer Gmail synchronization for notmuch";
+      enable = mkEnableOption "lieer Gmail synchronization for notmuch";
 
       package = lib.mkPackageOption pkgs "lieer" { };
     };

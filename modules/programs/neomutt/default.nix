@@ -14,6 +14,7 @@ let
     isString
     mkIf
     mkOption
+    mkEnableOption
     optionalString
     types
     ;
@@ -86,7 +87,7 @@ let
 
   sidebarModule = types.submodule {
     options = {
-      enable = lib.mkEnableOption "sidebar support";
+      enable = mkEnableOption "sidebar support";
 
       width = mkOption {
         type = types.int;
@@ -94,14 +95,11 @@ let
         description = "Width of the sidebar";
       };
 
-      shortPath = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          By default sidebar shows the full path of the mailbox, but
-          with this enabled only the relative name is shown.
-        '';
-      };
+      shortPath =
+        mkEnableOption "showing only relative names instead of the full path in the sidebar"
+        // {
+          default = true;
+        };
 
       format = mkOption {
         type = types.str;
@@ -389,7 +387,7 @@ in
 {
   options = {
     programs.neomutt = {
-      enable = lib.mkEnableOption "the NeoMutt mail client";
+      enable = mkEnableOption "the NeoMutt mail client";
 
       package = lib.mkPackageOption pkgs "neomutt" { };
 
@@ -425,11 +423,7 @@ in
         description = "Sorting method on messages.";
       };
 
-      vimKeys = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Enable vim-like bindings.";
-      };
+      vimKeys = mkEnableOption "vim-like bindings";
 
       checkStatsInterval = mkOption {
         type = types.nullOr types.int;
@@ -450,26 +444,20 @@ in
         description = "Extra configuration appended to the end.";
       };
 
-      changeFolderWhenSourcingAccount =
-        lib.mkEnableOption "changing the folder when sourcing an account"
-        // {
-          default = true;
-        };
-
-      sourcePrimaryAccount = lib.mkEnableOption "source the primary account by default" // {
+      changeFolderWhenSourcingAccount = mkEnableOption "changing the folder when sourcing an account" // {
         default = true;
       };
 
-      unmailboxes = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Set `unmailboxes *` at the start of account configurations.
-          It removes previous sidebar mailboxes when sourcing an account configuration.
-
-          See <http://www.mutt.org/doc/manual/#mailboxes> for more information.
-        '';
+      sourcePrimaryAccount = mkEnableOption "sourcing the primary account by default" // {
+        default = true;
       };
+
+      unmailboxes = mkEnableOption ''
+        setting `unmailboxes *` at the start of account configurations.
+        It removes previous sidebar mailboxes when sourcing an account configuration.
+
+        See <http://www.mutt.org/doc/manual/#mailboxes> for more information
+      '';
 
       extraConfig = mkOption {
         type = types.lines;

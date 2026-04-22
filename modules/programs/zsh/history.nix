@@ -7,7 +7,12 @@
 let
   cfg = config.programs.zsh;
 
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   inherit (import ./lib.nix { inherit config lib; }) dotDirAbs mkShellVarPathStr;
 in
@@ -18,20 +23,12 @@ in
         { config, ... }:
         {
           options = {
-            append = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                If set, zsh sessions will append their history list to the history
-                file, rather than replace it. Thus, multiple parallel zsh sessions
-                will all have the new entries from their history lists added to the
-                history file, in the order that they exit.
+            append = mkEnableOption ''
+              appending zsh session history to the history file instead of replacing it.
+              Thus, multiple parallel zsh sessions will all have the new entries from their history lists added to the history file, in the order that they exit.
 
-                This file will still be periodically re-written to trim it when the
-                number of lines grows 20% beyond the value specified by
-                `programs.zsh.history.save`.
-              '';
-            };
+              This file will still be periodically re-written to trim it when the number of lines grows 20% beyond the value specified by `programs.zsh.history.save`
+            '';
 
             size = mkOption {
               type = types.int;
@@ -64,67 +61,26 @@ in
               '';
             };
 
-            ignoreDups = mkOption {
-              type = types.bool;
+            ignoreDups = mkEnableOption "ignoring command duplicates of the previous history event" // {
               default = true;
-              description = ''
-                Do not enter command lines into the history list
-                if they are duplicates of the previous event.
-              '';
             };
 
-            ignoreAllDups = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                If a new command line being added to the history list
-                duplicates an older one, the older command is removed
-                from the list (even if it is not the previous event).
-              '';
-            };
+            ignoreAllDups = mkEnableOption "removing older duplicate commands when a duplicate is added to history";
 
-            saveNoDups = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Do not write duplicate entries into the history file.
-              '';
-            };
+            saveNoDups = mkEnableOption "ignoring duplicate entries in the history file";
 
-            findNoDups = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Do not display a line previously found in the history
-                file.
-              '';
-            };
+            findNoDups = mkEnableOption "hiding history lines that were previously found";
 
-            ignoreSpace = mkOption {
-              type = types.bool;
+            ignoreSpace = mkEnableOption "ignoring commands that start with a space in history" // {
               default = true;
-              description = ''
-                Do not enter command lines into the history list
-                if the first character is a space.
-              '';
             };
 
-            expireDuplicatesFirst = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Expire duplicates first.";
-            };
+            expireDuplicatesFirst = mkEnableOption "expiring duplicate history entries first";
 
-            extended = mkOption {
-              type = types.bool;
-              default = false;
-              description = "Save timestamp into the history file.";
-            };
+            extended = mkEnableOption "saving timestamps into the history file";
 
-            share = mkOption {
-              type = types.bool;
+            share = mkEnableOption "sharing command history between zsh sessions" // {
               default = true;
-              description = "Share command history between zsh sessions.";
             };
           };
         }
@@ -132,7 +88,7 @@ in
 
       historySubstringSearchModule = types.submodule {
         options = {
-          enable = lib.mkEnableOption "history substring search";
+          enable = mkEnableOption "history substring search";
           searchUpKey = mkOption {
             type = with types; either (listOf str) str;
             default = [ "^[[A" ];

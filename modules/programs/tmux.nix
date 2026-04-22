@@ -151,14 +151,7 @@ in
 {
   options = {
     programs.tmux = {
-      aggressiveResize = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Resize the window to the size of the smallest session for
-          which it is the current window.
-        '';
-      };
+      aggressiveResize = mkEnableOption "Resizing the window to the size of the smallest session for which it is the current window";
 
       baseIndex = mkOption {
         default = 0;
@@ -167,28 +160,11 @@ in
         description = "Base index for windows and panes.";
       };
 
-      clock24 = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Use 24 hour clock.";
-      };
+      clock24 = mkEnableOption "24-hour clock";
 
-      customPaneNavigationAndResize = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Override the hjkl and HJKL bindings for pane navigation and
-          resizing in VI mode.
-        '';
-      };
+      customPaneNavigationAndResize = mkEnableOption "overriding the hjkl and HJKL bindings for pane navigation and resizing in VI mode";
 
-      disableConfirmationPrompt = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Disable confirmation prompt before killing a pane or window
-        '';
-      };
+      disableConfirmationPrompt = mkEnableOption "disabling pane/window kill confirmation prompts";
 
       enable = mkEnableOption "tmux";
 
@@ -211,14 +187,7 @@ in
         '';
       };
 
-      focusEvents = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          On supported terminals, request focus events and pass them through to
-          applications running in tmux.
-        '';
-      };
+      focusEvents = mkEnableOption "requesting focus events and passing them through to applications running in tmux on supported terminals";
 
       historyLimit = mkOption {
         default = 2000;
@@ -239,22 +208,11 @@ in
 
       mouse = mkEnableOption "mouse support";
 
-      newSession = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Automatically spawn a session if trying to attach and none
-          are running.
-        '';
-      };
+      newSession = mkEnableOption "automatically spawning a session when attaching and none are running";
 
       package = lib.mkPackageOption pkgs "tmux" { nullable = true; };
 
-      reverseSplit = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Reverse the window split shortcuts.";
-      };
+      reverseSplit = mkEnableOption "reversing the window split shortcuts";
 
       resizeAmount = mkOption {
         default = defaultResize;
@@ -263,15 +221,7 @@ in
         description = "Number of lines/columns when resizing.";
       };
 
-      sensibleOnTop = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Run the sensible plugin at the top of the configuration. It
-          is possible to override the sensible settings using the
-          {option}`programs.tmux.extraConfig` option.
-        '';
-      };
+      sensibleOnTop = mkEnableOption "running the sensible plugin at the top of the configuration. It is possible to override the sensible settings using the {option}`programs.tmux.extraConfig` option";
 
       prefix = mkOption {
         default = null;
@@ -305,15 +255,11 @@ in
         description = "Set the default-shell tmux variable.";
       };
 
-      secureSocket = mkOption {
-        default = pkgs.stdenv.isLinux;
-        type = types.bool;
-        description = ''
-          Store tmux socket under {file}`/run`, which is more
-          secure than {file}`/tmp`, but as a downside it doesn't
-          survive user logout.
-        '';
-      };
+      secureSocket =
+        mkEnableOption "storing the tmux socket under {file}`/run`, which is more secure than {file}`/tmp`, but as a downside it doesn't survive user logout"
+        // {
+          default = pkgs.stdenv.isLinux;
+        };
 
       tmuxp.enable = mkEnableOption "tmuxp";
 

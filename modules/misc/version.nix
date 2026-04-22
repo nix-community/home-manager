@@ -66,16 +66,13 @@ in
         description = "The Home Manager release.";
       };
 
-      isReleaseBranch = lib.mkOption {
-        internal = true;
-        readOnly = true;
-        type = types.bool;
-        default = releaseInfo.isReleaseBranch;
-        description = ''
-          Whether the Home Manager version is from a versioned
-          release branch.
-        '';
-      };
+      isReleaseBranch =
+        lib.mkEnableOption "the Home Manager version being from a versioned release branch"
+        // {
+          internal = true;
+          readOnly = true;
+          default = releaseInfo.isReleaseBranch;
+        };
 
       revision = lib.mkOption {
         internal = true;

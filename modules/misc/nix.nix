@@ -181,15 +181,11 @@ in
       '';
     };
 
-    keepOldNixPath = mkOption {
-      type = types.bool;
-      default = true;
-      example = false;
-      description = ''
-        Whether {option}`nix.nixPath` should keep the previously set values in
-        {env}`NIX_PATH`.
-      '';
-    };
+    keepOldNixPath =
+      mkEnableOption "keeping previously set values in {env}`NIX_PATH` when applying {option}`nix.nixPath`"
+      // {
+        default = true;
+      };
 
     channels = lib.mkOption {
       type = with lib.types; attrsOf package;
@@ -248,15 +244,11 @@ in
                   The flake input to which {option}`from>` is to be rewritten.
                 '';
               };
-              exact = mkOption {
-                type = types.bool;
-                default = true;
-                description = ''
-                  Whether the {option}`from` reference needs to match exactly. If set,
-                  a {option}`from` reference like `nixpkgs` does not
-                  match with a reference like `nixpkgs/nixos-20.03`.
-                '';
-              };
+              exact =
+                mkEnableOption "requiring exact match for the {option}`from` reference.  If set, a {option}`from` reference like `nixpkgs` does not match with a reference like `nixpkgs/nixos-20.03`"
+                // {
+                  default = true;
+                };
             };
             config = {
               from = mkDefault {
@@ -289,29 +281,22 @@ in
       description = "The flake registry format version.";
     };
 
-    checkConfig = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        If enabled (the default), checks for data type mismatches and that Nix
-        can parse the generated nix.conf.
-      '';
-    };
+    checkConfig =
+      mkEnableOption "checking the generated nix.conf for type mismatches and parser errors"
+      // {
+        default = true;
+      };
 
-    assumeXdg = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether Home Manager should assume that Nix is configured to use XDG
-        base directories. Note that this doesn't change the behavior of Nix. To
-        do that, set nix.settings.use-xdg-base-directories instead. This option
-        is intended for settings in which use-xdg-base-directories is set
-        globally or nix.conf is unmanaged by Home Manager.
-      '';
-    };
+    assumeXdg = mkEnableOption ''
+      assuming that Nix is configured to use XDG base directories.
 
-    useXdg = mkOption {
-      type = types.bool;
+      Note that this doesn't change the behavior of Nix.
+      To do that, set {option}`nix.settings.use-xdg-base-directories` instead.
+
+      This option is intended for settings in which use-xdg-base-directories is set globally or nix.conf is unmanaged by Home Manager
+    '';
+
+    useXdg = mkEnableOption "using XDG base directories for Nix" // {
       visible = false;
       readOnly = true;
       defaultText = literalMD ''

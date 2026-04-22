@@ -12,6 +12,7 @@ let
     mapAttrsToList
     mkIf
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -73,9 +74,7 @@ let
 
   configModule = types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
-        description = "Whether to enable the output.";
+      enable = mkEnableOption "this output" // {
         default = true;
       };
 
@@ -86,11 +85,7 @@ let
         example = 0;
       };
 
-      primary = mkOption {
-        type = types.bool;
-        description = "Whether output should be marked as primary";
-        default = false;
-      };
+      primary = mkEnableOption "marking this output as primary";
 
       position = mkOption {
         type = types.str;
@@ -342,7 +337,7 @@ in
 
   options = {
     programs.autorandr = {
-      enable = lib.mkEnableOption "Autorandr";
+      enable = mkEnableOption "Autorandr";
 
       package = lib.mkPackageOption pkgs "autorandr" { nullable = true; };
 

@@ -2,22 +2,16 @@
 
 let
 
-  inherit (lib) mkIf mkOption types;
+  inherit (lib) mkIf mkEnableOption;
 
 in
 {
-  options.uninstall = mkOption {
-    type = types.bool;
-    default = false;
-    description = ''
-      Whether to set up a minimal configuration that will remove all managed
-      files and packages.
+  options.uninstall = mkEnableOption ''
+    setting up a minimal configuration that will remove all managed files and packages.
 
-      Use this with extreme care since running the generated activation script
-      will remove all Home Manager state from your user environment. This
-      includes removing all your historic Home Manager generations.
-    '';
-  };
+    Use this with extreme care since running the generated activation script will remove all Home Manager state from your user environment.
+    This includes removing all your historic Home Manager generations
+  '';
 
   config = mkIf config.uninstall {
     home.packages = lib.mkForce [ ];

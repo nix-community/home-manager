@@ -138,14 +138,11 @@ in
       '';
     };
 
-    includeSystemPath = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether to include common system `PATH` in the wrapper.
-        This allows sketchybar to access system binaries.
-      '';
-    };
+    includeSystemPath =
+      mkEnableOption "including common system `PATH` in the wrapper. This allows sketchybar to access system binaries"
+      // {
+        default = true;
+      };
 
     service = {
       enable = mkEnableOption "sketchybar service" // {

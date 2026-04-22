@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.xdg.mimeApps;
 
@@ -17,15 +17,11 @@ in
   meta.maintainers = with lib.maintainers; [ euxane ];
 
   options.xdg.mimeApps = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to manage {file}`$XDG_CONFIG_HOME/mimeapps.list`.
+    enable = mkEnableOption ''
+      the management of {file}`$XDG_CONFIG_HOME/mimeapps.list`.
 
-        The generated file is read-only.
-      '';
-    };
+      The generated file is read-only.
+    '';
 
     # descriptions from
     # https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-1.0.1.html

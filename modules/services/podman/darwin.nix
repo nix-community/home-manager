@@ -12,6 +12,7 @@ let
     mapAttrs'
     mkIf
     mkOption
+    mkEnableOption
     mkMerge
     nameValuePair
     optionalString
@@ -95,11 +96,8 @@ let
         '';
       };
 
-      autoStart = mkOption {
-        type = types.bool;
+      autoStart = mkEnableOption "automatically starting this machine on login" // {
         default = true;
-        example = false;
-        description = "Whether to automatically start this machine on login.";
       };
 
       watchdogInterval = mkOption {
@@ -159,16 +157,16 @@ let
 in
 {
   options.services.podman = {
-    useDefaultMachine = mkOption {
-      type = types.bool;
-      default = pkgs.stdenv.hostPlatform.isDarwin;
-      description = ''
-        Whether to create and use the default podman machine.
+    useDefaultMachine =
+      mkEnableOption ''
+        creating and using the default podman machine.
 
-        The default machine will be named `podman-machine-default` and configured with podmans default values.
-      '';
-      readOnly = pkgs.stdenv.hostPlatform.isLinux;
-    };
+        The default machine will be named `podman-machine-default` and configured with podmans default values
+      ''
+      // {
+        default = pkgs.stdenv.hostPlatform.isDarwin;
+        readOnly = pkgs.stdenv.hostPlatform.isLinux;
+      };
 
     machines = mkOption {
       type = types.attrsOf machineDefinitionType;

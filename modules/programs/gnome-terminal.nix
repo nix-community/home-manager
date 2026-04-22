@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.gnome-terminal;
 
@@ -70,11 +70,7 @@ let
 
   profileSubModule = types.submodule {
     options = {
-      default = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Whether this should be the default profile.";
-      };
+      default = mkEnableOption "this being the default profile";
 
       visibleName = mkOption {
         type = types.str;
@@ -122,16 +118,12 @@ let
         '';
       };
 
-      scrollOnOutput = mkOption {
+      scrollOnOutput = mkEnableOption "scrolling when output is written" // {
         default = true;
-        type = types.bool;
-        description = "Whether to scroll when output is written.";
       };
 
-      showScrollbar = mkOption {
+      showScrollbar = mkEnableOption "showing the scroll bar" // {
         default = true;
-        type = types.bool;
-        description = "Whether the scroll bar should be visible.";
       };
 
       scrollbackLines = mkOption {
@@ -150,11 +142,7 @@ let
         '';
       };
 
-      loginShell = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Run command as a login shell.";
-      };
+      loginShell = mkEnableOption "running command as a login shell";
 
       backspaceBinding = mkOption {
         default = "ascii-delete";
@@ -210,10 +198,8 @@ let
         '';
       };
 
-      audibleBell = mkOption {
+      audibleBell = mkEnableOption "the terminal bell" // {
         default = true;
-        type = types.bool;
-        description = "Turn on/off the terminal's bell.";
       };
 
       transparencyPercent = mkOption {
@@ -331,14 +317,12 @@ in
 
   options = {
     programs.gnome-terminal = {
-      enable = lib.mkEnableOption "Gnome Terminal";
+      enable = mkEnableOption "Gnome Terminal";
 
       package = lib.mkPackageOption pkgs "gnome-terminal" { nullable = true; };
 
-      showMenubar = mkOption {
+      showMenubar = mkEnableOption "showing the menubar by default" // {
         default = true;
-        type = types.bool;
-        description = "Whether to show the menubar by default";
       };
 
       themeVariant = mkOption {

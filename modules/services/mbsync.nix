@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.services.mbsync;
 
@@ -20,7 +20,7 @@ in
   meta.maintainers = [ lib.maintainers.pjones ];
 
   options.services.mbsync = {
-    enable = lib.mkEnableOption "mbsync";
+    enable = mkEnableOption "mbsync";
 
     package = lib.mkPackageOption pkgs "isync" { };
 
@@ -35,12 +35,8 @@ in
       '';
     };
 
-    verbose = mkOption {
-      type = types.bool;
+    verbose = mkEnableOption "verbose output" // {
       default = true;
-      description = ''
-        Whether mbsync should produce verbose output.
-      '';
     };
 
     configFile = mkOption {

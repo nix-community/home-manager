@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     mkMerge
     types
     ;
@@ -76,10 +77,8 @@ let
     {
       options = {
 
-        autoStart = mkOption {
-          type = types.bool;
+        autoStart = mkEnableOption "starting the build on boot (requires user lingering)" // {
           default = true;
-          description = "Whether to start the build on boot. Requires user lingering.";
         };
 
         authFile = mkOption {
@@ -161,11 +160,11 @@ let
           description = "The labels to apply to the build.";
         };
 
-        tlsVerify = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Require HTTPS and verification of certificates when contacting registries.";
-        };
+        tlsVerify =
+          mkEnableOption "requiring HTTPS and certificate verification when contacting registries"
+          // {
+            default = true;
+          };
 
         workingDirectory = mkOption {
           type = with types; nullOr path;

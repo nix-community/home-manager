@@ -12,28 +12,19 @@ let
   inherit (lib)
     getExe
     getExe'
-    mkOption
-    types
+    mkEnableOption
     ;
 
 in
 {
   options = {
     xdg.mime = {
-      enable = mkOption {
-        type = types.bool;
-        default = pkgs.stdenv.hostPlatform.isLinux;
-        defaultText = lib.literalExpression "true if host platform is Linux, false otherwise";
-        description = ''
-          Whether to install programs and files to support the
-          XDG Shared MIME-info specification and XDG MIME Applications
-          specification at
-          <https://specifications.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html>
-          and
-          <https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-latest.html>,
-          respectively.
-        '';
-      };
+      enable =
+        mkEnableOption "installing programs and files to support the XDG Shared MIME-info specification and XDG MIME Applications specification at <https://specifications.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html> and <https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-latest.html>, respectively"
+        // {
+          default = pkgs.stdenv.hostPlatform.isLinux;
+          defaultText = lib.literalExpression "true if host platform is Linux, false otherwise";
+        };
 
       sharedMimeInfoPackage = lib.mkPackageOption pkgs "shared-mime-info" {
         extraDescription = "Used when running update-mime-database.";

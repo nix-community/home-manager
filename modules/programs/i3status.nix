@@ -9,6 +9,7 @@ let
     literalExpression
     mkDefault
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -60,15 +61,10 @@ in
   meta.maintainers = [ lib.maintainers.justinlovinger ];
 
   options.programs.i3status = {
-    enable = lib.mkEnableOption "i3status";
+    enable = mkEnableOption "i3status";
 
-    enableDefault = mkOption {
-      type = types.bool;
+    enableDefault = mkEnableOption "the default configuration" // {
       default = true;
-      description = ''
-        Whether or not to enable
-        the default configuration.
-      '';
     };
 
     general = mkOption {
@@ -96,12 +92,8 @@ in
       type = types.attrsOf (
         types.submodule {
           options = {
-            enable = mkOption {
-              type = types.bool;
+            enable = mkEnableOption "this module" // {
               default = true;
-              description = ''
-                Whether or not to enable this module.
-              '';
             };
             position = mkOption {
               type = with types; either int float;

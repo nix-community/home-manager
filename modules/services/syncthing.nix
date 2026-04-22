@@ -8,6 +8,7 @@ let
   inherit (lib)
     literalExpression
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -329,9 +330,7 @@ in
 
   options = {
     services.syncthing = {
-      enable = lib.mkEnableOption ''
-        Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.
-      '';
+      enable = mkEnableOption "Syncthing, a self-hosted open-source alternative to Dropbox and Bittorrent Sync.";
 
       cert = mkOption {
         type = with types; nullOr str;
@@ -389,27 +388,25 @@ in
         );
       };
 
-      overrideDevices = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to delete the devices which are not configured via the
-          [devices](#opt-services.syncthing.settings.devices) option.
-          If set to `false`, devices added via the web
-          interface will persist and will have to be deleted manually.
-        '';
-      };
+      overrideDevices =
+        mkEnableOption ''
+          deleting the devices which are not configured via the [devices](#opt-services.syncthing.settings.devices) option.
 
-      overrideFolders = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to delete the folders which are not configured via the
-          [folders](#opt-services.syncthing.settings.folders) option.
-          If set to `false`, folders added via the web
-          interface will persist and will have to be deleted manually.
-        '';
-      };
+          If set to `false`, devices added via the web interface will persist and will have to be deleted manually
+        ''
+        // {
+          default = true;
+        };
+
+      overrideFolders =
+        mkEnableOption ''
+          deleting the folders which are not configured via the [folders](#opt-services.syncthing.settings.folders) option.
+
+          If set to `false`, folders added via the web interface will persist and will have to be deleted manually
+        ''
+        // {
+          default = true;
+        };
 
       settings = mkOption {
         type = types.submodule {
@@ -516,14 +513,11 @@ in
                         '';
                       };
 
-                      autoAcceptFolders = mkOption {
-                        type = types.bool;
-                        default = false;
-                        description = ''
-                          Automatically create or share folders that this device advertises at the default path.
-                          See <https://docs.syncthing.net/users/config.html?highlight=autoaccept#config-file-format>.
-                        '';
-                      };
+                      autoAcceptFolders = mkEnableOption ''
+                        Automatically creating or sharing folders that this device advertises at the default path.
+
+                        See <https://docs.syncthing.net/users/config.html?highlight=autoaccept#config-file-format>
+                      '';
 
                     };
                   }
@@ -556,15 +550,11 @@ in
                     freeformType = settingsFormat.type;
                     options = {
 
-                      enable = mkOption {
-                        type = types.bool;
-                        default = true;
-                        description = ''
-                          Whether to share this folder.
-                          This option is useful when you want to define all folders
-                          in one place, but not every machine should share all folders.
-                        '';
-                      };
+                      enable =
+                        mkEnableOption "sharing this folder. This option is useful when you want to define all folders in one place, but not every machine should share all folders"
+                        // {
+                          default = true;
+                        };
 
                       path = mkOption {
                         type = types.str // {
@@ -716,17 +706,10 @@ in
                           });
                       };
 
-                      copyOwnershipFromParent = mkOption {
-                        type = types.bool;
-                        default = false;
-                        description = ''
-                          On Unix systems, tries to copy file/folder ownership from
-                          the parent directory (the directory it’s located in).
-                          Requires running Syncthing as a privileged user, or
-                          granting it additional capabilities (e.g. CAP_CHOWN on
-                          Linux).
-                        '';
-                      };
+                      copyOwnershipFromParent = mkEnableOption ''
+                        copying file/folder ownership from the parent directory (the directory it's located in) on Unix.
+                        Requires running Syncthing as a privileged user, or granting it additional capabilities (e.g. CAP_CHOWN on Linux)
+                      '';
                     };
                   }
                 )
@@ -801,11 +784,7 @@ in
       package = lib.mkPackageOption pkgs "syncthing" { };
 
       tray = {
-        enable = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether to enable a syncthing tray service.";
-        };
+        enable = mkEnableOption "a syncthing tray service";
 
         command = mkOption {
           type = types.str;

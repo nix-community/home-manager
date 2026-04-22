@@ -12,6 +12,7 @@ let
     mkDefault
     mkIf
     mkOption
+    mkEnableOption
     removePrefix
     types
     ;
@@ -33,14 +34,11 @@ in
         { name, config, ... }:
         {
           options = {
-            enable = mkOption {
-              type = types.bool;
-              default = true;
-              description = ''
-                Whether this file should be generated. This option allows specific
-                files to be disabled.
-              '';
-            };
+            enable =
+              mkEnableOption "generating this file. This option allows specific files to be disabled"
+              // {
+                default = true;
+              };
             target = mkOption {
               type = types.str;
               apply =
@@ -85,34 +83,22 @@ in
               '';
             };
 
-            recursive = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                If the file source is a directory, then this option
-                determines whether the directory should be recursively
-                linked to the target location. This option has no effect
-                if the source is a file.
+            recursive = mkEnableOption ''
+              recursively linking directories to the target location.
 
-                If `false` (the default) then the target
-                will be a symbolic link to the source directory. If
-                `true` then the target will be a
-                directory structure matching the source's but whose leaves
-                are symbolic links to the files of the source directory.
-              '';
-            };
+              If the file source is a directory, then this option determines whether the directory should be recursively linked to the target location.
+              This option has no effect if the source is a file.
 
-            ignorelinks = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                When `recursive` is enabled, adds `-ignorelinks` flag to lndir
+              If `false` (the default) then the target will be a symbolic link to the source directory.
+              If `true` then the target will be a directory structure matching the source's but whose leaves are symbolic links to the files of the source directory
+            '';
 
-                It causes lndir to not treat symbolic links in the source directory specially.
-                The link created in the target directory will point back to the corresponding
-                (symbolic link) file in the source directory. If the link is to a directory
-              '';
-            };
+            ignorelinks = mkEnableOption ''
+              passing `-ignorelinks` to lndir when recursive linking is enabled
+
+              It causes lndir to not treat symbolic links in the source directory specially.
+              The link created in the target directory will point back to the corresponding (symbolic link) file in the source directory. If the link is to a directory
+            '';
 
             onChange = mkOption {
               type = types.lines;
@@ -128,16 +114,11 @@ in
               '';
             };
 
-            force = mkOption {
-              type = types.bool;
-              default = false;
-              description = ''
-                Whether the target path should be unconditionally replaced
-                by the managed file source. Warning, this will silently
-                delete the target regardless of whether it is a file or
-                link.
-              '';
-            };
+            force = mkEnableOption ''
+              unconditionally replacing the target path with the managed source.
+
+              Warning: this will silently delete the target regardless of whether it is a file or link
+            '';
           };
 
           config = {

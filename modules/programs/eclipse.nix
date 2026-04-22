@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.eclipse;
 in
@@ -14,7 +19,7 @@ in
 
   options = {
     programs.eclipse = {
-      enable = lib.mkEnableOption "Eclipse";
+      enable = mkEnableOption "Eclipse";
 
       package = lib.mkPackageOption pkgs "eclipse" {
         default = [
@@ -24,15 +29,7 @@ in
         example = "pkgs.eclipses.eclipse-java";
       };
 
-      enableLombok = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Whether to enable the Lombok Java Agent in Eclipse. This is
-          necessary to use the Lombok class annotations.
-        '';
-      };
+      enableLombok = mkEnableOption "the Lombok Java Agent in Eclipse. This is necessary to use the Lombok class annotations";
 
       jvmArgs = mkOption {
         type = types.listOf types.str;

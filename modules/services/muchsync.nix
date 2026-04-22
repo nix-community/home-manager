@@ -11,6 +11,7 @@ let
   inherit (lib)
     escapeShellArg
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -43,41 +44,22 @@ let
         '';
       };
 
-      upload = mkOption {
-        type = types.bool;
+      upload = mkEnableOption "propagating local changes to the remote" // {
         default = true;
-        description = ''
-          Whether to propagate local changes to the remote.
-        '';
       };
 
       local = {
-        checkForModifiedFiles = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Check for locally modified files.
-            Without this option, muchsync assumes that files in a maildir are
-            never edited.
+        checkForModifiedFiles = mkEnableOption ''
+          checking for locally modified files.
+          Without this option, muchsync assumes that files in a maildir are never edited.
 
-            {option}`checkForModifiedFiles` disables certain
-            optimizations so as to make muchsync at least check the timestamp on
-            every file, which will detect modified files at the cost of a longer
-            startup time.
+          {option}`checkForModifiedFiles` disables certain optimizations so as to make muchsync at least check the timestamp on every file, which will detect modified files at the cost of a longer startup time.
 
-            This option is useful if your software regularly modifies the
-            contents of mail files (e.g., because you are running offlineimap
-            with "synclabels = yes").
-          '';
-        };
+          This option is useful if your software regularly modifies the contents of mail files (e.g., because you are running offlineimap with "synclabels = yes")
+        '';
 
-        importNew = mkOption {
-          type = types.bool;
+        importNew = mkEnableOption "running {command}`notmuch new` locally before synchronisation" // {
           default = true;
-          description = ''
-            Whether to begin the synchronisation by running
-            {command}`notmuch new` locally.
-          '';
         };
       };
 
@@ -103,33 +85,20 @@ let
           '';
         };
 
-        checkForModifiedFiles = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Check for modified files on the remote side.
-            Without this option, muchsync assumes that files in a maildir are
-            never edited.
+        checkForModifiedFiles = mkEnableOption ''
+          Checking for modified files on the remote side.
+          Without this option, muchsync assumes that files in a maildir are never edited.
 
-            {option}`checkForModifiedFiles` disables certain
-            optimizations so as to make muchsync at least check the timestamp on
-            every file, which will detect modified files at the cost of a longer
-            startup time.
+          {option}`checkForModifiedFiles` disables certain optimizations so as to make muchsync at least check the timestamp on every file, which will detect modified files at the cost of a longer startup time.
 
-            This option is useful if your software regularly modifies the
-            contents of mail files (e.g., because you are running offlineimap
-            with "synclabels = yes").
-          '';
-        };
+          This option is useful if your software regularly modifies the contents of mail files (e.g., because you are running offlineimap with "synclabels = yes")
+        '';
 
-        importNew = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to begin the synchronisation by running
-            {command}`notmuch new` on the remote side.
-          '';
-        };
+        importNew =
+          mkEnableOption "running {command}`notmuch new` on the remote side before synchronisation"
+          // {
+            default = true;
+          };
       };
     };
   };

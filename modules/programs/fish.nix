@@ -134,13 +134,7 @@ let
         '';
       };
 
-      noScopeShadowing = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Allows the function to access the variables of calling functions.
-        '';
-      };
+      noScopeShadowing = mkEnableOption "allowing the function to access the variables of calling functions";
 
       inheritVariable = mkOption {
         type = with types; nullOr str;
@@ -441,12 +435,12 @@ in
 
   options = {
     programs.fish = {
-      enable = lib.mkEnableOption "fish, the friendly interactive shell";
+      enable = mkEnableOption "fish, the friendly interactive shell";
 
       package = lib.mkPackageOption pkgs "fish" { };
 
       generateCompletions =
-        lib.mkEnableOption "the automatic generation of completions based upon installed man pages"
+        mkEnableOption "the automatic generation of completions based upon installed man pages"
         // {
           default = true;
         };
@@ -486,15 +480,7 @@ in
         '';
       };
 
-      preferAbbrs = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          If enabled, abbreviations will be preferred over aliases when
-          other modules define aliases for fish.
-        '';
-      };
+      preferAbbrs = mkEnableOption "preferring abbreviations over aliases from other modules";
 
       binds = mkOption {
         type = types.attrsOf bindModule;

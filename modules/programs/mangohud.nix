@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.mangohud;
 
@@ -45,18 +50,11 @@ in
 
   options = {
     programs.mangohud = {
-      enable = lib.mkEnableOption "Mangohud";
+      enable = mkEnableOption "Mangohud";
 
       package = lib.mkPackageOption pkgs "mangohud" { };
 
-      enableSessionWide = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Sets environment variables so that
-          MangoHud is started on any application that supports it.
-        '';
-      };
+      enableSessionWide = mkEnableOption "the MangoHud environment variables so that MangoHud is started on any application that supports it";
 
       settings = mkOption {
         type = with types; attrsOf settingsType;

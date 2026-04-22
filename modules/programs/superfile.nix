@@ -133,12 +133,8 @@ in
       '';
     };
 
-    firstUseCheck = mkOption {
-      type = types.bool;
+    firstUseCheck = mkEnableOption "the first-time use popup" // {
       default = true;
-      description = ''
-        Enables the first time use popup.
-      '';
     };
 
     pinnedFolders = mkOption {

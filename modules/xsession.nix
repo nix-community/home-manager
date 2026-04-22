@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.xsession;
 
@@ -16,7 +16,7 @@ in
 
   options = {
     xsession = {
-      enable = lib.mkEnableOption "X Session";
+      enable = mkEnableOption "X Session";
 
       trayTarget = mkOption {
         readOnly = true;
@@ -72,16 +72,7 @@ in
         '';
       };
 
-      preferStatusNotifierItems = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Whether tray applets should prefer using the Status Notifier
-          Items (SNI) protocol, commonly called App Indicators. Note,
-          not all tray applets or status bars support SNI.
-        '';
-      };
+      preferStatusNotifierItems = mkEnableOption "tray applets preferring using the Status Notifier Items (SNI) protocol, commonly called App Indicators. Note, not all tray applets or status bars support SNI";
 
       profileExtra = mkOption {
         type = types.lines;

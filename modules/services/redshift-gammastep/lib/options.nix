@@ -13,7 +13,12 @@
   serviceDocumentation,
 }:
 let
-  inherit (lib) mkOption mkIf types;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    mkIf
+    types
+    ;
 
   cfg = config.services.${moduleName};
   settingsFormat = pkgs.formats.ini { };
@@ -54,7 +59,7 @@ in
     ];
 
   options = {
-    enable = lib.mkEnableOption programName;
+    enable = mkEnableOption programName;
 
     dawnTime = mkOption {
       type = types.nullOr types.str;
@@ -138,16 +143,9 @@ in
       '';
     };
 
-    enableVerboseLogging = lib.mkEnableOption "verbose service logging";
+    enableVerboseLogging = mkEnableOption "verbose service logging";
 
-    tray = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Start the ${appletExecutable} tray applet.
-      '';
-    };
+    tray = mkEnableOption "starting the ${appletExecutable} tray applet";
 
     settings = mkOption {
       type = types.submodule { freeformType = settingsFormat.type; };

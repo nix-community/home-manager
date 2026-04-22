@@ -9,6 +9,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     optional
     optionalString
     types
@@ -184,7 +185,7 @@ in
 
   options = {
     services.gpg-agent = {
-      enable = lib.mkEnableOption "GnuPG private key agent";
+      enable = mkEnableOption "GnuPG private key agent";
 
       defaultCacheTtl = mkOption {
         type = types.nullOr types.int;
@@ -226,13 +227,7 @@ in
         '';
       };
 
-      enableSshSupport = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to use the GnuPG key agent for SSH keys.
-        '';
-      };
+      enableSshSupport = mkEnableOption "the use of the GnuPG key agent for SSH keys";
 
       sshKeys = mkOption {
         type = types.nullOr (types.listOf types.str);
@@ -242,59 +237,39 @@ in
         '';
       };
 
-      enableExtraSocket = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to enable extra socket of the GnuPG key agent (useful for GPG
-          Agent forwarding).
-        '';
-      };
+      enableExtraSocket = mkEnableOption "extra socket of the GnuPG key agent (useful for GPG Agent forwarding)";
 
-      verbose = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to produce verbose output.
-        '';
-      };
+      verbose = mkEnableOption "verbose output";
 
-      grabKeyboardAndMouse = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Tell the pinentry to grab the keyboard and mouse. This
-          option should in general be used to avoid X-sniffing
-          attacks. When disabled, this option passes
-          {option}`no-grab` setting to gpg-agent.
-        '';
-      };
+      grabKeyboardAndMouse =
+        mkEnableOption ''
+          pinentry grabbing keyboard and mouse.
 
-      enableScDaemon = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Make use of the scdaemon tool. This option has the effect of
-          enabling the ability to do smartcard operations. When
-          disabled, this option passes
-          {option}`disable-scdaemon` setting to gpg-agent.
-        '';
-      };
+          This option should in general be used to avoid X-sniffing attacks.
+          When disabled, this option passes {option}`no-grab` setting to gpg-agent
+        ''
+        // {
+          default = true;
+        };
 
-      noAllowExternalCache = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Tell Pinentry not to enable features which use an external cache for
-          passphrases.
+      enableScDaemon =
+        mkEnableOption ''
+          the scdaemon tool.
 
-          Some desktop environments prefer to unlock all credentials with one
-          master password and may have installed a Pinentry which employs an
-          additional external cache to implement such a policy. By using this
-          option the Pinentry is advised not to make use of such a cache and
-          instead always ask the user for the requested passphrase.
-        '';
-      };
+          This option has the effect of enabling the ability to do smartcard operations.
+          When disabled, this option passes {option}`disable-scdaemon` setting to gpg-agent
+        ''
+        // {
+          default = true;
+        };
+
+      noAllowExternalCache = mkEnableOption ''
+        disabling external cache features in pinentry.
+        Tell Pinentry not to enable features which use an external cache for passphrases.
+
+        Some desktop environments prefer to unlock all credentials with one master password and may have installed a Pinentry which employs an additional external cache to implement such a policy.
+        By using this option the Pinentry is advised not to make use of such a cache and instead always ask the user for the requested passphrase
+      '';
 
       extraConfig = mkOption {
         type = types.lines;

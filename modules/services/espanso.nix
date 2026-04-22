@@ -11,7 +11,6 @@ let
     mkEnableOption
     mkIf
     literalExpression
-    types
     mkRemovedOptionModule
     versionAtLeast
     ;
@@ -68,16 +67,12 @@ in
           default = if isLinux && cfg.waylandSupport then pkgs.espanso-wayland else null;
         };
 
-      x11Support = mkOption {
-        type = types.bool;
-        description = "Whether to enable x11 support on linux";
+      x11Support = mkEnableOption "x11 support on Linux" // {
         default = isLinux;
         defaultText = "`true` on linux";
       };
 
-      waylandSupport = mkOption {
-        type = types.bool;
-        description = "Whether to enable wayland support on linux";
+      waylandSupport = mkEnableOption "wayland support on Linux" // {
         default = isLinux;
         defaultText = "`true` on linux";
       };

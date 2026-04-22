@@ -3,7 +3,7 @@
 let
 
   inherit (builtins) attrValues;
-  inherit (lib) types mkOption;
+  inherit (lib) types mkOption mkEnableOption;
 
 in
 rec {
@@ -69,15 +69,7 @@ rec {
             description = "Bookmarks within directory.";
           };
 
-          toolbar = mkOption {
-            type = types.bool;
-            default = false;
-            description = ''
-              Make this the toolbar directory. Note, this does _not_
-              mean that this directory will be added to the toolbar,
-              this directory _is_ the toolbar.
-            '';
-          };
+          toolbar = mkEnableOption "making this the toolbar directory. Note: this does _not_ mean that this directory will be added to the toolbar, this directory _is_ the toolbar";
         };
       }
     )

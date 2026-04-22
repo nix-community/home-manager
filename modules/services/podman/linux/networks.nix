@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     mkMerge
     types
     ;
@@ -90,12 +91,8 @@ let
   networkDefinitionType = types.submodule {
     options = {
 
-      autoStart = mkOption {
-        type = types.bool;
+      autoStart = mkEnableOption "starting the network on boot (requires user lingering)" // {
         default = true;
-        description = ''
-          Whether to start the network on boot (requires user lingering).
-        '';
       };
 
       description = mkOption {

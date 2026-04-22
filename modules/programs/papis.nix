@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.papis;
 
@@ -26,7 +26,7 @@ in
   meta.maintainers = [ ];
 
   options.programs.papis = {
-    enable = lib.mkEnableOption "papis";
+    enable = mkEnableOption "papis";
 
     package = lib.mkPackageOption pkgs "papis" { nullable = true; };
 
@@ -67,22 +67,17 @@ in
                 description = "This library's name.";
               };
 
-              isDefault = mkOption {
-                type = types.bool;
-                default = false;
-                example = true;
-                description = ''
-                  Whether this is a default library.
+              isDefault = mkEnableOption ''
+                this being a default library.
 
-                  For papis to function without explicit library selection
-                  (i.e. without `-l <library>` or `--pick-lib` flags) there
-                  must be a default library defined.
+                For papis to function without explicit library selection
+                (i.e. without `-l <library>` or `--pick-lib` flags) there
+                must be a default library defined.
 
-                  Note this can be also defined (or overridden) on a local
-                  `$(pwd)/.papis.config` or via python
-                  `$XDG_CONFIG_HOME/papis/config.py` config file.
-                '';
-              };
+                Note this can be also defined (or overridden) on a local
+                `$(pwd)/.papis.config` or via python
+                `$XDG_CONFIG_HOME/papis/config.py` config file
+              '';
 
               settings = mkOption {
                 type =

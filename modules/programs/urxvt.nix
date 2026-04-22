@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.programs.urxvt;
 in
 {
   options.programs.urxvt = {
-    enable = lib.mkEnableOption "rxvt-unicode terminal emulator";
+    enable = mkEnableOption "rxvt-unicode terminal emulator";
 
     package = lib.mkPackageOption pkgs "rxvt-unicode" { };
 
@@ -34,20 +34,16 @@ in
       '';
     };
 
-    iso14755 = mkOption {
-      type = types.bool;
+    iso14755 = mkEnableOption "ISO14755 support for viewing and entering unicode characters" // {
       default = true;
-      description = "ISO14755 support for viewing and entering unicode characters.";
     };
 
     scroll = {
       bar = mkOption {
         type = types.submodule {
           options = {
-            enable = mkOption {
-              type = types.bool;
+            enable = mkEnableOption "the scrollbar" // {
               default = true;
-              description = "Whether to enable the scrollbar";
             };
 
             style = mkOption {
@@ -80,10 +76,8 @@ in
               description = "Scrollbar position.";
             };
 
-            floating = mkOption {
-              type = types.bool;
+            floating = mkEnableOption "an rxvt scrollbar without a trough" // {
               default = true;
-              description = "Whether to display an rxvt scrollbar without a trough.";
             };
           };
         };
@@ -97,30 +91,18 @@ in
         description = "Number of lines to save in the scrollback buffer.";
       };
 
-      keepPosition = mkOption {
-        type = types.bool;
+      keepPosition = mkEnableOption "keeping scroll position when the TTY receives new lines" // {
         default = true;
-        description = "Whether to keep a scroll position when TTY receives new lines.";
       };
 
-      scrollOnKeystroke = mkOption {
-        type = types.bool;
+      scrollOnKeystroke = mkEnableOption "scrolling to bottom on keyboard input" // {
         default = true;
-        description = "Whether to scroll to bottom on keyboard input.";
       };
 
-      scrollOnOutput = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to scroll to bottom on TTY output.";
-      };
+      scrollOnOutput = mkEnableOption "scrolling to bottom on TTY output";
     };
 
-    transparent = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether to enable pseudo-transparency.";
-    };
+    transparent = mkEnableOption "pseudo-transparency";
 
     shading = mkOption {
       type = types.ints.between 0 200;

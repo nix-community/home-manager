@@ -12,6 +12,7 @@ let
     mkIf
     mkMerge
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -25,24 +26,19 @@ in
   meta.maintainers = [ lib.maintainers.misterio77 ];
 
   options.xdg.portal = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Whether to enable [XDG desktop integration](https://github.com/flatpak/xdg-desktop-portal).
+    enable = mkEnableOption ''
+      [XDG desktop integration](https://github.com/flatpak/xdg-desktop-portal).
 
-        Note, if you installed Home Manager via its NixOS module and
-        'home-manager.useUserPackages' is enabled, make sure to add
+      Note, if you installed Home Manager via its NixOS module and
+      'home-manager.useUserPackages' is enabled, make sure to add
 
-        ``` nix
-        environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
-        ```
+      ``` nix
+      environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
+      ```
 
-        to your NixOS configuration so that the portal definitions and DE
-        provided configurations get linked.
-      '';
-    };
+      to your NixOS configuration so that the portal definitions and DE
+      provided configurations get linked.
+    '';
 
     extraPortals = mkOption {
       type = types.listOf types.package;
@@ -61,16 +57,13 @@ in
       '';
     };
 
-    xdgOpenUsePortal = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Sets environment variable `NIXOS_XDG_OPEN_USE_PORTAL` to `1`
-        This will make `xdg-open` use the portal to open programs, which resolves bugs involving
-        programs opening inside FHS envs or with unexpected env vars set from wrappers.
-        See [#160923](https://github.com/NixOS/nixpkgs/issues/160923) for more info.
-      '';
-    };
+    xdgOpenUsePortal = mkEnableOption ''
+      setting environment variable `NIXOS_XDG_OPEN_USE_PORTAL` to `1`.
+
+      This will make `xdg-open` use the portal to open programs, which resolves bugs involving programs opening inside FHS envs or with unexpected env vars set from wrappers.
+
+      See [#160923](https://github.com/NixOS/nixpkgs/issues/160923) for more info
+    '';
 
     config = mkOption {
       type = types.attrsOf associationOptions;

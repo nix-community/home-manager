@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   extraMailboxOptions = {
     options = {
@@ -34,7 +34,7 @@ let
 in
 {
   options.notmuch.neomutt = {
-    enable = lib.mkEnableOption "Notmuch support in NeoMutt" // {
+    enable = mkEnableOption "Notmuch support in NeoMutt" // {
       default = true;
     };
 
@@ -57,7 +57,7 @@ in
   };
 
   options.neomutt = {
-    enable = lib.mkEnableOption "NeoMutt";
+    enable = mkEnableOption "NeoMutt";
 
     sendMailCommand = mkOption {
       type = types.nullOr types.str;
@@ -83,10 +83,8 @@ in
       '';
     };
 
-    showDefaultMailbox = mkOption {
-      type = types.bool;
+    showDefaultMailbox = mkEnableOption "showing the default mailbox (INBOX)" // {
       default = true;
-      description = "Show the default mailbox (INBOX)";
     };
 
     mailboxName = mkOption {

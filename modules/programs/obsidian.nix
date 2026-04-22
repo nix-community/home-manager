@@ -56,10 +56,8 @@ let
 
   corePluginsOptions = {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "this core plugin" // {
         default = true;
-        description = "Whether to enable the plugin.";
       };
 
       name = mkOption {
@@ -82,10 +80,8 @@ let
 
   communityPluginsOptions = {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "this community plugin" // {
         default = true;
-        description = "Whether to enable the plugin.";
       };
 
       pkg = mkOption {
@@ -110,10 +106,8 @@ let
     { config, ... }:
     {
       options = {
-        enable = mkOption {
-          type = types.bool;
+        enable = mkEnableOption "this CSS snippet" // {
           default = true;
-          description = "Whether to enable the snippet.";
         };
 
         name = mkOption {
@@ -145,10 +139,8 @@ let
 
   themesOptions = {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "this theme as active" // {
         default = true;
-        description = "Whether to set the theme as active.";
       };
 
       pkg = mkOption {
@@ -211,11 +203,7 @@ in
     enable = mkEnableOption "obsidian";
     package = mkPackageOption pkgs "obsidian" { nullable = true; };
 
-    cli.enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether to enable the Obsidian CLI in `obsidian.json`.";
-    };
+    cli.enable = mkEnableOption "the Obsidian CLI in `obsidian.json`";
 
     defaultSettings = {
       app = mkOption {
@@ -306,10 +294,8 @@ in
           { name, ... }:
           {
             options = {
-              enable = mkOption {
-                type = types.bool;
+              enable = mkEnableOption "this vault being generated" // {
                 default = true;
-                description = "Whether this vault should be generated.";
               };
 
               target = mkOption {

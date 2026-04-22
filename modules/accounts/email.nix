@@ -5,6 +5,7 @@ let
     mkDefault
     mkIf
     mkOption
+    mkEnableOption
     types
     ;
 
@@ -20,17 +21,9 @@ let
         '';
       };
 
-      signByDefault = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Sign messages by default.";
-      };
+      signByDefault = mkEnableOption "signing messages by default";
 
-      encryptByDefault = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Encrypt outgoing messages by default.";
-      };
+      encryptByDefault = mkEnableOption "encrypting outgoing messages by default";
     };
   };
 
@@ -85,21 +78,11 @@ let
 
   tlsModule = types.submodule {
     options = {
-      enable = mkOption {
-        type = types.bool;
+      enable = mkEnableOption "TLS/SSL" // {
         default = true;
-        description = ''
-          Whether to enable TLS/SSL.
-        '';
       };
 
-      useStartTls = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Whether to use STARTTLS.
-        '';
-      };
+      useStartTls = mkEnableOption "STARTTLS";
 
       certificatesFile = mkOption {
         type = types.nullOr types.path;
@@ -374,24 +357,13 @@ let
           '';
         };
 
-        primary = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Whether this is the primary account. Only one account may be
-            set as primary.
-          '';
-        };
+        primary = mkEnableOption "marking this as the primary account. Only one account may be set as primary";
 
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether this account is enabled.  Potentially useful to allow
-            setting email configuration globally then enabling or disabling on
-            specific systems.
-          '';
-        };
+        enable =
+          mkEnableOption "this account. Potentially useful to allow setting email configuration globally then enabling or disabling on specific systems"
+          // {
+            default = true;
+          };
 
         flavor = mkOption {
           type = types.enum [

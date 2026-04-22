@@ -6,7 +6,12 @@
 }:
 
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   cfg = config.programs.zellij;
   yamlFormat = pkgs.formats.yaml { };
@@ -26,7 +31,7 @@ in
   ];
 
   options.programs.zellij = {
-    enable = lib.mkEnableOption "Zellij";
+    enable = mkEnableOption "Zellij";
 
     package = lib.mkPackageOption pkgs "zellij" { };
 
@@ -211,25 +216,17 @@ in
       '';
     };
 
-    attachExistingSession = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to attach to the default session after being autostarted if a Zellij session already exists.
+    attachExistingSession = mkEnableOption ''
+      attaching to the default session after being autostarted if a Zellij session already exists.
 
-        Variable is checked in `auto-start` script. Requires shell integration to be enabled to have effect.
-      '';
-    };
+      Variable is checked in `auto-start` script. Requires shell integration to be enabled to have effect
+    '';
 
-    exitShellOnExit = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to exit the shell when Zellij exits after being autostarted.
+    exitShellOnExit = mkEnableOption ''
+      exiting the shell when Zellij exits after being autostarted.
 
-        Variable is checked in `auto-start` script. Requires shell integration to be enabled to have effect.
-      '';
-    };
+      Variable is checked in `auto-start` script. Requires shell integration to be enabled to have effect
+    '';
 
     themes = mkOption {
       type = types.attrsOf (

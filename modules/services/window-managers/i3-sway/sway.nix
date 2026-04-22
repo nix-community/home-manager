@@ -12,6 +12,7 @@ let
     mapAttrsToList
     mkIf
     mkOption
+    mkEnableOption
     optional
     types
     ;
@@ -194,14 +195,7 @@ let
         '';
       };
 
-      bindkeysToCode = mkOption {
-        type = types.bool;
-        default = false;
-        example = true;
-        description = ''
-          Whether to make use of {option}`--to-code` in keybindings.
-        '';
-      };
+      bindkeysToCode = mkEnableOption "using {option}`--to-code` in keybindings";
 
       input = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
@@ -326,32 +320,20 @@ let
         description = "The sway command to execute on state changes";
       };
 
-      locked = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Unless the flag --locked is set, the command
-          will not be run when a screen locking program
-          is active. If there is a matching binding with
-          and without --locked, the one with will be preferred
-          when locked and the one without will be
-          preferred when unlocked.
-        '';
-      };
+      locked = mkEnableOption ''
+        running the command when a screen locking program is active.
 
-      reload = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          If the --reload flag is given, the binding will
-          also be executed when the config is reloaded.
-          toggle bindings will not be executed on reload.
-          The --locked flag will operate as normal so if
-          the config is reloaded while locked and
-          --locked is not given, the binding will not be
-          executed.
-        '';
-      };
+        Otherwise, the command will not be run when a screen locking program is active.
+        If there is a matching binding with and without `--locked`, the one with will be preferred when locked and the one without will be preferred when unlocked
+      '';
+
+      reload = mkEnableOption ''
+        executing the binding when the config is reloaded.
+
+        The binding will also be executed when the config is reloaded.
+        Toggle bindings will not be executed on reload.
+        The `--locked` flag will operate as normal so if the config is reloaded while locked and `--locked` is not given, the binding will not be executed
+      '';
     };
   };
 
@@ -527,7 +509,7 @@ in
     ];
 
   options.wayland.windowManager.sway = {
-    enable = lib.mkEnableOption "sway wayland compositor";
+    enable = mkEnableOption "sway wayland compositor";
 
     package = mkOption {
       type = with types; nullOr package;
@@ -548,16 +530,12 @@ in
     };
 
     systemd = {
-      enable = mkOption {
-        type = types.bool;
-        default = pkgs.stdenv.isLinux;
-        example = false;
-        description = ''
-          Whether to enable {file}`sway-session.target` on
-          sway startup. This links to
-          {file}`graphical-session.target`.
-          Some important environment variables will be imported to systemd
-          and dbus user environment before reaching the target, including
+      enable =
+        mkEnableOption ''
+          {file}`sway-session.target` on sway startup.
+          This links to {file}`graphical-session.target`.
+
+          Some important environment variables will be imported to systemd and dbus user environment before reaching the target, including :
           * {env}`DISPLAY`
           * {env}`WAYLAND_DISPLAY`
           * {env}`SWAYSOCK`
@@ -566,9 +544,12 @@ in
           * {env}`NIXOS_OZONE_WL`
           * {env}`XCURSOR_THEME`
           * {env}`XCURSOR_SIZE`
-          You can extend this list using the `systemd.variables` option.
-        '';
-      };
+
+          You can extend this list using the `systemd.variables` option
+        ''
+        // {
+          default = pkgs.stdenv.isLinux;
+        };
 
       variables = mkOption {
         type = types.listOf types.str;
@@ -618,19 +599,17 @@ in
         '';
       };
 
-      xdgAutostart = lib.mkEnableOption ''
+      xdgAutostart = mkEnableOption ''
         autostart of applications using
         {manpage}`systemd-xdg-autostart-generator(8)`
       '';
     };
 
-    xwayland = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Enable xwayland, which is needed for the default configuration of sway.
-      '';
-    };
+    xwayland =
+      mkEnableOption "xwayland support, which is needed for the default configuration of sway"
+      // {
+        default = true;
+      };
 
     wrapperFeatures = mkOption {
       type = wrapperOptions;
@@ -681,11 +660,9 @@ in
       description = "Sway configuration options.";
     };
 
-    checkConfig = mkOption {
-      type = types.bool;
+    checkConfig = mkEnableOption "validating the generated config file" // {
       default = cfg.package != null;
       defaultText = lib.literalExpression "wayland.windowManager.sway.package != null";
-      description = "If enabled, validates the generated config file.";
     };
 
     extraConfig = mkOption {

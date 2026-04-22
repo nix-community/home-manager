@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     optionalString
     types
     ;
@@ -58,7 +59,7 @@ in
 
   options = {
     programs.powerline-go = {
-      enable = lib.mkEnableOption "Powerline-go, a beautiful and useful low-latency prompt for your shell";
+      enable = mkEnableOption "Powerline-go, a beautiful and useful low-latency prompt for your shell";
 
       package = lib.mkPackageOption pkgs "powerline-go" { };
 
@@ -96,14 +97,7 @@ in
         ];
       };
 
-      newline = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Set to true if the prompt should be on a line of its own.
-        '';
-        example = true;
-      };
+      newline = mkEnableOption "showing the prompt on its own line";
 
       pathAliases = mkOption {
         default = null;

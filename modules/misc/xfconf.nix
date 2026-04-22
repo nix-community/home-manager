@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.xfconf;
 
@@ -79,19 +79,17 @@ in
   meta.maintainers = [ lib.maintainers.chuangzhu ];
 
   options.xfconf = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      visible = false;
-      description = ''
-        Whether to enable Xfconf settings.
+    enable =
+      mkEnableOption ''
+        Xfconf settings.
 
-        Note, if you use NixOS then you must add
-        `programs.xfconf.enable = true`
-        to your system configuration. Otherwise you will see a systemd error
-        message when your configuration is activated.
-      '';
-    };
+        Note: if you use NixOS then you must add `programs.xfconf.enable = true` to your system configuration.
+        Otherwise you will see a systemd error message when your configuration is activated
+      ''
+      // {
+        default = true;
+        visible = false;
+      };
 
     settings = mkOption {
       type =

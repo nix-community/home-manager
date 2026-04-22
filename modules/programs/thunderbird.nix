@@ -15,6 +15,7 @@ let
     mapAttrsToList
     mkIf
     mkOption
+    mkEnableOption
     mkOptionDefault
     optionalAttrs
     optionalString
@@ -334,7 +335,7 @@ in
 
   options = {
     programs.thunderbird = {
-      enable = lib.mkEnableOption "Thunderbird";
+      enable = mkEnableOption "Thunderbird";
 
       package = lib.mkPackageOption pkgs "thunderbird" {
         example = "pkgs.thunderbird-91";
@@ -370,15 +371,7 @@ in
                   description = "This profile's name.";
                 };
 
-                isDefault = mkOption {
-                  type = types.bool;
-                  default = false;
-                  example = true;
-                  description = ''
-                    Whether this is a default profile. There must be exactly one
-                    default profile.
-                  '';
-                };
+                isDefault = mkEnableOption "this being the default profile. There must be exactly one default profile";
 
                 feedAccounts = mkOption {
                   type = types.attrsOf (
@@ -476,12 +469,7 @@ in
                   '';
                 };
 
-                withExternalGnupg = mkOption {
-                  type = types.bool;
-                  default = false;
-                  example = true;
-                  description = "Allow using external GPG keys with GPGME.";
-                };
+                withExternalGnupg = mkEnableOption "using external GPG keys with GPGME";
 
                 userChrome = mkOption {
                   type = types.lines;
@@ -577,17 +565,17 @@ in
         '';
       };
 
-      darwinSetupWarning = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        visible = false;
-        readOnly = !isDarwin;
-        description = ''
-          Using programs.thunderbird.darwinSetupWarning is deprecated. The
-          module is compatible with all Thunderbird installations.
-        '';
-      };
+      darwinSetupWarning =
+        mkEnableOption ''
+          the deprecated Thunderbird Darwin setup warning.
+
+          Using programs.thunderbird.darwinSetupWarning is deprecated. The module is compatible with all Thunderbird installations
+        ''
+        // {
+          default = true;
+          visible = false;
+          readOnly = !isDarwin;
+        };
     };
 
     accounts.email.accounts = mkOption {
@@ -604,7 +592,7 @@ in
               });
             };
             options.thunderbird = {
-              enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+              enable = mkEnableOption "the Thunderbird mail client for this account";
 
               profiles = mkOption {
                 type = with types; listOf str;
@@ -677,10 +665,8 @@ in
                         type = str;
                         description = "Name for the filter.";
                       };
-                      enabled = mkOption {
-                        type = bool;
+                      enabled = mkEnableOption "this filter" // {
                         default = true;
-                        description = "Whether this filter is currently active.";
                       };
                       type = mkOption {
                         type = str;
@@ -743,7 +729,7 @@ in
         with types;
         attrsOf (submodule {
           options.thunderbird = {
-            enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+            enable = mkEnableOption "the Thunderbird mail client for this account";
 
             profiles = mkOption {
               type = with types; listOf str;
@@ -758,11 +744,7 @@ in
               '';
             };
 
-            readOnly = mkOption {
-              type = bool;
-              default = false;
-              description = "Mark calendar as read only";
-            };
+            readOnly = mkEnableOption "marking calendar as read only";
 
             color = mkOption {
               type = str;
@@ -779,7 +761,7 @@ in
         with types;
         attrsOf (submodule {
           options.thunderbird = {
-            enable = lib.mkEnableOption "the Thunderbird mail client for this account";
+            enable = mkEnableOption "the Thunderbird mail client for this account";
 
             profiles = mkOption {
               type = with types; listOf str;

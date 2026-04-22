@@ -7,7 +7,12 @@
   capitalModuleName ? moduleName,
 }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    types
+    ;
 
   isI3 = moduleName == "i3";
   isSway = !isI3;
@@ -54,21 +59,17 @@ let
         description = "Command that will be executed on startup.";
       };
 
-      always = mkOption {
-        type = types.bool;
-        default = false;
-        description = "Whether to run command on each ${moduleName} restart.";
-      };
+      always = mkEnableOption "running command on each ${moduleName} restart";
     }
     // lib.optionalAttrs isI3 {
-      notification = mkOption {
-        type = types.bool;
-        default = true;
-        description = ''
-          Whether to enable startup-notification support for the command.
-          See {option}`--no-startup-id` option description in the i3 user guide.
-        '';
-      };
+      notification =
+        mkEnableOption ''
+          startup-notification support for the command.
+          See {option}`--no-startup-id` option description in the i3 user guide
+        ''
+        // {
+          default = true;
+        };
 
       workspace = mkOption {
         type = types.nullOr types.str;
@@ -416,8 +417,7 @@ in
   window = mkOption {
     type = types.submodule {
       options = {
-        titlebar = mkOption {
-          type = types.bool;
+        titlebar = mkEnableOption "window titlebars" // {
           default =
             if lib.versionOlder stateVersion "23.05" then (isI3 && (cfg.config.gaps == null)) else true;
           defaultText =
@@ -431,7 +431,6 @@ in
                 true for state version ≥ 23.05
                 false for state version < 23.05
               '';
-          description = "Whether to show window titlebars.";
         };
 
         border = mkOption {
@@ -485,8 +484,7 @@ in
   floating = mkOption {
     type = types.submodule {
       options = {
-        titlebar = mkOption {
-          type = types.bool;
+        titlebar = mkEnableOption "floating window titlebars" // {
           default =
             if lib.versionOlder stateVersion "23.05" then (isI3 && (cfg.config.gaps == null)) else true;
           defaultText =
@@ -500,7 +498,6 @@ in
                 true for state version ≥ 23.05
                 false for state version < 23.05
               '';
-          description = "Whether to show floating window titlebars.";
         };
 
         border = mkOption {
@@ -595,15 +592,11 @@ in
           '';
         };
 
-        forceWrapping = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Whether to force focus wrapping in tabbed or stacked containers.
+        forceWrapping = mkEnableOption ''
+          forcing focus wrapping in tabbed or stacked containers.
 
-            This option is deprecated, use {option}`focus.wrapping` instead.
-          '';
-        };
+          DEPRECATED, USE {option}`focus.wrapping` INSTEAD
+        '';
 
         mouseWarping = mkOption {
           type =
@@ -673,17 +666,11 @@ in
     '';
   };
 
-  workspaceAutoBackAndForth = mkOption {
-    type = types.bool;
-    default = false;
-    example = true;
-    description = ''
-      Assume you are on workspace "1: www" and switch to "2: IM" using
-      mod+2 because somebody sent you a message. You don’t need to remember
-      where you came from now, you can just press $mod+2 again to switch
-      back to "1: www".
-    '';
-  };
+  workspaceAutoBackAndForth = mkEnableOption ''
+    switching back to the previous workspace when selecting the current one again.
+
+    Assume you are on workspace "1: www" and switch to "2: IM" using mod+2 because somebody sent you a message. You don’t need to remember where you came from now, you can just press $mod+2 again to switch back to "1: www"
+  '';
 
   keycodebindings = mkOption {
     type = types.attrsOf (types.nullOr types.str);

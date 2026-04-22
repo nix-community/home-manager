@@ -171,17 +171,19 @@ in
           type = types.attrsOf types.str;
         };
 
-        enableCompletion = mkOption {
-          default = true;
-          description = ''
-            Enable zsh completion. Don't forget to add
+        enableCompletion =
+          mkEnableOption ''
+            zsh completion.
+
+            Don't forget to add
             ```nix
               environment.pathsToLink = [ "/share/zsh" ];
             ```
-            to your system configuration to get completion for system packages (e.g. systemd).
-          '';
-          type = types.bool;
-        };
+            to your system configuration to get completion for system packages (e.g. systemd)
+          ''
+          // {
+            default = true;
+          };
 
         completionInit = mkOption {
           default = "autoload -U compinit && compinit";
@@ -196,11 +198,7 @@ in
         };
 
         autosuggestion = {
-          enable = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Enable zsh autosuggestions";
-          };
+          enable = mkEnableOption "zsh autosuggestions";
 
           highlight = mkOption {
             type = types.nullOr types.str;

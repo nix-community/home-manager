@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption mkEnableOption types;
 
   cfg = config.xsession.windowManager.awesome;
   awesome = cfg.package;
@@ -18,7 +18,7 @@ in
 {
   options = {
     xsession.windowManager.awesome = {
-      enable = lib.mkEnableOption "Awesome window manager";
+      enable = mkEnableOption "Awesome window manager";
 
       package = lib.mkPackageOption pkgs "awesome" {
         extraDescription = "to use for running the Awesome WM";
@@ -34,14 +34,7 @@ in
         example = lib.literalExpression "[ pkgs.luaPackages.vicious ]";
       };
 
-      noArgb = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Disable client transparency support, which can be greatly
-          detrimental to performance in some setups
-        '';
-      };
+      noArgb = mkEnableOption "disabling client transparency support, which can be greatly detrimental to performance in some setups";
     };
   };
 

@@ -24,6 +24,7 @@ let
     mkMerge
     mkOption
     mkOptionDefault
+    mkEnableOption
     optionalString
     optional
     setAttrByPath
@@ -200,14 +201,9 @@ let
 in
 {
   options = setAttrByPath modulePath {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      example = true;
-      description = ''
-        Whether to enable ${appName}.${optionalString (description != null) " ${description}"}
-      '';
-    };
+    enable = mkEnableOption ''
+      ${appName}.${optionalString (description != null) " ${description}"}
+    '';
 
     package = mkOption {
       type = with types; nullOr package;
@@ -520,11 +516,9 @@ in
                 description = "Profile path.";
               };
 
-              isDefault = mkOption {
-                type = types.bool;
+              isDefault = mkEnableOption "this being the default profile" // {
                 default = config.id == 0;
                 defaultText = "true if profile ID is 0";
-                description = "Whether this is a default profile.";
               };
 
               search = mkOption {
@@ -565,16 +559,11 @@ in
                 description = "Declarative handlers configuration for MIME types and URL schemes.";
               };
 
-              containersForce = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Whether to force replace the existing containers configuration.
-                  This is recommended since ${appName} will replace the symlink on
-                  every launch, but note that you'll lose any existing configuration
-                  by enabling this.
-                '';
-              };
+              containersForce = mkEnableOption ''
+                force-replacing the existing containers configuration.
+
+                This is recommended since ${appName} will replace the symlink on every launch, but note that you'll lose any existing configuration
+              '';
 
               containers = mkOption {
                 type = types.attrsOf (
@@ -703,45 +692,18 @@ in
                             '';
                           };
 
-                          force = mkOption {
-                            description = ''
-                              Whether to override all previous firefox settings.
+                          force = mkEnableOption ''
+                            overriding all previous firefox settings.
+                            This is required when using `settings`
+                          '';
 
-                              This is required when using `settings`.
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
+                          exhaustivePermissions = mkEnableOption "requiring explicit permission authorization for all configured extensions from {option}`${moduleName}.profiles.<profile>.extensions.packages` in {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`";
 
-                          exhaustivePermissions = mkOption {
-                            description = ''
-                              When enabled, the user must authorize requested
-                              permissions for all extensions from
-                              {option}`${moduleName}.profiles.<profile>.extensions.packages`
-                              in
-                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
+                          exactPermissions = mkEnableOption ''
+                            requiring {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions` to specify the exact set extension of permission sets that the extension will request.
 
-                          exactPermissions = mkOption {
-                            description = ''
-                              When enabled,
-                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
-                              must specify the exact set of permissions that the
-                              extension will request.
-
-                              This means that if the authorized permissions are
-                              broader than what the extension requests, the
-                              assertion will fail.
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
+                            This means that if the authorized permissions are broader than what the extension requests, the assertion will fail.
+                          '';
 
                           settings = mkOption {
                             default = { };
@@ -788,15 +750,7 @@ in
                                       for a list of relevant permissions.
                                     '';
                                   };
-                                  force = mkOption {
-                                    type = types.bool;
-                                    default = false;
-                                    example = true;
-                                    description = ''
-                                      Forcibly override any existing configuration for
-                                      this extension.
-                                    '';
-                                  };
+                                  force = mkEnableOption "forcibly overriding existing configuration for this extension";
                                 };
                               }
                             );
@@ -922,16 +876,7 @@ in
       description = "Attribute set of ${appName} profiles.";
     };
 
-    enableGnomeExtensions = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable the GNOME Shell native host connector. Note, you
-        also need to set the NixOS option
-        `services.gnome.gnome-browser-connector.enable` to
-        `true`.
-      '';
-    };
+    enableGnomeExtensions = mkEnableOption "the GNOME Shell native host connector. Note: you also need to set the NixOS option {option}`services.gnome.gnome-browser-connector.enable` to `true`";
 
     pkcs11Modules = mkOption {
       type = types.listOf types.package;

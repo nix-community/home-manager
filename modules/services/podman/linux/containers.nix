@@ -8,6 +8,7 @@ let
   inherit (lib)
     mkIf
     mkOption
+    mkEnableOption
     mkMerge
     types
     ;
@@ -186,12 +187,8 @@ let
         description = "The capabilities to add to the container.";
       };
 
-      autoStart = mkOption {
-        type = types.bool;
+      autoStart = mkEnableOption "starting the container on boot (requires user lingering)" // {
         default = true;
-        description = ''
-          Whether to start the container on boot (requires user lingering).
-        '';
       };
 
       autoUpdate = mkOption {

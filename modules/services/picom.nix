@@ -117,13 +117,7 @@ in
   options.services.picom = {
     enable = mkEnableOption "Picom X11 compositor";
 
-    fade = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Fade windows in and out.
-      '';
-    };
+    fade = mkEnableOption "window fade animations";
 
     fadeDelta = mkOption {
       type = types.ints.positive;
@@ -163,13 +157,7 @@ in
       '';
     };
 
-    shadow = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Draw window shadows.
-      '';
-    };
+    shadow = mkEnableOption "window shadows";
 
     shadowOffsets = mkOption {
       type = pairOf types.int;
@@ -283,13 +271,7 @@ in
       '';
     };
 
-    vSync = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Enable vertical synchronization.
-      '';
-    };
+    vSync = mkEnableOption "vertical synchronization";
 
     extraArgs = mkOption {
       type = with types; listOf str;

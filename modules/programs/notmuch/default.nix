@@ -9,6 +9,7 @@ let
     catAttrs
     filter
     mkOption
+    mkEnableOption
     optionalAttrs
     types
     ;
@@ -69,7 +70,7 @@ in
 {
   options = {
     programs.notmuch = {
-      enable = lib.mkEnableOption "Notmuch mail indexer";
+      enable = mkEnableOption "Notmuch mail indexer";
 
       package = lib.mkPackageOption pkgs "notmuch" { };
 
@@ -148,12 +149,8 @@ in
       };
 
       maildir = {
-        synchronizeFlags = mkOption {
-          type = types.bool;
+        synchronizeFlags = mkEnableOption "synchronizing Maildir flags" // {
           default = true;
-          description = ''
-            Whether to synchronize Maildir flags.
-          '';
         };
       };
 
@@ -181,7 +178,7 @@ in
       type =
         with types;
         attrsOf (submodule {
-          options.notmuch.enable = lib.mkEnableOption "notmuch indexing";
+          options.notmuch.enable = mkEnableOption "notmuch indexing";
         });
     };
   };

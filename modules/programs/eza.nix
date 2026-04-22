@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption optionalAttrs types;
+  inherit (lib)
+    mkOption
+    mkEnableOption
+    optionalAttrs
+    types
+    ;
   yamlFormat = pkgs.formats.yaml { };
 in
 {
@@ -38,7 +43,7 @@ in
     ])
     ++ [ (lib.mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
   options.programs.eza = {
-    enable = lib.mkEnableOption "eza, a modern replacement for {command}`ls`";
+    enable = mkEnableOption "eza, a modern replacement for {command}`ls`";
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
@@ -96,13 +101,7 @@ in
       '';
     };
 
-    git = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        List each file's Git status if tracked or ignored ({option}`--git` argument).
-      '';
-    };
+    git = mkEnableOption "listing each file's Git status if tracked or ignored ({option}`--git` argument)";
 
     package = lib.mkPackageOption pkgs "eza" { nullable = true; };
 

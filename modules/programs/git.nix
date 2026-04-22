@@ -235,15 +235,7 @@ in
 
           package = lib.mkPackageOption pkgs "git-lfs" { nullable = true; };
 
-          skipSmudge = mkOption {
-            type = types.bool;
-            default = false;
-            description = ''
-              Skip automatic downloading of objects on clone or pull.
-              This requires a manual {command}`git lfs pull`
-              every time a new commit is checked out on your repository.
-            '';
-          };
+          skipSmudge = mkEnableOption "skipping automatic object downloads on clone or pull. This requires a manual {command}`git lfs pull` every time a new commit is checked out on your repository";
         };
 
         maintenance = {
