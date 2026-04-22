@@ -132,9 +132,11 @@ in
 
   config =
     let
-      vividCommand = "vivid ${
-        lib.optionalString (cfg.colorMode != null) "-m ${cfg.colorMode}"
-      } generate ${lib.optionalString (cfg.activeTheme != null) cfg.activeTheme}";
+      vividCommand = "${
+        if cfg.package != null then lib.getExe cfg.package else "vivid"
+      } ${lib.optionalString (cfg.colorMode != null) "-m ${cfg.colorMode} "}generate${
+        lib.optionalString (cfg.activeTheme != null) " ${cfg.activeTheme}"
+      }";
     in
     mkIf cfg.enable {
       home.packages = mkIf (cfg.package != null) [ cfg.package ];
