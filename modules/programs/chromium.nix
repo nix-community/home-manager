@@ -46,7 +46,12 @@ let
         type = types.nullOr types.package;
         readOnly = true;
         description = ''
-          Resulting customized ${name} package
+          Resulting customized ${name} package.
+
+          This includes any Home Manager customizations such as
+          `commandLineArgs` or `plasmaSupport`, and can be referenced from
+          other Home Manager options through
+          `config.programs.${browser}.finalPackage`.
         '';
       };
 
