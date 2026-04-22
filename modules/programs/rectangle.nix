@@ -65,7 +65,7 @@ in
     package = lib.mkPackageOption pkgs "rectangle" { nullable = true; };
 
     defaults = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
@@ -126,7 +126,7 @@ in
         {
           source = jsonFormat.generate "RectangleConfig.json" {
             bundleId = "com.knollsoft.Rectangle";
-            defaults = cfg.defaults;
+            inherit (cfg) defaults;
             shortcuts = lib.mapAttrs (_: resolveShortcut) cfg.shortcuts;
           };
         };
