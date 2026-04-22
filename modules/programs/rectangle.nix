@@ -21,40 +21,6 @@ let
     "ctrl+option+command" = 1835008;
     "ctrl+option+shift+command" = 1966080;
   };
-
-  modifierFlagsType = lib.types.enum (builtins.attrNames modifierFlagsMap);
-
-  shortcutType = lib.types.submodule {
-    options = {
-      keyCode = lib.mkOption {
-        type = lib.types.int;
-        description = "macOS virtual key code for this shortcut.";
-      };
-
-      modifierFlags = lib.mkOption {
-        type = modifierFlagsType;
-        description = ''
-          Modifier key combination for this shortcut. One of:
-          - `"shift"` (⇧)
-          - `"ctrl"` (⌃)
-          - `"option"` (⌥)
-          - `"ctrl+option"` (⌃⌥)
-          - `"ctrl+option+shift"` (⌃⌥⇧)
-          - `"command"` (⌘)
-          - `"shift+command"` (⇧⌘)
-          - `"ctrl+option+command"` (⌃⌥⌘)
-          - `"ctrl+option+shift+command"` (⌃⌥⇧⌘)
-        '';
-      };
-    };
-  };
-
-  resolveShortcut =
-    s:
-    s
-    // {
-      modifierFlags = modifierFlagsMap.${s.modifierFlags};
-    };
 in
 {
   meta.maintainers = with lib.maintainers; [ philocalyst ];
@@ -91,7 +57,32 @@ in
     };
 
     shortcuts = lib.mkOption {
-      type = lib.types.attrsOf shortcutType;
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            keyCode = lib.mkOption {
+              type = lib.types.int;
+              description = "macOS virtual key code for this shortcut.";
+            };
+
+            modifierFlags = lib.mkOption {
+              type = lib.types.enum (builtins.attrNames modifierFlagsMap);
+              description = ''
+                Modifier key combination for this shortcut. One of:
+                - `"shift"` (⇧)
+                - `"ctrl"` (⌃)
+                - `"option"` (⌥)
+                - `"ctrl+option"` (⌃⌥)
+                - `"ctrl+option+shift"` (⌃⌥⇧)
+                - `"command"` (⌘)
+                - `"shift+command"` (⇧⌘)
+                - `"ctrl+option+command"` (⌃⌥⌘)
+                - `"ctrl+option+shift+command"` (⌃⌥⇧⌘)
+              '';
+            };
+          };
+        }
+      );
       default = { };
       example = lib.literalExpression ''
         {
@@ -127,7 +118,13 @@ in
           source = jsonFormat.generate "RectangleConfig.json" {
             bundleId = "com.knollsoft.Rectangle";
             inherit (cfg) defaults;
-            shortcuts = lib.mapAttrs (_: resolveShortcut) cfg.shortcuts;
+            shortcuts = lib.mapAttrs (
+              _: s:
+              s
+              // {
+                modifierFlags = modifierFlagsMap.${s.modifierFlags};
+              }
+            ) cfg.shortcuts;
           };
         };
   };
