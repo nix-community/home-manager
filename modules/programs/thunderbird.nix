@@ -244,7 +244,8 @@ let
     }
     // optionalAttrs (calendar.thunderbird.color != "") {
       "calendar.registry.calendar_${id}.color" = calendar.thunderbird.color;
-    };
+    }
+    // calendar.thunderbird.settings id;
 
   toThunderbirdContact =
     contact: _:
@@ -769,6 +770,37 @@ in
               default = "";
               example = "#dc8add";
               description = "Display color of the calendar in hex";
+            };
+
+            settings = mkOption {
+              type =
+                with types;
+                functionTo (
+                  attrsOf (oneOf [
+                    bool
+                    int
+                    str
+                  ])
+                );
+              default = _: { };
+              defaultText = literalExpression "_: { }";
+              example = literalExpression ''
+                id: {
+                  "calendar.registry.''${id}.refreshInterval" = 5;
+
+                  # If "my-awesome-account" is the attribute name of an email account under
+                  # `config.accounts.email.accounts`, the below snippet links this calendar
+                  # account to "my-awesome-account".
+
+                  "calendar.registry.''${id}.imip.identity.key" =
+                    "id_''${builtins.hashString "sha256" "my-awesome-account"}";
+                };
+              '';
+              description = ''
+                Extra settings to add to this Thunderbird calendar configuration.
+                The {var}`id` given as argument is an automatically
+                generated account identifier.
+              '';
             };
           };
         });
