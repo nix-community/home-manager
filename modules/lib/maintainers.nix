@@ -523,6 +523,12 @@
     github = "silmarp";
     githubId = 67292496;
   };
+  soracat = {
+    name = "soracat";
+    email = "125882337+s0racat@users.noreply.github.com";
+    github = "s0racat";
+    githubId = 125882337;
+  };
   yarn = {
     name = "yarncat";
     email = "30006414+yaaaarn@users.noreply.github.com";
