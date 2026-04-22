@@ -8,6 +8,7 @@
   chromium-plasma-support-command-line-args = ./plasma-support-command-line-args.nix;
 }
 // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  chromium-brave-package-routing-linux = ./brave-package-routing-linux.nix;
   chromium-google-chrome-extensions-linux = ./google-chrome-extensions-linux.nix;
   chromium-ungoogled-chromium-extensions-linux = ./ungoogled-chromium-extensions-linux.nix;
 }
