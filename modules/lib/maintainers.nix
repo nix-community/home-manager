@@ -228,6 +228,12 @@
       }
     ];
   };
+  isaacST08 = {
+    name = "Isaac Shiells Thomas";
+    email = "isaacst.nix@proton.me";
+    github = "isaacST08";
+    githubId = 106057977;
+  };
   jack5079 = {
     name = "Jack W.";
     email = "nix@jack.cab";
