@@ -7,7 +7,6 @@
 let
   inherit (lib)
     concatStringsSep
-    literalExpression
     mkDefault
     mkEnableOption
     mkIf
@@ -131,7 +130,7 @@ in
         hooks = mkOption {
           type = types.attrsOf types.path;
           default = { };
-          example = literalExpression ''
+          example = lib.literalExpression ''
             {
               pre-commit = ./pre-commit-script;
             }
@@ -189,18 +188,16 @@ in
                   contents = mkOption {
                     type = types.attrsOf types.anything;
                     default = { };
-                    example = literalExpression ''
-                      {
-                        user = {
-                          email = "bob@work.example.com";
-                          name = "Bob Work";
-                          signingKey = "1A2B3C4D5E6F7G8H";
-                        };
-                        commit = {
-                          gpgSign = true;
-                        };
+                    example = {
+                      user = {
+                        email = "bob@work.example.com";
+                        name = "Bob Work";
+                        signingKey = "1A2B3C4D5E6F7G8H";
                       };
-                    '';
+                      commit = {
+                        gpgSign = true;
+                      };
+                    };
                     description = ''
                       Configuration to include. If empty then a path must be given.
 
@@ -230,15 +227,13 @@ in
             )
           );
           default = [ ];
-          example = literalExpression ''
-            [
-              { path = "~/path/to/config.inc"; }
-              {
-                path = "~/path/to/conditional.inc";
-                condition = "gitdir:~/src/dir";
-              }
-            ]
-          '';
+          example = [
+            { path = "~/path/to/config.inc"; }
+            {
+              path = "~/path/to/conditional.inc";
+              condition = "gitdir:~/src/dir";
+            }
+          ];
           description = "List of configuration files to include.";
         };
 
