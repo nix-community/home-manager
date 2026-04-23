@@ -6,7 +6,6 @@
     frequency = "daily";
     useFlake = true;
     flakeDir = "/tmp/my-flake";
-    preSwitchCommands = [ "nix flake update" ];
   };
 
   nmt.script = ''
@@ -15,6 +14,6 @@
     assertFileRegex "$serviceFile" "FLAKE_DIR=/tmp/my-flake"
 
     scriptPath=$(grep -oP 'ExecStart=\K.+' "$TESTED/$serviceFile")
-    assertFileRegex "$scriptPath" "nix flake update"
+    assertFileNotRegex "$scriptPath" "nix flake update"
   '';
 }
