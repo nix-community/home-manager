@@ -2,8 +2,7 @@
 location = "top"
 rounding = "sm"
 scale = 1
-
-[bar.layout]
+[[bar.layout]]
 center = ["media"]
 left = ["clock"]
 monitor = "*"
