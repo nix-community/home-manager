@@ -24,6 +24,7 @@ in
         test = {
           id = 1;
           settings = {
+            "browser.bookmarks.file" = ./bookmarks.html;
             "general.smoothScroll" = false;
             "browser.newtabpage.pinned" = [
               {
@@ -51,8 +52,11 @@ in
 
           assertDirectoryExists "home-files/${cfg.profilesPath}/basic"
 
+          settingsUserJs=$(normalizeStorePaths \
+            "home-files/${cfg.profilesPath}/test/user.js")
+
           assertFileContent \
-            "home-files/${cfg.profilesPath}/test/user.js" \
+            $settingsUserJs \
             ${./expected-user.js}
         '';
     }
