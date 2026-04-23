@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -10,26 +11,25 @@ let
 
   homeManagerPackage = config.programs.home-manager.package;
 
+  preSwitchCommandsStateVersion = lib.hm.deprecations.mkStateVersionOptionDefault {
+    inherit (config.home) stateVersion;
+    inherit config options;
+    since = "26.05";
+    optionPath = [
+      "services"
+      "home-manager"
+      "autoUpgrade"
+      "preSwitchCommands"
+    ];
+    legacy.value = [ "nix flake update" ];
+    current.value = [ ];
+    deferWarningToConfig = true;
+    shouldWarn = { optionUsesDefaultPriority, ... }: cfg.useFlake && optionUsesDefaultPriority;
+  };
+
   hmExtraArgs = lib.escapeShellArgs cfg.flags;
 
-  legacyPreSwitchCommands = lib.warn ''
-    services.home-manager.autoUpgrade:
-    Implicit `nix flake update` before `home-manager switch` is deprecated.
-    Please set `services.home-manager.autoUpgrade.preSwitchCommands`
-    explicitly.
-  '' [ "nix flake update" ];
-
-  # null = legacy behavior
-  # []   = run nothing
-  preSwitchCommands =
-    if cfg.useFlake && cfg.preSwitchCommands == null then
-      legacyPreSwitchCommands
-    else if cfg.preSwitchCommands == null then
-      [ ]
-    else
-      cfg.preSwitchCommands;
-
-  hasPreSwitchCommands = preSwitchCommands != [ ];
+  hasPreSwitchCommands = cfg.preSwitchCommands != [ ];
 
   preSwitchScript = lib.optionalString hasPreSwitchCommands (
     lib.concatStringsSep "\n" (
@@ -37,7 +37,7 @@ let
         ''echo "Running pre-switch commands"''
         "set -o xtrace"
       ]
-      ++ preSwitchCommands
+      ++ cfg.preSwitchCommands
     )
   );
 
@@ -139,8 +139,16 @@ in
       };
 
       preSwitchCommands = lib.mkOption {
-        type = lib.types.nullOr (lib.types.listOf lib.types.str);
-        default = null;
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        defaultText = lib.literalExpression ''
+          if lib.versionAtLeast config.home.stateVersion "26.05"
+             || !config.services.home-manager.autoUpgrade.useFlake
+          then
+            [ ]
+          else
+            [ "nix flake update" ]
+        '';
         example = lib.literalExpression ''
           [
             "''${pkgs.gitMinimal}/bin/git pull"
@@ -149,18 +157,21 @@ in
         '';
         description = ''
           Shell commands executed before `home-manager switch`.
-
-          - null: use legacy behavior (deprecated)
-          - []: run no pre-switch commands
         '';
       };
     };
   };
 
   config = lib.mkIf cfg.enable {
+    warnings = lib.optional preSwitchCommandsStateVersion.shouldWarn preSwitchCommandsStateVersion.warning;
+
     assertions = [
       (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs lib.platforms.linux)
     ];
+
+    services.home-manager.autoUpgrade.preSwitchCommands = lib.mkIf cfg.useFlake (
+      lib.mkOptionDefault preSwitchCommandsStateVersion.effectiveDefault
+    );
 
     systemd.user = {
       timers.home-manager-auto-upgrade = {
