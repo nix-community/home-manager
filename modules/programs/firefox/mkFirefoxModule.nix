@@ -75,7 +75,10 @@ let
   userPrefValue =
     pref:
     builtins.toJSON (
-      if lib.isBool pref || lib.isInt pref || lib.isString pref then pref else builtins.toJSON pref
+      if lib.isBool pref || lib.isInt pref || lib.isString pref || lib.isPath pref then
+        pref
+      else
+        builtins.toJSON pref
     );
 
   extensionSettingsNeedForce =
