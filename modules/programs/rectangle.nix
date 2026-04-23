@@ -8,8 +8,6 @@
 let
   cfg = config.programs.rectangle;
 
-  jsonFormat = pkgs.formats.json { };
-
   modifierFlagsMap = {
     "shift" = 131072;
     "ctrl" = 262144;
@@ -31,28 +29,26 @@ in
     package = lib.mkPackageOption pkgs "rectangle" { nullable = true; };
 
     defaults = lib.mkOption {
-      inherit (jsonFormat) type;
+      type = lib.types.attrsOf lib.types.anything;
       default = { };
       example = lib.literalExpression ''
         {
-          launchOnLogin = { bool = true; };
-          gapSize = { float = 8.0; };
-          windowSnapping = { int = 1; };
-          almostMaximizeHeight = { float = 0.9; };
-          almostMaximizeWidth = { float = 0.9; };
+          launchOnLogin = true;
+          gapSize = 8.0;
+          windowSnapping = 1;
+          almostMaximizeHeight = 0.9;
+          almostMaximizeWidth = 0.9;
         }
       '';
       description = ''
-        Rectangle application defaults. Each attribute name is a setting key
-        and its value must be wrapped in a type tag:
-        `{ bool = …; }`, `{ float = …; }`, or `{ int = …; }`.
+        Rectangle application defaults. Each attribute name is written as a
+        native macOS preference key in Rectangle's plist file.
 
         Written to
-        {file}`~/Library/Application Support/Rectangle/RectangleConfig.json`
-        and importable via Rectangle -> Import Config.
+        {file}`~/Library/Preferences/com.knollsoft.Rectangle.plist`.
 
-        See <https://github.com/rxhanson/Rectangle> for the full list of
-        available settings.
+        See <https://github.com/rxhanson/Rectangle> for the available
+        settings and their corresponding preference keys.
       '';
     };
 
@@ -66,7 +62,9 @@ in
             };
 
             modifierFlags = lib.mkOption {
-              type = lib.types.enum (builtins.attrNames modifierFlagsMap);
+              type = lib.types.coercedTo (lib.types.enum (builtins.attrNames modifierFlagsMap)) (
+                v: modifierFlagsMap.${v}
+              ) lib.types.int;
               description = ''
                 Modifier key combination for this shortcut. One of:
                 - `"shift"` (⇧)
@@ -112,20 +110,12 @@ in
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    home.file."Library/Application Support/Rectangle/RectangleConfig.json" =
+    home.file."Library/Preferences/com.knollsoft.Rectangle.plist" =
       lib.mkIf (cfg.defaults != { } || cfg.shortcuts != { })
         {
-          source = jsonFormat.generate "RectangleConfig.json" {
-            bundleId = "com.knollsoft.Rectangle";
-            inherit (cfg) defaults;
-            shortcuts = lib.mapAttrs (
-              _: s:
-              s
-              // {
-                modifierFlags = modifierFlagsMap.${s.modifierFlags};
-              }
-            ) cfg.shortcuts;
-          };
+          source = pkgs.writeText "com.knollsoft.Rectangle.plist" (
+            lib.generators.toPlist { escape = true; } (cfg.defaults // cfg.shortcuts) + "\n"
+          );
         };
   };
 }

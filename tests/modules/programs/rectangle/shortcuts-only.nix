@@ -22,8 +22,8 @@
   };
 
   nmt.script = ''
-    configFile="home-files/Library/Application Support/Rectangle/RectangleConfig.json"
+    configFile="home-files/Library/Preferences/com.knollsoft.Rectangle.plist"
     assertFileExists "$configFile"
-    assertFileContent "$configFile" ${./shortcuts-only-expected.json}
+    assertFileContent "$configFile" ${./shortcuts-only-expected.plist}
   '';
 }

@@ -6,21 +6,15 @@
     package = config.lib.test.mkStubPackage { name = "rectangle"; };
 
     defaults = {
-      launchOnLogin = {
-        bool = true;
-      };
-      gapSize = {
-        float = 8.0;
-      };
-      windowSnapping = {
-        int = 1;
-      };
+      launchOnLogin = true;
+      gapSize = 8.0;
+      windowSnapping = 1;
     };
   };
 
   nmt.script = ''
-    configFile="home-files/Library/Application Support/Rectangle/RectangleConfig.json"
+    configFile="home-files/Library/Preferences/com.knollsoft.Rectangle.plist"
     assertFileExists "$configFile"
-    assertFileContent "$configFile" ${./defaults-only-expected.json}
+    assertFileContent "$configFile" ${./defaults-only-expected.plist}
   '';
 }

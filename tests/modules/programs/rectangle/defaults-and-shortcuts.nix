@@ -6,12 +6,8 @@
     package = config.lib.test.mkStubPackage { name = "rectangle"; };
 
     defaults = {
-      launchOnLogin = {
-        bool = true;
-      };
-      footprintAlpha = {
-        float = 0.3;
-      };
+      launchOnLogin = true;
+      footprintAlpha = 0.3;
     };
 
     shortcuts = {
@@ -27,8 +23,8 @@
   };
 
   nmt.script = ''
-    configFile="home-files/Library/Application Support/Rectangle/RectangleConfig.json"
+    configFile="home-files/Library/Preferences/com.knollsoft.Rectangle.plist"
     assertFileExists "$configFile"
-    assertFileContent "$configFile" ${./defaults-and-shortcuts-expected.json}
+    assertFileContent "$configFile" ${./defaults-and-shortcuts-expected.plist}
   '';
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>leftHalf</key>
+	<dict>
+		<key>keyCode</key>
+		<integer>123</integer>
+		<key>modifierFlags</key>
+		<integer>1835008</integer>
+	</dict>
+	<key>maximize</key>
+	<dict>
+		<key>keyCode</key>
+		<integer>46</integer>
+		<key>modifierFlags</key>
+		<integer>1179648</integer>
+	</dict>
+	<key>rightHalf</key>
+	<dict>
+		<key>keyCode</key>
+		<integer>124</integer>
+		<key>modifierFlags</key>
+		<integer>1835008</integer>
+	</dict>
+</dict>
+</plist>
