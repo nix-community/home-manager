@@ -20,12 +20,14 @@
         location = "top";
         rounding = "sm";
 
-        layout = {
-          monitor = "*";
-          left = [ "clock" ];
-          center = [ "media" ];
-          right = [ "battery" ];
-        };
+        layout = [
+          {
+            monitor = "*";
+            left = [ "clock" ];
+            center = [ "media" ];
+            right = [ "battery" ];
+          }
+        ];
       };
 
       modules.clock = {
