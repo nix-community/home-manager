@@ -590,7 +590,7 @@ in
 
                         id = mkOption {
                           type = types.ints.unsigned;
-                          default = 0;
+                          default = 1;
                           description = ''
                             Container ID. This should be set to a unique number per container in this profile.
                           '';
@@ -966,11 +966,12 @@ in
               profiles: lib.flatten (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
 
             findInvalidContainerIds =
-              profiles: lib.filter (container: container.id >= 4294967294) (getContainers profiles);
+              profiles:
+              lib.filter (container: container.id == 0 || container.id >= 4294967294) (getContainers profiles);
           in
           {
             assertion = cfg.profiles == { } || length (findInvalidContainerIds cfg.profiles) == 0;
-            message = "Container id must be smaller than 4294967294 (2^32 - 2)";
+            message = "Container id must be between 1 and 4294967293";
           }
         )
 

@@ -20,12 +20,10 @@ in
         isDefault = true;
         id = 1;
 
-        containers = {
-          "shopping" = {
-            id = 4294967294;
-            color = "blue";
-            icon = "circle";
-          };
+        containers.shopping = {
+          id = 0;
+          color = "blue";
+          icon = "circle";
         };
       };
     }

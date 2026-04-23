@@ -17,6 +17,7 @@ builtins.mapAttrs
     "${name}-profiles-containers" = ./profiles/containers;
     "${name}-profiles-containers-duplicate-ids" = ./profiles/containers/duplicate-ids.nix;
     "${name}-profiles-containers-id-out-of-range" = ./profiles/containers/id-out-of-range.nix;
+    "${name}-profiles-containers-id-zero" = ./profiles/containers/id-zero.nix;
     "${name}-profiles-duplicate-ids" = ./profiles/duplicate-ids.nix;
     "${name}-profiles-extensions" = ./profiles/extensions;
     "${name}-profiles-extensions-assertions" = ./profiles/extensions/assertions.nix;
