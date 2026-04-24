@@ -198,7 +198,12 @@
               ./modules/misc/news/create-news-entry.sh
             '';
 
-            tests = pkgs.callPackage ./tests/package.nix { flake = self; };
+            tests = pkgs.callPackage ./tests/package.nix {
+              flake = self;
+              inputOverrides = {
+                inherit nixpkgs;
+              };
+            };
 
             docs-html = docs.manual.html;
             docs-htmlOpenTool = docs.manual.htmlOpenTool;
