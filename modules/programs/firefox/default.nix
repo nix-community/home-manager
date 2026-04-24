@@ -1,8 +1,43 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  options,
+  ...
+}:
 let
   inherit (lib) mkRemovedOptionModule;
 
   cfg = config.programs.firefox;
+
+  linuxConfigHome = lib.removePrefix "${config.home.homeDirectory}/" config.xdg.configHome;
+
+  linuxConfigPathStateVersion = lib.hm.deprecations.mkStateVersionOptionDefault {
+    inherit (config.home) stateVersion;
+    since = "26.05";
+    inherit config;
+    inherit options;
+    deferWarningToConfig = true;
+    optionPath = [
+      "programs"
+      "firefox"
+      "configPath"
+    ];
+    legacy = {
+      value = ".mozilla/firefox";
+    };
+    current = {
+      value = "${linuxConfigHome}/mozilla/firefox";
+      text = ''"''${config.xdg.configHome}/mozilla/firefox"'';
+    };
+    shouldWarn =
+      { optionUsesDefaultPriority, ... }: optionUsesDefaultPriority && !pkgs.stdenv.hostPlatform.isDarwin;
+    extraWarning = ''
+      To migrate to the XDG path, move `~/.mozilla/firefox` to
+      `$XDG_CONFIG_HOME/mozilla/firefox` and remove the old directory.
+      Native messaging hosts are not moved by this option change.
+    '';
+  };
 
   modulePath = [
     "programs"
@@ -28,7 +63,7 @@ in
       unwrappedPackageName = "firefox-unwrapped";
 
       platforms.linux = {
-        configPath = ".mozilla/firefox";
+        configPath = linuxConfigPathStateVersion.default;
       };
       platforms.darwin = {
         configPath = "Library/Application Support/Firefox";
@@ -56,6 +91,8 @@ in
   ];
 
   config = lib.mkIf cfg.enable {
+    warnings = lib.optional linuxConfigPathStateVersion.shouldWarn linuxConfigPathStateVersion.warning;
+
     mozilla.firefoxNativeMessagingHosts =
       cfg.nativeMessagingHosts
       # package configured native messaging hosts (entire browser actually)
