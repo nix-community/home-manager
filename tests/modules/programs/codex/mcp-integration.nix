@@ -3,6 +3,7 @@
     enable = true;
     servers = {
       everything = {
+        type = "stdio";
         command = "npx";
         args = [
           "-y"
@@ -10,12 +11,14 @@
         ];
       };
       context7 = {
+        type = "http";
         url = "https://mcp.context7.com/mcp";
         headers = {
           CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
         };
       };
       disabled-server = {
+        type = "stdio";
         command = "echo";
         args = [ "test" ];
         disabled = true;

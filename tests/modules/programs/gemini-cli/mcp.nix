@@ -25,6 +25,7 @@
       enable = true;
       servers = {
         filesystem = {
+          type = "stdio";
           command = "npx";
           args = [
             "-y"
@@ -33,6 +34,7 @@
           ];
         };
         database = {
+          type = "stdio";
           command = "npx";
           args = [
             "-y"

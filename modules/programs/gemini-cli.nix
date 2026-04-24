@@ -230,9 +230,25 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        programs.gemini-cli.settings.mcpServers = lib.mkIf (
-          cfg.enableMcpIntegration && config.programs.mcp.enable
-        ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+        programs.gemini-cli.settings.mcpServers =
+          lib.mkIf (cfg.enableMcpIntegration && config.programs.mcp.enable)
+            (
+              lib.mapAttrs (
+                _name: server:
+                lib.mkDefault (
+                  if server.type == "stdio" then
+                    {
+                      inherit (server) command args env;
+                    }
+                  else if server.type == "sse" || server.type == "http" then
+                    {
+                      inherit (server) url headers;
+                    }
+                  else
+                    throw "Unexpected MCP server type: ${server.type}"
+                )
+              ) (lib.filterAttrs (_: server: !server.disabled) config.programs.mcp.servers)
+            );
       }
       {
         home = {

@@ -17,18 +17,34 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  mkMcpServer =
-    server:
-    (removeAttrs server [ "disabled" ])
-    // (optionalAttrs (server ? url) { type = "http"; })
-    // (optionalAttrs (server ? command) { type = "stdio"; })
-    // {
-      enabled = !(server.disabled or false);
-    };
+  transformMcpServer = name: server: {
+    inherit name;
+    value = {
+      inherit (server) type;
+    }
+    // (
+      if server.type == "stdio" then
+        {
+          inherit (server) command args env;
+        }
+      else if server.type == "sse" || server.type == "http" then
+        {
+          inherit (server) url headers;
+        }
+      else
+        throw "Unexpected MCP server type: ${server.type}"
+    );
+  };
 
-  transformedMcpServers = optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
-    lib.mapAttrs (_name: mkMcpServer) config.programs.mcp.servers
-  );
+  transformedMcpServers =
+    if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+      lib.listToAttrs (
+        lib.mapAttrsToList transformMcpServer (
+          lib.filterAttrs (_: server: !server.disabled) config.programs.mcp.servers
+        )
+      )
+    else
+      { };
 
   mkContentOption =
     {

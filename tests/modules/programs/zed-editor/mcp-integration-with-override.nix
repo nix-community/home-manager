@@ -10,6 +10,7 @@
     enable = true;
     servers = {
       everything = {
+        type = "stdio";
         command = "npx";
         args = [
           "-y"
@@ -65,7 +66,8 @@
                 "@modelcontextprotocol/server-everything"
               ],
               "command": "npx",
-              "enabled": true
+              "enabled": true,
+              "env": {}
             }
           }
         }

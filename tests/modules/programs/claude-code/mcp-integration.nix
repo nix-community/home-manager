@@ -43,23 +43,24 @@
             "/other-tmp"
           ];
         };
-        database = {
-          command = "npx";
-          args = [
-            "-y"
-            "@bytebase/dbhub"
-            "--dsn"
-            "postgresql://user:pass@localhost:5432/db"
-          ];
-          env = {
-            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
+        context7 = {
+          type = "http";
+          url = "https://mcp.context7.com/mcp";
+          headers = {
+            API_KEY = "secret";
           };
         };
-        customTransport = {
-          type = "websocket";
-          url = "wss://example.com/mcp";
-          customOption = "value";
-          timeout = 5000;
+        atlassian = {
+          type = "sse";
+          url = "https://api-private.atlassian.com/mcp";
+          headers = {
+            Authorization = "Bearer token";
+          };
+        };
+        disabled = {
+          type = "stdio";
+          command = "echo";
+          disabled = true;
         };
       };
     };
@@ -74,9 +75,11 @@
     pluginDir="''${pluginDir#--plugin-dir }"
     assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
     assertFileRegex "$pluginDir/.mcp.json" '"github"'
-    assertFileRegex "$pluginDir/.mcp.json" '"database"'
+    assertFileRegex "$pluginDir/.mcp.json" '"context7"'
+    assertFileRegex "$pluginDir/.mcp.json" '"atlassian"'
     assertFileRegex "$pluginDir/.mcp.json" '"/tmp"'
     (! grep -q -- '/other-tmp' "$pluginDir/.mcp.json")
+    (! grep -q -- '"disabled"' "$pluginDir/.mcp.json")
     assertPathNotExists "$pluginDir/.lsp.json"
   '';
 }

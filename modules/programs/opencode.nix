@@ -21,24 +21,24 @@ let
   transformMcpServer = name: server: {
     inherit name;
     value = {
-      enabled = !(server.disabled or false);
+      enabled = !server.disabled;
     }
     // (
-      if server ? url then
-        {
-          type = "remote";
-          inherit (server) url;
-        }
-        // (lib.optionalAttrs (server ? headers) { inherit (server) headers; })
-      else if server ? command then
+      if server.type == "stdio" then
         {
           type = "local";
-          command = [ server.command ] ++ (server.args or [ ]);
+          command = [ server.command ] ++ server.args;
+          environment = server.env;
         }
-        // (lib.optionalAttrs (server ? env) { environment = server.env; })
+      else if server.type == "sse" || server.type == "http" then
+        {
+          inherit (server) url headers;
+          type = "remote";
+        }
       else
-        { }
-    );
+        throw "Unexpected MCP server type: ${server.type}"
+    )
+    // (lib.optionalAttrs (server.timeout != null) { inherit (server) timeout; });
   };
 
   transformedMcpServers =

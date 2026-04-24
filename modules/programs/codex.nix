@@ -224,21 +224,24 @@ in
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
         lib.mapAttrs (
           _name: server:
-          # NOTE: Convert shared programs.mcp fields to Codex config keys:
-          # - removeAttrs drops keys that Codex does not use directly
-          # - "disabled" becomes inverse "enabled"
-          # - "headers" is renamed to "http_headers"
+          # NOTE: Convert shared programs.mcp fields to Codex config keys.
           # See: https://developers.openai.com/codex/mcp#other-configuration-options
-          (lib.removeAttrs server [
-            "disabled"
-            "headers"
-          ])
-          // (lib.optionalAttrs (server ? headers && !(server ? http_headers)) {
-            http_headers = server.headers;
-          })
-          // {
-            enabled = !(server.disabled or false);
+          {
+            enabled = !server.disabled;
           }
+          // (
+            if server.type == "stdio" then
+              {
+                inherit (server) command args env;
+              }
+            else if server.type == "sse" || server.type == "http" then
+              {
+                inherit (server) url;
+                http_headers = server.headers;
+              }
+            else
+              throw "Unexpected MCP server type: ${server.type}"
+          )
         ) config.programs.mcp.servers
       );
 

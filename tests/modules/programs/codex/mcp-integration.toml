@@ -10,7 +10,11 @@ args = ["test"]
 command = "echo"
 enabled = false
 
+[mcp_servers.disabled-server.env]
+
 [mcp_servers.everything]
 args = ["-y", "@modelcontextprotocol/server-everything"]
 command = "npx"
 enabled = true
+
+[mcp_servers.everything.env]

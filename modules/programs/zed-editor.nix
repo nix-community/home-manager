@@ -32,14 +32,23 @@ let
   transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
     lib.mapAttrs (
       _name: server:
-      # NOTE: Convert shared programs.mcp fields to Zed config keys:
-      # - removeAttrs drops keys that Zed does not use directly
-      # - "disabled" becomes inverse "enabled"
+      # NOTE: Convert shared programs.mcp fields to Zed config keys.
       # See: https://zed.dev/docs/ai/mcp
-      (lib.removeAttrs server [ "disabled" ])
-      // {
-        enabled = !(server.disabled or false);
+      {
+        enabled = !server.disabled;
       }
+      // (
+        if server.type == "stdio" then
+          {
+            inherit (server) command args env;
+          }
+        else if server.type == "sse" || server.type == "http" then
+          {
+            inherit (server) url headers;
+          }
+        else
+          throw "Unexpected MCP server type: ${server.type}"
+      )
     ) config.programs.mcp.servers
   );
 
