@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
+import os
 import subprocess
 import sys
 from collections.abc import Sequence
@@ -41,11 +43,45 @@ def _run_command(
             print(f"Nix Error Output:\n{e.stderr.strip()}", file=sys.stderr)
         raise TestRunnerError("Subprocess command failed.") from e
 
+def _read_flake_override_paths(overrides_path: str | None) -> dict[str, str]:
+    """Read flake input override paths from the test wrapper."""
+    if not overrides_path:
+        return {}
+
+    try:
+        with open(overrides_path, encoding="utf-8") as overrides_file:
+            overrides = json.load(overrides_file)
+    except OSError as e:
+        raise TestRunnerError(f"Failed to read input overrides: {overrides_path}") from e
+    except json.JSONDecodeError as e:
+        raise TestRunnerError(f"Invalid input overrides: {overrides_path}") from e
+
+    if not isinstance(overrides, dict):
+        raise TestRunnerError(f"Invalid input overrides structure: {overrides_path}")
+
+    for name, path in overrides.items():
+        if not isinstance(path, str):
+            raise TestRunnerError(f"Invalid input override path for '{name}'")
+
+    return overrides
+
+def _format_flake_override_args(overrides: dict[str, str]) -> list[str]:
+    """Format flake input overrides as Nix CLI arguments."""
+    nix_args = []
+    for name, path in sorted(overrides.items()):
+        nix_args.extend(["--override-input", name, path])
+    return nix_args
+
 class TestRunner:
     """Manages the discovery and execution of Nix-based tests."""
 
     def __init__(self, repo_root: Path | None = None):
         self.repo_root = repo_root or Path.cwd()
+        self._flake_overrides = _format_flake_override_args(
+            _read_flake_override_paths(
+                os.environ.get("HOME_MANAGER_TEST_INPUT_OVERRIDES")
+            )
+        )
 
     def get_current_system(self) -> str:
         """Get the current system architecture using Nix."""
@@ -69,7 +105,8 @@ class TestRunner:
         )
 
         cmd = [
-            "nix", "eval", "--raw", f".#legacyPackages.{system}", "--apply", nix_apply_expr
+            "nix", "eval", "--raw", *self._flake_overrides,
+            f".#legacyPackages.{system}", "--apply", nix_apply_expr
         ]
         result = _run_command(cmd, cwd=self.repo_root)
         discovered = result.stdout.splitlines()
@@ -146,11 +183,10 @@ class TestRunner:
         try:
             store_cmd = [
                 "nix", "build", "--no-link", "--json", "--reference-lock-file", "flake.lock",
-                f"./tests#{test}", *nix_args
+                *self._flake_overrides, f"./tests#{test}", *nix_args
             ]
             result = _run_command(store_cmd, cwd=self.repo_root, check=False)
             if result.returncode == 0:
-                import json
                 build_info = json.loads(result.stdout)
                 if build_info:
                     return build_info[0]["outputs"]["out"]
@@ -172,7 +208,7 @@ class TestRunner:
             print(f"\n--- Running test {i}/{count}: {test} ---")
             cmd = [
                 "nix", "build", "-L", "--keep-failed", "--reference-lock-file", "flake.lock",
-                f"./tests#{test}", *nix_args
+                *self._flake_overrides, f"./tests#{test}", *nix_args
             ]
             try:
                 subprocess.run(cmd, check=True, cwd=self.repo_root, capture_output=True)
