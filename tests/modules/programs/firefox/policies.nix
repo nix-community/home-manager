@@ -21,6 +21,7 @@ in
     }
     // lib.setAttrByPath modulePath {
       enable = true;
+      configPath = lib.mkIf pkgs.stdenv.hostPlatform.isLinux ".mozilla/firefox";
       policies = {
         BlockAboutConfig = true;
       };

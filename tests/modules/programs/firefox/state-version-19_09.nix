@@ -17,7 +17,10 @@ in
     {
       home.stateVersion = "19.09";
     }
-    // lib.setAttrByPath modulePath { enable = true; }
+    // lib.setAttrByPath modulePath {
+      enable = true;
+      configPath = ".mozilla/firefox";
+    }
     // {
       nmt.script = ''
         assertFileRegex \
