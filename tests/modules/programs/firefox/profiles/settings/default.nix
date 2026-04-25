@@ -44,6 +44,7 @@ in
               "Applications/${cfg.darwinAppName}.app/Contents/MacOS"
             else
               "bin";
+          expectedUserJs = pkgs.writeText "expected-user.js" (builtins.readFile ./expected-user.js + "\n");
         in
         ''
           assertFileRegex \
@@ -56,8 +57,8 @@ in
             "home-files/${cfg.profilesPath}/test/user.js")
 
           assertFileContent \
-            $settingsUserJs \
-            ${./expected-user.js}
+            "$settingsUserJs" \
+            ${expectedUserJs}
         '';
     }
   );

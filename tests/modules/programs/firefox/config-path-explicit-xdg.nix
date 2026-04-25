@@ -5,6 +5,9 @@
   ...
 }:
 let
+  cfg = config.programs.firefox;
+  profilesPath = lib.removePrefix "${config.home.homeDirectory}/" cfg.profilesPath;
+
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix [
     "programs"
     "firefox"
@@ -13,7 +16,7 @@ in
 {
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf (config.test.enableBig && !pkgs.stdenv.hostPlatform.isDarwin) {
+  config = lib.mkIf config.test.enableBig {
     home.stateVersion = "25.11";
     xdg.configHome = "/home/hm-user/.config-custom";
 
@@ -30,11 +33,13 @@ in
 
     nmt.script = ''
       assertFileRegex \
-        home-files/.config-custom/mozilla/firefox/test/user.js \
+        "home-files/${profilesPath}/test/user.js" \
         'user_pref("general\.smoothScroll", false);'
 
       assertPathNotExists \
-        home-files/.mozilla/firefox/test/user.js
+        "home-files/${
+          if pkgs.stdenv.hostPlatform.isDarwin then ".mozilla/firefox/Profiles" else ".mozilla/firefox"
+        }/test/user.js"
     '';
   };
 }

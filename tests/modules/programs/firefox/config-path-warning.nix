@@ -5,6 +5,9 @@
   ...
 }:
 let
+  cfg = config.programs.firefox;
+  profilesPath = lib.removePrefix "${config.home.homeDirectory}/" cfg.profilesPath;
+
   firefoxMockOverlay = import ./setup-firefox-mock-overlay.nix [
     "programs"
     "firefox"
@@ -13,7 +16,7 @@ in
 {
   imports = [ firefoxMockOverlay ];
 
-  config = lib.mkIf (config.test.enableBig && !pkgs.stdenv.hostPlatform.isDarwin) {
+  config = lib.mkIf config.test.enableBig {
     home.stateVersion = "25.11";
 
     programs.firefox = {
@@ -23,14 +26,19 @@ in
 
     nmt.script = ''
       assertFileRegex \
-        home-files/.mozilla/firefox/test/user.js \
+        "home-files/${profilesPath}/test/user.js" \
         'user_pref("general\.smoothScroll", false);'
 
       assertPathNotExists \
-        home-files/.config/mozilla/firefox/test/user.js
+        "home-files/${
+          if pkgs.stdenv.hostPlatform.isDarwin then
+            ".config/mozilla/firefox/Profiles"
+          else
+            ".config/mozilla/firefox"
+        }/test/user.js"
     '';
 
-    test.asserts.warnings.expected = [
+    test.asserts.warnings.expected = lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       ''
         The default value of `programs.firefox.configPath` has changed from `".mozilla/firefox"` to `"''${config.xdg.configHome}/mozilla/firefox"`.
         You are currently using the legacy default (`".mozilla/firefox"`) because `home.stateVersion` is less than "26.05".
