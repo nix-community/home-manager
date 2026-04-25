@@ -63,7 +63,7 @@ in
       unwrappedPackageName = "firefox-unwrapped";
 
       platforms.linux = {
-        configPath = linuxConfigPathStateVersion.default;
+        configPath = linuxConfigPathStateVersion.effectiveDefault;
       };
       platforms.darwin = {
         configPath = "Library/Application Support/Firefox";
