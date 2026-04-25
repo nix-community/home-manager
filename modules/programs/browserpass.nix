@@ -104,9 +104,9 @@ in
           let
             dir =
               if isDarwin then
-                "Library/Application Support/LibreWolf/NativeMessagingHosts"
+                "${config.programs.librewolf.configPath}/NativeMessagingHosts"
               else
-                ".librewolf/native-messaging-hosts";
+                "${config.programs.librewolf.configPath}/native-messaging-hosts";
           in
           [
             {

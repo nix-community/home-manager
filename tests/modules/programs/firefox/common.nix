@@ -1,12 +1,25 @@
 name:
+let
+  modulePath = [
+    "programs"
+    name
+  ];
+
+  # 100 (explicit) < 900 < 1000 (mkDefault): silences the configPath
+  # migration warning while yielding to per-test stateVersion pins.
+  firefoxCurrentStateVersion =
+    { lib, pkgs, ... }:
+    lib.mkIf (name == "firefox" && pkgs.stdenv.hostPlatform.isLinux) {
+      home.stateVersion = lib.mkOverride 900 "26.05";
+    };
+in
 builtins.mapAttrs
-  (
-    _test: module:
-    import module [
-      "programs"
-      name
-    ]
-  )
+  (_test: module: {
+    imports = [
+      firefoxCurrentStateVersion
+      (import module modulePath)
+    ];
+  })
   {
     "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
     "${name}-null-package" = ./null-package.nix;

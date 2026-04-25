@@ -7,3 +7,4 @@ user_pref("browser.newtabpage.pinned", "[{\"title\":\"NixOS\",\"url\":\"https://
 user_pref("general.smoothScroll", false);
 
 
+

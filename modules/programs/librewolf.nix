@@ -63,7 +63,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.file.".librewolf/librewolf.overrides.cfg" = lib.mkIf (cfg.settings != { }) {
+    home.file."${cfg.configPath}/librewolf.overrides.cfg" = lib.mkIf (cfg.settings != { }) {
       text = mkOverridesFile cfg.settings;
     };
 
