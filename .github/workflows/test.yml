@@ -60,7 +60,7 @@ jobs:
         run: |
           echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
       - uses: cachix/install-nix-action@v31
-        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.format == 'true'
+        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.parse == 'true' || needs.changes.outputs.format == 'true'
         with:
           nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
           extra_nix_config: |
@@ -69,10 +69,14 @@ jobs:
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
       - name: Parse Nix files with nix and Lix
-        if: github.event_name == 'schedule' || needs.changes.outputs.parse == 'true'
+        if: >-
+          matrix.os == 'ubuntu-latest' &&
+          (github.event_name == 'schedule' || needs.changes.outputs.parse == 'true')
         run: nix build --show-trace --keep-going .#ci-parse .#ci-parse-lix
       - name: Format Check
-        if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
+        if: >-
+          matrix.os == 'ubuntu-latest' &&
+          (github.event_name == 'schedule' || needs.changes.outputs.format == 'true')
         run: nix fmt -- --ci
       - name: Test init --switch with locked inputs
         if: github.event_name == 'schedule' || needs.changes.outputs.hm == 'true'
