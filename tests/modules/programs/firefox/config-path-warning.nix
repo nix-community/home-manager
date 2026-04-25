@@ -24,7 +24,7 @@ in
     nmt.script = ''
       assertFileRegex \
         home-files/.mozilla/firefox/test/user.js \
-        'user_pref\("general\.smoothScroll", false\);'
+        'user_pref("general\.smoothScroll", false);'
 
       assertPathNotExists \
         home-files/.config/mozilla/firefox/test/user.js
@@ -32,12 +32,12 @@ in
 
     test.asserts.warnings.expected = [
       ''
-        The default value of `programs.firefox.configPath` has changed from `".mozilla/firefox"` to `"/home/hm-user/.config/mozilla/firefox"`.
+        The default value of `programs.firefox.configPath` has changed from `".mozilla/firefox"` to `"''${config.xdg.configHome}/mozilla/firefox"`.
         You are currently using the legacy default (`".mozilla/firefox"`) because `home.stateVersion` is less than "26.05".
         To silence this warning and keep legacy behavior, set:
-        programs.firefox.configPath = ".mozilla/firefox";
+          programs.firefox.configPath = ".mozilla/firefox";
         To adopt the new default behavior, set:
-          programs.firefox.configPath = "/home/hm-user/.config/mozilla/firefox";
+          programs.firefox.configPath = "''${config.xdg.configHome}/mozilla/firefox";
 
         To migrate to the XDG path, move `~/.mozilla/firefox` to
         `$XDG_CONFIG_HOME/mozilla/firefox` and remove the old directory.
