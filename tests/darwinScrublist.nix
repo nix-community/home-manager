@@ -22,6 +22,7 @@ let
     "bash-preexec"
     "bashInteractive"
     "bat"
+    "bat-extras"
     "borgmatic"
     "bottom"
     "broot"
