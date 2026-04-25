@@ -25,7 +25,7 @@ in
     nmt.script = ''
       assertFileRegex \
         home-files/.config-custom/mozilla/firefox/test/user.js \
-        'user_pref\("general\.smoothScroll", false\);'
+        'user_pref("general\.smoothScroll", false);'
 
       assertPathNotExists \
         home-files/.mozilla/firefox/test/user.js
