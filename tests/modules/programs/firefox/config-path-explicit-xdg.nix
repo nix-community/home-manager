@@ -17,12 +17,18 @@ in
   imports = [ firefoxMockOverlay ];
 
   config = lib.mkIf config.test.enableBig {
-    home.stateVersion = "26.05";
+    home.stateVersion = "25.11";
     xdg.configHome = "/home/hm-user/.config-custom";
 
     programs.firefox = {
       enable = true;
+      configPath = "${config.xdg.configHome}/mozilla/firefox";
       profiles.test.settings."general.smoothScroll" = false;
+    };
+
+    test.asserts.warnings = {
+      enable = true;
+      expected = [ ];
     };
 
     nmt.script = ''

@@ -17,12 +17,17 @@ in
   imports = [ firefoxMockOverlay ];
 
   config = lib.mkIf config.test.enableBig {
-    home.stateVersion = "26.05";
-    xdg.configHome = "/home/hm-user/.config-custom";
+    home.stateVersion = "25.11";
 
     programs.firefox = {
       enable = true;
+      configPath = ".mozilla/firefox";
       profiles.test.settings."general.smoothScroll" = false;
+    };
+
+    test.asserts.warnings = {
+      enable = true;
+      expected = [ ];
     };
 
     nmt.script = ''
@@ -32,7 +37,10 @@ in
 
       assertPathNotExists \
         "home-files/${
-          if pkgs.stdenv.hostPlatform.isDarwin then ".mozilla/firefox/Profiles" else ".mozilla/firefox"
+          if pkgs.stdenv.hostPlatform.isDarwin then
+            ".config/mozilla/firefox/Profiles"
+          else
+            ".config/mozilla/firefox"
         }/test/user.js"
     '';
   };

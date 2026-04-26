@@ -61,7 +61,7 @@ in
     // {
       nmt.script = ''
         assertFileContent \
-          home-files/${cfg.configPath}/handlers/handlers.json \
+          "home-files/${cfg.profilesPath}/handlers/handlers.json" \
           ${./expected-handlers.json}
       '';
     }

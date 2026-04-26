@@ -10,6 +10,6 @@ in
   programs.rbw.enable = true;
 
   nmt.script = ''
-    assertPathNotExists home-files/${path}
+    assertPathNotExists "home-files/${path}"
   '';
 }
