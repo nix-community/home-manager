@@ -51,7 +51,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && cfg.entries != [ ]) {
+  config = mkIf (cfg.enable && (cfg.readOnly || cfg.entries != [ ])) {
     xdg.configFile.autostart = {
       source = linkedDesktopEntries;
       recursive = !cfg.readOnly;

@@ -3,12 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>KeepAlive</key>
-	<dict>
-		<key>Crashed</key>
-		<true/>
-		<key>SuccessfulExit</key>
-		<false/>
-	</dict>
+	<true/>
 	<key>Label</key>
 	<string>org.nix-community.home.proton-pass-agent</string>
 	<key>ProcessType</key>

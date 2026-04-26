@@ -10,6 +10,16 @@ let
   fcitx5Package = cfg.fcitx5-with-addons.override { inherit (cfg) addons; };
   iniFormat = pkgs.formats.ini { };
   iniGlobalFormat = pkgs.formats.iniWithGlobalSection { };
+  normalizeFcitx5Value =
+    value:
+    if lib.isAttrs value then
+      lib.mapAttrs (_: normalizeFcitx5Value) value
+    else if builtins.isList value then
+      map normalizeFcitx5Value value
+    else if builtins.isBool value then
+      if value then "True" else "False"
+    else
+      value;
 in
 {
   options = {
@@ -231,11 +241,12 @@ in
             lib.optionalAttrs (v != { }) {
               ${p} = f "fcitx5-${builtins.replaceStrings [ "/" ] [ "-" ] p}" v;
             };
+
           entries = lib.attrsets.mergeAttrsList [
-            (optionalFile "config" iniFormat.generate cfg.settings.globalOptions)
-            (optionalFile "profile" iniFormat.generate cfg.settings.inputMethod)
+            (optionalFile "config" iniFormat.generate (normalizeFcitx5Value cfg.settings.globalOptions))
+            (optionalFile "profile" iniFormat.generate (normalizeFcitx5Value cfg.settings.inputMethod))
             (lib.concatMapAttrs (
-              name: value: optionalFile "conf/${name}.conf" iniGlobalFormat.generate value
+              name: value: optionalFile "conf/${name}.conf" iniGlobalFormat.generate (normalizeFcitx5Value value)
             ) cfg.settings.addons)
           ];
         in
@@ -258,7 +269,7 @@ in
             else if builtins.isString attrs.theme then
               pkgs.writeText "fcitx5-theme.conf" attrs.theme
             else
-              iniFormat.generate "fcitx5-${name}-theme" attrs.theme
+              iniFormat.generate "fcitx5-${name}-theme" (normalizeFcitx5Value attrs.theme)
           ))
         ]
       ) cfg.themes;

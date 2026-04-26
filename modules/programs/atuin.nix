@@ -231,7 +231,7 @@ in
         }
 
         (mkIf config.home.preferXdgDirectories {
-          programs.atuin.settings.log = {
+          programs.atuin.settings.logs = {
             dir = lib.mkDefault "${config.xdg.stateHome}/atuin/logs";
           };
         })

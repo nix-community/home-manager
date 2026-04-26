@@ -42,7 +42,7 @@ in
               '';
             };
             target = mkOption {
-              type = types.str;
+              type = types.nonEmptyStr;
               apply =
                 p:
                 let

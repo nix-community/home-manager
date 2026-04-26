@@ -4,6 +4,7 @@
   xdg-mime-disabled = ./mime-disabled.nix;
   xdg-autostart = ./autostart.nix;
   xdg-autostart-readonly = ./autostart-readonly.nix;
+  xdg-autostart-readonly-empty = ./autostart-readonly-empty.nix;
   xdg-local-bin-in-path = ./local-bin-in-path.nix;
   xdg-local-bin-not-in-path = ./local-bin-not-in-path.nix;
   xdg-user-dirs-mixed = ./user-dirs-mixed.nix;

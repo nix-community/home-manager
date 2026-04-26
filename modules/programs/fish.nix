@@ -217,7 +217,8 @@ let
         description = ''
           The marker indicates the position of the cursor when the abbreviation
           is expanded. When setCursor is true, the marker is set with a default
-          value of "%".
+          value of "%". This Nix option maps to fish's
+          {command}`abbr --set-cursor` flag in the generated configuration.
         '';
       };
 

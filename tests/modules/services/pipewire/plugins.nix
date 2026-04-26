@@ -9,6 +9,12 @@
         bing bong
       '')
     ];
+
+    extraLadspaPackages = [
+      (pkgs.writeTextDir "lib/ladspa/test" ''
+        bing bong
+      '')
+    ];
   };
 
   nmt.script = ''
@@ -17,9 +23,11 @@
     assertPathNotExists 'home-files/.local/share/wireplumber'
 
     file='home-files/.config/environment.d/10-home-manager.conf'
-    regex='^LV2_PATH=/nix/store/.*/lib/lv2\''${LV2_PATH:+:\$LV2_PATH}$'
+    lv2regex='^LV2_PATH=/nix/store/.*/lib/lv2\''${LV2_PATH:+:\$LV2_PATH}$'
+    ladsparegex='^LADSPA_PATH=/nix/store/.*/lib/ladspa\''${LADSPA_PATH:+:\$LADSPA_PATH}$'
 
     assertFileExists "$file"
-    assertFileRegex "$file" "$regex"
+    assertFileRegex "$file" "$lv2regex"
+    assertFileRegex "$file" "$ladsparegex"
   '';
 }

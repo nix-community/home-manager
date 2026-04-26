@@ -197,6 +197,19 @@ in
       '';
     };
 
+    extraLadspaPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.noisetorch-ladspa ]";
+      description = ''
+        List of packages that provide LADSPA plugins, in the form of
+        {file}`lib/ladspa/*` files.
+
+        LADSPA dependencies will be picked up from config packages automatically
+        via `passthru.requiredLadspaPackages`, so they don't need to be set here.
+      '';
+    };
+
     wireplumber = {
       enable = mkEnableOption "WirePlumber configurations";
 
@@ -415,9 +428,26 @@ in
           paths = lv2PluginPaths;
           pathsToLink = [ "/lib/lv2" ];
         };
+
+        ladspaPluginsPaths =
+          cfg.extraLadspaPackages
+          ++ flatten (
+            concatMap (p: attrByPath [ "passthru" "requiredLadspaPackages" ] [ ] p) (
+              cfg.configPackages ++ (optionals cfg.wireplumber.enable cfg.wireplumber.configPackages)
+            )
+          );
+
+        ladspaPlugins = pkgs.buildEnv {
+          name = "pipewire-ladspa-plugins";
+          paths = ladspaPluginsPaths;
+          pathsToLink = [ "/lib/ladspa" ];
+        };
       in
       {
         LV2_PATH = mkIf (lv2PluginPaths != [ ]) "${lv2Plugins}/lib/lv2\${LV2_PATH:+:$LV2_PATH}";
+        LADSPA_PATH = mkIf (
+          ladspaPlugins != [ ]
+        ) "${ladspaPlugins}/lib/ladspa\${LADSPA_PATH:+:$LADSPA_PATH}";
       };
 
     home.activation.reloadPipewire =

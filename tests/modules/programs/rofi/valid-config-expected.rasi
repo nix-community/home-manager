@@ -1,10 +1,21 @@
 configuration {
 cycle: false;
+drun {
+display-name: "";
+}
+filebrowser {
+directories-first: true;
+directory: "$HOME";
+sorting-method: "name";
+}
 font: "Droid Sans Mono 14";
 kb-primary-paste: "Control+V,Shift+Insert";
 kb-secondary-paste: "Control+v,Insert";
 location: 0;
 modes: [ "drun","emoji","ssh","foo:bar" ];
+run,drun {
+display-name: "open:";
+}
 terminal: "/some/path";
 xoffset: 0;
 yoffset: 0;

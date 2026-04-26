@@ -6,13 +6,16 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.run_id }}
   cancel-in-progress: true
+permissions: {}
 jobs:
   changes:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       docs: ${{ steps.changes.outputs.docs }}
       format: ${{ steps.changes.outputs.format }}
       hm: ${{ steps.changes.outputs.hm }}
+      parse: ${{ steps.changes.outputs.parse }}
       tests: ${{ steps.changes.outputs.tests }}
     steps:
       - uses: actions/checkout@v6
@@ -39,8 +42,12 @@ jobs:
               - 'flake.lock'
               - 'flake.nix'
               - 'home-manager/**'
+            parse:
+              - '**/*.nix'
+              - 'flake.lock'
   tests:
     needs: changes
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -53,14 +60,23 @@ jobs:
         run: |
           echo "rev=$(jq -r '.nodes.nixpkgs.locked.rev' flake.lock)" >> "$GITHUB_OUTPUT"
       - uses: cachix/install-nix-action@v31
-        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.format == 'true'
+        if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true' || needs.changes.outputs.tests == 'true' || needs.changes.outputs.hm == 'true' || needs.changes.outputs.parse == 'true' || needs.changes.outputs.format == 'true'
         with:
           nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/${{ steps.get-nixpkgs.outputs.rev }}.tar.gz
+          extra_nix_config: |
+            sandbox = true
       - name: Build docs
         if: github.event_name == 'schedule' || needs.changes.outputs.docs == 'true'
         run: nix build --show-trace .#docs-jsonModuleMaintainers
+      - name: Parse Nix files with nix and Lix
+        if: >-
+          matrix.os == 'ubuntu-latest' &&
+          (github.event_name == 'schedule' || needs.changes.outputs.parse == 'true')
+        run: nix build --show-trace --keep-going .#ci-parse .#ci-parse-lix
       - name: Format Check
-        if: github.event_name == 'schedule' || needs.changes.outputs.format == 'true'
+        if: >-
+          matrix.os == 'ubuntu-latest' &&
+          (github.event_name == 'schedule' || needs.changes.outputs.format == 'true')
         run: nix fmt -- --ci
       - name: Test init --switch with locked inputs
         if: github.event_name == 'schedule' || needs.changes.outputs.hm == 'true'
@@ -91,6 +107,12 @@ jobs:
             echo "- ✅ **Format Check:** Triggered" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ☑️ **Format Check:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.changes.outputs.parse }}" == "true" ]]; then
+            echo "- ✅ **Nix Parse (nix + Lix):** Triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ☑️ **Nix Parse (nix + Lix):** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
           fi
 
           if [[ "${{ needs.changes.outputs.hm }}" == "true" ]]; then
