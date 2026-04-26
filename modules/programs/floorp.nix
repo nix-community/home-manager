@@ -23,6 +23,7 @@ in
         configPath = ".floorp";
       };
       platforms.darwin = {
+        appName = "Floorp";
         configPath = "Library/Application Support/Floorp";
       };
     })

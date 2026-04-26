@@ -283,10 +283,13 @@ in
       internal = true;
       type = types.str;
       default =
-        lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
-        + lib.toLower (
-          lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
-        );
+        if platforms.darwin ? "appName" then
+          platforms.darwin.appName
+        else
+          lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
+          + lib.toLower (
+            lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
+          );
       description = "Name of browser app on Darwin.";
     };
 
