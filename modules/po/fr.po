@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-31 16:15+0000\n"
-"Last-Translator: swaps <swapgs@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2026-04-26 13:09+0000\n"
+"Last-Translator: Ludovic Pagès <nanucq@proton.me>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/"
 "modules/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
@@ -83,7 +83,7 @@ msgstr "Impossible de trouver le dossier de profil approprié, essayé %s et %s"
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "%s est \"%s\", attendu \"%s\""
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
