@@ -14,6 +14,8 @@ let
 
   cfg = config.fonts.fontconfig;
 
+  xml = pkgs.formats.xml { };
+
   globalConfig = config;
   fontConfigFileType = lib.types.submodule (
     { config, name, ... }:
@@ -68,11 +70,38 @@ let
           defaultText = ''"''${toString config.priority}-hm-''${config.label}.conf"'';
           type = lib.types.nonEmptyStr;
         };
+        settings = lib.mkOption {
+          inherit (xml) type;
+          default = { };
+          example = {
+            description = "Enable antialiasing";
+            match = {
+              "@target" = "font";
+              edit = {
+                "@mode" = "assign";
+                "@name" = "antialias";
+                bool = "true";
+              };
+            };
+          };
+          description = ''
+            Structured attrs of settings in the format of `pkgs.format.xml {}`. The
+            settings are implicitly wrapped inside the `<fontconfig>` tag, i.e. as
+            `{ fontconfig = <settings>; }`.
+
+            Note that out of the options
+            - {option}`fonts.fontconfig.configFile.<name>.settings`, and
+            - {option}`fonts.fontconfig.configFile.<name>.text`, and
+            - {option}`fonts.fontconfig.configFile.<name>.source`,
+            exactly one must be set.
+          '';
+        };
         text = lib.mkOption {
           description = ''
             Verbatim contents of the config file.
 
             Note that out of the options
+            - {option}`fonts.fontconfig.configFile.<name>.settings`, and
             - {option}`fonts.fontconfig.configFile.<name>.text`, and
             - {option}`fonts.fontconfig.configFile.<name>.source`,
             exactly one must be set.
@@ -85,12 +114,14 @@ let
             Path to the source file.
 
             Note that out of the options
+            - {option}`fonts.fontconfig.configFile.<name>.settings`, and
             - {option}`fonts.fontconfig.configFile.<name>.text`, and
             - {option}`fonts.fontconfig.configFile.<name>.source`,
             exactly one must be set.
 
-            If {option}`fonts.fontconfig.configFile.<name>.text` is set, then this option will
-            point to the file containing the text.
+            If {option}`fonts.fontconfig.configFile.<name>.settings` or
+            {option}`fonts.fontconfig.configFile.<name>.text` is set, then this option will
+            point to the file containing the settings or the text respectively.
           '';
           type = lib.types.path;
         };
@@ -98,8 +129,13 @@ let
       config.source =
         let
           name = lib.hm.strings.storeFileName "hm-fontconfig-${config.label}.xml";
+          settingsFile = xml.generate name { fontconfig = config.settings; };
+          textFile = pkgs.writeText name config.text;
         in
-        lib.mkIf (config.text != null) (pkgs.writeText name config.text);
+        lib.mkMerge [
+          (lib.mkIf (config.settings != { }) settingsFile)
+          (lib.mkIf (config.text != null) textFile)
+        ];
     }
   );
 
@@ -300,93 +336,88 @@ in
       fi
     '';
 
-    fonts.fontconfig.configFile =
-      let
-        xml = pkgs.formats.xml { };
-        mkFontconfigConf = name: conf: xml.generate name { fontconfig = conf; };
-      in
-      {
-        fonts =
-          let
-            mkInclude = path: {
-              "@ignore_missing" = "yes";
-              "#text" = path;
+    fonts.fontconfig.configFile = {
+      fonts =
+        let
+          mkInclude = path: {
+            "@ignore_missing" = "yes";
+            "#text" = path;
+          };
+        in
+        {
+          enable = true;
+          priority = 10;
+          settings = {
+            description = "Add fonts in the Nix user profile";
+            include = map mkInclude [
+              "${config.home.path}/etc/fonts/conf.d"
+              "${config.home.path}/etc/fonts/fonts.conf"
+            ];
+            dir = [
+              "${config.home.path}/lib/X11/fonts"
+              "${config.home.path}/share/fonts"
+              "${config.home.profileDirectory}/lib/X11/fonts"
+              "${config.home.profileDirectory}/share/fonts"
+            ];
+            cachedir = "${config.home.path}/lib/fontconfig/cache";
+          };
+        };
+      rendering =
+        let
+          toXmlValue =
+            value:
+            if lib.isBool value then
+              { bool = lib.boolToString value; }
+            else if lib.isString value then
+              { const = value; }
+            else
+              throw "expected bool or string but got ${lib.typeOf value}: ${toString value}";
+          assign =
+            name: value:
+            toXmlValue value
+            // {
+              "@mode" = "assign";
+              "@name" = name;
             };
-          in
-          {
-            enable = true;
-            priority = 10;
-            source = mkFontconfigConf "fonts" {
-              description = "Add fonts in the Nix user profile";
-              include = map mkInclude [
-                "${config.home.path}/etc/fonts/conf.d"
-                "${config.home.path}/etc/fonts/fonts.conf"
-              ];
-              dir = [
-                "${config.home.path}/lib/X11/fonts"
-                "${config.home.path}/share/fonts"
-                "${config.home.profileDirectory}/lib/X11/fonts"
-                "${config.home.profileDirectory}/share/fonts"
-              ];
-              cachedir = "${config.home.path}/lib/fontconfig/cache";
+          content =
+            lib.optional (cfg.antialiasing != null) (assign "antialias" cfg.antialiasing)
+            ++ lib.optionals (cfg.hinting != null) [
+              (assign "hinting" true)
+              (assign "hintstyle" ("hint" + cfg.hinting))
+            ]
+            ++ lib.optional (cfg.subpixelRendering != null) (
+              assign "rgba" (lib.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
+            );
+        in
+        {
+          enable = lib.length content > 0;
+          priority = 10;
+          settings = {
+            description = "Set the rendering mode";
+            match = {
+              "@target" = "font";
+              edit = content;
             };
           };
-        rendering =
-          let
-            toXmlValue =
-              value:
-              if lib.isBool value then
-                { bool = lib.boolToString value; }
-              else if lib.isString value then
-                { const = value; }
-              else
-                throw "expected bool or string but got ${lib.typeOf value}: ${toString value}";
-            assign =
-              name: value:
-              toXmlValue value
-              // {
-                "@mode" = "assign";
-                "@name" = name;
-              };
-            content =
-              lib.optional (cfg.antialiasing != null) (assign "antialias" cfg.antialiasing)
-              ++ lib.optionals (cfg.hinting != null) [
-                (assign "hinting" true)
-                (assign "hintstyle" ("hint" + cfg.hinting))
-              ]
-              ++ lib.optional (cfg.subpixelRendering != null) (
-                assign "rgba" (lib.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
-              );
-          in
-          {
-            enable = lib.length content > 0;
-            priority = 10;
-            source = mkFontconfigConf "rendering" {
-              description = "Set the rendering mode";
-              match = {
-                "@target" = "font";
-                edit = content;
-              };
-            };
+        };
+      default-fonts =
+        let
+          filterNonEmpty = lib.filterAttrs (_: fonts: fonts != [ ]);
+          mkAlias = name: fonts: {
+            "@binding" = "same";
+            family = if name == "sansSerif" then "sans-serif" else name;
+            prefer.family = fonts;
           };
-        default-fonts =
-          let
-            filterNonEmpty = lib.filterAttrs (_: fonts: fonts != [ ]);
-            mkAlias = name: fonts: {
-              "@binding" = "same";
-              family = if name == "sansSerif" then "sans-serif" else name;
-              prefer.family = fonts;
-            };
-          in
-          {
-            enable = true;
-            priority = 52;
-            source = mkFontconfigConf "default-fonts" {
-              description = "Set default fonts";
-              alias = lib.mapAttrsToList mkAlias (filterNonEmpty cfg.defaultFonts);
-            };
+        in
+        {
+          enable = true;
+          priority = 52;
+          settings = {
+            description = "Set default fonts";
+            alias = lib.mapAttrsToList mkAlias (filterNonEmpty cfg.defaultFonts);
           };
-      };
+        };
+    };
 
     xdg.configFile = lib.mapAttrs' (
       _name: config:
