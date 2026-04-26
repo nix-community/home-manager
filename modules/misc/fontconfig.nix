@@ -14,13 +14,15 @@ let
 
   cfg = config.fonts.fontconfig;
 
+  xml = pkgs.formats.xml { };
+
   globalConfig = config;
   fontConfigFileType = lib.types.submodule (
     let
       noteContentOptionsExclusivity = ''
-        Note that {option}`source` will be derived from {option}`text` if it is set; with override
-        priorities being preserved.  As a consequence, exactly one of {option}`text`, and
-        {option}`source` must be set with highest priority.
+        Note that {option}`source` will be derived from {option}`settings` and {option}`text` if they are
+        set; with override priorities being preserved. As a consequence, exactly
+        one of {option}`settings`, {option}`text`, and {option}`source` must be set with highest priority.
       '';
     in
     {
@@ -80,6 +82,27 @@ let
           defaultText = ''"''${toString config.priority}-hm-''${config.label}.conf"'';
           type = lib.types.nonEmptyStr;
         };
+        settings = lib.mkOption {
+          inherit (xml) type;
+          default = { };
+          example = {
+            description = "Enable antialiasing";
+            match = {
+              "@target" = "font";
+              edit = {
+                "@mode" = "assign";
+                "@name" = "antialias";
+                bool = "true";
+              };
+            };
+          };
+          description = ''
+            Structured attrs of settings in the format of `pkgs.format.xml {}`. The
+            settings are implicitly wrapped inside the `<fontconfig>` tag, i.e. as
+            `{ fontconfig = <settings>; }`.
+          ''
+          + noteContentOptionsExclusivity;
+        };
         text = lib.mkOption {
           description = ''
             Verbatim contents of the config file.
@@ -119,9 +142,13 @@ let
       config.source =
         let
           fileName = lib.hm.strings.storeFileName "hm-fontconfig-${config.label}.xml";
+          mkSettingsFile = settings: xml.generate fileName { fontconfig = settings; };
           mkTextFile = pkgs.writeText fileName;
         in
-        lib.mkIf (config.text != null) (lib.mkDerivedConfig options.text mkTextFile);
+        lib.mkMerge [
+          (lib.mkIf (config.settings != { }) (lib.mkDerivedConfig options.settings mkSettingsFile))
+          (lib.mkIf (config.text != null) (lib.mkDerivedConfig options.text mkTextFile))
+        ];
     }
   );
 
@@ -322,93 +349,88 @@ in
       fi
     '';
 
-    fonts.fontconfig.configFile =
-      let
-        xml = pkgs.formats.xml { };
-        mkFontconfigConf = name: conf: xml.generate name { fontconfig = conf; };
-      in
-      {
-        fonts =
-          let
-            mkInclude = path: {
-              "@ignore_missing" = "yes";
-              "#text" = path;
+    fonts.fontconfig.configFile = {
+      fonts =
+        let
+          mkInclude = path: {
+            "@ignore_missing" = "yes";
+            "#text" = path;
+          };
+        in
+        {
+          enable = true;
+          priority = 10;
+          settings = {
+            description = "Add fonts in the Nix user profile";
+            include = map mkInclude [
+              "${config.home.path}/etc/fonts/conf.d"
+              "${config.home.path}/etc/fonts/fonts.conf"
+            ];
+            dir = [
+              "${config.home.path}/lib/X11/fonts"
+              "${config.home.path}/share/fonts"
+              "${config.home.profileDirectory}/lib/X11/fonts"
+              "${config.home.profileDirectory}/share/fonts"
+            ];
+            cachedir = "${config.home.path}/lib/fontconfig/cache";
+          };
+        };
+      rendering =
+        let
+          toXmlValue =
+            value:
+            if lib.isBool value then
+              { bool = lib.boolToString value; }
+            else if lib.isString value then
+              { const = value; }
+            else
+              throw "expected bool or string but got ${lib.typeOf value}: ${toString value}";
+          assign =
+            name: value:
+            toXmlValue value
+            // {
+              "@mode" = "assign";
+              "@name" = name;
             };
-          in
-          {
-            enable = true;
-            priority = 10;
-            source = mkFontconfigConf "fonts" {
-              description = "Add fonts in the Nix user profile";
-              include = map mkInclude [
-                "${config.home.path}/etc/fonts/conf.d"
-                "${config.home.path}/etc/fonts/fonts.conf"
-              ];
-              dir = [
-                "${config.home.path}/lib/X11/fonts"
-                "${config.home.path}/share/fonts"
-                "${config.home.profileDirectory}/lib/X11/fonts"
-                "${config.home.profileDirectory}/share/fonts"
-              ];
-              cachedir = "${config.home.path}/lib/fontconfig/cache";
+          content =
+            lib.optional (cfg.antialiasing != null) (assign "antialias" cfg.antialiasing)
+            ++ lib.optionals (cfg.hinting != null) [
+              (assign "hinting" true)
+              (assign "hintstyle" ("hint" + cfg.hinting))
+            ]
+            ++ lib.optional (cfg.subpixelRendering != null) (
+              assign "rgba" (lib.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
+            );
+        in
+        {
+          enable = lib.length content > 0;
+          priority = 10;
+          settings = {
+            description = "Set the rendering mode";
+            match = {
+              "@target" = "font";
+              edit = content;
             };
           };
-        rendering =
-          let
-            toXmlValue =
-              value:
-              if lib.isBool value then
-                { bool = lib.boolToString value; }
-              else if lib.isString value then
-                { const = value; }
-              else
-                throw "expected bool or string but got ${lib.typeOf value}: ${toString value}";
-            assign =
-              name: value:
-              toXmlValue value
-              // {
-                "@mode" = "assign";
-                "@name" = name;
-              };
-            content =
-              lib.optional (cfg.antialiasing != null) (assign "antialias" cfg.antialiasing)
-              ++ lib.optionals (cfg.hinting != null) [
-                (assign "hinting" true)
-                (assign "hintstyle" ("hint" + cfg.hinting))
-              ]
-              ++ lib.optional (cfg.subpixelRendering != null) (
-                assign "rgba" (lib.replaceStrings [ "ertical-" ] [ "" ] cfg.subpixelRendering)
-              );
-          in
-          {
-            enable = lib.length content > 0;
-            priority = 10;
-            source = mkFontconfigConf "rendering" {
-              description = "Set the rendering mode";
-              match = {
-                "@target" = "font";
-                edit = content;
-              };
-            };
+        };
+      default-fonts =
+        let
+          filterNonEmpty = lib.filterAttrs (_: fonts: fonts != [ ]);
+          mkAlias = name: fonts: {
+            "@binding" = "same";
+            family = if name == "sansSerif" then "sans-serif" else name;
+            prefer.family = fonts;
           };
-        default-fonts =
-          let
-            filterNonEmpty = lib.filterAttrs (_: fonts: fonts != [ ]);
-            mkAlias = name: fonts: {
-              "@binding" = "same";
-              family = if name == "sansSerif" then "sans-serif" else name;
-              prefer.family = fonts;
-            };
-          in
-          {
-            enable = true;
-            priority = 52;
-            source = mkFontconfigConf "default-fonts" {
-              description = "Set default fonts";
-              alias = lib.mapAttrsToList mkAlias (filterNonEmpty cfg.defaultFonts);
-            };
+        in
+        {
+          enable = true;
+          priority = 52;
+          settings = {
+            description = "Set default fonts";
+            alias = lib.mapAttrsToList mkAlias (filterNonEmpty cfg.defaultFonts);
           };
-      };
+        };
+    };
 
     xdg.configFile = lib.mapAttrs' (
       _name: config:
