@@ -1,11 +1,22 @@
-name:
+{ lib, name }:
+let
+  withDefaultStateVersion = module: {
+    imports = [ module ];
+
+    # Stronger than the global test default, but weaker than any test-local
+    # stateVersion assignment.
+    home.stateVersion = lib.mkOverride 900 "26.05";
+  };
+in
 builtins.mapAttrs
   (
     _test: module:
-    import module [
-      "programs"
-      name
-    ]
+    withDefaultStateVersion (
+      import module [
+        "programs"
+        name
+      ]
+    )
   )
   {
     "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
