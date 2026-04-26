@@ -1,33 +1,53 @@
+{ lib, ... }:
+
 let
-  sampleTextContent = "hello world";
   fcConfD = "home-files/.config/fontconfig/conf.d";
+  sampleText = "hello world";
+  sampleSource = builtins.toFile "fontconfig-source" ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+    <fontconfig>
+      ...
+    </fontconfig>
+  '';
 in
 {
+  home.stateVersion = lib.trivial.release;
+
   fonts.fontconfig = {
     enable = true;
     configFile = {
-      text-label-test = {
-        enable = true;
-        label = "sample-text-config";
-        text = sampleTextContent;
-        priority = 55;
+      disabled = {
+        enable = false;
+        text = "";
       };
-      source-nolabel-test = {
-        enable = true;
-        source = ./sample-extra-config.conf;
+      label = {
+        label = "custom_label";
+        text = "";
       };
+      priority = {
+        priority = 37;
+        text = "";
+      };
+      text.text = sampleText;
+      source.source = sampleSource;
     };
   };
 
   nmt.script = ''
     assertDirectoryExists ${fcConfD}
 
-    assertFileExists  ${fcConfD}/55-hm-sample-text-config.conf
-    assertFileContent ${fcConfD}/55-hm-sample-text-config.conf \
-      ${builtins.toFile "sample-text-config" sampleTextContent}
+    assertPathNotExists ${fcConfD}/90-hm-disabled.conf
 
-    assertFileExists  ${fcConfD}/90-hm-source-nolabel-test.conf
-    assertFileContent ${fcConfD}/90-hm-source-nolabel-test.conf \
-      ${./sample-extra-config.conf}
+    assertFileExists ${fcConfD}/90-hm-custom_label.conf
+
+    assertFileExists ${fcConfD}/37-hm-priority.conf
+
+    assertFileExists  ${fcConfD}/90-hm-text.conf
+    assertFileContent ${fcConfD}/90-hm-text.conf \
+      ${builtins.toFile "sample-text-config" sampleText}
+
+    assertFileExists  ${fcConfD}/90-hm-source.conf
+    assertFileContent ${fcConfD}/90-hm-source.conf ${sampleSource}
   '';
 }

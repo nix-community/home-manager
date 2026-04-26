@@ -16,11 +16,35 @@ let
 
   inherit (config.home) profileDirectory;
 
+  globalConfig = config;
   fontConfigFileType = lib.types.submodule (
     { name, ... }:
     {
       options = {
-        enable = lib.mkEnableOption "Whether this font config file should be generated.";
+        enable = lib.mkOption {
+          description = ''
+            Whether this file should be generated. This option allows specific
+            files to be disabled.
+          '';
+          type = lib.types.bool;
+          inherit
+            (lib.hm.deprecations.mkStateVersionOptionDefault {
+              inherit (globalConfig.home) stateVersion;
+              since = "26.11";
+              optionPath = [
+                "fonts"
+                "fontconfig"
+                "configFile"
+                name
+                "enable"
+              ];
+              legacy.value = false;
+              current.value = true;
+            })
+            default
+            defaultText
+            ;
+        };
         text = lib.mkOption {
           type = lib.types.nullOr lib.types.lines;
           default = null;
