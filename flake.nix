@@ -63,8 +63,7 @@
             # Create chunked test packages for better CI parallelization
             tests = import ./tests {
               inherit pkgs;
-              # Disable big tests since this is only used for CI
-              enableBig = false;
+              enableBig = true;
             };
             allTests = lib.attrNames tests.build;
             # Remove 'all' from the test list as it's a meta-package
