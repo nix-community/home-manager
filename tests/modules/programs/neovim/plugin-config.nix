@@ -7,6 +7,8 @@
 }:
 
 lib.mkIf config.test.enableBig {
+  home.stateVersion = "26.05";
+
   programs.neovim = {
     enable = true;
     extraConfig = ''
@@ -17,6 +19,7 @@ lib.mkIf config.test.enableBig {
       {
         plugin = vim-commentary;
         # testing viml config
+        type = "viml";
         config = ''
           let g:hmPlugins='HM_PLUGINS_CONFIG'
         '';
