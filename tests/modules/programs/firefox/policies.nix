@@ -16,10 +16,7 @@ in
   imports = [ firefoxMockOverlay ];
 
   config = lib.mkIf config.test.enableBig (
-    {
-      home.stateVersion = "23.05";
-    }
-    // lib.setAttrByPath modulePath {
+    lib.setAttrByPath modulePath {
       enable = true;
       configPath = lib.mkIf pkgs.stdenv.hostPlatform.isLinux ".mozilla/firefox";
       policies = {
@@ -40,9 +37,17 @@ in
             else
               "${cfg.finalPackage}/lib/${cfg.finalPackage.unwrapped.libName or cfg.wrappedPackageName}";
           config_file = "${libDir}/distribution/policies.json";
+          config_file_browser = "${libDir}/browser/distribution/policies.json";
         in
         ''
           jq=${lib.getExe pkgs.jq}
+          if [[ -f "${config_file}" ]]; then
+            config_file="${config_file}"
+          elif [[ -f "${config_file_browser}" ]]; then
+            config_file="${config_file_browser}"
+          else
+            fail "Expected ${libDir}/distribution/policies.json to exist but it was not found."
+          fi
 
           assertFileExists "${config_file}"
 

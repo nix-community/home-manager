@@ -18,11 +18,7 @@ in
   imports = [ firefoxMockOverlay ];
 
   config = lib.mkIf config.test.enableBig (
-    {
-      # Required for bookmark policy to get set
-      home.stateVersion = "19.09";
-    }
-    // lib.setAttrByPath modulePath {
+    lib.setAttrByPath modulePath {
       enable = true;
       configPath = lib.mkIf pkgs.stdenv.hostPlatform.isLinux ".mozilla/firefox";
       profiles.bookmarks = {
@@ -95,8 +91,17 @@ in
             else
               "${cfg.finalPackage}/lib/${cfg.finalPackage.unwrapped.libName or cfg.wrappedPackageName}";
           config_file = "${libDir}/distribution/policies.json";
+          config_file_browser = "${libDir}/browser/distribution/policies.json";
         in
         ''
+          if [[ -f "${config_file}" ]]; then
+            config_file="${config_file}"
+          elif [[ -f "${config_file_browser}" ]]; then
+            config_file="${config_file_browser}"
+          else
+            fail "Expected ${libDir}/distribution/policies.json to exist but it was not found."
+          fi
+
           assertFileExists "${config_file}"
 
           noDefaultBookmarks_actual_value="$(${lib.getExe pkgs.jq} ".policies.NoDefaultBookmarks" ${config_file})"
