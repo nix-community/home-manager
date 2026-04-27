@@ -1,0 +1,9 @@
+[Install]
+WantedBy=timers.target
+
+[Timer]
+OnCalendar=hourly
+Unit=imapgoose.service
+
+[Unit]
+Description=imapgoose mail synchronization
