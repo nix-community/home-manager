@@ -12,6 +12,52 @@ let
   replaceIllegalChars = builtins.replaceStrings [ "/" " " "$" ] [ "." "_" "" ];
   isUsingSecretProvisioner = name: config ? "${name}" && config."${name}".secrets != { };
 
+  # options shared between mounts/serve
+  mountServeOptions = {
+    logLevel = lib.mkOption {
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "ERROR"
+          "NOTICE"
+          "INFO"
+          "DEBUG"
+        ]
+      );
+      default = null;
+      example = "INFO";
+      description = ''
+        Set the log-level.
+        See: https://rclone.org/docs/#logging
+      '';
+    };
+    options = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (
+          nullOr (oneOf [
+            bool
+            int
+            float
+            str
+          ])
+        );
+      default = { };
+      apply = lib.mergeAttrs {
+        vfs-cache-mode = "full";
+        cache-dir = "%C/rclone";
+      };
+      description = ''
+        An attribute set of option values passed to the command.
+        To set a boolean option, assign it `true` or `false`. See
+        <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toCommandLineShellGNU>
+        for more details on the format.
+
+        Some caching options are set by default, namely `vfs-cache-mode = "full"`
+        and `cache-dir`. These can be overridden if desired.
+      '';
+    };
+  };
+
 in
 {
   meta.maintainers = with lib.maintainers; [ jess ];
@@ -117,23 +163,6 @@ in
                           default = true;
                         };
 
-                        logLevel = lib.mkOption {
-                          type = lib.types.nullOr (
-                            lib.types.enum [
-                              "ERROR"
-                              "NOTICE"
-                              "INFO"
-                              "DEBUG"
-                            ]
-                          );
-                          default = null;
-                          example = "INFO";
-                          description = ''
-                            Set the log-level.
-                            See: https://rclone.org/docs/#logging
-                          '';
-                        };
-
                         mountPoint = lib.mkOption {
                           type = lib.types.str;
                           default = null;
@@ -142,34 +171,8 @@ in
                           '';
                           example = "/home/alice/my-remote";
                         };
-
-                        options = lib.mkOption {
-                          type =
-                            with lib.types;
-                            attrsOf (
-                              nullOr (oneOf [
-                                bool
-                                int
-                                float
-                                str
-                              ])
-                            );
-                          default = { };
-                          apply = lib.mergeAttrs {
-                            vfs-cache-mode = "full";
-                            cache-dir = "%C/rclone";
-                          };
-                          description = ''
-                            An attribute set of option values passed to `rclone mount`. To set
-                            a boolean option, assign it `true` or `false`. See
-                            <https://nixos.org/manual/nixpkgs/stable/#function-library-lib.cli.toCommandLineShellGNU>
-                            for more details on the format.
-
-                            Some caching options are set by default, namely `vfs-cache-mode = "full"`
-                            and `cache-dir`. These can be overridden if desired.
-                          '';
-                        };
-                      };
+                      }
+                      // mountServeOptions;
                     }
                   );
                 default = { };
@@ -198,6 +201,67 @@ in
                   }
                 '';
 
+              };
+
+              serve = lib.mkOption {
+                type =
+                  with lib.types;
+                  attrsOf (
+                    lib.types.submodule {
+                      options = {
+                        enable = lib.mkEnableOption "serving this path";
+
+                        protocol = lib.mkOption {
+                          type = lib.types.enum [
+                            "dlna"
+                            "docker"
+                            "ftp"
+                            "http"
+                            "nfs"
+                            "restic"
+                            "s3"
+                            "sftp"
+                            "webdav"
+                          ];
+                          description = ''
+                            The protocol to serve this path using.
+                            See: https://rclone.org/commands/rclone_serve
+                          '';
+                          example = "http";
+                        };
+
+                        autoServe = lib.mkEnableOption "automatic serving" // {
+                          default = true;
+                        };
+                      }
+                      // mountServeOptions;
+                    }
+                  );
+                default = { };
+                description = ''
+                  An attribute set mapping remote file paths to their corresponding serve configurations.
+
+                  For each entry, to perform the equivalent of
+                  `rclone serve protocol remote:path/to/files` — as described in the
+                  rclone documentation <https://rclone.org/commands/rclone_serve/> — we create
+                  a key-value pair like this:
+                  `"path/to/files/on/remote" = { ... }`.
+                '';
+                example = lib.literalExpression ''
+                  {
+                    "path/to/files" = {
+                      enable = true;
+                      protocol = "http";
+                      options = {
+                        addr = "127.0.0.1:3000";
+                        dir-cache-time = "5000h";
+                        poll-interval = "10s";
+                        umask = "002";
+                        user-agent = "Laptop";
+                      };
+                    };
+                  }
+                '';
               };
             };
           }
@@ -399,12 +463,62 @@ in
             ]
           )
       );
+
+      serveServices = lib.listToAttrs (
+        lib.concatMap
+          (
+            { name, value }:
+            let
+              remote-name = name;
+              remote = value;
+            in
+            lib.concatMap (
+              { name, value }:
+              let
+                serve-path = name;
+                serve = value;
+              in
+              lib.optional serve.enable (
+                lib.nameValuePair "rclone-serve:${replaceIllegalChars serve-path}@${remote-name}" {
+                  Unit = {
+                    Description = "Rclone protocol serving for ${remote-name}:${serve-path}";
+                    Requires = [ "rclone-config.service" ];
+                    After = [ "rclone-config.service" ];
+                  };
+
+                  Service = {
+                    Type = "notify";
+                    Environment = lib.optional (serve.logLevel != null) "RCLONE_LOG_LEVEL=${serve.logLevel}";
+
+                    ExecStart = lib.concatStringsSep " " [
+                      (lib.getExe cfg.package)
+                      "serve"
+                      (lib.escapeShellArg serve.protocol)
+                      (lib.cli.toCommandLineShellGNU { } serve.options)
+                      (lib.escapeShellArg "${remote-name}:${serve-path}")
+                    ];
+                    Restart = "on-failure";
+                  };
+
+                  Install.WantedBy = lib.optional serve.autoServe "default.target";
+                }
+              )
+            ) (lib.attrsToList remote.serve)
+          )
+          (
+            lib.pipe cfg.remotes [
+              lib.attrsToList
+              (lib.filter (rem: rem.value ? serve))
+            ]
+          )
+      );
     in
     lib.mkIf cfg.enable {
       home.packages = [ cfg.package ];
       systemd.user.services = lib.mkMerge [
         rcloneConfigService
         mountServices
+        serveServices
       ];
     };
 }
