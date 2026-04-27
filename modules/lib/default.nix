@@ -12,6 +12,7 @@ rec {
   git = import ./git.nix { inherit lib; };
   gvariant = import ./gvariant.nix { inherit lib; };
   maintainers = import ./maintainers.nix;
+  mcp = import ./mcp.nix { inherit lib; };
   strings = import ./strings.nix { inherit lib; };
   types = import ./types.nix { inherit gvariant lib; };
 

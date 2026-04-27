@@ -8,9 +8,12 @@
           "-y"
           "@modelcontextprotocol/server-everything"
         ];
+        envFiles = {
+          NPM_TOKEN = "/run/secrets/npm-token";
+        };
       };
       context7 = {
-        serverUrl = "https://mcp.context7.com/mcp";
+        url = "https://mcp.context7.com/mcp";
         headers = {
           CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
         };
