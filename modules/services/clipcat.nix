@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib)
+    getExe'
     types
     mkIf
     mkEnableOption
@@ -134,15 +135,8 @@ in
       Install.WantedBy = [ "graphical-session.target" ];
 
       Service = {
-        ExecStartPre = "${pkgs.writeShellScript "clipcatd-exec-start-pre" ''
-          PATH=/run/current-system/sw/bin:
-          rm -f %t/clipcat/grpc.sock
-        ''}";
-
-        ExecStart = "${pkgs.writeShellScript "clipcatd-exec-start" ''
-          PATH=/run/current-system/sw/bin:
-          ${cfg.package}/bin/clipcatd --no-daemon --replace
-        ''}";
+        ExecStartPre = "${getExe' pkgs.coreutils "rm"} -f %t/clipcat/grpc.sock";
+        ExecStart = "${getExe' cfg.package "clipcatd"} --no-daemon --replace";
 
         Restart = "on-failure";
         Type = "simple";
