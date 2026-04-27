@@ -1252,6 +1252,13 @@
     name = "Ilya Savitsky";
     source = "nixpkgs";
   };
+  isaacST08 = {
+    email = "isaacst.nix@proton.me";
+    github = "isaacST08";
+    githubId = 106057977;
+    name = "Isaac Shiells Thomas";
+    source = "home-manager";
+  };
   iynaix = {
     email = "iynaix@gmail.com";
     github = "iynaix";
@@ -1930,13 +1937,6 @@
     name = "Myles Wirth";
     source = "nixpkgs";
   };
-  pinage404 = {
-    email = "pinage404+nixpkgs@gmail.com";
-    github = "pinage404";
-    githubId = 6325757;
-    name = "pinage404";
-    source = "nixpkgs";
-  };
   pjones = {
     email = "pjones@devalot.com";
     github = "pjones";
@@ -2108,6 +2108,13 @@
       }
     ];
     name = "Robert Helgesson";
+    source = "nixpkgs";
+  };
+  s0racat = {
+    email = "125882337+s0racat@users.noreply.github.com";
+    github = "s0racat";
+    githubId = 125882337;
+    name = "soracat";
     source = "nixpkgs";
   };
   sableseyler = {
