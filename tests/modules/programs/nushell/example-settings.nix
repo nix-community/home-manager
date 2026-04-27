@@ -70,9 +70,10 @@
       assertFileContent \
         "${configDir}/config.nu" \
         ${./config-expected.nu}
-      assertFileContent \
+      assertFileRegex \
         "${configDir}/env.nu" \
-        ${./env-expected.nu}
+        "source /nix/store/[^/]*-hm-session-vars.nu
+        ${./env-expected.nu}"
       assertFileContent \
         "${configDir}/login.nu" \
         ${./login-expected.nu}
