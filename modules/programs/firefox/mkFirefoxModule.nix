@@ -910,7 +910,27 @@ in
         )
       );
       default = { };
-      description = "Attribute set of ${appName} profiles.";
+      example = lib.optionalAttrs (moduleName == "programs.firefox") (literalExpression ''
+        {
+          "dev-edition-default" = {
+            id = 0;
+            path = config.home.username;
+
+            settings = {
+              "browser.aboutConfig.showWarning" = false;
+            };
+          };
+        }
+      '');
+      description = ''
+        Attribute set of ${appName} profiles.
+
+        ${lib.optionalString (moduleName == "programs.firefox") ''
+          When using Firefox Developer Edition, the profile name should be
+          `dev-edition-default`. You can still set {option}`path` to store the
+          profile in a custom directory.
+        ''}
+      '';
     };
 
     enableGnomeExtensions = mkOption {
