@@ -11,6 +11,7 @@ lib.mkIf config.test.enableBig {
 
   programs.neovim = {
     enable = true;
+    withRuby = false;
     extraConfig = ''
       let g:hmExtraConfig='HM_EXTRA_CONFIG'
     '';
