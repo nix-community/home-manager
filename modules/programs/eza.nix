@@ -52,6 +52,9 @@ in
     };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableXonshIntegration = lib.mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
 
     extraOptions = mkOption {
       type = types.listOf types.str;
@@ -177,6 +180,8 @@ in
           shellAbbrs = optionalAttrs cfg.enableFishIntegration aliases;
         })
       ];
+
+      programs.xonsh.shellAliases = optionsAlias // optionalAttrs cfg.enableXonshIntegration aliases;
 
       programs.ion.shellAliases = optionsAlias // optionalAttrs cfg.enableIonIntegration aliases;
 

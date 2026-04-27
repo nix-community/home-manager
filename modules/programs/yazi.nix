@@ -4,6 +4,7 @@
   pkgs,
   ...
 }:
+
 let
   inherit (lib)
     literalExpression
@@ -76,6 +77,8 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    enableXonshIntegration = mkEnableOption "Xonsh integration";
 
     keymap = mkOption {
       inherit (tomlFormat) type;
@@ -255,6 +258,20 @@ in
 
     programs =
       let
+
+        xonshIntegration = ''
+          def _y(args):
+              tmp = $(mktemp -t "yazi-cwd.XXXXXX")
+              args.append(f"--cwd-file={tmp}")
+              $[yazi @(args)]
+              with open(tmp) as f:
+                  cwd = f.read().strip()
+              if cwd != $PWD:
+                  cd @(cwd)
+              rm -f -- @(tmp)
+
+          aliases["${cfg.shellWrapperName}"] = _y
+        '';
         bashIntegration = ''
           function ${cfg.shellWrapperName}() {
             local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
@@ -265,7 +282,6 @@ in
             rm -f -- "$tmp"
           }
         '';
-
         fishIntegration = ''
           set -l tmp (mktemp -t "yazi-cwd.XXXXX")
           command yazi $argv --cwd-file="$tmp"
@@ -291,6 +307,8 @@ in
         bash.initExtra = mkIf cfg.enableBashIntegration bashIntegration;
 
         zsh.initContent = mkIf cfg.enableZshIntegration bashIntegration;
+
+        xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration xonshIntegration;
 
         fish.functions.${cfg.shellWrapperName} = mkIf cfg.enableFishIntegration fishIntegration;
 
@@ -348,5 +366,6 @@ in
         ) cfg.plugins)
       ]
     );
+
   };
 }

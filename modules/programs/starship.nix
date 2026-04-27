@@ -83,6 +83,10 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
+    enableXonshIntegration = lib.mkEnableOption "Xonsh integration" // {
+      default = true;
+    };
+
     enableInteractive = mkOption {
       type = types.bool;
       default = true;
@@ -177,6 +181,11 @@ in
         if [[ $TERM != "dumb" ]]; then
           eval "$(${lib.getExe cfg.package} init zsh)"
         fi
+      '';
+
+      xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+        if $TERM != "dumb":
+          execx($(${lib.getExe cfg.package} init xonsh))
       '';
 
       fish.${initFish} = mkIf cfg.enableFishIntegration ''
