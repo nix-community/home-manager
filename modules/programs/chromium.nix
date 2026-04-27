@@ -321,9 +321,7 @@ let
         else
           cfg.package;
 
-      home.packages = lib.mkIf (cfg.finalPackage != null) [
-        cfg.finalPackage
-      ];
+      home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
       home.file =
         lib.optionalAttrs supportsUserExtensions (lib.listToAttrs (map extensionJson cfg.extensions))
         // lib.listToAttrs (map dictionary cfg.dictionaries)
@@ -338,7 +336,7 @@ let
 in
 {
   options.programs = builtins.mapAttrs (
-    browser: name: browserModule browser name (if browser == "chromium" then true else false)
+    browser: name: browserModule browser name (browser == "chromium")
   ) supportedBrowsers;
 
   config = lib.mkMerge (
