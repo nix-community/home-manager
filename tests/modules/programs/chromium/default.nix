@@ -16,4 +16,5 @@
 // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
   chromium-google-chrome-dev-package-routing-darwin = ./google-chrome-dev-package-routing-darwin.nix;
   chromium-google-chrome-extensions-darwin = ./google-chrome-extensions-darwin.nix;
+  chromium-vivaldi-package-routing-darwin = ./vivaldi-package-routing-darwin.nix;
 }
