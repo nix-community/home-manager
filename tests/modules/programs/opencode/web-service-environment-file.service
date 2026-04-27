@@ -2,6 +2,7 @@
 WantedBy=default.target
 
 [Service]
+Environment=PATH=/home/hm-user/.nix-profile/bin
 EnvironmentFile=/run/secrets/opencode
 ExecStart=@opencode@/bin/opencode serve 
 Restart=always
