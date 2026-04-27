@@ -74,27 +74,26 @@ let
         '';
       };
     }
-    // lib.optionalAttrs (lib.elem browser plasmaSupportedBrowsers) {
-      plasmaSupport = mkOption {
-        inherit visible;
-        type = types.bool;
-        default = false;
-        example = true;
-        description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
-      };
+    //
+      lib.optionalAttrs (pkgs.stdenv.hostPlatform.isLinux && lib.elem browser plasmaSupportedBrowsers)
+        {
+          plasmaSupport = mkOption {
+            inherit visible;
+            type = types.bool;
+            default = false;
+            example = true;
+            description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
+          };
 
-      plasmaBrowserIntegrationPackage = mkOption {
-        inherit visible;
-        type = types.package;
-        default = pkgs.kdePackages.plasma-browser-integration;
-        defaultText = literalExpression "pkgs.kdePackages.plasma-browser-integration";
-        example = literalExpression "pkgs.kdePackages.plasma-browser-integration";
-        description = ''
-          Package to use for the Plasma browser integration native messaging
-          host on Linux.
-        '';
-      };
-    }
+          plasmaBrowserIntegrationPackage =
+            lib.mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
+              extraDescription = "Used for the native messaging host on Linux.";
+              pkgsText = "pkgs.kdePackages";
+            }
+            // {
+              inherit visible;
+            };
+        }
     // {
       dictionaries = mkOption {
         inherit visible;
@@ -269,7 +268,8 @@ let
         value.source = pkg;
       };
 
-      plasmaSupportEnabled = pkgs.stdenv.isLinux && (cfg.plasmaSupport or false);
+      plasmaSupportEnabled =
+        pkgs.stdenv.isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
 
       nativeMessagingHosts = lib.unique (
         cfg.nativeMessagingHosts ++ lib.optional plasmaSupportEnabled cfg.plasmaBrowserIntegrationPackage
