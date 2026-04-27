@@ -6,14 +6,17 @@
 }:
 let
   inherit (lib) literalExpression mkOption types;
+  inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 
   chromeWebStoreUpdateUrl = "https://clients2.google.com/service/update2/crx";
 
+  google-chrome = "Google Chrome";
+
   supportedBrowsers = {
     chromium = "Chromium";
-    google-chrome = "Google Chrome";
-    google-chrome-beta = "Google Chrome Beta";
-    google-chrome-dev = "Google Chrome Dev";
+    inherit google-chrome;
+    google-chrome-beta = google-chrome + " Beta";
+    google-chrome-dev = google-chrome + " Dev";
     brave = "Brave Browser";
     vivaldi = "Vivaldi Browser";
   };
@@ -74,26 +77,24 @@ let
         '';
       };
     }
-    //
-      lib.optionalAttrs (pkgs.stdenv.hostPlatform.isLinux && lib.elem browser plasmaSupportedBrowsers)
-        {
-          plasmaSupport = mkOption {
-            inherit visible;
-            type = types.bool;
-            default = false;
-            example = true;
-            description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
-          };
+    // lib.optionalAttrs (isLinux && lib.elem browser plasmaSupportedBrowsers) {
+      plasmaSupport = mkOption {
+        inherit visible;
+        type = types.bool;
+        default = false;
+        example = true;
+        description = "Whether to enable the 'Use QT' theme for ${name}.";
+      };
 
-          plasmaBrowserIntegrationPackage =
-            lib.mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
-              extraDescription = "Used for the native messaging host on Linux.";
-              pkgsText = "pkgs.kdePackages";
-            }
-            // {
-              inherit visible;
-            };
+      plasmaBrowserIntegrationPackage =
+        lib.mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
+          extraDescription = "Used for the native messaging host on Linux.";
+          pkgsText = "pkgs.kdePackages";
         }
+        // {
+          inherit visible;
+        };
+    }
     // {
       dictionaries = mkOption {
         inherit visible;
@@ -225,7 +226,7 @@ let
         if builtins.hasAttr packageName supportedBrowsers then packageName else browser;
 
       isProprietaryChrome = lib.hasPrefix "google-chrome" effectiveBrowser;
-      supportsUserExtensions = !isProprietaryChrome || pkgs.stdenv.isDarwin;
+      supportsUserExtensions = !isProprietaryChrome || isDarwin;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -233,6 +234,7 @@ let
         google-chrome-beta = "Google/Chrome Beta";
         google-chrome-dev = "Google/Chrome Dev";
         brave = "BraveSoftware/Brave-Browser";
+        vivaldi = "Vivaldi";
       };
 
       linuxDirs = {
@@ -240,7 +242,7 @@ let
       };
 
       configDir =
-        if pkgs.stdenv.isDarwin then
+        if isDarwin then
           "Library/Application Support/" + (darwinDirs."${effectiveBrowser}" or effectiveBrowser)
         else
           "${config.xdg.configHome}/" + (linuxDirs."${effectiveBrowser}" or effectiveBrowser);
@@ -268,8 +270,7 @@ let
         value.source = pkg;
       };
 
-      plasmaSupportEnabled =
-        pkgs.stdenv.isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
+      plasmaSupportEnabled = isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
 
       nativeMessagingHosts = lib.unique (
         cfg.nativeMessagingHosts ++ lib.optional plasmaSupportEnabled cfg.plasmaBrowserIntegrationPackage
@@ -289,14 +290,18 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
-          assertion = !(isProprietaryChrome && pkgs.stdenv.isLinux && cfg.extensions != [ ]);
+          assertion = builtins.all (ext: (ext.crxPath == null) == (ext.version == null)) cfg.extensions;
+          message = "Cannot set `version` without `crxPath`, or `crxPath` without `version`, for `${effectiveBrowser}`.";
+        }
+        {
+          assertion = !(isProprietaryChrome && isLinux && cfg.extensions != [ ]);
           message = "Cannot set `extensions` for `${effectiveBrowser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
         }
         {
           assertion =
             !(
               isProprietaryChrome
-              && pkgs.stdenv.isDarwin
+              && isDarwin
               && !builtins.all (
                 ext: ext.crxPath == null && ext.version == null && ext.updateUrl == chromeWebStoreUpdateUrl
               ) cfg.extensions
@@ -321,9 +326,7 @@ let
         else
           cfg.package;
 
-      home.packages = lib.mkIf (cfg.finalPackage != null) [
-        cfg.finalPackage
-      ];
+      home.packages = lib.optional (cfg.finalPackage != null) cfg.finalPackage;
       home.file =
         lib.optionalAttrs supportsUserExtensions (lib.listToAttrs (map extensionJson cfg.extensions))
         // lib.listToAttrs (map dictionary cfg.dictionaries)
@@ -338,7 +341,7 @@ let
 in
 {
   options.programs = builtins.mapAttrs (
-    browser: name: browserModule browser name (if browser == "chromium" then true else false)
+    browser: name: browserModule browser name (browser == "chromium")
   ) supportedBrowsers;
 
   config = lib.mkMerge (
