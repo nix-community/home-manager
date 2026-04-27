@@ -499,6 +499,12 @@
       }
     ];
   };
+  rodrada = {
+    name = "Daniel Ramos Rodríguez";
+    email = "daniel.ramos.rodrig@gmail.com";
+    github = "rodrada";
+    githubId = 64539957;
+  };
   rosuavio = {
     name = "Rosario Pulella";
     email = "RosarioPulella@gmail.com";
