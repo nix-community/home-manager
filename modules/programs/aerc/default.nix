@@ -134,6 +134,8 @@ in
     let
       joinCfg = cfgs: lib.concatStringsSep "\n" (lib.filter (v: v != "") cfgs);
 
+      bindsConf = builtins.readFile ./binds.conf;
+
       sectionsToINI =
         conf:
         let
@@ -277,6 +279,9 @@ in
         "${configDir}/binds.conf" = mkIf genBindsConf {
           text = joinCfg [
             header
+            # upstream defaults
+            bindsConf
+            # user overrides
             (mkINI cfg.extraBinds)
             (joinContextual accountsExtraBinds)
           ];
