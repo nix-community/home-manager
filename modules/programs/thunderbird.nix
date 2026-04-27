@@ -102,6 +102,9 @@ let
       "mail.identity.id_${id}.htmlSigText" =
         if identity.signature.showSignature == "none" then "" else identity.signature.text;
     }
+    // optionalAttrs identity.signature.htmlFormat {
+      "mail.identity.id_${id}.htmlSigFormat" = true;
+    }
     // optionalAttrs (identity.gpg != null) {
       "mail.identity.id_${id}.attachPgpKey" = false;
       "mail.identity.id_${id}.autoEncryptDrafts" = true;

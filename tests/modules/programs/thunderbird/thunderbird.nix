@@ -59,6 +59,7 @@
       smtp.port = 456;
 
       signature = {
+        htmlFormat = true;
         text = "signature";
         showSignature = "append";
       };

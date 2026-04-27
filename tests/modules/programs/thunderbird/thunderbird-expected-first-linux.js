@@ -36,6 +36,7 @@ user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ec
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.e2etechpref", 0);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.encryptionpolicy", 0);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.fullName", "H. M. Test");
+user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.htmlSigFormat", true);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.htmlSigText", "signature");
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.is_gnupg_key_id", true);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.last_entered_external_gnupg_key_id", "ABC");
@@ -71,6 +72,7 @@ user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.e2etechpref", 0);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.encryptionpolicy", 0);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.fullName", "H. M. Test");
+user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.htmlSigFormat", true);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.htmlSigText", "signature");
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.is_gnupg_key_id", true);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.last_entered_external_gnupg_key_id", "ABC");

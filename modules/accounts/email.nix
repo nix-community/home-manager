@@ -80,6 +80,18 @@ let
         default = "none";
         description = "Method to communicate the signature.";
       };
+
+      htmlFormat = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether Thunderbird should interpret {option}`text` as an HTML signature.
+
+          This maps to Thunderbird's `mail.identity.id_*.htmlSigFormat`
+          preference. The signature content itself is still written through
+          `mail.identity.id_*.htmlSigText`.
+        '';
+      };
     };
   };
 
