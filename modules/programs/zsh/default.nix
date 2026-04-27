@@ -317,6 +317,9 @@ in
               "dir"
               "vcs"
             ];
+            ZSH_HIGHLIGHT_STYLES = {
+              unknown-token = "bg=red,fg=white,bold";
+            };
           };
           description = ''
             Extra local variables defined at the top of {file}`.zshrc`.
