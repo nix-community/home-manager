@@ -1,23 +1,9 @@
 { pkgs, lib, ... }:
 
 let
-  knownPackage = pkgs.writeScriptBin "vscode" "" // {
+  package = pkgs.writeScriptBin "vscode" "" // {
     pname = "vscode";
     version = "1.75.0";
-  };
-
-  unknownPackage = pkgs.writeTextFile rec {
-    name = "${derivationArgs.pname}-${derivationArgs.version}";
-    derivationArgs = {
-      pname = "test-vscode-unknown";
-      version = "0.1.0";
-    };
-    text = builtins.toJSON {
-      dataFolderName = ".test-vscode-unknown";
-      nameShort = passthru.longName;
-    };
-    destination = "/lib/vscode/resources/app/product.json";
-    passthru.longName = "Test VSCode Fork";
   };
 
   tests = {
@@ -31,14 +17,9 @@ let
     snippets = import ./snippets.nix;
   };
 
-  knownTests = lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}-known" (v knownPackage)) tests;
-  unknownTests = lib.mapAttrs' (
-    k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
-  ) tests;
-
   nullPackageTests = {
     vscode-null-package = import ./null-package.nix;
   };
 in
 
-knownTests // unknownTests // nullPackageTests
+lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}" (v package)) tests // nullPackageTests

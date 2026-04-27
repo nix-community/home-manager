@@ -1,0 +1,540 @@
+{
+  modulePath,
+  name,
+  packageName,
+  nameShort,
+  dataFolderName,
+  skipVersionCheck ? false,
+}:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    flatten
+    literalExpression
+    mapAttrsToList
+    mkOption
+    mkIf
+    optionalString
+    types
+    ;
+
+  moduleName = lib.concatStringsSep "." modulePath;
+
+  cfg = lib.getAttrFromPath modulePath config;
+  vscodeVersion = cfg.package.version or pkgs.vscode.version;
+
+  jsonFormat = pkgs.formats.json { };
+
+  userDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "${config.home.homeDirectory}/Library/Application Support/${nameShort}/User"
+    else
+      "${config.xdg.configHome}/${nameShort}/User";
+
+  argvPath = "${dataFolderName}/argv.json";
+  configFilePath =
+    name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
+  tasksFilePath =
+    name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}tasks.json";
+  mcpFilePath = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}mcp.json";
+  keybindingsFilePath =
+    name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}keybindings.json";
+
+  snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
+
+  extensionPath = "${dataFolderName}/extensions";
+
+  extensionJson = ext: pkgs.vscode-utils.toExtensionJson ext;
+  extensionJsonFile =
+    name: text:
+    pkgs.writeTextFile {
+      inherit text;
+      name = "extensions-json-${name}";
+      destination = "/share/vscode/extensions/extensions.json";
+    };
+
+  mergedUserSettings =
+    userSettings: enableUpdateCheck: enableExtensionUpdateCheck:
+    userSettings
+    // lib.optionalAttrs (enableUpdateCheck == false) {
+      "update.mode" = "none";
+    }
+    // lib.optionalAttrs (enableExtensionUpdateCheck == false) {
+      "extensions.autoCheckUpdates" = false;
+    };
+
+  isPath = p: builtins.isPath p || lib.isStorePath p;
+
+  transformMcpServerForVscode =
+    name: server:
+    let
+      # Remove the disabled field from the server config
+      cleanServer = lib.filterAttrs (n: _v: n != "disabled") server;
+    in
+    {
+      inherit name;
+      value = {
+        enabled = !(server.disabled or false);
+      }
+      // (
+        if server ? url then
+          {
+            type = "http";
+          }
+          // cleanServer
+        else if server ? command then
+          {
+            type = "stdio";
+          }
+          // cleanServer
+        else
+          { }
+      );
+    };
+
+  profileType = types.submodule {
+    options = {
+      userSettings = mkOption {
+        type = types.either types.path jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            "files.autoSave" = "off";
+            "[nix]"."editor.tabSize" = 2;
+          }
+        '';
+        description = ''
+          Configuration written to ${name}'s
+          {file}`settings.json`.
+          This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      userTasks = mkOption {
+        type = types.either types.path jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            version = "2.0.0";
+            tasks = [
+              {
+                type = "shell";
+                label = "Hello task";
+                command = "hello";
+              }
+            ];
+          }
+        '';
+        description = ''
+          Configuration written to ${name}'s
+          {file}`tasks.json`.
+          This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      enableMcpIntegration = mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to integrate the MCP servers config from
+          {option}`programs.mcp.servers` into
+          {option}`${moduleName}.profiles.<name>.userMcp`.
+
+          Note: Settings defined in {option}`programs.mcp.servers` are merged
+          with {option}`${moduleName}.profiles.<name>.userMcp`, with ${name}
+          settings taking precedence.
+        '';
+      };
+
+      userMcp = mkOption {
+        type = types.either types.path jsonFormat.type;
+        default = { };
+        example = literalExpression ''
+          {
+            "servers": {
+              "Github": {
+                "url": "https://api.githubcopilot.com/mcp/"
+              }
+            }
+          }
+        '';
+        description = ''
+          Configuration written to ${name}'s
+          {file}`mcp.json`.
+          This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      keybindings = mkOption {
+        type = types.either types.path (
+          types.listOf (
+            types.submodule {
+              options = {
+                key = mkOption {
+                  type = types.str;
+                  example = "ctrl+c";
+                  description = "The key or key-combination to bind.";
+                };
+
+                command = mkOption {
+                  type = types.str;
+                  example = "editor.action.clipboardCopyAction";
+                  description = "The VS Code command to execute.";
+                };
+
+                when = mkOption {
+                  type = types.nullOr (types.str);
+                  default = null;
+                  example = "textInputFocus";
+                  description = "Optional context filter.";
+                };
+
+                # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
+                args = mkOption {
+                  type = types.nullOr (jsonFormat.type);
+                  default = null;
+                  example = {
+                    direction = "up";
+                  };
+                  description = "Optional arguments for a command.";
+                };
+              };
+            }
+          )
+        );
+        default = [ ];
+        example = literalExpression ''
+          [
+            {
+              key = "ctrl+c";
+              command = "editor.action.clipboardCopyAction";
+              when = "textInputFocus";
+            }
+          ]
+        '';
+        description = ''
+          Keybindings written to ${name}'s
+          {file}`keybindings.json`.
+          This can be a JSON object or a path to a custom JSON file.
+        '';
+      };
+
+      extensions = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
+        description = ''
+          The extensions ${name} should be started with.
+        '';
+      };
+
+      languageSnippets = mkOption {
+        inherit (jsonFormat) type;
+        default = { };
+        example = {
+          haskell = {
+            fixme = {
+              prefix = [ "fixme" ];
+              body = [ "$LINE_COMMENT FIXME: $0" ];
+              description = "Insert a FIXME remark";
+            };
+          };
+        };
+        description = "Defines user snippets for different languages.";
+      };
+
+      globalSnippets = mkOption {
+        inherit (jsonFormat) type;
+        default = { };
+        example = {
+          fixme = {
+            prefix = [ "fixme" ];
+            body = [ "$LINE_COMMENT FIXME: $0" ];
+            description = "Insert a FIXME remark";
+          };
+        };
+        description = "Defines global user snippets.";
+      };
+
+      enableUpdateCheck = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Whether to enable update checks/notifications.
+          Can only be set for the default profile, but
+          it applies to all profiles.
+        '';
+      };
+
+      enableExtensionUpdateCheck = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          Whether to enable update notifications for extensions.
+          Can only be set for the default profile, but
+          it applies to all profiles.
+        '';
+      };
+    };
+  };
+  defaultProfile = cfg.profiles.default or { };
+  allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
+in
+{
+  options = lib.setAttrByPath modulePath {
+    enable = lib.mkEnableOption name;
+
+    package = lib.mkPackageOption pkgs packageName {
+      nullable = true;
+      extraDescription = "Version of ${name} to install.";
+    };
+
+    mutableExtensionsDir = mkOption {
+      type = types.bool;
+      default = allProfilesExceptDefault == { };
+      defaultText = lib.literalExpression "(removeAttrs config.${moduleName}.profiles [ \"default\" ]) == { }";
+      example = false;
+      description = ''
+        Whether extensions can be installed or updated manually
+        or by ${name}. Mutually exclusive to
+        ${moduleName}.profiles.
+      '';
+    };
+
+    argvSettings = mkOption {
+      type = types.either types.path jsonFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          enable-crash-reporter = false;
+        }
+      '';
+      description = ''
+        Configuration written to ${name}'s
+        {file}`argv.json`.
+        This can be a JSON object or a path to a custom JSON file.
+      '';
+    };
+
+    profiles = mkOption {
+      type = types.attrsOf profileType;
+      default = { };
+      description = ''
+        A list of all ${name} profiles. Mutually exclusive
+        to ${moduleName}.mutableExtensionsDir
+      '';
+    };
+  };
+
+  config = mkIf cfg.enable {
+    warnings = [
+      (mkIf (
+        allProfilesExceptDefault != { } && cfg.mutableExtensionsDir
+      ) "${moduleName}.mutableExtensionsDir can be used only if no profiles apart from default are set.")
+      (mkIf
+        (
+          (lib.filterAttrs (
+            _n: v:
+            (v ? enableExtensionUpdateCheck || v ? enableUpdateCheck)
+            && (v.enableExtensionUpdateCheck != null || v.enableUpdateCheck != null)
+          ) allProfilesExceptDefault) != { }
+        )
+        "The option ${moduleName}.profiles.*.enableExtensionUpdateCheck and option ${moduleName}.profiles.*.enableUpdateCheck is invalid for all profiles except default."
+      )
+    ];
+
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+    # The file `${userDir}/globalStorage/storage.json` needs to be writable by VSCode,
+    # since it contains other data, such as theme backgrounds, recently opened folders, etc.
+
+    # A caveat of adding profiles this way is, VSCode has to be closed
+    # when this file is being written, since the file is loaded into RAM
+    # and overwritten on closing VSCode.
+    home.activation = {
+      "${lib.last modulePath}Profiles" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+        let
+          modifyGlobalStorage = pkgs.writeShellScript "${lib.last modulePath}-global-storage-modify" ''
+            PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
+            file="${userDir}/globalStorage/storage.json"
+            file_write=""
+            profiles=(${lib.escapeShellArgs (flatten (mapAttrsToList (n: _v: n) allProfilesExceptDefault))})
+
+            if [ -f "$file" ]; then
+              existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
+
+              for profile in "''${profiles[@]}"; do
+                if [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile "$profile" '.[$profile]')" != "\"$profile\"" ]]; then
+                  file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+                fi
+              done
+            else
+              for profile in "''${profiles[@]}"; do
+                file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+              done
+
+              mkdir -p "$(dirname "$file")"
+              echo "{}" > "$file"
+            fi
+
+            if [ "$file_write" != "" ]; then
+              userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" "$file")
+              echo $userDataProfiles > "$file"
+            fi
+          '';
+        in
+        modifyGlobalStorage.outPath
+      );
+    };
+
+    home.file = lib.mkMerge (flatten [
+      (mkIf (cfg.argvSettings != { }) {
+        "${argvPath}".source =
+          if isPath cfg.argvSettings then
+            cfg.argvSettings
+          else
+            jsonFormat.generate "vscode-argv" cfg.argvSettings;
+      })
+
+      (mapAttrsToList (n: v: [
+        (mkIf ((mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck) != { })
+          {
+            "${configFilePath n}".source =
+              if isPath v.userSettings then
+                v.userSettings
+              else
+                jsonFormat.generate "vscode-user-settings" (
+                  mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck
+                );
+          }
+        )
+
+        (mkIf (v.userTasks != { }) {
+          "${tasksFilePath n}".source =
+            if isPath v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
+        })
+
+        (mkIf
+          (
+            v.userMcp != { }
+            || (v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { })
+          )
+          {
+            "${mcpFilePath n}".source =
+              if isPath v.userMcp then
+                v.userMcp
+              else
+                let
+                  transformedMcpServers =
+                    if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+                      lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
+                    else
+                      { };
+                  # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
+                  mergedServers = transformedMcpServers // (v.userMcp.servers or { });
+                  # Merge all MCP config
+                  mergedMcpConfig =
+                    v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });
+                in
+                jsonFormat.generate "vscode-user-mcp" mergedMcpConfig;
+          }
+        )
+
+        (mkIf (v.keybindings != [ ]) {
+          "${keybindingsFilePath n}".source =
+            if isPath v.keybindings then
+              v.keybindings
+            else
+              jsonFormat.generate "vscode-keybindings" (map (lib.filterAttrs (_: v: v != null)) v.keybindings);
+        })
+
+        (mkIf (v.languageSnippets != { }) (
+          lib.mapAttrs' (
+            language: snippet:
+            lib.nameValuePair "${snippetDir n}/${language}.json" {
+              source = jsonFormat.generate "user-snippet-${language}.json" snippet;
+            }
+          ) v.languageSnippets
+        ))
+
+        (mkIf (v.globalSnippets != { }) {
+          "${snippetDir n}/global.code-snippets".source =
+            jsonFormat.generate "user-snippet-global.code-snippets" v.globalSnippets;
+        })
+      ]) cfg.profiles)
+
+      # We write extensions.json for all profiles, except the default profile,
+      # since that is handled by code below.
+      (mkIf (allProfilesExceptDefault != { }) (
+        lib.mapAttrs' (
+          n: v:
+          lib.nameValuePair "${userDir}/profiles/${n}/extensions.json" {
+            source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
+          }
+        ) allProfilesExceptDefault
+      ))
+
+      (mkIf (cfg.profiles != { }) (
+        let
+          # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+          subDir = "share/vscode/extensions";
+          toPaths =
+            ext:
+            map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+              if ext ? vscodeExtUniqueId then
+                [ ext.vscodeExtUniqueId ]
+              else
+                builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
+            );
+        in
+        if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
+          # Mutable extensions dir can only occur when only default profile is set.
+          # Force regenerating extensions.json using the below method,
+          # causes VSCode to create the extensions.json with all the extensions
+          # in the extension directory, which includes extensions from other profiles.
+          lib.mkMerge (
+            lib.concatMap toPaths (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
+            ++
+              lib.optional
+                (
+                  (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck)
+                  && defaultProfile != { }
+                  && cfg.package != null
+                )
+                {
+                  # Whenever our immutable extensions.json changes, force VSCode to regenerate
+                  # extensions.json with both mutable and immutable extensions.
+                  "${extensionPath}/.extensions-immutable.json" = {
+                    text = extensionJson defaultProfile.extensions;
+                    onChange = ''
+                      run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
+                      verboseEcho "Regenerating VSCode extensions.json"
+                      run ${lib.getExe cfg.package} --list-extensions > /dev/null
+                    '';
+                  };
+                }
+          )
+        else
+          {
+            "${extensionPath}".source =
+              let
+                combinedExtensionsDrv = pkgs.buildEnv {
+                  name = "vscode-extensions";
+                  paths =
+                    (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
+                    ++ lib.optional (
+                      (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck) && defaultProfile != { }
+                    ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
+                };
+              in
+              "${combinedExtensionsDrv}/${subDir}";
+          }
+      ))
+    ]);
+  };
+}

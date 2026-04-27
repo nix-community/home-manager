@@ -1,17 +1,14 @@
 {
-  config,
   pkgs,
   ...
 }:
 
 let
-  cfg = config.programs.vscode;
-
   settingsPath =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "Library/Application Support/${cfg.nameShort}/User/settings.json"
+      "Library/Application Support/Code/User/settings.json"
     else
-      ".config/${cfg.nameShort}/User/settings.json";
+      ".config/Code/User/settings.json";
 
   expectedSettings = pkgs.writeText "expected-settings.json" ''
     {
@@ -24,7 +21,6 @@ in
   programs.vscode = {
     enable = true;
     package = null;
-    pname = "vscode";
     profiles.default.userSettings."editor.fontSize" = 14;
   };
 
