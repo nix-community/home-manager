@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "database": {
+      "args": [
+        "-y",
+        "@bytebase/dbhub"
+      ],
+      "command": "npx",
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/db"
+      },
+      "tools": [
+        "*"
+      ],
+      "type": "local"
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "tools": [
+        "*"
+      ],
+      "type": "local"
+    }
+  }
+}
