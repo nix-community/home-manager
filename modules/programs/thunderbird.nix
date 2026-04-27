@@ -688,7 +688,15 @@ in
                       };
                       type = mkOption {
                         type = str;
-                        description = "Type for this filter.";
+                        description = ''
+                          Thunderbird filter type bitmask written as the
+                          `type="..."` field in `msgFilterRules.dat`.
+
+                          Thunderbird does not publish a stable table for this
+                          bitmask. To reuse an existing value, inspect the
+                          account's `msgFilterRules.dat` file and copy the
+                          `type="..."` field from a comparable filter.
+                        '';
                       };
                       action = mkOption {
                         type = str;
@@ -732,8 +740,16 @@ in
                   ]
                 '';
                 description = ''
-                  List of message filters to add to this Thunderbird account
-                  configuration.
+                  List of message filters to add to this Thunderbird account configuration.
+
+                  Home Manager writes these to Thunderbird's per-account
+                  `msgFilterRules.dat` file under the profile mail server
+                  directory, for example `ImapMail/<server>/msgFilterRules.dat`.
+
+                  Thunderbird does not publish a stable reference for all fields
+                  in this file. To migrate existing filters, inspect an existing
+                  `msgFilterRules.dat` file and translate each filter block into
+                  this option.
                 '';
               };
             };
