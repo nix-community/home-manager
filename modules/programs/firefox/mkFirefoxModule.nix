@@ -692,6 +692,20 @@ in
                         `"extensions.autoDisableScopes" = 0;`
                         to
                         [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
+
+                        On systems using impermanence, this only prevents
+                        ${name} from requiring manual extension approval. It
+                        does not preserve extension runtime state such as
+                        extension UUIDs, logins, local storage, or
+                        per-extension data. Persist the ${name} profile state
+                        needed by your extensions, or configure supported
+                        extension settings declaratively with
+                        [{option}`${moduleName}.profiles.<profile>.extensions.settings`](#opt-${moduleName}.profiles._name_.extensions.settings).
+
+                        Persisting only the `extensions` directory is generally
+                        not sufficient, because ${name} stores extension state
+                        in other profile files and databases that are managed
+                        outside Home Manager.
                       '';
                     };
 
