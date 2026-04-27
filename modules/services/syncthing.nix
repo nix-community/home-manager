@@ -853,7 +853,7 @@ in
               3
               4
             ];
-            Environment = lib.mkIf (cfg.allProxy != null) { all_proxy = cfg.allProxy; };
+            Environment = lib.mkIf (cfg.allProxy != null) "all_proxy=${cfg.allProxy}";
 
             # Sandboxing.
             LockPersonality = true;
