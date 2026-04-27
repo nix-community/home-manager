@@ -1,6 +1,7 @@
 { lib, pkgs, ... }:
 {
   chromium-basic-options = ./basic-options.nix;
+  chromium-extension-version-without-crxpath = ./extension-version-without-crxpath.nix;
   chromium-google-chrome-options = ./google-chrome-options.nix;
   chromium-google-chrome-package-routing = ./google-chrome-package-routing.nix;
   chromium-native-messaging-google-chrome = ./native-messaging-google-chrome.nix;

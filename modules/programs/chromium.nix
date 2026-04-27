@@ -289,6 +289,10 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
+          assertion = builtins.all (ext: (ext.crxPath == null) == (ext.version == null)) cfg.extensions;
+          message = "Cannot set `version` without `crxPath`, or `crxPath` without `version`, for `${effectiveBrowser}`.";
+        }
+        {
           assertion = !(isProprietaryChrome && pkgs.stdenv.isLinux && cfg.extensions != [ ]);
           message = "Cannot set `extensions` for `${effectiveBrowser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
         }
