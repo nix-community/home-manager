@@ -10,11 +10,13 @@ let
 
   chromeWebStoreUpdateUrl = "https://clients2.google.com/service/update2/crx";
 
+  google-chrome = "Google Chrome";
+
   supportedBrowsers = {
     chromium = "Chromium";
-    google-chrome = "Google Chrome";
-    google-chrome-beta = "Google Chrome Beta";
-    google-chrome-dev = "Google Chrome Dev";
+    inherit google-chrome;
+    google-chrome-beta = google-chrome + " Beta";
+    google-chrome-dev = google-chrome + " Dev";
     brave = "Brave Browser";
     vivaldi = "Vivaldi Browser";
   };
