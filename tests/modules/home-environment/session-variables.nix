@@ -6,7 +6,7 @@ let
 
   linuxExpected = ''
     # Only source this once.
-    if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
     export LOCALE_ARCHIVE_2_27="${config.i18n.glibcLocales}/lib/locale/locale-archive"
@@ -22,7 +22,7 @@ let
 
   darwinExpected = ''
     # Only source this once.
-    if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
     export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/usr/share/terminfo"
