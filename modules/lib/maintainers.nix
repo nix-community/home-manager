@@ -535,6 +535,12 @@
     github = "yaaaarn";
     githubId = 30006414;
   };
+  xelacodes = {
+    name = "Alex";
+    email = "nixpkgs@xela.codes";
+    github = "itzTheMeow";
+    githubId = 50887230;
+  };
   zorrobert = {
     name = "zorrobert";
     email = "118135271+zorrobert@users.noreply.github.com";
