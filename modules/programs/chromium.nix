@@ -81,7 +81,7 @@ let
         type = types.bool;
         default = false;
         example = true;
-        description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
+        description = "Whether to enable the 'Use QT' theme for ${name}.";
       };
 
       plasmaBrowserIntegrationPackage =
