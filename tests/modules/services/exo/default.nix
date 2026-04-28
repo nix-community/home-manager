@@ -1,0 +1,3 @@
+{
+  exo-service = ./service.nix;
+}
