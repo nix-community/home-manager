@@ -32,22 +32,15 @@ let
   ];
 
   browserModule =
-    browser: name: visible:
+    browser: name:
     {
-      enable = mkEnableOption name // {
-        inherit visible;
+      enable = mkEnableOption name;
+
+      package = mkPackageOption pkgs browser {
+        nullable = true;
       };
 
-      package =
-        mkPackageOption pkgs browser {
-          nullable = true;
-        }
-        // {
-          inherit visible;
-        };
-
       finalPackage = mkOption {
-        inherit visible;
         type = types.nullOr types.package;
         readOnly = true;
         description = ''
@@ -61,7 +54,6 @@ let
       };
 
       commandLineArgs = mkOption {
-        inherit visible;
         type = types.listOf types.str;
         default = [ ];
         example = [
@@ -80,22 +72,15 @@ let
       };
     }
     // lib.optionalAttrs (isLinux && lib.elem browser plasmaSupportedBrowsers) {
-      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${name}" // {
-        inherit visible;
-      };
+      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${name}";
 
-      plasmaBrowserIntegrationPackage =
-        mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
-          extraDescription = "Used for the native messaging host on Linux.";
-          pkgsText = "pkgs.kdePackages";
-        }
-        // {
-          inherit visible;
-        };
+      plasmaBrowserIntegrationPackage = mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
+        extraDescription = "Used for the native messaging host on Linux.";
+        pkgsText = "pkgs.kdePackages";
+      };
     }
     // {
       dictionaries = mkOption {
-        inherit visible;
         type = types.listOf types.package;
         default = [ ];
         example = literalExpression ''
@@ -123,7 +108,6 @@ let
     }
     // {
       extensions = mkOption {
-        inherit visible;
         type =
           let
             extensionType = types.submodule {
@@ -340,9 +324,7 @@ let
 
 in
 {
-  options.programs = builtins.mapAttrs (
-    browser: name: browserModule browser name (browser == "chromium")
-  ) supportedBrowsers;
+  options.programs = builtins.mapAttrs (browser: name: browserModule browser name) supportedBrowsers;
 
   config = lib.mkMerge (
     map (browser: browserConfig browser config.programs.${browser}) (
