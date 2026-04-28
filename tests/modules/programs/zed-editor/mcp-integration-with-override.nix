@@ -62,8 +62,7 @@
                 "-y",
                 "@modelcontextprotocol/server-everything"
               ],
-              "command": "npx",
-              "enabled": true
+              "command": "npx"
             }
           }
         }
