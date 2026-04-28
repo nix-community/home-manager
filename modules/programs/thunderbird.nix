@@ -162,6 +162,9 @@ let
     // optionalAttrs (identity.smtp != null) {
       "mail.identity.id_${id}.smtpServer" = "smtp_${identity.id}";
     }
+    // optionalAttrs (identity.smtp == null && account.ews != null) {
+      "mail.identity.id_${id}.smtpServer" = "ews_${account.id}";
+    }
     // account.thunderbird.perIdentitySettings id;
 
   toThunderbirdSMTP =
@@ -235,6 +238,7 @@ let
     // optionalAttrs (account.ews != null) {
       "mail.smtpserver.ews_${id}.type" = "ews";
       "mail.outgoingserver.ews_${id}.auth_method" = toThunderbirdAuthMethod account.ews.authentication;
+      "mail.outgoingserver.ews_${id}.description" = account.name;
       "mail.outgoingserver.ews_${id}.ews_url" = account.ews.serviceDescriptionURL;
       "mail.outgoingserver.ews_${id}.key" = "ews_${id}";
       "mail.outgoingserver.ews_${id}.username" = account.userName;
@@ -262,6 +266,9 @@ let
     // builtins.foldl' (a: b: a // b) { } (map (address: toThunderbirdSMTP account address) addresses)
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
+    }
+    // optionalAttrs (account.smtp == null && account.ews != null && account.primary) {
+      "mail.smtp.defaultserver" = "ews_${id}";
     }
     // builtins.foldl' (a: b: a // b) { } (
       map (address: toThunderbirdIdentity account address) addresses
@@ -1163,7 +1170,10 @@ in
         in
         (builtins.listToAttrs (
           map (a: {
-            name = "${thunderbirdProfilesPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
+            name =
+              "${thunderbirdProfilesPath}/${name}/"
+              + (if a.ews != null then "Mail" else "ImapMail")
+              + "/${a.id}/msgFilterRules.dat";
             value = {
               text = mkFilterListToIni a.thunderbird.messageFilters;
             };

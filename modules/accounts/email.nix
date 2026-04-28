@@ -412,6 +412,7 @@ let
             "gmail.com"
             "mailbox.org"
             "migadu.com"
+            "outlook.office365.com-ews"
             "outlook.office365.com"
             "plain"
             "posteo.de"
@@ -620,6 +621,17 @@ let
               enable = true;
               useStartTls = true;
             };
+          };
+        })
+
+        (mkIf (config.flavor == "outlook.office365.com-ews") {
+          userName = mkDefault config.address;
+
+          ews = {
+            host = "outlook.office365.com";
+            serviceDescriptionURL = "https://outlook.office365.com/EWS/Exchange.asmx";
+            authentication = "xoauth2";
+            tls.enable = true;
           };
         })
 
