@@ -14,8 +14,6 @@ let
 
   cfg = config.fonts.fontconfig;
 
-  inherit (config.home) profileDirectory;
-
   globalConfig = config;
   fontConfigFileType = lib.types.submodule (
     { name, ... }:
@@ -298,8 +296,8 @@ in
 
             <dir>${config.home.path}/lib/X11/fonts</dir>
             <dir>${config.home.path}/share/fonts</dir>
-            <dir>${profileDirectory}/lib/X11/fonts</dir>
-            <dir>${profileDirectory}/share/fonts</dir>
+            <dir>${config.home.profileDirectory}/lib/X11/fonts</dir>
+            <dir>${config.home.profileDirectory}/share/fonts</dir>
 
             <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
           '';
