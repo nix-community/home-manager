@@ -5,7 +5,13 @@
   ...
 }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib)
+    literalExpression
+    mkOption
+    mkEnableOption
+    mkPackageOption
+    types
+    ;
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 
   chromeWebStoreUpdateUrl = "https://clients2.google.com/service/update2/crx";
@@ -28,21 +34,17 @@ let
   browserModule =
     browser: name: visible:
     {
-      enable = mkOption {
+      enable = mkEnableOption name // {
         inherit visible;
-        type = types.bool;
-        default = false;
-        example = true;
-        description = "Whether to enable ${name}.";
       };
 
-      package = mkOption {
-        inherit visible;
-        type = types.nullOr types.package;
-        default = pkgs.${browser};
-        defaultText = literalExpression "pkgs.${browser}";
-        description = "The ${name} package to use.";
-      };
+      package =
+        mkPackageOption pkgs browser {
+          nullable = true;
+        }
+        // {
+          inherit visible;
+        };
 
       finalPackage = mkOption {
         inherit visible;
@@ -78,16 +80,12 @@ let
       };
     }
     // lib.optionalAttrs (isLinux && lib.elem browser plasmaSupportedBrowsers) {
-      plasmaSupport = mkOption {
+      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${name}" // {
         inherit visible;
-        type = types.bool;
-        default = false;
-        example = true;
-        description = "Whether to enable the 'Use QT' theme for ${name}.";
       };
 
       plasmaBrowserIntegrationPackage =
-        lib.mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
+        mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
           extraDescription = "Used for the native messaging host on Linux.";
           pkgsText = "pkgs.kdePackages";
         }
