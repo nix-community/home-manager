@@ -151,6 +151,12 @@
     github = "dsoverlord";
     githubId = 78819443;
   };
+  dsqr = {
+    name = "Dave Dennis";
+    email = "me@dsqr.dev";
+    github = "0xdsqr";
+    githubId = 99584622;
+  };
   dwagenk = {
     email = "dwagenk@mailbox.org";
     github = "dwagenk";
