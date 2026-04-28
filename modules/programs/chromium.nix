@@ -281,6 +281,10 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
+          assertion = !(packageName != null && !builtins.hasAttr packageName supportedBrowsers);
+          message = "Cannot set `package` to `${packageName}` for ${browser}. Use one of the packages in `supportedBrowsers` instead.";
+        }
+        {
           assertion =
             !(packageName != null && builtins.hasAttr packageName supportedBrowsers && packageName != browser);
           message = "Cannot set `package` to `${packageName}` for ${browser}. Use `programs.${packageName}.enable = true;` instead.";

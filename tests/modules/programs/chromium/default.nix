@@ -5,6 +5,7 @@
   chromium-google-chrome-options = ./google-chrome-options.nix;
   chromium-google-chrome-package-assertion = ./google-chrome-package-assertion.nix;
   chromium-null-package-command-line-args = ./null-package-command-line-args.nix;
+  chromium-unsupported-package-assertion = ./unsupported-package-assertion.nix;
   chromium-plasma-support-command-line-args = ./plasma-support-command-line-args.nix;
 }
 // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
