@@ -24,7 +24,9 @@ let
 
   cfg = config.programs.thunderbird;
 
-  thunderbirdJson = types.attrsOf (pkgs.formats.json { }).type // {
+  jsonFormat = pkgs.formats.json { };
+
+  thunderbirdJson = types.attrsOf jsonFormat.type // {
     description = "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
   };
 
@@ -385,6 +387,7 @@ let
     (filter (
       a: a.thunderbird.profiles == [ ] || lib.any (p: p == profileName) a.thunderbird.profiles
     ) accounts);
+
 in
 {
   meta.maintainers = [
@@ -398,6 +401,58 @@ in
 
       package = lib.mkPackageOption pkgs "thunderbird" {
         example = "pkgs.thunderbird-91";
+      };
+
+      finalPackage = mkOption {
+        type = types.package;
+        readOnly = true;
+        description = "Resulting Thunderbird package.";
+      };
+
+      release = mkOption {
+        internal = true;
+        type = types.str;
+        description = ''
+          Upstream release version used to fetch language packs from
+          `releases.mozilla.org`.
+        '';
+      };
+
+      languagePacks = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Thunderbird language packs to install and activate through enterprise
+          policies.
+
+          Available language codes can be found on the releases page:
+          `https://releases.mozilla.org/pub/thunderbird/releases/''${version}/linux-x86_64/xpi/`,
+          replacing `''${version}` with the version of Thunderbird you have. If
+          the version string of your Thunderbird package differs from the
+          upstream version, override the internal `release` option.
+        '';
+        example = [
+          "en-GB"
+          "de"
+        ];
+      };
+
+      policies = mkOption {
+        type = types.attrsOf jsonFormat.type;
+        default = { };
+        description = ''
+          Thunderbird enterprise policies. See the
+          [list of policies](https://thunderbird.github.io/policy-templates/).
+        '';
+        example = {
+          DisableTelemetry = true;
+          ExtensionSettings = {
+            "addoncompatibility@opto.one" = {
+              install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/addon-compatibility-check/latest.xpi";
+              installation_mode = "normal_installed";
+            };
+          };
+        };
       };
 
       profileVersion = mkOption {
@@ -944,6 +999,14 @@ in
         }
       )
 
+      {
+        assertion = cfg.policies == { } || cfg.package ? override;
+        message = ''
+          'programs.thunderbird.policies' requires 'programs.thunderbird.package'
+          to be a package that supports overriding wrapper arguments.
+        '';
+      }
+
       (
         let
           profiles = lib.catAttrs "name" profilesWithId;
@@ -1032,12 +1095,12 @@ in
       ++ lib.flatten (map unsupportedAuthMethodWarnings enabledEmailAccounts);
 
     home.packages = [
-      cfg.package
+      cfg.finalPackage
     ]
     ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
 
     mozilla.thunderbirdNativeMessagingHosts = [
-      cfg.package # package configured native messaging hosts (entire mail app actually)
+      cfg.finalPackage # package configured native messaging hosts (entire mail app actually)
     ]
     ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
 
@@ -1190,5 +1253,34 @@ in
         ))
       ) cfg.profiles)
     );
+
+    programs.thunderbird = {
+      finalPackage =
+        if cfg.policies == { } then
+          cfg.package
+        else
+          cfg.package.override (old: {
+            extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+          });
+
+      release = mkOptionDefault (
+        builtins.head (lib.splitString "-" (cfg.package.version or (lib.getVersion cfg.package)))
+      );
+
+      policies = {
+        RequestedLocales = lib.mkIf (cfg.languagePacks != [ ]) (concatStringsSep "," cfg.languagePacks);
+        ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
+          lib.listToAttrs (
+            map (
+              lang:
+              lib.nameValuePair "langpack-${lang}@thunderbird.mozilla.org" {
+                installation_mode = "normal_installed";
+                install_url = "https://releases.mozilla.org/pub/thunderbird/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
+              }
+            ) cfg.languagePacks
+          )
+        );
+      };
+    };
   };
 }
