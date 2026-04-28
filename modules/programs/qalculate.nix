@@ -32,6 +32,7 @@ in
             save_definitions_on_exit = 0;
           };
           Mode = {
+            calculate_as_you_type = 1;
             angle_unit = 1;
             number_base = 10;
             min_deci = 0;
