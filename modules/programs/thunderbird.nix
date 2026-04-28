@@ -540,7 +540,16 @@ in
                   type = types.bool;
                   default = false;
                   example = true;
-                  description = "Allow using external GPG keys with GPGME.";
+                  description = ''
+                    Allow Thunderbird to use external GnuPG secret keys through
+                    GPGME, as used by its documented smartcard and external-key
+                    workflow.
+
+                    This installs `gpgme` and sets
+                    `mail.openpgp.allow_external_gnupg`. Public keys and key
+                    acceptance settings still live in Thunderbird's internal
+                    OpenPGP key manager.
+                  '';
                 };
 
                 userChrome = mkOption {
