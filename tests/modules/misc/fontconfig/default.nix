@@ -7,6 +7,7 @@
   fontconfig-default-rendering = ./default-rendering.nix;
   fontconfig-custom-rendering = ./custom-rendering.nix;
   fontconfig-extra-config-files = ./extra-config-files.nix;
+  fontconfig-fonts = ./fonts.nix;
 
   fontconfig-old-default-configFile-toggle = ./old-default-configFile-toggle.nix;
 }
