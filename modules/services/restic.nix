@@ -498,7 +498,6 @@ in
           RuntimeDirectory = serviceName;
           CacheDirectory = serviceName;
           CacheDirectoryMode = "0700";
-          PrivateTmp = true;
 
           Environment = mkEnvironment backup ++ [ "RESTIC_CACHE_DIR=%C/${serviceName}" ];
 

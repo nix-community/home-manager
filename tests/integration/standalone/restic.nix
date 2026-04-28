@@ -1,5 +1,7 @@
 { pkgs, lib, ... }:
 let
+  sshKeys = import "${pkgs.path}/nixos/tests/ssh-keys.nix" pkgs;
+
   testDir = pkgs.runCommand "test-files-to-backup" { } ''
     mkdir $out
     echo some_file > $out/some_file
@@ -20,11 +22,8 @@ let
       '';
     }
   );
-in
-{
-  name = "restic";
 
-  nodes.machine = {
+  baseMachine = {
     imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
     virtualisation.memorySize = 2048;
     users.users.alice = {
@@ -33,8 +32,23 @@ in
       password = "foobar";
       uid = 1000;
     };
+  };
+in
+{
+  name = "restic";
 
-    security.polkit.enable = true;
+  nodes = {
+    machine = {
+      imports = [ baseMachine ];
+      security.polkit.enable = true;
+    };
+    remote = {
+      imports = [ baseMachine ];
+      services.openssh.enable = true;
+      users.users.alice.openssh.authorizedKeys.keys = [
+        sshKeys.snakeOilEd25519PublicKey
+      ];
+    };
   };
 
   testScript = ''
@@ -305,6 +319,14 @@ in
       systemctl_succeed_as_alice("start restic-backups-env-file.service")
       actual = succeed_as_alice("restic-env-file ls latest")
       assert_list("restic-env-file ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+    with subtest("sftp remote"):
+      systemctl_succeed_as_alice("start restic-backups-sftp.service")
+      actual = succeed_as_alice("restic-sftp ls latest")
+      assert_list("restic-sftp ls latest", expectedIncluded, actual)
 
       assert "exclude" not in actual, \
         f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
