@@ -93,12 +93,14 @@ let
         '';
       };
 
-      disabled = mkOption {
-        type = lib.types.bool;
-        default = false;
+      enabled = mkOption {
+        type = lib.types.nullOr lib.types.bool;
+        default = null;
         description = ''
-          Whether this MCP server is disabled. Disabled servers remain in the
-          configuration but are not started.
+          Whether this MCP server is enabled.
+
+          If this option and `disabled` are both set, they must satisfy
+          `enabled == !disabled`.
         '';
       };
     };
@@ -139,6 +141,8 @@ in
 
         Each server is either a local (stdio) server via {option}`command`
         or a remote (HTTP/SSE) server via {option}`url`.
+
+        Besides declared options, arbitrary MCP fields are allowed.
       '';
     };
   };
@@ -160,9 +164,17 @@ in
           '';
         }
         {
-          assertion = server.command == null || server.headers == { };
+          assertion = server.headers == { } || server.url != null;
           message = ''
             programs.mcp.servers.${name}: `headers` is only valid for remote servers (`url`).
+          '';
+        }
+        {
+          assertion =
+            !(server.enabled != null && server ? disabled && server.disabled != null)
+            || server.enabled != server.disabled;
+          message = ''
+            programs.mcp.servers.${name}: `enabled` and `disabled` are set to incompatible values.
           '';
         }
       ]) cfg.servers
@@ -171,16 +183,11 @@ in
     xdg.configFile = mkIf (cfg.servers != { }) {
       "mcp/mcp.json".source = jsonFormat.generate "mcp.json" {
         mcpServers = lib.mapAttrs (
-          _name: server:
-          let
-            # Resolve envFiles into env using {file:...} substitution syntax.
-            # Consumers that don't understand this syntax must handle envFiles
-            # themselves (e.g. via a wrapper script).
-            mergedEnv = lib.hm.mcp.mergeEnvFile server;
-          in
-          lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) (
-            (lib.removeAttrs server [ "envFiles" ]) // lib.optionalAttrs (mergedEnv != { }) { env = mergedEnv; }
-          )
+          name: server:
+          lib.hm.mcp.transformMcpServer {
+            inherit pkgs name server;
+            transformStyle = "opencode";
+          }
         ) cfg.servers;
       };
     };

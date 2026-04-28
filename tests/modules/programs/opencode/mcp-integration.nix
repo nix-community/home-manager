@@ -21,7 +21,7 @@
       disabled-server = {
         command = "echo";
         args = [ "test" ];
-        disabled = true;
+        enabled = false;
       };
     };
   };
