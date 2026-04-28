@@ -19,8 +19,18 @@
       }
     ];
     extraConfig = {
+      combi-modes = [
+        "window"
+        "drun"
+      ];
       kb-primary-paste = "Control+V,Shift+Insert";
       kb-secondary-paste = "Control+v,Insert";
+      modi = [
+        "run"
+        "drun"
+        "window"
+        "ssh"
+      ];
       drun = {
         display-name = "";
       };

@@ -102,7 +102,9 @@ let
   # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
   configType = with types; either sectionType str;
 
-  extraConfigType = with types; attrsOf (either sectionType configValueType);
+  extraConfigType =
+    with types;
+    attrsOf (either sectionType (either configValueType (listOf configValueType)));
 
   rasiLiteral =
     types.submodule {
