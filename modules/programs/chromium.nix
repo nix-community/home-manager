@@ -211,19 +211,13 @@ let
   browserConfig =
     browser: cfg:
     let
-      # Native messaging host manifests must follow the actual browser package
-      # directory layout, not just the Home Manager option namespace.
-      effectiveBrowser =
-        let
-          packageName =
-            if cfg.package == null then
-              browser
-            else
-              (cfg.package.pname or (builtins.parseDrvName cfg.package.name).name);
-        in
-        if builtins.hasAttr packageName supportedBrowsers then packageName else browser;
+      packageName =
+        if cfg.package == null then
+          null
+        else
+          (cfg.package.pname or (builtins.parseDrvName cfg.package.name).name);
 
-      isProprietaryChrome = lib.hasPrefix "google-chrome" effectiveBrowser;
+      isProprietaryChrome = lib.hasPrefix "google-chrome" browser;
       supportsUserExtensions = !isProprietaryChrome || isDarwin;
 
       darwinDirs = {
@@ -240,9 +234,9 @@ let
 
       configDir =
         if isDarwin then
-          "Library/Application Support/" + (darwinDirs."${effectiveBrowser}" or effectiveBrowser)
+          "Library/Application Support/" + (darwinDirs."${browser}" or browser)
         else
-          "${config.xdg.configHome}/" + (linuxDirs."${effectiveBrowser}" or effectiveBrowser);
+          "${config.xdg.configHome}/" + (linuxDirs."${browser}" or browser);
 
       extensionJson =
         ext:
@@ -274,7 +268,7 @@ let
       );
 
       nativeMessagingHostsJoined = pkgs.symlinkJoin {
-        name = "${effectiveBrowser}-native-messaging-hosts";
+        name = "${browser}-native-messaging-hosts";
         paths = nativeMessagingHosts;
       };
 
@@ -287,12 +281,17 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
+          assertion =
+            !(packageName != null && builtins.hasAttr packageName supportedBrowsers && packageName != browser);
+          message = "Cannot set `package` to `${packageName}` for ${browser}. Use `programs.${packageName}.enable = true;` instead.";
+        }
+        {
           assertion = builtins.all (ext: (ext.crxPath == null) == (ext.version == null)) cfg.extensions;
-          message = "Cannot set `version` without `crxPath`, or `crxPath` without `version`, for `${effectiveBrowser}`.";
+          message = "Cannot set `version` without `crxPath`, or `crxPath` without `version`, for `${browser}`.";
         }
         {
           assertion = !(isProprietaryChrome && isLinux && cfg.extensions != [ ]);
-          message = "Cannot set `extensions` for `${effectiveBrowser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
+          message = "Cannot set `extensions` for `${browser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
         }
         {
           assertion =
@@ -303,7 +302,7 @@ let
                 ext: ext.crxPath == null && ext.version == null && ext.updateUrl == chromeWebStoreUpdateUrl
               ) cfg.extensions
             );
-          message = "Cannot set `crxPath`, `version`, or a custom `updateUrl` for `${effectiveBrowser}` on Darwin. Google Chrome only supports Chrome Web Store external extensions there.";
+          message = "Cannot set `crxPath`, `version`, or a custom `updateUrl` for `${browser}` on Darwin. Google Chrome only supports Chrome Web Store external extensions there.";
         }
       ];
 
