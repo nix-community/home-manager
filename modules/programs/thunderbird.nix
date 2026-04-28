@@ -649,12 +649,18 @@ in
           { config, ... }:
           {
             config.thunderbird = {
-              settings = lib.mkIf (config.flavor == "gmail.com") (id: {
-                "mail.smtpserver.smtp_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
-                "mail.server.server_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
-                "mail.server.server_${id}.socketType" = mkOptionDefault 3; # SSL/TLS
-                "mail.server.server_${id}.is_gmail" = mkOptionDefault true; # handle labels, trash, etc
-              });
+              settings = lib.mkIf (config.flavor == "gmail.com" || config.flavor == "outlook.office365.com") (
+                id:
+                lib.optionalAttrs (config.smtp != null && config.smtp.authentication == null) {
+                  "mail.smtpserver.smtp_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
+                }
+                // lib.optionalAttrs (config.imap != null && config.imap.authentication == null) {
+                  "mail.server.server_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
+                }
+                // lib.optionalAttrs (config.flavor == "gmail.com") {
+                  "mail.server.server_${id}.is_gmail" = mkOptionDefault true; # handle labels, trash, etc
+                }
+              );
             };
             options.thunderbird = {
               enable = lib.mkEnableOption "the Thunderbird mail client for this account";
