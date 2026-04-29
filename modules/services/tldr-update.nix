@@ -35,6 +35,8 @@ in
       Unit = {
         Description = "Update tldr CLI cache";
         Documentation = "https://tldr.sh/";
+        Wants = [ "network-online.target" ];
+        After = [ "network-online.target" ];
       };
 
       Service = {
