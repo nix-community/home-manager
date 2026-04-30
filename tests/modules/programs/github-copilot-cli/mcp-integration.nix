@@ -36,6 +36,9 @@
             DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
           };
         };
+        fetch = {
+          command = "mcp-server-fetch";
+        };
         disabled-server = {
           command = "disabled-cmd";
           disabled = true;

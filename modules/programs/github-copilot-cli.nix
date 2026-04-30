@@ -22,17 +22,19 @@ let
   transformSingleServer =
     _name: server:
     let
-      base = removeAttrs server [ "disabled" ];
-      withType =
-        if base ? type then
-          base
-        else if base ? url then
-          base // { type = "http"; }
-        else
-          base // { type = "local"; };
-      withTools = if withType ? tools then withType else withType // { tools = [ "*" ]; };
+      server' = removeAttrs server [ "disabled" ];
+      type = server'.type or (if server' ? url then "http" else "local");
     in
-    withTools;
+    server'
+    // {
+      inherit type;
+    }
+    // lib.optionalAttrs (type == "local") {
+      args = server'.args or [ ];
+    }
+    // lib.optionalAttrs (!(server' ? tools)) {
+      tools = [ "*" ];
+    };
 
   transformedMcpServers =
     if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
