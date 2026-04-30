@@ -41,7 +41,7 @@
 
     test.stubs.depot-tools = { };
 
-    nmt.script = ''
+    nmt.script = lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
       service=home-files/.config/systemd/user/depot-tools-environment.service
 
       assertFileExists "$service"
