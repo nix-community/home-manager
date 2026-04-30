@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -33,6 +34,10 @@
       chromium-git-cookies.path = "/run/agenix/chromium-git-cookies";
       luci-context.path = "/run/agenix/luci-context";
     };
+
+    test.asserts.assertions.expected = lib.optionals (!pkgs.stdenv.hostPlatform.isLinux) [
+      "programs.depot-tools.environmentSecretFiles currently requires systemd user services, which are only available on Linux."
+    ];
 
     test.stubs.depot-tools = { };
 
