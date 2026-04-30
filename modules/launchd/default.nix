@@ -145,7 +145,7 @@ in
 
               verboseEcho "Stopping agent '$domain/$agentName'..."
               local bootout_output
-              bootout_output=$(run /bin/launchctl bootout "$domain/$agentName" 2>&1) || {
+              bootout_output=$(run /bin/launchctl bootout --wait "$domain/$agentName" 2>&1) || {
                 # Only show warning if it's not the common "No such process" error
                 if [[ "$bootout_output" != *"No such process"* ]]; then
                   warnEcho "Failed to stop agent '$domain/$agentName': $bootout_output"
@@ -153,9 +153,6 @@ in
                   verboseEcho "Agent '$domain/$agentName' was not running"
                 fi
               }
-
-              # Give the system a moment to fully unload the agent
-              sleep 1
             }
 
             installAndBootstrapAgent() {
