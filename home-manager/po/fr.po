@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-04-26 13:09+0000\n"
+"PO-Revision-Date: 2026-04-30 04:09+0000\n"
 "Last-Translator: Ludovic Pagès <nanucq@proton.me>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/home-manager/cli/"
 "fr/>\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr "Home Manager indisponible à %s."
+msgstr "Home Manager absent dans %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
@@ -84,15 +84,16 @@ msgid ""
 "\n"
 "     $ rm -r \"%s\""
 msgstr ""
-"Pour supprimer cet avertissement, exécutez l'une des actions suivantes :\n"
+"Pour supprimer cet avertissement, exécutez l'une des actions suivantes :\n"
+" \n"
 "\n"
 "1. Préciser explicitement à Home Manager d'utiliser le chemin d'accès, par "
-"exemple en ajoutant ceci à votre configuration :\n"
+"exemple en ajoutant ceci à votre configuration :\n"
 "\n"
 "\t{ programs.home-manager.path = \"%s\" ; }\n"
 "\n"
 "Si vous importez Home Manager directement, vous pouvez utiliser le paramètre "
-"`path` au lancement du package :\n"
+"`path` au lancement du package :\n"
 "\n"
 "\tpkgs.callPackage /path/to/home-manager-package { path = \"%s\" ; }\n"
 "\n"
@@ -120,7 +121,7 @@ msgstr "%s : l'option '%s' est inconnue"
 
 #: home-manager/home-manager:345 home-manager/home-manager:1290
 msgid "Run '%s --help' for usage help"
-msgstr "Exécuter « %s --help » pour de l'aide sur l'utilisation"
+msgstr "Exécuter '%s --help' pour de l'aide sur l'utilisation"
 
 #: home-manager/home-manager:371 home-manager/home-manager:476
 msgid "The file %s already exists, leaving it unchanged..."
@@ -144,13 +145,13 @@ msgid ""
 "to configure Home Manager. Run 'man home-configuration.nix' to\n"
 "see all available options."
 msgstr ""
-"Tout est fait! Home Manager devrait désormais être installé et vous pouvez "
+"Terminé ! Home Manager devrait désormais être installé et vous pouvez "
 "éditer\n"
 "\n"
 "     %s\n"
 "\n"
 "pour configurer Home Manager. Pour avoir une liste des options disponibles,\n"
-"essayez 'man home-configuration.nix'."
+"lancez 'man home-configuration.nix'."
 
 #. translators: The "%s" specifier will be replaced by a URL.
 #: home-manager/home-manager:532
@@ -161,8 +162,8 @@ msgid ""
 "\n"
 "if the error seems to be the fault of Home Manager."
 msgstr ""
-"Uh oh, l'installation n'a pas réussi! Veuillez signaler cette erreur à "
-"l'adresse suivante\n"
+"Uh oh, l'installation a échoué! Veuillez signaler cette erreur à l'adresse "
+"suivante\n"
 "\n"
 "     %s\n"
 "\n"
@@ -198,7 +199,7 @@ msgstr "Veuillez remplir la variable d'environnement $EDITOR ou VISUAL"
 
 #: home-manager/home-manager:659
 msgid "Cannot run build in read-only directory"
-msgstr "Impossible de lancer une compilation dans un dossier en écriture seule"
+msgstr "Impossible de lancer une compilation dans un dossier en lecture seule"
 
 #: home-manager/home-manager:822
 msgid "The configuration does not contain the specialisation \"%s\""
