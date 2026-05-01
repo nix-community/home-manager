@@ -21,6 +21,13 @@
     name = "0xda157";
     source = "nixpkgs";
   };
+  "0xdsqr" = {
+    email = "me@dsqr.dev";
+    github = "0xdsqr";
+    githubId = 99584622;
+    name = "Dave Dennis";
+    source = "nixpkgs";
+  };
   "3ulalia" = {
     email = "3ulalia@proton.me";
     github = "3ulalia";
@@ -1846,6 +1853,13 @@
     githubId = 127548;
     name = "Judson Lester";
     source = "nixpkgs";
+  };
+  ojsef39 = {
+    email = "josef.hofer@1und1.de";
+    github = "ojsef39";
+    githubId = 43563019;
+    name = "Josef Hofer";
+    source = "home-manager";
   };
   olmokramer = {
     email = "olmokramer@users.noreply.github.com";
