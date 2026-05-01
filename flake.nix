@@ -187,6 +187,7 @@
           {
             default = hmPkg;
             home-manager = hmPkg;
+            hermesix = pkgs.callPackage ./tools/managed-config/package.nix { };
 
             ci-parse = pkgs.callPackage ./ci/parse.nix { nix = pkgs.nixVersions.latest; };
             ci-parse-lix = pkgs.callPackage ./ci/parse.nix {

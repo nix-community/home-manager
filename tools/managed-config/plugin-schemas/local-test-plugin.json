@@ -1,0 +1,37 @@
+{
+  "source_ids": [
+    {
+      "file": "source.c",
+      "line": 1,
+      "key": "demo_source",
+      "text": "static struct obs_source_info demo_source = { .id = \"demo_source\" };"
+    }
+  ],
+  "filter_ids": [],
+  "output_ids": [],
+  "encoder_ids": [],
+  "registrations": [
+    {
+      "file": "source.c",
+      "line": 4,
+      "key": null,
+      "text": "obs_register_source(&demo_source);"
+    }
+  ],
+  "setting_defaults": [
+    {
+      "file": "source.c",
+      "line": 2,
+      "key": "demo_key",
+      "text": "obs_data_set_default_string(settings, \"demo_key\", \"value\");"
+    }
+  ],
+  "property_settings": [
+    {
+      "file": "source.c",
+      "line": 3,
+      "key": "demo_key",
+      "text": "obs_properties_add_text(props, \"demo_key\", \"Demo\", OBS_TEXT_DEFAULT);"
+    }
+  ]
+}
