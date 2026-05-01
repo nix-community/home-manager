@@ -74,7 +74,8 @@ in
       example = literalExpression ''"''${config.xdg.configHome}/copilot"'';
       description = ''
         Directory holding Copilot CLI configuration files such as
-        {file}`config.json`, {file}`mcp-config.json`, and
+        {file}`config.json`, {file}`mcp-config.json`,
+        {file}`lsp-config.json`, and
         {file}`copilot-instructions.md`.
 
         Defaults to `''${config.xdg.configHome}/copilot` when
@@ -201,6 +202,55 @@ in
       '';
     };
 
+    lspServers = mkOption {
+      type = lib.types.attrsOf jsonFormat.type;
+      default = { };
+      example = literalExpression ''
+        {
+          typescript = {
+            command = "typescript-language-server";
+            args = [ "--stdio" ];
+            fileExtensions = {
+              ".ts" = "typescript";
+              ".tsx" = "typescriptreact";
+              ".js" = "javascript";
+              ".jsx" = "javascriptreact";
+            };
+          };
+          python = {
+            command = lib.getExe' pkgs.pyright "pyright-langserver";
+            args = [ "--stdio" ];
+            fileExtensions = {
+              ".py" = "python";
+              ".pyw" = "python";
+              ".pyi" = "python";
+            };
+          };
+        }
+      '';
+      description = ''
+        LSP (Language Server Protocol) server configurations written to
+        {file}`lsp-config.json` inside
+        {option}`programs.github-copilot-cli.configDir`.
+
+        Each attribute defines a server entry under `lspServers` in the config
+        file. Supported fields include:
+        - `command` — command used to start the LSP server
+        - `args` — arguments passed to the command
+        - `fileExtensions` — map of file extensions to language IDs
+        - `env` — environment variables for the server process
+        - `rootUri` — server root directory relative to the Git root
+        - `initializationOptions` — custom startup options
+        - `requestTimeoutMs` — request timeout in milliseconds
+
+        Language server packages are not installed automatically. Add them to
+        {option}`home.packages` when needed.
+
+        See <https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-lsp-servers>
+        for the documentation.
+      '';
+    };
+
     agents = mkOption {
       type = lib.types.either (lib.types.attrsOf (
         lib.types.oneOf [
@@ -321,6 +371,12 @@ in
       "${cfg.configDir}/mcp-config.json" = mkIf (mergedMcpServers != { }) {
         source = jsonFormat.generate "github-copilot-cli-mcp-config.json" {
           mcpServers = mergedMcpServers;
+        };
+      };
+
+      "${cfg.configDir}/lsp-config.json" = mkIf (cfg.lspServers != { }) {
+        source = jsonFormat.generate "github-copilot-cli-lsp-config.json" {
+          inherit (cfg) lspServers;
         };
       };
 
