@@ -212,6 +212,7 @@ import nmtSrc {
           ./modules/misc/qt
           ./modules/misc/xdg/linux.nix
           ./modules/misc/xsession
+          ./modules/services-modular
           ./modules/systemd
           ./modules/targets-linux
           # keep-sorted end

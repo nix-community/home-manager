@@ -64,6 +64,7 @@ let
       ./misc/xdg-user-dirs.nix
       ./misc/xdg.nix
       ./misc/xfconf.nix
+      ./services-modular
       ./systemd.nix
       ./targets/darwin
       ./targets/generic-linux.nix
