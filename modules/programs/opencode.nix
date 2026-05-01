@@ -62,6 +62,10 @@ let
       }
     else
       cfg.package;
+
+  isStorePathString =
+    content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
+  isPathLikeContent = content: lib.isPath content || isStorePathString content;
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
@@ -435,7 +439,7 @@ in
         message = "`programs.opencode.tools` must be a directory when set to a path";
       }
       {
-        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+        assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.opencode.skills` must be a directory when set to a path";
       }
       {
@@ -522,7 +526,7 @@ in
         recursive = true;
       };
 
-      "opencode/skills" = mkIf (lib.isPath cfg.skills) {
+      "opencode/skills" = mkIf (isPathLikeContent cfg.skills) {
         source = cfg.skills;
         recursive = true;
       };
@@ -558,17 +562,14 @@ in
     )
     // lib.mapAttrs' (
       name: content:
-      if
-        (lib.isPath content && lib.pathIsDirectory content)
-        || (builtins.isString content && lib.hasPrefix builtins.storeDir content)
-      then
+      if isPathLikeContent content && lib.pathIsDirectory content then
         lib.nameValuePair "opencode/skills/${name}" {
           source = content;
           recursive = true;
         }
       else
         lib.nameValuePair "opencode/skills/${name}/SKILL.md" (
-          if lib.isPath content then { source = content; } else { text = content; }
+          if isPathLikeContent content then { source = content; } else { text = content; }
         )
     ) (if builtins.isAttrs cfg.skills then cfg.skills else { })
     // lib.optionalAttrs (builtins.isAttrs cfg.themes) (

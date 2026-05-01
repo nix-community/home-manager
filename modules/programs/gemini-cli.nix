@@ -227,82 +227,88 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    lib.mkMerge [
-      {
-        programs.gemini-cli.settings.mcpServers = lib.mkIf (
-          cfg.enableMcpIntegration && config.programs.mcp.enable
-        ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
-      }
-      {
-        home = {
-          packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-          file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
-            source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
-          };
-          sessionVariables = lib.mkIf (cfg.defaultModel != null) {
-            GEMINI_MODEL = cfg.defaultModel;
-          };
-        };
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
-        ) cfg.context;
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v:
-          lib.nameValuePair ".gemini/commands/${n}.toml" {
-            source = tomlFormat.generate "gemini-cli-command-${n}.toml" {
-              inherit (v) description prompt;
+  config =
+    let
+      isStorePathString =
+        content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
+      isPathLikeContent = content: lib.isPath content || isStorePathString content;
+    in
+    lib.mkIf cfg.enable (
+      lib.mkMerge [
+        {
+          programs.gemini-cli.settings.mcpServers = lib.mkIf (
+            cfg.enableMcpIntegration && config.programs.mcp.enable
+          ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+        }
+        {
+          home = {
+            packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+            file.".gemini/settings.json" = lib.mkIf (cfg.settings != { }) {
+              source = jsonFormat.generate "gemini-cli-settings.json" cfg.settings;
             };
-          }
-        ) cfg.commands;
-      }
-      {
-        home.file = lib.mapAttrs' (
-          n: v:
-          lib.nameValuePair ".gemini/policies/${n}.toml" {
-            source =
-              if builtins.isPath v || builtins.isString v || lib.isDerivation v then
-                v
-              else
-                tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
-          }
-        ) cfg.policies;
-      }
-      {
-        assertions = [
-          {
-            assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
-            message = "`programs.gemini-cli.skills` must be a directory when set to a path";
-          }
-        ];
-      }
-      {
-        home.file =
-          if lib.isPath cfg.skills then
-            {
-              ".gemini/skills" = {
-                source = cfg.skills;
-                recursive = true;
+            sessionVariables = lib.mkIf (cfg.defaultModel != null) {
+              GEMINI_MODEL = cfg.defaultModel;
+            };
+          };
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v: lib.nameValuePair ".gemini/${n}.md" (if lib.isPath v then { source = v; } else { text = v; })
+          ) cfg.context;
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair ".gemini/commands/${n}.toml" {
+              source = tomlFormat.generate "gemini-cli-command-${n}.toml" {
+                inherit (v) description prompt;
               };
             }
-          else
-            lib.mapAttrs' (
-              n: v:
-              if lib.isPath v && lib.pathIsDirectory v then
-                lib.nameValuePair ".gemini/skills/${n}" {
-                  source = v;
+          ) cfg.commands;
+        }
+        {
+          home.file = lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair ".gemini/policies/${n}.toml" {
+              source =
+                if builtins.isPath v || builtins.isString v || lib.isDerivation v then
+                  v
+                else
+                  tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
+            }
+          ) cfg.policies;
+        }
+        {
+          assertions = [
+            {
+              assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
+              message = "`programs.gemini-cli.skills` must be a directory when set to a path";
+            }
+          ];
+        }
+        {
+          home.file =
+            if isPathLikeContent cfg.skills then
+              {
+                ".gemini/skills" = {
+                  source = cfg.skills;
                   recursive = true;
-                }
-              else
-                lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
-                  if lib.isPath v then { source = v; } else { text = v; }
-                )
-            ) cfg.skills;
-      }
-    ]
-  );
+                };
+              }
+            else
+              lib.mapAttrs' (
+                n: v:
+                if isPathLikeContent v && lib.pathIsDirectory v then
+                  lib.nameValuePair ".gemini/skills/${n}" {
+                    source = v;
+                    recursive = true;
+                  }
+                else
+                  lib.nameValuePair ".gemini/skills/${n}/SKILL.md" (
+                    if isPathLikeContent v then { source = v; } else { text = v; }
+                  )
+              ) cfg.skills;
+        }
+      ]
+    );
 }

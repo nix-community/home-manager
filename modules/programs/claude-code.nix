@@ -514,7 +514,8 @@ in
     let
       mkSourceEntry = content: if lib.isPath content then { source = content; } else { text = content; };
 
-      isStorePathString = content: builtins.isString content && lib.hasPrefix builtins.storeDir content;
+      isStorePathString =
+        content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
       isPathLikeContent = content: lib.isPath content || isStorePathString content;
 
       mkMarkdownEntries =
@@ -587,7 +588,7 @@ in
             message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured";
           }
           {
-            assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+            assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
             message = "`programs.claude-code.skills` must be a directory when set to a path";
           }
         ]
@@ -680,7 +681,7 @@ in
           (mkRecursiveDirAttrs "commands" cfg.commandsDir)
           (mkRecursiveDirAttrs "hooks" cfg.hooksDir)
           (mkRecursiveDirAttrs "rules" cfg.rulesDir)
-          (lib.mkIf (lib.isPath cfg.skills) {
+          (lib.mkIf (isPathLikeContent cfg.skills) {
             ".claude/skills" = {
               source = cfg.skills;
               recursive = true;
