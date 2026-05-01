@@ -272,6 +272,7 @@ in
             path
             int
             float
+            bool
           ])
         );
       example = {

@@ -10,6 +10,8 @@
       V2 = "v2-${config.programs.zsh.sessionVariables.V1}";
       IS_EMPTY = "";
       IS_NULL = null;
+      IS_FALSE = false;
+      IS_TRUE = true;
     };
   };
 

@@ -23,7 +23,12 @@ let
     };
 
   # Produces a Bourne shell like variable export statement.
-  export = n: v: ''export ${n}="${toString v}"'';
+  export =
+    n: v:
+    let
+      value = if builtins.isBool v then lib.boolToString v else toString v;
+    in
+    ''export ${n}="${value}"'';
 
   # Wrap a list of strings to a given line width.
   # Packs as many items as possible per line without exceeding maxWidth.
