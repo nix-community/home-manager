@@ -30,6 +30,11 @@ let
         default = null;
         description = "Whether to show the palette.";
       };
+      spacing = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = "The amount of spacing to leave between each glyph.";
+      };
     };
   };
 
