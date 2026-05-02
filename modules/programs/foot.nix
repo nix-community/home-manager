@@ -77,6 +77,7 @@ in
           Documentation = "man:foot(1)";
           PartOf = [ cfg.server.systemdTarget ];
           After = [ cfg.server.systemdTarget ];
+          ConditionEnvironment = "WAYLAND_DISPLAY";
         };
 
         Service = {
