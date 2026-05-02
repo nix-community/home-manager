@@ -18,6 +18,7 @@
   nmt.script = ''
     assertFileExists home-files/.config/git/config
     assertFileContains home-files/.config/git/config '[pager]'
+    assertFileRegex home-files/.config/git/config 'blame = .*/bin/delta'
     assertFileRegex home-files/.config/git/config 'diff = .*/bin/delta'
     assertFileRegex home-files/.config/git/config 'log = .*/bin/delta'
     assertFileRegex home-files/.config/git/config 'show = .*/bin/delta'
