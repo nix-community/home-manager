@@ -90,7 +90,6 @@ let
   ) cfg.integrations;
 
   mergeJson = a: b: lib.recursiveUpdate a b;
-  toolsPackage = pkgs.hermesix or (pkgs.callPackage ../../tools/managed-config/package.nix { });
 
   portalSettings =
     source:
@@ -1093,27 +1092,6 @@ in
         '';
       };
 
-      tools = {
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to install the `hermesix` CLI with OBS
-            compatibility commands.
-          '';
-        };
-
-        package = mkOption {
-          type = types.package;
-          default = toolsPackage;
-          defaultText = literalExpression "hermesix";
-          description = ''
-            Package providing Home Manager managed configuration tooling and
-            OBS Studio export/sync compatibility commands.
-          '';
-        };
-      };
-
       settings = {
         global = mkOption {
           inherit (iniFormat) type;
@@ -1310,12 +1288,12 @@ in
       ) cfg.sceneCollections
     );
 
-    home.packages = [ cfg.finalPackage ] ++ lib.optional cfg.tools.enable cfg.tools.package;
+    home.packages = [ cfg.finalPackage ];
     programs.obs-studio.finalPackage = pkgs.wrapOBS.override { obs-studio = cfg.package; } {
       plugins = lib.unique (cfg.plugins ++ enabledIntegrationPackages);
     };
 
-    home.activation.obsStudioConfig = mkIf (managedFileCount > 0 || cfg.tools.enable) (
+    home.activation.obsStudioConfig = mkIf (managedFileCount > 0) (
       lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         ${installGeneratedFiles}
         ${installGeneratedManifest}
