@@ -101,7 +101,6 @@
         }).override
           {
             libsOnly = true;
-            kernel = null;
           };
 
       setupPackage = cfg.packages.callPackage ./setup {
