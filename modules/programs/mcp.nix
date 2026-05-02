@@ -13,52 +13,183 @@ let
     ;
 
   cfg = config.programs.mcp;
-
   jsonFormat = pkgs.formats.json { };
+
+  serverModule = lib.types.submodule {
+    freeformType = jsonFormat.type;
+
+    options = {
+      command = mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = ''
+          Executable for a local (stdio) MCP server.
+          Mutually exclusive with {option}`url`.
+        '';
+        example = "npx";
+      };
+
+      args = mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        description = ''
+          Arguments passed to {option}`command`.
+          Only valid for local servers.
+        '';
+        example = [
+          "-y"
+          "@modelcontextprotocol/server-everything"
+        ];
+      };
+
+      env = mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+        description = ''
+          Environment variables set when spawning the MCP server.
+          Values are literal strings.
+          For file-based secrets use {option}`envFiles`.
+          Only valid for local servers.
+        '';
+        example = literalExpression ''
+          { API_BASE_URL = "https://api.example.com"; }
+        '';
+      };
+
+      envFiles = mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+        description = ''
+          Environment variables whose values are read from files at startup.
+          Maps variable names to file paths (e.g. sops-nix, systemd credentials).
+
+          In {file}`mcp.json` each entry is resolved to a {file:`…`} substitution in {option}`env`.
+          Consumers that do not understand this syntax must handle {option}`envFiles` themselves (e.g. via a generated wrapper script).
+        '';
+        example = literalExpression ''
+          { FORGEJO_ACCESS_TOKEN = "/run/secrets/forgejo_token"; }
+        '';
+      };
+
+      url = mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = ''
+          HTTP(S) endpoint for a remote (SSE/HTTP) MCP server.
+          Mutually exclusive with {option}`command`.
+        '';
+        example = "https://mcp.context7.com/mcp";
+      };
+
+      headers = mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+        description = ''
+          HTTP headers for requests to a remote MCP server.
+          Only valid for remote servers.
+        '';
+        example = literalExpression ''
+          { MY_API_KEY = "{env:MY_API_KEY}"; }
+        '';
+      };
+
+      enabled = mkOption {
+        type = lib.types.nullOr lib.types.bool;
+        default = null;
+        description = ''
+          Whether this MCP server is enabled.
+
+          If this option and `disabled` are both set, they must satisfy
+          `enabled == !disabled`.
+        '';
+      };
+    };
+  };
+
 in
 {
-  meta.maintainers = with lib.maintainers; [ delafthi ];
+  meta.maintainers = with lib.maintainers; [
+    delafthi
+    malik
+  ];
 
   options.programs.mcp = {
     enable = mkEnableOption "mcp";
 
     servers = mkOption {
-      inherit (jsonFormat) type;
+      type = lib.types.attrsOf serverModule;
       default = { };
       example = literalExpression ''
         {
           everything = {
             command = "npx";
-            args = [
-              "-y"
-              "@modelcontextprotocol/server-everything"
-            ];
+            args = [ "-y" "@modelcontextprotocol/server-everything" ];
           };
           context7 = {
             url = "https://mcp.context7.com/mcp";
-            headers = {
-              CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
-            };
+            headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
+          };
+          codeberg = {
+            command = "/path/to/forgejo-mcp";
+            args = [ "transport" "stdio" "--url" "https://codeberg.org" ];
+            envFiles.FORGEJO_ACCESS_TOKEN = "/run/secrets/codeberg_token";
           };
         }
       '';
       description = ''
-        MCP server configurations written to
-        {file}`XDG_CONFIG_HOME/mcp/mcp.json`
+        MCP server configurations written to {file}`$XDG_CONFIG_HOME/mcp/mcp.json`.
+
+        Each server is either a local (stdio) server via {option}`command`
+        or a remote (HTTP/SSE) server via {option}`url`.
+
+        Besides declared options, arbitrary MCP fields are allowed.
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    xdg.configFile = mkIf (cfg.servers != { }) (
-      let
-        mcp-config = {
-          mcpServers = cfg.servers;
-        };
-      in
-      {
-        "mcp/mcp.json".source = jsonFormat.generate "mcp.json" mcp-config;
-      }
+    assertions = lib.concatLists (
+      lib.mapAttrsToList (name: server: [
+        {
+          assertion = (server.command != null) != (server.url != null);
+          message = ''
+            programs.mcp.servers.${name}: exactly one of `command` or `url` must be set.
+          '';
+        }
+        {
+          assertion =
+            server.url == null || (server.args == [ ] && server.env == { } && server.envFiles == { });
+          message = ''
+            programs.mcp.servers.${name}: `args`, `env`, and `envFiles` are only valid for local servers (`command`).
+          '';
+        }
+        {
+          assertion = server.headers == { } || server.url != null;
+          message = ''
+            programs.mcp.servers.${name}: `headers` is only valid for remote servers (`url`).
+          '';
+        }
+        {
+          assertion =
+            !(server.enabled != null && server ? disabled && server.disabled != null)
+            || server.enabled != server.disabled;
+          message = ''
+            programs.mcp.servers.${name}: `enabled` and `disabled` are set to incompatible values.
+          '';
+        }
+      ]) cfg.servers
     );
+
+    xdg.configFile = mkIf (cfg.servers != { }) {
+      "mcp/mcp.json".source = jsonFormat.generate "mcp.json" {
+        mcpServers = lib.mapAttrs (
+          name: server:
+          lib.hm.mcp.transformMcpServer {
+            inherit pkgs name server;
+            transformStyle = "opencode";
+          }
+        ) cfg.servers;
+      };
+    };
   };
 }

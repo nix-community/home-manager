@@ -236,9 +236,16 @@ in
     lib.mkIf cfg.enable (
       lib.mkMerge [
         {
-          programs.gemini-cli.settings.mcpServers = lib.mkIf (
-            cfg.enableMcpIntegration && config.programs.mcp.enable
-          ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+          programs.gemini-cli.settings.mcpServers =
+            lib.mkIf (cfg.enableMcpIntegration && config.programs.mcp.enable)
+              (
+                lib.mapAttrs (
+                  name: server:
+                  lib.hm.mcp.transformMcpServer {
+                    inherit pkgs name server;
+                  }
+                ) config.programs.mcp.servers
+              );
         }
         {
           home = {

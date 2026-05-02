@@ -8,6 +8,9 @@
           "-y"
           "@modelcontextprotocol/server-everything"
         ];
+        envFiles = {
+          NPM_TOKEN = "/run/secrets/npm-token";
+        };
       };
       context7 = {
         url = "https://mcp.context7.com/mcp";
@@ -18,7 +21,7 @@
       disabled-server = {
         command = "echo";
         args = [ "test" ];
-        disabled = true;
+        enabled = false;
       };
     };
   };
