@@ -16,7 +16,23 @@ in
 
     package = lib.mkPackageOption pkgs "foot" { };
 
-    server.enable = lib.mkEnableOption "Foot terminal server";
+    server = {
+      enable = lib.mkEnableOption "Foot terminal server";
+
+      systemdTarget = lib.mkOption {
+        type = lib.types.str;
+        default = config.wayland.systemd.target;
+        defaultText = lib.literalExpression "config.wayland.systemd.target";
+        example = "sway-session.target";
+        description = ''
+          The systemd target that will automatically start the Foot server service.
+
+          When setting this value to `"sway-session.target"`,
+          make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
+          otherwise the service may never be started.
+        '';
+      };
+    };
 
     settings = lib.mkOption {
       inherit (iniFormat) type;
@@ -59,8 +75,8 @@ in
         Unit = {
           Description = "Fast, lightweight and minimalistic Wayland terminal emulator.";
           Documentation = "man:foot(1)";
-          PartOf = [ "graphical-session.target" ];
-          After = [ "graphical-session.target" ];
+          PartOf = [ cfg.server.systemdTarget ];
+          After = [ cfg.server.systemdTarget ];
         };
 
         Service = {
@@ -70,7 +86,7 @@ in
         };
 
         Install = {
-          WantedBy = [ "graphical-session.target" ];
+          WantedBy = [ cfg.server.systemdTarget ];
         };
       };
     };
