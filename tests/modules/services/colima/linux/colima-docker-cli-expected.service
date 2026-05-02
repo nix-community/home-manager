@@ -17,6 +17,4 @@ StandardError=append:/home/hm-user/.local/state/colima/default.log
 StandardOutput=append:/home/hm-user/.local/state/colima/default.log
 
 [Unit]
-After=network-online.target
 Description=Colima container runtime (default profile)
-Wants=network-online.target

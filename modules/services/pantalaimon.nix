@@ -58,7 +58,6 @@ in
       pantalaimon = {
         Unit = {
           Description = "Pantalaimon - E2EE aware proxy daemon for matrix clients";
-          After = [ "network-online.target" ];
         };
 
         Service = {

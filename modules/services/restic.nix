@@ -487,8 +487,6 @@ in
       lib.nameValuePair serviceName {
         Unit = {
           Description = "Restic backup service";
-          Wants = [ "network-online.target" ];
-          After = [ "network-online.target" ];
         };
 
         Service = {

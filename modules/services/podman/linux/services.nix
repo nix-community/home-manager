@@ -42,8 +42,6 @@ in
           Unit = {
             Description = "Podman auto-update service";
             Documentation = "man:podman-auto-update(1)";
-            Wants = [ "network-online.target" ];
-            After = [ "network-online.target" ];
           };
 
           Service = {
