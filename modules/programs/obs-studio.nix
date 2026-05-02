@@ -90,11 +90,7 @@ let
   ) cfg.integrations;
 
   mergeJson = a: b: lib.recursiveUpdate a b;
-  toolsPackage =
-    if pkgs ? hermesix then
-      pkgs.hermesix
-    else
-      pkgs.callPackage ../../tools/managed-config/package.nix { };
+  toolsPackage = pkgs.hermesix or (pkgs.callPackage ../../tools/managed-config/package.nix { });
 
   portalSettings =
     source:
@@ -109,34 +105,34 @@ let
     };
 
   renderSource =
-    collectionName: name: source:
+    _collectionName: _name: source:
     mergeJson {
-      name = source.name;
-      uuid = source.uuid;
-      id = source.id;
+      inherit (source) name;
+      inherit (source) uuid;
+      inherit (source) id;
       versioned_id = source.versionedId;
       settings = mergeJson source.settings (portalSettings source);
-      mixers = source.mixers;
-      sync = source.sync;
-      flags = source.flags;
-      volume = source.volume;
-      balance = source.balance;
-      enabled = source.enabled;
-      muted = source.muted;
+      inherit (source) mixers;
+      inherit (source) sync;
+      inherit (source) flags;
+      inherit (source) volume;
+      inherit (source) balance;
+      inherit (source) enabled;
+      inherit (source) muted;
       push-to-mute = source.pushToMute;
       push-to-mute-delay = source.pushToMuteDelay;
       push-to-talk = source.pushToTalk;
       push-to-talk-delay = source.pushToTalkDelay;
-      hotkeys = source.hotkeys;
+      inherit (source) hotkeys;
       deinterlace_mode = source.deinterlaceMode;
       deinterlace_field_order = source.deinterlaceFieldOrder;
       monitoring_type = source.monitoringType;
       private_settings = source.privateSettings;
-      filters = source.filters;
+      inherit (source) filters;
     } source.raw;
 
   renderSceneItem =
-    collectionName: collection: index: item:
+    collectionName: collection: _index: item:
     let
       resolvedSourceUuid =
         if item.sourceUuid != null then
@@ -149,13 +145,13 @@ let
           uuidFor "${collectionName}:source:${item.source}";
     in
     mergeJson {
-      name = item.name;
+      inherit (item) name;
       source_uuid = resolvedSourceUuid;
-      visible = item.visible;
-      locked = item.locked;
-      rot = item.rot;
+      inherit (item) visible;
+      inherit (item) locked;
+      inherit (item) rot;
       scale_ref = item.scaleRef;
-      align = item.align;
+      inherit (item) align;
       bounds_type = item.boundsType;
       bounds_align = item.boundsAlign;
       bounds_crop = item.boundsCrop;
@@ -163,13 +159,13 @@ let
       crop_top = item.cropTop;
       crop_right = item.cropRight;
       crop_bottom = item.cropBottom;
-      id = item.id;
+      inherit (item) id;
       group_item_backup = item.groupItemBackup;
-      pos = item.pos;
+      inherit (item) pos;
       pos_rel = item.posRel;
-      scale = item.scale;
+      inherit (item) scale;
       scale_rel = item.scaleRel;
-      bounds = item.bounds;
+      inherit (item) bounds;
       bounds_rel = item.boundsRel;
       scale_filter = item.scaleFilter;
       blend_method = item.blendMethod;
@@ -180,10 +176,10 @@ let
     } item.raw;
 
   renderSceneSource =
-    collectionName: collection: sceneName: scene:
+    collectionName: collection: _sceneName: scene:
     mergeJson {
-      name = scene.name;
-      uuid = scene.uuid;
+      inherit (scene) name;
+      inherit (scene) uuid;
       id = "scene";
       versioned_id = "scene";
       settings = mergeJson {
@@ -191,7 +187,7 @@ let
         custom_size = scene.customSize;
         items = lib.imap0 (renderSceneItem collectionName collection) scene.items;
       } scene.settings;
-      mixers = scene.mixers;
+      inherit (scene) mixers;
       sync = 0;
       flags = 0;
       volume = 1.0;
@@ -202,7 +198,7 @@ let
       push-to-mute-delay = 0;
       push-to-talk = false;
       push-to-talk-delay = 0;
-      hotkeys = scene.hotkeys;
+      inherit (scene) hotkeys;
       deinterlace_mode = 0;
       deinterlace_field_order = 0;
       monitoring_type = 0;
@@ -216,20 +212,20 @@ let
         if collection.sceneOrder == [ ] then lib.attrNames collection.scenes else collection.sceneOrder;
     in
     mergeJson {
-      name = collection.name;
+      inherit (collection) name;
       DesktopAudioDevice1 = collection.desktopAudioDevice;
       AuxAudioDevice1 = collection.auxAudioDevice;
       sources =
         (lib.mapAttrsToList (renderSource name) collection.sources)
         ++ (lib.mapAttrsToList (renderSceneSource name collection) collection.scenes);
-      groups = collection.groups;
+      inherit (collection) groups;
       scene_order = map (sceneName: { name = sceneName; }) sceneOrder;
       current_scene = collection.currentScene;
       current_program_scene = collection.currentProgramScene;
-      canvases = collection.canvases;
+      inherit (collection) canvases;
       current_transition = collection.currentTransition;
       transition_duration = collection.transitionDuration;
-      transitions = collection.transitions;
+      inherit (collection) transitions;
       quick_transitions = collection.quickTransitions;
       saved_projectors = collection.savedProjectors;
       preview_locked = collection.previewLocked;
@@ -238,9 +234,9 @@ let
       scaling_off_x = collection.scalingOffX;
       scaling_off_y = collection.scalingOffY;
       virtual-camera = collection.virtualCamera;
-      modules = collection.modules;
-      resolution = collection.resolution;
-      version = collection.version;
+      inherit (collection) modules;
+      inherit (collection) resolution;
+      inherit (collection) version;
     } collection.raw;
 
   mkGeneratedFile = origin: kind: source: {
@@ -390,11 +386,12 @@ let
         versionedId = mkOption {
           type = types.str;
           default = config.id;
+          defaultText = literalExpression "id";
           description = "OBS versioned source kind identifier.";
         };
 
         settings = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS source settings JSON.";
         };
@@ -532,7 +529,7 @@ let
         };
 
         hotkeys = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS source hotkeys.";
         };
@@ -556,19 +553,19 @@ let
         };
 
         privateSettings = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS private source settings.";
         };
 
         filters = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = [ ];
           description = "OBS source filters.";
         };
 
         raw = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "Raw OBS source JSON merged after typed fields.";
         };
@@ -579,7 +576,6 @@ let
     collectionName:
     {
       name,
-      config,
       ...
     }:
     {
@@ -603,7 +599,7 @@ let
         };
 
         settings = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "Extra OBS scene settings merged into the generated settings object.";
         };
@@ -622,6 +618,7 @@ let
                   name = mkOption {
                     type = types.str;
                     default = config.source;
+                    defaultText = literalExpression "source";
                     description = "Scene item display name.";
                   };
 
@@ -650,7 +647,7 @@ let
                   };
 
                   scaleRef = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 0.0;
                       y = 0.0;
@@ -719,7 +716,7 @@ let
                   };
 
                   pos = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 0.0;
                       y = 0.0;
@@ -728,7 +725,7 @@ let
                   };
 
                   posRel = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 0.0;
                       y = 0.0;
@@ -737,7 +734,7 @@ let
                   };
 
                   scale = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 1.0;
                       y = 1.0;
@@ -746,7 +743,7 @@ let
                   };
 
                   scaleRel = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 1.0;
                       y = 1.0;
@@ -755,7 +752,7 @@ let
                   };
 
                   bounds = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 0.0;
                       y = 0.0;
@@ -764,7 +761,7 @@ let
                   };
 
                   boundsRel = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       x = 0.0;
                       y = 0.0;
@@ -791,7 +788,7 @@ let
                   };
 
                   showTransition = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       duration = 300;
                     };
@@ -799,7 +796,7 @@ let
                   };
 
                   hideTransition = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = {
                       duration = 300;
                     };
@@ -807,13 +804,13 @@ let
                   };
 
                   privateSettings = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = { };
                     description = "Scene item private settings.";
                   };
 
                   raw = mkOption {
-                    type = jsonFormat.type;
+                    inherit (jsonFormat) type;
                     default = { };
                     description = "Raw OBS scene item JSON merged after typed fields.";
                   };
@@ -832,19 +829,19 @@ let
         };
 
         hotkeys = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS scene hotkeys.";
         };
 
         privateSettings = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS scene private settings.";
         };
 
         raw = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "Raw OBS scene source JSON merged after typed fields.";
         };
@@ -862,7 +859,7 @@ let
         };
 
         resolution = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = {
             x = 0;
             y = 0;
@@ -902,31 +899,31 @@ let
         };
 
         quickTransitions = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = [ ];
           description = "OBS quick transitions JSON.";
         };
 
         transitions = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = [ ];
           description = "OBS transitions JSON.";
         };
 
         groups = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = [ ];
           description = "OBS groups JSON.";
         };
 
         canvases = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = [ ];
           description = "OBS canvases JSON.";
         };
 
         savedProjectors = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = [ ];
           description = "OBS saved projectors JSON.";
         };
@@ -962,25 +959,25 @@ let
         };
 
         virtualCamera = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS virtual camera JSON.";
         };
 
         modules = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS scene collection module JSON.";
         };
 
         desktopAudioDevice = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS DesktopAudioDevice1 JSON.";
         };
 
         auxAudioDevice = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "OBS AuxAudioDevice1 JSON.";
         };
@@ -998,7 +995,7 @@ let
         };
 
         raw = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = "Raw OBS scene collection JSON merged after typed fields.";
         };
@@ -1014,7 +1011,6 @@ let
   integrationModule =
     {
       name,
-      config,
       ...
     }:
     {
@@ -1042,7 +1038,7 @@ let
         };
 
         settings = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           default = { };
           description = ''
             Reserved for verified typed settings for this plugin. Unsupported or
@@ -1120,7 +1116,7 @@ in
 
       settings = {
         global = mkOption {
-          type = iniFormat.type;
+          inherit (iniFormat) type;
           default = { };
           example = literalExpression ''
             {
@@ -1134,7 +1130,7 @@ in
         };
 
         user = mkOption {
-          type = iniFormat.type;
+          inherit (iniFormat) type;
           default = { };
           description = "Configuration written to {file}`$XDG_CONFIG_HOME/obs-studio/user.ini`.";
         };
@@ -1145,19 +1141,19 @@ in
           types.submodule {
             options = {
               settings = mkOption {
-                type = iniFormat.type;
+                inherit (iniFormat) type;
                 default = { };
                 description = "Configuration written to the profile's {file}`basic.ini`.";
               };
 
               streamEncoder = mkOption {
-                type = jsonFormat.type;
+                inherit (jsonFormat) type;
                 default = { };
                 description = "Configuration written to the profile's {file}`streamEncoder.json`.";
               };
 
               recordEncoder = mkOption {
-                type = jsonFormat.type;
+                inherit (jsonFormat) type;
                 default = { };
                 description = "Configuration written to the profile's {file}`recordEncoder.json`.";
               };
