@@ -129,6 +129,7 @@ in
         Description = "Day/night gamma adjustments for Wayland compositors.";
         After = [ cfg.systemdTarget ];
         PartOf = [ cfg.systemdTarget ];
+        ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
       Service = {
