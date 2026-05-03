@@ -4,16 +4,17 @@ DisableSidebar = false
 SidebarOverlay = false
 
 [[database]]
-DBName = "foo"
-Name = "Production database"
-Provider = "postgres"
-URL = "postgres://postgres:urlencodedpassword@localhost:$${port}/foo"
+DBName = 'foo'
+Name = 'Production database'
+Provider = 'postgres'
+URL = 'postgres://postgres:urlencodedpassword@localhost:$${port}/foo'
+
 [[database.Commands]]
-Command = "ssh -tt remote-bastion -L $${port}:localhost:5432"
-WaitForPort = "$${port}"
+Command = 'ssh -tt remote-bastion -L $${port}:localhost:5432'
+WaitForPort = '$${port}'
 
 [[database]]
-DBName = "foo"
-Name = "Development database"
-Provider = "postgres"
-URL = "postgres://postgres:urlencodedpassword@localhost:5432/foo"
+DBName = 'foo'
+Name = 'Development database'
+Provider = 'postgres'
+URL = 'postgres://postgres:urlencodedpassword@localhost:5432/foo'

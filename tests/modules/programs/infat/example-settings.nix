@@ -23,13 +23,13 @@
       expectedConfigPath = "home-files/.config/infat/config.toml";
       expectedConfigContent = pkgs.writeText "infat.config.expected" ''
         [extensions]
-        md = "TextEdit"
+        md = 'TextEdit'
 
         [schemes]
-        web = "Safari"
+        web = 'Safari'
 
         [types]
-        plain-text = "VSCode"
+        plain-text = 'VSCode'
       '';
     in
     ''

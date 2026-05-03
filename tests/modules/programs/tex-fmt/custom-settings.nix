@@ -20,7 +20,7 @@
         assertFileExists "${expectedConfigPath}"
         assertFileContent "${expectedConfigPath}" ${pkgs.writeText "tex-fmt.config-custom.expected" ''
           lists = []
-          tabchar = "space"
+          tabchar = 'space'
           tabsize = 2
           wrap = true
         ''}

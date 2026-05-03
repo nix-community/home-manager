@@ -1,4 +1,4 @@
 [[rule]]
-toolName = "read_file"
-decision = "allow"
+decision = 'allow'
 priority = 50
+toolName = 'read_file'

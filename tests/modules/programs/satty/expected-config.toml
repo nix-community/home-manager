@@ -1,11 +1,11 @@
 [color-palette]
-palette = ["#00ffff"]
+palette = ['#00ffff']
 
 [font]
-family = "Roboto"
+family = 'Roboto'
 
 [general]
 corner-roundness = 12
 fullscreen = true
-initial-tool = "brush"
-output-filename = "/tmp/test.png"
+initial-tool = 'brush'
+output-filename = '/tmp/test.png'

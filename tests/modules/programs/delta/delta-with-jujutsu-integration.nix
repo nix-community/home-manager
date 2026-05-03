@@ -10,12 +10,13 @@
   nmt.script = ''
     assertFileExists home-files/.config/jj/config.toml
     assertFileContent home-files/.config/jj/config.toml ${builtins.toFile "expected" ''
+      [merge-tools]
       [merge-tools.delta]
       diff-expected-exit-codes = [0, 1]
 
       [ui]
-      diff-formatter = ":git"
-      pager = "${lib.getExe config.programs.delta.finalPackage}"
+      diff-formatter = ':git'
+      pager = '${lib.getExe config.programs.delta.finalPackage}'
     ''}
   '';
 }

@@ -22,7 +22,7 @@
           "home-files/${configDir}/config.toml" \
           ${pkgs.writeText "expected" ''
             [revisions]
-            template = "builtin_log_oneline"
+            template = 'builtin_log_oneline'
           ''}
       '';
   };

@@ -1,7 +1,7 @@
 [modules]
-center = ["WindowTitle"]
-left = ["Workspaces"]
-right = ["SystemInfo"]
+center = ['WindowTitle']
+left = ['Workspaces']
+right = ['SystemInfo']
 
 [system_info]
 refresh_rate = 1000
@@ -10,4 +10,4 @@ show_memory = true
 
 [workspaces]
 show_empty = true
-visibility_mode = "MonitorSpecific"
+visibility_mode = 'MonitorSpecific'

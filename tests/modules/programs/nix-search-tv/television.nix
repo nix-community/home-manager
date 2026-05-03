@@ -8,23 +8,24 @@
     assertFileExists home-files/.config/television/cable/nix-search-tv.toml
     assertFileContent home-files/.config/television/cable/nix-search-tv.toml \
       ${pkgs.writeText "settings-expected" ''
+        [actions]
         [actions.run]
-        command = "nix run {replace:s/\\/ /#/g}"
-        mode = "fork"
+        command = 'nix run {replace:s/\/ /#/g}'
+        mode = 'fork'
 
         [actions.shell]
-        command = "nix shell {replace:s/\\/ /#/g}"
-        mode = "execute"
+        command = 'nix shell {replace:s/\/ /#/g}'
+        mode = 'execute'
 
         [metadata]
-        description = "Search nix options and packages"
-        name = "nix-search-tv"
+        description = 'Search nix options and packages'
+        name = 'nix-search-tv'
 
         [preview]
-        command = "${lib.getExe pkgs.nix-search-tv} preview \"{}\""
+        command = '${lib.getExe pkgs.nix-search-tv} preview "{}"'
 
         [source]
-        command = "${lib.getExe pkgs.nix-search-tv} print"
+        command = '${lib.getExe pkgs.nix-search-tv} print'
       ''}
   '';
 }

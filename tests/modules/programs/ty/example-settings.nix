@@ -15,7 +15,7 @@
       expectedConfigPath = "home-files/.config/ty/ty.toml";
       expectedConfigContent = pkgs.writeText "ty.config-custom.expected" ''
         [rules]
-        index-out-of-bounds = "ignore"
+        index-out-of-bounds = 'ignore'
       '';
     in
     ''

@@ -1,7 +1,7 @@
 [global]
 hide_env_diff = true
-log_filter = "^$"
-log_format = "-"
+log_filter = '^$'
+log_format = '-'
 
 [whitelist]
-prefix = ["/home/user/projects"]
+prefix = ['/home/user/projects']

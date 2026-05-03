@@ -1,5 +1,5 @@
 [date]
-fmt = "%A, %B %d, %Y"
+fmt = '%A, %B %d, %Y'
 hide_seconds = true
 use_12h = true
 utc = true
@@ -7,9 +7,9 @@ utc = true
 [general]
 blink = true
 bold = true
-color = "magenta"
+color = 'magenta'
 interval = 250
 
 [position]
-horizontal = "start"
-vertical = "end"
+horizontal = 'start'
+vertical = 'end'

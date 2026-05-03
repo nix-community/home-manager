@@ -22,13 +22,13 @@
       home-files/.config/aria2p/config.toml \
       ${builtins.toFile "aria2p-expected-config.toml" ''
         [colors]
-        FOCUSED_HEADER = "BLACK NORMAL CYAN"
-        METADATA = "WHITE UNDERLINE DEFAULT"
-        UI = "WHITE BOLD DEFAULT"
+        FOCUSED_HEADER = 'BLACK NORMAL CYAN'
+        METADATA = 'WHITE UNDERLINE DEFAULT'
+        UI = 'WHITE BOLD DEFAULT'
 
         [key_bindings]
-        AUTOCLEAR = "c"
-        FILTER = ["F4", "\\"]
+        AUTOCLEAR = 'c'
+        FILTER = ['F4', '\']
       ''}
   '';
 }

@@ -1,8 +1,8 @@
 [app_cfg]
-paths = ["$HOME/Desktop"]
+paths = ['$HOME/Desktop']
 
 [gui_cfg]
 font_size = 12
 icon = true
-ui_framework = "EGUI"
+ui_framework = 'EGUI'
 window_size = [300, 300]

@@ -5,9 +5,9 @@ padding = 100
 decrease_interval = 48
 
 [keybinding]
-complete = ["Tab"]
-execute = ["KP_Enter", "Return"]
-paste = ["ctrl+v"]
+complete = ['Tab']
+execute = ['KP_Enter', 'Return']
+paste = ['ctrl+v']
 
 [search]
 show_hidden_files = false

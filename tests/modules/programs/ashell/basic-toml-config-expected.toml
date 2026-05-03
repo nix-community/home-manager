@@ -1,8 +1,8 @@
 [modules]
-center = ["Window Title"]
-left = ["Workspaces"]
-right = ["SystemInfo", "Clock"]
+center = ['Window Title']
+left = ['Workspaces']
+right = ['SystemInfo', 'Clock']
 
 [workspaces]
 show_empty = true
-visibility_mode = "MonitorSpecific"
+visibility_mode = 'MonitorSpecific'

@@ -39,8 +39,8 @@
           [keybindings]
 
           [user]
-          name = "MYNAME"
-          phone_number = "MYNUMBER"
+          name = 'MYNAME'
+          phone_number = 'MYNUMBER'
         ''}
     '';
 }

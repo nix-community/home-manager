@@ -1,7 +1,10 @@
+[buffer]
+[buffer.channel]
 [buffer.channel.topic]
 enabled = true
 
+[servers]
 [servers.liberachat]
-channels = ["#halloy"]
-nickname = "halloy-user"
-server = "irc.libera.chat"
+channels = ['#halloy']
+nickname = 'halloy-user'
+server = 'irc.libera.chat'

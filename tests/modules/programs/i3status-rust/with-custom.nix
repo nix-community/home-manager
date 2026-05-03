@@ -115,89 +115,89 @@
         ${pkgs.writeText "i3status-rust-expected-config" ''
           [[block]]
           alert = 10.0
-          block = "disk_space"
-          info_type = "available"
+          block = 'disk_space'
+          info_type = 'available'
           interval = 60
-          path = "/"
+          path = '/'
           warning = 20.0
 
           [[block]]
-          block = "memory"
-          display_type = "memory"
-          format_mem = "{Mug}GB ({Mup}%)"
-          format_swap = "{SUp}%"
+          block = 'memory'
+          display_type = 'memory'
+          format_mem = '{Mug}GB ({Mup}%)'
+          format_swap = '{SUp}%'
 
           [[block]]
-          block = "cpu"
-          format = " $icon $barchart "
+          block = 'cpu'
+          format = ' $icon $barchart '
           interval = 1
 
           [[block]]
-          block = "load"
-          format = " $icon $1m $5m "
+          block = 'load'
+          format = ' $icon $1m $5m '
           interval = 1
 
           [[block]]
-          block = "temperature"
-          chip = "*-isa-*"
-          format = "$icon $min min, $max max, $average avg"
+          block = 'temperature'
+          chip = '*-isa-*'
+          format = '$icon $min min, $max max, $average avg'
           interval = 10
 
           [[block]]
-          block = "net"
-          device = "enp9s0u2u1u2c2"
+          block = 'net'
+          device = 'enp9s0u2u1u2c2'
           interval = 5
 
           [[block]]
-          block = "speedtest"
-          format = " ^icon_ping $ping "
+          block = 'speedtest'
+          format = ' ^icon_ping $ping '
 
           [[block]]
-          block = "xrandr"
+          block = 'xrandr'
           interval = 6000
 
           [[block]]
-          block = "sound"
-          format = "{output_name} {volume}%"
+          block = 'sound'
+          format = '{output_name} {volume}%'
 
           [[block.click]]
-          button = "left"
-          cmd = "pavucontrol --tab=3"
+          button = 'left'
+          cmd = 'pavucontrol --tab=3'
 
           [block.mappings]
-          "alsa_output.pci-0000_00_1f.3.analog-stereo" = ""
-          "bluez_sink.70_26_05_DA_27_A4.a2dp_sink" = ""
+          'alsa_output.pci-0000_00_1f.3.analog-stereo' = ''
+          'bluez_sink.70_26_05_DA_27_A4.a2dp_sink' = ''
 
           [[block]]
-          block = "music"
-          buttons = ["play", "prev", "next"]
-          player = "spotify"
+          block = 'music'
+          buttons = ['play', 'prev', 'next']
+          player = 'spotify'
 
           [[block.click]]
-          action = "music_play"
-          button = "play"
+          action = 'music_play'
+          button = 'play'
 
           [[block.click]]
-          action = "music_prev"
-          button = "prev"
+          action = 'music_prev'
+          button = 'prev'
 
           [[block.click]]
-          action = "music_next"
-          button = "next"
+          action = 'music_next'
+          button = 'next'
 
           [[block]]
-          block = "time"
+          block = 'time'
           format = " $timestamp.datetime(f:'%a %d/%m %R') "
           interval = 60
 
           [[block]]
-          block = "battery"
+          block = 'battery'
 
           [icons]
-          icons = "awesome5"
+          icons = 'awesome5'
 
           [theme]
-          theme = "gruvbox-dark"
+          theme = 'gruvbox-dark'
         ''}
     '';
   };

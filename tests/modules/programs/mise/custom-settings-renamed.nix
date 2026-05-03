@@ -27,7 +27,7 @@
 
     assertFileContent home-files/.config/mise/config.toml ${pkgs.writeText "mise.config.expected" ''
       [settings]
-      disable_tools = ["node"]
+      disable_tools = ['node']
       experimental = true
       verbose = false
     ''}

@@ -2,9 +2,9 @@
 
 let
   expected = builtins.toFile "rio-expected.toml" ''
-    cursor = "_"
+    cursor = '_'
     padding-x = 0
-    performance = "Low"
+    performance = 'Low'
   '';
 in
 {

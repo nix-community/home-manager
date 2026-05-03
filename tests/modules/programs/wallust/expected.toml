@@ -1,2 +1,2 @@
-backend = "fastresize"
-color_space = "lchmixed"
+backend = 'fastresize'
+color_space = 'lchmixed'

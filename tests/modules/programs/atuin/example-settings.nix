@@ -15,9 +15,9 @@
       home-files/.config/atuin/config.toml \
       ${builtins.toFile "example-settings-expected.toml" ''
         auto_sync = true
-        db_path = "~/.atuin-history.db"
-        dialect = "us"
-        search-mode = "fulltext"
+        db_path = '~/.atuin-history.db'
+        dialect = 'us'
+        search-mode = 'fulltext'
       ''}
   '';
 }

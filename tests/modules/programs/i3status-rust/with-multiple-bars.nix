@@ -59,21 +59,21 @@
         ${pkgs.writeText "i3status-rust-expected-config" ''
           [[block]]
           alert = 10.0
-          block = "disk_space"
-          info_type = "available"
+          block = 'disk_space'
+          info_type = 'available'
           interval = 60
           warning = 20.0
 
           [[block]]
-          block = "memory"
-          format_mem = " $icon $Mug ($Mup) "
-          format_swap = " $icon $SUp "
+          block = 'memory'
+          format_mem = ' $icon $Mug ($Mup) '
+          format_swap = ' $icon $SUp '
 
           [icons]
-          icons = "none"
+          icons = 'none'
 
           [theme]
-          theme = "plain"
+          theme = 'plain'
         ''}
 
       assertFileExists home-files/.config/i3status-rust/config-bottom.toml
@@ -81,20 +81,20 @@
         home-files/.config/i3status-rust/config-bottom.toml \
         ${pkgs.writeText "i3status-rust-expected-config" ''
           [[block]]
-          block = "cpu"
-          format = " $icon $barchart "
+          block = 'cpu'
+          format = ' $icon $barchart '
           interval = 1
 
           [[block]]
-          block = "load"
-          format = " $icon $1m $5m "
+          block = 'load'
+          format = ' $icon $1m $5m '
           interval = 1
 
           [icons]
-          icons = "awesome5"
+          icons = 'awesome5'
 
           [theme]
-          theme = "gruvbox-dark"
+          theme = 'gruvbox-dark'
         ''}
     '';
   };

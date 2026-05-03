@@ -23,16 +23,16 @@
     assertFileExists home-files/.config/rescrobbled/config.toml
     assertFileContent home-files/.config/rescrobbled/config.toml \
       ${pkgs.writeText "settings-expected" ''
-        filter-script = "path/to/script"
-        lastfm-key = "Last.fm API key"
-        lastfm-secret = "Last.fm API secret"
+        filter-script = 'path/to/script'
+        lastfm-key = 'Last.fm API key'
+        lastfm-secret = 'Last.fm API secret'
         min-play-time = 0
-        player-whitelist = ["Player MPRIS identity or bus name"]
+        player-whitelist = ['Player MPRIS identity or bus name']
         use-track-start-timestamp = false
 
         [[listenbrainz]]
-        token = "User token"
-        url = "Custom API URL"
+        token = 'User token'
+        url = 'Custom API URL'
       ''}
 
     service=home-files/.config/systemd/user/rescrobbled.service

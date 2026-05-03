@@ -1,15 +1,15 @@
 [core]
-color-theme = "Custom"
+color-theme = 'Custom'
 custom-titlebar = false
-icon-theme = "Material Icons"
+icon-theme = 'Material Icons'
 
 [editor]
 bracket-pair-colorization = true
 cursor-surrounding-lines = 4
-font-family = "FiraCode Nerd Bold Font, monospace"
+font-family = 'FiraCode Nerd Bold Font, monospace'
 font-size = 22
 highlight-matching-brackets = true
-render-whitespace = "all"
+render-whitespace = 'all'
 tab-width = 2
 
 [ui]

@@ -242,7 +242,7 @@
       ${./theme-base16-expected.toml}
     assertFileContent \
       home-files/.config/helix/themes/string.toml \
-      ${./theme-base16-expected.toml}
+      ${./theme-base16-string-expected.toml}
     assertFileContent \
       home-files/.config/helix/themes/path.toml \
       ${./theme-base16-expected.toml}

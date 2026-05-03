@@ -1,14 +1,17 @@
+[font]
 [font.bold]
-family = "SFMono"
+family = 'SFMono'
 
 [font.normal]
-family = "SFMono"
+family = 'SFMono'
 
+[keyboard]
 [[keyboard.bindings]]
-chars = "\u000c"
-key = "K"
-mods = "Control"
+chars = '\u000c'
+key = 'K'
+mods = 'Control'
 
+[window]
 [window.dimensions]
 columns = 200
 lines = 3
