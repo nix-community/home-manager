@@ -5,11 +5,11 @@
     programs.man = {
       enable = true;
       package = null;
-      generateCaches = true;
+      cache.enable = true;
     };
 
     test.asserts.warnings.expected = [
-      "programs.man.generateCaches has no effect when programs.man.package is null"
+      "programs.man.cache.enable has no effect when programs.man.package is null"
     ];
 
     nmt.script = ''
