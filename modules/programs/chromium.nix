@@ -116,16 +116,7 @@ let
           [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).
         '';
       };
-    }
-    // lib.optionalAttrs (isLinux && spec.supportsPlasmaSupport) {
-      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${displayName}";
 
-      plasmaBrowserIntegrationPackage = mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
-        extraDescription = "Used for the native messaging host on Linux.";
-        pkgsText = "pkgs.kdePackages";
-      };
-    }
-    // {
       dictionaries = mkOption {
         type = types.listOf types.package;
         default = [ ];
@@ -151,8 +142,7 @@ let
           List of ${displayName} native messaging hosts to install.
         '';
       };
-    }
-    // {
+
       extensions = mkOption {
         type =
           let
@@ -235,6 +225,14 @@ let
           Proprietary Google Chrome on macOS only supports extensions from the
           Chrome Web Store.
         '';
+      };
+    }
+    // lib.optionalAttrs (isLinux && spec.supportsPlasmaSupport) {
+      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${displayName}";
+
+      plasmaBrowserIntegrationPackage = mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
+        extraDescription = "Used for the native messaging host on Linux.";
+        pkgsText = "pkgs.kdePackages";
       };
     };
 
