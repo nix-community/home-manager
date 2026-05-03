@@ -1,12 +1,33 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
   # This would normally not be a file in the store for security reasons.
   fooKeyFile = pkgs.writeText "foo-key-file" "a-sync-key";
   barKeyFile = pkgs.writeText "bar-key-file" "a-sync-key";
+
+  fakeAnkiPython = config.lib.test.mkStubPackage {
+    name = "python3";
+    extraAttrs = {
+      isPy3 = true;
+      interpreter = pkgs.writeShellScript "fake-anki-python" ''
+        mkdir -p "$2"
+        touch "$2/gldriver6"
+        touch "$2/prefs21.db"
+      '';
+    };
+  };
+
+  fakeAnki = config.lib.test.mkStubPackage {
+    name = "anki";
+    extraAttrs = {
+      nativeBuildInputs = [ fakeAnkiPython ];
+      withAddons = _: fakeAnki;
+    };
+  };
 in
 {
   programs.anki = {
     enable = true;
+    package = fakeAnki;
     addons = [ pkgs.ankiAddons.passfail2 ];
     answerKeys = [
       {
