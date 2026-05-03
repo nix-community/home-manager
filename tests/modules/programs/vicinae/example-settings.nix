@@ -1,9 +1,16 @@
 {
   pkgs,
-  config,
   ...
 }:
 
+let
+  mkExtensionStub =
+    name:
+    pkgs.runCommandLocal name { } ''
+      mkdir -p $out
+      echo '{}' > $out/package.json
+    '';
+in
 {
   programs.vicinae = {
     enable = true;
@@ -61,22 +68,8 @@
     };
 
     extensions = [
-      (config.lib.vicinae.mkRayCastExtension {
-        name = "cdnjs";
-        sha256 = "sha256-k3YfruMxSOMf8K65iTW84aZxiknADCcntJOAE89agYc=";
-        rev = "ac7c50844bf77d0cf51daa840e369d999f2add59";
-      })
-      (config.lib.vicinae.mkExtension {
-        name = "test-extension";
-        src =
-          pkgs.fetchFromGitHub {
-            owner = "schromp";
-            repo = "vicinae-extensions";
-            rev = "f8be5c89393a336f773d679d22faf82d59631991";
-            sha256 = "sha256-zk7WIJ19ITzRFnqGSMtX35SgPGq0Z+M+f7hJRbyQugw=";
-          }
-          + "/test-extension";
-      })
+      (mkExtensionStub "cdnjs")
+      (mkExtensionStub "test-extension")
     ];
   };
 
