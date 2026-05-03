@@ -16,25 +16,71 @@ let
 
   chromeWebStoreUpdateUrl = "https://clients2.google.com/service/update2/crx";
 
-  google-chrome = "Google Chrome";
+  mkChromiumBrowser =
+    name:
+    types.submodule {
+      options = {
+        displayName = mkOption {
+          type = types.str;
+          description = "Display name of the browser";
+        };
 
-  supportedBrowsers = {
-    chromium = "Chromium";
-    inherit google-chrome;
-    google-chrome-beta = google-chrome + " Beta";
-    google-chrome-dev = google-chrome + " Dev";
-    brave = "Brave Browser";
-    vivaldi = "Vivaldi Browser";
+        darwinDir = mkOption {
+          type = types.str;
+          description = "Directory path in macOS Library/Application Support for browser configuration";
+        };
+
+        linuxDir = mkOption {
+          type = types.str;
+          default = name;
+          description = "Directory path in XDG config home for browser configuration on Linux";
+        };
+
+        supportsPlasmaSupport = mkEnableOption "KDE Plasma integration support for this browser";
+      };
+    };
+
+  browserSpecs = {
+    chromium = (mkChromiumBrowser "chromium") {
+      displayName = "Chromium";
+      darwinDir = "Chromium";
+    };
+
+    brave = (mkChromiumBrowser "brave") {
+      displayName = "Brave Browser";
+      darwinDir = "BraveSoftware/Brave-Browser";
+      linuxDir = "BraveSoftware/Brave-Browser";
+    };
+
+    google-chrome = (mkChromiumBrowser "google-chrome") {
+      displayName = "Google Chrome";
+      darwinDir = "Google/Chrome";
+      supportsPlasmaSupport = true;
+    };
+
+    google-chrome-beta = (mkChromiumBrowser "google-chrome-beta") {
+      displayName = "Google Chrome Beta";
+      darwinDir = "Google/Chrome Beta";
+    };
+
+    google-chrome-dev = (mkChromiumBrowser "google-chrome-dev") {
+      displayName = "Google Chrome Dev";
+      darwinDir = "Google/Chrome Dev";
+    };
+
+    vivaldi = (mkChromiumBrowser "vivaldi") {
+      displayName = "Vivaldi Browser";
+    };
   };
 
-  plasmaSupportedBrowsers = [
-    "google-chrome"
-  ];
-
   browserModule =
-    browser: name:
+    browser:
+    let
+      spec = browserSpecs.${browser};
+      inherit (spec) displayName;
+    in
     {
-      enable = mkEnableOption name;
+      enable = mkEnableOption displayName;
 
       package = mkPackageOption pkgs browser {
         nullable = true;
@@ -44,7 +90,7 @@ let
         type = types.nullOr types.package;
         readOnly = true;
         description = ''
-          Resulting customized ${name} package.
+          Resulting customized ${displayName} package.
 
           This includes any Home Manager customizations such as
           `commandLineArgs` or `plasmaSupport`, and can be referenced from
@@ -61,7 +107,7 @@ let
           "--ignore-gpu-blocklist"
         ];
         description = ''
-          List of command-line arguments to be passed to ${name}.
+          List of command-line arguments to be passed to ${displayName}.
 
           For a list of common switches, see
           [Chrome switches](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc).
@@ -71,8 +117,8 @@ let
         '';
       };
     }
-    // lib.optionalAttrs (isLinux && lib.elem browser plasmaSupportedBrowsers) {
-      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${name}";
+    // lib.optionalAttrs (isLinux && spec.supportsPlasmaSupport) {
+      plasmaSupport = mkEnableOption "the 'Use QT' theme for ${displayName}";
 
       plasmaBrowserIntegrationPackage = mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
         extraDescription = "Used for the native messaging host on Linux.";
@@ -89,7 +135,7 @@ let
           ]
         '';
         description = ''
-          List of ${name} dictionaries to install.
+          List of ${displayName} dictionaries to install.
         '';
       };
 
@@ -102,7 +148,7 @@ let
           ]
         '';
         description = ''
-          List of ${name} native messaging hosts to install.
+          List of ${displayName} native messaging hosts to install.
         '';
       };
     }
@@ -172,7 +218,7 @@ let
           ]
         '';
         description = ''
-          List of ${name} extensions to install.
+          List of ${displayName} extensions to install.
           To find the extension ID, check its URL on the
           [Chrome Web Store](https://chrome.google.com/webstore/category/extensions).
 
@@ -195,6 +241,8 @@ let
   browserConfig =
     browser: cfg:
     let
+      spec = browserSpecs.${browser};
+
       packageName =
         if cfg.package == null then
           null
@@ -204,23 +252,11 @@ let
       isProprietaryChrome = lib.hasPrefix "google-chrome" browser;
       supportsUserExtensions = !isProprietaryChrome || isDarwin;
 
-      darwinDirs = {
-        chromium = "Chromium";
-        google-chrome = "Google/Chrome";
-        google-chrome-beta = "Google/Chrome Beta";
-        google-chrome-dev = "Google/Chrome Dev";
-        brave = "BraveSoftware/Brave-Browser";
-      };
-
-      linuxDirs = {
-        brave = "BraveSoftware/Brave-Browser";
-      };
-
       configDir =
         if isDarwin then
-          "Library/Application Support/" + (darwinDirs."${browser}" or browser)
+          "Library/Application Support/" + spec.darwinDir
         else
-          "${config.xdg.configHome}/" + (linuxDirs."${browser}" or browser);
+          "${config.xdg.configHome}/" + spec.linuxDir;
 
       extensionJson =
         ext:
@@ -245,7 +281,7 @@ let
         value.source = pkg;
       };
 
-      plasmaSupportEnabled = isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
+      plasmaSupportEnabled = isLinux && spec.supportsPlasmaSupport && cfg.plasmaSupport;
 
       nativeMessagingHosts = lib.unique (
         cfg.nativeMessagingHosts ++ lib.optional plasmaSupportEnabled cfg.plasmaBrowserIntegrationPackage
@@ -265,12 +301,12 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
-          assertion = !(packageName != null && !builtins.hasAttr packageName supportedBrowsers);
-          message = "Cannot set `package` to `${packageName}` for ${browser}. Use one of the packages in `supportedBrowsers` instead.";
+          assertion = !(packageName != null && !builtins.hasAttr packageName browserSpecs);
+          message = "Cannot set `package` to `${packageName}` for ${browser}. Use one of the packages in `browserSpecs` instead.";
         }
         {
           assertion =
-            !(packageName != null && builtins.hasAttr packageName supportedBrowsers && packageName != browser);
+            !(packageName != null && builtins.hasAttr packageName browserSpecs && packageName != browser);
           message = "Cannot set `package` to `${packageName}` for ${browser}. Use `programs.${packageName}.enable = true;` instead.";
         }
         {
@@ -324,11 +360,9 @@ let
 
 in
 {
-  options.programs = builtins.mapAttrs (browser: name: browserModule browser name) supportedBrowsers;
+  options.programs = lib.mapAttrs (browser: _: browserModule browser) browserSpecs;
 
-  config = lib.mkMerge (
-    map (browser: browserConfig browser config.programs.${browser}) (
-      builtins.attrNames supportedBrowsers
-    )
-  );
+  config = lib.mkMerge lib.mapAttrsToList (
+    browser: _: browserConfig browser config.programs.${browser}
+  ) browserSpecs;
 }
