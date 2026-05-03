@@ -79,6 +79,7 @@ in
             inheritSettings = mkOption {
               type = types.bool;
               default = cfg.inheritSettings;
+              defaultText = lib.literalExpression "config.programs.wlr-which-key.inheritSettings";
               example = true;
               description = ''
                 Whether this menu inherits top-level theming settings from
