@@ -166,6 +166,14 @@ in
   config =
     let
       flagsStr = lib.escapeShellArgs cfg.flags;
+      atuinFishConfig =
+        pkgs.runCommand "atuin-fish-config.fish"
+          {
+            nativeBuildInputs = [ pkgs.writableTmpDirAsHomeHook ];
+          }
+          ''
+            ${lib.getExe cfg.package} init fish ${flagsStr} > "$out"
+          '';
     in
     mkIf cfg.enable (
       lib.mkMerge [
@@ -212,7 +220,7 @@ in
           '';
 
           programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-            ${lib.getExe cfg.package} init fish ${flagsStr} | source
+            source ${atuinFishConfig}
           '';
 
           programs.nushell = mkIf cfg.enableNushellIntegration {
