@@ -454,7 +454,7 @@ in
       (mkIf (cfg.signing != { }) {
         programs.git = {
           signing = {
-            format = mkOptionDefault signingFormatStateVersionDefault.default;
+            format = mkOptionDefault signingFormatStateVersionDefault.effectiveDefault;
             signer =
               let
                 defaultSigners = {

@@ -7,6 +7,7 @@
   git-without-signing-key-id = ./git-without-signing-key-id.nix;
   git-without-signing-key-id-current = ./git-without-signing-key-id-current.nix;
   git-without-signing = ./git-without-signing.nix;
+  git-without-signing-legacy = ./git-without-signing-legacy.nix;
   git-with-hooks = ./git-with-hooks.nix;
   git-with-lfs = ./git-with-lfs.nix;
   git-with-maintenance = ./git-with-maintenance.nix;
