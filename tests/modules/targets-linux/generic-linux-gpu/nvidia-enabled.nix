@@ -39,15 +39,15 @@ in
     setupScript="$TESTED/home-path/bin/non-nixos-gpu-setup"
     assertFileExists "$setupScript"
 
-    # Find the service file
+    # Find the tmpfiles.d config file
     storePath="$(dirname "$(readlink "''${setupScript}")")"/../
-    servicePath="$storePath/lib/systemd/system/non-nixos-gpu.service"
+    confPath="$storePath/lib/tmpfiles.d/non-nixos-gpu.conf"
 
     # Extract the GPU environment path
-    envPath=$(grep -oP '/nix/store/[^/]+-non-nixos-gpu' "$servicePath" | head -1)
+    envPath=$(grep -oP '/nix/store/[^/]+-non-nixos-gpu' "$confPath" | head -1)
 
     if [[ -z "$envPath" ]]; then
-      fail "Could not find GPU environment path in service file"
+      fail "Could not find GPU environment path in config file"
     fi
 
     markerFile="$envPath/lib/nvidia-test-marker"

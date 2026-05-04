@@ -19,7 +19,7 @@
     # Check that expected files are present and free of placeholders
     storePath="$(dirname "$(readlink "''${setupScript}")")"/../
     expectedFiles=(
-      lib/systemd/system/non-nixos-gpu.service
+      lib/tmpfiles.d/non-nixos-gpu.conf
     )
 
     for f in "''${expectedFiles[@]}"; do

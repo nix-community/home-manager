@@ -20,12 +20,12 @@ stdenv.mkDerivation {
     substituteInPlace non-nixos-gpu* \
       --replace-quiet '@@resources@@' "$out/resources" \
       --replace-quiet '@@statedir@@' '${nixStateDirectory}' \
-      --replace-quiet '@@systemddir@@' "$out/lib/systemd/system" \
+      --replace-quiet '@@tmpfilesdir@@' "$out/lib/tmpfiles.d" \
       --replace-quiet '@@env@@' "${nonNixosGpuEnv}"
   '';
   installPhase = ''
-    mkdir -p $out/{bin,resources,lib/systemd/system}
+    mkdir -p $out/{bin,resources,lib/tmpfiles.d}
     cp non-nixos-gpu-setup $out/bin
-    cp non-nixos-gpu.service $out/lib/systemd/system
+    cp non-nixos-gpu.conf $out/lib/tmpfiles.d
   '';
 }
