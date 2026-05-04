@@ -115,6 +115,12 @@
     github = "ckgxrg-salt";
     githubId = 165614491;
   };
+  conao3 = {
+    name = "conao3";
+    email = "conao3@gmail.com";
+    github = "conao3";
+    githubId = 4703128;
+  };
   d-dervishi = {
     email = "david.dervishi@epfl.ch";
     github = "d-dervishi";
