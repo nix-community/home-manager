@@ -20,10 +20,22 @@ this package. This can typically be done in two ways.
     { pkgs, config, ... }:
 
     let
-
       pkgsUnstable = import <nixpkgs-unstable> {};
-
     in
+    {
+      programs.beets.package = pkgsUnstable.beets;
+
+      # …
+    }
+    ```
+
+    should work OK. With flakes, pass the unstable package set as
+    described in
+    [How do I install packages from Nixpkgs unstable?](#_how_do_i_install_packages_from_nixpkgs_unstable)
+    and then use the extra module argument:
+
+    ``` nix
+    { pkgsUnstable, ... }:
 
     {
       programs.beets.package = pkgsUnstable.beets;
@@ -32,9 +44,7 @@ this package. This can typically be done in two ways.
     }
     ```
 
-    should work OK.
-
-3.  If no `package` option is available then you can typically change
+2.  If no `package` option is available then you can typically change
     the relevant package using an
     [overlay](https://nixos.org/nixpkgs/manual/#chap-overlays).
 
@@ -45,16 +55,14 @@ this package. This can typically be done in two ways.
     { pkgs, config, ... }:
 
     let
-
       pkgsUnstable = import <nixpkgs-unstable> {};
-
     in
 
     {
       programs.skim.enable = true;
 
       nixpkgs.overlays = [
-        (self: super: {
+        (_final: _prev: {
           skim = pkgsUnstable.skim;
         })
       ];
@@ -64,3 +72,46 @@ this package. This can typically be done in two ways.
     ```
 
     should work OK.
+
+    The same Home Manager overlay works in a flake-based standalone
+    configuration if `pkgsUnstable` is passed to the Home Manager
+    module:
+
+    ``` nix
+    { pkgsUnstable, ... }:
+
+    {
+      programs.skim.enable = true;
+
+      nixpkgs.overlays = [
+        (_final: _prev: {
+          skim = pkgsUnstable.skim;
+        })
+      ];
+
+      # …
+    }
+    ```
+
+    This also works when Home Manager is used as a NixOS or nix-darwin
+    module without `home-manager.useGlobalPkgs = true`. If
+    `home-manager.useGlobalPkgs = true` is enabled, Home Manager uses
+    the system package set and the `nixpkgs.*` options inside Home
+    Manager are disabled. In that case, put the overlay in the system
+    configuration instead, for example:
+
+    ``` nix
+    { pkgsUnstable, ... }:
+
+    {
+      nixpkgs.overlays = [
+        (_final: _prev: {
+          skim = pkgsUnstable.skim;
+        })
+      ];
+    }
+    ```
+
+    In a flake-based NixOS or nix-darwin configuration, pass
+    `pkgsUnstable` to `nixosSystem` or `darwinSystem` with
+    `specialArgs`.
