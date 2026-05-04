@@ -506,7 +506,7 @@ in
       };
       difftool = {
         prompt = lib.mkDefault false;
-        trustExistCode = lib.mkDefault true;
+        trustExitCode = lib.mkDefault true;
         kitty = {
           cmd = "kitten diff $LOCAL $REMOTE";
         };
