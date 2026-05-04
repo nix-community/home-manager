@@ -367,7 +367,7 @@ $ home-manager generations
 2023-12-25 18:51 : id 761 -&gt; /nix/store/czc5y6vi1rvnkfv83cs3rn84jarcgsgh-home-manager-generation
 …
 </code></pre></div></details></div><br class="example-break" />
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-dotfiles" class="title" style="clear: both">Keeping your ~ safe from harm   </h2>  </div> </div></div><p>To configure programs and services Home Manager must write various
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-dotfiles" class="title" style="clear: both">Keeping your ~ safe from harm   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-usage-dotfiles-collisions">Resolving file collisions</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-dotfiles-advanced">Advanced file behavior</a> </span></dt> </dl></div><p>To configure programs and services Home Manager must write various
 things to your home directory. To prevent overwriting any existing files
 when switching to a new generation, Home Manager will attempt to detect
 collisions between existing files and generated files. If any such
@@ -390,7 +390,77 @@ result in</p><pre><code class="programlisting  shell">$ home-manager switch
 Activating checkLinkTargets
 Existing file &#x27;/home/jdoe/.config/git/config&#x27; is in the way
 Please move the above files and try again
-</code></pre>
+</code></pre><p>This error is about a file that Home Manager wants to manage as a
+symbolic link in your home directory. It is separate from package
+profile collisions, which usually mention <code class="literal">installPackages</code> or a
+<code class="literal">collision between .../bin/...</code> path. For package collisions, see
+<a class="link" href="index.xhtml#_why_is_there_a_collision_error_when_switching_generation" title="Why is there a collision error when switching generation?" >Why is there a collision error when switching generation?</a>.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-dotfiles-collisions" class="title" >Resolving file collisions   </h3>  </div> </div></div><p>The safest resolution is to inspect the existing path, move any
+settings you want Home Manager to manage into your configuration, and
+remove or move the unmanaged file before switching again.</p><p>For a standalone Home Manager installation, you can ask Home Manager to
+move unmanaged non-symlink paths out of the way during activation:</p><pre><code class="programlisting  shell">home-manager switch -b backup
+</code></pre><p>With the command above, a colliding <code class="literal">~/.config/git/config</code> is moved to
+<code class="literal">~/.config/git/config.backup</code> before Home Manager links the managed
+file. If the backup path already exists then activation still aborts, so
+choose an extension whose backup path does not already exist.</p><p>Standalone activation can also run a custom command for each collision:</p><pre><code class="programlisting  shell">home-manager switch -B trash-put
+</code></pre><p>The command receives the colliding path as an argument and must move or
+remove that path. If both <code class="literal">-B</code> and <code class="literal">-b</code> are set, the custom command takes
+precedence; the command may still use the
+<code class="literal">HOME_MANAGER_BACKUP_EXT</code> environment variable set by <code class="literal">-b</code>.</p><p>When Home Manager is used as a NixOS or nix-darwin module, configure the
+corresponding module options instead of passing standalone command line
+flags:</p><pre><code class="programlisting  nix">{
+  home-manager.backupFileExtension = &quot;backup&quot;;
+}
+</code></pre><p>or</p><pre><code class="programlisting  nix">{
+  home-manager.backupCommand = &quot;${pkgs.trash-cli}/bin/trash-put&quot;;
+}
+</code></pre><p>If both <code class="option">home-manager.backupCommand</code> and
+<code class="option">home-manager.backupFileExtension</code> are set, the command takes
+precedence. The extension is still exported to the command as
+<code class="literal">HOME_MANAGER_BACKUP_EXT</code>, so the command can use it when implementing
+its own backup naming. With
+<code class="option">home-manager.backupFileExtension</code>, Home Manager refuses to
+replace an existing backup path unless
+<code class="option">home-manager.overwriteBackup</code> is enabled:</p><pre><code class="programlisting  nix">{
+  home-manager.backupFileExtension = &quot;backup&quot;;
+  home-manager.overwriteBackup = true;
+}
+</code></pre><div class="warning"><h3 class="title">Warning</h3><p><code class="option">home-manager.overwriteBackup</code> allows activation to clobber
+existing backup files. Only enable it when those backup paths are
+disposable.</p></div><p>For individual files, many file options also support <code class="literal">force = true</code>:</p><pre><code class="programlisting  nix">{
+  home.file.&quot;.config/example&quot; = {
+    source = ./example;
+    force = true;
+  };
+}
+</code></pre><p>This skips the collision check for the affected target and lets Home
+Manager replace the existing file or link. Use it sparingly; it can
+silently delete local changes.</p><p>Backup commands and backup extensions are intended for unmanaged
+non-symlink paths. If the colliding target is an unmanaged symbolic
+link, move it manually or use <code class="literal">force = true</code> after checking that the
+link target is safe to replace.</p>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-dotfiles-advanced" class="title" >Advanced file behavior   </h3>  </div> </div></div><p>The notes below apply to <code class="option">home.file</code> and to options based on the
+same file type, such as <code class="option">xdg.configFile</code>.</p><p>When a file source is a directory, <code class="option">home.file.&lt;name&gt;.recursive</code>
+changes how the directory is linked. With the default <code class="literal">recursive = false</code>, the target is one symbolic link to the source directory. With
+<code class="literal">recursive = true</code>, Home Manager creates a matching directory tree and
+links each leaf file into it.</p><p>Recursive directory linking has special overlap behavior. A direct
+duplicate target, such as two managed files both targeting <code class="literal">foo</code>, is an
+error. If a recursively linked directory provides <code class="literal">foo/bar</code> and another
+managed file also targets <code class="literal">foo/bar</code>, Home Manager keeps the recursive
+file by default and ignores the overlapping regular file.</p><p>The <code class="option">home.file.&lt;name&gt;.onChange</code> hook runs after the new files
+are linked. For recursive file entries, the hook is always run, so it
+should be written to be safe even when no leaf file actually changed.</p><p>Normally a path assigned to <code class="option">home.file.&lt;name&gt;.source</code> is copied
+or linked through the Nix store. To make Home Manager create a link to a
+live path outside the store, use
+<code class="literal">config.lib.file.mkOutOfStoreSymlink</code>:</p><pre><code class="programlisting  nix">{ config, ... }:
+
+{
+  home.file.&quot;.config/example&quot;.source =
+    config.lib.file.mkOutOfStoreSymlink ./example;
+}
+</code></pre><p>This is useful when the target should follow changes to a mutable file
+or directory outside the store.</p>
+</div>
+
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-graphical" class="title" style="clear: both">Graphical services   </h2>  </div> </div></div><p>Home Manager includes a number of services intended to run in a
 graphical session, for example <code class="literal">xscreensaver</code> and <code class="literal">dunst</code>.
 Unfortunately, such services will not be started automatically unless
