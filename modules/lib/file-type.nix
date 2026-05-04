@@ -106,11 +106,13 @@ in
               type = types.bool;
               default = false;
               description = ''
-                When `recursive` is enabled, adds `-ignorelinks` flag to lndir
+                When `recursive` is enabled, adds the `-ignorelinks` flag to lndir.
 
                 It causes lndir to not treat symbolic links in the source directory specially.
                 The link created in the target directory will point back to the corresponding
-                (symbolic link) file in the source directory. If the link is to a directory
+                symbolic link in the source directory. If that link points to a directory, the
+                resulting target will be a link to the source tree's symlink rather than a
+                recursively linked directory tree.
               '';
             };
 
