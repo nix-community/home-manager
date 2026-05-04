@@ -34,7 +34,12 @@ can be embedded using <code class="literal">lib.generators.mkLuaInline</code>. T
 <a class="xref" href="options.xhtml#opt-programs.wezterm.extraConfig"  ><code class="option">programs.wezterm.extraConfig</code></a> option remains fully supported
 and can be combined with <a class="xref" href="options.xhtml#opt-programs.wezterm.settings"  ><code class="option">programs.wezterm.settings</code></a>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.anki.uiScale"  ><code class="option">programs.anki.uiScale</code></a> option now expects a value in the
 range 1.0–2.0, previously it erroneously expected values in the
-range <code class="literal">0.0–1.0</code>.</p></li></ul></div>
+range <code class="literal">0.0–1.0</code>.</p></li><li class="listitem"><p>New <a class="xref" href="options.xhtml#opt-home.services"  ><code class="option">home.services</code></a> namespace for nixpkgs
+<a class="link" href="https://nixos.org/manual/nixos/unstable/#modular-services"  target="_top">modular services</a>.
+Service modules shipped with packages (e.g.
+<code class="literal">pkgs.&lt;name&gt;.passthru.services.default</code>) drop in unchanged and are
+lifted to user systemd units. See
+<a class="link" href="index.xhtml#sec-usage-modular-services" title="Modular Services" >Modular Services</a> for details.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
 changes are only active if the <code class="literal">home.stateVersion</code> option is set to
 &quot;26.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-gtk.gtk4.theme"  ><code class="option">gtk.gtk4.theme</code></a> option does not mirror
