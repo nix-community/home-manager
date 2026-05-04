@@ -187,17 +187,17 @@ description of Home Manager and how to use it.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-install-nix-darwin-module" class="title" style="clear: both">nix-darwin module   </h2>  </div> </div></div><p>Home Manager provides a module that allows you to prepare user
 environments directly from the
 <a class="link" href="https://github.com/nix-darwin/nix-darwin/"  target="_top">nix-darwin</a> configuration file,
-which often is more convenient than using the <code class="literal">home-manager</code> tool.</p><p>To make the NixOS module available for use you must <code class="literal">import</code> it into
-your system configuration. This is most conveniently done by adding a
-Home Manager channel. For example, if you are following Nixpkgs master
+which often is more convenient than using the <code class="literal">home-manager</code> tool.</p><p>To make the nix-darwin module available for use you must <code class="literal">import</code> it
+into your system configuration. This is most conveniently done by adding
+a Home Manager channel. For example, if you are following Nixpkgs master
 or an unstable channel, you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 $ nix-channel --update
 </code></pre><p>and if you follow a Nixpkgs version 25.11 channel, you can run</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
 $ nix-channel --update
 </code></pre><p>It is then possible to add</p><pre><code class="programlisting  nix">imports = [ &lt;home-manager/nix-darwin&gt; ];
-</code></pre><p>to your nix-darwin <code class="literal">configuration.nix</code> file, which will introduce a new
-NixOS option called <code class="literal">home-manager</code> whose type is an attribute set that
-maps user names to Home Manager configurations.</p><p>For example, a nix-darwin configuration may include the lines</p><pre><code class="programlisting  nix">users.users.eve = {
+</code></pre><p>to your nix-darwin <code class="literal">configuration.nix</code> file, which will introduce a
+<code class="literal">home-manager.users</code> option whose type is an attribute set that maps
+user names to Home Manager configurations.</p><p>For example, a nix-darwin configuration may include the lines</p><pre><code class="programlisting  nix">users.users.eve = {
   name = &quot;eve&quot;;
   home = &quot;/Users/eve&quot;;
 };
@@ -579,35 +579,59 @@ are intentionally not modeled on <code class="literal">home.services</code> unti
 to keep both surfaces aligned.</p>
 </div>
 
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-updating" class="title" style="clear: both">Updating   </h2>  </div> </div></div><p>If you have installed Home Manager using the Nix channel method then
-updating Home Manager is done by first updating the channel. You can
-then switch to the updated Home Manager environment.</p><pre><code class="programlisting  shell">$ nix-channel --update
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-updating" class="title" style="clear: both">Updating   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-updating-flakes">Flake-Based Configurations</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-updating-channels">Channel-Based Configurations</a> </span></dt> </dl></div><p>Updating means moving to a newer revision of the Home Manager branch
+that your configuration already follows. For example, a configuration
+using <code class="literal">release-25.11</code> can update to a newer revision of <code class="literal">release-25.11</code>
+without changing release branches.</p><p>If you want to move from one release branch to another, such as
+<code class="literal">release-25.05</code> to <code class="literal">release-25.11</code>, or between a release branch and
+<code class="literal">master</code>, see
+<a class="link" href="index.xhtml#sec-upgrade-release" title="Upgrading to a new Home Manager release" >Upgrading to a new Home Manager release</a>.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-updating-flakes" class="title" >Flake-Based Configurations   </h3>  </div> </div></div><p>Flake inputs are pinned in <code class="literal">flake.lock</code>, and Home Manager will keep using
+the pinned revisions until you update that lock file.</p><p>To update all inputs in the flake:</p><pre><code class="programlisting  shell">$ nix flake update
+</code></pre><p>To update only specific inputs, name them explicitly:</p><pre><code class="programlisting  shell">$ nix flake update home-manager nixpkgs
+</code></pre><p>These commands assume that your current directory is the flake. If not,
+pass the flake path or URI with <code class="literal">--flake &lt;flake-uri&gt;</code>.</p><p>After updating the lock file, rebuild with the command for your
+installation method.</p><p>For a standalone Home Manager flake:</p><pre><code class="programlisting  shell">$ home-manager switch --flake .
+</code></pre><p>For Home Manager as a NixOS module:</p><pre><code class="programlisting  shell">$ sudo nixos-rebuild switch --flake .
+</code></pre><p>For Home Manager as a nix-darwin module:</p><pre><code class="programlisting  shell">$ darwin-rebuild switch --flake .
+</code></pre>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-updating-channels" class="title" >Channel-Based Configurations   </h3>  </div> </div></div><p>Channels are mutable references outside the Home Manager configuration
+itself. Updating a channel moves it to a newer revision of the same
+channel or branch.</p><p>For a standalone Home Manager channel installation, update the user’s
+channels and then switch:</p><pre><code class="programlisting  shell">$ nix-channel --update
 …
 unpacking channels...
 $ home-manager switch
+</code></pre><p>For Home Manager as a NixOS module, update the root user’s Home Manager
+channel and rebuild the system:</p><pre><code class="programlisting  shell">$ sudo nix-channel --update home-manager
+$ sudo nixos-rebuild switch
+</code></pre><p>For Home Manager as a nix-darwin module, update the Home Manager channel
+used by your nix-darwin configuration and rebuild the system:</p><pre><code class="programlisting  shell">$ nix-channel --update home-manager
+$ darwin-rebuild switch
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-upgrade-release" class="title" style="clear: both">Upgrading to a new Home Manager release   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-overview">Overview</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-understanding-versioning">Understanding Home Manager Versioning</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-understanding-channel">Channel-Based Installation (Traditional)</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-understanding-flake">Flake-Based Installation (Modern)</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-state-version">State Version Management</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-state-troubleshooting">Troubleshooting</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-resources">Additional Resources</a> </span></dt> </dl></div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-overview" class="title" >Overview   </h3>  </div> </div></div><p>When upgrading NixOS to a new major version (e.g., from 24.11 to
-25.05), you also need to upgrade your Home Manager channel to maintain
-compatibility. This guide covers the proper steps to upgrade Home
-Manager channels for NixOS 25.05.</p>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-versioning" class="title" >Understanding Home Manager Versioning   </h3>  </div> </div></div><p>Home Manager follows NixOS release cycles and provides corresponding branches:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><span class="strong"><strong>release-##.##</strong></span>: Stable branch for NixOS ##.## (current stable)</p></li><li class="listitem"><p><span class="strong"><strong>master</strong></span>: Development branch (tracks nixos-unstable)</p></li></ul></div><div class="note"><h3 class="title">Note</h3><p>Always use the Home Manager version that matches your NixOS version to
-avoid compatibility issues.</p></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-channel" class="title" >Channel-Based Installation (Traditional)   </h3>  </div> </div></div><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>First, verify your current Home Manager channel:</p><pre><code class="programlisting  shell">$ nix-channel --list
-</code></pre><p>You should see something like:</p><pre><code class="programlisting">home-manager https://github.com/nix-community/home-manager/archive/release-24.11.tar.gz
-</code></pre></li><li class="listitem"><p>Update the Home Manager channel to a NixOS 25.05 compatible version:</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.05.tar.gz home-manager
-$ nix-channel --update
-</code></pre></li><li class="listitem"><p>Apply the changes:</p><pre><code class="programlisting  shell">$ home-manager switch
-</code></pre></li></ol></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-flake" class="title" >Flake-Based Installation (Modern)   </h3>  </div> </div></div><p>If you’re using Home Manager with Nix flakes, update your <code class="literal">flake.nix</code>:</p><pre><code class="programlisting nix">{
+</div>
+
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-upgrade-release" class="title" style="clear: both">Upgrading to a new Home Manager release   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-overview">Overview</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-understanding-versioning">Understanding Home Manager Versioning</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-understanding-flake">Flake-Based Installation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-understanding-channel">Channel-Based Installation</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-state-version">State Version Management</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-state-troubleshooting">Troubleshooting</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-upgrade-release-resources">Additional Resources</a> </span></dt> </dl></div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-overview" class="title" >Overview   </h3>  </div> </div></div><p>When moving your configuration to a new Nixpkgs release branch, you
+should also move Home Manager to the matching release branch. On NixOS
+this usually means upgrading Home Manager together with NixOS. On
+standalone and nix-darwin installations, match Home Manager to the
+Nixpkgs branch used by your configuration. The examples below use 25.11;
+replace this with the release branch you are upgrading to.</p><p>If your configuration follows <code class="literal">nixos-unstable</code> or <code class="literal">nixpkgs-unstable</code>,
+use Home Manager’s <code class="literal">master</code> branch.</p>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-versioning" class="title" >Understanding Home Manager Versioning   </h3>  </div> </div></div><p>Home Manager follows NixOS release cycles and provides corresponding branches:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><span class="strong"><strong>release-&lt;version&gt;</strong></span>: Stable branch for the matching NixOS or
+Nixpkgs release, such as <code class="literal">release-25.11</code>.</p></li><li class="listitem"><p><span class="strong"><strong>master</strong></span>: Development branch (tracks nixos-unstable)</p></li></ul></div><div class="note"><h3 class="title">Note</h3><p>Use the Home Manager branch that matches the Nixpkgs branch used to
+evaluate your Home Manager configuration. For stable NixOS
+configurations, this is normally the same as your NixOS version.</p></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-flake" class="title" >Flake-Based Installation   </h3>  </div> </div></div><p>If you are using Home Manager with Nix flakes, update your <code class="literal">nixpkgs</code> and
+<code class="literal">home-manager</code> inputs together:</p><pre><code class="programlisting nix">{
   description = &quot;Home Manager configuration&quot;;
 
   inputs = {
-    # Increment release branch for NixOS
-    nixpkgs.url = &quot;github:NixOS/nixpkgs/nixos-25.05&quot;;
+    # Match the Nixpkgs branch to the release you are using.
+    nixpkgs.url = &quot;github:NixOS/nixpkgs/nixos-25.11&quot;;
+
     home-manager = {
-      # Follow corresponding `release` branch from Home Manager
-      url = &quot;github:nix-community/home-manager/release-25.05&quot;;
-      inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
+      # Match the Home Manager branch to the Nixpkgs branch above.
+      url = &quot;github:nix-community/home-manager/release-25.11&quot;;
     };
   };
 
@@ -618,32 +642,65 @@ $ nix-channel --update
     };
   };
 }
-</code></pre><p>Then update and rebuild. If you are using Home Manager standalone:</p><pre><code class="programlisting  shell">$ nix flake update
+</code></pre><p>For <code class="literal">nixos-unstable</code> or <code class="literal">nixpkgs-unstable</code>, use the <code class="literal">master</code> branch
+instead:</p><pre><code class="programlisting nix">{
+  inputs = {
+    nixpkgs.url = &quot;github:NixOS/nixpkgs/nixos-unstable&quot;;
+
+    home-manager = {
+      url = &quot;github:nix-community/home-manager&quot;;
+    };
+  };
+}
+</code></pre><p>Then update the lock file and rebuild using the command for your
+installation method.</p><p>For a standalone Home Manager flake:</p><pre><code class="programlisting  shell">$ nix flake update
 $ home-manager switch --flake .
-</code></pre><p>And if you are using Home Manager as a NixOS module then you will need
-to update your system configuration instead and run</p><pre><code class="programlisting  shell">$ nix flake update
+</code></pre><p>For Home Manager as a NixOS module:</p><pre><code class="programlisting  shell">$ nix flake update
+$ sudo nixos-rebuild switch --flake .
+</code></pre><p>For Home Manager as a nix-darwin module:</p><pre><code class="programlisting  shell">$ nix flake update
+$ darwin-rebuild switch --flake .
+</code></pre><p>These commands assume that your current directory is the flake. If not,
+pass the flake path or URI with <code class="literal">--flake &lt;flake-uri&gt;</code>.</p>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-channel" class="title" >Channel-Based Installation   </h3>  </div> </div></div><p>For a standalone channel-based installation, first verify your current
+Home Manager channel:</p><pre><code class="programlisting  shell">$ nix-channel --list
+</code></pre><p>The entry identifies the Home Manager branch currently in use. For
+example:</p><pre><code class="programlisting">home-manager https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz
+</code></pre><p>Update the Home Manager channel to the branch matching your Nixpkgs
+release, then switch:</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
+$ nix-channel --update
+$ home-manager switch
+</code></pre><p>When Home Manager is installed as a NixOS module with channels, update
+the root user’s Home Manager channel and rebuild the system:</p><pre><code class="programlisting  shell">$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
+$ sudo nix-channel --update
 $ sudo nixos-rebuild switch
+</code></pre><p>When Home Manager is installed as a nix-darwin module with channels,
+update the Home Manager channel used by your nix-darwin configuration
+and rebuild the system:</p><pre><code class="programlisting  shell">$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
+$ nix-channel --update
+$ darwin-rebuild switch
 </code></pre>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-state-version" class="title" >State Version Management   </h3>  </div> </div></div><div class="warning"><h3 class="title">Warning</h3><p>Careful updating your <code class="literal">home.stateVersion</code> when upgrading Home Manager.</p></div><p>The <code class="literal">stateVersion</code> is best to remain set to the NixOS version you
-<span class="strong"><strong>first installed</strong></span> Home Manager</p><pre><code class="programlisting nix">{
-  home.stateVersion = &quot;24.11&quot;;  # Example: if you first installed on 24.11
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-state-version" class="title" >State Version Management   </h3>  </div> </div></div><div class="warning"><h3 class="title">Warning</h3><p>Careful updating your <code class="literal">home.stateVersion</code> when upgrading Home Manager.</p></div><p>The <code class="literal">stateVersion</code> should remain set to the Home Manager release you
+first used for this home configuration.</p><pre><code class="programlisting nix">{
+  # Example: if this home configuration was first created on 24.11.
+  home.stateVersion = &quot;24.11&quot;;
 }
 </code></pre><p><span class="strong"><strong>Why?</strong></span> The <code class="literal">stateVersion</code> ensures backward compatibility and
-prevents breaking changes from affecting your existing configuration.</p><p><span class="strong"><strong>Remember:</strong></span> Channel version is not the same as State version. Update
-the channel, keep the <code class="literal">stateVersion</code> unchanged. Advanced users can
-view the changes between releases and see if any of the <code class="literal">stateVersion</code>
-changes will affect them and increment, if they migrate their
-configurations to follow the changed evaluation.</p>
+prevents breaking changes from affecting your existing configuration.</p><p><span class="strong"><strong>Remember:</strong></span> Channel or flake input version is not the same as state
+version. Update Home Manager, keep <code class="literal">home.stateVersion</code> unchanged, and
+only change it after reading the release notes and migrating any
+affected configuration.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-state-troubleshooting" class="title" >Troubleshooting   </h3>  </div> </div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-upgrade-release-state-troubleshooting-common-issues" class="title" >Common Issues   </h4>  </div> </div></div><p>Check the <a class="link" href="release-notes.xhtml" title="Appendix D. Release Notes" >Home Manager Release Notes</a> for breaking changes.</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p><span class="strong"><strong>Version Mismatch Warning</strong></span>: If you see warnings about version
-mismatches, ensure your Home Manager version matches your NixOS
-version.</p></li><li class="listitem"><p><span class="strong"><strong>Module Changes</strong></span>: Modules are constantly being updated with new
+mismatches, ensure your Home Manager branch matches the Nixpkgs
+branch used by your configuration. For NixOS stable releases, this
+usually means matching your NixOS version.</p></li><li class="listitem"><p><span class="strong"><strong>Module Changes</strong></span>: Modules are constantly being updated with new
 features to keep up with changes in upstream packaging or to fix
 bugs and add features. If you have an unexpected change, check if
 there was something noted in the release notes or news entries.</p></li><li class="listitem"><p><span class="strong"><strong>Channel Not Found</strong></span>: If <code class="literal">nix-channel --list</code> shows no channels,
-you might be using a different installation method (like flakes or
-NixOS module).</p></li></ol></div>
+you might be using a different installation method, such as flakes,
+or Home Manager may be imported through your system configuration.</p></li></ol></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-upgrade-release-state-troubleshooting-verification" class="title" >Verification   </h4>  </div> </div></div><p>After upgrading, verify the installation:</p><pre><code class="programlisting  shell">$ home-manager --version
-</code></pre><p>This should show version 25.05 or indicate it’s using the release-25.05 branch.</p>
+</code></pre><p>This should show the Home Manager version or indicate that it is using
+the expected release branch.</p>
 </div>
 
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-resources" class="title" >Additional Resources   </h3>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p><a class="link" href="https://nixos.org/manual/nixos/stable/release-notes"  target="_top">NixOS Stable Release Notes</a></p></li><li class="listitem"><p><a class="link" href="release-notes.xhtml" title="Appendix D. Release Notes" >Home Manager Release Notes</a></p></li></ul></div>
@@ -662,10 +719,23 @@ home directory independently of the system as a whole. See
 to perform this installation.</p></li><li class="listitem"><p>As a module within a NixOS system configuration. This allows the
 user profiles to be built together with the system when running
 <code class="literal">nixos-rebuild</code>. See <a class="link" href="index.xhtml#sec-flakes-nixos-module" title="NixOS module" >NixOS module</a> for a
-description of this setup.</p></li><li class="listitem"><p>This allows the user profiles to be built together with the system
-when running <code class="literal">darwin-rebuild</code>. See <a class="link" href="index.xhtml#sec-flakes-nix-darwin-module" title="nix-darwin module" >nix-darwin
-module</a> for a description of this
-setup.</p></li></ol></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-flakes-prerequisites">Prerequisites</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-standalone">Standalone setup</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nix-darwin-module">nix-darwin module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-flake-parts-module">flake-parts module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-prerequisites" class="title" style="clear: both">Prerequisites   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Install Nix 2.4 or later, or have it in <code class="literal">nix-shell</code>.</p></li><li class="listitem"><p>Enable experimental features <code class="literal">nix-command</code> and <code class="literal">flakes</code>.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>When using NixOS, add the following to your <code class="literal">configuration.nix</code>
+description of this setup.</p></li><li class="listitem"><p>As a module within a <a class="link" href="https://github.com/nix-darwin/nix-darwin/"  target="_top">nix-darwin</a>
+system configuration. This allows the user profiles to be built
+together with the system when running <code class="literal">darwin-rebuild</code>. See
+<a class="link" href="index.xhtml#sec-flakes-nix-darwin-module" title="nix-darwin module" >nix-darwin module</a> for a
+description of this setup.</p></li></ol></div><p>Advanced users may want Home Manager’s <code class="literal">nixpkgs</code> input to follow the
+same Nixpkgs input as the rest of their flake. This avoids a second
+Nixpkgs input and makes Home Manager use the same pinned Nixpkgs source
+revision as the rest of the configuration:</p><pre><code class="programlisting  nix">home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
+</code></pre><p>This removes the compatibility assumption between Home Manager and the
+Nixpkgs revision in Home Manager’s own lock file, so use it carefully,
+especially when tracking unstable branches.</p><p>This does not by itself make Home Manager use the same <code class="literal">pkgs</code> value as
+your NixOS or nix-darwin system. In NixOS and nix-darwin module setups,
+<code class="literal">home-manager.useGlobalPkgs = true</code> controls that behavior by making
+Home Manager modules receive the system <code class="literal">pkgs</code> value. When
+<code class="literal">home-manager.useGlobalPkgs</code> is enabled, configure Nixpkgs overlays and
+configuration at the system level instead of through Home Manager
+<code class="literal">nixpkgs.*</code> options.</p><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-flakes-prerequisites">Prerequisites</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-standalone">Standalone setup</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nixos-module">NixOS module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-nix-darwin-module">nix-darwin module</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-flakes-flake-parts-module">flake-parts module</a> </span></dt> </dl></div></div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-prerequisites" class="title" style="clear: both">Prerequisites   </h2>  </div> </div></div><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Install Nix 2.4 or later, or have it in <code class="literal">nix-shell</code>.</p></li><li class="listitem"><p>Enable experimental features <code class="literal">nix-command</code> and <code class="literal">flakes</code>.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: circle;"><li class="listitem"><p>When using NixOS, add the following to your <code class="literal">configuration.nix</code>
 and rebuild your system.</p><pre><code class="programlisting  nix">nix.settings.experimental-features = &quot;nix-command flakes&quot;;
 </code></pre></li><li class="listitem"><p>If you are not using NixOS, add the following to <code class="literal">nix.conf</code>
 (located at <code class="literal">~/.config/nix/</code> or <code class="literal">/etc/nix/nix.conf</code>).</p><pre><code class="programlisting  bash">experimental-features = nix-command flakes
@@ -689,7 +759,6 @@ imported Home Manager modules, use <code class="literal">extraSpecialArgs</code>
   inputs = {
     nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
-    home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }: {
@@ -715,12 +784,11 @@ and activating your flake-based configuration is as simple as</p><pre><code clas
 want. For example,</p><pre><code class="programlisting  shell">$ nix run home-manager/$branch -- init --switch ~/hmconf
 $ # And after the initial activation.
 $ home-manager switch --flake ~/hmconf
-</code></pre><div class="note"><h3 class="title">Note</h3><p>The flake inputs are not automatically updated by Home Manager. You need
-to use the standard <code class="literal">nix flake update</code> command for that.</p><p>If you only want to update a single flake input, then the command
-<code class="literal">nix flake lock --update-input &lt;input&gt;</code> can be used.</p><p>You can also pass flake-related options such as <code class="literal">--recreate-lock-file</code>
-or <code class="literal">--update-input &lt;input&gt;</code> to <code class="literal">home-manager</code> when building or
-switching, and these options will be forwarded to <code class="literal">nix build</code>. See the
-<a class="link" href="https://wiki.nixos.org/wiki/Flakes"  target="_top">NixOS Wiki page</a> for details.</p></div>
+</code></pre><div class="note"><h3 class="title">Note</h3><p>The flake inputs are not automatically updated by Home Manager. Update
+the lock file with <code class="literal">nix flake update</code> before switching if you want to
+use newer input revisions.</p><p>If you only want to update specific flake inputs, name them explicitly,
+for example <code class="literal">nix flake update nixpkgs home-manager</code>.</p><p>These commands assume that your current directory is the flake. If not,
+pass the flake path or URI with <code class="literal">--flake &lt;flake-uri&gt;</code>.</p></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-nixos-module" class="title" style="clear: both">NixOS module   </h2>  </div> </div></div><p>To use Home Manager as a NixOS module, a bare-minimum <code class="literal">flake.nix</code> would
 be as follows:</p><pre><code class="programlisting  nix">{
   description = &quot;NixOS configuration&quot;;
@@ -728,7 +796,6 @@ be as follows:</p><pre><code class="programlisting  nix">{
   inputs = {
     nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
-    home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }: {
@@ -758,8 +825,8 @@ module argument from within the module graph itself. For values that originate
 outside the module graph, such as flake inputs, prefer
 <code class="literal">home-manager.extraSpecialArgs</code>.</p><p>The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate
-command for the system, such as
-<code class="literal">nixos-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">/etc/nixos</code> by</p><pre><code class="programlisting  shell">$ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
+command for the system, such as</p><pre><code class="programlisting  shell">$ nixos-rebuild switch --flake /etc/nixos
+</code></pre><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">/etc/nixos</code> by</p><pre><code class="programlisting  shell">$ nix flake new /etc/nixos -t github:nix-community/home-manager#nixos
 </code></pre>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-nix-darwin-module" class="title" style="clear: both">nix-darwin module   </h2>  </div> </div></div><p>The flake-based setup of the Home Manager nix-darwin module is similar
 to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><code class="programlisting  nix">{
@@ -770,7 +837,6 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
     darwin.url = &quot;github:nix-darwin/nix-darwin&quot;;
     darwin.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
-    home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
   };
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
@@ -799,7 +865,7 @@ so they can declare arguments such as <code class="literal">{ inputs, ... }:</co
 module argument from within the module graph itself. For values that originate
 outside the module graph, such as flake inputs, prefer
 <code class="literal">home-manager.extraSpecialArgs</code>.</p><p>and it is also rebuilt with the nix-darwin generations. The rebuild
-command here may be <code class="literal">darwin-rebuild switch --flake &lt;flake-uri&gt;</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre><code class="programlisting  shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
+command here may be <code class="literal">darwin-rebuild switch --flake ~/.config/darwin</code>.</p><p>You can use the above <code class="literal">flake.nix</code> as a template in <code class="literal">~/.config/darwin</code> by</p><pre><code class="programlisting  shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 </code></pre>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-flakes-flake-parts-module" class="title" style="clear: both">flake-parts module   </h2>  </div> </div></div><p>When using <a class="link" href="https://flake.parts"  target="_top">flake-parts</a> you may wish to import Home
 Manager’s flake module, <code class="literal">flakeModules.home-manager</code>.</p><pre><code class="programlisting nix">{
@@ -808,7 +874,6 @@ Manager’s flake module, <code class="literal">flakeModules.home-manager</code>
   inputs = {
     nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
-    home-manager.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
     flake-parts.url = &quot;github:hercules-ci/flake-parts&quot;;
   };
 
@@ -1424,25 +1489,83 @@ might get is</p><pre><code class="programlisting">error: GDBus.Error:org.freedes
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="_how_do_i_install_packages_from_nixpkgs_unstable" class="title" style="clear: both">How do I install packages from Nixpkgs unstable?   </h2>  </div> </div></div><p>If you are using a stable version of Nixpkgs but would like to install
 some particular packages from Nixpkgs unstable – or some other channel
 – then you can import the unstable Nixpkgs and refer to its packages
-within your configuration. Something like</p><pre><code class="programlisting  nix">{ pkgs, config, ... }:
+within your configuration.</p><p>With channels, something like</p><pre><code class="programlisting  nix">{ pkgs, config, ... }:
 
 let
-
   pkgsUnstable = import &lt;nixpkgs-unstable&gt; {};
-
 in
+{
+  home.packages = [
+    pkgsUnstable.foo
+  ];
+  # …
+}
+</code></pre><p>should work provided you have a Nix channel called <code class="literal">nixpkgs-unstable</code>.</p><p>You can add the <code class="literal">nixpkgs-unstable</code> channel by running</p><pre><code class="programlisting  shell">$ nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
+$ nix-channel --update
+</code></pre><p>With flakes, add another Nixpkgs input and pass its packages to your
+Home Manager modules. For example, a standalone Home Manager flake can
+define the following. Replace 25.11 with the release branch your
+configuration follows.</p><pre><code class="programlisting  nix">{
+  inputs = {
+    nixpkgs.url = &quot;github:NixOS/nixpkgs/nixos-25.11&quot;;
+    nixpkgs-unstable.url = &quot;github:NixOS/nixpkgs/nixpkgs-unstable&quot;;
+    home-manager.url = &quot;github:nix-community/home-manager/release-25.11&quot;;
+  };
+
+  outputs =
+    { nixpkgs, nixpkgs-unstable, home-manager, ... }:
+    let
+      # Replace this with the system of your Home Manager configuration.
+      system = &quot;x86_64-linux&quot;;
+      pkgs = nixpkgs.legacyPackages.${system};
+      pkgsUnstable = nixpkgs-unstable.legacyPackages.${system};
+    in
+    {
+      homeConfigurations.jdoe = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        extraSpecialArgs = { inherit pkgsUnstable; };
+        modules = [ ./home.nix ];
+      };
+    };
+}
+</code></pre><p>and then use the extra argument in <code class="literal">home.nix</code>:</p><pre><code class="programlisting  nix">{ pkgsUnstable, ... }:
 
 {
   home.packages = [
     pkgsUnstable.foo
   ];
-
-  # …
 }
-</code></pre><p>should work provided you have a Nix channel called <code class="literal">nixpkgs-unstable</code>.</p><p>You can add the <code class="literal">nixpkgs-unstable</code> channel by running</p><pre><code class="programlisting  shell">$ nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
-$ nix-channel --update
-</code></pre><p>Note, the package will not be affected by any package overrides,
-overlays, etc.</p>
+</code></pre><p>When Home Manager is used as a NixOS or nix-darwin module, pass the
+extra package set with <code class="literal">home-manager.extraSpecialArgs</code> in the system
+configuration:</p><pre><code class="programlisting  nix">outputs =
+  { nixpkgs, nixpkgs-unstable, home-manager, ... }:
+  let
+    # Replace this with the system of your NixOS or nix-darwin configuration.
+    system = &quot;x86_64-linux&quot;;
+  in
+  {
+    nixosConfigurations.hostname = nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [
+        home-manager.nixosModules.home-manager
+        ({ config, ... }: {
+          home-manager.extraSpecialArgs = {
+            pkgsUnstable = import nixpkgs-unstable {
+              inherit system;
+              config = config.nixpkgs.config;
+              overlays = config.nixpkgs.overlays;
+            };
+
+            # If you use a stock Nixpkgs configuration, you can use:
+            # pkgsUnstable = nixpkgs-unstable.legacyPackages.${system};
+          };
+        })
+      ];
+    };
+  };
+</code></pre><p>The nix-darwin setup is the same pattern with
+<code class="literal">darwin.lib.darwinSystem</code> and
+<code class="literal">home-manager.darwinModules.home-manager</code>.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="_how_do_i_change_the_package_used_by_a_module" class="title" style="clear: both">How do I change the package used by a module?   </h2>  </div> </div></div><p>By default Home Manager will install the package provided by your chosen
 <code class="literal">nixpkgs</code> channel but occasionally you might end up needing to change
 this package. This can typically be done in two ways.</p><div class="orderedlist"><ol class="orderedlist "  type="1"><li class="listitem"><p>If the module provides a <code class="literal">package</code> option, such as
@@ -1453,39 +1576,75 @@ for more information on package overrides. Alternatively, if you want
 to use the <code class="literal">beets</code> package from Nixpkgs unstable, then a configuration like</p><pre><code class="programlisting  nix">{ pkgs, config, ... }:
 
 let
-
   pkgsUnstable = import &lt;nixpkgs-unstable&gt; {};
-
 in
+{
+  programs.beets.package = pkgsUnstable.beets;
+
+  # …
+}
+</code></pre><p>should work OK. With flakes, pass the unstable package set as
+described in
+<a class="link" href="index.xhtml#_how_do_i_install_packages_from_nixpkgs_unstable" title="How do I install packages from Nixpkgs unstable?" >How do I install packages from Nixpkgs unstable?</a>
+and then use the extra module argument:</p><pre><code class="programlisting  nix">{ pkgsUnstable, ... }:
 
 {
   programs.beets.package = pkgsUnstable.beets;
 
   # …
 }
-</code></pre><p>should work OK.</p></li><li class="listitem"><p>If no <code class="literal">package</code> option is available then you can typically change
+</code></pre></li><li class="listitem"><p>If no <code class="literal">package</code> option is available then you can typically change
 the relevant package using an
 <a class="link" href="https://nixos.org/nixpkgs/manual/#chap-overlays"  target="_top">overlay</a>.</p><p>For example, if you want to use the <code class="literal">programs.skim</code> module but use
 the <code class="literal">skim</code> package from Nixpkgs unstable, then a configuration like</p><pre><code class="programlisting  nix">{ pkgs, config, ... }:
 
 let
-
   pkgsUnstable = import &lt;nixpkgs-unstable&gt; {};
-
 in
 
 {
   programs.skim.enable = true;
 
   nixpkgs.overlays = [
-    (self: super: {
+    (_final: _prev: {
       skim = pkgsUnstable.skim;
     })
   ];
 
   # …
 }
-</code></pre><p>should work OK.</p></li></ol></div>
+</code></pre><p>should work OK.</p><p>The same Home Manager overlay works in a flake-based standalone
+configuration if <code class="literal">pkgsUnstable</code> is passed to the Home Manager
+module:</p><pre><code class="programlisting  nix">{ pkgsUnstable, ... }:
+
+{
+  programs.skim.enable = true;
+
+  nixpkgs.overlays = [
+    (_final: _prev: {
+      skim = pkgsUnstable.skim;
+    })
+  ];
+
+  # …
+}
+</code></pre><p>This also works when Home Manager is used as a NixOS or nix-darwin
+module without <code class="literal">home-manager.useGlobalPkgs = true</code>. If
+<code class="literal">home-manager.useGlobalPkgs = true</code> is enabled, Home Manager uses
+the system package set and the <code class="literal">nixpkgs.*</code> options inside Home
+Manager are disabled. In that case, put the overlay in the system
+configuration instead, for example:</p><pre><code class="programlisting  nix">{ pkgsUnstable, ... }:
+
+{
+  nixpkgs.overlays = [
+    (_final: _prev: {
+      skim = pkgsUnstable.skim;
+    })
+  ];
+}
+</code></pre><p>In a flake-based NixOS or nix-darwin configuration, pass
+<code class="literal">pkgsUnstable</code> to <code class="literal">nixosSystem</code> or <code class="literal">darwinSystem</code> with
+<code class="literal">specialArgs</code>.</p></li></ol></div>
 </div>
 </div>
  </div>
