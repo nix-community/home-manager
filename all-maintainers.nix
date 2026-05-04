@@ -2143,6 +2143,13 @@
     name = "Sable Seyler";
     source = "nixpkgs";
   };
+  sei40kr = {
+    email = "sei40kr@gmail.com";
+    github = "sei40kr";
+    githubId = 11665236;
+    name = "Seong Yong-ju";
+    source = "nixpkgs";
+  };
   shikanime = {
     email = "william.phetsinorath@shikanime.studio";
     github = "shikanime";
