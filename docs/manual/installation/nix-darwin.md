@@ -5,9 +5,9 @@ environments directly from the
 [nix-darwin](https://github.com/nix-darwin/nix-darwin/) configuration file,
 which often is more convenient than using the `home-manager` tool.
 
-To make the NixOS module available for use you must `import` it into
-your system configuration. This is most conveniently done by adding a
-Home Manager channel. For example, if you are following Nixpkgs master
+To make the nix-darwin module available for use you must `import` it
+into your system configuration. This is most conveniently done by adding
+a Home Manager channel. For example, if you are following Nixpkgs master
 or an unstable channel, you can run
 
 ``` shell
@@ -28,9 +28,9 @@ It is then possible to add
 imports = [ <home-manager/nix-darwin> ];
 ```
 
-to your nix-darwin `configuration.nix` file, which will introduce a new
-NixOS option called `home-manager` whose type is an attribute set that
-maps user names to Home Manager configurations.
+to your nix-darwin `configuration.nix` file, which will introduce a
+`home-manager.users` option whose type is an attribute set that maps
+user names to Home Manager configurations.
 
 For example, a nix-darwin configuration may include the lines
 

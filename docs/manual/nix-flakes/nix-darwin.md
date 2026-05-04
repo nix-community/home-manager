@@ -12,7 +12,6 @@ to that of NixOS. The `flake.nix` would be:
     darwin.url = "github:nix-darwin/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
@@ -47,7 +46,7 @@ outside the module graph, such as flake inputs, prefer
 `home-manager.extraSpecialArgs`.
 
 and it is also rebuilt with the nix-darwin generations. The rebuild
-command here may be `darwin-rebuild switch --flake <flake-uri>`.
+command here may be `darwin-rebuild switch --flake ~/.config/darwin`.
 
 You can use the above `flake.nix` as a template in `~/.config/darwin` by
 

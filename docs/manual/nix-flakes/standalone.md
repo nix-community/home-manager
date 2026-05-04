@@ -29,7 +29,6 @@ imported Home Manager modules, use `extraSpecialArgs` in the call to
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }: {
@@ -79,14 +78,13 @@ $ home-manager switch --flake ~/hmconf
 ```
 
 ::: {.note}
-The flake inputs are not automatically updated by Home Manager. You need
-to use the standard `nix flake update` command for that.
+The flake inputs are not automatically updated by Home Manager. Update
+the lock file with `nix flake update` before switching if you want to
+use newer input revisions.
 
-If you only want to update a single flake input, then the command
-`nix flake lock --update-input <input>` can be used.
+If you only want to update specific flake inputs, name them explicitly,
+for example `nix flake update nixpkgs home-manager`.
 
-You can also pass flake-related options such as `--recreate-lock-file`
-or `--update-input <input>` to `home-manager` when building or
-switching, and these options will be forwarded to `nix build`. See the
-[NixOS Wiki page](https://wiki.nixos.org/wiki/Flakes) for details.
+These commands assume that your current directory is the flake. If not,
+pass the flake path or URI with `--flake <flake-uri>`.
 :::
