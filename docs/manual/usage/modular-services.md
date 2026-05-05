@@ -38,6 +38,30 @@ units are dashed under the parent service name. The empty unit key
 after the service itself); [`process.argv`] becomes the default
 `ExecStart` for that unit, which defaults to `WantedBy=default.target`.
 
+## Reusing upstream package modules {#sec-usage-modular-services-upstream}
+
+Modular services exposed by packages under
+`pkgs.<name>.passthru.services.default` can be imported directly.
+For example, `pkgs.php`'s [`php-fpm`]:
+
+```nix
+{ pkgs, ... }: {
+  home.services."php-fpm" = {
+    imports = [ pkgs.php.passthru.services.default ];
+    configData."php-fpm.conf".source = builtins.elemAt config.home.services.php-fpm.process.argv 2;
+    php-fpm.settings.mypool = {
+      listen = "127.0.0.1:9000";
+      # FIXME: required by upstream modular service, but ignored when run as user
+      "user" = "";
+      "pm" = "dynamic";
+      "pm.max_children" = 75;
+      "pm.min_spare_servers" = 5;
+      "pm.max_spare_servers" = 20;
+    };
+  };
+}
+```
+
 ## Configuration data {#sec-usage-modular-services-configdata}
 
 Each service can declare configuration files via `configData.<name>`.
@@ -76,3 +100,4 @@ are intentionally not modeled on `home.services` until upstream grows them,
 to keep both surfaces aligned.
 
 [`process.argv`]: https://nixos.org/manual/nixos/unstable/#service-opt-process.argv
+[`php-fpm`]: https://nixos.org/manual/nixos/stable/options#opt-_imports_=___pkgs.php.services.default___
