@@ -49,7 +49,7 @@ after the service itself); [`process.argv`] becomes the default
 ## Configuration data {#sec-usage-modular-services-configdata}
 
 Each service can declare configuration files via `configData.<name>`.
-These are materialized at `$XDG_CONFIG_HOME/system-services/<service>/<name>`
+These are materialized at `$XDG_CONFIG_HOME/home-services/<service>/<name>`
 (mirroring how NixOS lifts `configData` to `environment.etc`), with the
 absolute path injected back into `configData.<name>.path` so the service
 can refer to its files at a stable location:

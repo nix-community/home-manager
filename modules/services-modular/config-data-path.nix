@@ -23,7 +23,7 @@ let
             types.submodule (
               { config, ... }:
               {
-                config.path = lib.mkDefault "${xdgConfigHome}/system-services/${servicePrefix}/${config.name}";
+                config.path = lib.mkDefault "${xdgConfigHome}/home-services/${servicePrefix}/${config.name}";
               }
             )
           );

@@ -119,7 +119,7 @@ let
   makeConfigFiles =
     prefix: service:
     lib.mapAttrs' (_: cfg: {
-      name = "system-services/${prefix}/${cfg.name}";
+      name = "home-services/${prefix}/${cfg.name}";
       value = lib.filterAttrs (_: v: v != null) {
         source = cfg.source or null;
         text = cfg.text or null;
