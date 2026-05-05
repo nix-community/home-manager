@@ -63,9 +63,13 @@ in
             assertion = !(builtins.any (name: lib.hasInfix "/" name) (builtins.attrNames cfg.configs));
             message = "The names of configs in `programs.quickshell.configs` must not contain slashes.";
           }
+          {
+            assertion = cfg.systemd.enable -> cfg.package != null;
+            message = "`programs.quickshell.systemd.enable` cannot be true when `programs.quickshell.package` is null";
+          }
         ];
 
-        home.packages = [ cfg.package ];
+        home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
       }
       (lib.mkIf cfg.systemd.enable {
