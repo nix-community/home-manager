@@ -2,7 +2,7 @@
 
 Home Manager supports nixpkgs
 [modular services](https://nixos.org/manual/nixos/unstable/#modular-services)
-under [](#opt-home.services). This is the home-manager analog to the
+under [](#opt-home.services). This is the Home Manager analog to the
 NixOS `system.services` namespace: each entry is an abstract service
 sourced from `<nixpkgs/lib/services/lib.nix>` with the upstream portable
 systemd module loaded into it, so service modules shipped with packages
@@ -35,7 +35,7 @@ Each service exposes the upstream NixOS-style schema: [`process.argv`],
 `systemd.services`, `systemd.sockets`. Lifted units are translated from
 NixOS-style attrs (`wantedBy`, `serviceConfig`, `unitConfig`,
 `environment`, ...) into the section-based INI shape
-(`{ Unit; Service; Install; }`) that home-manager's
+(`{ Unit; Service; Install; }`) that Home Manager's
 [](#opt-systemd.user.services) consumes. Only common keys are mapped
 explicitly; uncommon options remain reachable via `unitConfig`,
 `serviceConfig`, or `socketConfig`.

@@ -24,7 +24,7 @@ let
 
   # Translate a NixOS-style systemd unit attrset (wantedBy, serviceConfig,
   # unitConfig, environment, ...) into the section-based INI shape that
-  # home-manager's `systemd.user.<unitType>` expects (Unit/Service/Install).
+  # Home Manager's `systemd.user.<unitType>` expects (Unit/Service/Install).
   # Only the common keys are mapped; uncommon options can still be set
   # explicitly via `unitConfig` / `serviceConfig` / `socketConfig`.
   unitAttrKeys = [
@@ -148,11 +148,11 @@ in
 
   options.home.services = mkOption {
     description = ''
-      Home-Manager [modular services](https://nixos.org/manual/nixos/unstable/#modular-services).
+      Home Manager [modular services](https://nixos.org/manual/nixos/unstable/#modular-services).
 
       Each entry is an abstract service that may declare a {option}`process.argv`
-      and home-manager-style {option}`systemd.user.{services,sockets}` units
-      (INI section shape). Units are emitted under home-manager's
+      and Home Manager-style {option}`systemd.user.{services,sockets}` units
+      (INI section shape). Units are emitted under Home Manager's
       {option}`systemd.user.services` (and friends) with the service name
       as a prefix. Mirrors {option}`system.services` in NixOS.
     '';
