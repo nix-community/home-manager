@@ -74,4 +74,4 @@ natively under [](#opt-systemd.user.services) (timers, paths, mounts, ...)
 are intentionally not modeled on `home.services` until upstream grows them,
 to keep both surfaces aligned.
 
-[`process.argv`]: https://nixos.org/manual/nixos/unstable/#opt-system.services._name_.process.argv
+[`process.argv`]: https://nixos.org/manual/nixos/unstable/#service-opt-process.argv
