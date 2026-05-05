@@ -1,0 +1,14 @@
+[audio]
+device = "default"
+max_duration_secs = 60
+sample_rate = 16000
+
+[hotkey]
+
+[output]
+fallback_to_clipboard = true
+mode = "type"
+
+[whisper]
+language = "en"
+model = "base.en"
