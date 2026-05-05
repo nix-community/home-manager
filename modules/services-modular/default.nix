@@ -49,17 +49,19 @@ let
         k:
         lib.optional (src ? ${k} && src.${k} != null && src.${k} != [ ]) {
           name = lib.toSentenceCase k;
-          value = src.${k};
+          value = normalizeTargets src.${k};
         }
       ) keys
     );
   envToList =
     env: lib.mapAttrsToList (k: v: "${k}=${toString v}") (lib.filterAttrs (_: v: v != null) env);
+  normalizeTarget = t: if t == "multi-user.target" then "default.target" else t;
+  normalizeTargets = v: if lib.isList v then map normalizeTarget v else v;
   installSection =
     u:
     lib.filterAttrs (_: v: v != [ ]) {
-      WantedBy = u.wantedBy or [ ];
-      RequiredBy = u.requiredBy or [ ];
+      WantedBy = map normalizeTarget (u.wantedBy or [ ]);
+      RequiredBy = map normalizeTarget (u.requiredBy or [ ]);
     };
   toHmIni = unit: {
     Unit = pickSection unitAttrKeys unit // (unit.unitConfig or { });
