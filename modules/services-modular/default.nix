@@ -106,10 +106,45 @@ let
         ];
       }).config;
 
+  # Collect the `source` store paths of a service's enabled `configData`
+  # entries. When `text` is set, the upstream `config-data-item.nix` module
+  # automatically derives `source` via `pkgs.writeText`, so `source` is
+  # always non-null for enabled entries.
+  configDataSources =
+    service:
+    lib.mapAttrsToList (_: cfg: cfg.source) (
+      lib.filterAttrs (_: cfg: cfg.enable) (service.configData or { })
+    );
+
   makeUnits =
     translator: unitType: prefix: service:
+    let
+      # Wire each service's `configData` sources into the primary unit's
+      # `X-Reload-Triggers` so `home-manager switch` restarts it whenever
+      # a config file changes. Preserves any triggers the unit already sets.
+      triggers = configDataSources service;
+      primaryTranslator =
+        if triggers == [ ] then
+          translator
+        else
+          (
+            unit:
+            let
+              ini = translator unit;
+              existing = lib.toList (ini.Unit.X-Reload-Triggers or [ ]);
+            in
+            ini
+            // {
+              Unit = ini.Unit // {
+                X-Reload-Triggers = lib.unique (existing ++ triggers);
+              };
+            }
+          );
+    in
     concatMapAttrs (unitName: unitModule: {
-      "${dashed prefix unitName}" = evalDeferred translator unitModule;
+      "${dashed prefix unitName}" = evalDeferred (
+        if unitName == "" then primaryTranslator else translator
+      ) unitModule;
     }) service.systemd.${unitType}
     // concatMapAttrs (
       subName: subService: makeUnits translator unitType (dashed prefix subName) subService

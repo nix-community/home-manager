@@ -58,6 +58,15 @@ can refer to its files at a stable location:
 }
 ```
 
+The store paths of all enabled `configData` entries are automatically
+added to the primary unit's `X-Reload-Triggers`, so `home-manager switch`
+restarts the service whenever any of its configuration files change. To
+reload instead of restart, override `X-SwitchMethod`:
+
+```nix
+home.services.demo.systemd.services."".unitConfig.X-SwitchMethod = "reload";
+```
+
 ## Scope notes {#sec-usage-modular-services-scope}
 
 Home Manager mirrors the surface of nixpkgs' portable systemd module:
