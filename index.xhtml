@@ -502,11 +502,12 @@ GPU drivers require an update, run
   sudo /nix/store/HASH-non-nixos-gpu/bin/non-nixos-gpu-setup
 </code></pre><p>Because the <code class="literal">/run</code> directory is volatile and disappears on reboot, libraries
 cannot be simply copied or linked there. The <code class="literal">non-nixos-gpu-setup</code> script
-installs a Systemd service which ensures that the drivers are linked to
-<code class="literal">/run/opengl-driver</code> on boot. Home Manager will always check and warn you when
-this setup needs to be refreshed.</p><p>If you ever wish to uninstall these drivers, all you need to do is</p><pre><code class="programlisting sh">sudo rm /run/opengl-driver
-sudo systemctl disable --now non-nixos-gpu.service
-sudo rm /etc/systemd/system/non-nixos-gpu.service
+installs a
+<a class="link" href="https://www.freedesktop.org/software/systemd/man/latest/tmpfiles.d.html"  target="_top"><code class="literal">tmpfiles.d</code></a>
+config which ensures that the drivers are linked to <code class="literal">/run/opengl-driver</code> on
+boot. Home Manager will always check and warn you when this setup needs to be
+refreshed.</p><p>If you ever wish to uninstall these drivers, all you need to do is</p><pre><code class="programlisting sh">sudo rm /run/opengl-driver
+sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf
 </code></pre><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-usage-gpu-offloading" class="title" >GPU offloading   </h4>  </div> </div></div><p>You can use the <code class="option">targets.genericLinux.nixGL.prime.installScript</code> option.
 It installs the <code class="literal">prime-offload</code> script which is configured through options under
 <code class="option">targets.genericLinux.nixGL.prime</code>. This functionality is independent
