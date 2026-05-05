@@ -87,7 +87,10 @@ in
       assertFileRegex home-files/.zshrc \
         'eval.*direnv hook zsh'
 
-      # Test fish integration (enabled by default)
+      # Test fish integration includes a guard so the hook is a no-op when
+      # direnv's Fish vendor conf file has already been loaded.
+      assertFileRegex home-files/.config/fish/config.fish \
+        'functions -q __direnv_export_eval'
       assertFileRegex home-files/.config/fish/config.fish \
         'direnv hook fish.*source'
 
