@@ -9,7 +9,6 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/system-services/demo/config.toml
-    assertFileContains home-files/.config/system-services/demo/config.toml 'port = 1234'
+    assertFileContent home-files/.config/home-services/demo/config.toml ${./config.toml}
   '';
 }
