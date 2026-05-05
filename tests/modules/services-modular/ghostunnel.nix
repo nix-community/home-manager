@@ -1,3 +1,9 @@
+# Smoke test that an upstream system-shape portable service module drops in
+# unchanged. The generated unit intentionally contains system-oriented
+# directives (`AmbientCapabilities`, `DynamicUser`) inherited from the upstream
+# ghostunnel module; user systemd silently ignores the ones it cannot honour.
+# `WantedBy=multi-user.target` is normalized to `default.target` by the
+# translator. For a service meant to run as a user see `php-fpm.nix`.
 { pkgs, ... }:
 {
   home.services.tunnel = {
@@ -12,9 +18,6 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/systemd/user/tunnel.service
-    assertFileContains home-files/.config/systemd/user/tunnel.service '/bin/ghostunnel'
-    assertFileContains home-files/.config/systemd/user/tunnel.service 'allow-all'
-    assertFileContains home-files/.config/systemd/user/tunnel.service 'LoadCredential=cert:/run/secrets/cert.pem'
+    assertFileContent home-files/.config/systemd/user/tunnel.service ${./tunnel.service}
   '';
 }

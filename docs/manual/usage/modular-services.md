@@ -62,6 +62,22 @@ For example, `pkgs.php`'s [`php-fpm`]:
 }
 ```
 
+Some packages ship modules written for system services that include
+directives the user-session manager cannot honour (`DynamicUser`,
+`AmbientCapabilities`, ...). The unit is still generated with those
+directives -- user systemd silently ignores what it cannot apply.
+`WantedBy=multi-user.target` is automatically normalized to
+`WantedBy=default.target`. Other directives can be overridden per
+service:
+
+```nix
+home.services."tunnel" = {
+  imports = [ pkgs.ghostunnel.passthru.services.default ];
+  # ...
+  systemd.services."tunnel".serviceConfig.DynamicUser = lib.mkForce false;
+};
+```
+
 ## Configuration data {#sec-usage-modular-services-configdata}
 
 Each service can declare configuration files via `configData.<name>`.
