@@ -20,7 +20,7 @@ let
             known_hosts = "${sshKeys.snakeOilEd25519PublicKey}";
           };
           serve = {
-            "/home/alice/files" = {
+            "/home/alice/sftp-files" = {
               enable = true;
               protocol = "http";
               options.addr = "localhost:8080";
@@ -57,9 +57,9 @@ in
     with subtest("Serve a remote over HTTP (sftp)"):
       # create files on remote
       succeed_as_alice(
-        "mkdir /home/alice/files",
-        "touch /home/alice/files/other_file",
-        "echo serving > /home/alice/files/test.txt",
+        "mkdir /home/alice/sftp-files",
+        "touch /home/alice/sftp-files/other_file",
+        "echo serving > /home/alice/sftp-files/test.txt",
         box=remote
       )
 
