@@ -1,0 +1,8 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart="@mpd@/bin/mpd" "--no-daemon"
+Restart=always
+RestartSec=5
+Type=simple

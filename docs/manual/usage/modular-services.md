@@ -9,26 +9,18 @@ systemd module loaded into it, so service modules shipped with packages
 (e.g. `pkgs.<name>.passthru.services.default`) drop in unchanged --
 the same module evaluates on NixOS and on Home Manager.
 
-A minimal example -- run a one-shot user service from a package's
-modular service definition:
+A minimal example -- run mpd as a user service:
 
 ```nix
 { pkgs, ... }: {
-  home.services.tunnel = {
-    imports = [ pkgs.ghostunnel.passthru.services.default ];
-    ghostunnel = {
-      listen = "127.0.0.1:8443";
-      target = "127.0.0.1:8080";
-      cert = "/run/secrets/cert.pem";
-      key = "/run/secrets/key.pem";
-      allowAll = true;
-    };
+  home.services.mpd = {
+    process.argv = [ "${pkgs.mpd}/bin/mpd" "--no-daemon" ];
   };
 }
 ```
 
-This produces `~/.config/systemd/user/tunnel.service` with the expected
-`ExecStart`, `LoadCredential`, and `WantedBy=default.target`.
+This produces `~/.config/systemd/user/mpd.service` with `ExecStart` set
+to the mpd binary and `WantedBy=default.target`.
 
 Each service exposes the upstream NixOS-style schema: [`process.argv`],
 `systemd.lib`, `systemd.mainExecStart`, `systemd.service`,
