@@ -163,6 +163,32 @@ let
       ) (lib.attrsToList cfg.remotes)
     );
 
+  # Darwin-only: wraps each rclone mount/serve invocation, polling for
+  # rclone.conf before exec'ing. Substitutes for systemd's
+  # `After=rclone-config.service` ordering. Has no consumers on Linux.
+  rcloneSidecarWrapper = pkgs.writeShellApplication {
+    name = "rclone-sidecar-wrapper";
+
+    runtimeInputs = [
+      pkgs.coreutils
+    ];
+
+    text = ''
+      configPath="${config.xdg.configHome}/rclone/rclone.conf"
+      deadline=$(( $(date +%s) + 300 ))
+
+      while [ ! -f "$configPath" ]; do
+        if [ "$(date +%s)" -ge "$deadline" ]; then
+          echo "Timeout waiting for $configPath" >&2
+          exit 1
+        fi
+        sleep 1
+      done
+
+      exec "$@"
+    '';
+  };
+
 in
 {
   meta.maintainers = with lib.maintainers; [ jess ];
