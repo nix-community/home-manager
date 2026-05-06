@@ -489,17 +489,21 @@ in
 
       requiresUnit = lib.mkOption {
         type = with lib.types; nullOr str;
+        readOnly = !pkgs.stdenv.hostPlatform.isLinux;
         default =
-          lib.foldlAttrs
-            (
-              acc: prov: svc:
-              if isUsingSecretProvisioner prov then svc else acc
-            )
+          if !pkgs.stdenv.hostPlatform.isLinux then
             null
-            {
-              "sops" = "sops-nix.service";
-              "age" = "agenix.service";
-            };
+          else
+            lib.foldlAttrs
+              (
+                acc: prov: svc:
+                if isUsingSecretProvisioner prov then svc else acc
+              )
+              null
+              {
+                "sops" = "sops-nix.service";
+                "age" = "agenix.service";
+              };
         example = "agenix.service";
         description = ''
           The name of a systemd user service that must complete before the rclone
@@ -512,10 +516,11 @@ in
           sops-nix.service or agenix.service, respectively. Set this manually if you
           use a different secret provisioner.
 
-          Ignored on macOS, since launchd has no equivalent ordering primitive.
-          The config-install agent retries on failure (KeepAlive.Crashed), so it
-          will succeed on a subsequent attempt once the secret-provisioner agent
-          has materialized the secret files.
+          Read-only on non-systemd platforms (always null), since this option
+          has no equivalent ordering primitive outside systemd. On macOS, the
+          config-install launchd agent retries on failure (KeepAlive.Crashed),
+          so it will succeed on a subsequent attempt once the secret-provisioner
+          agent has materialized the secret files.
         '';
       };
     };
