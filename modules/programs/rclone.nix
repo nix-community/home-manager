@@ -542,6 +542,22 @@ in
           Install.WantedBy = [ "default.target" ];
         };
       };
+
+      mkLaunchdConfigService = lib.mkIf (cfg.remotes != { }) {
+        rclone-config = {
+          enable = true;
+          config = {
+            ProgramArguments = [ (lib.getExe rcloneConfigScript) ];
+            RunAtLoad = true;
+            KeepAlive = {
+              SuccessfulExit = false;
+              Crashed = true;
+            };
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/rclone/rclone-config.log";
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/rclone/rclone-config.err.log";
+          };
+        };
+      };
     in
     lib.mkIf cfg.enable {
       home.packages = [ cfg.package ];
@@ -549,6 +565,9 @@ in
         mkSystemdConfigService
         (mkRcloneSidecars "mounts" mkSystemdSidecar)
         (mkRcloneSidecars "serve" mkSystemdSidecar)
+      ];
+      launchd.agents = lib.mkMerge [
+        mkLaunchdConfigService
       ];
     };
 }
