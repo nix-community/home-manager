@@ -130,7 +130,6 @@ let
   # of a `nameValuePair` (the agent attrs).
   mkLaunchdSidecar =
     {
-      sidecarType,
       remoteName,
       sidecar,
       sidecarPath,
@@ -140,35 +139,35 @@ let
     let
       label = "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}";
       runAtLoad = if isMount then sidecar.autoMount else sidecar.autoStart;
-      rcloneArgs =
-        [
-          (lib.getExe cfg.package)
-          cmdName
-        ]
-        ++ (lib.cli.toCommandLineGNU { } sidecar.options)
-        ++ (
-          if isMount then
-            [
-              "${remoteName}:${sidecarPath}"
-              sidecar.mountPoint
-            ]
-          else
-            [
-              sidecar.protocol
-              "${remoteName}:${sidecarPath}"
-            ]
-        );
+      rcloneArgs = [
+        (lib.getExe cfg.package)
+        cmdName
+      ]
+      ++ (lib.cli.toCommandLineGNU { } sidecar.options)
+      ++ (
+        if isMount then
+          [
+            "${remoteName}:${sidecarPath}"
+            sidecar.mountPoint
+          ]
+        else
+          [
+            sidecar.protocol
+            "${remoteName}:${sidecarPath}"
+          ]
+      );
     in
     {
       enable = true;
       config = {
-        ProgramArguments =
-          [ (lib.getExe rcloneSidecarWrapper) ]
-          ++ (lib.optionals isMount [
-            "--mkdir"
-            sidecar.mountPoint
-          ])
-          ++ rcloneArgs;
+        ProgramArguments = [
+          (lib.getExe rcloneSidecarWrapper)
+        ]
+        ++ (lib.optionals isMount [
+          "--mkdir"
+          sidecar.mountPoint
+        ])
+        ++ rcloneArgs;
         RunAtLoad = runAtLoad;
         KeepAlive = {
           SuccessfulExit = false;
@@ -201,18 +200,16 @@ let
             cmdName = if isMount then "mount" else "serve";
           in
           lib.optional sidecar.enable (
-            lib.nameValuePair "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}" (
-              mkValue {
-                inherit
-                  sidecarType
-                  remoteName
-                  sidecar
-                  sidecarPath
-                  isMount
-                  cmdName
-                  ;
-              }
-            )
+            lib.nameValuePair "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}" (mkValue {
+              inherit
+                sidecarType
+                remoteName
+                sidecar
+                sidecarPath
+                isMount
+                cmdName
+                ;
+            })
           )
         ) (lib.attrsToList (remote.${sidecarType} or { }))
       ) (lib.attrsToList cfg.remotes)
@@ -331,9 +328,10 @@ in
                   must be provided as file paths to the secrets, which will be read at activation
                   time.
 
-                  These values are expanded in a shell context within a systemd service, so
+                  These values are expanded in a shell context within the rclone-config
+                  service (a systemd user service on Linux, a launchd agent on macOS), so
                   you can use bash features like command substitution or variable expansion
-                  (e.g. "''${XDG_RUNTIME_DIR}" as used by agenix).
+                  (e.g. "''${XDG_RUNTIME_DIR}" on Linux, as used by agenix).
                 '';
                 example = lib.literalExpression ''
                   {
