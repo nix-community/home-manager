@@ -365,6 +365,11 @@ in
                   rclone documentation <https://rclone.org/commands/rclone_mount/> — we create
                   a key-value pair like this:
                   `"path/to/files/on/remote" = { ... }`.
+
+                  On macOS, FUSE mounts additionally require macFUSE
+                  (<https://osxfuse.github.io/>) to be installed and its system extension
+                  approved. Home Manager does not install macFUSE; rclone will surface
+                  a runtime error if it is missing.
                 '';
                 example = lib.literalExpression ''
                   {
@@ -502,6 +507,11 @@ in
           When using sops-nix or agenix, this value is set automatically to
           sops-nix.service or agenix.service, respectively. Set this manually if you
           use a different secret provisioner.
+
+          Ignored on macOS, since launchd has no equivalent ordering primitive.
+          The config-install agent retries on failure (KeepAlive.Crashed), so it
+          will succeed on a subsequent attempt once the secret-provisioner agent
+          has materialized the secret files.
         '';
       };
     };
