@@ -73,7 +73,6 @@ let
   # of a `nameValuePair` (the unit attrs).
   mkSystemdSidecar =
     {
-      sidecarType,
       remoteName,
       sidecar,
       sidecarPath,
@@ -91,12 +90,9 @@ let
 
       Service = {
         Type =
-          if sidecarType == "serve" && !(builtins.elem sidecar.protocol serveProtocolNotifies) then
-            "simple"
-          else
-            "notify";
+          if !isMount && !(builtins.elem sidecar.protocol serveProtocolNotifies) then "simple" else "notify";
         Environment =
-          (lib.optional (sidecarType == "mounts") "PATH=/run/wrappers/bin")
+          (lib.optional isMount "PATH=/run/wrappers/bin")
           ++ lib.optional (sidecar.logLevel != null) "RCLONE_LOG_LEVEL=${sidecar.logLevel}";
         SuccessExitStatus = "143";
 
@@ -202,7 +198,6 @@ let
           lib.optional sidecar.enable (
             lib.nameValuePair "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}" (mkValue {
               inherit
-                sidecarType
                 remoteName
                 sidecar
                 sidecarPath
