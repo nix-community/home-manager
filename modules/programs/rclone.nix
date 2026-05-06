@@ -126,6 +126,61 @@ let
       ) "default.target";
     };
 
+  # Builder for a per-sidecar launchd agent. Returns the value half
+  # of a `nameValuePair` (the agent attrs).
+  mkLaunchdSidecar =
+    {
+      sidecarType,
+      remoteName,
+      sidecar,
+      sidecarPath,
+      isMount,
+      cmdName,
+    }:
+    let
+      label = "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}";
+      runAtLoad = if isMount then sidecar.autoMount else sidecar.autoStart;
+      rcloneArgs =
+        [
+          (lib.getExe cfg.package)
+          cmdName
+        ]
+        ++ (lib.cli.toCommandLineGNU { } sidecar.options)
+        ++ (
+          if isMount then
+            [
+              "${remoteName}:${sidecarPath}"
+              sidecar.mountPoint
+            ]
+          else
+            [
+              sidecar.protocol
+              "${remoteName}:${sidecarPath}"
+            ]
+        );
+    in
+    {
+      enable = true;
+      config = {
+        ProgramArguments =
+          [ (lib.getExe rcloneSidecarWrapper) ]
+          ++ (lib.optionals isMount [
+            "--mkdir"
+            sidecar.mountPoint
+          ])
+          ++ rcloneArgs;
+        RunAtLoad = runAtLoad;
+        KeepAlive = {
+          SuccessfulExit = false;
+          Crashed = true;
+        };
+        StandardOutPath = "${config.home.homeDirectory}/Library/Logs/rclone/${label}.log";
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/rclone/${label}.err.log";
+        EnvironmentVariables =
+          if sidecar.logLevel != null then { RCLONE_LOG_LEVEL = sidecar.logLevel; } else null;
+      };
+    };
+
   # Iterate cfg.remotes × remote.${sidecarType}, applying the supplied
   # value builder. Produces an attrset keyed by service name.
   mkRcloneSidecars =
@@ -184,6 +239,11 @@ let
         fi
         sleep 1
       done
+
+      if [ "''${1:-}" = "--mkdir" ]; then
+        mkdir -p "$2"
+        shift 2
+      fi
 
       exec "$@"
     '';
@@ -568,6 +628,8 @@ in
       ];
       launchd.agents = lib.mkMerge [
         mkLaunchdConfigService
+        (mkRcloneSidecars "mounts" mkLaunchdSidecar)
+        (mkRcloneSidecars "serve" mkLaunchdSidecar)
       ];
     };
 }

@@ -6,3 +6,6 @@
   rclone-mount-service-generation = ./mount-service-generation.nix;
   rclone-serve-service-generation = ./serve-service-generation.nix;
 }
+// lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+  rclone-mount-service-generation-darwin = ./mount-service-generation-darwin.nix;
+}
