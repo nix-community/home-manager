@@ -162,7 +162,13 @@ let
     {
       enable = true;
       config = {
-        ProgramArguments = [ (lib.getExe rcloneSidecarWrapper) ] ++ rcloneArgs;
+        ProgramArguments =
+          [ (lib.getExe rcloneSidecarWrapper) ]
+          ++ (lib.optionals isMount [
+            "--mkdir"
+            sidecar.mountPoint
+          ])
+          ++ rcloneArgs;
         RunAtLoad = runAtLoad;
         KeepAlive = {
           SuccessfulExit = false;
@@ -233,6 +239,11 @@ let
         fi
         sleep 1
       done
+
+      if [ "''${1:-}" = "--mkdir" ]; then
+        mkdir -p "$2"
+        shift 2
+      fi
 
       exec "$@"
     '';

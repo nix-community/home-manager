@@ -46,6 +46,9 @@ _: {
     assertFileContains "$plist" "sftp-remote:documents/work"
     assertFileContains "$plist" "/Users/alice/mounts/work-docs"
 
+    # Mount sidecars pre-create the mount point via the wrapper's --mkdir flag.
+    assertFileContains "$plist" "rclone-sidecar-wrapper --mkdir"
+
     # Lifecycle keys
     assertFileContains "$plist" "<key>RunAtLoad</key>"
     assertFileContains "$plist" "<key>KeepAlive</key>"
