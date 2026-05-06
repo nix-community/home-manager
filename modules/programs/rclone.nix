@@ -434,91 +434,93 @@ in
 
   config =
     let
-      rcloneConfigService =
-        let
-          safeConfig = lib.pipe cfg.remotes [
-            (lib.mapAttrs (_: v: v.config))
-            (iniFormat.generate "rclone.conf@pre-secrets")
+      rcloneConfigPath = "${config.xdg.configHome}/rclone/rclone.conf";
+
+      injectSecret =
+        remote:
+        lib.mapAttrsToList (secret: secretFile: ''
+          if [[ ! -r "${secretFile}" ]]; then
+            echo "Secret \"${secretFile}\" not found"
+            cleanup
+          fi
+
+          if ! ${lib.getExe cfg.package} config update \
+                 --config "$stagingPath" \
+                 ${remote.name} config_refresh_token=false \
+                 ${secret}="$(cat "${secretFile}")" \
+                 --non-interactive; then
+            echo "Failed to inject secret \"${secretFile}\""
+            cleanup
+          fi
+        '') remote.value.secrets or { };
+
+      injectAllSecrets = lib.concatMap injectSecret (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
+
+      safeConfig = lib.pipe cfg.remotes [
+        (lib.mapAttrs (_: v: v.config))
+        (iniFormat.generate "rclone.conf@pre-secrets")
+      ];
+
+      rcloneConfigScript = pkgs.writeShellApplication {
+        name = "rclone-config";
+
+        runtimeInputs = [
+          pkgs.coreutils
+        ];
+
+        text = ''
+          configPath="${rcloneConfigPath}"
+          configDir="$(dirname "$configPath")"
+          install -d -m700 "$configDir"
+          stagingPath="$(mktemp "$configDir/.rclone.conf.XXXXXX")"
+
+          cleanup() {
+            echo "Failed to render config."
+            rm -f "$stagingPath"
+            exit 1
+          }
+
+          trap cleanup SIGINT
+
+          # Render and inject secrets into a staging file, then publish it
+          # atomically. The live rclone.conf only ever appears (or changes)
+          # once it is complete with secrets, so a half-rendered or
+          # secrets-less config is never observed and an existing config is
+          # left untouched on failure. This matters on Darwin, where the
+          # sidecar wrapper polls for this file in lieu of systemd ordering.
+          install -v -m600 "${safeConfig}" "$stagingPath"
+          ${lib.concatLines injectAllSecrets}
+          mv -f "$stagingPath" "$configPath"
+        '';
+      };
+
+      mkSystemdConfigService = lib.mkIf (cfg.remotes != { }) {
+        rclone-config = {
+          Unit = lib.mkMerge [
+            {
+              Description = "Install rclone configuration to ${rcloneConfigPath}";
+            }
+
+            (lib.optionalAttrs (cfg.requiresUnit != null) {
+              Requires = [ cfg.requiresUnit ];
+              After = [ cfg.requiresUnit ];
+            })
           ];
 
-          injectSecret =
-            remote:
-            lib.mapAttrsToList (secret: secretFile: ''
-              if [[ ! -r "${secretFile}" ]]; then
-                echo "Secret \"${secretFile}\" not found"
-                cleanup
-              fi
-
-              if ! ${lib.getExe cfg.package} config update \
-                     ${remote.name} config_refresh_token=false \
-                     ${secret}="$(cat "${secretFile}")" \
-                     --non-interactive; then
-                echo "Failed to inject secret \"${secretFile}\""
-                cleanup
-              fi
-            '') remote.value.secrets or { };
-
-          injectAllSecrets = lib.concatMap injectSecret (lib.mapAttrsToList lib.nameValuePair cfg.remotes);
-          rcloneConfigPath = "${config.xdg.configHome}/rclone/rclone.conf";
-        in
-        lib.mkIf (cfg.remotes != { }) {
-          rclone-config = {
-            Unit = lib.mkMerge [
-              {
-                Description = "Install rclone configuration to ${rcloneConfigPath}";
-              }
-
-              (lib.optionalAttrs (cfg.requiresUnit != null) {
-                Requires = [ cfg.requiresUnit ];
-                After = [ cfg.requiresUnit ];
-              })
-            ];
-
-            Service = {
-              Type = "oneshot";
-              ExecStart = lib.getExe (
-                pkgs.writeShellApplication {
-                  name = "rclone-config";
-
-                  runtimeInputs = [
-                    pkgs.coreutils
-                  ];
-
-                  text = ''
-                    configPath="${rcloneConfigPath}"
-                    configName="$(basename $configPath)"
-                    savedConfigPath="$(dirname $configPath)"/."$configName".orig
-
-                    cleanup() {
-                      echo "Failed to render config."
-                      if [ -f "$savedConfigPath" ]; then
-                        cp -v "$savedConfigPath" "${rcloneConfigPath}"
-                      fi
-                      exit 1
-                    }
-
-                    trap cleanup SIGINT
-
-                    if [ -f "${rcloneConfigPath}" ]; then
-                      cp -v "${rcloneConfigPath}" "$savedConfigPath"
-                    fi
-
-                    install -v -D -m600 "${safeConfig}" "${rcloneConfigPath}"
-                    ${lib.concatLines injectAllSecrets}
-                  '';
-                }
-              );
-              Restart = "on-abnormal";
-            };
-
-            Install.WantedBy = [ "default.target" ];
+          Service = {
+            Type = "oneshot";
+            ExecStart = lib.getExe rcloneConfigScript;
+            Restart = "on-abnormal";
           };
+
+          Install.WantedBy = [ "default.target" ];
         };
+      };
     in
     lib.mkIf cfg.enable {
       home.packages = [ cfg.package ];
       systemd.user.services = lib.mkMerge [
-        rcloneConfigService
+        mkSystemdConfigService
         (mkRcloneSidecars "mounts" mkSystemdSidecar)
         (mkRcloneSidecars "serve" mkSystemdSidecar)
       ];
