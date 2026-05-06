@@ -48,7 +48,14 @@ let
       default = { };
       apply = lib.mergeAttrs {
         vfs-cache-mode = "full";
-        cache-dir = "%C/rclone";
+        # On Linux the unit runs under systemd, so keep the %C specifier:
+        # it is expanded at unit-start time to the live $XDG_CACHE_HOME
+        # (falling back to ~/.cache), preserving the pre-Darwin behavior
+        # even for users who set XDG_CACHE_HOME outside Home Manager.
+        # launchd has no equivalent specifier, so Darwin must use the
+        # Home Manager-evaluated path.
+        cache-dir =
+          if pkgs.stdenv.hostPlatform.isLinux then "%C/rclone" else "${config.xdg.cacheHome}/rclone";
       };
       description = ''
         An attribute set of option values passed to the command.
