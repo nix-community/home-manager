@@ -69,80 +69,95 @@ let
     };
   };
 
-  # creates a sidecar user service. returns an attrset of systemd services
+  # Builder for a per-sidecar systemd user unit. Returns the value half
+  # of a `nameValuePair` (the unit attrs).
+  mkSystemdSidecar =
+    {
+      sidecarType,
+      remoteName,
+      sidecar,
+      sidecarPath,
+      isMount,
+      cmdName,
+    }:
+    {
+      Unit = {
+        Description = "Rclone ${
+          if isMount then "FUSE daemon" else "protocol serving"
+        } for ${remoteName}:${sidecarPath}";
+        Requires = [ "rclone-config.service" ];
+        After = [ "rclone-config.service" ];
+      };
+
+      Service = {
+        Type =
+          if sidecarType == "serve" && !(builtins.elem sidecar.protocol serveProtocolNotifies) then
+            "simple"
+          else
+            "notify";
+        Environment =
+          (lib.optional (sidecarType == "mounts") "PATH=/run/wrappers/bin")
+          ++ lib.optional (sidecar.logLevel != null) "RCLONE_LOG_LEVEL=${sidecar.logLevel}";
+        SuccessExitStatus = "143";
+
+        ExecStartPre = lib.mkIf isMount "${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg sidecar.mountPoint}";
+        ExecStart = lib.concatStringsSep " " (
+          [ "${lib.getExe cfg.package} ${cmdName}" ]
+          ++ (
+            if isMount then
+              [
+                (lib.cli.toCommandLineShellGNU { } sidecar.options)
+                (lib.escapeShellArg "${remoteName}:${sidecarPath}")
+                (lib.escapeShellArg sidecar.mountPoint)
+              ]
+            else
+              [
+                (lib.escapeShellArg sidecar.protocol)
+                (lib.cli.toCommandLineShellGNU { } sidecar.options)
+                (lib.escapeShellArg "${remoteName}:${sidecarPath}")
+              ]
+          )
+        );
+        Restart = "on-failure";
+      };
+
+      Install.WantedBy = lib.optional (
+        if isMount then sidecar.autoMount else sidecar.autoStart
+      ) "default.target";
+    };
+
+  # Iterate cfg.remotes × remote.${sidecarType}, applying the supplied
+  # value builder. Produces an attrset keyed by service name.
   mkRcloneSidecars =
-    # type of the sidecar, either "mounts" or "serve" corresponding to options
-    sidecarType:
+    sidecarType: mkValue:
     lib.listToAttrs (
       lib.concatMap (
-        _remote: # remote name + remote config
+        _remote:
         let
           remoteName = _remote.name;
           remote = _remote.value;
         in
         lib.concatMap (
-          _sidecar: # sidecar path + sidecar config
+          _sidecar:
           let
-            # a sidecar is either a mount or a protocol-serve
             sidecarPath = _sidecar.name;
             sidecar = _sidecar.value;
-
-            # there are currently only 2 types mount/serve - this may need changed in the future
             isMount = sidecarType == "mounts";
-            # name of the rclone command to use - also used in service name
             cmdName = if isMount then "mount" else "serve";
           in
           lib.optional sidecar.enable (
-            lib.nameValuePair "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}" {
-              Unit = {
-                Description = "Rclone ${
-                  if isMount then "FUSE daemon" else "protocol serving"
-                } for ${remoteName}:${sidecarPath}";
-                Requires = [ "rclone-config.service" ];
-                After = [ "rclone-config.service" ];
-              };
-
-              Service = {
-                Type =
-                  # all services can be Type=notify except for serve protocols that don't notify
-                  if sidecarType == "serve" && !(builtins.elem sidecar.protocol serveProtocolNotifies) then
-                    "simple"
-                  else
-                    "notify";
-                Environment =
-                  # fusermount/fusermount3
-                  (lib.optional (sidecarType == "mounts") "PATH=/run/wrappers/bin")
-                  ++ lib.optional (sidecar.logLevel != null) "RCLONE_LOG_LEVEL=${sidecar.logLevel}";
-                # rclone exits with code 143 when stopped properly
-                SuccessExitStatus = "143";
-
-                ExecStartPre = lib.mkIf isMount "${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg sidecar.mountPoint}";
-                ExecStart = lib.concatStringsSep " " (
-                  [ "${lib.getExe cfg.package} ${cmdName}" ] # rclone [command]
-                  ++ (
-                    if isMount then
-                      # https://rclone.org/commands/rclone_mount/
-                      [
-                        (lib.cli.toCommandLineShellGNU { } sidecar.options) # [opts]
-                        (lib.escapeShellArg "${remoteName}:${sidecarPath}") # <remote>
-                        (lib.escapeShellArg sidecar.mountPoint) # <mountpoint>
-                      ]
-                    else
-                      # https://rclone.org/commands/rclone_serve/
-                      [
-                        (lib.escapeShellArg sidecar.protocol) # <protocol>
-                        (lib.cli.toCommandLineShellGNU { } sidecar.options) # [opts]
-                        (lib.escapeShellArg "${remoteName}:${sidecarPath}") # <remote>
-                      ]
-                  )
-                );
-                Restart = "on-failure";
-              };
-
-              Install.WantedBy = lib.optional (
-                if isMount then sidecar.autoMount else sidecar.autoStart
-              ) "default.target";
-            }
+            lib.nameValuePair "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}" (
+              mkValue {
+                inherit
+                  sidecarType
+                  remoteName
+                  sidecar
+                  sidecarPath
+                  isMount
+                  cmdName
+                  ;
+              }
+            )
           )
         ) (lib.attrsToList (remote.${sidecarType} or { }))
       ) (lib.attrsToList cfg.remotes)
@@ -504,8 +519,8 @@ in
       home.packages = [ cfg.package ];
       systemd.user.services = lib.mkMerge [
         rcloneConfigService
-        (mkRcloneSidecars "mounts")
-        (mkRcloneSidecars "serve")
+        (mkRcloneSidecars "mounts" mkSystemdSidecar)
+        (mkRcloneSidecars "serve" mkSystemdSidecar)
       ];
     };
 }
