@@ -17,6 +17,8 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  upstreamConfigDir = "${config.home.homeDirectory}/.claude";
+
   mkMcpServer =
     server:
     (removeAttrs server [ "disabled" ])
@@ -100,6 +102,22 @@ in
       '';
     };
 
+    configDir = mkOption {
+      type = lib.types.str;
+      default = upstreamConfigDir;
+      defaultText = literalExpression ''"''${config.home.homeDirectory}/.claude"'';
+      example = literalExpression ''"''${config.xdg.configHome}/claude"'';
+      description = ''
+        Directory holding Claude Code's configuration files.
+
+        Defaults to {file}`~/.claude`, matching the upstream
+        {command}`claude` CLI default. The {env}`CLAUDE_CONFIG_DIR`
+        environment variable is exported automatically whenever the
+        directory differs from this default so the CLI reads
+        configuration from the same location.
+      '';
+    };
+
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -167,7 +185,8 @@ in
         - A path to a file containing the content
 
         The configured content is written to
-        {file}`~/.claude/CLAUDE.md`.
+        {file}`CLAUDE.md` inside {option}`programs.claude-code.configDir`
+        (default {file}`~/.claude/CLAUDE.md`).
       '';
       example = literalExpression "./claude-memory.md";
     };
@@ -223,7 +242,8 @@ in
         The attribute name becomes the agent filename, and the value is either:
         - Inline content as a string with frontmatter
         - A path to a file containing the agent content with frontmatter
-        Agents are stored in .claude/agents/ directory.
+        Agents are stored in the {file}`agents/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression ''
         {
@@ -248,7 +268,8 @@ in
         The attribute name becomes the command filename, and the value is either:
         - Inline content as a string
         - A path to a file containing the command content
-        Commands are stored in .claude/commands/ directory.
+        Commands are stored in the {file}`commands/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression ''
         {
@@ -287,7 +308,8 @@ in
       description = ''
         Custom hooks for Claude Code.
         The attribute name becomes the hook filename, and the value is the hook script content.
-        Hooks are stored in .claude/hooks/ directory.
+        Hooks are stored in the {file}`hooks/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = {
         pre-edit = ''
@@ -307,8 +329,9 @@ in
         The attribute name becomes the rule filename, and the value is either:
         - Inline content as a string
         - A path to a file containing the rule content
-        Rules are stored in .claude/rules/ directory.
-        All markdown files in .claude/rules/ are automatically loaded as project memory.
+        Rules are stored in the {file}`rules/` subdirectory of
+        {option}`programs.claude-code.configDir`. All markdown files in
+        that directory are automatically loaded as project memory.
       '';
       example = literalExpression ''
         {
@@ -332,8 +355,10 @@ in
     rulesDir = mkDirOption {
       description = ''
         Path to a directory containing rule files for Claude Code.
-        Rule files from this directory will be symlinked to .claude/rules/.
-        All markdown files in this directory are automatically loaded as project memory.
+        Rule files from this directory will be symlinked into the
+        {file}`rules/` subdirectory of
+        {option}`programs.claude-code.configDir`. All markdown files in
+        this directory are automatically loaded as project memory.
       '';
       example = literalExpression "./rules";
     };
@@ -341,7 +366,9 @@ in
     agentsDir = mkDirOption {
       description = ''
         Path to a directory containing agent files for Claude Code.
-        Agent files from this directory will be symlinked to .claude/agents/.
+        Agent files from this directory will be symlinked into the
+        {file}`agents/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression "./agents";
     };
@@ -349,7 +376,9 @@ in
     commandsDir = mkDirOption {
       description = ''
         Path to a directory containing command files for Claude Code.
-        Command files from this directory will be symlinked to .claude/commands/.
+        Command files from this directory will be symlinked into the
+        {file}`commands/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression "./commands";
     };
@@ -357,7 +386,9 @@ in
     hooksDir = mkDirOption {
       description = ''
         Path to a directory containing hook files for Claude Code.
-        Hook files from this directory will be symlinked to .claude/hooks/.
+        Hook files from this directory will be symlinked into the
+        {file}`hooks/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression "./hooks";
     };
@@ -369,7 +400,9 @@ in
         The value is either:
           - Inline content as a string
           - A path to a file
-        In both cases, the contents will be written to .claude/output-styles/<name>.md
+        In both cases, the contents will be written to
+        {file}`output-styles/<name>.md` inside
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression ''
         {
@@ -401,16 +434,17 @@ in
 
         If an attribute set is used, the attribute name becomes the
         skill directory name, and the value is either:
-        - Inline content as a string (creates .claude/skills/<name>/SKILL.md)
-        - A path to a file (creates .claude/skills/<name>/SKILL.md)
-        - A path to a directory (creates .claude/skills/<name>/ with all files)
+        - Inline content as a string (creates {file}`skills/<name>/SKILL.md`)
+        - A path to a file (creates {file}`skills/<name>/SKILL.md`)
+        - A path to a directory (creates {file}`skills/<name>/` with all files)
 
         This also accepts Nix store paths, for example a skill directory
         from a package.
 
         If a path is used, it is expected to contain one folder per
         skill name, each containing a {file}`SKILL.md`. The directory is
-        symlinked to {file}`~/.claude/skills/`.
+        symlinked into the {file}`skills/` subdirectory of
+        {option}`programs.claude-code.configDir`.
       '';
       example = literalExpression ''
         {
@@ -521,17 +555,19 @@ in
       mkMarkdownEntries =
         subdir: attrs:
         lib.mapAttrs' (
-          name: content: nameValuePair ".claude/${subdir}/${name}.md" (mkSourceEntry content)
+          name: content: nameValuePair "${cfg.configDir}/${subdir}/${name}.md" (mkSourceEntry content)
         ) attrs;
 
       mkTextEntries =
         subdir: attrs:
-        lib.mapAttrs' (name: content: nameValuePair ".claude/${subdir}/${name}" { text = content; }) attrs;
+        lib.mapAttrs' (
+          name: content: nameValuePair "${cfg.configDir}/${subdir}/${name}" { text = content; }
+        ) attrs;
 
       mkRecursiveDirAttrs =
         subdir: dir:
         optionalAttrs (dir != null) {
-          ".claude/${subdir}" = {
+          "${cfg.configDir}/${subdir}" = {
             source = dir;
             recursive = true;
           };
@@ -540,12 +576,12 @@ in
       mkSkillEntry =
         name: content:
         if isPathLikeContent content && lib.pathIsDirectory content then
-          nameValuePair ".claude/skills/${name}" {
+          nameValuePair "${cfg.configDir}/skills/${name}" {
             source = content;
             recursive = true;
           }
         else
-          nameValuePair ".claude/skills/${name}/SKILL.md" (
+          nameValuePair "${cfg.configDir}/skills/${name}/SKILL.md" (
             if isPathLikeContent content then { source = content; } else { text = content; }
           );
 
@@ -646,9 +682,13 @@ in
       home = {
         packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
 
+        sessionVariables = lib.mkIf (cfg.configDir != upstreamConfigDir) {
+          CLAUDE_CONFIG_DIR = cfg.configDir;
+        };
+
         file = lib.mkMerge [
           (lib.mkIf (cfg.settings != { } || cfg.marketplaces != { }) {
-            ".claude/settings.json".source = jsonFormat.generate "claude-code-settings.json" (
+            "${cfg.configDir}/settings.json".source = jsonFormat.generate "claude-code-settings.json" (
               cfg.settings
               // {
                 "$schema" = "https://json.schemastore.org/claude-code-settings.json";
@@ -661,15 +701,15 @@ in
           (
             if lib.isPath cfg.context then
               {
-                ".claude/CLAUDE.md".source = cfg.context;
+                "${cfg.configDir}/CLAUDE.md".source = cfg.context;
               }
             else
               (lib.mkIf (cfg.context != "") {
-                ".claude/CLAUDE.md".text = cfg.context;
+                "${cfg.configDir}/CLAUDE.md".text = cfg.context;
               })
           )
           (lib.mkIf (cfg.marketplaces != { }) {
-            ".claude/plugins/known_marketplaces.json".source =
+            "${cfg.configDir}/plugins/known_marketplaces.json".source =
               jsonFormat.generate "claude-code-known-marketplaces.json" (
                 lib.mapAttrs mkInstalledMarketplaceEntry cfg.marketplaces
               );
@@ -682,7 +722,7 @@ in
           (mkRecursiveDirAttrs "hooks" cfg.hooksDir)
           (mkRecursiveDirAttrs "rules" cfg.rulesDir)
           (lib.mkIf (isPathLikeContent cfg.skills) {
-            ".claude/skills" = {
+            "${cfg.configDir}/skills" = {
               source = cfg.skills;
               recursive = true;
             };
