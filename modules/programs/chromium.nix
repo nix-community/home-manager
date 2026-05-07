@@ -16,6 +16,7 @@ let
     google-chrome-dev = "Google Chrome Dev";
     brave = "Brave Browser";
     vivaldi = "Vivaldi Browser";
+    microsoft-edge = "Microsoft Edge";
   };
 
   plasmaSupportedBrowsers = [
@@ -233,6 +234,7 @@ let
         google-chrome-beta = "Google/Chrome Beta";
         google-chrome-dev = "Google/Chrome Dev";
         brave = "BraveSoftware/Brave-Browser";
+        microsoft-edge = "Microsoft Edge";
       };
 
       linuxDirs = {
