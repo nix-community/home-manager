@@ -92,7 +92,12 @@ let
         Type =
           if !isMount && !(builtins.elem sidecar.protocol serveProtocolNotifies) then "simple" else "notify";
         Environment =
-          (lib.optional isMount "PATH=/run/wrappers/bin")
+          # PATH is set explicitly so fusermount/fusermount3 is found on both
+          # NixOS (/run/wrappers/bin) and standalone home-manager hosts running
+          # other Linux distros (where the FUSE setuid helper lives in standard
+          # /usr or /sbin paths). Setting Environment=PATH= replaces systemd's
+          # inherited PATH, so we must enumerate the non-NixOS locations too.
+          (lib.optional isMount "PATH=/run/wrappers/bin:/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin")
           ++ lib.optional (sidecar.logLevel != null) "RCLONE_LOG_LEVEL=${sidecar.logLevel}";
         SuccessExitStatus = "143";
 

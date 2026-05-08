@@ -34,7 +34,7 @@ _: {
     assertFileContains "$service" "rclone mount '--cache-dir=%C/rclone' '--dir-cache-time=5000h' '--poll-interval=10s' '--umask=002' '--vfs-cache-mode=full' sftp-remote:documents/work /home/alice/mounts/work-docs"
     assertFileContains "$service" "mkdir -p /home/alice/mounts/work-docs"
     assertFileContains "$service" "RCLONE_LOG_LEVEL=INFO"
-    assertFileContains "$service" "PATH=/run/wrappers/bin"
+    assertFileContains "$service" "PATH=/run/wrappers/bin:/run/current-system/sw/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     assertFileContains "$service" "Rclone FUSE daemon for sftp-remote:documents/work"
     assertFileContains "$service" "Type=notify"
 
