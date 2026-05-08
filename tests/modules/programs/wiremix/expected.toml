@@ -1,0 +1,4 @@
+max_volume_percent = 100.0
+mouse = false
+peaks = "auto"
+theme = "default"
