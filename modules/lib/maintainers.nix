@@ -500,6 +500,8 @@
   };
   rachitvrma = {
     name = "Rachit Kumar Verma";
+    email = "155641117+rachitvrma@users.noreply.github.com";
+    matrix = "@rachitvrma:matrix.org";
     github = "rachitvrma";
     githubId = 155641117;
   };
