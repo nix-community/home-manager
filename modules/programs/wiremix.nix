@@ -5,6 +5,15 @@
   ...
 }:
 let
+  inherit (lib)
+    hm
+    mkIf
+    mkEnableOption
+    mkOption
+    mkPackageOption
+    platforms
+    ;
+
   cfg = config.programs.wiremix;
   tomlFormat = pkgs.formats.toml { };
 in
@@ -12,11 +21,11 @@ in
   meta.maintainers = [ lib.maintainers.rachitvrma ];
 
   options.programs.wiremix = {
-    enable = lib.mkEnableOption "wiremix";
+    enable = mkEnableOption "wiremix";
 
-    package = lib.mkPackageOption pkgs "wiremix" { nullable = true; };
+    package = mkPackageOption pkgs "wiremix" { nullable = true; };
 
-    settings = {
+    settings = mkOption {
       inherit (tomlFormat) type;
 
       default = { };
@@ -40,10 +49,15 @@ in
     };
 
   };
-  config = lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+  config = mkIf cfg.enable {
 
-    xdg.configFile."wiremix/wiremix.toml" = lib.mkIf (cfg.settings != { }) {
+    assertions = [
+      (hm.assertions.assertPlatform "programs.wiremix" pkgs platforms.linux)
+    ];
+
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
+
+    xdg.configFile."wiremix/wiremix.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "wiremix.toml" cfg.settings;
     };
   };
