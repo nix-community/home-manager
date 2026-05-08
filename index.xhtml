@@ -596,41 +596,62 @@ flake. When using channels, the example would instead begin with</p><pre><code c
 </code></pre>
 </div>
 
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-modular-services" class="title" style="clear: both">Modular Services   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-usage-modular-services-configdata">Configuration data</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-modular-services-scope">Scope notes</a> </span></dt> </dl></div><p>Home Manager supports nixpkgs
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-usage-modular-services" class="title" style="clear: both">Modular Services   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-usage-modular-services-upstream">Reusing upstream package modules</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-modular-services-configdata">Configuration data</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-usage-modular-services-scope">Scope notes</a> </span></dt> </dl></div><p>Home Manager supports nixpkgs
 <a class="link" href="https://nixos.org/manual/nixos/unstable/#modular-services"  target="_top">modular services</a>
-under <a class="xref" href="options.xhtml#opt-home.services"  ><code class="option">home.services</code></a>. This is the home-manager analog to the
+under <a class="xref" href="options.xhtml#opt-home.services"  ><code class="option">home.services</code></a>. This is the Home Manager analog to the
 NixOS <code class="literal">system.services</code> namespace: each entry is an abstract service
 sourced from <code class="literal">&lt;nixpkgs/lib/services/lib.nix&gt;</code> with the upstream portable
 systemd module loaded into it, so service modules shipped with packages
 (e.g. <code class="literal">pkgs.&lt;name&gt;.passthru.services.default</code>) drop in unchanged –
-the same module evaluates on NixOS and on Home Manager.</p><p>A minimal example – run a one-shot user service from a package’s
-modular service definition:</p><pre><code class="programlisting nix">{ pkgs, ... }: {
-  home.services.tunnel = {
-    imports = [ pkgs.ghostunnel.passthru.services.default ];
-    ghostunnel = {
-      listen = &quot;127.0.0.1:8443&quot;;
-      target = &quot;127.0.0.1:8080&quot;;
-      cert = &quot;/run/secrets/cert.pem&quot;;
-      key = &quot;/run/secrets/key.pem&quot;;
-      allowAll = true;
-    };
+the same module evaluates on NixOS and on Home Manager.</p><p>A minimal example – run mpd as a user service:</p><pre><code class="programlisting nix">{ pkgs, ... }: {
+  home.services.mpd = {
+    process.argv = [ &quot;${pkgs.mpd}/bin/mpd&quot; &quot;--no-daemon&quot; ];
   };
 }
-</code></pre><p>This produces <code class="literal">~/.config/systemd/user/tunnel.service</code> with the expected
-<code class="literal">ExecStart</code>, <code class="literal">LoadCredential</code>, and <code class="literal">WantedBy=default.target</code>.</p><p>Each service exposes the upstream NixOS-style schema: <a class="link" href="https://nixos.org/manual/nixos/unstable/#opt-system.services._name_.process.argv"  target="_top"><code class="literal">process.argv</code></a>,
+</code></pre><p>This produces <code class="literal">~/.config/systemd/user/mpd.service</code> with <code class="literal">ExecStart</code> set
+to the mpd binary and <code class="literal">WantedBy=default.target</code>.</p><p>Each service exposes the upstream NixOS-style schema: <a class="link" href="https://nixos.org/manual/nixos/unstable/#service-opt-process.argv"  target="_top"><code class="literal">process.argv</code></a>,
 <code class="literal">systemd.lib</code>, <code class="literal">systemd.mainExecStart</code>, <code class="literal">systemd.service</code>,
 <code class="literal">systemd.services</code>, <code class="literal">systemd.sockets</code>. Lifted units are translated from
 NixOS-style attrs (<code class="literal">wantedBy</code>, <code class="literal">serviceConfig</code>, <code class="literal">unitConfig</code>,
 <code class="literal">environment</code>, …) into the section-based INI shape
-(<code class="literal">{ Unit; Service; Install; }</code>) that home-manager’s
+(<code class="literal">{ Unit; Service; Install; }</code>) that Home Manager’s
 <a class="xref" href="options.xhtml#opt-systemd.user.services"  ><code class="option">systemd.user.services</code></a> consumes. Only common keys are mapped
 explicitly; uncommon options remain reachable via <code class="literal">unitConfig</code>,
 <code class="literal">serviceConfig</code>, or <code class="literal">socketConfig</code>.</p><p>Sub-services (nested <code class="literal">services.&lt;sub&gt;</code> inside another service) and their
 units are dashed under the parent service name. The empty unit key
 <code class="literal">&quot;&quot;</code> denotes the service’s <span class="emphasis"><em>primary</em></span> unit (lifted to a unit named
-after the service itself); <a class="link" href="https://nixos.org/manual/nixos/unstable/#opt-system.services._name_.process.argv"  target="_top"><code class="literal">process.argv</code></a> becomes the default
-<code class="literal">ExecStart</code> for that unit, which defaults to <code class="literal">WantedBy=default.target</code>.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-modular-services-configdata" class="title" >Configuration data   </h3>  </div> </div></div><p>Each service can declare configuration files via <code class="literal">configData.&lt;name&gt;</code>.
-These are materialized at <code class="literal">$XDG_CONFIG_HOME/system-services/&lt;service&gt;/&lt;name&gt;</code>
+after the service itself); <a class="link" href="https://nixos.org/manual/nixos/unstable/#service-opt-process.argv"  target="_top"><code class="literal">process.argv</code></a> becomes the default
+<code class="literal">ExecStart</code> for that unit, which defaults to <code class="literal">WantedBy=default.target</code>.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-modular-services-upstream" class="title" >Reusing upstream package modules   </h3>  </div> </div></div><p>Modular services exposed by packages under
+<code class="literal">pkgs.&lt;name&gt;.passthru.services.default</code> can be imported directly.
+For example, <code class="literal">pkgs.php</code>’s <a class="link" href="https://nixos.org/manual/nixos/stable/options#opt-_imports_=___pkgs.php.services.default___"  target="_top"><code class="literal">php-fpm</code></a>:</p><pre><code class="programlisting nix">{ pkgs, ... }: {
+  home.services.&quot;php-fpm&quot; = {
+    imports = [ pkgs.php.passthru.services.default ];
+    configData.&quot;php-fpm.conf&quot;.source = builtins.elemAt config.home.services.php-fpm.process.argv 2;
+    php-fpm.settings.mypool = {
+      listen = &quot;127.0.0.1:9000&quot;;
+      # FIXME: required by upstream modular service, but ignored when run as user
+      &quot;user&quot; = &quot;&quot;;
+      &quot;pm&quot; = &quot;dynamic&quot;;
+      &quot;pm.max_children&quot; = 75;
+      &quot;pm.min_spare_servers&quot; = 5;
+      &quot;pm.max_spare_servers&quot; = 20;
+    };
+  };
+}
+</code></pre><p>Some packages ship modules written for system services that include
+directives the user-session manager cannot honour (<code class="literal">DynamicUser</code>,
+<code class="literal">AmbientCapabilities</code>, …). The unit is still generated with those
+directives – user systemd silently ignores what it cannot apply.
+<code class="literal">WantedBy=multi-user.target</code> is automatically normalized to
+<code class="literal">WantedBy=default.target</code>. Other directives can be overridden per
+service:</p><pre><code class="programlisting nix">home.services.&quot;tunnel&quot; = {
+  imports = [ pkgs.ghostunnel.passthru.services.default ];
+  # ...
+  systemd.services.&quot;tunnel&quot;.serviceConfig.DynamicUser = lib.mkForce false;
+};
+</code></pre>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-modular-services-configdata" class="title" >Configuration data   </h3>  </div> </div></div><p>Each service can declare configuration files via <code class="literal">configData.&lt;name&gt;</code>.
+These are materialized at <code class="literal">$XDG_CONFIG_HOME/home-services/&lt;service&gt;/&lt;name&gt;</code>
 (mirroring how NixOS lifts <code class="literal">configData</code> to <code class="literal">environment.etc</code>), with the
 absolute path injected back into <code class="literal">configData.&lt;name&gt;.path</code> so the service
 can refer to its files at a stable location:</p><pre><code class="programlisting nix">{ config, ... }:
@@ -642,6 +663,10 @@ can refer to its files at a stable location:</p><pre><code class="programlisting
     &#x27;&#x27;;
   };
 }
+</code></pre><p>The store paths of all enabled <code class="literal">configData</code> entries are automatically
+added to the primary unit’s <code class="literal">X-Reload-Triggers</code>, so <code class="literal">home-manager switch</code>
+restarts the service whenever any of its configuration files change. To
+reload instead of restart, override <code class="literal">X-SwitchMethod</code>:</p><pre><code class="programlisting nix">home.services.demo.systemd.services.&quot;&quot;.unitConfig.X-SwitchMethod = &quot;reload&quot;;
 </code></pre>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-usage-modular-services-scope" class="title" >Scope notes   </h3>  </div> </div></div><p>Home Manager mirrors the surface of nixpkgs’ portable systemd module:
 services and sockets only. Other unit kinds Home Manager supports
