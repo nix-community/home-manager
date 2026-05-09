@@ -1840,13 +1840,6 @@
     name = "Viktor Titov";
     source = "nixpkgs";
   };
-  nurelin = {
-    email = "nurelin@users.noreply.github.com";
-    github = "nurelin";
-    githubId = 5276274;
-    name = "nurelin";
-    source = "home-manager";
-  };
   nyarly = {
     email = "nyarly@gmail.com";
     github = "nyarly";

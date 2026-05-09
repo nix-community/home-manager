@@ -434,12 +434,6 @@
     github = "NitroSniper";
     githubId = 44097331;
   };
-  nurelin = {
-    name = "nurelin";
-    email = "nurelin@users.noreply.github.com";
-    github = "nurelin";
-    githubId = 5276274;
-  };
   ojsef39 = {
     name = "Josef Hofer";
     email = "josef.hofer@1und1.de";
