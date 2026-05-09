@@ -265,7 +265,7 @@ in
     configPath = mkOption {
       default = "${config.xdg.configHome}/rofi/config.rasi";
       defaultText = "$XDG_CONFIG_HOME/rofi/config.rasi";
-      type = types.str;
+      type = types.nonEmptyStr;
       description = "Path where to put generated configuration file.";
     };
 
