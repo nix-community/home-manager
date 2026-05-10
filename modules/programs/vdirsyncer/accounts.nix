@@ -188,6 +188,16 @@ in
       '';
     };
 
+    preDeletionHook = mkOption {
+      type = types.nullOr types.lines;
+      default = null;
+      description = ''
+        Command to call before each item deletion.
+        The command will be called with the path of the file that will
+        be deleted.
+      '';
+    };
+
     ## Options for google storages
 
     tokenFile = mkOption {
