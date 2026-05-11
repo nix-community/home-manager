@@ -81,12 +81,31 @@ in
         source.command = "${path} print";
         preview.command = ''${path} preview "{}"'';
 
+        keybindings = {
+          "ctrl-r" = "actions:run";
+          "ctrl-i" = "actions:shell";
+          "ctrl-s" = "actions:source";
+          "ctrl-o" = "actions:homepage";
+        };
+
         actions.run = {
+          description = "Run the package";
           command = ''nix run {replace:s/\/ /#/g}'';
-          mode = "fork";
+          mode = "execute";
         };
         actions.shell = {
+          description = "Enter new nix shell with this package";
           command = ''nix shell {replace:s/\/ /#/g}'';
+          mode = "execute";
+        };
+        actions.source = {
+          description = "Open link to source code";
+          command = "nix-search-tv source '{}' | xargs xdg-open";
+          mode = "execute";
+        };
+        actions.homepage = {
+          description = "Open link to homepage";
+          command = "nix-search-tv homepage '{}' | xargs xdg-open";
           mode = "execute";
         };
       }
