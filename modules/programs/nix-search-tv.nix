@@ -70,7 +70,9 @@ in
 
     programs.television.channels.nix-search-tv = lib.mkIf cfg.enableTelevisionIntegration (
       let
-        path = lib.getExe cfg.package;
+        nix-search-tv-path = if cfg.package != null then lib.getExe cfg.package else "nix-search-tv";
+        keybinding_modifier = if pkgs.stdenv.isDarwin then "alt" else "ctrl";
+        opener = if pkgs.stdenv.isDarwin then "open" else "xdg-open";
       in
       {
         metadata = {
@@ -78,15 +80,34 @@ in
           description = "Search nix options and packages";
         };
 
-        source.command = "${path} print";
-        preview.command = ''${path} preview "{}"'';
+        source.command = "${nix-search-tv-path} print";
+        preview.command = ''${nix-search-tv-path} preview "{}"'';
+
+        keybindings = {
+          "${keybinding_modifier}-r" = "actions:run";
+          "${keybinding_modifier}-i" = "actions:shell";
+          "${keybinding_modifier}-s" = "actions:source";
+          "${keybinding_modifier}-o" = "actions:homepage";
+        };
 
         actions.run = {
+          description = "Run the package";
           command = ''nix run {replace:s/\/ /#/g}'';
-          mode = "fork";
+          mode = "execute";
         };
         actions.shell = {
+          description = "Enter new nix shell with this package";
           command = ''nix shell {replace:s/\/ /#/g}'';
+          mode = "execute";
+        };
+        actions.source = {
+          description = "Open link to source code";
+          command = "${nix-search-tv-path} source '{}' | xargs ${opener}";
+          mode = "execute";
+        };
+        actions.homepage = {
+          description = "Open link to homepage";
+          command = "${nix-search-tv-path} homepage '{}' | xargs ${opener}";
           mode = "execute";
         };
       }
