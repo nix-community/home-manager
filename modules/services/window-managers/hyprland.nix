@@ -32,7 +32,7 @@ in
 
     (lib.mkRemovedOptionModule # \
       [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
-      "HiDPI patches are deprecated. Refer to https://wiki.hypr.land/Configuring/XWayland"
+      "HiDPI patches are deprecated. Refer to <https://wiki.hypr.land/Configuring/Advanced-and-Cool/XWayland>"
     )
 
     (lib.mkRemovedOptionModule # \
@@ -230,7 +230,7 @@ in
       description = ''
         Attribute set of Hyprland submaps.
 
-        See <https://wiki.hypr.land/Configuring/Binds#submaps> to learn about submaps
+        See <https://wiki.hypr.land/Configuring/Basics/Binds/#submaps> to learn about submaps
       '';
       default = { };
       type = lib.types.attrsOf (
