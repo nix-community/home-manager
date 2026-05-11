@@ -2428,6 +2428,12 @@
     name = "Jona Abdinghoff";
     source = "nixpkgs";
   };
+  zh4ngx = {
+    github = "zh4ngx";
+    githubId = 1329212;
+    name = "Andy Zhang";
+    source = "nixpkgs";
+  };
   zorrobert = {
     email = "118135271+zorrobert@users.noreply.github.com";
     github = "zorrobert";
