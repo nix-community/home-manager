@@ -454,8 +454,7 @@ in
 
   # If we run under a Linux system we assume that systemd is
   # available, in particular we assume that systemctl is in PATH.
-  # Do not install any user services if username is root.
-  config = mkIf (cfg.enable && config.home.username != "root") {
+  config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "systemd" pkgs lib.platforms.linux)
     ];
