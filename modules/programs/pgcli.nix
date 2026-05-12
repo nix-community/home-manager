@@ -19,7 +19,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.nickthegroot ];
+  meta.maintainers = [ lib.maintainers.nickthegroot ];
 
   options.programs.pgcli = {
     enable = mkEnableOption "pgcli";

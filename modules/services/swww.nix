@@ -8,7 +8,7 @@ let
   cfg = config.services.swww;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ hey2022 ];
+  meta.maintainers = with lib.maintainers; [ hey2022 ];
 
   options.services.swww = {
     enable = lib.mkEnableOption "swww, a Solution to your Wayland Wallpaper Woes";
