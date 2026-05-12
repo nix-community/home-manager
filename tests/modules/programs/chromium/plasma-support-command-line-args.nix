@@ -35,11 +35,13 @@ let
     in
     mkPackage { name = "google-chrome"; };
 
+  plasmaBrowserIntegrationFile = "org.kde.plasma.browser_integration.json";
+
   plasmaBrowserIntegrationPackage = config.lib.test.mkStubPackage {
     name = "plasma-browser-integration";
     buildScript = ''
       mkdir -p $out/etc/chromium/native-messaging-hosts
-      echo test > $out/etc/chromium/native-messaging-hosts/org.kde.plasma.browser_integration.json
+      echo test > $out/etc/chromium/native-messaging-hosts/${plasmaBrowserIntegrationFile}
     '';
   };
 
@@ -49,17 +51,7 @@ let
     else
       ".config/google-chrome/NativeMessagingHosts";
 
-  nativeHostAssertion =
-    if pkgs.stdenv.hostPlatform.isLinux then
-      ''
-        assertFileExists \
-          "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
-      ''
-    else
-      ''
-        assertPathNotExists \
-          "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
-      '';
+  plasmaBrowserIntegrationHomeFile = "home-files/${nativeHostsDir}/${plasmaBrowserIntegrationFile}";
 in
 {
   programs.google-chrome = {
@@ -90,6 +82,8 @@ in
         plasmaSupport=${lib.boolToString pkgs.stdenv.hostPlatform.isLinux}
       ''}
 
-    ${nativeHostAssertion}
+    ${
+      if pkgs.stdenv.hostPlatform.isLinux then "assertFileExists" else "assertPathNotExists"
+    } ${plasmaBrowserIntegrationHomeFile}
   '';
 }
