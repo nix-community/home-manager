@@ -1,4 +1,8 @@
 {
+  pkgs,
+  ...
+}:
+{
   home.enableNixpkgsReleaseCheck = false;
   programs.wallust = {
     enable = true;
@@ -9,8 +13,16 @@
     };
   };
 
-  nmt.script = ''
-    assertFileExists home-files/.config/wallust/wallust.toml
-    assertFileContent home-files/.config/wallust/wallust.toml ${./expected.toml}
-  '';
+  nmt.script =
+    let
+      path =
+        if pkgs.stdenv.isDarwin then
+          "home-files/Library/Application Support/wallust/wallust.toml"
+        else
+          "home-files/.config/wallust/wallust.toml";
+    in
+    ''
+      assertFileExists '${path}'
+      assertFileContent '${path}' ${./expected.toml}
+    '';
 }
