@@ -16,7 +16,7 @@
   nmt.script =
     let
       path =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "home-files/Library/Application Support/wallust/wallust.toml"
         else
           "home-files/.config/wallust/wallust.toml";

@@ -42,12 +42,14 @@ in
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."wallust/wallust.toml" = mkIf (cfg.settings != { } && !pkgs.stdenv.isDarwin) {
-      source = tomlFormat.generate "wallust.toml" cfg.settings;
-    };
+    xdg.configFile."wallust/wallust.toml" =
+      mkIf (cfg.settings != { } && !pkgs.stdenv.hostPlatform.isDarwin)
+        {
+          source = tomlFormat.generate "wallust.toml" cfg.settings;
+        };
 
     home.file."Library/Application Support/wallust/wallust.toml" =
-      mkIf (cfg.settings != { } && pkgs.stdenv.isDarwin)
+      mkIf (cfg.settings != { } && pkgs.stdenv.hostPlatform.isDarwin)
         {
           source = tomlFormat.generate "wallust.toml" cfg.settings;
         };
