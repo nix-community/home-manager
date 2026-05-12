@@ -5,13 +5,26 @@
   ...
 }:
 let
-
   cfg = config.wayland.windowManager.hyprland;
+
+  toLua = lib.generators.toLua { };
 
   variables = builtins.concatStringsSep " " cfg.systemd.variables;
   extraCommands = builtins.concatStringsSep " " (map (f: "&& ${f}") cfg.systemd.extraCommands);
-  systemdActivation = ''
-    exec-once = ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
+  systemdActivationCommand = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}";
+
+  pluginPath =
+    entry: if lib.types.package.check entry then "${entry}/lib/lib${entry.pname}.so" else entry;
+
+  reloadConfig = ''
+    (
+      XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+      if [[ -d "/tmp/hypr" || -d "$XDG_RUNTIME_DIR/hypr" ]]; then
+        for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
+          ${cfg.finalPackage}/bin/hyprctl -i "$i" reload config-only
+        done
+      fi
+    )
   '';
 in
 {
@@ -118,6 +131,35 @@ in
       '';
     };
 
+    configType = lib.mkOption {
+      type = lib.types.enum [
+        "hyprlang"
+        "lua"
+      ];
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.05";
+          optionPath = [
+            "wayland"
+            "windowManager"
+            "hyprland"
+            "configType"
+          ];
+          legacy.value = "hyprlang";
+          current.value = "lua";
+        })
+        default
+        defaultText
+        ;
+      description = ''
+        The type of Hyprland configuration to generate.
+
+        `hyprlang` writes {file}`$XDG_CONFIG_HOME/hypr/hyprland.conf`.
+        `lua` writes {file}`$XDG_CONFIG_HOME/hypr/hyprland.lua`.
+      '';
+    };
+
     systemd = {
       enable = lib.mkEnableOption null // {
         default = true;
@@ -206,22 +248,69 @@ in
         declare plugins.
         :::
 
+        When {option}`wayland.windowManager.hyprland.configType` is `"lua"`,
+        each attribute maps to an `hl.<name>(...)` call. List values generate
+        one call per element.
+
+        Attribute values with an `_args` list generate multi-argument calls.
+        Values created with `lib.generators.mkLuaInline` are rendered as raw
+        Lua expressions.
+
       '';
       example = lib.literalExpression ''
         {
-          decoration = {
-            shadow_offset = "0 5";
-            "col.shadow" = "rgba(00000099)";
+          config = {
+            general = {
+              gaps_in = 5;
+              gaps_out = 20;
+              border_size = 2;
+            };
+
+            decoration = {
+              rounding = 10;
+            };
           };
 
-          "$mod" = "SUPER";
-
-          bindm = [
-            # mouse movements
-            "$mod, mouse:272, movewindow"
-            "$mod, mouse:273, resizewindow"
-            "$mod ALT, mouse:272, resizewindow"
+          bind = [
+            {
+              _args = [
+                "SUPER + Q"
+                (lib.generators.mkLuaInline "hl.dsp.window.close()")
+                { locked = true; }
+              ];
+            }
+            {
+              _args = [
+                "SUPER + RETURN"
+                (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"kitty\")")
+              ];
+            }
+            {
+              _args = [
+                "ALT + R"
+                (lib.generators.mkLuaInline "hl.dsp.submap(\"resize\")")
+              ];
+            }
           ];
+
+          define_submap = {
+            _args = [
+              "resize"
+              (lib.generators.mkLuaInline "function()\n  hl.bind(\"right\", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })\n  hl.bind(\"left\", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })\n  hl.bind(\"escape\", hl.dsp.submap(\"reset\"))\nend")
+            ];
+          };
+
+          window_rule = {
+            match.class = "kitty";
+            border_size = 2;
+          };
+
+          on = {
+            _args = [
+              "hyprland.start"
+              (lib.generators.mkLuaInline "function()\n  hl.exec_cmd(\"waybar\")\nend")
+            ];
+          };
         }
       '';
     };
@@ -230,7 +319,7 @@ in
       description = ''
         Attribute set of Hyprland submaps.
 
-        See <https://wiki.hypr.land/Configuring/Basics/Binds/#submaps> to learn about submaps
+        See <https://wiki.hypr.land/Configuring/Basics/Binds/#submaps> to learn about submaps.
       '';
       default = { };
       type = lib.types.attrsOf (
@@ -250,7 +339,7 @@ in
               };
               default = { };
               description = ''
-                Hyprland binds to be put in the submap
+                Hyprland binds to be put in the submap.
               '';
               example = lib.literalExpression ''
                 {
@@ -299,19 +388,17 @@ in
       type = lib.types.lines;
       default = "";
       example = ''
-        # window resize
-        bind = $mod, S, submap, resize
-
-        submap = resize
-        binde = , right, resizeactive, 10 0
-        binde = , left, resizeactive, -10 0
-        binde = , up, resizeactive, 0 -10
-        binde = , down, resizeactive, 0 10
-        bind = , escape, submap, reset
-        submap = reset
+        hl.on("window.open", function()
+          hl.timer(function()
+            hl.dispatch(hl.dsp.exec_cmd("notify-send 'Window opened'"))
+          end, {
+            timeout = 100,
+            type = "oneshot",
+          })
+        end)
       '';
       description = ''
-        Extra configuration lines to add to `~/.config/hypr/hyprland.conf`.
+        Extra configuration content appended to the generated Hyprland file.
       '';
     };
 
@@ -328,6 +415,7 @@ in
       default = [
         "$"
         "bezier"
+        "curve"
         "name"
         "output"
       ];
@@ -377,63 +465,111 @@ in
       [ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland
     );
 
-    xdg.configFile."hypr/hyprland.conf" =
-      let
-        shouldGenerate =
-          cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
+    xdg.configFile = lib.mkMerge [
+      {
+        "hypr/hyprland.conf" = lib.mkIf (cfg.configType == "hyprlang") (
+          let
+            shouldGenerate =
+              cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
 
-        importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
+            importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
 
-        pluginsToHyprconf =
-          plugins:
-          lib.hm.generators.toHyprconf {
-            attrs = {
-              "exec-once" =
-                let
-                  mkEntry =
-                    entry: if lib.types.package.check entry then "${entry}/lib/lib${entry.pname}.so" else entry;
-                in
-                map (p: "hyprctl plugin load ${mkEntry p}") plugins;
-            };
-            inherit importantPrefixes;
-          };
+            pluginsToHyprconf =
+              plugins:
+              lib.hm.generators.toHyprconf {
+                attrs = {
+                  "exec-once" = map (entry: "hyprctl plugin load ${pluginPath entry}") plugins;
+                };
+                inherit importantPrefixes;
+              };
 
-        mkSubMap = name: attrs: ''
-          submap = ${name}${lib.optionalString (attrs.onDispatch != "") ", ${attrs.onDispatch}"}
-          ${
-            lib.hm.generators.toHyprconf {
-              attrs = attrs.settings;
-              indentLevel = 0;
-            }
-          }submap = reset
-        '';
+            mkSubMap = name: attrs: ''
+              submap = ${name}${lib.optionalString (attrs.onDispatch != "") ", ${attrs.onDispatch}"}
+              ${
+                lib.hm.generators.toHyprconf {
+                  attrs = attrs.settings;
+                  indentLevel = 0;
+                }
+              }submap = reset
+            '';
 
-        submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap;
-      in
-      lib.mkIf shouldGenerate {
-        text =
-          lib.optionalString cfg.systemd.enable systemdActivation
-          + lib.optionalString (cfg.plugins != [ ]) (pluginsToHyprconf cfg.plugins)
-          + lib.optionalString (cfg.settings != { }) (
-            lib.hm.generators.toHyprconf {
-              attrs = cfg.settings;
-              inherit importantPrefixes;
-            }
-          )
-          + lib.optionalString (cfg.submaps != { }) (submapsToHyprConf cfg.submaps)
-          + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+            submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap;
+          in
+          lib.mkIf shouldGenerate {
+            text =
+              lib.optionalString cfg.systemd.enable ''
+                exec-once = ${systemdActivationCommand}
+              ''
+              + lib.optionalString (cfg.plugins != [ ]) (pluginsToHyprconf cfg.plugins)
+              + lib.optionalString (cfg.settings != { }) (
+                lib.hm.generators.toHyprconf {
+                  attrs = cfg.settings;
+                  inherit importantPrefixes;
+                }
+              )
+              + lib.optionalString (cfg.submaps != { }) (submapsToHyprConf cfg.submaps)
+              + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
-        onChange = lib.mkIf (cfg.package != null) ''
-          (
-            XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
-            if [[ -d "/tmp/hypr" || -d "$XDG_RUNTIME_DIR/hypr" ]]; then
-              for i in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
-                ${cfg.finalPackage}/bin/hyprctl -i "$i" reload config-only
-              done
-            fi
-          )
-        '';
-      };
+            onChange = lib.mkIf (cfg.package != null) reloadConfig;
+          }
+        );
+      }
+      {
+        "hypr/hyprland.lua" = lib.mkIf (cfg.configType == "lua") (
+          let
+            pluginLoadCommands = map (entry: "hyprctl plugin load ${pluginPath entry}") cfg.plugins;
+            startupCommands =
+              lib.optionals cfg.systemd.enable [ systemdActivationCommand ] ++ pluginLoadCommands;
+
+            renderSettings =
+              let
+                names = lib.sort lib.lessThan (lib.attrNames cfg.settings);
+                renderArgs =
+                  value:
+                  if lib.isAttrs value && value ? _args then
+                    lib.concatMapStringsSep ", " toLua value._args
+                  else
+                    toLua value;
+                importantNames = lib.unique (
+                  lib.concatMap (
+                    prefix: builtins.filter (name: lib.hasPrefix prefix name) names
+                  ) cfg.importantPrefixes
+                );
+                orderedNames = importantNames ++ builtins.filter (name: !(builtins.elem name importantNames)) names;
+                renderCall = name: value: "hl.${name}(${renderArgs value})\n";
+                renderCalls =
+                  name: value:
+                  lib.concatMapStrings (renderCall name) (if builtins.isList value then value else [ value ]);
+              in
+              lib.concatMapStrings (name: renderCalls name cfg.settings.${name}) orderedNames;
+
+            renderStartHook =
+              if startupCommands == [ ] then
+                ""
+              else
+                ''
+                  hl.on("hyprland.start", function()
+                  ${lib.concatMapStrings (command: "  hl.exec_cmd(${toLua command})\n") startupCommands}end)
+                '';
+
+            shouldGenerate =
+              cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
+          in
+          lib.mkIf shouldGenerate {
+            text = ''
+              -- Generated by Home Manager.
+              -- See https://wiki.hypr.land/Configuring/Start/
+
+            ''
+            + renderSettings
+            + renderStartHook
+            + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+
+            onChange = lib.mkIf (cfg.package != null) reloadConfig;
+          }
+        );
+      }
+    ];
 
     xdg.portal = {
       enable = cfg.finalPortalPackage != null;
