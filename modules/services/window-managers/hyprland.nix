@@ -9,6 +9,21 @@ let
 
   toLua = lib.generators.toLua { };
 
+  settingValueType =
+    with lib.types;
+    nullOr (oneOf [
+      bool
+      int
+      float
+      str
+      path
+      (attrsOf settingValueType)
+      (listOf settingValueType)
+    ])
+    // {
+      description = "Hyprland configuration value";
+    };
+
   variables = builtins.concatStringsSep " " cfg.systemd.variables;
   extraCommands = builtins.concatStringsSep " " (map (f: "&& ${f}") cfg.systemd.extraCommands);
   systemdActivationCommand = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}";
@@ -219,24 +234,7 @@ in
     };
 
     settings = lib.mkOption {
-      type =
-        with lib.types;
-        let
-          valueType =
-            nullOr (oneOf [
-              bool
-              int
-              float
-              str
-              path
-              (attrsOf valueType)
-              (listOf valueType)
-            ])
-            // {
-              description = "Hyprland configuration value";
-            };
-        in
-        valueType;
+      type = settingValueType;
       default = { };
       description = ''
         Hyprland configuration written in Nix. Entries with the same key
@@ -334,12 +332,22 @@ in
               example = "reset";
             };
             settings = lib.mkOption {
-              type = (with lib.types; attrsOf (listOf str)) // {
+              type = (with lib.types; attrsOf (listOf settingValueType)) // {
                 description = "Hyprland binds";
               };
               default = { };
               description = ''
                 Hyprland binds to be put in the submap.
+
+                String entries render only when
+                {option}`wayland.windowManager.hyprland.configType` is
+                `"hyprlang"`.
+
+                Attribute set entries render only when
+                {option}`wayland.windowManager.hyprland.configType` is `"lua"`.
+                Attribute values with an `_args` list generate multi-argument
+                calls. Values created with `lib.generators.mkLuaInline` are
+                rendered as raw Lua expressions.
               '';
               example = lib.literalExpression ''
                 {
@@ -352,6 +360,12 @@ in
 
                   bind = [
                     ", escape, submap, reset"
+                    {
+                      _args = [
+                        "escape"
+                        (lib.generators.mkLuaInline "hl.dsp.submap(\"reset\")")
+                      ];
+                    }
                   ];
                 }
               '';
@@ -469,9 +483,6 @@ in
       {
         "hypr/hyprland.conf" = lib.mkIf (cfg.configType == "hyprlang") (
           let
-            shouldGenerate =
-              cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
-
             importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
 
             pluginsToHyprconf =
@@ -483,17 +494,34 @@ in
                 inherit importantPrefixes;
               };
 
+            hyprlangSubmapSettings =
+              settings:
+              lib.filterAttrs (_: values: values != [ ]) (
+                lib.mapAttrs (_: builtins.filter lib.isString) settings
+              );
+
+            hyprlangSubmaps = lib.filterAttrs (
+              _: submap: hyprlangSubmapSettings submap.settings != { }
+            ) cfg.submaps;
+
             mkSubMap = name: attrs: ''
               submap = ${name}${lib.optionalString (attrs.onDispatch != "") ", ${attrs.onDispatch}"}
               ${
                 lib.hm.generators.toHyprconf {
-                  attrs = attrs.settings;
+                  attrs = hyprlangSubmapSettings attrs.settings;
                   indentLevel = 0;
                 }
               }submap = reset
             '';
 
-            submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap;
+            submapsToHyprConf = lib.concatMapAttrsStringSep "\n" mkSubMap hyprlangSubmaps;
+
+            shouldGenerate =
+              cfg.systemd.enable
+              || cfg.extraConfig != ""
+              || cfg.settings != { }
+              || cfg.plugins != [ ]
+              || hyprlangSubmaps != { };
           in
           lib.mkIf shouldGenerate {
             text =
@@ -507,7 +535,7 @@ in
                   inherit importantPrefixes;
                 }
               )
-              + lib.optionalString (cfg.submaps != { }) (submapsToHyprConf cfg.submaps)
+              + lib.optionalString (hyprlangSubmaps != { }) submapsToHyprConf
               + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
 
             onChange = lib.mkIf (cfg.package != null) reloadConfig;
@@ -521,15 +549,23 @@ in
             startupCommands =
               lib.optionals cfg.systemd.enable [ systemdActivationCommand ] ++ pluginLoadCommands;
 
+            renderArgs =
+              value:
+              if lib.isAttrs value && value ? _args then
+                lib.concatMapStringsSep ", " toLua value._args
+              else
+                toLua value;
+
+            renderSection =
+              name: text:
+              lib.optionalString (text != "") ''
+                -- ${name}
+                ${text}
+              '';
+
             renderSettings =
               let
                 names = lib.sort lib.lessThan (lib.attrNames cfg.settings);
-                renderArgs =
-                  value:
-                  if lib.isAttrs value && value ? _args then
-                    lib.concatMapStringsSep ", " toLua value._args
-                  else
-                    toLua value;
                 importantNames = lib.unique (
                   lib.concatMap (
                     prefix: builtins.filter (name: lib.hasPrefix prefix name) names
@@ -541,19 +577,56 @@ in
                   name: value:
                   lib.concatMapStrings (renderCall name) (if builtins.isList value then value else [ value ]);
               in
-              lib.concatMapStrings (name: renderCalls name cfg.settings.${name}) orderedNames;
+              lib.concatMapStrings (
+                name: renderSection "settings.${name}" (renderCalls name cfg.settings.${name})
+              ) orderedNames;
 
             renderStartHook =
               if startupCommands == [ ] then
                 ""
               else
-                ''
+                renderSection "startup" ''
                   hl.on("hyprland.start", function()
                   ${lib.concatMapStrings (command: "  hl.exec_cmd(${toLua command})\n") startupCommands}end)
                 '';
 
+            renderSubmaps =
+              let
+                renderLuaArg = value: lib.replaceStrings [ "\n" ] [ "\n  " ] (renderArgs value);
+                renderCall = name: value: "  hl.${name}(${renderLuaArg value})\n";
+                renderCalls =
+                  name: values:
+                  lib.concatMapStrings (renderCall name) (builtins.filter (value: !lib.isString value) values);
+                renderSubmap =
+                  name: submap:
+                  renderSection "submaps.${name}" (
+                    "hl.define_submap(${toLua name}"
+                    + lib.optionalString (submap.onDispatch != "") ", ${toLua submap.onDispatch}"
+                    + ", function()\n"
+                    + lib.concatMapStrings (settingName: renderCalls settingName submap.settings.${settingName}) (
+                      lib.sort lib.lessThan (lib.attrNames submap.settings)
+                    )
+                    + "end)\n"
+                  );
+                hasLuaSettings =
+                  submap:
+                  lib.any (values: builtins.any (value: !lib.isString value) values) (lib.attrValues submap.settings);
+                luaSubmaps = lib.filterAttrs (_: hasLuaSettings) cfg.submaps;
+                names = lib.sort lib.lessThan (lib.attrNames luaSubmaps);
+              in
+              lib.concatMapStrings (name: renderSubmap name luaSubmaps.${name}) names;
+
+            hasLuaSubmaps = lib.any (
+              submap:
+              lib.any (values: builtins.any (value: !lib.isString value) values) (lib.attrValues submap.settings)
+            ) (lib.attrValues cfg.submaps);
+
             shouldGenerate =
-              cfg.systemd.enable || cfg.extraConfig != "" || cfg.settings != { } || cfg.plugins != [ ];
+              cfg.systemd.enable
+              || cfg.extraConfig != ""
+              || cfg.settings != { }
+              || cfg.plugins != [ ]
+              || hasLuaSubmaps;
           in
           lib.mkIf shouldGenerate {
             text = ''
@@ -562,8 +635,9 @@ in
 
             ''
             + renderSettings
+            + renderSubmaps
             + renderStartHook
-            + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+            + renderSection "extraConfig" cfg.extraConfig;
 
             onChange = lib.mkIf (cfg.package != null) reloadConfig;
           }

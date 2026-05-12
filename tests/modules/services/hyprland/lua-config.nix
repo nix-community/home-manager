@@ -130,6 +130,12 @@
             (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("kitty")'')
           ];
         }
+        {
+          _args = [
+            "SUPER + SHIFT + 1"
+            (lib.generators.mkLuaInline ''hl.dsp.window.move({ workspace = "1", follow = false })'')
+          ];
+        }
       ];
 
       on = {
@@ -141,6 +147,37 @@
             end
           '')
         ];
+      };
+    };
+
+    submaps = {
+      resize = {
+        onDispatch = "reset";
+        settings = {
+          bind = [
+            ", q, exec, ignored-hyprlang-bind"
+            {
+              _args = [
+                "right"
+                (lib.generators.mkLuaInline "hl.dsp.window.resize({ x = 10, y = 0, relative = true })")
+                { repeating = true; }
+              ];
+            }
+            {
+              _args = [
+                "left"
+                (lib.generators.mkLuaInline "hl.dsp.window.resize({ x = -10, y = 0, relative = true })")
+                { repeating = true; }
+              ];
+            }
+            {
+              _args = [
+                "escape"
+                (lib.generators.mkLuaInline ''hl.dsp.submap("reset")'')
+              ];
+            }
+          ];
+        };
       };
     };
 
@@ -165,6 +202,7 @@
     config=home-files/.config/hypr/hyprland.lua
     assertFileExists "$config"
     assertPathNotExists home-files/.config/hypr/hyprland.conf
+    assertFileNotRegex "$config" "ignored-hyprlang-bind"
     normalizedConfig=$(normalizeStorePaths "$config")
     assertFileContent "$normalizedConfig" ${./lua-config.lua}
   '';
