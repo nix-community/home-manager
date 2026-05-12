@@ -8,6 +8,8 @@
 {
   programs.anime-downloader = {
     enable = true;
+    # nixpkgs removed anime-downloader; this test only exercises config generation.
+    package = null;
     settings = {
       dl = {
         aria2c_for_torrents = false;
