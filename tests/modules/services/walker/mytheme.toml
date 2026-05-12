@@ -1,4 +1,3 @@
-[ui]
 [ui.anchors]
 bottom = true
 left = true
@@ -6,5 +5,5 @@ right = true
 top = true
 
 [ui.window]
-h_align = 'fill'
-v_align = 'fill'
+h_align = "fill"
+v_align = "fill"
