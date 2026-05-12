@@ -1832,11 +1832,6 @@
     email = "nukdokplex@nukdokplex.ru";
     github = "nukdokplex";
     githubId = 25458915;
-    keys = [
-      {
-        fingerprint = "7CE2 4C42 942D 58EA 99F6  F00A A47E 7374 3EF6 FCC4";
-      }
-    ];
     name = "Viktor Titov";
     source = "nixpkgs";
   };
@@ -1848,11 +1843,11 @@
     source = "nixpkgs";
   };
   ojsef39 = {
-    email = "josef.hofer@1und1.de";
+    email = "me+github@jhofer.de";
     github = "ojsef39";
     githubId = 43563019;
     name = "Josef Hofer";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   olmokramer = {
     email = "olmokramer@users.noreply.github.com";
