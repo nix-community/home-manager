@@ -7,6 +7,11 @@
       "/path/to/plugin1"
       (config.lib.test.mkStubPackage { name = "foo"; })
     ];
+    animations = {
+      border = "1, 2, smoothIn";
+      fade = "1, 4, smoothOut";
+      windows = "1, 3, overshot, popin 80%";
+    };
     settings = {
       source = [ "sourced.conf" ];
 
@@ -29,11 +34,6 @@
 
       animations = {
         enabled = true;
-        animation = [
-          "border, 1, 2, smoothIn"
-          "fade, 1, 4, smoothOut"
-          "windows, 1, 3, overshot, popin 80%"
-        ];
       };
 
       bezier = [
