@@ -1,10 +1,16 @@
 { config, lib, ... }:
 
+let
+  hyprland = config.lib.test.mkStubPackage { name = "hyprland"; };
+in
+
 {
   wayland.windowManager.hyprland = {
     enable = true;
     configType = "lua";
-    package = null;
+    package = hyprland // {
+      override = _: hyprland;
+    };
     portalPackage = null;
 
     plugins = [
@@ -200,10 +206,14 @@
 
   nmt.script = ''
     config=home-files/.config/hypr/hyprland.lua
+    luarc=home-files/.config/hypr/.luarc.json
     assertFileExists "$config"
+    assertFileExists "$luarc"
     assertPathNotExists home-files/.config/hypr/hyprland.conf
     assertFileNotRegex "$config" "ignored-hyprlang-bind"
     normalizedConfig=$(normalizeStorePaths "$config")
+    normalizedLuarc=$(normalizeStorePaths "$luarc")
     assertFileContent "$normalizedConfig" ${./lua-config.lua}
+    assertFileContent "$normalizedLuarc" ${./luarc.json}
   '';
 }
