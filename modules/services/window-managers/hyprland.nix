@@ -481,6 +481,14 @@ in
 
     xdg.configFile = lib.mkMerge [
       {
+        "hypr/.luarc.json" = lib.mkIf (cfg.configType == "lua" && cfg.finalPackage != null) {
+          text = builtins.toJSON {
+            workspace.library = [ "${cfg.finalPackage}/share/hypr/stubs" ];
+            diagnostics.globals = [ "hl" ];
+          };
+        };
+      }
+      {
         "hypr/hyprland.conf" = lib.mkIf (cfg.configType == "hyprlang") (
           let
             importantPrefixes = cfg.importantPrefixes ++ lib.optional cfg.sourceFirst "source";
