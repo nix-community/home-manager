@@ -45,39 +45,6 @@ in
 {
   meta.maintainers = [ lib.maintainers.fufexan ];
 
-  # A few option removals and renames to aid those migrating from the upstream
-  # module.
-  imports = [
-    (lib.mkRemovedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "disableAutoreload" ]
-      "Autoreloading now always happens"
-    )
-
-    (lib.mkRemovedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "recommendedEnvironment" ]
-      "Recommended environment variables are now always set"
-    )
-
-    (lib.mkRemovedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "xwayland" "hidpi" ]
-      "HiDPI patches are deprecated. Refer to <https://wiki.hypr.land/Configuring/Advanced-and-Cool/XWayland>"
-    )
-
-    (lib.mkRemovedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "nvidiaPatches" ] # \
-      "Nvidia patches are no longer needed"
-    )
-    (lib.mkRemovedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "enableNvidiaPatches" ] # \
-      "Nvidia patches are no longer needed"
-    )
-
-    (lib.mkRenamedOptionModule # \
-      [ "wayland" "windowManager" "hyprland" "systemdIntegration" ] # \
-      [ "wayland" "windowManager" "hyprland" "systemd" "enable" ]
-    )
-  ];
-
   options.wayland.windowManager.hyprland = {
     enable = lib.mkOption {
       type = lib.types.bool;
