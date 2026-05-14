@@ -27,8 +27,8 @@ in
     };
     pythonPackages = mkOption {
       type = types.raw;
-      default = pkgs.pythonPackages;
-      defaultText = "pkgs.pythonPackages";
+      default = pkgs.python3Packages;
+      defaultText = "pkgs.python3Packages";
       description = ''
         The pythonPackages set extraPackages are taken from
       '';
