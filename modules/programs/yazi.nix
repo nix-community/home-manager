@@ -17,6 +17,46 @@ let
 
   cfg = config.programs.yazi;
   tomlFormat = pkgs.formats.toml { };
+
+  pluginSubmodule = types.submodule {
+    options = {
+      package = mkOption {
+        type =
+          with types;
+          oneOf [
+            path
+            package
+          ];
+        description = ''
+          Package or path for the plugin.
+          Will be linked to
+          {file}`$XDG_CONFIG_HOME/yazi/plugins/<name>.yazi`.
+        '';
+      };
+      setup = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          When {var}`true`, generates a
+          {command}`require("{name}"):setup({...})` call in
+          {file}`$XDG_CONFIG_HOME/yazi/init.lua`.
+        '';
+      };
+      settings = mkOption {
+        type = types.attrs;
+        default = { };
+        description = ''
+          Attribute set passed to the plugin's
+          {command}`setup()` as a Lua table (via
+          {command}`lib.generators.toLua`). Values created with
+          {command}`lib.generators.mkLuaInline` are rendered as raw Lua expressions.
+          Only used when {option}`setup` is {var}`true`.
+          When empty, {command}`setup()` is called with no
+          arguments.
+        '';
+      };
+    };
+  };
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -189,23 +229,53 @@ in
     plugins = mkOption {
       type =
         with types;
-        attrsOf (oneOf [
-          path
-          package
-        ]);
+        attrsOf (
+          coercedTo
+            (oneOf [
+              path
+              package
+            ])
+            (pkg: {
+              package = pkg;
+              setup = false;
+              settings = { };
+            })
+            pluginSubmodule
+        );
       default = { };
       description = ''
         Lua plugins.
-        Values should be a package or path containing an `init.lua` file.
-        Will be linked to {file}`$XDG_CONFIG_HOME/yazi/plugins/<name>.yazi`.
+        Values can be a package or path (linked as-is), or an attribute set
+        with {option}`package`, {option}`setup`, and {option}`settings`.
+
+        Plugins with {option}`setup` set to {var}`true` generate a
+        {command}`require("{name}"):setup({...})` call in
+        {file}`$XDG_CONFIG_HOME/yazi/init.lua`, written before any
+        {option}`initLua` content.
 
         See <https://yazi-rs.github.io/docs/plugins/overview>
         for documentation.
       '';
       example = literalExpression ''
         {
-          foo = ./foo;
-          bar = pkgs.bar;
+          # package only, no setup call
+          foo = pkgs.foo;
+
+          # empty setup call: require("bar"):setup()
+          bar = {
+            package = pkgs.bar;
+            setup = true;
+          };
+
+          # setup call with settings
+          baz = {
+            package = pkgs.baz;
+            setup = true;
+            settings = {
+              part_separator = { open = ""; close = ""; };
+              tab_width = 20;
+            };
+          };
         }
       '';
     };
@@ -310,22 +380,34 @@ in
       "yazi/vfs.toml" = mkIf (cfg.vfs != { }) {
         source = tomlFormat.generate "yazi-vfs" cfg.vfs;
       };
-      "yazi/init.lua" = mkIf (cfg.initLua != null) (
-        if builtins.isPath cfg.initLua then
-          {
-            source = cfg.initLua;
-          }
-        else
-          {
-            text = cfg.initLua;
-          }
-      );
+      "yazi/init.lua" =
+        mkIf (lib.any (v: v.setup) (builtins.attrValues cfg.plugins) || cfg.initLua != null)
+          (
+            if lib.any (v: v.setup) (builtins.attrValues cfg.plugins) then
+              {
+                text =
+                  (lib.concatMapStringsSep "\n" (
+                    { name, value }:
+                    if value.settings == { } then
+                      "require(${lib.generators.toLua { } name}):setup()"
+                    else
+                      "require(${lib.generators.toLua { } name}):setup(${lib.generators.toLua { } value.settings})"
+                  ) (lib.attrsToList (lib.filterAttrs (_n: v: v.setup) cfg.plugins)))
+                  + optionalString (cfg.initLua != null) (
+                    "\n" + (if builtins.isPath cfg.initLua then builtins.readFile cfg.initLua else cfg.initLua)
+                  );
+              }
+            else if builtins.isPath cfg.initLua then
+              { source = cfg.initLua; }
+            else
+              { text = cfg.initLua; }
+          );
     }
     // (lib.mapAttrs' (
       name: value: lib.nameValuePair "yazi/flavors/${name}.yazi" { source = value; }
     ) cfg.flavors)
     // (lib.mapAttrs' (
-      name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value; }
+      name: value: lib.nameValuePair "yazi/plugins/${name}.yazi" { source = value.package; }
     ) cfg.plugins);
 
     warnings = lib.filter (s: s != "") (
