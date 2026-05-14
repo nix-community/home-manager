@@ -410,7 +410,9 @@ let
       ++ optional (cf.forwardAgent != null) "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
       ++ optional cf.forwardX11 "  ForwardX11 yes"
       ++ optional cf.forwardX11Trusted "  ForwardX11Trusted yes"
-      ++ optional (cf.identitiesOnly != null) "  IdentitiesOnly ${lib.hm.booleans.yesNo cf.identitiesOnly}"
+      ++ optional (
+        cf.identitiesOnly != null
+      ) "  IdentitiesOnly ${lib.hm.booleans.yesNo cf.identitiesOnly}"
       ++ optional (cf.user != null) "  User ${cf.user}"
       ++ optional (cf.hostname != null) "  HostName ${cf.hostname}"
       ++ optional (cf.addressFamily != null) "  AddressFamily ${cf.addressFamily}"
