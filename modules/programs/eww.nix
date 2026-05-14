@@ -12,6 +12,22 @@ in
 {
   meta.maintainers = [ lib.hm.maintainers.mainrs ];
 
+  imports =
+    map
+      (
+        shell:
+        lib.mkRemovedOptionModule [
+          "programs"
+          "eww"
+          "enable${shell}Integration"
+        ] "This option is no longer necessary. Shell completions are now installed with eww by nixpkgs."
+      )
+      [
+        "Bash"
+        "Zsh"
+        "Fish"
+      ];
+
   options.programs.eww = {
     enable = lib.mkEnableOption "eww";
 
@@ -26,38 +42,10 @@ in
         {file}`$XDG_CONFIG_HOME/eww`.
       '';
     };
-
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
-
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
   };
 
-  config =
-    let
-      ewwCmd = lib.getExe cfg.package;
-    in
-    mkIf cfg.enable {
-      home.packages = [ cfg.package ];
-      xdg = mkIf (cfg.configDir != null) { configFile."eww".source = cfg.configDir; };
-
-      programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        if [[ $TERM != "dumb" ]]; then
-          eval "$(${ewwCmd} shell-completions --shell bash)"
-        fi
-      '';
-
-      programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-        if [[ $TERM != "dumb" ]]; then
-          eval "$(${ewwCmd} shell-completions --shell zsh)"
-        fi
-      '';
-
-      programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        if test "$TERM" != "dumb"
-          eval "$(${ewwCmd} shell-completions --shell fish)"
-        end
-      '';
-    };
+  config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+    xdg = mkIf (cfg.configDir != null) { configFile."eww".source = cfg.configDir; };
+  };
 }
