@@ -15,6 +15,20 @@ in
     enable = lib.mkEnableOption "Official Tailscale systray application for Linux";
 
     package = lib.mkPackageOption pkgs "tailscale" { };
+
+    theme = lib.mkOption {
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "dark"
+          "dark:nobg"
+          "light"
+          "light:nobg"
+        ]
+      );
+      default = null;
+      example = "dark:nobg";
+      description = "Color theme to use for the Tailscale icon.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -24,6 +38,12 @@ in
         assertion = lib.versionAtLeast cfg.package.version "1.88.1";
         message = ''
           Tailscale systray is available since version 1.88.1
+        '';
+      }
+      {
+        assertion = cfg.theme != null -> lib.versionAtLeast cfg.package.version "1.98";
+        message = ''
+          Tailscale systray supports themes since version 1.98
         '';
       }
     ];
@@ -41,7 +61,12 @@ in
       Install = {
         WantedBy = [ "graphical-session.target" ];
       };
-      Service.ExecStart = "${lib.getExe cfg.package} systray";
+      Service.ExecStart = lib.concatStringsSep " " (
+        [
+          "${lib.getExe cfg.package} systray"
+        ]
+        ++ lib.optional (cfg.theme != null) "--theme ${cfg.theme}"
+      );
     };
   };
 }
