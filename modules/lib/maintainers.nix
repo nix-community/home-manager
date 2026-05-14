@@ -211,6 +211,12 @@
     github = "fpob";
     githubId = 6289078;
   };
+  garklein = {
+    name = "Garklein";
+    email = "garklein97@gmail.com";
+    github = "garklein";
+    githubId = 63201615;
+  };
   gauthsvenkat = {
     email = "gauthsvenkat+home-manager@gmail.com";
     github = "gauthsvenkat";
