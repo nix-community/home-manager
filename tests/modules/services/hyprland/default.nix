@@ -15,4 +15,6 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-submaps-config = ./submaps-config.nix;
   hyprland-submaps-on-dispatch = ./submaps-on-dispatch.nix;
   hyprland-lua-config = ./lua-config.nix;
+  hyprland-lua-files-assertions = ./lua-files-assertions.nix;
+  hyprland-lua-files-config = ./lua-files-config.nix;
 }
