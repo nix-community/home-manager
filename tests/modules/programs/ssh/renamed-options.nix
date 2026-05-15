@@ -18,7 +18,19 @@
 
   test.asserts.warnings.expected =
     let
-      renamedOptions = [
+      renamedOptions = {
+        forwardAgent = "ForwardAgent";
+        addKeysToAgent = "AddKeysToAgent";
+        compression = "Compression";
+        serverAliveInterval = "ServerAliveInterval";
+        serverAliveCountMax = "ServerAliveCountMax";
+        hashKnownHosts = "HashKnownHosts";
+        userKnownHostsFile = "UserKnownHostsFile";
+        controlMaster = "ControlMaster";
+        controlPath = "ControlPath";
+        controlPersist = "ControlPersist";
+      };
+      renamedOptionOrder = [
         "controlPersist"
         "controlPath"
         "controlMaster"
@@ -32,11 +44,14 @@
       ];
     in
     map (
-      o:
-      "The option `programs.ssh.${o}' defined in ${
-        lib.showFiles options.programs.ssh.${o}.files
-      } has been renamed to `programs.ssh.matchBlocks.*.${o}'."
-    ) renamedOptions;
+      old:
+      let
+        new = renamedOptions.${old};
+      in
+      "The option `programs.ssh.${old}' defined in ${
+        lib.showFiles options.programs.ssh.${old}.files
+      } has been renamed to `programs.ssh.settings.*.${new}'."
+    ) renamedOptionOrder;
 
   nmt.script = ''
     assertFileExists home-files/.ssh/config

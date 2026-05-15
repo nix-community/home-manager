@@ -9,18 +9,13 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
-        abc = {
-          port = 2222;
-        };
-
-        xyz = {
-          match = "host xyz canonical";
-          port = 2223;
-        };
-
-        "* !github.com" = {
-          port = 516;
+      matchBlocks.legacy = {
+        user = "typed-user";
+        hostname = "example.org";
+        extraOptions = {
+          ForwardAgent = "yes";
+          HostName = "extra.example.org";
+          User = "extra-user";
         };
       };
     };
@@ -33,13 +28,16 @@
       ''
         `programs.ssh.matchBlocks` defined in ${lib.showFiles options.programs.ssh.matchBlocks.files} is deprecated. Use `programs.ssh.settings`.
       ''
+      ''
+        `programs.ssh.matchBlocks.legacy.extraOptions` defined in ${lib.showFiles options.programs.ssh.matchBlocks.files} is deprecated. Move these OpenSSH options to `programs.ssh.settings.legacy` using upstream directive names.
+      ''
     ];
 
     nmt.script = ''
       assertFileExists home-files/.ssh/config
       assertFileContent \
         home-files/.ssh/config \
-        ${./match-blocks-match-and-hosts-expected.conf}
+        ${./match-blocks-extra-options-duplicates-expected.conf}
       assertFileContent home-files/assertions ${./no-assertions.json}
     '';
   };
