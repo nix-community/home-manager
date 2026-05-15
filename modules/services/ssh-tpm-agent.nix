@@ -89,7 +89,12 @@ in
             After = [ "ssh-tpm-agent.socket" ];
           };
           Service = {
-            Environment = "SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock";
+            Environment = [
+              "SSH_TPM_AUTH_SOCK=%t/ssh-tpm-agent.sock"
+            ]
+            ++ lib.optional (
+              config.home.sessionVariables ? SSH_ASKPASS
+            ) "SSH_ASKPASS=${config.home.sessionVariables.SSH_ASKPASS}";
             ExecStart =
               let
                 inherit (config.services) ssh-agent;
