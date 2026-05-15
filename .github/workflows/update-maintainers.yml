@@ -184,7 +184,7 @@ jobs:
           if [[ -n "$info" ]]; then
             echo "PR info:"
             echo "$info"
-            echo "$info" >> $GITHUB_OUTPUT
+            echo "$info" >> "$GITHUB_OUTPUT"
           else
             echo "No PR is currently open"
           fi
@@ -266,21 +266,21 @@ jobs:
                 echo "✅ Successfully updated PR with new changes."
                 echo "$changes"
                 echo "🔗 PR URL: $pr_url"
-                echo "### ✅ PR Updated" >> $GITHUB_STEP_SUMMARY
-                echo "[$pr_url]($pr_url)" >> $GITHUB_STEP_SUMMARY
+                echo "### ✅ PR Updated" >> "$GITHUB_STEP_SUMMARY"
+                echo "[$pr_url]($pr_url)" >> "$GITHUB_STEP_SUMMARY"
               elif [[ -n "$pr_url" ]]; then
                 echo "✅ Successfully created PR with maintainer updates."
                 echo "$changes"
                 echo "🔗 PR URL: $pr_url"
-                echo "### ✅ PR Created" >> $GITHUB_STEP_SUMMARY
-                echo "[$pr_url]($pr_url)" >> $GITHUB_STEP_SUMMARY
+                echo "### ✅ PR Created" >> "$GITHUB_STEP_SUMMARY"
+                echo "[$pr_url]($pr_url)" >> "$GITHUB_STEP_SUMMARY"
               else
                 echo "❌ Failed to create or update pull request."
-                echo "### ❌ PR Operation Failed" >> $GITHUB_STEP_SUMMARY
-                echo "A pull request was intended but the URL was not captured. Please check the logs." >> $GITHUB_STEP_SUMMARY
+                echo "### ❌ PR Operation Failed" >> "$GITHUB_STEP_SUMMARY"
+                echo "A pull request was intended but the URL was not captured. Please check the logs." >> "$GITHUB_STEP_SUMMARY"
               fi
           else
             echo "ℹ️ No changes detected - maintainers list is up to date."
-            echo "### ℹ️ No Changes" >> $GITHUB_STEP_SUMMARY
-            echo "The maintainers list is up-to-date. No PR was created." >> $GITHUB_STEP_SUMMARY
+            echo "### ℹ️ No Changes" >> "$GITHUB_STEP_SUMMARY"
+            echo "The maintainers list is up-to-date. No PR was created." >> "$GITHUB_STEP_SUMMARY"
           fi
