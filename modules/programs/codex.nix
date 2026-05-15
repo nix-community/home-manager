@@ -217,7 +217,7 @@ in
           {command}`codex app-server --listen`.
 
           The default disables local transports and exposes only the outbound
-          remote-control websocket. Set this to {literal}`unix://` if local
+          remote-control websocket. Set this to `unix://` if local
           tools should also be able to connect through the Codex app-server
           control socket.
         '';
