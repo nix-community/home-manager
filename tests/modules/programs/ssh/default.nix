@@ -2,9 +2,14 @@
   ssh-old-defaults = ./old-defaults.nix;
   ssh-old-defaults-extra-config = ./old-defaults-extra-config.nix;
   ssh-extra-config-no-default-host = ./extra-config-no-default-host.nix;
+  ssh-extra-option-overrides = ./extra-option-overrides.nix;
   ssh-renamed-options = ./renamed-options.nix;
   ssh-includes = ./includes.nix;
+  ssh-settings = ./settings.nix;
+  ssh-settings-extra-options-assertion = ./settings-extra-options-assertion.nix;
+  ssh-settings-raw-forwards = ./settings-raw-forwards.nix;
   ssh-match-blocks = ./match-blocks-attrs.nix;
+  ssh-match-blocks-extra-options-duplicates = ./match-blocks-extra-options-duplicates.nix;
   ssh-match-blocks-match-and-hosts = ./match-blocks-match-and-hosts.nix;
   ssh-forwards-dynamic-valid-bind-no-asserts = ./forwards-dynamic-valid-bind-no-asserts.nix;
   ssh-forwards-dynamic-bind-path-with-port-asserts = ./forwards-dynamic-bind-path-with-port-asserts.nix;
