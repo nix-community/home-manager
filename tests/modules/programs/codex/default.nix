@@ -1,3 +1,5 @@
+{ lib, pkgs, ... }:
+
 {
   codex-settings-toml = ./settings-toml.nix;
   codex-settings-toml-prefer-xdg-directories = ./settings-toml-prefer-xdg-directories.nix;
@@ -6,7 +8,6 @@
   codex-legacy-custom-instructions = ./legacy-custom-instructions.nix;
   codex-mcp-integration = ./mcp-integration.nix;
   codex-mcp-integration-with-override = ./mcp-integration-with-override.nix;
-  codex-remote-control-service = ./remote-control-service.nix;
   codex-rules = ./rules.nix;
   codex-skills-inline = ./skills-inline.nix;
   codex-skills-inline-null-package = ./skills-inline-null-package.nix;
@@ -15,4 +16,7 @@
   codex-skills-store-path = ./skills-store-path.nix;
   codex-skills-store-path-dir = ./skills-store-path-dir.nix;
   codex-skills-path-not-directory = ./skills-path-not-directory.nix;
+}
+// lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  codex-remote-control-service = ./remote-control-service.nix;
 }
