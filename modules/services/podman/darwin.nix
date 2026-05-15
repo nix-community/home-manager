@@ -198,6 +198,20 @@ in
         };
       };
     };
+
+    extraPackages = mkOption {
+      type = types.listOf types.package;
+      default = with pkgs; [
+        openssh
+      ];
+      defaultText = lib.literalExpression "[ pkgs.openssh ]";
+      example = lib.literalExpression ''
+        with pkgs; [ openssh hello ];
+      '';
+      description = ''
+        Extra packages added to {env}`PATH` when creating Podman machines.
+      '';
+    };
   };
 
   config =
@@ -263,7 +277,14 @@ in
               '';
           in
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            PATH="${cfg.package}/bin:$PATH"
+            PATH="${
+              lib.makeBinPath (
+                [
+                  cfg.package
+                ]
+                ++ cfg.extraPackages
+              )
+            }:$PATH"
 
             ${concatStringsSep "\n" (lib.mapAttrsToList mkMachineInitScript allMachines)}
 
