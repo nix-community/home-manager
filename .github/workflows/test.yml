@@ -92,37 +92,37 @@ jobs:
         if: github.event_name == 'pull_request'
         shell: bash
         run: |
-          echo "### Test Job Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "A summary of tasks triggered by file changes in this PR:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Job Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "A summary of tasks triggered by file changes in this PR:" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
 
           if [[ "${{ needs.changes.outputs.docs }}" == "true" ]]; then
-            echo "- ✅ **Docs Build:** Triggered" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Docs Build:** Triggered" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- ☑️ **Docs Build:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+            echo "- ☑️ **Docs Build:** Skipped (no relevant files changed)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           if [[ "${{ needs.changes.outputs.format }}" == "true" ]]; then
-            echo "- ✅ **Format Check:** Triggered" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Format Check:** Triggered" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- ☑️ **Format Check:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+            echo "- ☑️ **Format Check:** Skipped (no relevant files changed)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           if [[ "${{ needs.changes.outputs.parse }}" == "true" ]]; then
-            echo "- ✅ **Nix Parse (nix + Lix):** Triggered" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Nix Parse (nix + Lix):** Triggered" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- ☑️ **Nix Parse (nix + Lix):** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+            echo "- ☑️ **Nix Parse (nix + Lix):** Skipped (no relevant files changed)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           if [[ "${{ needs.changes.outputs.hm }}" == "true" ]]; then
-            echo "- ✅ **Home Manager Tests:** Triggered" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Home Manager Tests:** Triggered" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- ☑️ **Home Manager Tests:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+            echo "- ☑️ **Home Manager Tests:** Skipped (no relevant files changed)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           if [[ "${{ needs.changes.outputs.tests }}" == "true" ]]; then
-            echo "- ✅ **General Tests:** Triggered" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **General Tests:** Triggered" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- ☑️ **General Tests:** Skipped (no relevant files changed)" >> $GITHUB_STEP_SUMMARY
+            echo "- ☑️ **General Tests:** Skipped (no relevant files changed)" >> "$GITHUB_STEP_SUMMARY"
           fi
