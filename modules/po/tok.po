@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-31 16:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-05-15 00:11+0000\n"
+"Last-Translator: soweli Emi <emi@alchemi.dev>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/home-manager/"
 "modules/tok/>\n"
 "Language: tok\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.5.dev0\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
-msgstr ""
+msgstr "mi pali e lipu nimi lon %s"
 
 #: modules/files.nix:227
 msgid "Cleaning up orphan links from %s"
@@ -29,11 +29,11 @@ msgstr ""
 
 #: modules/home-environment.nix:680
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "mi pali e kulupu sin pi lipu lawa tan ilo Home Manager"
 
 #: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "ale li sama li ante ala. ni la mi kepeken kulupu pini pi lipu lawa"
 
 #: modules/home-environment.nix:732
 msgid ""
@@ -50,48 +50,63 @@ msgid ""
 "\n"
 "Then try activating your Home Manager configuration again."
 msgstr ""
+"ike a! mi ken ala pana e kulupu sin pi lipu lawa tan ilo Home Manager tawa "
+"tomo sina!\n"
+"\n"
+"ken la sina lon e ilo kepeken \"%s\".\n"
+"ilo ni li lon li sama ilo sin la ni li pali e ike. ken la o toki:\n"
+"\n"
+"    %s\n"
+"\n"
+"ilo ike li lon la sina ken weka e ona kepeken toki ni:\n"
+"\n"
+"    %s\n"
+"\n"
+"pini la pali kin."
 
 #: modules/home-environment.nix:768
 msgid "Activating %s"
-msgstr ""
+msgstr "tenpo ni la mi pali %s"
 
 #: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: mi ken ala sona e nimi '%s'"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
-msgstr ""
+msgstr "mi ante a lipu lawa tan %s tawa %s"
 
 #: modules/lib-bash/activation-init.sh:54
 msgid "Could not find suitable profile directory, tried %s and %s"
 msgstr ""
+"mi wile pana e kulupu lipu sina lon poki sona. taso mi ken ala alasa e ma "
+"pona lon %s lon %s"
 
 #. translators: For example: HOME is "/home/foo", expected "/home/bar"
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "poki sona %s li \"%s\". mi la ni li nasa. mi alasa e \"%s\""
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
-msgstr ""
+msgstr "ilo Home Manager li open"
 
 #: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"
-msgstr ""
+msgstr "mi alasa ilo Nix tan ni: ilo Nix li lon ala la ni li ike mute li nasa"
 
 #: modules/lib-bash/activation-init.sh:155
 msgid "This is a dry run"
-msgstr ""
+msgstr "tenpo ni la mi ante ala e lipu li toki taso"
 
 #: modules/lib-bash/activation-init.sh:159
 msgid "This is a live run"
-msgstr ""
+msgstr "mi pali e ale ni li ante e lipu lon"
 
 #: modules/lib-bash/activation-init.sh:165
 msgid "Using Nix version: %s"
-msgstr ""
+msgstr "ilo Nix li ante %s"
 
 #: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
