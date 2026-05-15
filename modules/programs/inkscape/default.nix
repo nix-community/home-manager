@@ -24,7 +24,7 @@ in
   options.programs.inkscape = {
     enable = mkEnableOption "Inkscape vector graphics editor";
 
-    package = mkPackageOption pkgs "inkscape" { };
+    package = mkPackageOption pkgs "inkscape" { nullable = true; };
 
     settings = mkOption {
       type = types.attrsOf xmlFormat.type;
@@ -87,7 +87,7 @@ in
         Writes {file}`$XDG_CONFIG_HOME/inkscape/keys/default.xml` with an
         XInclude reference to the chosen keymap.
 
-        Ignored when {option}`programs.inkscape.keymapXml` is set.
+        Ignored when {option}`programs.inkscape.keymap` is set.
       '';
     };
 
@@ -117,7 +117,7 @@ in
         Custom keyboard shortcut XML written verbatim to
         {file}`$XDG_CONFIG_HOME/inkscape/keys/default.xml`.
 
-        Takes precedence over {option}`programs.inkscape.keymap`.
+        Takes precedence over {option}`programs.inkscape.keymapSet`.
         Same XML writing logic as settings.
       '';
     };

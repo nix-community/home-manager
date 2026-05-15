@@ -26,7 +26,7 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = lib.mkMerge [
       (lib.mkIf (cfg.settings != { }) {
