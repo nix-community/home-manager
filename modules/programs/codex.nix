@@ -183,6 +183,18 @@ in
     remoteControl = {
       enable = lib.mkEnableOption "the Codex remote-control app-server systemd user service";
 
+      package = lib.mkOption {
+        type = lib.types.nullOr lib.types.package;
+        default = cfg.package;
+        defaultText = lib.literalExpression "config.programs.codex.package";
+        description = ''
+          Codex package to use for the remote-control service.
+
+          This defaults to {option}`programs.codex.package`, but can be
+          overridden when the service should run a different Codex build.
+        '';
+      };
+
       codexHome = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
@@ -300,6 +312,7 @@ in
         ]
         ++ remoteControlCfg.extraPackages
       );
+      remoteControlPackage = remoteControlCfg.package;
       remoteControlEnvironment = {
         CODEX_HOME = codexHome;
         PATH = remoteControlPath;
@@ -386,8 +399,8 @@ in
           message = "`programs.codex.remoteControl.enable` is only supported on Linux";
         }
         {
-          assertion = !remoteControlCfg.enable || cfg.package != null;
-          message = "`programs.codex.remoteControl.enable` requires `programs.codex.package` to be set";
+          assertion = !remoteControlCfg.enable || remoteControlPackage != null;
+          message = "`programs.codex.remoteControl.enable` requires `programs.codex.remoteControl.package` to be set";
         }
       ];
 
@@ -415,7 +428,7 @@ in
       };
 
       systemd.user.services.codex-remote-control =
-        mkIf (remoteControlCfg.enable && cfg.package != null && pkgs.stdenv.hostPlatform.isLinux)
+        mkIf (remoteControlCfg.enable && remoteControlPackage != null && pkgs.stdenv.hostPlatform.isLinux)
           {
             Unit = {
               Description = "Codex remote-control app-server";
@@ -426,7 +439,7 @@ in
               Environment = remoteControlEnvironmentList;
               ExecStart = lib.escapeShellArgs (
                 [
-                  (lib.getExe cfg.package)
+                  (lib.getExe remoteControlPackage)
                   "app-server"
                   "--remote-control"
                   "--listen"

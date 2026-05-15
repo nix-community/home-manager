@@ -6,7 +6,7 @@ Environment=CODEX_HOME=/home/hm-user/.codex
 Environment=PATH=/home/hm-user/.nix-profile/bin
 Environment=RUST_LOG=codex_app_server=info
 EnvironmentFile=/run/secrets/codex-remote-control.env
-ExecStart=/nix/store/00000000000000000000000000000000-codex/bin/codex app-server --remote-control --listen unix:// --analytics-default-enabled
+ExecStart=/nix/store/00000000000000000000000000000000-codex-remote-control/bin/codex-remote-control app-server --remote-control --listen unix:// --analytics-default-enabled
 Restart=on-failure
 RestartSec=5
 

@@ -3,6 +3,9 @@ let
   codexPackage = config.lib.test.mkStubPackage {
     name = "codex";
   };
+  remoteControlPackage = config.lib.test.mkStubPackage {
+    name = "codex-remote-control";
+  };
 in
 {
   programs.codex = {
@@ -10,6 +13,7 @@ in
     package = codexPackage;
     remoteControl = {
       enable = true;
+      package = remoteControlPackage;
       listen = "unix://";
       environment = {
         RUST_LOG = "codex_app_server=info";
