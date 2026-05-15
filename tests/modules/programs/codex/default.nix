@@ -6,6 +6,7 @@
   codex-legacy-custom-instructions = ./legacy-custom-instructions.nix;
   codex-mcp-integration = ./mcp-integration.nix;
   codex-mcp-integration-with-override = ./mcp-integration-with-override.nix;
+  codex-remote-control-service = ./remote-control-service.nix;
   codex-rules = ./rules.nix;
   codex-skills-inline = ./skills-inline.nix;
   codex-skills-inline-null-package = ./skills-inline-null-package.nix;

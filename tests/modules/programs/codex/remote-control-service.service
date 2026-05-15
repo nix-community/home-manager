@@ -1,0 +1,15 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+Environment=CODEX_HOME=/home/hm-user/.codex
+Environment=PATH=/home/hm-user/.nix-profile/bin
+Environment=RUST_LOG=codex_app_server=info
+EnvironmentFile=/run/secrets/codex-remote-control.env
+ExecStart=/nix/store/00000000000000000000000000000000-codex/bin/codex app-server --remote-control --listen unix:// --analytics-default-enabled
+Restart=on-failure
+RestartSec=5
+
+[Unit]
+After=network.target
+Description=Codex remote-control app-server
