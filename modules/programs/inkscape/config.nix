@@ -11,17 +11,17 @@ let
 
   cfg = config.programs.inkscape;
 
-  # Resolve a user-supplied value (either a store path or inline text) to a store path :0
   toSource =
     name: content:
-    if builtins.isPath content || lib.isStorePath content then content else pkgs.writeText name content;
+    if lib.isPath content || lib.isStorePath content then content else pkgs.writeText name content;
 
-  # Build xdg.configFile entries from an attrsOf (either path lines) option.
   mkConfigFiles =
     subdir: items:
-    lib.mapAttrs' (
-      name: content: lib.nameValuePair "inkscape/${subdir}/${name}" { source = toSource name content; }
-    ) items;
+    lib.concatMapAttrs (name: content: {
+      "inkscape/${subdir}/${name}" = {
+        source = toSource name content;
+      };
+    }) items;
 
 in
 {
@@ -63,9 +63,9 @@ in
         ) cfg.fonts
       ))
 
-      (lib.mapAttrs' (
-        name: text: lib.nameValuePair "inkscape/fontscollections/${name}" { inherit text; }
-      ) cfg.fontCollections)
+      (lib.concatMapAttrs (name: text: {
+        "inkscape/fontscollections/${name}" = { inherit text; };
+      }) cfg.fontCollections)
     ];
   };
 }

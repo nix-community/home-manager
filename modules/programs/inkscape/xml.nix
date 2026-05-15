@@ -1,27 +1,28 @@
 { lib }:
 
+# unfortunately, we can't use pkgs.formats.xml becuase it maps attrset keys to
+# XML element names, producing e.g. <ui theme="Adwaita"/>.
+# Inkscape's preferences.xml requires the inverse:
+# every node is a <group id="key"> element, so the key becomes an *attribute*
+# rather than the element name.
+
 let
   generateGroup =
     name: value:
     let
-      keys = builtins.attrNames value;
-      attrKeys = builtins.filter (k: lib.hasPrefix "@" k) keys;
-      childKeys = builtins.filter (k: !(lib.hasPrefix "@" k)) keys;
-
-      attrs = lib.concatStrings (
-        map (k: " ${builtins.substring 1 999 k}=\"${lib.escapeXML (toString value.${k})}\"") attrKeys
-      );
-
-      children = lib.concatStringsSep "\n" (map (k: "    ${generateGroup k value.${k}}") childKeys);
+      parts = lib.partition (lib.hasPrefix "@") (lib.attrNames value);
+      attrs = lib.concatMapStrings (
+        k: " ${lib.removePrefix "@" k}=\"${lib.escapeXML (toString value.${k})}\""
+      ) parts.right;
+      children = lib.concatMapStringsSep "\n" (k: "    ${generateGroup k value.${k}}") parts.wrong;
     in
+
     if children == "" then
       "<group id=\"${name}\"${attrs}/>"
     else
       "<group id=\"${name}\"${attrs}>\n${children}\n  </group>";
-
 in
 {
-  # Render a settings attrset as a complete preferences.xml file.
   preferencesToXml =
     settings:
     lib.concatStringsSep "\n" [
