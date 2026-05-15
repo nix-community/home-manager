@@ -14,6 +14,7 @@ Environment=VAL_B=2
 Environment=VAL_C=false
 Image=docker.io/alpine:latest
 Label=nix.home-manager.managed=true
+Label="traefik.rule=Host(`example.com`) && PathPrefix(`/api`)"
 Network=mynet
 NetworkAlias=test-alias-1
 NetworkAlias=test-alias-2
@@ -38,7 +39,7 @@ Delegate=yes
 Type=notify
 NotifyAccess=all
 SyslogIdentifier=%N
-ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --replace --rm --cgroups=split --entrypoint=/sleep.sh --network-alias test-alias-1 --network-alias test-alias-2 --read-only-tmpfs --network mynet --sdnotify=conmon -d --device /dev/null:/dev/null -v /tmp:/tmp --label io.containers.autoupdate=registry --publish 8080:80 --env VAL_A=A --env VAL_B=2 --env VAL_C=false --label nix.home-manager.managed=true --security-opt=no-new-privileges docker.io/alpine:latest
+ExecStart=/nix/store/00000000000000000000000000000000-podman/bin/podman run --name my-container --replace --rm --cgroups=split --entrypoint=/sleep.sh --network-alias test-alias-1 --network-alias test-alias-2 --read-only-tmpfs --network mynet --sdnotify=conmon -d --device /dev/null:/dev/null -v /tmp:/tmp --label io.containers.autoupdate=registry --publish 8080:80 --env VAL_A=A --env VAL_B=2 --env VAL_C=false --label nix.home-manager.managed=true --label "traefik.rule=Host(`example.com`)\x20&&\x20PathPrefix(`/api`)" --security-opt=no-new-privileges docker.io/alpine:latest
 
 [Unit]
 Wants=podman-user-wait-network-online.service

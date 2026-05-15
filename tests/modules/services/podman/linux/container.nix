@@ -27,6 +27,9 @@
             Unit.Before = "fake.target";
           };
           image = "docker.io/alpine:latest";
+          labels = {
+            "traefik.rule" = "Host(`example.com`) && PathPrefix(`/api`)";
+          };
           # Should not generate Requires/After for network because there is no
           # services.podman.networks.mynet.
           network = "mynet";
