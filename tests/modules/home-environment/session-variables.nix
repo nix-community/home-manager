@@ -6,7 +6,7 @@ let
 
   linuxExpected = ''
     # Only source this once.
-    if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
     export IS_EMPTY=""
@@ -25,7 +25,7 @@ let
 
   darwinExpected = ''
     # Only source this once.
-    if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
     export __HM_SESS_VARS_SOURCED=1
 
     export IS_EMPTY=""
