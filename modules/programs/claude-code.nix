@@ -94,7 +94,7 @@ in
       description = ''
         Whether to integrate the MCP servers config from
         {option}`programs.mcp.servers` into
-        {option}`programs.opencode.settings.mcp`.
+        {option}`programs.claude-code.mcpServers`.
 
         Note: Settings defined in {option}`programs.mcp.servers` are merged
         with {option}`programs.claude-code.mcpServers`, with Claude Code servers
