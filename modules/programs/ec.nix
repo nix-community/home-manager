@@ -18,6 +18,7 @@ in
 
       enableGitIntegration = lib.mkOption {
         type = lib.types.bool;
+        default = false;
         description = ''
           Whether to enable git integration for ec.
 
