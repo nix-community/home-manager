@@ -79,6 +79,9 @@ in
             config = {
               # The per-user directory inside /etc/profiles is not known by
               # fontconfig by default.
+              #
+              # When changing the following line, remember to reflect these
+              # changes in the description of 'fonts.fontconfig.enable'!
               fonts.fontconfig.enable = lib.mkDefault (cfg.useUserPackages && config.fonts.fontconfig.enable);
 
               # Inherit glibcLocales setting from NixOS.

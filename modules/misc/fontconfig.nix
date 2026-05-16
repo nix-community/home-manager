@@ -72,11 +72,13 @@ in
         type = lib.types.bool;
         default = false;
         description = ''
-          Whether to enable fontconfig configuration. This will, for
-          example, allow fontconfig to discover fonts and
-          configurations installed through
-          {var}`home.packages` and
-          {command}`nix-env`.
+          Whether to enable fontconfig configuration. This will, for example,
+          allow fontconfig to discover fonts and configurations installed through
+          {var}`home.packages` and {command}`nix-env`.
+
+          If Home Manager is installed as a NixOS submodule and
+          {var}`home-manager.useUserPackages` is enabled, this option defaults to the
+          value of NixOS' {var}`fonts.fontconfig.enable`.
         '';
       };
 
