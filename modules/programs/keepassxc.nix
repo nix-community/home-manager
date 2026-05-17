@@ -44,20 +44,18 @@ in
     settings = lib.mkOption {
       inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          Browser.Enabled = true;
+      example = {
+        Browser.Enabled = true;
 
-          GUI = {
-            AdvancedSettings = true;
-            ApplicationTheme = "dark";
-            CompactMode = true;
-            HidePasswords = true;
-          };
+        GUI = {
+          AdvancedSettings = true;
+          ApplicationTheme = "dark";
+          CompactMode = true;
+          HidePasswords = true;
+        };
 
-          SSHAgent.Enabled = true;
-        }
-      '';
+        SSHAgent.Enabled = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/keepassxc/keepassxc.ini`.

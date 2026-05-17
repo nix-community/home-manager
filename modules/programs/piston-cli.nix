@@ -19,14 +19,12 @@ in
     settings = lib.mkOption {
       inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          theme = "emacs";
-          box_style = "MINIMAL_DOUBLE_HEAD";
-          prompt_continuation = "...";
-          prompt_start = ">>>";
-        }
-      '';
+      example = {
+        theme = "emacs";
+        box_style = "MINIMAL_DOUBLE_HEAD";
+        prompt_continuation = "...";
+        prompt_start = ">>>";
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/piston-cli/config.yml`.

@@ -174,31 +174,29 @@ in
       type = types.attrsOf machineDefinitionType;
       default = { };
       description = "Declarative podman machine configurations.";
-      example = lib.literalExpression ''
-        {
-          "dev-machine" = {
-            cpus = 4;
-            diskSize = 100;
-            memory = 8192;
-            swap = 2048;
-            timezone = "UTC";
-            volumes = [
-              "/Users:/Users"
-              "/private:/private"
-            ];
-            autoStart = true;
-            watchdogInterval = 30;
-          };
-          "testing" = {
-            cpus = 2;
-            diskSize = 50;
-            image = "ghcr.io/your-org/custom-image:latest";
-            memory = 4096;
-            username = "podman";
-            autoStart = false;
-          };
-        }
-      '';
+      example = {
+        "dev-machine" = {
+          cpus = 4;
+          diskSize = 100;
+          memory = 8192;
+          swap = 2048;
+          timezone = "UTC";
+          volumes = [
+            "/Users:/Users"
+            "/private:/private"
+          ];
+          autoStart = true;
+          watchdogInterval = 30;
+        };
+        "testing" = {
+          cpus = 2;
+          diskSize = 50;
+          image = "ghcr.io/your-org/custom-image:latest";
+          memory = 4096;
+          username = "podman";
+          autoStart = false;
+        };
+      };
     };
   };
 

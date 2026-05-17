@@ -28,11 +28,9 @@ in
       inherit (yamlFormat) type;
       default = { };
       defaultText = literalExpression "{ }";
-      example = literalExpression ''
-        {
-          check-for-app-update = false;
-        }
-      '';
+      example = {
+        check-for-app-update = false;
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/grype/config.yaml`.
         See <https://oss.anchore.com/docs/reference/grype/configuration/> for supported values.

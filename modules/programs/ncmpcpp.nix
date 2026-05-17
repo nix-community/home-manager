@@ -108,14 +108,30 @@ in
       type = types.listOf bindingType;
       default = [ ];
       description = "List of keybindings.";
-      example = literalExpression ''
-        [
-          { key = "j"; command = "scroll_down"; }
-          { key = "k"; command = "scroll_up"; }
-          { key = "J"; command = [ "select_item" "scroll_down" ]; }
-          { key = "K"; command = [ "select_item" "scroll_up" ]; }
-        ]
-      '';
+      example = [
+        {
+          key = "j";
+          command = "scroll_down";
+        }
+        {
+          key = "k";
+          command = "scroll_up";
+        }
+        {
+          key = "J";
+          command = [
+            "select_item"
+            "scroll_down"
+          ];
+        }
+        {
+          key = "K";
+          command = [
+            "select_item"
+            "scroll_up"
+          ];
+        }
+      ];
     };
   };
 

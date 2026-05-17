@@ -11,7 +11,6 @@ let
     mkPackageOption
     mkOption
     mkIf
-    literalExpression
     ;
   cfg = config.programs.wallust;
   tomlFormat = pkgs.formats.toml { };
@@ -27,11 +26,9 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          palette = "softdark";
-        }
-      '';
+      example = {
+        palette = "softdark";
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/wallust/wallust.toml`.
         See <https://explosion-mental.codeberg.page/wallust/config/> for

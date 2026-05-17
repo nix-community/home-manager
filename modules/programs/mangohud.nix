@@ -78,13 +78,11 @@ in
       settingsPerApplication = mkOption {
         type = with types; attrsOf (attrsOf settingsType);
         default = { };
-        example = lib.literalExpression ''
-          {
-            mpv = {
-              no_display = true;
-            };
-          }
-        '';
+        example = {
+          mpv = {
+            no_display = true;
+          };
+        };
         description = ''
           Sets MangoHud settings per application.
           Configuration written to

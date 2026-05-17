@@ -20,15 +20,13 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          preset = "rainbow";
-          mode = "rgb";
-          color_align = {
-            mode = "horizontal";
-          };
-        }
-      '';
+      example = {
+        preset = "rainbow";
+        mode = "rgb";
+        color_align = {
+          mode = "horizontal";
+        };
+      };
       description = "JSON config for HyFetch";
     };
   };

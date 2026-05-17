@@ -48,7 +48,7 @@ in
       description = ''
         Your baserom's region. Note that only "us", "eu", and "jp" are supported.
       '';
-      example = literalExpression "jp";
+      example = "jp";
     };
 
     baserom = mkOption {

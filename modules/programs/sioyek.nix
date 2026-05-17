@@ -58,16 +58,14 @@ in
           See <https://github.com/ahrm/sioyek/blob/main/pdf_viewer/prefs.config>.
         '';
         default = { };
-        example = literalExpression ''
-          {
-            "background_color" = "1.0 1.0 1.0";
-            "text_highlight_color" = "1.0 0.0 0.0";
-            startup_commands = [
-              "toggle_visual_scroll"
-              "toggle_dark_mode"
-            ];
-          }
-        '';
+        example = {
+          "background_color" = "1.0 1.0 1.0";
+          "text_highlight_color" = "1.0 0.0 0.0";
+          startup_commands = [
+            "toggle_visual_scroll"
+            "toggle_dark_mode"
+          ];
+        };
         type = types.submodule {
           freeformType = types.attrsOf types.str;
 

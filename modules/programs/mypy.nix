@@ -22,14 +22,12 @@ in
     settings = lib.mkOption {
       inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          mypy = {
-            warn_return_any = true;
-            warn_unused_configs = true;
-          };
-        }
-      '';
+      example = {
+        mypy = {
+          warn_return_any = true;
+          warn_unused_configs = true;
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/mypy/config`.

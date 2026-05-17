@@ -106,15 +106,13 @@ in
     settings = mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
-      example = literalExpression ''
-        {
-          model = "claude-sonnet-4-5";
-          theme = "default";
-          trusted_folders = [ "/home/user/projects" ];
-          renderMarkdown = true;
-          autoUpdate = false;
-        }
-      '';
+      example = {
+        model = "claude-sonnet-4-5";
+        theme = "default";
+        trusted_folders = [ "/home/user/projects" ];
+        renderMarkdown = true;
+        autoUpdate = false;
+      };
       description = ''
         Configuration written to {file}`config.json` inside
         {option}`programs.github-copilot-cli.configDir`.

@@ -158,12 +158,10 @@ in
       shellAliases = mkOption {
         default = { };
         type = types.attrsOf types.str;
-        example = lib.literalExpression ''
-          {
-            ll = "ls -l";
-            ".." = "cd ..";
-          }
-        '';
+        example = {
+          ll = "ls -l";
+          ".." = "cd ..";
+        };
         description = ''
           An attribute set that maps aliases (the top level attribute names in
           this option) to command strings or directly to build outputs.

@@ -20,19 +20,17 @@ in
     clouds = lib.mkOption {
       type = lib.types.submodule { freeformType = yamlFormat.type; };
       default = { };
-      example = lib.literalExpression ''
-        {
-          my-infra = {
-            cloud = "example-cloud";
-            auth = {
-              project_id = "0123456789abcdef0123456789abcdef";
-              username = "openstack";
-            };
-            region_name = "XXX";
-            interface = "internal";
+      example = {
+        my-infra = {
+          cloud = "example-cloud";
+          auth = {
+            project_id = "0123456789abcdef0123456789abcdef";
+            username = "openstack";
           };
-        }
-      '';
+          region_name = "XXX";
+          interface = "internal";
+        };
+      };
       description = ''
         Configuration needed to connect to one or more clouds.
 

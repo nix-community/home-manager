@@ -27,22 +27,20 @@ in
     settings = mkOption {
       type = iniFormat.type.nestedTypes.elemType;
       default = { };
-      example = lib.literalExpression ''
-        {
-          position = "bottom";
-          orientation = "h";
-          width = 300;
-          height = 50;
-          icon-size = 26;
-          show-percentage = true;
-          margins = "0 0 0 0";
-          timeout = 3;
-          transition-time = 250;
-          listeners = "audio_in,audio_out,backlight";
-          backlight-path = "/sys/class/backlight/gmux_backlight";
-          keyboard-path = "/dev/input/eventXX";
-        }
-      '';
+      example = {
+        position = "bottom";
+        orientation = "h";
+        width = 300;
+        height = 50;
+        icon-size = 26;
+        show-percentage = true;
+        margins = "0 0 0 0";
+        timeout = 3;
+        transition-time = 250;
+        listeners = "audio_in,audio_out,backlight";
+        backlight-path = "/sys/class/backlight/gmux_backlight";
+        keyboard-path = "/dev/input/eventXX";
+      };
       description = ''
         Configuration for syshud.
         All available options can be found here:

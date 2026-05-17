@@ -33,12 +33,14 @@ in
     associations.added = mkOption {
       type = types.attrsOf strListOrSingleton;
       default = { };
-      example = lib.literalExpression ''
-        {
-          "mimetype1" = [ "foo1.desktop" "foo2.desktop" "foo3.desktop" ];
-          "mimetype2" = "foo4.desktop";
-        }
-      '';
+      example = {
+        "mimetype1" = [
+          "foo1.desktop"
+          "foo2.desktop"
+          "foo3.desktop"
+        ];
+        "mimetype2" = "foo4.desktop";
+      };
       description = ''
         Defines additional associations of applications with
         mimetypes, as if the .desktop file was listing this mimetype
@@ -62,11 +64,12 @@ in
     defaultApplications = mkOption {
       type = types.attrsOf strListOrSingleton;
       default = { };
-      example = lib.literalExpression ''
-        {
-          "mimetype1" = [ "default1.desktop" "default2.desktop" ];
-        }
-      '';
+      example = {
+        "mimetype1" = [
+          "default1.desktop"
+          "default2.desktop"
+        ];
+      };
       description = ''
         The default application to be used for a given mimetype. This
         is, for instance, the one that will be started when

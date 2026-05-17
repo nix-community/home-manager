@@ -35,12 +35,10 @@ in
         ]
       );
       default = { };
-      example = lib.literalExpression ''
-        {
-          ETESYNC_LISTEN_ADDRESS = "localhost";
-          ETESYNC_LISTEN_PORT = 37358;
-        }
-      '';
+      example = {
+        ETESYNC_LISTEN_ADDRESS = "localhost";
+        ETESYNC_LISTEN_PORT = 37358;
+      };
       description = ''
         Settings for etesync-dav, passed as environment variables.
       '';

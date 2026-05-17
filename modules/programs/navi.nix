@@ -29,15 +29,13 @@ in
     settings = lib.mkOption {
       inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          cheats = {
-            paths = [
-              "~/cheats/"
-            ];
-          };
-        }
-      '';
+      example = {
+        cheats = {
+          paths = [
+            "~/cheats/"
+          ];
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/navi/config.yaml` on Linux or

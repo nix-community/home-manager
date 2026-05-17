@@ -25,22 +25,20 @@ in
         or {file}`Library/Application Support/gurk/gurk.toml`. Options are
         declared at <https://github.com/boxdot/gurk-rs/blob/main/src/config.rs>.
       '';
-      example = lib.literalExpression ''
-        {
-          data_dir = "/home/USERNAME/.local/share/gurk/signal-db";
-          first_name_only = false;
-          show_receipts = true;
-          notifications = true;
-          bell = true;
-          colored_messages = false;
-          default_keybindings = true;
-          user = {
-            name = "MYNAME";
-            phone_number = "MYNUMBER";
-          };
-          keybindings =  { };
-        }
-      '';
+      example = {
+        data_dir = "/home/USERNAME/.local/share/gurk/signal-db";
+        first_name_only = false;
+        show_receipts = true;
+        notifications = true;
+        bell = true;
+        colored_messages = false;
+        default_keybindings = true;
+        user = {
+          name = "MYNAME";
+          phone_number = "MYNUMBER";
+        };
+        keybindings = { };
+      };
     };
   };
 

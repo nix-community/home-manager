@@ -11,7 +11,6 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
-    literalExpression
     ;
 
   configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
@@ -34,14 +33,12 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          wrap = true;
-          tabsize = 2;
-          tabchar = "space";
-          lists = [];
-        }
-      '';
+      example = {
+        wrap = true;
+        tabsize = 2;
+        tabchar = "space";
+        lists = [ ];
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/tex-fmt/tex-fmt.toml` on Linux or

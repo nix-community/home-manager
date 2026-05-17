@@ -105,13 +105,11 @@ let
         extraConfig = mkOption {
           type = podman-lib.extraConfigType;
           default = { };
-          example = lib.literalExpression ''
-            {
-              Image = {
-                ContainersConfModule = "/etc/nvd.conf";
-              };
-            }
-          '';
+          example = {
+            Image = {
+              ContainersConfModule = "/etc/nvd.conf";
+            };
+          };
           description = "INI sections and values to populate the Image Quadlet.";
         };
 

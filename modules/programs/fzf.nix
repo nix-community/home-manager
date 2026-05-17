@@ -174,7 +174,7 @@ in
       shellIntegrationOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExpression ''[ "-d 40%" ]'';
+        example = [ "-d 40%" ];
         description = ''
           If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
           shell integration will use these options for fzf-tmux.

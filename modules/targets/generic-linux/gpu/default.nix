@@ -37,7 +37,7 @@
         version = mkOption {
           type = types.nullOr (types.strMatching "[0-9]{3}\\.[0-9]{2,3}(\\.[0-9]{2,3})?");
           default = null;
-          example = literalExpression "550.163.01";
+          example = "550.163.01";
           description = ''
             The exact version of Nvidia drivers to use. This version **must**
             match the version of the driver used by the host OS.
@@ -47,7 +47,7 @@
         sha256 = mkOption {
           type = types.nullOr (types.strMatching "sha256-.*=");
           default = null;
-          example = literalExpression "sha256-hfK1D5EiYcGRegss9+H5dDr/0Aj9wPIJ9NVWP3dNUC0=";
+          example = "sha256-hfK1D5EiYcGRegss9+H5dDr/0Aj9wPIJ9NVWP3dNUC0=";
           description = ''
             The hash of the downloaded driver file. It can be obtained by
             running, for example,

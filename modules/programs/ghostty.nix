@@ -49,16 +49,14 @@ in
       settings = lib.mkOption {
         inherit (keyValue) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            theme = "catppuccin-mocha";
-            font-size = 10;
-            keybind = [
-              "ctrl+h=goto_split:left"
-              "ctrl+l=goto_split:right"
-            ];
-          }
-        '';
+        example = {
+          theme = "catppuccin-mocha";
+          font-size = 10;
+          keybind = [
+            "ctrl+h=goto_split:left"
+            "ctrl+l=goto_split:right"
+          ];
+        };
         description = ''
           Configuration written to {file}`$XDG_CONFIG_HOME/ghostty/config`.
 

@@ -121,12 +121,10 @@ let
           This may override other values.
         '';
         default = { };
-        example = literalExpression ''
-          {
-            Keywords = "calc;math";
-            DBusActivatable = "false";
-          }
-        '';
+        example = {
+          Keywords = "calc;math";
+          DBusActivatable = "false";
+        };
       };
 
       actions = mkOption {
@@ -212,18 +210,22 @@ in
     '';
     default = { };
     type = types.attrsOf (types.submodule desktopEntry);
-    example = literalExpression ''
-      {
-        firefox = {
-          name = "Firefox";
-          genericName = "Web Browser";
-          exec = "firefox %U";
-          terminal = false;
-          categories = [ "Network" "WebBrowser" ];
-          mimeType = [ "text/html" "text/xml" ];
-        };
-      }
-    '';
+    example = {
+      firefox = {
+        name = "Firefox";
+        genericName = "Web Browser";
+        exec = "firefox %U";
+        terminal = false;
+        categories = [
+          "Network"
+          "WebBrowser"
+        ];
+        mimeType = [
+          "text/html"
+          "text/xml"
+        ];
+      };
+    };
   };
 
   config = lib.mkIf (config.xdg.desktopEntries != { }) {

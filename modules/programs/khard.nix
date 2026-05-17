@@ -65,24 +65,38 @@ in
           <https://khard.readthedocs.io/en/latest/#configuration>
           for more information.
         '';
-        example = lib.literalExpression ''
-          {
-            general = {
-              default_action = "list";
-              editor = ["vim" "-i" "NONE"];
-            };
+        example = {
+          general = {
+            default_action = "list";
+            editor = [
+              "vim"
+              "-i"
+              "NONE"
+            ];
+          };
 
-            "contact table" = {
-              display = "formatted_name";
-              preferred_phone_number_type = ["pref" "cell" "home"];
-              preferred_email_address_type = ["pref" "work" "home"];
-            };
+          "contact table" = {
+            display = "formatted_name";
+            preferred_phone_number_type = [
+              "pref"
+              "cell"
+              "home"
+            ];
+            preferred_email_address_type = [
+              "pref"
+              "work"
+              "home"
+            ];
+          };
 
-            vcard = {
-              private_objects = ["Jabber" "Skype" "Twitter"];
-            };
-          }
-        '';
+          vcard = {
+            private_objects = [
+              "Jabber"
+              "Skype"
+              "Twitter"
+            ];
+          };
+        };
       };
     };
 

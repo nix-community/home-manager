@@ -102,12 +102,10 @@ let
       userSettings = mkOption {
         type = types.either types.path jsonFormat.type;
         default = { };
-        example = literalExpression ''
-          {
-            "files.autoSave" = "off";
-            "[nix]"."editor.tabSize" = 2;
-          }
-        '';
+        example = {
+          "files.autoSave" = "off";
+          "[nix]"."editor.tabSize" = 2;
+        };
         description = ''
           Configuration written to ${name}'s
           {file}`settings.json`.
@@ -118,18 +116,16 @@ let
       userTasks = mkOption {
         type = types.either types.path jsonFormat.type;
         default = { };
-        example = literalExpression ''
-          {
-            version = "2.0.0";
-            tasks = [
-              {
-                type = "shell";
-                label = "Hello task";
-                command = "hello";
-              }
-            ];
-          }
-        '';
+        example = {
+          version = "2.0.0";
+          tasks = [
+            {
+              type = "shell";
+              label = "Hello task";
+              command = "hello";
+            }
+          ];
+        };
         description = ''
           Configuration written to ${name}'s
           {file}`tasks.json`.
@@ -208,15 +204,13 @@ let
           )
         );
         default = [ ];
-        example = literalExpression ''
-          [
-            {
-              key = "ctrl+c";
-              command = "editor.action.clipboardCopyAction";
-              when = "textInputFocus";
-            }
-          ]
-        '';
+        example = [
+          {
+            key = "ctrl+c";
+            command = "editor.action.clipboardCopyAction";
+            when = "textInputFocus";
+          }
+        ];
         description = ''
           Keybindings written to ${name}'s
           {file}`keybindings.json`.
@@ -309,11 +303,9 @@ in
     argvSettings = mkOption {
       type = types.either types.path jsonFormat.type;
       default = { };
-      example = literalExpression ''
-        {
-          enable-crash-reporter = false;
-        }
-      '';
+      example = {
+        enable-crash-reporter = false;
+      };
       description = ''
         Configuration written to ${name}'s
         {file}`argv.json`.

@@ -61,11 +61,9 @@ in
     environment = mkOption {
       type = types.attrsOf types.str;
       default = { };
-      example = literalExpression ''
-        {
-          "primary-display" = "$(xrandr | awk '/ primary/{print $1}')";
-        }
-      '';
+      example = {
+        "primary-display" = "$(xrandr | awk '/ primary/{print $1}')";
+      };
       description = ''
         Extra environment variables to be exported in the script.
         These options are passed unescaped as `export name=value`.

@@ -22,7 +22,7 @@ in
     config = lib.mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = lib.literalExpression ''[ "/etc/xdg" ]'';
+      example = [ "/etc/xdg" ];
       description = ''
         Directory names to add to {env}`XDG_CONFIG_DIRS`
         in the user session.
@@ -32,7 +32,10 @@ in
     data = lib.mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = lib.literalExpression ''[ "/usr/share" "/usr/local/share" ]'';
+      example = [
+        "/usr/share"
+        "/usr/local/share"
+      ];
       description = ''
         Directory names to add to {env}`XDG_DATA_DIRS`
         in the user session.

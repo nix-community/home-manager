@@ -133,25 +133,21 @@ in
       type = types.nullOr (types.listOf types.str);
       default = null;
       description = "Command-line options to use when launched by Mac OS GUI";
-      example = literalExpression ''
-        [
-          "--single-instance"
-          "--directory=/tmp/my-dir"
-          "--listen-on=unix:/tmp/my-socket"
-        ]
-      '';
+      example = [
+        "--single-instance"
+        "--directory=/tmp/my-dir"
+        "--listen-on=unix:/tmp/my-socket"
+      ];
     };
 
     settings = mkOption {
       type = types.attrsOf settingsValueType;
       default = { };
-      example = literalExpression ''
-        {
-          scrollback_lines = 10000;
-          enable_audio_bell = false;
-          update_check_interval = 0;
-        }
-      '';
+      example = {
+        scrollback_lines = 10000;
+        enable_audio_bell = false;
+        update_check_interval = 0;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/kitty/kitty.conf`. See
@@ -205,13 +201,11 @@ in
         Kitty applies these based on the OS color scheme, and they override
         other color and background image settings.
       '';
-      example = literalExpression ''
-        {
-          light = "GitHub";
-          dark = "TokyoNight";
-          noPreference = "OneDark";
-        }
-      '';
+      example = {
+        light = "GitHub";
+        dark = "TokyoNight";
+        noPreference = "OneDark";
+      };
     };
 
     font = mkOption {
@@ -224,24 +218,20 @@ in
       type = types.attrsOf types.str;
       default = { };
       description = "Define action aliases.";
-      example = literalExpression ''
-        {
-          "launch_tab" = "launch --cwd=current --type=tab";
-          "launch_window" = "launch --cwd=current --type=os-window";
-        }
-      '';
+      example = {
+        "launch_tab" = "launch --cwd=current --type=tab";
+        "launch_window" = "launch --cwd=current --type=os-window";
+      };
     };
 
     keybindings = mkOption {
       type = types.attrsOf types.str;
       default = { };
       description = "Mapping of keybindings to actions.";
-      example = literalExpression ''
-        {
-          "ctrl+c" = "copy_or_interrupt";
-          "ctrl+f>2" = "set_font_size 20";
-        }
-      '';
+      example = {
+        "ctrl+c" = "copy_or_interrupt";
+        "ctrl+f>2" = "set_font_size 20";
+      };
     };
 
     mouseBindings = mkOption {
@@ -260,11 +250,9 @@ in
       type = types.attrsOf types.str;
       default = { };
       description = "Environment variables to set or override.";
-      example = literalExpression ''
-        {
-          "LS_COLORS" = "1";
-        }
-      '';
+      example = {
+        "LS_COLORS" = "1";
+      };
     };
 
     shellIntegration = {
@@ -318,13 +306,11 @@ in
     quickAccessTerminalConfig = mkOption {
       type = types.attrsOf settingsValueType;
       default = { };
-      example = literalExpression ''
-        {
-          start_as_hidden = false;
-          hide_on_focus_loss = false;
-          background_opacity = 0.85;
-        }
-      '';
+      example = {
+        start_as_hidden = false;
+        hide_on_focus_loss = false;
+        background_opacity = 0.85;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/kitty/quick-access-terminal.conf`. See

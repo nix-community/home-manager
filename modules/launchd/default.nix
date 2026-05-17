@@ -21,17 +21,18 @@ let
         config = lib.mkOption {
           type = lib.types.submodule (import ./launchd.nix);
           default = { };
-          example = lib.literalExpression ''
-            {
-              ProgramArguments = [ "/usr/bin/say" "Good afternoon" ];
-              StartCalendarInterval = [
-                {
-                  Hour = 12;
-                  Minute = 0;
-                }
-              ];
-            }
-          '';
+          example = {
+            ProgramArguments = [
+              "/usr/bin/say"
+              "Good afternoon"
+            ];
+            StartCalendarInterval = [
+              {
+                Hour = 12;
+                Minute = 0;
+              }
+            ];
+          };
           description = ''
             Define a launchd job. See {manpage}`launchd.plist(5)` for details.
           '';

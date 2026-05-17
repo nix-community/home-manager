@@ -71,13 +71,11 @@ in
           };
         };
       };
-      example = lib.literalExpression ''
-        {
-          address = "libera.chat:6697";
-          nickname = "nicholas";
-          password = "verysecurepassword";
-        }
-      '';
+      example = {
+        address = "libera.chat:6697";
+        nickname = "nicholas";
+        password = "verysecurepassword";
+      };
       description = ''
         Configuration for senpai. For a complete list of options, see
         {manpage}`senpai(5)`.

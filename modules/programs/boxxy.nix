@@ -55,12 +55,10 @@ let
       only = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExpression ''
-          [
-            "bash"
-            "/usr/bin/sh"
-          ]
-        '';
+        example = [
+          "bash"
+          "/usr/bin/sh"
+        ];
         description = ''
           Apply redirection ONLY to specified executable names.
         '';
@@ -78,11 +76,9 @@ let
       env = mkOption {
         type = types.attrsOf types.str;
         default = { };
-        example = literalExpression ''
-          {
-            MY_ENV_VAR = "my_env_var_value";
-          }
-        '';
+        example = {
+          MY_ENV_VAR = "my_env_var_value";
+        };
         description = ''
           Give certain environment variables for said match.
         '';

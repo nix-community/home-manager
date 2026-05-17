@@ -139,18 +139,16 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          favicon_service = "twenty";
-          font.normal.size = 10;
-          pop_to_root_on_close=false;
-          search_files_in_root= false;
-          theme = {
-            dark.name = "vicinae-dark";
-            light.name = "vicinae-light";
-          };
-        }
-      '';
+      example = {
+        favicon_service = "twenty";
+        font.normal.size = 10;
+        pop_to_root_on_close = false;
+        search_files_in_root = false;
+        theme = {
+          dark.name = "vicinae-dark";
+          light.name = "vicinae-light";
+        };
+      };
       description = ''
         Settings written as JSON to {file}`~/.config/vicinae/settings.json`.
         See {command}`vicinae config default`.

@@ -59,11 +59,9 @@ let
             ]))
           ]);
         default = { };
-        example = lib.literalExpression ''
-          {
-            quiet = true;
-          }
-        '';
+        example = {
+          quiet = true;
+        };
         description = ''
           Configuration for the specific plugin, written to
           {file}`$XDG_CONFIG_HOME/streamlink/config.<name>` (linux) or

@@ -34,15 +34,13 @@ in
         {manpage}`aria2c(1)`
         for options.
       '';
-      example = lib.literalExpression ''
-        {
-          listen-port = 60000;
-          dht-listen-port = 60000;
-          seed-ratio = 1.0;
-          max-upload-limit = "50K";
-          ftp-pasv = true;
-        }
-      '';
+      example = {
+        listen-port = 60000;
+        dht-listen-port = 60000;
+        seed-ratio = 1.0;
+        max-upload-limit = "50K";
+        ftp-pasv = true;
+      };
     };
 
     systemd.enable = lib.mkEnableOption "Aria2 systemd integration";

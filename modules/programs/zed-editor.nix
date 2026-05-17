@@ -119,19 +119,17 @@ in
       userSettings = mkOption {
         inherit (jsonFormat) type;
         default = { };
-        example = literalExpression ''
-          {
-            features = {
-              copilot = false;
-            };
-            telemetry = {
-              metrics = false;
-            };
-            vim_mode = false;
-            ui_font_size = 16;
-            buffer_font_size = 16;
-          }
-        '';
+        example = {
+          features = {
+            copilot = false;
+          };
+          telemetry = {
+            metrics = false;
+          };
+          vim_mode = false;
+          ui_font_size = 16;
+          buffer_font_size = 16;
+        };
         description = ''
           Configuration written to Zed's {file}`settings.json`.
         '';
@@ -158,15 +156,16 @@ in
       userTasks = mkOption {
         inherit (jsonFormat) type;
         default = [ ];
-        example = literalExpression ''
-          [
-            {
-              label = "Format Code";
-              command = "nix";
-              args = [ "fmt" "$ZED_WORKTREE_ROOT" ];
-            }
-          ]
-        '';
+        example = [
+          {
+            label = "Format Code";
+            command = "nix";
+            args = [
+              "fmt"
+              "$ZED_WORKTREE_ROOT"
+            ];
+          }
+        ];
         description = ''
           Configuration written to Zed's {file}`tasks.json`.
 
@@ -178,17 +177,15 @@ in
       userDebug = mkOption {
         inherit (jsonFormat) type;
         default = [ ];
-        example = literalExpression ''
-          [
-            {
-              label = "Go (Delve)";
-              adapter = "Delve";
-              program = "$ZED_FILE";
-              request = "launch";
-              mode = "debug";
-            }
-          ]
-        '';
+        example = [
+          {
+            label = "Go (Delve)";
+            adapter = "Delve";
+            program = "$ZED_FILE";
+            request = "launch";
+            mode = "debug";
+          }
+        ];
         description = ''
           Configuration written to Zed's {file}`debug.json`.
 
@@ -199,9 +196,11 @@ in
       extensions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExpression ''
-          [ "swift" "nix" "xy-zed" ]
-        '';
+        example = [
+          "swift"
+          "nix"
+          "xy-zed"
+        ];
         description = ''
           A list of the extensions Zed should install on startup.
           Use the name of a repository in the [extension list](https://github.com/zed-industries/extensions/tree/main/extensions).

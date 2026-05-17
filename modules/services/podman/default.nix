@@ -66,16 +66,14 @@ in
       policy = lib.mkOption {
         default = { };
         type = lib.types.attrs;
-        example = lib.literalExpression ''
-          {
-            default = [ { type = "insecureAcceptAnything"; } ];
-            transports = {
-              docker-daemon = {
-                "" = [ { type = "insecureAcceptAnything"; } ];
-              };
+        example = {
+          default = [ { type = "insecureAcceptAnything"; } ];
+          transports = {
+            docker-daemon = {
+              "" = [ { type = "insecureAcceptAnything"; } ];
             };
-          }
-        '';
+          };
+        };
         description = ''
           Signature verification policy file.
           If this option is empty the default policy file from

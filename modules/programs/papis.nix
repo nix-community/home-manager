@@ -93,11 +93,9 @@ in
                     str
                   ]);
                 default = { };
-                example = lib.literalExpression ''
-                  {
-                    dir = "~/papers/";
-                  }
-                '';
+                example = {
+                  dir = "~/papers/";
+                };
                 description = ''
                   Configuration for this library.
                 '';

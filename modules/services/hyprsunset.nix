@@ -48,11 +48,12 @@ in
 
                 List of requests to pass to `hyprctl hyprsunset` for this transition. Each inner list represents a separate command.
               '';
-              example = lib.literalExpression ''
+              example = [
                 [
-                  [ "temperature" "3500" ]
+                  "temperature"
+                  "3500"
                 ]
-              '';
+              ];
             };
           };
         }
@@ -63,23 +64,27 @@ in
 
         Set of transitions for different times of day (e.g., sunrise, sunset)
       '';
-      example = lib.literalExpression ''
-        {
-          sunrise = {
-            calendar = "*-*-* 06:00:00";
-            requests = [
-              [ "temperature" "6500" ]
-              [ "gamma 100" ]
-            ];
-          };
-          sunset = {
-            calendar = "*-*-* 19:00:00";
-            requests = [
-              [ "temperature" "3500" ]
-            ];
-          };
-        }
-      '';
+      example = {
+        sunrise = {
+          calendar = "*-*-* 06:00:00";
+          requests = [
+            [
+              "temperature"
+              "6500"
+            ]
+            [ "gamma 100" ]
+          ];
+        };
+        sunset = {
+          calendar = "*-*-* 19:00:00";
+          requests = [
+            [
+              "temperature"
+              "3500"
+            ]
+          ];
+        };
+      };
     };
 
     settings = lib.mkOption {

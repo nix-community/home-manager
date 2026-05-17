@@ -78,24 +78,22 @@ in
     userSettings = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          enableAssistantStreaming = true;
-          providerInstances = {
-            codex = {
-              driver = "codex";
+      example = {
+        enableAssistantStreaming = true;
+        providerInstances = {
+          codex = {
+            driver = "codex";
+            enabled = true;
+            config = {
               enabled = true;
-              config = {
-                enabled = true;
-                binaryPath = "codex";
-                homePath = "";
-                shadowHomePath = "";
-                customModels = [ ];
-              };
+              binaryPath = "codex";
+              homePath = "";
+              shadowHomePath = "";
+              customModels = [ ];
             };
           };
-        }
-      '';
+        };
+      };
       description = ''
         Configuration written to t3code's {file}`settings.json`.
       '';
@@ -104,24 +102,22 @@ in
     keybindings = mkOption {
       inherit (jsonFormat) type;
       default = [ ];
-      example = literalExpression ''
-        [
-          {
-            key = "mod+j";
-            command = "terminal.toggle";
-          }
-          {
-            key = "mod+d";
-            command = "terminal.split";
-            when = "terminalFocus";
-          }
-          {
-            key = "mod+d";
-            command = "diff.toggle";
-            when = "!terminalFocus";
-          }
-        ]
-      '';
+      example = [
+        {
+          key = "mod+j";
+          command = "terminal.toggle";
+        }
+        {
+          key = "mod+d";
+          command = "terminal.split";
+          when = "terminalFocus";
+        }
+        {
+          key = "mod+d";
+          command = "diff.toggle";
+          when = "!terminalFocus";
+        }
+      ];
       description = ''
         Configuration written to t3code's {file}`keybindings.json`.
       '';
@@ -130,20 +126,18 @@ in
     clientSettings = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          settings = {
-            favorites = [
-              {
-                provider = "codex";
-                model = "gpt-5.5";
-              }
-            ];
-            sidebarProjectGroupingMode = "repository";
-            timestampFormat = "locale";
-          };
-        }
-      '';
+      example = {
+        settings = {
+          favorites = [
+            {
+              provider = "codex";
+              model = "gpt-5.5";
+            }
+          ];
+          sidebarProjectGroupingMode = "repository";
+          timestampFormat = "locale";
+        };
+      };
       description = ''
         Configuration written to t3code's {file}`client-settings.json`.
       '';

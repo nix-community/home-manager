@@ -53,12 +53,10 @@ in
       quickPhrase = lib.mkOption {
         type = with lib.types; attrsOf str;
         default = { };
-        example = lib.literalExpression ''
-          {
-            smile = "（・∀・）";
-            angry = "(￣ー￣)";
-          }
-        '';
+        example = {
+          smile = "（・∀・）";
+          angry = "(￣ー￣)";
+        };
         description = "Quick phrases.";
       };
 
@@ -83,18 +81,16 @@ in
           description = ''
             The global options in `config` file in ini format.
           '';
-          example = lib.literalExpression ''
-            {
-              Behavior = {
-                ActiveByDefault = false;
-              };
-              Hotkey = {
-                EnumerateWithTriggerKeys = true;
-                EnumerateSkipFirst = false;
-                ModifierOnlyKeyTimeout = 250;
-              };
-            }
-          '';
+          example = {
+            Behavior = {
+              ActiveByDefault = false;
+            };
+            Hotkey = {
+              EnumerateWithTriggerKeys = true;
+              EnumerateSkipFirst = false;
+              ModifierOnlyKeyTimeout = 250;
+            };
+          };
         };
         inputMethod = lib.mkOption {
           type = lib.types.submodule {
@@ -104,18 +100,16 @@ in
           description = ''
             The input method configure in `profile` file in ini format.
           '';
-          example = lib.literalExpression ''
-            {
-              GroupOrder."0" = "Default";
-              "Groups/0" = {
-                Name = "Default";
-                "Default Layout" = "us";
-                DefaultIM = "pinyin";
-              };
-              "Groups/0/Items/0".Name = "keyboard-us";
-              "Groups/0/Items/1".Name = "pinyin";
-            }
-          '';
+          example = {
+            GroupOrder."0" = "Default";
+            "Groups/0" = {
+              Name = "Default";
+              "Default Layout" = "us";
+              DefaultIM = "pinyin";
+            };
+            "Groups/0/Items/0".Name = "keyboard-us";
+            "Groups/0/Items/1".Name = "pinyin";
+          };
         };
         addons = lib.mkOption {
           type = with lib.types; (attrsOf iniGlobalFormat.type);
@@ -124,12 +118,10 @@ in
             The addon configures in `conf` folder in ini format with global sections.
             Each item is written to the corresponding file.
           '';
-          example = lib.literalExpression ''
-            {
-              classicui.globalSection.Theme = "example";
-              pinyin.globalSection.EmojiEnabled = "True";
-            }
-          '';
+          example = {
+            classicui.globalSection.Theme = "example";
+            pinyin.globalSection.EmojiEnabled = "True";
+          };
         };
       };
 

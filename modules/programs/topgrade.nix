@@ -22,22 +22,20 @@ in
       inherit (tomlFormat) type;
       default = { };
       defaultText = lib.literalExpression "{ }";
-      example = lib.literalExpression ''
-        {
-          misc = {
-            assume_yes = true;
-            disable = [
-              "flutter"
-              "node"
-            ];
-            set_title = false;
-            cleanup = true;
-          };
-          commands = {
-            "Run garbage collection on Nix store" = "nix-collect-garbage";
-          };
-        }
-      '';
+      example = {
+        misc = {
+          assume_yes = true;
+          disable = [
+            "flutter"
+            "node"
+          ];
+          set_title = false;
+          cleanup = true;
+        };
+        commands = {
+          "Run garbage collection on Nix store" = "nix-collect-garbage";
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/topgrade.toml`.

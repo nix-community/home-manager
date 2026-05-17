@@ -469,16 +469,14 @@ in
       shellAbbrs = mkOption {
         type = with types; attrsOf (either str abbrModule);
         default = { };
-        example = literalExpression ''
-          {
-            l = "less";
-            gco = "git checkout";
-            "-C" = {
-              position = "anywhere";
-              expansion = "--color";
-            };
-          }
-        '';
+        example = {
+          l = "less";
+          gco = "git checkout";
+          "-C" = {
+            position = "anywhere";
+            expansion = "--color";
+          };
+        };
         description = ''
           An attribute set that maps aliases (the top level attribute names
           in this option) to abbreviations. Abbreviations are expanded with

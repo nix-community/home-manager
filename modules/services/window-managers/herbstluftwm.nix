@@ -65,45 +65,42 @@ in
     keybinds = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
-      example = lib.literalExpression ''
-        {
-          Mod4-o = "split right";
-          Mod4-u = "split bottom";
-        }
-      '';
+      example = {
+        Mod4-o = "split right";
+        Mod4-u = "split bottom";
+      };
       description = "Herbstluftwm keybinds.";
     };
 
     mousebinds = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
-      example = lib.literalExpression ''
-        {
-          Mod4-B1 = "move";
-          Mod4-B3 = "resize";
-        }
-      '';
+      example = {
+        Mod4-B1 = "move";
+        Mod4-B3 = "resize";
+      };
       description = "Herbstluftwm mousebinds.";
     };
 
     rules = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      example = lib.literalExpression ''
-        [
-          "windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' focus=on pseudotile=on"
-          "windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off"
-        ]
-      '';
+      example = [
+        "windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' focus=on pseudotile=on"
+        "windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off"
+      ];
       description = "Herbstluftwm rules.";
     };
 
     tags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      example = lib.literalExpression ''
-        [ "work" "browser" "music" "gaming" ]
-      '';
+      example = [
+        "work"
+        "browser"
+        "music"
+        "gaming"
+      ];
       description = "Tags to create on startup.";
     };
 

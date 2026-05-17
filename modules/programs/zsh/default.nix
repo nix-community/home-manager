@@ -128,12 +128,10 @@ in
 
         shellAliases = mkOption {
           default = { };
-          example = literalExpression ''
-            {
-              ll = "ls -l";
-              ".." = "cd ..";
-            }
-          '';
+          example = {
+            ll = "ls -l";
+            ".." = "cd ..";
+          };
           description = ''
             An attribute set that maps aliases (the top level attribute names in
             this option) to command strings or directly to build outputs.
@@ -143,12 +141,10 @@ in
 
         shellGlobalAliases = mkOption {
           default = { };
-          example = literalExpression ''
-            {
-              UUID = "$(uuidgen | tr -d \\n)";
-              G = "| grep";
-            }
-          '';
+          example = {
+            UUID = "$(uuidgen | tr -d \\n)";
+            G = "| grep";
+          };
           description = ''
             Similar to [](#opt-programs.zsh.shellAliases),
             but are substituted anywhere on a line.

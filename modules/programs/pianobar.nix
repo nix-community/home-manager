@@ -10,7 +10,6 @@ let
     mkIf
     mkOption
     mkPackageOption
-    literalExpression
     ;
 
   inherit (lib.types)
@@ -75,17 +74,15 @@ in
         `programs.pianobar.settings.password_command` value.
       '';
 
-      example = literalExpression ''
-        {
-          programs.pianobar = {
-            enable = true;
-            settings = {
-              user = "groovy-tunes@example.com";
-              password_command = "cat /run/secrets/pianobar/groovy-tunes";
-            };
+      example = {
+        programs.pianobar = {
+          enable = true;
+          settings = {
+            user = "groovy-tunes@example.com";
+            password_command = "cat /run/secrets/pianobar/groovy-tunes";
           };
-        }
-      '';
+        };
+      };
     };
   };
 

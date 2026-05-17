@@ -103,13 +103,11 @@ in
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          model = "anthropic/claude-sonnet-4-20250514";
-          autoshare = false;
-          autoupdate = true;
-        }
-      '';
+      example = {
+        model = "anthropic/claude-sonnet-4-20250514";
+        autoshare = false;
+        autoupdate = true;
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/opencode/opencode.json`.
         See <https://opencode.ai/docs/config/> for the documentation.
@@ -121,14 +119,12 @@ in
     tui = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          theme = "system";
-          keybinds = {
-            leader = "alt+b";
-          };
-        }
-      '';
+      example = {
+        theme = "system";
+        keybinds = {
+          leader = "alt+b";
+        };
+      };
 
       description = ''
         TUI-specific configuration written to {file}`$XDG_CONFIG_HOME/opencode/tui.json`.

@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib)
-    literalExpression
     mkIf
     mkOption
     ;
@@ -31,16 +30,14 @@ in
         See <https://github.com/max-niederman/ttyper> for all available options,
         including supported languages and theme keys.
       '';
-      example = literalExpression ''
-        {
-          default_language = "english200";
-          theme = {
-            border_type = "rounded";
-            prompt_correct = "green";
-            prompt_incorrect = "red";
-          };
-        }
-      '';
+      example = {
+        default_language = "english200";
+        theme = {
+          border_type = "rounded";
+          prompt_correct = "green";
+          prompt_incorrect = "red";
+        };
+      };
     };
   };
 
