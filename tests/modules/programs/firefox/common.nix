@@ -33,6 +33,9 @@ builtins.mapAttrs
     "${name}-profiles-extensions" = ./profiles/extensions;
     "${name}-profiles-extensions-assertions" = ./profiles/extensions/assertions.nix;
     "${name}-profiles-extensions-extensible" = ./profiles/extensions/extensible.nix;
+    "${name}-profiles-extensions-per-extension-force" = ./profiles/extensions/per-extension-force.nix;
+    "${name}-profiles-extensions-per-extension-force-assertions" =
+      ./profiles/extensions/per-extension-force-assertions.nix;
     "${name}-profiles-extensions-exhaustive" = ./profiles/extensions/exhaustive.nix;
     "${name}-profiles-extensions-exact" = ./profiles/extensions/exact.nix;
     "${name}-profiles-handlers" = ./profiles/handlers;

@@ -84,6 +84,10 @@ let
   extensionSettingsNeedForce =
     extensionSettings: builtins.any (ext: ext.settings != { }) (attrValues extensionSettings);
 
+  extensionSettingsMissingForce =
+    extensionSettings:
+    builtins.any (ext: ext.settings != { } && !ext.force) (attrValues extensionSettings);
+
   mkUserJs =
     prePrefs: prefs: extraPrefs: bookmarksFile: extensions:
     let
@@ -836,11 +840,13 @@ in
               assertions = [
                 (mkNoDuplicateAssertion config.containers "container")
                 {
-                  assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
+                  assertion = !(extensionSettingsMissingForce config.extensions.settings) || config.extensions.force;
                   message = ''
                     Using '${lib.showOption profilePath}.extensions.settings' will override all
-                    previous extensions settings. Enable
-                    '${lib.showOption profilePath}.extensions.force' to acknowledge this.
+                    previous extensions settings. Enable either
+                    '${lib.showOption profilePath}.extensions.force' or the corresponding
+                    '${lib.showOption profilePath}.extensions.settings.<extensionId>.force'
+                    to acknowledge this.
                   '';
                 }
               ]
