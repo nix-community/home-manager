@@ -296,19 +296,17 @@ in
         lib.mkOption {
           type = lib.types.nullOr qtctFormat.type;
           default = null;
-          example = lib.literalExpression ''
-            {
-              Appearance = {
-                style = "kvantum";
-                icon_theme = "Papirus-Dark";
-                standard_dialogs = "xdgdesktopportal";
-              };
-              Fonts = {
-                fixed = "\"DejaVuSansM Nerd Font Mono,12\"";
-                general = "\"DejaVu Sans,12\"";
-              };
-            }
-          '';
+          example = {
+            Appearance = {
+              style = "kvantum";
+              icon_theme = "Papirus-Dark";
+              standard_dialogs = "xdgdesktopportal";
+            };
+            Fonts = {
+              fixed = ''"DejaVuSansM Nerd Font Mono,12"'';
+              general = ''"DejaVu Sans,12"'';
+            };
+          };
           description = ''
             Qtct configuration. Writes settings to `${name}/${name}.conf`
             file. Lists will be translated to comma-separated strings.

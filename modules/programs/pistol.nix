@@ -62,13 +62,20 @@ in
     associations = mkOption {
       type = types.listOf association;
       default = [ ];
-      example = lib.literalExpression ''
-        [
-          { mime = "application/json"; command = "bat %pistol-filename%"; }
-          { mime = "application/*"; command = "hexyl %pistol-filename%"; }
-          { fpath = ".*.md$"; command = "sh: bat --paging=never --color=always %pistol-filename% | head -8"; }
-        ]
-      '';
+      example = [
+        {
+          mime = "application/json";
+          command = "bat %pistol-filename%";
+        }
+        {
+          mime = "application/*";
+          command = "hexyl %pistol-filename%";
+        }
+        {
+          fpath = ".*.md$";
+          command = "sh: bat --paging=never --color=always %pistol-filename% | head -8";
+        }
+      ];
       description = ''
         Associations written to the Pistol configuration at
         {file}`$XDG_CONFIG_HOME/pistol/pistol.conf`.

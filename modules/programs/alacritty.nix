@@ -36,21 +36,19 @@ in
       settings = lib.mkOption {
         inherit (tomlFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            window.dimensions = {
-              lines = 3;
-              columns = 200;
-            };
-            keyboard.bindings = [
-              {
-                key = "K";
-                mods = "Control";
-                chars = "\\u000c";
-              }
-            ];
-          }
-        '';
+        example = {
+          window.dimensions = {
+            lines = 3;
+            columns = 200;
+          };
+          keyboard.bindings = [
+            {
+              key = "K";
+              mods = "Control";
+              chars = "\\u000c";
+            }
+          ];
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml` or

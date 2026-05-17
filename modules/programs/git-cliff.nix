@@ -19,12 +19,10 @@ in
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          header = "Changelog";
-          trim = true;
-        }
-      '';
+      example = {
+        header = "Changelog";
+        trim = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/git-cliff/cliff.toml`. See

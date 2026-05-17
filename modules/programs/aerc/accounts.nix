@@ -69,7 +69,9 @@ in
           extraAccounts = mkOption {
             type = confSection;
             default = { };
-            example = literalExpression ''{ source = "maildir://~/Maildir/example"; }'';
+            example = {
+              source = "maildir://~/Maildir/example";
+            };
             description = ''
               Extra config added to the configuration section for this account in
               {file}`$HOME/.config/aerc/accounts.conf`.
@@ -91,7 +93,11 @@ in
           extraConfig = mkOption {
             type = confSections;
             default = { };
-            example = literalExpression "{ ui = { sidebar-width = 25; }; }";
+            example = {
+              ui = {
+                sidebar-width = 25;
+              };
+            };
             description = ''
               Config specific to this account, added to {file}`$HOME/.config/aerc/aerc.conf`.
               Aerc only supports per-account UI configuration.

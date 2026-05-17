@@ -31,13 +31,11 @@ in
         Configuration options for wofi. See
         {manpage}`wofi(5)`.
       '';
-      example = lib.literalExpression ''
-        {
-          location = "bottom-right";
-          allow_markup = true;
-          width = 250;
-        }
-      '';
+      example = {
+        location = "bottom-right";
+        allow_markup = true;
+        width = 250;
+      };
     };
 
     style = mkOption {

@@ -22,12 +22,10 @@ in
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          shuffle = true;
-          gapless = true;
-        }
-      '';
+      example = {
+        shuffle = true;
+        gapless = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/ncspot/config.toml`.

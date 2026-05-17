@@ -97,22 +97,20 @@ let
       description = ''
         Plugins to install.
       '';
-      example = literalExpression ''
-        [
-          {
-            author = "MrFoxPro";
-            name = "lapce-nix";
-            version = "0.0.1";
-            hash = "sha256-...";
-          }
-          {
-            author = "dzhou121";
-            name = "lapce-rust";
-            version = "0.3.1932";
-            hash = "sha256-...";
-          }
-        ]
-      '';
+      example = [
+        {
+          author = "MrFoxPro";
+          name = "lapce-nix";
+          version = "0.0.1";
+          hash = "sha256-...";
+        }
+        {
+          author = "dzhou121";
+          name = "lapce-rust";
+          version = "0.3.1932";
+          hash = "sha256-...";
+        }
+      ];
     };
     keymaps = mkOption {
       inherit (settingsFormat) type;
@@ -121,14 +119,12 @@ let
         Keymaps written to {file}`$XDG_CONFIG_HOME/lapce/keymaps.toml`.
         See <https://github.com/lapce/lapce/blob/master/defaults/keymaps-common.toml> for examples.
       '';
-      example = literalExpression ''
-        [
-          {
-            command = "open_log_file";
-            key = "Ctrl+Shift+L";
-          }
-        ]
-      '';
+      example = [
+        {
+          command = "open_log_file";
+          key = "Ctrl+Shift+L";
+        }
+      ];
     };
   };
 

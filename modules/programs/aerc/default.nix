@@ -72,7 +72,11 @@ in
     extraAccounts = mkOption {
       type = sectionsOrLines;
       default = { };
-      example = literalExpression ''{ Work = { source = "maildir://~/Maildir/work"; }; }'';
+      example = {
+        Work = {
+          source = "maildir://~/Maildir/work";
+        };
+      };
       description = ''
         Extra lines added to {file}`$HOME/.config/aerc/accounts.conf`.
 
@@ -83,7 +87,11 @@ in
     extraBinds = mkOption {
       type = sectionsOrLines;
       default = { };
-      example = literalExpression ''{ messages = { q = ":quit<Enter>"; }; }'';
+      example = {
+        messages = {
+          q = ":quit<Enter>";
+        };
+      };
       description = ''
         Extra lines added to {file}`$HOME/.config/aerc/binds.conf`.
         Global keybindings can be set in the `global` section.
@@ -95,7 +103,11 @@ in
     extraConfig = mkOption {
       type = sectionsOrLines;
       default = { };
-      example = literalExpression ''{ ui = { sort = "-r date"; }; }'';
+      example = {
+        ui = {
+          sort = "-r date";
+        };
+      };
       description = ''
         Extra lines added to {file}`$HOME/.config/aerc/aerc.conf`.
 

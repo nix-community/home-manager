@@ -147,19 +147,17 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          log = {
-            enabled = false;
-          };
-          mgr = {
-            show_hidden = false;
-            sort_by = "mtime";
-            sort_dir_first = true;
-            sort_reverse = true;
-          };
-        }
-      '';
+      example = {
+        log = {
+          enabled = false;
+        };
+        mgr = {
+          show_hidden = false;
+          sort_by = "mtime";
+          sort_dir_first = true;
+          sort_reverse = true;
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/yazi.toml`.
@@ -196,18 +194,16 @@ in
     vfs = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          services = {
-            my-server = {
-              host = "1.2.3.4";
-              port = 22;
-              type = "sftp";
-              user = "root";
-            };
+      example = {
+        services = {
+          my-server = {
+            host = "1.2.3.4";
+            port = 22;
+            type = "sftp";
+            user = "root";
           };
-        }
-      '';
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yazi/vfs.toml`.

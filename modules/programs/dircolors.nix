@@ -46,13 +46,11 @@ in
         See {command}`dircolors --print-database`
         for options.
       '';
-      example = lib.literalExpression ''
-        {
-          OTHER_WRITABLE = "30;46";
-          ".sh" = "01;32";
-          ".csh" = "01;32";
-        }
-      '';
+      example = {
+        OTHER_WRITABLE = "30;46";
+        ".sh" = "01;32";
+        ".csh" = "01;32";
+      };
     };
 
     extraConfig = mkOption {

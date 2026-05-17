@@ -103,15 +103,13 @@ in
         or {file}`Library/Application Support/k9s/hotkeys.yaml` (darwin). See
         <https://k9scli.io/topics/hotkeys/> for supported values.
       '';
-      example = literalExpression ''
-        {
-          shift-0 = {
-            shortCut = "Shift-0";
-            description = "Viewing pods";
-            command = "pods";
-          };
-        }
-      '';
+      example = {
+        shift-0 = {
+          shortCut = "Shift-0";
+          description = "Viewing pods";
+          command = "pods";
+        };
+      };
     };
 
     plugins = mkOption {
@@ -155,21 +153,19 @@ in
         or {file}`Library/Application Support/k9s/views.yaml` (darwin).
         See <https://k9scli.io/topics/columns/> for supported values.
       '';
-      example = literalExpression ''
-        {
-          "v1/pods" = {
-            columns = [
-              "AGE"
-              "NAMESPACE"
-              "NAME"
-              "IP"
-              "NODE"
-              "STATUS"
-              "READY"
-            ];
-          };
-        }
-      '';
+      example = {
+        "v1/pods" = {
+          columns = [
+            "AGE"
+            "NAMESPACE"
+            "NAME"
+            "IP"
+            "NODE"
+            "STATUS"
+            "READY"
+          ];
+        };
+      };
     };
   };
 

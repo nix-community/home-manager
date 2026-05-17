@@ -234,28 +234,26 @@ in
       description = ''
         Attribute set of profiles.
       '';
-      example = literalExpression ''
-        {
-          undocked = {
-            outputs = [
-              {
-                criteria = "eDP-1";
-              }
-            ];
-          };
-          docked = {
-            outputs = [
-              {
-                criteria = "eDP-1";
-              }
-              {
-                criteria = "Some Company ASDF 4242";
-                transform = "90";
-              }
-            ];
-          };
-        }
-      '';
+      example = {
+        undocked = {
+          outputs = [
+            {
+              criteria = "eDP-1";
+            }
+          ];
+        };
+        docked = {
+          outputs = [
+            {
+              criteria = "eDP-1";
+            }
+            {
+              criteria = "Some Company ASDF 4242";
+              transform = "90";
+            }
+          ];
+        };
+      };
     };
 
     extraConfig = mkOption {

@@ -8,7 +8,6 @@
 let
   inherit (lib)
     getExe
-    literalExpression
     mkEnableOption
     mkIf
     mkOption
@@ -31,16 +30,14 @@ in
     settings = mkOption {
       inherit (settingsFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          "" = {
-            border_size = 10;
-            height = 50;
-          };
-          "output.foo".name = "DP-1";
-          "style.muted".background_color = "032cfc";
-        }
-      '';
+      example = {
+        "" = {
+          border_size = 10;
+          height = 50;
+        };
+        "output.foo".name = "DP-1";
+        "style.muted".background_color = "032cfc";
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/wob/wob.ini`.
         See {manpage}`wob.ini(5)` for documentation.

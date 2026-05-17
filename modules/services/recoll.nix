@@ -127,21 +127,27 @@ in
 
         See {manpage}`recoll.conf(5)` for more details about the configuration.
       '';
-      example = literalExpression ''
-        {
-          nocjk = true;
-          loglevel = 5;
-          topdirs = [ "~/Downloads" "~/Documents" "~/projects" ];
+      example = {
+        nocjk = true;
+        loglevel = 5;
+        topdirs = [
+          "~/Downloads"
+          "~/Documents"
+          "~/projects"
+        ];
 
-          "~/Downloads" = {
-            "skippedNames+" = [ "*.iso" ];
-          };
+        "~/Downloads" = {
+          "skippedNames+" = [ "*.iso" ];
+        };
 
-          "~/projects" = {
-            "skippedNames+" = [ "node_modules" "target" "result" ];
-          };
-        }
-      '';
+        "~/projects" = {
+          "skippedNames+" = [
+            "node_modules"
+            "target"
+            "result"
+          ];
+        };
+      };
     };
 
     configDir = mkOption {

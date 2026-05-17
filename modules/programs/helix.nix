@@ -57,21 +57,22 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          theme = "base16";
-          editor = {
-            line-number = "relative";
-            lsp.display-messages = true;
-          };
-          keys.normal = {
-            space.space = "file_picker";
-            space.w = ":w";
-            space.q = ":q";
-            esc = [ "collapse_selection" "keep_primary_selection" ];
-          };
-        }
-      '';
+      example = {
+        theme = "base16";
+        editor = {
+          line-number = "relative";
+          lsp.display-messages = true;
+        };
+        keys.normal = {
+          space.space = "file_picker";
+          space.w = ":w";
+          space.q = ":q";
+          esc = [
+            "collapse_selection"
+            "keep_primary_selection"
+          ];
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/helix/config.toml`.

@@ -11,7 +11,6 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
-    literalExpression
     ;
 
   tomlFormat = pkgs.formats.toml { };
@@ -36,12 +35,10 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          virtualenvs.create = true;
-          virtualenvs.in-project = true;
-        }
-      '';
+      example = {
+        virtualenvs.create = true;
+        virtualenvs.in-project = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/pypoetry/config.toml` on Linux or

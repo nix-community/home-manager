@@ -61,19 +61,17 @@ in
           {manpage}`fnott.ini(5)` for a list of available options and <https://codeberg.org/dnkl/fnott/src/branch/master/fnott.ini>
           for an example configuration.
         '';
-        example = lib.literalExpression ''
-          {
-            main = {
-              notification-margin = 5;
-            };
+        example = {
+          main = {
+            notification-margin = 5;
+          };
 
-            low = {
-              timeout = 5;
-              title-font = "Dina:weight=bold:slant=italic";
-              title-color = "ffffff";
-            };
-          }
-        '';
+          low = {
+            timeout = 5;
+            title-font = "Dina:weight=bold:slant=italic";
+            title-color = "ffffff";
+          };
+        };
       };
     };
   };

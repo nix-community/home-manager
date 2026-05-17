@@ -303,15 +303,13 @@ in
 
     extraConfig = mkOption {
       default = { };
-      example = literalExpression ''
-        {
-          kb-primary-paste = "Control+V,Shift+Insert";
-          kb-secondary-paste = "Control+v,Insert";
-          "run,drun" = {
-            display-name = "open:";
-          };
-        }
-      '';
+      example = {
+        kb-primary-paste = "Control+V,Shift+Insert";
+        kb-secondary-paste = "Control+v,Insert";
+        "run,drun" = {
+          display-name = "open:";
+        };
+      };
       type = extraConfigType;
       description = "Additional configuration to add.";
     };

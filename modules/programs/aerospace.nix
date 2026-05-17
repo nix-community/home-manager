@@ -103,43 +103,41 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          gaps = {
-            outer.left = 8;
-            outer.bottom = 8;
-            outer.top = 8;
-            outer.right = 8;
-          };
-          mode.main.binding = {
-            alt-h = "focus left";
-            alt-j = "focus down";
-            alt-k = "focus up";
-            alt-l = "focus right";
-          };
-          on-window-detected = [
-            {
-              "if".app-id = "com.apple.finder";
-              run = "move-node-to-workspace 9";
-            }
+      example = {
+        gaps = {
+          outer.left = 8;
+          outer.bottom = 8;
+          outer.top = 8;
+          outer.right = 8;
+        };
+        mode.main.binding = {
+          alt-h = "focus left";
+          alt-j = "focus down";
+          alt-k = "focus up";
+          alt-l = "focus right";
+        };
+        on-window-detected = [
+          {
+            "if".app-id = "com.apple.finder";
+            run = "move-node-to-workspace 9";
+          }
 
-            {
-              "if" = {
-                app-id = "com.apple.systempreferences";
-                app-name-regex-substring = "settings";
-                window-title-regex-substring = "substring";
-                workspace = "workspace-name";
-                during-aerospace-startup = true;
-              };
-              check-further-callbacks = true;
-              run = [
-                "layout floating"
-                "move-node-to-workspace S"
-              ];
-            }
-          ];
-        }
-      '';
+          {
+            "if" = {
+              app-id = "com.apple.systempreferences";
+              app-name-regex-substring = "settings";
+              window-title-regex-substring = "substring";
+              workspace = "workspace-name";
+              during-aerospace-startup = true;
+            };
+            check-further-callbacks = true;
+            run = [
+              "layout floating"
+              "move-node-to-workspace S"
+            ];
+          }
+        ];
+      };
       description = ''
         AeroSpace configuration, see
         <https://nikitabobko.github.io/AeroSpace/guide#configuring-aerospace>

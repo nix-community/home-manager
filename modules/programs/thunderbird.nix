@@ -522,21 +522,19 @@ in
                 settings = mkOption {
                   type = thunderbirdJson;
                   default = { };
-                  example = literalExpression ''
-                    {
-                      "mail.spellcheck.inline" = false;
-                      "mailnews.database.global.views.global.columns" = {
-                        selectCol = {
-                          visible = false;
-                          ordinal = 1;
-                        };
-                        threadCol = {
-                          visible = true;
-                          ordinal = 2;
-                        };
+                  example = {
+                    "mail.spellcheck.inline" = false;
+                    "mailnews.database.global.views.global.columns" = {
+                      selectCol = {
+                        visible = false;
+                        ordinal = 1;
                       };
-                    }
-                  '';
+                      threadCol = {
+                        visible = true;
+                        ordinal = 2;
+                      };
+                    };
+                  };
                   description = ''
                     Preferences to add to this profile's
                     {file}`user.js`.
@@ -689,12 +687,10 @@ in
       settings = mkOption {
         type = thunderbirdJson;
         default = { };
-        example = literalExpression ''
-          {
-            "general.useragent.override" = "";
-            "privacy.donottrackheader.enabled" = true;
-          }
-        '';
+        example = {
+          "general.useragent.override" = "";
+          "privacy.donottrackheader.enabled" = true;
+        };
         description = ''
           Attribute set of Thunderbird preferences to be added to
           all profiles.
@@ -739,9 +735,10 @@ in
               profiles = mkOption {
                 type = with types; listOf str;
                 default = [ ];
-                example = literalExpression ''
-                  [ "profile1" "profile2" ]
-                '';
+                example = [
+                  "profile1"
+                  "profile2"
+                ];
                 description = ''
                   List of Thunderbird profiles for which this account should be
                   enabled. If this list is empty (the default), this account will
@@ -854,17 +851,15 @@ in
                   });
                 default = [ ];
                 defaultText = literalExpression "[ ]";
-                example = literalExpression ''
-                  [
-                    {
-                      name = "Mark as Read on Archive";
-                      enabled = true;
-                      type = "128";
-                      action = "Mark read";
-                      condition = "ALL";
-                    }
-                  ]
-                '';
+                example = [
+                  {
+                    name = "Mark as Read on Archive";
+                    enabled = true;
+                    type = "128";
+                    action = "Mark read";
+                    condition = "ALL";
+                  }
+                ];
                 description = ''
                   List of message filters to add to this Thunderbird account configuration.
 
@@ -894,9 +889,10 @@ in
             profiles = mkOption {
               type = with types; listOf str;
               default = [ ];
-              example = literalExpression ''
-                [ "profile1" "profile2" ]
-              '';
+              example = [
+                "profile1"
+                "profile2"
+              ];
               description = ''
                 List of Thunderbird profiles for which this account should be
                 enabled. If this list is empty (the default), this account will
@@ -961,9 +957,10 @@ in
             profiles = mkOption {
               type = with types; listOf str;
               default = [ ];
-              example = literalExpression ''
-                [ "profile1" "profile2" ]
-              '';
+              example = [
+                "profile1"
+                "profile2"
+              ];
               description = ''
                 List of Thunderbird profiles for which this account should be
                 enabled. If this list is empty (the default), this account will

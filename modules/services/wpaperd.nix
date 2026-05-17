@@ -42,18 +42,16 @@ in
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          eDP-1 = {
-            path = "/home/foo/Pictures/Wallpaper";
-            apply-shadow = true;
-          };
-          DP-2 = {
-            path = "/home/foo/Pictures/Anime";
-            sorting = "descending";
-          };
-        }
-      '';
+      example = {
+        eDP-1 = {
+          path = "/home/foo/Pictures/Wallpaper";
+          apply-shadow = true;
+        };
+        DP-2 = {
+          path = "/home/foo/Pictures/Anime";
+          sorting = "descending";
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/wpaperd/wallpaper.toml`.

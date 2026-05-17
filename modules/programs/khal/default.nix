@@ -215,17 +215,15 @@ in
     settings = mkOption {
       inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          default = {
-            default_calendar = "Calendar";
-            timedelta = "5d";
-          };
-          view = {
-            agenda_event_format =
-              "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
-          };
-        }'';
+      example = {
+        default = {
+          default_calendar = "Calendar";
+          timedelta = "5d";
+        };
+        view = {
+          agenda_event_format = "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
+        };
+      };
       description = ''
         Configuration options to add to the various sections in the configuration file.
       '';

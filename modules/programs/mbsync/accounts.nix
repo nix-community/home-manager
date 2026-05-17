@@ -103,14 +103,12 @@ let
         extraConfig = mkOption {
           type = extraConfigType;
           default = { };
-          example = literalExpression ''
-            {
-              Create = "both";
-              CopyArrivalDate = "yes";
-              MaxMessages = 10000;
-              MaxSize = "1m";
-            }
-          '';
+          example = {
+            Create = "both";
+            CopyArrivalDate = "yes";
+            MaxMessages = 10000;
+            MaxSize = "1m";
+          };
           description = ''
             Extra configuration lines to add to *THIS* channel's
             configuration.

@@ -65,15 +65,13 @@
 
           See <https://github.com/WayfireWM/wayfire/wiki/Configuration>
         '';
-        example = lib.literalExpression ''
-          {
-            core.plugins = "command expo cube";
-            command = {
-              binding_terminal = "alacritty";
-              command_terminal = "alacritty";
-            };
-          }
-        '';
+        example = {
+          core.plugins = "command expo cube";
+          command = {
+            binding_terminal = "alacritty";
+            command_terminal = "alacritty";
+          };
+        };
       };
 
       wf-shell = {
@@ -91,14 +89,12 @@
 
             See <https://github.com/WayfireWM/wf-shell/blob/master/wf-shell.ini.example>
           '';
-          example = lib.literalExpression ''
-            {
-              panel = {
-                widgets_left = "menu spacing4 launchers window-list";
-                autohide = true;
-              };
-            }
-          '';
+          example = {
+            panel = {
+              widgets_left = "menu spacing4 launchers window-list";
+              autohide = true;
+            };
+          };
         };
       };
 

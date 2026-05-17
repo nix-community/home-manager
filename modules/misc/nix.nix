@@ -335,13 +335,15 @@ in
     settings = mkOption {
       type = types.submodule { freeformType = semanticConfType; };
       default = { };
-      example = literalExpression ''
-        {
-          sandbox = true;
-          show-trace = true;
-          system-features = [ "big-parallel" "kvm" "recursive-nix" ];
-        }
-      '';
+      example = {
+        sandbox = true;
+        show-trace = true;
+        system-features = [
+          "big-parallel"
+          "kvm"
+          "recursive-nix"
+        ];
+      };
       description = ''
         Configuration for Nix; see {manpage}`nix.conf(5)` for available options.
         The value declared here will be translated directly to the key-value pairs Nix expects.

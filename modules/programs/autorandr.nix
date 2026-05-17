@@ -137,13 +137,23 @@ let
       transform = mkOption {
         type = types.nullOr (matrixOf 3 3 types.float);
         default = null;
-        example = literalExpression ''
+        example = [
           [
-            [ 0.6 0.0 0.0 ]
-            [ 0.0 0.6 0.0 ]
-            [ 0.0 0.0 1.0 ]
+            0.6
+            0.0
+            0.0
           ]
-        '';
+          [
+            0.0
+            0.6
+            0.0
+          ]
+          [
+            0.0
+            0.0
+            1.0
+          ]
+        ];
         description = ''
           Refer to
           {manpage}`xrandr(1)`
@@ -199,12 +209,10 @@ let
           exclusive.
         '';
         default = null;
-        example = literalExpression ''
-          {
-            x = 1.25;
-            y = 1.25;
-          }
-        '';
+        example = {
+          x = 1.25;
+          y = 1.25;
+        };
       };
 
       filter = mkOption {

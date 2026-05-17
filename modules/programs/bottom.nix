@@ -32,18 +32,16 @@ in
           See <https://github.com/ClementTsang/bottom/blob/master/sample_configs/default_config.toml>
           for the default configuration.
         '';
-        example = lib.literalExpression ''
-          {
-            flags = {
-              avg_cpu = true;
-              temperature_type = "c";
-            };
+        example = {
+          flags = {
+            avg_cpu = true;
+            temperature_type = "c";
+          };
 
-            colors = {
-              low_battery_color = "red";
-            };
-          }
-        '';
+          colors = {
+            low_battery_color = "red";
+          };
+        };
       };
     };
   };

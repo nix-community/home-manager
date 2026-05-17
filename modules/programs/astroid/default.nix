@@ -110,11 +110,9 @@ in
       extraConfig = mkOption {
         inherit (jsonFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            poll.interval = 0;
-          }
-        '';
+        example = {
+          poll.interval = 0;
+        };
         description = ''
           JSON config that will override the default Astroid configuration.
         '';

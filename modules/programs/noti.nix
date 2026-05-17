@@ -26,17 +26,15 @@ in
         {manpage}`noti.yaml(5)`.
         for the full list of options.
       '';
-      example = lib.literalExpression ''
-        {
-          say = {
-            voice = "Alex";
-          };
-          slack = {
-            token = "1234567890abcdefg";
-            channel = "@jaime";
-          };
-        }
-      '';
+      example = {
+        say = {
+          voice = "Alex";
+        };
+        slack = {
+          token = "1234567890abcdefg";
+          channel = "@jaime";
+        };
+      };
     };
   };
 

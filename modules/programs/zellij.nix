@@ -39,98 +39,96 @@ in
         ]
       );
       default = { };
-      example = lib.literalExpression ''
-        {
-          dev = {
-            layout = {
-              _children = [
-                {
-                  default_tab_template = {
-                    _children = [
-                      {
-                        pane = {
-                          size = 1;
-                          borderless = true;
-                          plugin = {
-                            location = "zellij:tab-bar";
-                          };
+      example = {
+        dev = {
+          layout = {
+            _children = [
+              {
+                default_tab_template = {
+                  _children = [
+                    {
+                      pane = {
+                        size = 1;
+                        borderless = true;
+                        plugin = {
+                          location = "zellij:tab-bar";
                         };
-                      }
-                      { "children" = { }; }
-                      {
-                        pane = {
-                          size = 2;
-                          borderless = true;
-                          plugin = {
-                            location = "zellij:status-bar";
-                          };
+                      };
+                    }
+                    { "children" = { }; }
+                    {
+                      pane = {
+                        size = 2;
+                        borderless = true;
+                        plugin = {
+                          location = "zellij:status-bar";
                         };
-                      }
-                    ];
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Project";
+                    focus = true;
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Project";
-                      focus = true;
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "nvim";
-                        };
-                      }
-                    ];
+                  _children = [
+                    {
+                      pane = {
+                        command = "nvim";
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Git";
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Git";
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "lazygit";
-                        };
-                      }
-                    ];
+                  _children = [
+                    {
+                      pane = {
+                        command = "lazygit";
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Files";
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Files";
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "yazi";
-                        };
-                      }
-                    ];
+                  _children = [
+                    {
+                      pane = {
+                        command = "yazi";
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Shell";
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Shell";
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "zsh";
-                        };
-                      }
-                    ];
-                  };
-                }
-              ];
-            };
+                  _children = [
+                    {
+                      pane = {
+                        command = "zsh";
+                      };
+                    }
+                  ];
+                };
+              }
+            ];
           };
-        }
-      '';
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/zellij/layouts/<layout>.kdl`.

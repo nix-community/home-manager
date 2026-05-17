@@ -43,23 +43,21 @@ in
         should be written as lists. Variables' and colors' names should be
         quoted. See <https://wiki.hypr.land/Hypr-Ecosystem/hyprpaper/> for more examples.
       '';
-      example = lib.literalExpression ''
-        {
-          splash = false;
+      example = {
+        splash = false;
 
-          wallpaper = [
-            {
-              monitor = "DP-3";
-              path = "/share/wallpapers/buttons.png";
-              fit_mode = "tile";
-            }
-            {
-              monitor = "DP-1";
-              path = "/share/wallpapers/cat_pacman.png";
-            }
-          ];
-        }
-      '';
+        wallpaper = [
+          {
+            monitor = "DP-3";
+            path = "/share/wallpapers/buttons.png";
+            fit_mode = "tile";
+          }
+          {
+            monitor = "DP-1";
+            path = "/share/wallpapers/cat_pacman.png";
+          }
+        ];
+      };
     };
 
     importantPrefixes = lib.mkOption {

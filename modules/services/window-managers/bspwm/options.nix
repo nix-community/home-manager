@@ -1,6 +1,6 @@
 { pkgs, lib }:
 let
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib) mkOption types;
 
   primitive =
     with types;
@@ -243,21 +243,19 @@ in
       type = types.attrsOf rule;
       default = { };
       description = "Rule configuration. The keys of the attribute set are the targets of the rules.";
-      example = literalExpression ''
-        {
-          "Gimp" = {
-            desktop = "^8";
-            state = "floating";
-            follow = true;
-          };
-          "Kupfer.py" = {
-            focus = true;
-          };
-          "Screenkey" = {
-            manage = false;
-          };
-        }
-      '';
+      example = {
+        "Gimp" = {
+          desktop = "^8";
+          state = "floating";
+          follow = true;
+        };
+        "Kupfer.py" = {
+          focus = true;
+        };
+        "Screenkey" = {
+          manage = false;
+        };
+      };
     };
 
     startupPrograms = mkOption {

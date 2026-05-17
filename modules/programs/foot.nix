@@ -42,20 +42,18 @@ in
         {file}`$XDG_CONFIG_HOME/foot/foot.ini`. See <https://codeberg.org/dnkl/foot/src/branch/master/foot.ini>
         for a list of available options.
       '';
-      example = lib.literalExpression ''
-        {
-          main = {
-            term = "xterm-256color";
+      example = {
+        main = {
+          term = "xterm-256color";
 
-            font = "Fira Code:size=11";
-            dpi-aware = "yes";
-          };
+          font = "Fira Code:size=11";
+          dpi-aware = "yes";
+        };
 
-          mouse = {
-            hide-when-typing = "yes";
-          };
-        }
-      '';
+        mouse = {
+          hide-when-typing = "yes";
+        };
+      };
     };
   };
 

@@ -23,13 +23,11 @@ in
     settings = lib.mkOption {
       inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          daemon = {
-            default_parallel_tasks = 2;
-          };
-        }
-      '';
+      example = {
+        daemon = {
+          default_parallel_tasks = 2;
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/pueue/pueue.yml`.

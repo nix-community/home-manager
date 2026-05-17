@@ -9,7 +9,6 @@ let
   cfg = config.programs.riff;
 
   inherit (lib)
-    literalExpression
     mkEnableOption
     mkIf
     mkOption
@@ -42,7 +41,7 @@ in
     commandLineOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = literalExpression ''[ "--no-adds-only-special" ]'';
+      example = [ "--no-adds-only-special" ];
       apply = lib.concatStringsSep " ";
       description = ''
         Command line arguments to include in the <command>RIFF</command> environment variable.

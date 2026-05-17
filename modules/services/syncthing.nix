@@ -545,14 +545,12 @@ in
                 will be reverted on restart if [overrideFolders](#opt-services.syncthing.overrideFolders)
                 is enabled.
               '';
-              example = lib.literalExpression ''
-                {
-                  "/home/user/sync" = {
-                    id = "syncme";
-                    devices = [ "bigbox" ];
-                  };
-                }
-              '';
+              example = {
+                "/home/user/sync" = {
+                  id = "syncme";
+                  devices = [ "bigbox" ];
+                };
+              };
               type = types.attrsOf (
                 types.submodule (
                   { name, ... }:
@@ -815,7 +813,7 @@ in
           type = types.str;
           default = "syncthingtray --wait";
           defaultText = literalExpression "syncthingtray --wait";
-          example = literalExpression "qsyncthingtray";
+          example = "qsyncthingtray";
           description = "Syncthing tray command to use.";
         };
 

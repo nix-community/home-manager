@@ -111,13 +111,11 @@ in
       settings = mkOption {
         type = vimSettingsType;
         default = { };
-        example = literalExpression ''
-          {
-            expandtab = true;
-            history = 1000;
-            background = "dark";
-          }
-        '';
+        example = {
+          expandtab = true;
+          history = 1000;
+          background = "dark";
+        };
         description = ''
           At attribute set of Vim settings. The attribute names and
           corresponding values must be among the following supported

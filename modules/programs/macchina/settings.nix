@@ -3,7 +3,6 @@ let
   inherit (lib)
     mkOption
     types
-    literalExpression
     ;
 in
 {
@@ -107,7 +106,12 @@ in
         )
       );
       default = null;
-      example = literalExpression ''[ "Battery" "Memory" "Processor" "Shell" ]'';
+      example = [
+        "Battery"
+        "Memory"
+        "Processor"
+        "Shell"
+      ];
       description = ''
         Display only the specified readouts. When null, all readouts are shown.
         Values are case-sensitive.

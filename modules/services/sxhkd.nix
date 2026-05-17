@@ -45,7 +45,7 @@ in
       type = types.listOf types.str;
       default = [ ];
       description = "Command line arguments to invoke {command}`sxhkd` with.";
-      example = literalExpression ''[ "-m 1" ]'';
+      example = [ "-m 1" ];
     };
 
     keybindings = mkOption {

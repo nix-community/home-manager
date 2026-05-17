@@ -22,21 +22,19 @@ in
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          default_profile = "personal";
-          settings = {
-            notifications.enabled = true;
-            image_preview.protocol = {
-              type = "kitty";
-              size = {
-                height = 10;
-                width = 66;
-              };
+      example = {
+        default_profile = "personal";
+        settings = {
+          notifications.enabled = true;
+          image_preview.protocol = {
+            type = "kitty";
+            size = {
+              height = 10;
+              width = 66;
             };
           };
-        }
-      '';
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/iamb/config.toml`.
