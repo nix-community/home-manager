@@ -275,12 +275,23 @@ in
         }
       )
 
-      (lib.mkIf (cfg.envFile != null || cfg.extraEnv != "") {
-        "${cfg.configDir}/env.nu".text = lib.mkMerge [
-          (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
-          cfg.extraEnv
-        ];
-      })
+      (
+        let
+          hmSessionVars = pkgs.runCommand "hm-session-vars.nu" { } ''
+            echo "if ('__HM_SESS_VARS_SOURCED' not-in \$env) {$(${lib.getExe cfg.package} -c "
+              use ${pkgs.nu_scripts}/share/nu_scripts/modules/capture-foreign-env
+              open ${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh | capture-foreign-env | reject SSH_AUTH_SOCK | to nuon
+            ") | load-env}" >> "$out"
+          '';
+        in
+        lib.mkIf (cfg.envFile != null || cfg.extraEnv != "") {
+          "${cfg.configDir}/env.nu".text = lib.mkMerge [
+            "source ${hmSessionVars}"
+            (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
+            cfg.extraEnv
+          ];
+        }
+      )
       (lib.mkIf (cfg.loginFile != null || cfg.extraLogin != "") {
         "${cfg.configDir}/login.nu".text = lib.mkMerge [
           (lib.mkIf (cfg.loginFile != null) cfg.loginFile.text)
