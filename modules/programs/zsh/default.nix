@@ -520,7 +520,7 @@ in
 
             (lib.mkIf (cfg.cdpath != [ ]) (
               mkOrder 510 ''
-                cdpath+=(${concatStringsSep " " cfg.cdpath})
+                cdpath+=(${lib.hm.shell.formatShellArrayContent cfg.cdpath})
               ''
             ))
 

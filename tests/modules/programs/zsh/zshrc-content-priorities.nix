@@ -3,6 +3,12 @@
   programs.zsh = {
     enable = true;
 
+    cdpath = [
+      "$HOME/projects"
+      "/tmp/with space"
+      "/tmp/with[glob]"
+    ];
+
     initContent = lib.mkMerge [
       (lib.mkBefore ''
         # High priority (mkBefore)
@@ -34,6 +40,10 @@
           echo "High priority content"
 
           typeset -U path cdpath fpath manpath
+          cdpath+=(
+            '$HOME/projects' '/tmp/with space' '/tmp/with[glob]'
+          )
+
           for profile in ''${(z)NIX_PROFILES}; do
             fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
           done
