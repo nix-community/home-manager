@@ -1,0 +1,5 @@
+collection: Platformer games
+file: mario1.bin
+file: mario2.bin
+file: mario3.bin
+launch: {file.path}

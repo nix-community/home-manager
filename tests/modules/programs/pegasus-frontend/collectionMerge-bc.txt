@@ -1,0 +1,4 @@
+collection: collection bc
+file: b
+file: c
+launch: {file.path}

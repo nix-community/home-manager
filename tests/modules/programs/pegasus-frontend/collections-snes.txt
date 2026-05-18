@@ -1,0 +1,5 @@
+collection: Super Nintendo Entertainment System
+extensions: 7z, bin, smc, sfc, fig, swc, mgd, zip, bin
+ignore-file: buggygame.bin
+ignore-file: duplicategame.bin
+launch: snes9x "{file.path}"

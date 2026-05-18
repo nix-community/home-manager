@@ -1,0 +1,17 @@
+game: game a
+file: a
+
+
+game: game b
+file: b
+
+
+game: game c
+file: c
+multi-key: v1
+multi-key: v2
+
+
+game: game ad
+file: a
+file: d

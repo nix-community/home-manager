@@ -1,0 +1,7 @@
+collection: coll
+file: a
+file: b
+file: c
+file: d
+file: e
+launch: {file.path}
