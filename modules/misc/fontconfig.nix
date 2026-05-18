@@ -14,13 +14,35 @@ let
 
   cfg = config.fonts.fontconfig;
 
-  inherit (config.home) profileDirectory;
-
+  globalConfig = config;
   fontConfigFileType = lib.types.submodule (
     { name, ... }:
     {
       options = {
-        enable = lib.mkEnableOption "Whether this font config file should be generated.";
+        enable = lib.mkOption {
+          description = ''
+            Whether this file should be generated. This option allows specific
+            files to be disabled.
+          '';
+          type = lib.types.bool;
+          inherit
+            (lib.hm.deprecations.mkStateVersionOptionDefault {
+              inherit (globalConfig.home) stateVersion;
+              since = "26.05";
+              optionPath = [
+                "fonts"
+                "fontconfig"
+                "configFile"
+                name
+                "enable"
+              ];
+              legacy.value = false;
+              current.value = true;
+            })
+            default
+            defaultText
+            ;
+        };
         text = lib.mkOption {
           type = lib.types.nullOr lib.types.lines;
           default = null;
@@ -274,8 +296,8 @@ in
 
             <dir>${config.home.path}/lib/X11/fonts</dir>
             <dir>${config.home.path}/share/fonts</dir>
-            <dir>${profileDirectory}/lib/X11/fonts</dir>
-            <dir>${profileDirectory}/share/fonts</dir>
+            <dir>${config.home.profileDirectory}/lib/X11/fonts</dir>
+            <dir>${config.home.profileDirectory}/share/fonts</dir>
 
             <cachedir>${config.home.path}/lib/fontconfig/cache</cachedir>
           '';
