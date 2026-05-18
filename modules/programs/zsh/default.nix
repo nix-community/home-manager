@@ -398,6 +398,9 @@ in
       dirHashesStr = concatStringsSep "\n" (
         lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
       );
+      # Keep double quotes so existing configs using shell variables like
+      # $HOME still expand, while escaping chars special inside them.
+      cdpathStr = concatStringsSep " " (map (v: ''"${lib.escape [ "\\" "\"" "`" ] v}"'') cfg.cdpath);
     in
     mkIf cfg.enable (
       lib.mkMerge [
@@ -520,7 +523,7 @@ in
 
             (lib.mkIf (cfg.cdpath != [ ]) (
               mkOrder 510 ''
-                cdpath+=(${concatStringsSep " " cfg.cdpath})
+                cdpath+=(${cdpathStr})
               ''
             ))
 
