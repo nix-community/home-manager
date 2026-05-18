@@ -7,6 +7,7 @@
   fish-source-handlers = ./source-handlers.nix;
   fish-plugins = ./plugins.nix;
   fish-manpage = ./manpage.nix;
+  fish-no-man-cache-without-man-package = ./no-man-cache-without-man-package.nix;
   fish-binds = ./binds.nix;
   fish-session-variables = ./session-variables.nix;
 }
