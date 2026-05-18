@@ -14,13 +14,10 @@ in
   ];
 
   imports = [
-    (lib.mkRenamedOptionModule
+    (lib.mkChangedOptionModule
       [ "services" "cliphist" "systemdTarget" ]
-      [
-        "services"
-        "cliphist"
-        "systemdTargets"
-      ]
+      [ "services" "cliphist" "systemdTargets" ]
+      (config: lib.toList (lib.getAttrFromPath [ "services" "cliphist" "systemdTarget" ] config))
     )
   ];
 
@@ -53,7 +50,7 @@ in
     };
 
     systemdTargets = lib.mkOption {
-      type = with lib.types; either (listOf str) str;
+      type = with lib.types; listOf str;
       default = [ config.wayland.systemd.target ];
       defaultText = lib.literalExpression "[ config.wayland.systemd.target ]";
       example = "sway-session.target";
@@ -63,8 +60,6 @@ in
         When setting this value to `["sway-session.target"]`,
         make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
         otherwise the service may never be started.
-
-        Note: A single string value is deprecated, please use a list.
       '';
     };
   };
@@ -83,8 +78,8 @@ in
       systemd.user.services.cliphist = {
         Unit = {
           Description = "Clipboard management daemon";
-          PartOf = lib.toList cfg.systemdTargets;
-          After = lib.toList cfg.systemdTargets;
+          PartOf = cfg.systemdTargets;
+          After = cfg.systemdTargets;
         };
 
         Service = {
@@ -94,15 +89,15 @@ in
         };
 
         Install = {
-          WantedBy = lib.toList cfg.systemdTargets;
+          WantedBy = cfg.systemdTargets;
         };
       };
 
       systemd.user.services.cliphist-images = lib.mkIf cfg.allowImages {
         Unit = {
           Description = "Clipboard management daemon - images";
-          PartOf = lib.toList cfg.systemdTargets;
-          After = lib.toList cfg.systemdTargets;
+          PartOf = cfg.systemdTargets;
+          After = cfg.systemdTargets;
         };
 
         Service = {
@@ -112,7 +107,7 @@ in
         };
 
         Install = {
-          WantedBy = lib.toList cfg.systemdTargets;
+          WantedBy = cfg.systemdTargets;
         };
       };
     };
