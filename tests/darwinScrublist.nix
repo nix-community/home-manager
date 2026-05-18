@@ -49,6 +49,7 @@ let
     "discord"
     "discoss"
     "earthly"
+    "ec"
     "element-desktop"
     "emacs"
     "espanso"
