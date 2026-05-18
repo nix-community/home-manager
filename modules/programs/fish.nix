@@ -429,6 +429,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.SunOfLife1 ];
+
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
       Prompt is now configured through the
