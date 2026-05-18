@@ -8,6 +8,10 @@
       "/tmp/with space"
       "/tmp/with[glob]"
     ];
+    dirHashes = {
+      docs = "/tmp/with space";
+      glob = "/tmp/with[glob]";
+    };
 
     initContent = lib.mkMerge [
       (lib.mkBefore ''
@@ -72,6 +76,10 @@
 
           # Default priority
           echo "Default priority content"
+
+          # Named Directory Hashes
+          hash -d docs='/tmp/with space'
+          hash -d glob='/tmp/with[glob]'
 
           zprof
           # Low priority (mkAfter)

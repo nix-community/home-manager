@@ -396,7 +396,7 @@ in
       );
 
       dirHashesStr = concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+        lib.mapAttrsToList (k: v: "hash -d ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.dirHashes
       );
     in
     mkIf cfg.enable (
