@@ -731,6 +731,7 @@ in
         For an equivalent, copy and paste the following
         code snippet in your config:
 
+        ```nix
         programs.ssh.settings."*" = {
           ForwardAgent = false;
           AddKeysToAgent = "no";
@@ -743,6 +744,7 @@ in
           ControlPath = "~/.ssh/master-%r@%n:%p";
           ControlPersist = "no";
         };
+        ```
       '';
     };
   };
