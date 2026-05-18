@@ -114,8 +114,14 @@ in
             for plugin_dir in "''${plugin_dirs[@]}"; do
               path+="${pluginsDir}/$plugin_dir"
               fpath+="${pluginsDir}/$plugin_dir"
+              for plugin_fpath_dir in \
+                "$plugin_dir/share/zsh/plugins/$plugin_dir" \
+                "$plugin_dir/share/zsh/site-functions" \
+                "$plugin_dir/share/zsh/vendor-completions"; do
+                [[ -d "${pluginsDir}/$plugin_fpath_dir" ]] && fpath+="${pluginsDir}/$plugin_fpath_dir"
+              done
             done
-            unset plugin_dir plugin_dirs
+            unset plugin_dir plugin_dirs plugin_fpath_dir
             ${lib.optionalString (completionPaths != [ ]) ''
               # Add completion paths to fpath
               ${lib.hm.zsh.define "completion_paths" completionPaths}
