@@ -487,6 +487,12 @@
     github = "prescientmoon";
     githubId = 39400800;
   };
+  rachitvrma = {
+    name = "Rachit Kumar Verma";
+    email = "155641117+rachitvrma@users.noreply.github.com";
+    github = "rachitvrma";
+    githubId = 155641117;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
