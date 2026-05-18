@@ -1,3 +1,5 @@
+{ lib, pkgs, ... }:
+
 {
   codex-settings-toml = ./settings-toml.nix;
   codex-settings-toml-prefer-xdg-directories = ./settings-toml-prefer-xdg-directories.nix;
@@ -14,4 +16,7 @@
   codex-skills-store-path = ./skills-store-path.nix;
   codex-skills-store-path-dir = ./skills-store-path-dir.nix;
   codex-skills-path-not-directory = ./skills-path-not-directory.nix;
+}
+// lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+  codex-remote-control-service = ./remote-control-service.nix;
 }
