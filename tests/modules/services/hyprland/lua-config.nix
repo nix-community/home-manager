@@ -19,6 +19,14 @@ in
     ];
 
     settings = {
+      mod = {
+        _var = "SUPER";
+      };
+
+      terminal = {
+        _var = "kitty";
+      };
+
       config = {
         input = {
           kb_layout = "ro";
@@ -125,21 +133,28 @@ in
       bind = [
         {
           _args = [
-            "SUPER + Q"
+            (lib.generators.mkLuaInline ''mod .. " + Q"'')
             (lib.generators.mkLuaInline "hl.dsp.window.close()")
             { locked = true; }
           ];
         }
         {
           _args = [
-            "SUPER + RETURN"
-            (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("kitty")'')
+            (lib.generators.mkLuaInline ''mod .. " + RETURN"'')
+            (lib.generators.mkLuaInline "hl.dsp.exec_cmd(terminal)")
           ];
         }
         {
           _args = [
             "SUPER + SHIFT + 1"
             (lib.generators.mkLuaInline ''hl.dsp.window.move({ workspace = "1", follow = false })'')
+          ];
+        }
+        {
+          _args = [
+            (lib.generators.mkLuaInline ''mod .. " + mouse:272"'')
+            (lib.generators.mkLuaInline "hl.dsp.window.drag()")
+            { mouse = true; }
           ];
         }
       ];
