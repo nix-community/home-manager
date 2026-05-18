@@ -1,0 +1,7 @@
+anchor: bottom-left
+background: '#282828d0'
+font: JetBrainsMono Nerd Font 12
+menu:
+- cmd: firefox
+  desc: Firefox
+  key: f
