@@ -570,7 +570,7 @@ assignment inside a <code class="literal">config</code> attribute. For example, 
 </code></pre></li><li class="listitem"><p>The <code class="literal">services.compton</code> module has been deprecated and instead the
 new module <code class="literal">services.picom</code> should be used. This is because Nixpkgs
 no longer packages compton, and instead packages the (mostly)
-compatible fork called picom.</p></li><li class="listitem"><p>The list form of the <a class="link" href="options.xhtml#opt-programs.ssh.matchBlocks"  >programs.ssh.matchBlocks</a> option has
+compatible fork called picom.</p></li><li class="listitem"><p>The list form of the <code class="literal">programs.ssh.matchBlocks</code> option has
 been deprecated and configurations requiring match blocks in a
 defined order should switch to using DAG entries instead. For
 example, a configuration</p><pre><code class="programlisting  nix">programs.ssh.matchBlocks = [
