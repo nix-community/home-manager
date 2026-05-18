@@ -218,12 +218,19 @@ in
         one call per element.
 
         Attribute values with an `_args` list generate multi-argument calls.
+        Attribute values with `_var` generate a Lua local variable instead of
+        an `hl.<name>(...)` call. If no `name` is set, the attribute name is
+        used as the Lua variable name.
         Values created with `lib.generators.mkLuaInline` are rendered as raw
         Lua expressions.
 
       '';
       example = lib.literalExpression ''
         {
+          mod = {
+            _var = "SUPER";
+          };
+
           config = {
             general = {
               gaps_in = 5;
@@ -239,7 +246,7 @@ in
           bind = [
             {
               _args = [
-                "SUPER + Q"
+                (lib.generators.mkLuaInline "mod .. \" + Q\"")
                 (lib.generators.mkLuaInline "hl.dsp.window.close()")
                 { locked = true; }
               ];
@@ -541,18 +548,32 @@ in
             renderSettings =
               let
                 names = lib.sort lib.lessThan (lib.attrNames cfg.settings);
+                luaLocalNames = builtins.filter (
+                  name: lib.isAttrs cfg.settings.${name} && cfg.settings.${name} ? _var
+                ) names;
+                settingNames = builtins.filter (name: !(builtins.elem name luaLocalNames)) names;
                 importantNames = lib.unique (
                   lib.concatMap (
-                    prefix: builtins.filter (name: lib.hasPrefix prefix name) names
+                    prefix: builtins.filter (name: lib.hasPrefix prefix name) settingNames
                   ) cfg.importantPrefixes
                 );
-                orderedNames = importantNames ++ builtins.filter (name: !(builtins.elem name importantNames)) names;
+                orderedNames =
+                  importantNames ++ builtins.filter (name: !(builtins.elem name importantNames)) settingNames;
+                renderLocal =
+                  name:
+                  let
+                    value = cfg.settings.${name};
+                  in
+                  "local ${value.name or name} = ${renderArgs value._var}\n";
                 renderCall = name: value: "hl.${name}(${renderArgs value})\n";
                 renderCalls =
                   name: value:
                   lib.concatMapStrings (renderCall name) (if builtins.isList value then value else [ value ]);
               in
-              lib.concatMapStrings (
+              lib.optionalString (luaLocalNames != [ ]) (
+                renderSection "settings.locals" (lib.concatMapStrings renderLocal luaLocalNames)
+              )
+              + lib.concatMapStrings (
                 name: renderSection "settings.${name}" (renderCalls name cfg.settings.${name})
               ) orderedNames;
 
