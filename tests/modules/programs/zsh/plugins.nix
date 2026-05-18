@@ -12,7 +12,7 @@ in
           name = "mockPlugin";
           file = "share/mockPlugin/mockPlugin.plugin.zsh";
           src = mockZshPluginSrc;
-          completions = [
+          functions = [
             "share/zsh/site-functions"
             "share/zsh/vendor-completions"
           ];
@@ -30,14 +30,17 @@ in
       assertFileContains home-files/.zshrc 'for plugin_dir in "''${plugin_dirs[@]}"; do'
       assertFileContains home-files/.zshrc 'path+="/home/hm-user/.zsh/plugins/$plugin_dir"'
       assertFileContains home-files/.zshrc 'fpath+="/home/hm-user/.zsh/plugins/$plugin_dir"'
+      assertFileContains home-files/.zshrc '$plugin_dir/share/zsh/plugins/$plugin_dir'
+      assertFileContains home-files/.zshrc '$plugin_dir/share/zsh/site-functions'
+      assertFileContains home-files/.zshrc '$plugin_dir/share/zsh/vendor-completions'
 
       # Test the completion paths loop structure
-      assertFileContains home-files/.zshrc '# Add completion paths to fpath'
-      assertFileContains home-files/.zshrc 'completion_paths=('
+      assertFileContains home-files/.zshrc '# Add additional function paths to fpath'
+      assertFileContains home-files/.zshrc 'function_paths=('
       assertFileContains home-files/.zshrc 'mockPlugin/share/zsh/site-functions'
       assertFileContains home-files/.zshrc 'mockPlugin/share/zsh/vendor-completions'
-      assertFileContains home-files/.zshrc 'for completion_path in "''${completion_paths[@]}"; do'
-      assertFileContains home-files/.zshrc 'fpath+="/home/hm-user/.zsh/plugins/$completion_path"'
+      assertFileContains home-files/.zshrc 'for function_path in "''${function_paths[@]}"; do'
+      assertFileContains home-files/.zshrc 'fpath+="/home/hm-user/.zsh/plugins/$function_path"'
 
       # Test the plugin loading structure
       assertFileContains home-files/.zshrc '# Source plugins'
@@ -45,7 +48,6 @@ in
       assertFileContains home-files/.zshrc 'mockPlugin/share/mockPlugin/mockPlugin.plugin.zsh'
       assertFileContains home-files/.zshrc 'for plugin in "''${plugins[@]}"; do'
       assertFileContains home-files/.zshrc '[[ -f "/home/hm-user/.zsh/plugins/$plugin" ]] && source "/home/hm-user/.zsh/plugins/$plugin"'
-      assertFileContains home-files/.zshrc 'done'
     '';
   };
 }

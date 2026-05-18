@@ -373,6 +373,21 @@ in
     let
       envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
+      sessionVarsStr = lib.removeSuffix "\n" ''
+        # Environment variables
+        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
+
+        # Only source this once
+        if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
+          export __HM_ZSH_SESS_VARS_SOURCED=1
+          ${envVarsStr}
+        fi
+      '';
+      indentNonEmptyLines =
+        str:
+        concatStringsSep "\n" (
+          map (line: if line == "" then "" else "  ${line}") (lib.splitString "\n" str)
+        );
 
       aliasesStr = concatStringsSep "\n" (
         lib.mapAttrsToList (
@@ -381,7 +396,7 @@ in
       );
 
       dirHashesStr = concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+        lib.mapAttrsToList (k: v: "hash -d ${lib.escapeShellArg k}=${lib.escapeShellArg v}") cfg.dirHashes
       );
     in
     mkIf cfg.enable (
@@ -441,10 +456,6 @@ in
           home.file."${dotDirRel}/.zshenv".text = cfg.envExtra;
         })
 
-        (mkIf (cfg.profileExtra != "") {
-          home.file."${dotDirRel}/.zprofile".text = cfg.profileExtra;
-        })
-
         (mkIf (cfg.loginExtra != "") {
           home.file."${dotDirRel}/.zlogin".text = cfg.loginExtra;
         })
@@ -478,14 +489,17 @@ in
 
         {
           home.file."${dotDirRel}/.zshenv".text = ''
-            # Environment variables
-            . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-
-            # Only source this once
-            if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
-              export __HM_ZSH_SESS_VARS_SOURCED=1
-              ${envVarsStr}
+            if [[ ! -o login ]]; then
+            ${indentNonEmptyLines sessionVarsStr}
             fi
+          '';
+
+          home.file."${dotDirRel}/.zprofile".text = ''
+            ${sessionVarsStr}
+          ''
+          + optionalString (cfg.profileExtra != "") ''
+
+            ${cfg.profileExtra}
           '';
         }
 
@@ -506,7 +520,7 @@ in
 
             (lib.mkIf (cfg.cdpath != [ ]) (
               mkOrder 510 ''
-                cdpath+=(${concatStringsSep " " cfg.cdpath})
+                cdpath+=(${lib.hm.shell.formatShellArrayContent cfg.cdpath})
               ''
             ))
 
