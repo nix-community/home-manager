@@ -2,6 +2,7 @@
 WantedBy=default.target
 
 [Service]
+Environment=PATH=/home/hm-user/.nix-profile/bin
 ExecStart=@opencode@/bin/opencode serve --hostname 0.0.0.0 --port 4096 --mdns --cors https://example.com --cors http://localhost:3000 --print-logs --log-level DEBUG
 Restart=always
 RestartSec=5
