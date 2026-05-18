@@ -522,12 +522,13 @@ in
         programs.git.iniContent.filter.lfs =
           let
             skipArg = lib.optional cfg.lfs.skipSmudge "--skip";
+            lfsPath = if cfg.lfs.package != null then lib.getExe cfg.lfs.package else "git-lfs";
           in
           {
-            clean = "git-lfs clean -- %f";
+            clean = "${lfsPath} clean -- %f";
             process = concatStringsSep " " (
               [
-                "git-lfs"
+                lfsPath
                 "filter-process"
               ]
               ++ skipArg
@@ -535,7 +536,7 @@ in
             required = true;
             smudge = concatStringsSep " " (
               [
-                "git-lfs"
+                lfsPath
                 "smudge"
               ]
               ++ skipArg
