@@ -11,16 +11,16 @@ let
     };
 
   initSubmodule = {
-    options.bash = mkShellInitOption "bash";
+    options.sh = mkShellInitOption "sh";
     options.fish = mkShellInitOption "fish";
     options.nushell = mkShellInitOption "nushell";
   };
 
   # Preserve $SSH_AUTH_SOCK only if it stems from a forwarded agent which
   # is the case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
-  bashIntegration = ''
+  shIntegration = ''
     if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-      ${cfg.initialization.bash}
+      ${cfg.initialization.sh}
     fi
   '';
   fishIntegration = ''
@@ -54,7 +54,7 @@ in
       proper {option}`programs.(bash|fish|nushell|zsh).*` options.
     '';
     example = {
-      bash = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
+      sh = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
       fish = "set -x SSH_AUTH_SOCK $HOME/.ssh/agent.sock";
       nushell = "$env.SSH_AUTH_SOCK = $HOME/.ssh/agent.sock";
     };
@@ -65,9 +65,10 @@ in
 
   config = lib.mkIf (cfg.initialization != null) {
     # $SSH_AUTH_SOCK has to be set early since other tools rely on it
-    programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
+    programs.sh.profileExtra = lib.mkOrder 900 shIntegration;
+    programs.bash.profileExtra = lib.mkOrder 900 shIntegration;
     programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
     programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
-    programs.zsh.envExtra = lib.mkOrder 900 bashIntegration;
+    programs.zsh.envExtra = lib.mkOrder 900 shIntegration;
   };
 }

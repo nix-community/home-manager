@@ -107,4 +107,5 @@ in
   mkIonIntegrationOption = mkShellIntegrationOption "Ion";
   mkNushellIntegrationOption = mkShellIntegrationOption "Nushell";
   mkZshIntegrationOption = mkShellIntegrationOption "Zsh";
+  mkShIntegrationOption = mkShellIntegrationOption "Sh";
 }

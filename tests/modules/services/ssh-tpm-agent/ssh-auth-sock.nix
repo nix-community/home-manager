@@ -1,4 +1,5 @@
 {
+  programs.sh.enable = true;
   programs.bash.enable = true;
   programs.fish.enable = true;
   programs.nushell.enable = true;
@@ -6,6 +7,9 @@
   services.ssh-tpm-agent.enable = true;
 
   nmt.script = ''
+    assertFileContains \
+      home-files/.bash_profile \
+      'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'
     assertFileContains \
       home-files/.profile \
       'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'

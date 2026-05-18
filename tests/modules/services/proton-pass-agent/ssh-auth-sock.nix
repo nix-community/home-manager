@@ -1,6 +1,7 @@
 { pkgs, ... }:
 
 {
+  programs.sh.enable = true;
   programs.bash.enable = true;
   programs.fish.enable = true;
   programs.nushell.enable = true;
@@ -26,6 +27,9 @@
           "($env.XDG_RUNTIME_DIR)";
     in
     ''
+      assertFileContains \
+        home-files/.bash_profile \
+        'export SSH_AUTH_SOCK="${bashDir}/proton-pass-agent"'
       assertFileContains \
         home-files/.profile \
         'export SSH_AUTH_SOCK="${bashDir}/proton-pass-agent"'
