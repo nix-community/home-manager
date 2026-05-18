@@ -3,9 +3,12 @@ let
   layout_xml = builtins.readFile ./item_dmenu.xml;
 in
 {
+  services.elephant.enable = true;
+
   services.walker = {
     enable = true;
     systemd.enable = true;
+    enableElephantIntegration = true;
     settings = {
       app_launch_prefix = "";
       terminal_title_flag = "";
@@ -49,5 +52,9 @@ in
 
     assertFileContent home-files/.config/walker/themes/mytheme/style.css \
     ${./mytheme.css}
+
+    walkerService=home-files/.config/systemd/user/walker.service
+
+    assertFileContent $walkerService ${./walker.service}
   '';
 }

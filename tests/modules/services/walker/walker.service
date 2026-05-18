@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@walker@/bin/walker --gapplication-service
+Restart=on-failure
+
+[Unit]
+After=elephant.service
+Description=Walker - Application Runner
+Requires=elephant.service
