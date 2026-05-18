@@ -24,20 +24,34 @@ in
 
     sshAuthSock.initialization =
       let
-        socketPath =
-          if pkgs.stdenv.isDarwin then
-            "/tmp/yubikey-agent.sock"
-          else
-            "\${XDG_RUNTIME_DIR:-/run/user/$UID}/yubikey-agent/yubikey-agent.sock";
+        darwinSocket = "/tmp/yubikey-agent.sock";
+        linuxSocketSuffix = "yubikey-agent/yubikey-agent.sock";
       in
       {
-        bash = ''export SSH_AUTH_SOCK="${socketPath}"'';
-        fish = ''set -x SSH_AUTH_SOCK "${socketPath}"'';
+        bash = ''export SSH_AUTH_SOCK="${
+          if pkgs.stdenv.isDarwin then
+            darwinSocket
+          else
+            "\${XDG_RUNTIME_DIR:-/run/user/$UID}/${linuxSocketSuffix}"
+        }"'';
+
+        fish =
+          if pkgs.stdenv.isDarwin then
+            ''
+              set -x SSH_AUTH_SOCK ${darwinSocket}
+            ''
+          else
+            ''
+              set -l runtime_dir "$XDG_RUNTIME_DIR"
+              test -n "$runtime_dir"; or set runtime_dir /run/user/(id -u)
+              set -x SSH_AUTH_SOCK "$runtime_dir/${linuxSocketSuffix}"
+            '';
+
         nushell = "$env.SSH_AUTH_SOCK = ${
           if pkgs.stdenv.isDarwin then
-            "/tmp/yubikey-agent.sock"
+            darwinSocket
           else
-            ''$"($env.XDG_RUNTIME_DIR | default $"/run/user/(id -u)")/yubikey-agent/yubikey-agent.sock"''
+            ''$"($env.XDG_RUNTIME_DIR? | default $"/run/user/(id -u)")/${linuxSocketSuffix}"''
         }";
       };
 
