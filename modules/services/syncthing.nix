@@ -19,11 +19,28 @@ let
   isUnixGui = (builtins.substring 0 1 cfg.guiAddress) == "/";
 
   # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
-  syncthing_dir =
+  syncthingDir =
     if pkgs.stdenv.isDarwin then
       "$HOME/Library/Application Support/Syncthing"
     else
       "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
+
+  syncthingDirShell =
+    if pkgs.stdenv.isDarwin then
+      ''
+        syncthing_dir="${syncthingDir}"
+      ''
+    else
+      ''
+        syncthing_state_dir="${syncthingDir}"
+        syncthing_config_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/syncthing"
+
+        if [[ -e "$syncthing_state_dir/config.xml" || ! -e "$syncthing_config_dir/config.xml" ]]; then
+            syncthing_dir="$syncthing_state_dir"
+        else
+            syncthing_dir="$syncthing_config_dir"
+        fi
+      '';
 
   defaultGuiAddress = "127.0.0.1:8384";
 
@@ -75,16 +92,20 @@ let
   mkpasswd = lib.getExe pkgs.mkpasswd;
 
   copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
-    ${install} -dm700 "${syncthing_dir}"
+    ${syncthingDirShell}
+
+    ${install} -dm700 "$syncthing_dir"
     ${lib.optionalString (cfg.cert != null) ''
-      ${install} -Dm400 ${toString cfg.cert} "${syncthing_dir}/cert.pem"
+      ${install} -Dm400 ${toString cfg.cert} "$syncthing_dir/cert.pem"
     ''}
     ${lib.optionalString (cfg.key != null) ''
-      ${install} -Dm400 ${toString cfg.key} "${syncthing_dir}/key.pem"
+      ${install} -Dm400 ${toString cfg.key} "$syncthing_dir/key.pem"
     ''}
   '';
 
   curlShellFunction = ''
+    ${syncthingDirShell}
+
     # systemd sets and creates RUNTIME_DIRECTORY on Linux
     # on Darwin, we create it manually via mktemp
     RUNTIME_DIRECTORY="''${RUNTIME_DIRECTORY:=$(${mktemp} -d)}"
@@ -94,7 +115,7 @@ let
         while
             ! ${pkgs.libxml2}/bin/xmllint \
                 --xpath 'string(configuration/gui/apikey)' \
-                "${syncthing_dir}/config.xml" \
+                "$syncthing_dir/config.xml" \
                 >"$RUNTIME_DIRECTORY/api_key"
         do ${sleep} 1; done
         (${printf} "X-API-Key: "; ${cat} "$RUNTIME_DIRECTORY/api_key") >"$RUNTIME_DIRECTORY/headers"
