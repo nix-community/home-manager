@@ -20,6 +20,7 @@
   zsh-history-path-zdotdir-variable = import ./history-path.nix "zdotdir-variable";
   zsh-history-substring-search = ./history-substring-search.nix;
   zsh-legacy-warning = ./legacy-warning.nix;
+  zsh-plugins-completions-renamed = ./plugins-completions-renamed.nix;
   zsh-siteFunctions-mkcd = ./siteFunctions-mkcd.nix;
   zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;

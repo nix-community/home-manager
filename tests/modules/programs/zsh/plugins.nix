@@ -12,7 +12,7 @@ in
           name = "mockPlugin";
           file = "share/mockPlugin/mockPlugin.plugin.zsh";
           src = mockZshPluginSrc;
-          completions = [
+          functions = [
             "share/zsh/site-functions"
             "share/zsh/vendor-completions"
           ];
