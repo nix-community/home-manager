@@ -378,6 +378,13 @@ in
               userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" "$file")
               echo $userDataProfiles > "$file"
             fi
+
+            # Create globalStorage for profiles, if it doesn't exist.
+            # Required to store state.vscdb file.
+            # VSCode doesn't create this folder itself.
+            for profile in "''${profiles[@]}"; do
+              mkdir -p "${userDir}/profiles/$profile/globalStorage"
+            done
           '';
         in
         modifyGlobalStorage.outPath
