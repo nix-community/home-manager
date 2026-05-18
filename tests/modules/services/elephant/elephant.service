@@ -1,0 +1,9 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@elephant@/bin/elephant
+Restart=on-failure
+
+[Unit]
+Description=Elephant - Data provider for application launchers
