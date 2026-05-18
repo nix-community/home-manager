@@ -43,7 +43,10 @@ let
   '';
 in
 {
-  meta.maintainers = [ lib.maintainers.fufexan ];
+  meta.maintainers = with lib.maintainers; [
+    fufexan
+    khaneliman
+  ];
 
   options.wayland.windowManager.hyprland = {
     enable = lib.mkOption {
