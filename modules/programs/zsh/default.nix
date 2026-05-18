@@ -395,11 +395,13 @@ in
         ) cfg.shellAliases
       );
 
-      dirHashesStr = concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
-      );
       # Keep double quotes so existing configs using shell variables like
       # $HOME still expand, while escaping chars special inside them.
+      dirHashesStr = concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          k: v: ''hash -d ${lib.escapeShellArg k}="${lib.escape [ "\\" "\"" "`" ] v}"''
+        ) cfg.dirHashes
+      );
       cdpathStr = concatStringsSep " " (map (v: ''"${lib.escape [ "\\" "\"" "`" ] v}"'') cfg.cdpath);
     in
     mkIf cfg.enable (

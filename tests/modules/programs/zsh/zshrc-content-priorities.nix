@@ -8,6 +8,12 @@
       "/tmp/with space"
       "/tmp/with[glob]"
     ];
+    dirHashes = {
+      docs = "/tmp/with space";
+      glob = "/tmp/with[glob]";
+      home = "$HOME/Documents";
+      quoted = ''/tmp/with "quotes"'';
+    };
 
     initContent = lib.mkMerge [
       (lib.mkBefore ''
@@ -70,6 +76,12 @@
 
           # Default priority
           echo "Default priority content"
+
+          # Named Directory Hashes
+          hash -d docs="/tmp/with space"
+          hash -d glob="/tmp/with[glob]"
+          hash -d home="$HOME/Documents"
+          hash -d quoted="/tmp/with \"quotes\""
 
           zprof
           # Low priority (mkAfter)
