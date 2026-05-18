@@ -14,6 +14,11 @@
       home = "$HOME/Documents";
       quoted = ''/tmp/with "quotes"'';
     };
+    localVariables = {
+      BACKTICK = "`literal`";
+      QUOTED = ''value "quoted"'';
+      RUNTIME = "$HOME/bin";
+    };
 
     initContent = lib.mkMerge [
       (lib.mkBefore ''
@@ -54,6 +59,9 @@
 
           HELPDIR="@zsh@/share/zsh/$ZSH_VERSION/help"
 
+          BACKTICK="\`literal\`"
+          QUOTED="value \"quoted\""
+          RUNTIME="$HOME/bin"
           autoload -U compinit && compinit
           # History options should be set in .zshrc and after oh-my-zsh sourcing.
           # See https://github.com/nix-community/home-manager/issues/177.
