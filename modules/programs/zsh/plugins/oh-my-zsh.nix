@@ -98,8 +98,8 @@ in
       ${optionalString (
         cfg.oh-my-zsh.plugins != [ ]
       ) "plugins=(${escapeShellArgs cfg.oh-my-zsh.plugins})"}
-      ${optionalString (cfg.oh-my-zsh.custom != "") "ZSH_CUSTOM=${escapeShellArg cfg.oh-my-zsh.custom}"}
-      ${optionalString (cfg.oh-my-zsh.theme != "") "ZSH_THEME=${escapeShellArg cfg.oh-my-zsh.theme}"}
+      ${optionalString (cfg.oh-my-zsh.custom != "") ''ZSH_CUSTOM="${cfg.oh-my-zsh.custom}"''}
+      ${optionalString (cfg.oh-my-zsh.theme != "") ''ZSH_THEME="${cfg.oh-my-zsh.theme}"''}
       source $ZSH/oh-my-zsh.sh
     '';
   };
