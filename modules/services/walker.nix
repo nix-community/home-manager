@@ -22,7 +22,20 @@ in
 
   options.services.walker = {
     enable = mkEnableOption "walker";
+
     package = mkPackageOption pkgs "walker" { nullable = true; };
+
+    enableElephantIntegration = mkOption {
+      type = types.bool;
+      default = config.services.elephant.enable;
+      defaultText = lib.literalExpression "config.services.elephant.enable";
+      example = true;
+      description = ''
+        Whether to make Walker's systemd service depend on
+        {option}`services.elephant`.
+      '';
+    };
+
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
@@ -95,12 +108,18 @@ in
         }
       ];
 
-      home.packages = mkIf (cfg.package != null) [ cfg.package ];
+      home.packages = lib.optional (cfg.package != null) cfg.package;
       xdg.configFile."walker/config.toml" = mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "walker-config" cfg.settings;
       };
       systemd.user.services.walker = mkIf (cfg.systemd.enable && cfg.package != null) {
-        Unit.Description = "Walker - Application Runner";
+        Unit = {
+          Description = "Walker - Application Runner";
+        }
+        // lib.optionalAttrs cfg.enableElephantIntegration {
+          After = [ "elephant.service" ];
+          Requires = [ "elephant.service" ];
+        };
         Install.WantedBy = [ "graphical-session.target" ];
         Service = {
           ExecStart = "${lib.getExe cfg.package} --gapplication-service";
