@@ -97,15 +97,11 @@ in
       };
 
       settings = mkOption {
-        type = types.submodule {
-          freeformType = with types; attrsOf (attrsOf eitherStrBoolIntList);
-          options = {
-            global.icon_path = mkOption {
-              type = types.separatedString ":";
-              description = "Paths where dunst will look for icons.";
-            };
-          };
-        };
+        type = lib.hm.types.dagOf (
+          types.submodule {
+            freeformType = with types; attrsOf eitherStrBoolIntList;
+          }
+        );
         default = { };
         description = "Configuration written to {file}`$XDG_CONFIG_HOME/dunst/dunstrc`.";
         example = literalExpression ''
@@ -118,12 +114,18 @@ in
               transparency = 10;
               frame_color = "#eceff1";
               font = "Droid Sans 9";
+              icon_path = "/run/current-system/sw/share/icons/hicolor/32x32/status:/run/current-system/sw/share/icons/hicolor/32x32/devices";
             };
 
             urgency_normal = {
               background = "#37474f";
               foreground = "#eceff1";
               timeout = 10;
+            };
+
+            custom-rule = lib.hm.dag.entryAfter [ "global" ] {
+              appname = "custom-app";
+              timeout = 1;
             };
           };
         '';
@@ -142,7 +144,14 @@ in
       "${cfg.package}/share/dbus-1/services/org.knopwob.dunst.service";
 
     xdg.configFile."dunst/dunstrc" = lib.mkIf (cfg.settings != { }) {
-      text = toDunstIni cfg.settings;
+      text =
+        let
+          sortedSettings = lib.hm.dag.topoSort cfg.settings;
+          sections =
+            sortedSettings.result
+              or (abort "Dependency cycle in dunst settings: ${builtins.toJSON sortedSettings}");
+        in
+        lib.concatStringsSep "\n" (map (section: toDunstIni { ${section.name} = section.data; }) sections);
     };
 
     services.dunst.settings.global.icon_path =
