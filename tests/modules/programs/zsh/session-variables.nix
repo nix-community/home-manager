@@ -18,5 +18,7 @@
   nmt.script = ''
     assertFileExists home-files/.zshenv
     assertFileContent $(normalizeStorePaths home-files/.zshenv) ${./session-variables.zshenv}
+    assertFileExists home-files/.zprofile
+    assertFileContent $(normalizeStorePaths home-files/.zprofile) ${./session-variables.zprofile}
   '';
 }
