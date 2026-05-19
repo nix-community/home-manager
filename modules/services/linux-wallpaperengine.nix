@@ -156,19 +156,29 @@ in
     systemd.user.services."linux-wallpaperengine" =
       let
         args = lib.lists.forEach cfg.wallpapers (
+          # `lib.toGNUCommandLine` cannot be used here because `linux-wallpaperengine` requires specific order of the arguments supplied, and `lib.toGNUCommandLine` cannot preserve the order.
           each:
           lib.concatStringsSep " " (
-            lib.cli.toCommandLineGNU { } {
-              screen-root = each.monitor;
-              inherit (each) scaling fps;
-              inherit (each.audio) silent;
-              noautomute = !each.audio.automute;
-              no-audio-processing = !each.audio.processing;
-            }
+            [
+              "--screen-root"
+              each.monitor
+            ]
+            ++ lib.optionals (each.scaling != null) [
+              "--scaling"
+              each.scaling
+            ]
+            ++ lib.optionals (each.clamp != null) [
+              "--clamp"
+              each.clamp
+            ]
             ++ each.extraOptions
-            ++ [
+            ++ lib.optionals (each.wallpaper != null) [
               "--bg"
-              each.wallpaperId
+              each.wallpaper
+            ]
+            ++ lib.optionals (each.playlist != null) [
+              "--playlist"
+              each.playlist
             ]
           )
         );
@@ -183,7 +193,12 @@ in
           ExecStart = lib.concatStringsSep " " (
             [ (lib.getExe cfg.package) ]
             ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${cfg.assetsPath}"
-            ++ lib.optional (cfg.clamping != null) "--clamping ${cfg.clamping}"
+            ++ lib.optional (cfg.fps != null) "--fps ${lib.toString cfg.fps}"
+            ++ lib.optional (cfg.audio.silent) "--silent"
+            ++ lib.optional (cfg.audio.volume != null) "--volume ${lib.toString cfg.audio.volume}"
+            ++ lib.optional (!cfg.audio.automute) "--noautomute"
+            ++ lib.optional (!cfg.audio.processing) "--no-audio-processing"
+            ++ cfg.extraOptions
             ++ args
           );
           Restart = "on-failure";
