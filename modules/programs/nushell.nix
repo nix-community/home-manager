@@ -228,7 +228,11 @@ in
       (
         let
           writeConfig =
-            cfg.configFile != null || cfg.extraConfig != "" || aliasesStr != "" || cfg.settings != { };
+            cfg.configFile != null
+            || cfg.extraConfig != ""
+            || aliasesStr != ""
+            || cfg.settings != { }
+            || cfg.environmentVariables != { };
 
           aliasesStr = lib.concatLines (
             lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}") cfg.shellAliases
