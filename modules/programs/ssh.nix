@@ -496,12 +496,12 @@ let
     optionalString (!isLiteralHeader) "Host " + name;
 
   matchBlockStr =
-    key: cf:
+    _key: cf:
     let
-      header = cf.__hmSshBlockHeader or (blockHeader key);
+      inherit (cf) header;
       extraOptions = cf.__hmSshBlockExtraOptions or { };
       settings = lib.removeAttrs cf [
-        "__hmSshBlockHeader"
+        "header"
         "__hmSshBlockExtraOptions"
         "extraOptions"
       ];
@@ -529,7 +529,7 @@ let
         optional (cf.match != null) "Match ${cf.match}" ++ optional (cf.host != null) "Host ${cf.host}";
     in
     lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) {
-      __hmSshBlockHeader = lib.head (headers ++ [ null ]);
+      header = lib.head (headers ++ [ null ]);
       Port = cf.port;
       ForwardAgent = cf.forwardAgent;
       ForwardX11 = if cf.forwardX11 then true else null;
@@ -648,9 +648,33 @@ in
 
     settings = mkOption {
       type = lib.hm.types.dagOf (
-        types.submodule {
-          freeformType = types.attrsOf types.anything;
-        }
+        types.submodule (
+          { dagName, ... }:
+          {
+            freeformType = types.attrsOf types.anything;
+            options.header = mkOption {
+              type = types.str;
+              default = blockHeader dagName;
+              defaultText = lib.literalMD ''
+                The attribute name, prefixed with `Host ` unless it already
+                starts with `Host ` or `Match `.
+              '';
+              description = ''
+                The literal `Host` or `Match` line that opens this block.
+
+                By default this is derived from the attribute name: names
+                starting with `Host ` or `Match ` are used literally, and
+                all other names are prefixed with `Host `. This default is
+                suitable for most configurations.
+
+                Set this only when the header cannot be expressed as the
+                attribute name, e.g. when it carries Nix string context
+                (store paths), or when a stable attribute name is wanted
+                for {option}`lib.hm.dag` ordering.
+              '';
+            };
+          }
+        )
       );
       default = { };
       example = literalExpression ''

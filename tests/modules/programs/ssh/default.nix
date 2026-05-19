@@ -6,6 +6,7 @@
   ssh-renamed-options = ./renamed-options.nix;
   ssh-includes = ./includes.nix;
   ssh-settings = ./settings.nix;
+  ssh-settings-header = ./settings-header.nix;
   ssh-settings-extra-options-assertion = ./settings-extra-options-assertion.nix;
   ssh-settings-raw-forwards = ./settings-raw-forwards.nix;
   ssh-match-blocks = ./match-blocks-attrs.nix;
