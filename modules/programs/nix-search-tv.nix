@@ -71,6 +71,8 @@ in
     programs.television.channels.nix-search-tv = lib.mkIf cfg.enableTelevisionIntegration (
       let
         path = lib.getExe cfg.package;
+        keybinding_modifier = if pkgs.stdenv.isDarwin then "alt" else "ctrl";
+        opener = if pkgs.stdenv.isDarwin then "open" else "xdg-open";
       in
       {
         metadata = {
@@ -82,10 +84,10 @@ in
         preview.command = ''${path} preview "{}"'';
 
         keybindings = {
-          "ctrl-r" = "actions:run";
-          "ctrl-i" = "actions:shell";
-          "ctrl-s" = "actions:source";
-          "ctrl-o" = "actions:homepage";
+          "${keybinding_modifier}-r" = "actions:run";
+          "${keybinding_modifier}-i" = "actions:shell";
+          "${keybinding_modifier}-s" = "actions:source";
+          "${keybinding_modifier}-o" = "actions:homepage";
         };
 
         actions.run = {
@@ -100,12 +102,12 @@ in
         };
         actions.source = {
           description = "Open link to source code";
-          command = "${path} source '{}' | xargs xdg-open";
+          command = "${path} source '{}' | xargs ${opener}";
           mode = "execute";
         };
         actions.homepage = {
           description = "Open link to homepage";
-          command = "${path} homepage '{}' | xargs xdg-open";
+          command = "${path} homepage '{}' | xargs ${opener}";
           mode = "execute";
         };
       }
