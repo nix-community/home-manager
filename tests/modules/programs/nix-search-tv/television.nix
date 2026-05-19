@@ -9,7 +9,7 @@
     assertFileContent home-files/.config/television/cable/nix-search-tv.toml \
       ${pkgs.writeText "settings-expected" ''
         [actions.homepage]
-        command = "nix-search-tv homepage '{}' | xargs xdg-open"
+        command = "${lib.getExe pkgs.nix-search-tv} homepage '{}' | xargs xdg-open"
         description = "Open link to homepage"
         mode = "execute"
 
@@ -24,7 +24,7 @@
         mode = "execute"
 
         [actions.source]
-        command = "nix-search-tv source '{}' | xargs xdg-open"
+        command = "${lib.getExe pkgs.nix-search-tv} source '{}' | xargs xdg-open"
         description = "Open link to source code"
         mode = "execute"
 

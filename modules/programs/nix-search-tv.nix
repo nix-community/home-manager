@@ -100,12 +100,12 @@ in
         };
         actions.source = {
           description = "Open link to source code";
-          command = "nix-search-tv source '{}' | xargs xdg-open";
+          command = "${path} source '{}' | xargs xdg-open";
           mode = "execute";
         };
         actions.homepage = {
           description = "Open link to homepage";
-          command = "nix-search-tv homepage '{}' | xargs xdg-open";
+          command = "${path} homepage '{}' | xargs xdg-open";
           mode = "execute";
         };
       }
