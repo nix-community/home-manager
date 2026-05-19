@@ -661,9 +661,15 @@ in
               '';
               description = ''
                 The literal `Host` or `Match` line that opens this block.
-                Set this when the header cannot be expressed as the
+
+                By default this is derived from the attribute name: names
+                starting with `Host ` or `Match ` are used literally, and
+                all other names are prefixed with `Host `. This default is
+                suitable for most configurations.
+
+                Set this only when the header cannot be expressed as the
                 attribute name, e.g. when it carries Nix string context
-                (store paths) or when a stable attribute name is wanted
+                (store paths), or when a stable attribute name is wanted
                 for {option}`lib.hm.dag` ordering.
               '';
             };
