@@ -1,0 +1,5 @@
+[[rule]]
+toolName = "run_shell_command"
+commandPrefix = "nix "
+decision = "ask_user"
+priority = 100

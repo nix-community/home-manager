@@ -1,6 +1,14 @@
 {
+  pkgs,
+  lib,
+  options,
+  ...
+}:
+
+{
   programs.gemini-cli = {
     enable = true;
+    package = pkgs.writeShellScriptBin "gemini-cli" "";
     defaultModel = "gemini-2.5-flash";
     settings = {
       theme = "Default";
@@ -20,32 +28,30 @@
         description = "Generates a fix for a given GitHub issue.";
       };
     };
-    policies = {
-      "my-rules" = {
-        rule = [
-          {
-            toolName = "run_shell_command";
-            commandPrefix = "git ";
-            decision = "ask_user";
-            priority = 100;
-          }
-        ];
-      };
-      "other-rules" = ./other-rules.toml;
+    permissions = {
+      allow = [ "command(git)" ];
+      deny = [ "command(rm -rf)" ];
+      ask = [ "command(*)" ];
     };
   };
+  test.asserts.warnings.expected = [
+    "The option `programs.gemini-cli' defined in ${lib.showFiles options.programs.gemini-cli.files} has been renamed to `programs.antigravity-cli'."
+  ];
+
   nmt.script = ''
     assertFileExists home-files/.gemini/settings.json
     assertFileContent home-files/.gemini/settings.json \
       ${./settings.json}
-    assertFileContent home-files/.gemini/commands/changelog.toml \
-      ${./changelog.toml}
-    assertFileContent home-files/.gemini/commands/git/fix.toml \
-      ${./fix.toml}
-    assertFileContent home-files/.gemini/policies/my-rules.toml \
-      ${./my-rules.toml}
-    assertFileContent home-files/.gemini/policies/other-rules.toml \
-      ${./other-rules.toml}
+    assertFileExists home-files/.gemini/commands/changelog.toml
+    assertFileRegex home-files/.gemini/commands/changelog.toml \
+      'prompt ='
+    assertFileRegex home-files/.gemini/commands/changelog.toml \
+      "Adds a new entry to the project's CHANGELOG.md file."
+    assertFileExists home-files/.gemini/commands/git/fix.toml
+    assertFileRegex home-files/.gemini/commands/git/fix.toml \
+      'prompt ='
+    assertFileRegex home-files/.gemini/commands/git/fix.toml \
+      'Generates a fix for a given GitHub issue.'
 
     assertFileExists home-path/etc/profile.d/hm-session-vars.sh
     assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
