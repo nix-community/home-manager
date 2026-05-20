@@ -208,7 +208,11 @@ in
 
         onChange = lib.mkIf cfg.launchd.enable ''
           echo "AeroSpace config changed, reloading..."
-          ${lib.getExe cfg.package} reload-config
+          if ${lib.getExe cfg.package} list-modes --current >/dev/null 2>&1; then
+            ${lib.getExe cfg.package} reload-config
+          else
+            echo "AeroSpace is not running yet, skipping reload-config."
+          fi
         '';
       };
     };
