@@ -191,24 +191,21 @@ in
       # TODO: Remove this workaround once Codex supports symlinked SKILL.md
       # files again. Upstream only supports symlinking the containing skill
       # directory today: https://github.com/openai/codex/issues/10470
-      isStorePathString =
-        content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
-      isPathLikeContent = content: lib.isPath content || isStorePathString content;
       mkSkillDir =
         content:
         pkgs.writeTextDir "SKILL.md" (
-          if isPathLikeContent content then builtins.readFile content else content
+          if lib.hm.strings.isPathLike content then builtins.readFile content else content
         );
       skillSources =
         if builtins.isAttrs cfg.skills then
           cfg.skills
-        else if isPathLikeContent cfg.skills && lib.pathIsDirectory cfg.skills then
+        else if lib.hm.strings.isPathLike cfg.skills && lib.pathIsDirectory cfg.skills then
           lib.mapAttrs (name: _type: cfg.skills + "/${name}") (builtins.readDir cfg.skills)
         else
           { };
       mkSkillEntry =
         name: content:
-        if isPathLikeContent content && lib.pathIsDirectory content then
+        if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
           lib.nameValuePair "${skillsDir}/${name}" {
             source = content;
           }
@@ -219,7 +216,7 @@ in
       mkRuleEntry =
         name: content:
         lib.nameValuePair "${configDir}/rules/${name}.rules" (
-          if isPathLikeContent content then { source = content; } else { text = content; }
+          if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
         );
 
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
@@ -251,11 +248,11 @@ in
     mkIf cfg.enable {
       assertions = [
         {
-          assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
+          assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
           message = "`programs.codex.skills` must be a directory when set to a path";
         }
         {
-          assertion = lib.all (content: !(isPathLikeContent content && lib.pathIsDirectory content)) (
+          assertion = lib.all (content: !(lib.hm.strings.isPathLike content && lib.pathIsDirectory content)) (
             lib.attrValues cfg.rules
           );
           message = "`programs.codex.rules` attribute values must be files when set to paths";
