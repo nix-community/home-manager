@@ -19,11 +19,6 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.copilot";
 
-  isStorePathString =
-    content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
-
-  isPathLikeContent = content: lib.isPath content || isStorePathString content;
-
   transformSingleServer =
     _name: server:
     let
@@ -344,11 +339,11 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = !isPathLikeContent cfg.agents || lib.pathIsDirectory cfg.agents;
+        assertion = !lib.hm.strings.isPathLike cfg.agents || lib.pathIsDirectory cfg.agents;
         message = "`programs.github-copilot-cli.agents` must be a directory when set to a path";
       }
       {
-        assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
+        assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.github-copilot-cli.skills` must be a directory when set to a path";
       }
     ];
@@ -379,19 +374,19 @@ in
       };
 
       "${cfg.configDir}/copilot-instructions.md" =
-        if isPathLikeContent cfg.context then
+        if lib.hm.strings.isPathLike cfg.context then
           { source = cfg.context; }
         else
           mkIf (cfg.context != "") {
             text = cfg.context;
           };
 
-      "${cfg.configDir}/agents" = mkIf (isPathLikeContent cfg.agents) {
+      "${cfg.configDir}/agents" = mkIf (lib.hm.strings.isPathLike cfg.agents) {
         source = cfg.agents;
         recursive = true;
       };
 
-      "${cfg.configDir}/skills" = mkIf (isPathLikeContent cfg.skills) {
+      "${cfg.configDir}/skills" = mkIf (lib.hm.strings.isPathLike cfg.skills) {
         source = cfg.skills;
         recursive = true;
       };
@@ -400,21 +395,21 @@ in
       lib.mapAttrs' (
         name: content:
         lib.nameValuePair "${cfg.configDir}/agents/${name}.agent.md" (
-          if isPathLikeContent content then { source = content; } else { text = content; }
+          if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
         )
       ) cfg.agents
     )
     // lib.optionalAttrs (builtins.isAttrs cfg.skills) (
       lib.mapAttrs' (
         name: content:
-        if isPathLikeContent content && lib.pathIsDirectory content then
+        if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
           lib.nameValuePair "${cfg.configDir}/skills/${name}" {
             source = content;
             recursive = true;
           }
         else
           lib.nameValuePair "${cfg.configDir}/skills/${name}/SKILL.md" (
-            if isPathLikeContent content then { source = content; } else { text = content; }
+            if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
           )
       ) cfg.skills
     );
