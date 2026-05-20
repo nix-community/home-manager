@@ -10,11 +10,6 @@ let
   jsonFormat = pkgs.formats.json { };
   tomlFormat = pkgs.formats.toml { };
 
-  isStorePathString =
-    content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
-
-  isPathLikeContent = content: lib.isPath content || isStorePathString content;
-
   transformMcpServer =
     server:
     removeAttrs server [
@@ -392,11 +387,11 @@ in
               n: v:
               lib.nameValuePair ".gemini/policies/${n}.toml" {
                 source =
-                  if isPathLikeContent v then v else tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
+                  if lib.hm.strings.isPathLike v then v else tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
               }
             ) cfg.policies
             // (
-              if isPathLikeContent cfg.skills then
+              if lib.hm.strings.isPathLike cfg.skills then
                 {
                   "${geminiSkillsDir}" = {
                     source = cfg.skills;
@@ -406,14 +401,14 @@ in
               else
                 lib.mapAttrs' (
                   n: v:
-                  if isPathLikeContent v && lib.pathIsDirectory v then
+                  if lib.hm.strings.isPathLike v && lib.pathIsDirectory v then
                     lib.nameValuePair "${geminiSkillsDir}/${n}" {
                       source = v;
                       recursive = true;
                     }
                   else
                     lib.nameValuePair "${geminiSkillsDir}/${n}/SKILL.md" (
-                      if isPathLikeContent v then { source = v; } else { text = v; }
+                      if lib.hm.strings.isPathLike v then { source = v; } else { text = v; }
                     )
                 ) cfg.skills
             );
@@ -463,7 +458,7 @@ in
               }
             ) cfg.commands
             // (
-              if isPathLikeContent cfg.skills then
+              if lib.hm.strings.isPathLike cfg.skills then
                 {
                   "${antigravitySkillsDir}" = {
                     source = cfg.skills;
@@ -473,14 +468,14 @@ in
               else
                 lib.mapAttrs' (
                   n: v:
-                  if isPathLikeContent v && lib.pathIsDirectory v then
+                  if lib.hm.strings.isPathLike v && lib.pathIsDirectory v then
                     lib.nameValuePair "${antigravitySkillsDir}/${n}" {
                       source = v;
                       recursive = true;
                     }
                   else
                     lib.nameValuePair "${antigravitySkillsDir}/${n}/SKILL.md" (
-                      if isPathLikeContent v then { source = v; } else { text = v; }
+                      if lib.hm.strings.isPathLike v then { source = v; } else { text = v; }
                     )
                 ) cfg.skills
             );
@@ -488,7 +483,7 @@ in
         {
           assertions = [
             {
-              assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
+              assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
               message = "`programs.antigravity-cli.skills` must be a directory when set to a path";
             }
           ];
