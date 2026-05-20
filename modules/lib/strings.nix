@@ -87,4 +87,11 @@ rec {
   # Returns true for strings like `SCREAMING_SNAKE_CASE`, `SOME_CONSTANT`.
   # Must be all uppercase letters/numbers, with words separated by single underscores.
   isScreamingSnakeCase = str: builtins.match "^[A-Z0-9]+(_[A-Z0-9]+)*$" str != null;
+
+  # Check if the content is path-like (a path, a Nix store path string, or a derivation).
+  isPathLike =
+    content:
+    lib.isPath content
+    || (builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content)
+    || lib.isDerivation content;
 }
