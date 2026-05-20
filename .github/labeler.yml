@@ -10,7 +10,7 @@
           - modules/programs/claude-code.nix
           - modules/programs/codex.nix
           - modules/programs/fabric-ai.nix
-          - modules/programs/gemini-cli.nix
+          - modules/programs/antigravity-cli.nix
           - modules/programs/mcp.nix
           - modules/programs/mistral-vibe.nix
           - modules/programs/mods.nix

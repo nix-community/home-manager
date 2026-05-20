@@ -1,6 +1,9 @@
+{ pkgs, ... }:
+
 {
-  programs.gemini-cli = {
+  programs.antigravity-cli = {
     enable = true;
+    package = pkgs.writeShellScriptBin "antigravity-cli" "";
     context = {
       # Test inline content
       GEMINI = ''

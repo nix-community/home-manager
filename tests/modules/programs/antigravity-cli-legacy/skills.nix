@@ -1,6 +1,14 @@
 {
+  pkgs,
+  lib,
+  options,
+  ...
+}:
+
+{
   programs.gemini-cli = {
     enable = true;
+    package = pkgs.writeShellScriptBin "gemini-cli" "";
     skills = {
       xlsx = ./skills/xlsx/SKILL.md;
       data-analysis = ./skills/data-analysis;
@@ -25,6 +33,10 @@
       '';
     };
   };
+  test.asserts.warnings.expected = [
+    "The option `programs.gemini-cli' defined in ${lib.showFiles options.programs.gemini-cli.files} has been renamed to `programs.antigravity-cli'."
+  ];
+
   nmt.script = ''
     assertFileExists home-files/.gemini/skills/xlsx/SKILL.md
     assertFileContent home-files/.gemini/skills/xlsx/SKILL.md \
