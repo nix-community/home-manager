@@ -548,10 +548,6 @@ in
     let
       mkSourceEntry = content: if lib.isPath content then { source = content; } else { text = content; };
 
-      isStorePathString =
-        content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
-      isPathLikeContent = content: lib.isPath content || isStorePathString content;
-
       mkMarkdownEntries =
         subdir: attrs:
         lib.mapAttrs' (
@@ -579,14 +575,14 @@ in
 
       mkSkillEntry =
         name: content:
-        if isPathLikeContent content && lib.pathIsDirectory content then
+        if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
           nameValuePair "${cfg.configDir}/skills/${name}" {
             source = content;
             recursive = true;
           }
         else
           nameValuePair "${cfg.configDir}/skills/${name}/SKILL.md" (
-            if isPathLikeContent content then { source = content; } else { text = content; }
+            if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
           );
 
       mkMarketplaceEntry = _name: content: {
@@ -628,7 +624,7 @@ in
             message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured";
           }
           {
-            assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
+            assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
             message = "`programs.claude-code.skills` must be a directory when set to a path";
           }
         ]
@@ -725,7 +721,7 @@ in
           (mkRecursiveDirAttrs "commands" cfg.commandsDir)
           (mkRecursiveDirAttrs "hooks" cfg.hooksDir)
           (mkRecursiveDirAttrs "rules" cfg.rulesDir)
-          (lib.mkIf (isPathLikeContent cfg.skills) {
+          (lib.mkIf (lib.hm.strings.isPathLike cfg.skills) {
             "${cfg.configDir}/skills" = {
               source = cfg.skills;
               recursive = true;
