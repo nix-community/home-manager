@@ -535,6 +535,11 @@
     github = "s0racat";
     githubId = 125882337;
   };
+  SunOfLife1 = {
+    name = "SunOfLife1";
+    github = "SunOfLife1";
+    githubId = 30405063;
+  };
   yarn = {
     name = "yarncat";
     email = "30006414+yaaaarn@users.noreply.github.com";
