@@ -1,14 +1,15 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
   configDir =
     if pkgs.stdenv.hostPlatform.isDarwin then
-      "home-files/Library/Application Support/audacity"
+      "home-files/Library/Application Support/audacity/Macros"
     else
-      "home-files/.config/audacity";
+      "home-files/.local/share/audacity/Macros";
 in
 {
   programs.audacity = {
     enable = true;
+    package = config.lib.test.mkStubPackage { version = "3.7.7"; };
     macros = {
       normalize-and-export = [
         { command = "SelectAll"; }
@@ -31,12 +32,12 @@ in
   };
 
   nmt.script = ''
-    macroFile="${configDir}/macros/normalize-and-export.txt"
+    macroFile="${configDir}/normalize-and-export.txt"
     assertFileExists "$macroFile"
     assertFileContent "$macroFile" ${builtins.toFile "expected" ''
-      SelectAll
-      Normalize	ApplyGain="0" PeakLevel="-1"
-      Export2	Filename="output" Format="FLAC"
+      SelectAll:
+      Normalize:ApplyGain="0" PeakLevel="-1"
+      Export2:Filename="output" Format="FLAC"
     ''}
   '';
 }
