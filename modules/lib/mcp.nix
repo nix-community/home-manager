@@ -1,28 +1,31 @@
 { lib }:
 
 let
+  isFileRef = v: lib.isAttrs v && v ? file;
+
+  literalEnv = env: lib.filterAttrs (_: v: !isFileRef v) env;
+  fileRefEnv = env: lib.mapAttrs (_: v: v.file) (lib.filterAttrs (_: isFileRef) env);
+
   /*
-    Merge a server's `env` and `envFiles` into a single attribute set,
-    converting each `envFiles` path using the provided template function.
+    Render an `env` attrset (literals + file refs) as a flat `attrsOf str` by
+    mapping file refs through `mkFileRef path` and leaving literals untouched.
 
-    The `mkFileRef` function receives the file path string and returns the
-    substitution string for that path.
-
-    Type: mergeEnv :: (String -> String) -> AttrSet -> AttrSet
+    Type: renderEnv :: (String -> String) -> AttrSet -> AttrSet
 
     Example:
-      mergeEnv (path: "{file:${path}}") {
-        env = { API_KEY = "literal"; };
-        envFiles = { TOKEN = /run/secrets/token; };
+      renderEnv (p: "{file:${p}}") {
+        A = "literal";
+        B.file = "/run/secrets/token";
       }
-      => { API_KEY = "literal"; TOKEN = "{file:/run/secrets/token}"; }
+      => { A = "literal"; B = "{file:/run/secrets/token}"; }
   */
-  mergeEnv = mkFileRef: server: server.env // lib.mapAttrs (_: mkFileRef) server.envFiles;
+  renderEnv = mkFileRef: env: lib.mapAttrs (_: v: if isFileRef v then mkFileRef v.file else v) env;
 
   /*
-    Wrap a local MCP server command in a shell script that reads secrets from
-    `envFiles` paths into the environment before executing the original process.
-    Compatible with file-based secret managers such as sops-nix or systemd credentials.
+    Wrap a local MCP server command in a shell script that reads file-backed
+    env values into the environment before executing the original process.
+    Compatible with file-based secret managers such as sops-nix or systemd
+    credentials. Reads file refs from `server.env`.
 
     Type: mkEnvFilesWrapper :: { pkgs, name, server } -> Derivation
   */
@@ -32,6 +35,9 @@ let
       name,
       server,
     }:
+    let
+      files = fileRefEnv (server.env or { });
+    in
     pkgs.writeShellScript "mcp-${name}-wrapper" ''
       ${lib.concatStrings (
         lib.mapAttrsToList (var: path: ''
@@ -42,108 +48,111 @@ let
               ${lib.escapeShellArg var} \
               ${lib.escapeShellArg path} >&2
           fi
-        '') server.envFiles
+        '') files
       )}
       exec ${lib.escapeShellArgs ([ server.command ] ++ server.args)}
     '';
 
   /*
-    If the server has `envFiles` set and a non-null `command`, return
-    attribute overrides that replace `command` with an `mkEnvFilesWrapper`
-    wrapper script and reset `args` to `[]`.
+    extraTransform that adds `type = "stdio" | "http"` based on whether the
+    server has a `url`.
 
-    Returns `{}` when no wrapping is needed.
-
-    Type: envFilesOverrides :: Pkgs -> String -> AttrSet -> AttrSet
+    Type: deriveType :: AttrSet -> AttrSet
   */
-  envFilesOverrides =
-    pkgs: name: server:
-    (lib.optionalAttrs (server.envFiles != { } && server.command != null) {
-      command = mkEnvFilesWrapper { inherit pkgs name server; };
-      args = [ ];
-    });
-
-  # Check if mcp server config is remote
-  isRemote = server: server.url != null;
-in
-{
-  inherit mkEnvFilesWrapper;
+  deriveType = s: s // { type = if s.url or null != null then "http" else "stdio"; };
 
   /*
-    Normalise an MCP server attribute set for consumption by a client
-    program. Applies the following transformations:
+    extraTransform factory: when the server has file refs in `env` and a
+    local `command`, replace `command` with a wrapper script that reads
+    those files at startup, reset `args` to `[ ]`, and drop the file refs
+    from `env` (leaving only literal entries).
 
-    - Resolves effective `enabled` from optional `enabled`/`disabled`
-    - `transformStyle = "wrapping"`:
-      - Adds `enabled`
-      - Adds `type` derived from whether `url` is set (`"http"` or `"stdio"`)
-      - Wraps `command` via `mkEnvFilesWrapper` when `envFiles` is non-empty
-      - Removes `disabled`, `envFiles`, and attributes listed in `exclude`
-    - `transformStyle = "opencode"`:
-      - Produces OpenCode-native shape (`local`/`remote`, command list, environment)
+    When there is nothing to wrap, returns the server unchanged.
 
-    Type: transformMcpServer :: { exclude?, pkgs, name, server, transformStyle? } -> AttrSet
+    Type: wrapEnvFilesCommand :: { pkgs, name } -> AttrSet -> AttrSet
   */
-  transformMcpServer =
-    {
-      exclude ? [ ],
-      pkgs,
-      name,
-      server,
-      transformStyle ? "wrapping",
-    }:
+  wrapEnvFilesCommand =
+    { pkgs, name }:
+    s:
+    let
+      files = fileRefEnv (s.env or { });
+    in
+    if files == { } || (s.command or null) == null then
+      s
+    else
+      s
+      // {
+        command = mkEnvFilesWrapper {
+          inherit pkgs name;
+          server = s;
+        };
+        args = [ ];
+        env = literalEnv (s.env or { });
+      };
+
+  resolveEnabled =
+    server:
     let
       hasEnabled = server ? enabled && server.enabled != null;
       hasDisabled = server ? disabled && server.disabled != null;
-      enabled =
-        if hasEnabled then
-          server.enabled
-        else if hasDisabled then
-          !server.disabled
-        else
-          null;
-      transformedServer =
-        if transformStyle == "wrapping" then
-          server
-          // {
-            inherit enabled;
-            type = if isRemote server then "http" else "stdio";
-          }
-          // (envFilesOverrides pkgs name server)
-        else if transformStyle == "opencode" then
-          let
-            mergedEnvFile = mergeEnv (path: "{file:${path}}") server;
-          in
-          {
-            inherit enabled;
-          }
-          // (
-            if isRemote server then
-              {
-                type = "remote";
-                inherit (server) url;
-              }
-              // lib.optionalAttrs (server.headers != { }) { inherit (server) headers; }
-            else
-              {
-                type = "local";
-                command = [ server.command ] ++ server.args;
-              }
-              // lib.optionalAttrs (mergedEnvFile != { }) { environment = mergedEnvFile; }
-          )
-        else
-          throw ''
-            lib.hm.mcp.transformMcpServer: unknown transformStyle `${transformStyle}`.
-            Expected one of: "wrapping", "opencode".
-          '';
     in
-    lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) (
-      lib.removeAttrs transformedServer (
-        [
-          "disabled"
-          "envFiles"
-        ]
-        ++ exclude
-      )
-    );
+    if hasEnabled then
+      server.enabled
+    else if hasDisabled then
+      !server.disabled
+    else
+      null;
+in
+{
+  inherit
+    isFileRef
+    literalEnv
+    fileRefEnv
+    renderEnv
+    mkEnvFilesWrapper
+    wrapEnvFilesCommand
+    deriveType
+    ;
+
+  /*
+    Normalise an MCP server attribute set for consumption by a client
+    program. Performs only universal steps:
+
+    1. Resolve `enabled` from optional `enabled`/`disabled` fields.
+    2. Apply each function in `extraTransforms` to the server attrs, in
+       order. Transforms run before `mkFileRef`, `exclude` and the
+       empty-value filter, so a transform can still read attrs that will
+       be excluded and operate on the raw env shape (with file refs).
+    3. Render any remaining file refs in `env` through `mkFileRef path`.
+       Callers that consume file refs themselves (e.g. via
+       `wrapEnvFilesCommand`) will have stripped them in an
+       extraTransform, so `mkFileRef` is a no-op for them.
+    4. Remove `disabled` and any keys listed in `exclude`.
+    5. Filter `null`, `[]`, and `{}` values.
+
+    Type: transformMcpServer ::
+      { server, exclude?, extraTransforms?, mkFileRef? }
+      -> AttrSet
+  */
+  transformMcpServer =
+    {
+      server,
+      exclude ? [ ],
+      extraTransforms ? [ ],
+      mkFileRef ? (p: "{file:${p}}"),
+    }:
+    let
+      enabled = resolveEnabled server;
+      withEnabled = server // {
+        inherit enabled;
+      };
+      transformed = lib.foldl' (acc: f: f acc) withEnabled extraTransforms;
+      withRenderedEnv =
+        transformed
+        // lib.optionalAttrs (transformed ? env) {
+          env = renderEnv mkFileRef transformed.env;
+        };
+      cleaned = removeAttrs withRenderedEnv ([ "disabled" ] ++ exclude);
+    in
+    lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) cleaned;
 }

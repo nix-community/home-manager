@@ -10,7 +10,7 @@ let
         "-y"
         "@modelcontextprotocol/server-everything"
       ];
-      envFiles.NPM_TOKEN = "${fakeSecret}";
+      env.NPM_TOKEN.file = "${fakeSecret}";
     };
   };
 in
