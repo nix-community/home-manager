@@ -43,29 +43,45 @@ let
             defaultText
             ;
         };
-        text = lib.mkOption {
-          type = lib.types.nullOr lib.types.lines;
-          default = null;
-          description = "Verbatim contents of the config file. If this option is null then the 'source' option must be set.";
-        };
-        source = lib.mkOption {
-          type = lib.types.nullOr lib.types.path;
-          default = null;
-          description = "Config file to source. Alternatively, use the 'text' option instead.";
-        };
         label = lib.mkOption {
-          type = lib.types.str;
-          default = name;
-          defaultText = "<name>";
           description = "Label to use for the name of the config file.";
+          default = name;
+          defaultText = lib.literalExpression "<name>";
+          type = lib.types.str;
         };
         priority = lib.mkOption {
-          type = lib.types.ints.between 0 99;
-          default = 90;
           description = ''
-            Determines the order in which configs are loaded.
-            Must be a value within the range of 0-99, where priority 0 is the highest priority and 99 is the lowest.
+            Determines the order in which configuration files are loaded.
+
+            Must be a value within the range of 0-99, where priority 0 is the
+            highest priority and 99 is the lowest.
           '';
+          default = 90;
+          type = lib.types.ints.between 0 99;
+        };
+        text = lib.mkOption {
+          description = ''
+            Verbatim contents of the config file.
+
+            Note that out of the options
+            - {option}`fonts.fontconfig.configFile.<name>.text`, and
+            - {option}`fonts.fontconfig.configFile.<name>.source`,
+            exactly one must be set.
+          '';
+          default = null;
+          type = with lib.types; nullOr lines;
+        };
+        source = lib.mkOption {
+          description = ''
+            Path to the source file.
+
+            Note that out of the options
+            - {option}`fonts.fontconfig.configFile.<name>.text`, and
+            - {option}`fonts.fontconfig.configFile.<name>.source`,
+            exactly one must be set.
+          '';
+          default = null;
+          type = with lib.types; nullOr path;
         };
       };
     }
@@ -197,13 +213,13 @@ in
         type = lib.types.attrsOf fontConfigFileType;
         default = { };
         description = ''
-          Extra font config files that will be added to `~/.config/fontconfig/conf.d/`.
+          Config files that will be installed to {file}`~/.config/fontconfig/conf.d/`.
           Files are named like `fontconfig/conf.d/{priority}-{label}.conf`.
         '';
         example = {
-          tamzen = {
+          tamzen-disable-antialiasing = {
             enable = true;
-            label = "tamzen-disable-antialiasing";
+            priority = 90;
             text = ''
               <?xml version="1.0"?>
               <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
@@ -220,13 +236,12 @@ in
                 </match>
               </fontconfig>
             '';
-            priority = 90;
-          }; # => conf.d/90-tamzen-disable-antialiasing.conf
+          };
           commit-mono-options = {
             enable = true;
-            source = "./resources/fontconfig/commit-mono.conf";
             priority = 80;
-          }; # => conf.d/80-commit-mono-options.conf
+            source = "./resources/fontconfig/commit-mono.conf";
+          };
         };
 
       };
