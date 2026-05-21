@@ -16,14 +16,33 @@ let
 
   cfg = config.programs.audacity;
 
-  iniFormat = pkgs.formats.ini { };
+  boolToInt =
+    v:
+    if builtins.isBool v then (if v then "1" else "0") else lib.generators.mkValueStringDefault { } v;
+
+  audacityKeyValue = lib.generators.mkKeyValueDefault { mkValueString = boolToInt; } "=";
+
+  iniWithGlobalSectionFormat = pkgs.formats.iniWithGlobalSection {
+    mkKeyValue = audacityKeyValue;
+  };
+
+  iniFormat = pkgs.formats.ini {
+    mkKeyValue = audacityKeyValue;
+  };
+
   xmlFormat = pkgs.formats.xml { };
 
-  configDir =
+  configDirAbs =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "${config.home.homeDirectory}/Library/Application Support/audacity"
+    else
+      "${config.xdg.configHome}/audacity";
+
+  configDirRel =
     if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/audacity"
     else
-      ".config/audacity";
+      lib.removePrefix "${config.home.homeDirectory}/" "${config.xdg.configHome}/audacity";
 
   renderMacro =
     steps:
@@ -48,28 +67,37 @@ in
     };
 
     settings = mkOption {
-      inherit (iniFormat) type;
+      inherit (iniWithGlobalSectionFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
-          GUI = {
-            ShowSplashScreen = "0";
-            Theme = "classic";
+          globalSection = {
+            PrefsVersion = "1.1.0.0";
           };
-          AudioIO = {
-            DefaultSampleRate = "44100";
-            SWPlaythrough = "0";
+          sections = {
+            GUI = {
+              ShowSplashScreen = false;
+              Theme = "classic";
+            };
+            AudioIO = {
+              DefaultSampleRate = "44100";
+              SWPlaythrough = false;
+            };
           };
         }
       '';
       description = ''
-        Audacity preferences written to {file}`audacity.cfg`. Each attribute
-        key corresponds to an INI section name, and its value is a set of
-        key-value preference entries for that section.
+        Audacity preferences written to {file}`audacity.cfg`. The
+        {var}`globalSection` attrset holds top-level (un-sectioned) keys, and
+        {var}`sections` is a set of INI section names to key-value maps.
 
-        See the
+        Boolean values are automatically converted to `1`/`0`, as Audacity expects
         [Audacity preferences documentation](https://manual.audacityteam.org/man/audio_settings_preferences.html)
         for available options.
+
+        Because Audacity rewrites this file at runtime the generated file is
+        installed via {var}`home.activation` rather than {var}`home.file`, so
+        that the file remains writable.
       '';
     };
 
@@ -150,23 +178,28 @@ in
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
+    home.activation.audacitySettings = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      lib.optionalString (cfg.settings != { }) ''
+        install -Dm644 \
+          ${iniWithGlobalSectionFormat.generate "audacity.cfg" cfg.settings} \
+          "${configDirAbs}/audacity.cfg"
+      ''
+    );
+
     home.file =
-      lib.optionalAttrs (cfg.settings != { }) {
-        "${configDir}/audacity.cfg".source = iniFormat.generate "audacity.cfg" cfg.settings;
-      }
-      // lib.optionalAttrs (cfg.pluginRegistry != { }) {
-        "${configDir}/pluginregistry.cfg".source =
+      lib.optionalAttrs (cfg.pluginRegistry != { }) {
+        "${configDirRel}/pluginregistry.cfg".source =
           iniFormat.generate "pluginregistry.cfg" cfg.pluginRegistry;
       }
       // lib.optionalAttrs (cfg.pluginSettings != { }) {
-        "${configDir}/pluginsettings.cfg".source =
+        "${configDirRel}/pluginsettings.cfg".source =
           iniFormat.generate "pluginsettings.cfg" cfg.pluginSettings;
       }
       // lib.optionalAttrs (cfg.eqCurves != { }) {
-        "${configDir}/EQCurves.xml".source = xmlFormat.generate "EQCurves.xml" cfg.eqCurves;
+        "${configDirRel}/EQCurves.xml".source = xmlFormat.generate "EQCurves.xml" cfg.eqCurves;
       }
       // lib.mapAttrs' (
-        name: steps: lib.nameValuePair "${configDir}/macros/${name}.txt" { text = renderMacro steps; }
+        name: steps: lib.nameValuePair "${configDirRel}/macros/${name}.txt" { text = renderMacro steps; }
       ) cfg.macros;
   };
 }
