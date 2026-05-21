@@ -34,8 +34,10 @@ let
       name: server:
       # See: https://zed.dev/docs/ai/mcp & https://github.com/zed-industries/zed/discussions/53780
       lib.hm.mcp.transformMcpServer {
-        inherit pkgs name server;
-        exclude = [ "type" ];
+        inherit server;
+        extraTransforms = [
+          (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+        ];
       }
     ) config.programs.mcp.servers
   );

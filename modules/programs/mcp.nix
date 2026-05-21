@@ -43,31 +43,36 @@ let
       };
 
       env = mkOption {
-        type = lib.types.attrsOf lib.types.str;
+        type = lib.types.attrsOf (
+          lib.types.either lib.types.str (
+            lib.types.submodule {
+              options.file = mkOption {
+                type = lib.types.str;
+                description = ''
+                  Path to a file whose contents become the value of this variable at startup
+                  (e.g. sops-nix, systemd credentials).
+                '';
+              };
+            }
+          )
+        );
         default = { };
         description = ''
-          Environment variables set when spawning the MCP server.
-          Values are literal strings.
-          For file-based secrets use {option}`envFiles`.
+          Environment variables for the MCP server. Each value is either a
+          literal string or `{ file = "/path"; }`, in which case the variable
+          is loaded from the file at startup.
+
+          In {file}`mcp.json` file references are rendered as {file}`{file:…}`
+          substitutions. Consumers that do not understand that syntax handle
+          file references themselves (typically via a generated wrapper script).
+
           Only valid for local servers.
         '';
         example = literalExpression ''
-          { API_BASE_URL = "https://api.example.com"; }
-        '';
-      };
-
-      envFiles = mkOption {
-        type = lib.types.attrsOf lib.types.str;
-        default = { };
-        description = ''
-          Environment variables whose values are read from files at startup.
-          Maps variable names to file paths (e.g. sops-nix, systemd credentials).
-
-          In {file}`mcp.json` each entry is resolved to a {file:`…`} substitution in {option}`env`.
-          Consumers that do not understand this syntax must handle {option}`envFiles` themselves (e.g. via a generated wrapper script).
-        '';
-        example = literalExpression ''
-          { FORGEJO_ACCESS_TOKEN = "/run/secrets/forgejo_token"; }
+          {
+            API_BASE_URL = "https://api.example.com";
+            FORGEJO_ACCESS_TOKEN.file = "/run/secrets/forgejo_token";
+          }
         '';
       };
 
@@ -132,7 +137,7 @@ in
           codeberg = {
             command = "/path/to/forgejo-mcp";
             args = [ "transport" "stdio" "--url" "https://codeberg.org" ];
-            envFiles.FORGEJO_ACCESS_TOKEN = "/run/secrets/codeberg_token";
+            env.FORGEJO_ACCESS_TOKEN.file = "/run/secrets/codeberg_token";
           };
         }
       '';
@@ -157,10 +162,9 @@ in
           '';
         }
         {
-          assertion =
-            server.url == null || (server.args == [ ] && server.env == { } && server.envFiles == { });
+          assertion = server.url == null || (server.args == [ ] && server.env == { });
           message = ''
-            programs.mcp.servers.${name}: `args`, `env`, and `envFiles` are only valid for local servers (`command`).
+            programs.mcp.servers.${name}: `args` and `env` are only valid for local servers (`command`).
           '';
         }
         {
@@ -183,10 +187,10 @@ in
     xdg.configFile = mkIf (cfg.servers != { }) {
       "mcp/mcp.json".source = jsonFormat.generate "mcp.json" {
         mcpServers = lib.mapAttrs (
-          name: server:
+          _: server:
           lib.hm.mcp.transformMcpServer {
-            inherit pkgs name server;
-            transformStyle = "opencode";
+            inherit server;
+            extraTransforms = [ lib.hm.mcp.deriveType ];
           }
         ) cfg.servers;
       };

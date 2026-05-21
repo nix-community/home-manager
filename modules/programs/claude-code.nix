@@ -21,8 +21,16 @@ let
 
   transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
     lib.mapAttrs (
-      name: server: lib.hm.mcp.transformMcpServer { inherit pkgs name server; }
-    ) config.programs.mcp.servers # envFiles currently still need wrapping https://github.com/anthropics/claude-code/issues/28942
+      # file-backed env entries currently still need wrapping https://github.com/anthropics/claude-code/issues/28942
+      name: server:
+      lib.hm.mcp.transformMcpServer {
+        inherit server;
+        extraTransforms = [
+          lib.hm.mcp.deriveType
+          (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+        ];
+      }
+    ) config.programs.mcp.servers
   );
 
   mkContentOption =

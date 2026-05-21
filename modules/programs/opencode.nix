@@ -18,13 +18,37 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  toOpencodeShape =
+    s:
+    let
+      env = lib.hm.mcp.renderEnv (p: "{file:${p}}") (s.env or { });
+      isRemote = s.url or null != null;
+    in
+    {
+      inherit (s) enabled;
+    }
+    // (
+      if isRemote then
+        {
+          type = "remote";
+          inherit (s) url;
+        }
+        // lib.optionalAttrs (s.headers or { } != { }) { inherit (s) headers; }
+      else
+        {
+          type = "local";
+          command = [ s.command ] ++ s.args;
+        }
+        // lib.optionalAttrs (env != { }) { environment = env; }
+    );
+
   transformedMcpServers =
     if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
       lib.mapAttrs (
-        name: server:
+        _: server:
         lib.hm.mcp.transformMcpServer {
-          inherit pkgs name server;
-          transformStyle = "opencode";
+          inherit server;
+          extraTransforms = [ toOpencodeShape ];
         }
       ) config.programs.mcp.servers
     else

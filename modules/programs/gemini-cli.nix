@@ -242,7 +242,11 @@ in
                 lib.mapAttrs (
                   name: server:
                   lib.hm.mcp.transformMcpServer {
-                    inherit pkgs name server;
+                    inherit server;
+                    extraTransforms = [
+                      lib.hm.mcp.deriveType
+                      (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+                    ];
                   }
                 ) config.programs.mcp.servers
               );

@@ -72,7 +72,13 @@ let
 
   transformMcpServerForVscode = name: server: {
     inherit name;
-    value = lib.hm.mcp.transformMcpServer { inherit pkgs name server; };
+    value = lib.hm.mcp.transformMcpServer {
+      inherit server;
+      extraTransforms = [
+        lib.hm.mcp.deriveType
+        (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+      ];
+    };
   };
 
   profileType = types.submodule {

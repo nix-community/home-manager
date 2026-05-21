@@ -224,20 +224,23 @@ in
 
       transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
         lib.mapAttrs (
-          name: server:
           # NOTE: Convert shared programs.mcp fields to Codex config keys:
           # - "disabled" becomes inverse "enabled"
           # - "headers" is renamed to "http_headers"
-          # - "envFiles" are wrapped in a shell script that sets environment variables before exec
+          # - file-backed env entries are wrapped in a shell script that sets environment variables before exec
           # See: https://developers.openai.com/codex/mcp#other-configuration-options
-          (lib.hm.mcp.transformMcpServer {
-            inherit pkgs name server;
+          name: server:
+          lib.hm.mcp.transformMcpServer {
+            inherit server;
             exclude = [
               "headers"
               "type"
             ];
-          })
-          // lib.optionalAttrs (server.headers != { }) { http_headers = server.headers; }
+            extraTransforms = [
+              (s: s // lib.optionalAttrs (s.headers or { } != { }) { http_headers = s.headers; })
+              (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+            ];
+          }
         ) config.programs.mcp.servers
       );
 
