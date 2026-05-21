@@ -45,17 +45,23 @@ in
     settings = mkOption {
       type =
         let
+          isColor = v: builtins.isAttrs v && v ? r && v ? g && v ? b;
           scalar = types.oneOf [
             types.bool
             types.int
             types.float
             types.str
           ];
-          # leafAttrs covers both {r,g,b,a} colour attrsets and flat compound sub-values.
-          leafAttrs = types.attrsOf scalar;
-          leaf = types.either scalar leafAttrs;
-
-          # compound covers settings whose sub-values may be scalars or colours.
+          colorType = lib.types.mkOptionType {
+            name = "gimpColor";
+            description = "GIMP color (attrset with r, g, b float keys)";
+            check = {
+              __functor = _: isColor;
+              isV2MergeCoherent = true;
+            };
+            merge = loc: defs: builtins.foldl' lib.recursiveUpdate { } (map (d: d.value) defs);
+          };
+          leaf = types.either scalar colorType;
           compound = types.attrsOf leaf;
         in
         types.attrsOf (types.either leaf compound);
