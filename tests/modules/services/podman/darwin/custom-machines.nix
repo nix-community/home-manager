@@ -16,6 +16,7 @@
         memory = 4096;
         diskSize = 50;
         autoStart = false;
+        volumes = [ ];
         watchdogInterval = 30;
       };
     };
@@ -46,6 +47,10 @@
     assertFileRegex activate '[-][-]memory 8192'
     assertFileRegex activate '[-][-]disk-size 200'
     assertFileRegex activate '[-][-]rootful'
+    assertFileRegex activate '[-][-]volume "$HOME/.config/containers:/var/home/core/.config/containers"'
+    assertFileRegex activate '[-][-]volume "/Users:/Users"'
+    assertFileRegex activate '[-][-]volume "/private:/private"'
+    assertFileRegex activate '[-][-]volume "/var/folders:/var/folders"'
 
     # Check test-machine initialization
     assertFileRegex activate 'test-machine'
@@ -53,11 +58,13 @@
     assertFileRegex activate '[-][-]cpus 2'
     assertFileRegex activate '[-][-]memory 4096'
     assertFileRegex activate '[-][-]disk-size 50'
+    assertFileRegex activate '[-][-]volume "$HOME/.config/containers:/var/home/core/.config/containers"'
 
     # Verify default machine is NOT created
     assertFileNotRegex activate 'podman-machine-default'
 
     # Verify that config directory is automatically mounted into all machines
-    assertFileRegex activate '\$HOME/\.config/containers:/home/core/\.config/containers'
+    # at the canonical /var/home path (because /home is a symlink on the guest)
+    assertFileRegex activate '\$HOME/\.config/containers:/var/home/core/\.config/containers'
   '';
 }

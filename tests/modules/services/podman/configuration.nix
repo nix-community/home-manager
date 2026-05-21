@@ -39,42 +39,50 @@
     };
   };
 
-  nmt.script = ''
-    configPath=home-files/.config/containers
-    containersFile=$configPath/containers.conf
-    policyFile=$configPath/policy.json
-    registriesFile=$configPath/registries.conf
-    storageFile=$configPath/storage.conf
-    mountsFile=$configPath/mounts.conf
+  nmt.script =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      ''
+        # On Darwin, container config files are not part of the home-files
+        # generation — they're installed into ~/.config/containers by an
+        # activation script so they can be bind-mounted into the podman VM.
+        assertFileExists activate
+        assertFileRegex activate 'podmanContainersConfig'
+        assertFileRegex activate 'install -m 0644'
+        assertFileRegex activate 'policy\.json'
+        assertFileRegex activate 'registries\.conf'
+        assertFileRegex activate 'storage\.conf'
+        assertFileRegex activate 'containers\.conf'
+        assertFileRegex activate 'mounts\.conf'
 
-    # Check that config files are generated on both platforms
-    assertFileExists $containersFile
-    assertFileExists $policyFile
-    assertFileExists $registriesFile
-    assertFileExists $storageFile
-    assertFileExists $mountsFile
+        # Verify that config directory is automatically mounted into podman
+        # machines at the canonical /var/home path
+        assertFileRegex activate '\$HOME/\.config/containers:/var/home/core/\.config/containers'
+      ''
+    else
+      ''
+        configPath=home-files/.config/containers
+        containersFile=$configPath/containers.conf
+        policyFile=$configPath/policy.json
+        registriesFile=$configPath/registries.conf
+        storageFile=$configPath/storage.conf
+        mountsFile=$configPath/mounts.conf
 
-    containersFile=$(normalizeStorePaths $containersFile)
-    policyFile=$(normalizeStorePaths $policyFile)
-    registriesFile=$(normalizeStorePaths $registriesFile)
-    storageFile=$(normalizeStorePaths $storageFile)
-    mountsFile=$(normalizeStorePaths $mountsFile)
+        assertFileExists $containersFile
+        assertFileExists $policyFile
+        assertFileExists $registriesFile
+        assertFileExists $storageFile
+        assertFileExists $mountsFile
 
-    assertFileContent $containersFile ${./configuration-containers-expected.conf}
-    assertFileContent $policyFile ${./configuration-policy-expected.json}
-    assertFileContent $registriesFile ${./configuration-registries-expected.conf}
-    assertFileContent $storageFile ${./configuration-storage-expected.conf}
-    assertFileContent $mountsFile ${./configuration-mounts-expected.conf}
+        containersFile=$(normalizeStorePaths $containersFile)
+        policyFile=$(normalizeStorePaths $policyFile)
+        registriesFile=$(normalizeStorePaths $registriesFile)
+        storageFile=$(normalizeStorePaths $storageFile)
+        mountsFile=$(normalizeStorePaths $mountsFile)
 
-    ${
-      if pkgs.stdenv.hostPlatform.isDarwin then
-        ''
-          # Darwin-specific: verify that config directory is automatically mounted into podman machines
-          assertFileExists activate
-          assertFileRegex activate '\$HOME/\.config/containers:/home/core/\.config/containers'
-        ''
-      else
-        ""
-    }
-  '';
+        assertFileContent $containersFile ${./configuration-containers-expected.conf}
+        assertFileContent $policyFile ${./configuration-policy-expected.json}
+        assertFileContent $registriesFile ${./configuration-registries-expected.conf}
+        assertFileContent $storageFile ${./configuration-storage-expected.conf}
+        assertFileContent $mountsFile ${./configuration-mounts-expected.conf}
+      '';
 }
