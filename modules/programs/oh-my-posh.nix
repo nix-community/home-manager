@@ -108,11 +108,11 @@ in
           if lib.versionAtLeast (lib.versions.major cfg.package.version) "26" then
             "${lib.getExe cfg.package} init nu ${configArgument}"
           else
-            ''source ${
+            "source ${
               pkgs.runCommand "oh-my-posh-nushell-config.nu" { } ''
                 ${lib.getExe cfg.package} init nu ${configArgument} --print >> "$out"
               ''
-            }''
+            }"
         }
       '';
     };

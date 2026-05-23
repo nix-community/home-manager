@@ -278,7 +278,7 @@ in
       type = types.nullOr types.str;
       default = if platforms.darwin ? "defaultsId" then platforms.darwin.defaultsId else null;
       example = if default != null then default else "com.developer.app";
-      description = ''The id for the darwin defaults in order to set policies'';
+      description = "The id for the darwin defaults in order to set policies";
     };
 
     darwinAppName = mkOption {
