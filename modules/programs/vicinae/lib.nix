@@ -1,15 +1,38 @@
 {
   pkgs,
 }:
+let
+  buildExtension =
+    {
+      name,
+      src,
+      installPhase,
+      npmDepsHash,
+    }:
+    pkgs.buildNpmPackage (
+      {
+        inherit name src installPhase;
+      }
+      // (
+        if npmDepsHash != null then
+          { inherit npmDepsHash; }
+        else
+          {
+            inherit (pkgs.importNpmLock) npmConfigHook;
+            npmDeps = pkgs.importNpmLock { npmRoot = src; };
+          }
+      )
+    );
+in
 {
   mkExtension =
     {
       name,
       src,
+      npmDepsHash ? null,
     }:
-    pkgs.buildNpmPackage {
-      inherit name src;
-      inherit (pkgs.importNpmLock) npmConfigHook;
+    buildExtension {
+      inherit name src npmDepsHash;
       installPhase = ''
         runHook preInstall
 
@@ -18,7 +41,6 @@
 
         runHook postInstall
       '';
-      npmDeps = pkgs.importNpmLock { npmRoot = src; };
     };
 
   mkRayCastExtension =
@@ -27,6 +49,7 @@
       src ? null,
       rev ? null,
       sha256 ? null,
+      npmDepsHash ? null,
     }:
     let
       resolvedSrc =
@@ -40,9 +63,8 @@
           }
           + "/extensions/${name}";
     in
-    pkgs.buildNpmPackage {
-      inherit name;
-      inherit (pkgs.importNpmLock) npmConfigHook;
+    buildExtension {
+      inherit name npmDepsHash;
       src = resolvedSrc;
       installPhase = ''
         runHook preInstall
@@ -52,6 +74,5 @@
 
         runHook postInstall
       '';
-      npmDeps = pkgs.importNpmLock { npmRoot = resolvedSrc; };
     };
 }

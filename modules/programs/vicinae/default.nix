@@ -65,6 +65,7 @@ in
          [
           (config.lib.vicinae.mkExtension {
             name = "test-extension";
+            npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
             src =
               pkgs.fetchFromGitHub {
                 owner = "schromp";
@@ -78,6 +79,7 @@ in
             name = "gif-search";
             sha256 = "sha256-G7il8T1L+P/2mXWJsb68n4BCbVKcrrtK8GnBNxzt73Q=";
             rev = "4d417c2dfd86a5b2bea202d4a7b48d8eb3dbaeb1";
+            npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           })
           (config.lib.vicinae.mkRayCastExtension {
             name = "my-local-raycast-extension";
@@ -85,6 +87,11 @@ in
           })
          ],
           ```
+
+        Set `npmDepsHash` when `src` is produced by a fetcher such as
+        `pkgs.fetchFromGitHub` or `pkgs.fetchgit`; otherwise
+        dependency import reads `package-lock.json` from the fetched source
+        during evaluation.
       '';
     };
 
