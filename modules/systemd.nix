@@ -278,7 +278,6 @@ let
           "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
       '';
       executable = true;
-      force = true;
     };
   };
 
