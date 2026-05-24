@@ -87,6 +87,7 @@ let
     "hyfetch"
     "i3status"
     "inori"
+    "intelli-shell"
     "irssi"
     "isync"
     "jankyborders"
