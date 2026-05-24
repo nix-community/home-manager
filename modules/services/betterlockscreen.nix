@@ -8,7 +8,7 @@ let
   cfg = config.services.betterlockscreen;
 in
 {
-  meta.maintainers = with lib.maintainers; [ sebtm ];
+  meta.maintainers = [ ];
 
   options = {
     services.betterlockscreen = {
