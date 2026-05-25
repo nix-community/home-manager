@@ -652,24 +652,41 @@ in
       // (maybeSet "LC_MEASUREMENT" cfg.language.measurement);
 
     # Provide a file holding all session variables.
-    home.sessionVariablesPackage = pkgs.writeTextFile {
-      name = "hm-session-vars.sh";
-      destination = "/etc/profile.d/hm-session-vars.sh";
-      text = ''
-        # Only source this once.
-        if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-        export __HM_SESS_VARS_SOURCED=1
+    home.sessionVariablesPackage =
+      let
+        # The actual variable definitions sourced by the shells. Kept separate
+        # from the guard below so we can derive a content-based sentinel from it.
+        sessionVarsBody =
+          config.lib.shell.exportAll cfg.sessionVariables
+          + "\n"
+          + lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (
+              env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
+            ) cfg.sessionSearchVariables
+          )
+          + "\n"
+          + cfg.sessionVariablesExtra;
 
-        ${config.lib.shell.exportAll cfg.sessionVariables}
-      ''
-      + lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (
-          env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
-        ) cfg.sessionSearchVariables
-      )
-      + "\n"
-      + cfg.sessionVariablesExtra;
-    };
+        # A sentinel that changes whenever the variable definitions change. The
+        # guard records it in the exported `__HM_SESS_VARS_SOURCED` variable, so
+        # that after a switch any shell started from a session that sourced an
+        # older generation sees a mismatch and re-exports the new values instead
+        # of skipping. Shells of the same generation still source only once.
+        sentinel = builtins.hashString "sha256" sessionVarsBody;
+      in
+      pkgs.writeTextFile {
+        name = "hm-session-vars.sh";
+        destination = "/etc/profile.d/hm-session-vars.sh";
+        text = ''
+          # Only source this once per set of variables. The sentinel changes
+          # when the variables do, so updated values are picked up by the next
+          # shell without requiring a full re-login.
+          if [ "''${__HM_SESS_VARS_SOURCED-}" = "${sentinel}" ]; then return; fi
+          export __HM_SESS_VARS_SOURCED="${sentinel}"
+
+        ''
+        + sessionVarsBody;
+      };
 
     home.sessionSearchVariables.PATH = lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;
 

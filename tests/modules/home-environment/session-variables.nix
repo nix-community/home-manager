@@ -4,11 +4,10 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  linuxExpected = ''
-    # Only source this once.
-    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-    export __HM_SESS_VARS_SOURCED=1
-
+  # The variable definitions emitted after the source-guard. The expected file
+  # is rebuilt from these below so the sentinel hash stays in sync with the
+  # content without being hard-coded.
+  linuxBody = ''
     export IS_EMPTY=""
     export IS_FALSE="false"
     export IS_TRUE="true"
@@ -23,11 +22,7 @@ let
 
   '';
 
-  darwinExpected = ''
-    # Only source this once.
-    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-    export __HM_SESS_VARS_SOURCED=1
-
+  darwinBody = ''
     export IS_EMPTY=""
     export IS_FALSE="false"
     export IS_TRUE="true"
@@ -44,7 +39,22 @@ let
     export TERM="$TERM"
   '';
 
-  expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
+  body = if isDarwin then darwinBody else linuxBody;
+
+  # Mirrors the sentinel derivation in modules/home-environment.nix.
+  sentinel = builtins.hashString "sha256" body;
+
+  expected = pkgs.writeText "expected" (
+    ''
+      # Only source this once per set of variables. The sentinel changes
+      # when the variables do, so updated values are picked up by the next
+      # shell without requiring a full re-login.
+      if [ "''${__HM_SESS_VARS_SOURCED-}" = "${sentinel}" ]; then return; fi
+      export __HM_SESS_VARS_SOURCED="${sentinel}"
+
+    ''
+    + body
+  );
 
 in
 {
