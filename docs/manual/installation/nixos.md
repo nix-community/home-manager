@@ -17,10 +17,10 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 25.11 channel, you can run
+and if you follow a Nixpkgs version 26.05 channel, you can run
 
 ``` shell
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz home-manager
 $ sudo nix-channel --update
 ```
 
@@ -39,7 +39,7 @@ Alternatively, home-manager installation can be done declaratively through confi
 { config, pkgs, lib, ... }:
 
 let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz;
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz;
 in
 {
   imports =
@@ -54,7 +54,7 @@ in
 
     # The state version is required and should stay at the version you
     # originally installed.
-    home.stateVersion = "25.11";
+    home.stateVersion = "26.05";
   };
 }
 ```
@@ -74,7 +74,7 @@ home-manager.users.eve = { pkgs, ... }: {
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "25.11"; # Please read the comment before changing. 
+  home.stateVersion = "26.05"; # Please read the comment before changing.
 
 };
 ```
@@ -154,4 +154,3 @@ you create. This contains the system's NixOS configuration.
 
 Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
 description of Home Manager and how to use it.
-
