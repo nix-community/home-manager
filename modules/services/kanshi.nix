@@ -7,6 +7,7 @@
 let
   inherit (lib)
     concatStringsSep
+    hm
     literalExpression
     mkIf
     mkOption
@@ -373,6 +374,29 @@ in
             WantedBy = [ cfg.systemdTarget ];
           };
         };
+
+        # Re-apply the active profile after activation.
+        #
+        # kanshi only re-evaluates profiles when wlr-output-management
+        # reports a head topology change (head added/removed).  In two
+        # common cases the daemon ends up with stale state without such
+        # an event firing:
+        #
+        #   1. The user edited their kanshi config; the daemon is still
+        #      using the previous profile definitions.
+        #
+        #   2. The compositor reloaded its own config (e.g. sway runs
+        #      `swaymsg reload` via this module's sway onChange when
+        #      packages referenced in sway/config change store paths)
+        #      and re-applied output stanzas, leaving on-screen geometry
+        #      out of sync with the active profile.
+        #
+        # `kanshictl reload` is cheap and idempotent.
+        home.activation.reloadKanshi = hm.dag.entryAfter [ "reloadSystemd" ] ''
+          if ${pkgs.systemd}/bin/systemctl --user --quiet is-active kanshi.service 2>/dev/null; then
+            $DRY_RUN_CMD ${cfg.package}/bin/kanshictl reload 2>/dev/null || true
+          fi
+        '';
       }
     ]
   );
