@@ -152,6 +152,7 @@ let
     "pay-respects"
     "pet"
     "pgcli"
+    "pimsync"
     "pistol"
     "pls"
     "poetry"
