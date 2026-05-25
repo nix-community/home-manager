@@ -2,7 +2,7 @@
   description = "Support developing Home Manager documentation";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     scss-reset = {
       url = "github:andreymatin/scss-reset/1.4.2";
       flake = false;
