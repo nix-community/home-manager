@@ -405,13 +405,6 @@
     name = "Sefa Eyeoglu";
     source = "nixpkgs";
   };
-  SebTM = {
-    email = "mail@sebastian-sellmeier.de";
-    github = "SebTM";
-    githubId = 17243347;
-    name = "Sebastian Sellmeier";
-    source = "nixpkgs";
-  };
   ShamrockLee = {
     email = "shamrocklee@posteo.net";
     github = "ShamrockLee";
