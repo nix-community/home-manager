@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-05-15 00:11+0000\n"
-"Last-Translator: soweli Emi <emi@alchemi.dev>\n"
+"PO-Revision-Date: 2026-05-27 11:11+0000\n"
+"Last-Translator: qb114514 <GNUqb114514@outlook.com>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/home-manager/"
 "modules/tok/>\n"
 "Language: tok\n"
@@ -17,15 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.5.dev0\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "mi pali e lipu nimi lon %s"
 
 #: modules/files.nix:227
+#, fuzzy
 msgid "Cleaning up orphan links from %s"
-msgstr ""
+msgstr "mi moli e lipu nimi pi pali ala"
 
 #: modules/home-environment.nix:680
 msgid "Creating new profile generation"
@@ -110,4 +111,4 @@ msgstr "ilo Nix li ante %s"
 
 #: modules/lib-bash/activation-init.sh:168
 msgid "Activation variables:"
-msgstr ""
+msgstr "nanpa ante open:"
