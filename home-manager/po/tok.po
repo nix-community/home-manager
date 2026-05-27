@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-05-15 00:11+0000\n"
-"Last-Translator: soweli Emi <emi@alchemi.dev>\n"
+"PO-Revision-Date: 2026-05-27 11:11+0000\n"
+"Last-Translator: qb114514 <GNUqb114514@outlook.com>\n"
 "Language-Team: Toki Pona <https://hosted.weblate.org/projects/home-manager/"
 "cli/tok/>\n"
 "Language: tok\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.5.dev0\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -185,8 +185,9 @@ msgid "Cannot run build in read-only directory"
 msgstr "ma ni li ken ala ante. mi ken ala pali \"build\" lon ma ni"
 
 #: home-manager/home-manager:822
+#, fuzzy
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr ""
+msgstr "lipu lawa jo ala lipu Specialisation \"%s\""
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"
