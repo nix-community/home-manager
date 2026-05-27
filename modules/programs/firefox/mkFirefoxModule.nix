@@ -459,17 +459,16 @@ in
               storeId = mkOption {
                 type = types.nullOr (types.strMatching "[0-9a-f]{8}");
                 default = null;
+                example = "e41de5fe";
                 description = ''
-                  Store ID. Either null, or the first segment of a UUID string.
+                  Store ID. Either null, or the first segment of a UUID string (8 lowercase hex characters).
 
-                  If this value is set, then profile.ini is created
-                  with predictable StoreIDs.
+                  If this value is set, then profiles.ini is created with predictable StoreIDs.
+                  'toolkit.profiles.storeID' is also set accordingly.
 
-                  This is useful to keep the StoreID static,
-                  which helps to bridge the firefox profiles and the new
-                  firefox switchable profile implementations.
-
-                  This should be set to a string of 8 lowercase hex characters.
+                  A predictable StoreID helps bridge the old and new firefox profile implementations.
+                  The StoreID is the name of the sqlite database in "Profile Groups" holding the new
+                  profiles' metadata.
                 '';
               };
 
