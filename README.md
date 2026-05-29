@@ -25,8 +25,9 @@ If you would like to contribute to Home Manager, then please have a look at
 Releases
 --------
 
-Home Manager is developed against `nixos-unstable` branch, which often causes
-it to contain tweaks for changes/packages not yet released in stable [NixOS][].
+Home Manager is developed against the `nixpkgs-unstable` branch, which often
+causes it to contain tweaks for changes/packages not yet released in stable
+[NixOS][].
 To avoid breaking users' configurations, Home Manager is released in branches
 corresponding to NixOS releases (e.g. `release-26.05`). These branches get
 fixes, but usually not new modules. If you need a module to be backported, then
@@ -49,7 +50,7 @@ dconf store and cannot tell whether a configuration that is about to be
 overwritten was from a previous Home Manager generation or from manual
 configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 26.05 (the current
+Home Manager targets `nixpkgs-unstable` and NixOS version 26.05 (the current
 stable version), it may or may not work on other Linux distributions and NixOS
 versions.
 

@@ -8,7 +8,7 @@ Manager's flake module, `flakeModules.home-manager`.
   description = "flake-parts configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     home-manager.url = "github:nix-community/home-manager";
     flake-parts.url = "github:hercules-ci/flake-parts";
   };

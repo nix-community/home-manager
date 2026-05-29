@@ -19,7 +19,7 @@ Home Manager follows NixOS release cycles and provides corresponding branches:
 - **release-<version>**: Stable branch for the matching NixOS or
   Nixpkgs release, such as `release-25.11`.
 
-- **master**: Development branch (tracks nixos-unstable)
+- **master**: Development branch (tracks nixpkgs-unstable)
 
 :::{.note}
 Use the Home Manager branch that matches the Nixpkgs branch used to
@@ -61,7 +61,7 @@ instead:
 ```nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
