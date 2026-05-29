@@ -31,19 +31,21 @@ let
 
   transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
     lib.mapAttrs (
-      _name: server:
-      # NOTE: Convert shared programs.mcp fields to Zed config keys:
-      # - removeAttrs drops keys that Zed does not use directly
-      # - "disabled" becomes inverse "enabled"
-      # See: https://zed.dev/docs/ai/mcp
-      (lib.removeAttrs server [ "disabled" ])
-      // {
-        enabled = !(server.disabled or false);
+      name: server:
+      # See: https://zed.dev/docs/ai/mcp & https://github.com/zed-industries/zed/discussions/53780
+      lib.hm.mcp.transformMcpServer {
+        inherit server;
+        extraTransforms = [
+          lib.hm.mcp.addType
+          (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+        ];
       }
     ) config.programs.mcp.servers
   );
 
-  settingMcpServers = lib.attrByPath [ "context_servers" ] { } cfg.userSettings;
+  settingMcpServers = lib.mapAttrs (_: lib.hm.mcp.addType) (
+    lib.attrByPath [ "context_servers" ] { } cfg.userSettings
+  );
   mergedMcpServers = transformedMcpServers // settingMcpServers;
 
   mergedSettings =

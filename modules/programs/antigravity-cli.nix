@@ -407,9 +407,21 @@ in
           ) cfg.context;
         }
         (lib.mkIf useGeminiConfig {
-          programs.antigravity-cli.settings.mcpServers = lib.mkIf (
-            cfg.enableMcpIntegration && config.programs.mcp.enable
-          ) (lib.mapAttrs (_n: lib.mkDefault) config.programs.mcp.servers);
+          programs.antigravity-cli.settings.mcpServers =
+            lib.mkIf (cfg.enableMcpIntegration && config.programs.mcp.enable)
+              (
+                lib.mapAttrs (
+                  name: server:
+                  lib.hm.mcp.transformMcpServer {
+                    inherit server;
+                    extraTransforms = [
+                      lib.hm.mcp.addType
+                      (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+                      (s: lib.mapAttrs (_: lib.mkDefault) s)
+                    ];
+                  }
+                ) config.programs.mcp.servers
+              );
 
           home.file =
             lib.optionalAttrs (geminiSettings != { }) {
@@ -456,7 +468,32 @@ in
         (lib.mkIf (!useGeminiConfig) {
           programs.antigravity-cli.mcpServers =
             lib.mkIf (cfg.enableMcpIntegration && config.programs.mcp.enable)
-              (lib.mapAttrs (_n: server: lib.mkDefault (transformMcpServer server)) config.programs.mcp.servers);
+              (
+                lib.mapAttrs (
+                  name: server:
+                  lib.hm.mcp.transformMcpServer {
+                    inherit server;
+                    extraTransforms = [
+                      (
+                        s:
+                        removeAttrs s [
+                          "httpUrl"
+                          "url"
+                        ]
+                        // lib.optionalAttrs (s ? httpUrl) {
+                          serverUrl = s.httpUrl;
+                        }
+                        // lib.optionalAttrs (s ? url) {
+                          serverUrl = s.url;
+                        }
+                      )
+                      lib.hm.mcp.addType
+                      (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+                      (s: lib.mapAttrs (_: lib.mkDefault) s)
+                    ];
+                  }
+                ) config.programs.mcp.servers
+              );
 
           assertions = [
             {
