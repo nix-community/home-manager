@@ -19,34 +19,57 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.copilot";
 
-  transformSingleServer =
-    _name: server:
+  forCopilotFormat =
+    server:
     let
-      server' = removeAttrs server [ "disabled" ];
-      type = server'.type or (if server' ? url then "http" else "local");
+      isLocal = server.type == "stdio";
     in
-    server'
+    server
     // {
-      inherit type;
+      type = if server.type == "stdio" then "local" else server.type or "local";
     }
-    // lib.optionalAttrs (type == "local") {
-      args = server'.args or [ ];
+    // lib.optionalAttrs isLocal {
+      args = server.args or [ ];
     }
-    // lib.optionalAttrs (!(server' ? tools)) {
+    // lib.optionalAttrs (!(server ? tools)) {
       tools = [ "*" ];
     };
 
+  enabledServers = lib.filterAttrs (
+    _: server: !(server.disabled or false) && (server ? url || server ? command)
+  ) config.programs.mcp.servers;
+
   transformedMcpServers =
-    if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
-      lib.mapAttrs transformSingleServer (
-        lib.filterAttrs (
-          _: server: !(server.disabled or false) && (server ? url || server ? command)
-        ) config.programs.mcp.servers
-      )
+    if cfg.enableMcpIntegration && config.programs.mcp.enable && enabledServers != { } then
+      lib.mapAttrs (
+        name: server:
+        lib.hm.mcp.transformMcpServer {
+          inherit server;
+          extraTransforms = [
+            lib.hm.mcp.addType
+            (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+            forCopilotFormat
+          ];
+        }
+      ) enabledServers
     else
       { };
 
-  mergedMcpServers = transformedMcpServers // cfg.mcpServers;
+  mergedMcpServers =
+    transformedMcpServers
+    // lib.mapAttrs (
+      name: server:
+      lib.hm.mcp.transformMcpServer {
+        inherit server;
+        extraTransforms = [
+          lib.hm.mcp.addType
+          (lib.hm.mcp.wrapEnvFilesCommand {
+            inherit pkgs name;
+          })
+          forCopilotFormat
+        ];
+      }
+    ) cfg.mcpServers;
 in
 {
   meta.maintainers = [ lib.maintainers.ojsef39 ];

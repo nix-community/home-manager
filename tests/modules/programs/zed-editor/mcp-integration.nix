@@ -44,10 +44,10 @@
         {
           "context_servers": {
             "context7": {
-              "enabled": true,
               "headers": {
                 "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
               },
+              "type": "http",
               "url": "https://mcp.context7.com/mcp"
             },
             "disabled-server": {
@@ -55,7 +55,8 @@
                 "test"
               ],
               "command": "echo",
-              "enabled": false
+              "enabled": false,
+              "type": "stdio"
             },
             "everything": {
               "args": [
@@ -63,7 +64,7 @@
                 "@modelcontextprotocol/server-everything"
               ],
               "command": "npx",
-              "enabled": true
+              "type": "stdio"
             }
           }
         }
