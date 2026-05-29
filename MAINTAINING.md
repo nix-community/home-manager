@@ -125,7 +125,7 @@ Reference commits:
    - Update the nixpkgs input to track the corresponding stable branch
    - Example: For `release-25.11`, change from:
      ```nix
-     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
      ```
      to:
      ```nix
@@ -135,7 +135,7 @@ Reference commits:
    - Commit the flake.nix and flake.lock changes
 
 **Note**: The release branch should track the stable NixOS release channel
-(e.g., `nixos-25.11`), while master continues to track `nixos-unstable`.
+(e.g., `nixos-25.11`), while master continues to track `nixpkgs-unstable`.
 
 #### Step 3.5: On master - Update CI for the New Release Branch
 
