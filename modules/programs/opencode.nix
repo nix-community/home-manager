@@ -18,32 +18,39 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  transformMcpServer = name: server: {
-    inherit name;
-    value = {
-      enabled = !(server.disabled or false);
+  toOpencodeShape =
+    s:
+    let
+      isRemote = s ? url && s.url != null;
+      renderedEnv = lib.hm.mcp.renderEnv (p: "{file:${p}}") (s.env or { });
+    in
+    lib.optionalAttrs (s.enabled or null != null) { inherit (s) enabled; }
+    // {
+      type = if isRemote then "remote" else "local";
     }
     // (
-      if server ? url then
-        {
-          type = "remote";
-          inherit (server) url;
-        }
-        // (lib.optionalAttrs (server ? headers) { inherit (server) headers; })
-      else if server ? command then
-        {
-          type = "local";
-          command = [ server.command ] ++ (server.args or [ ]);
-        }
-        // (lib.optionalAttrs (server ? env) { environment = server.env; })
+      if isRemote then
+        { inherit (s) url; } // lib.optionalAttrs (s.headers or { } != { }) { inherit (s) headers; }
       else
-        { }
+        {
+          command = [ s.command ] ++ (s.args or [ ]);
+        }
+        // lib.optionalAttrs (renderedEnv != { }) { environment = renderedEnv; }
     );
-  };
 
   transformedMcpServers =
     if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
-      lib.listToAttrs (lib.mapAttrsToList transformMcpServer config.programs.mcp.servers)
+      lib.mapAttrs (
+        _: server:
+        lib.hm.mcp.transformMcpServer {
+          inherit server;
+          extraTransforms = [ toOpencodeShape ];
+          exclude = [
+            "args"
+            "env"
+          ];
+        }
+      ) config.programs.mcp.servers
     else
       { };
 

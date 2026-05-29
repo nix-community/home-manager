@@ -43,7 +43,6 @@
         {
           "context_servers": {
             "custom-server": {
-              "enabled": false
             }
           },
         }
@@ -53,10 +52,10 @@
         {
           "context_servers": {
             "custom-server": {
-              "enabled": false,
               "headers": {
                 "Authorization": "Bearer token"
               },
+              "type": "http",
               "url": "https://custom.example.com/mcp"
             },
             "everything": {
@@ -65,7 +64,7 @@
                 "@modelcontextprotocol/server-everything"
               ],
               "command": "npx",
-              "enabled": true
+              "type": "stdio"
             }
           }
         }
