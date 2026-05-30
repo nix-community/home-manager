@@ -29,7 +29,7 @@
   <div class="titlepage">
    <div>
    <div><h1 class="title"><a id="home-manager-manual"></a>Home Manager Manual</h1></div>
-   <div><h2 class="subtitle">Version 26.05</h2></div>
+   <div><h2 class="subtitle">Version 26.11 (unstable)</h2></div>
    </div>
    <hr />
   </div>
@@ -714,7 +714,7 @@ Nixpkgs branch used by your configuration. The examples below use 25.11;
 replace this with the release branch you are upgrading to.</p><p>If your configuration follows <code class="literal">nixos-unstable</code> or <code class="literal">nixpkgs-unstable</code>,
 use Home Manager’s <code class="literal">master</code> branch.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-versioning" class="title" >Understanding Home Manager Versioning   </h3>  </div> </div></div><p>Home Manager follows NixOS release cycles and provides corresponding branches:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p><span class="strong"><strong>release-&lt;version&gt;</strong></span>: Stable branch for the matching NixOS or
-Nixpkgs release, such as <code class="literal">release-25.11</code>.</p></li><li class="listitem"><p><span class="strong"><strong>master</strong></span>: Development branch (tracks nixos-unstable)</p></li></ul></div><div class="note"><h3 class="title">Note</h3><p>Use the Home Manager branch that matches the Nixpkgs branch used to
+Nixpkgs release, such as <code class="literal">release-25.11</code>.</p></li><li class="listitem"><p><span class="strong"><strong>master</strong></span>: Development branch (tracks nixpkgs-unstable)</p></li></ul></div><div class="note"><h3 class="title">Note</h3><p>Use the Home Manager branch that matches the Nixpkgs branch used to
 evaluate your Home Manager configuration. For stable NixOS
 configurations, this is normally the same as your NixOS version.</p></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-upgrade-release-understanding-flake" class="title" >Flake-Based Installation   </h3>  </div> </div></div><p>If you are using Home Manager with Nix flakes, update your <code class="literal">nixpkgs</code> and
@@ -741,7 +741,7 @@ configurations, this is normally the same as your NixOS version.</p></div>
 </code></pre><p>For <code class="literal">nixos-unstable</code> or <code class="literal">nixpkgs-unstable</code>, use the <code class="literal">master</code> branch
 instead:</p><pre><code class="programlisting nix">{
   inputs = {
-    nixpkgs.url = &quot;github:NixOS/nixpkgs/nixos-unstable&quot;;
+    nixpkgs.url = &quot;github:NixOS/nixpkgs/nixpkgs-unstable&quot;;
 
     home-manager = {
       url = &quot;github:nix-community/home-manager&quot;;
@@ -853,7 +853,7 @@ then to generate and activate a basic configuration run the command</p><pre><cod
 imported Home Manager modules, use <code class="literal">extraSpecialArgs</code> in the call to
 <code class="literal">home-manager.lib.homeManagerConfiguration</code>:</p><pre><code class="programlisting  nix">{
   inputs = {
-    nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
+    nixpkgs.url = &quot;github:nixos/nixpkgs/nixpkgs-unstable&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
   };
 
@@ -890,7 +890,7 @@ be as follows:</p><pre><code class="programlisting  nix">{
   description = &quot;NixOS configuration&quot;;
 
   inputs = {
-    nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
+    nixpkgs.url = &quot;github:nixos/nixpkgs/nixpkgs-unstable&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
   };
 
@@ -929,7 +929,7 @@ to that of NixOS. The <code class="literal">flake.nix</code> would be:</p><pre><
   description = &quot;Darwin configuration&quot;;
 
   inputs = {
-    nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
+    nixpkgs.url = &quot;github:nixos/nixpkgs/nixpkgs-unstable&quot;;
     darwin.url = &quot;github:nix-darwin/nix-darwin&quot;;
     darwin.inputs.nixpkgs.follows = &quot;nixpkgs&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
@@ -968,7 +968,7 @@ Manager’s flake module, <code class="literal">flakeModules.home-manager</code>
   description = &quot;flake-parts configuration&quot;;
 
   inputs = {
-    nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
+    nixpkgs.url = &quot;github:nixos/nixpkgs/nixpkgs-unstable&quot;;
     home-manager.url = &quot;github:nix-community/home-manager&quot;;
     flake-parts.url = &quot;github:hercules-ci/flake-parts&quot;;
   };
