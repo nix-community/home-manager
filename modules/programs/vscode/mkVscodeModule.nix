@@ -170,6 +170,7 @@ let
         type = types.either types.path (
           types.listOf (
             types.submodule {
+              freeformType = jsonFormat.type;
               options = {
                 key = mkOption {
                   type = types.str;
