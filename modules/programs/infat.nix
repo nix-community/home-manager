@@ -117,11 +117,17 @@ in
       (lib.hm.assertions.assertPlatform "programs.infat" pkgs lib.platforms.darwin)
     ];
 
-    warnings = lib.optional cfg.autoActivate._legacyBoolean ''
-      Using `programs.infat.autoActivate` as a Boolean is deprecated and will be
-      removed in a future release. Please use `programs.infat.autoActivate.enable`
-      instead.
-    '';
+    warnings = lib.optional cfg.autoActivate._legacyBoolean (
+      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+        option = [
+          "programs"
+          "infat"
+          "autoActivate"
+        ];
+        old = "a Boolean";
+        replacement = "`programs.infat.autoActivate.enable`";
+      }
+    );
 
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
