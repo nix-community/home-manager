@@ -558,10 +558,14 @@ in
           name: content: nameValuePair "${cfg.configDir}/${subdir}/${name}.md" (mkSourceEntry content)
         ) attrs;
 
-      mkTextEntries =
-        subdir: attrs:
+      mkHookEntries =
+        attrs:
         lib.mapAttrs' (
-          name: content: nameValuePair "${cfg.configDir}/${subdir}/${name}" { text = content; }
+          name: content:
+          nameValuePair "${cfg.configDir}/hooks/${name}" {
+            text = content;
+            executable = true;
+          }
         ) attrs;
 
       mkRecursiveDirAttrs =
@@ -727,7 +731,7 @@ in
               recursive = true;
             };
           })
-          (mkTextEntries "hooks" cfg.hooks)
+          (mkHookEntries cfg.hooks)
           (lib.optionalAttrs (builtins.isAttrs cfg.skills) (lib.mapAttrs' mkSkillEntry cfg.skills))
           (mkMarkdownEntries "output-styles" cfg.outputStyles)
         ];
