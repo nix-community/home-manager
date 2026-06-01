@@ -177,6 +177,7 @@ import nmtSrc {
       (
         [
           # keep-sorted start case=no numeric=yes
+          ./lib/deprecations
           ./lib/generators
           ./lib/types
           ./modules/files
