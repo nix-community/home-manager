@@ -15,8 +15,7 @@ _:
     asserts.warnings.expected = [
       ''
         Using `programs.infat.autoActivate` as a Boolean is deprecated and will be
-        removed in a future release. Please use `programs.infat.autoActivate.enable`
-        instead.
+        removed in a future release. Please use `programs.infat.autoActivate.enable` instead.
       ''
     ];
 
