@@ -118,6 +118,20 @@ in
       '';
     };
 
+    enableSkillsIntegration = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the skills declared in
+        {option}`programs.agent-skills` into Claude Code by materializing
+        them under the {file}`skills/` subdirectory of
+        {option}`programs.claude-code.configDir`.
+
+        Shared skills are merged with {option}`programs.claude-code.skills`,
+        with Claude Code skills taking precedence on name conflicts.
+      '';
+    };
+
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -552,6 +566,11 @@ in
         content: builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content;
       isPathLikeContent = content: lib.isPath content || isStorePathString content;
 
+      sharedSkillsEnabled = cfg.enableSkillsIntegration && config.programs.agent-skills.enable;
+      mergedSkillsAttrs =
+        (lib.optionalAttrs sharedSkillsEnabled config.programs.agent-skills.skillEntries)
+        // (lib.optionalAttrs (builtins.isAttrs cfg.skills) cfg.skills);
+
       mkMarkdownEntries =
         subdir: attrs:
         lib.mapAttrs' (
@@ -626,6 +645,10 @@ in
           {
             assertion = !isPathLikeContent cfg.skills || lib.pathIsDirectory cfg.skills;
             message = "`programs.claude-code.skills` must be a directory when set to a path";
+          }
+          {
+            assertion = !sharedSkillsEnabled || builtins.isAttrs cfg.skills;
+            message = "`programs.claude-code.skills` must be an attribute set when `enableSkillsIntegration` is true";
           }
         ]
         ++ map mkExclusiveAssertion exclusiveInlineDirNames;
@@ -728,7 +751,7 @@ in
             };
           })
           (mkTextEntries "hooks" cfg.hooks)
-          (lib.optionalAttrs (builtins.isAttrs cfg.skills) (lib.mapAttrs' mkSkillEntry cfg.skills))
+          (lib.optionalAttrs (builtins.isAttrs cfg.skills) (lib.mapAttrs' mkSkillEntry mergedSkillsAttrs))
           (mkMarkdownEntries "output-styles" cfg.outputStyles)
         ];
       };
