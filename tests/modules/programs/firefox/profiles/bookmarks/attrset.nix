@@ -72,6 +72,25 @@ in
       };
     }
     // {
+      test.asserts.warnings.expected = [
+        ''
+          Using `${lib.showOption modulePath}.profiles.bookmarks.bookmarks` as an attribute set is deprecated and will be
+          removed in a future release. Please use `${lib.showOption modulePath}.profiles.bookmarks.bookmarks.settings` with `${lib.showOption modulePath}.profiles.bookmarks.bookmarks.force = true` instead.
+
+          Set `force = true` to acknowledge replacing existing custom bookmarks.
+
+          Replace:
+            ${lib.showOption modulePath}.profiles.bookmarks.bookmarks = { ... };
+
+          With:
+            ${lib.showOption modulePath}.profiles.bookmarks.bookmarks = {
+              force = true;
+              settings = { ... };
+            };
+
+        ''
+      ];
+
       nmt.script = ''
         bookmarksUserJs=$(normalizeStorePaths \
           "home-files/${cfg.profilesPath}/bookmarks/user.js")
