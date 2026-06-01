@@ -1618,6 +1618,13 @@
     name = "Manaiki Laut";
     source = "nixpkgs";
   };
+  marijanp = {
+    email = "marijan.petricevic94@gmail.com";
+    github = "marijanp";
+    githubId = 13599169;
+    name = "Marijan Petričević";
+    source = "nixpkgs";
+  };
   mateusauler = {
     email = "mateus@auler.dev";
     github = "mateusauler";
