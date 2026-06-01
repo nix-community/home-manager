@@ -66,6 +66,7 @@
     assertFileExists home-files/.config/claude/commands/hello.md
     assertFileExists home-files/.config/claude/rules/style.md
     assertFileExists home-files/.config/claude/hooks/pre-edit
+    assertFileIsExecutable home-files/.config/claude/hooks/pre-edit
     assertFileExists home-files/.config/claude/output-styles/concise.md
     assertFileExists home-files/.config/claude/skills/pdf/SKILL.md
 
