@@ -77,14 +77,14 @@ in
           "${config.xdg.dataHome}/PrismLauncher";
 
       impureConfigMerger = filePath: staticSettingsFile: emptySettingsFile: ''
-        mkdir -p $(dirname '${escapeShellArg filePath}')
+        mkdir -p "$(dirname ${escapeShellArg filePath})"
 
-        if [ ! -e '${escapeShellArg filePath}' ]; then
-          cat '${escapeShellArg emptySettingsFile}' > '${escapeShellArg filePath}'
+        if [ ! -e ${escapeShellArg filePath} ]; then
+          cat ${escapeShellArg emptySettingsFile} > ${escapeShellArg filePath}
         fi
 
         ${lib.getExe pkgs.crudini} --merge --ini-options=nospace \
-          '${escapeShellArg filePath}' < '${escapeShellArg staticSettingsFile}'
+          ${escapeShellArg filePath} < ${escapeShellArg staticSettingsFile}
       '';
     in
     mkIf cfg.enable {
