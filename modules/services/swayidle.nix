@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -99,22 +100,14 @@ in
       events = mkOption {
         type =
           with types;
-          (coercedTo (listOf attrs)) (
+          coercedTo (listOf attrs) (
             events:
-            lib.warn
-              ''
-                The syntax of services.swayidle.events has changed. While it
-                previously accepted a list of events, it now accepts an attrset
-                keyed by the event name.
-              ''
-              (
-                lib.listToAttrs (
-                  map (e: {
-                    name = e.event;
-                    value = e.command;
-                  }) events
-                )
-              )
+            lib.listToAttrs (
+              map (e: {
+                name = e.event;
+                value = e.command;
+              }) events
+            )
           ) (submodule eventsModule);
         default = { };
         example = literalExpression ''
@@ -145,6 +138,21 @@ in
     };
 
   config = lib.mkIf cfg.enable {
+    warnings = lib.optional (lib.any builtins.isList options.services.swayidle.events.definitions) (
+      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+        option = [
+          "services"
+          "swayidle"
+          "events"
+        ];
+        old = "a list";
+        replacement = "an attribute set keyed by event name";
+        details = ''
+          Use event names as attribute keys and commands as values.
+        '';
+      }
+    );
+
     assertions = [
       (lib.hm.assertions.assertPlatform "services.swayidle" pkgs lib.platforms.linux)
     ];

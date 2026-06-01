@@ -1,5 +1,12 @@
 { config, ... }:
 {
+  # Exercise merging legacy list definitions with new attrset definitions.
+  imports = [
+    {
+      services.swayidle.events.after-resume = "notify-send resumed";
+    }
+  ];
+
   services.swayidle = {
     enable = true;
     package = config.lib.test.mkStubPackage { outPath = "@swayidle@"; };
@@ -15,11 +22,13 @@
     ];
   };
 
-  test.asserts.evalWarnings.expected = [
+  test.asserts.warnings.expected = [
     ''
-      The syntax of services.swayidle.events has changed. While it
-      previously accepted a list of events, it now accepts an attrset
-      keyed by the event name.
+      Using `services.swayidle.events` as a list is deprecated and will be
+      removed in a future release. Please use an attribute set keyed by event name instead.
+
+      Use event names as attribute keys and commands as values.
+
     ''
   ];
 
@@ -36,7 +45,7 @@
 
       [Service]
       Environment=PATH=@bash-interactive@/bin
-      ExecStart=@swayidle@/bin/dummy -w before-sleep 'swaylock -fF' lock 'swaylock -fF'
+      ExecStart=@swayidle@/bin/dummy -w after-resume 'notify-send resumed' before-sleep 'swaylock -fF' lock 'swaylock -fF'
       Restart=always
       Type=simple
 
