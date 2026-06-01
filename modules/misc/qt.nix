@@ -319,22 +319,31 @@ in
 
   config =
     let
-      deprecateKde6 =
-        name: optionPath:
-        if name == "kde6" then
-          lib.warn ''
-            The ${optionPath} value "kde6" has been deprecated and renamed to "kde".
-            Please update your configuration:
-              ${optionPath} = "kde";
-          '' "kde"
+      deprecateKde6 = name: if name == "kde6" then "kde" else name;
+
+      deprecatedKde6PlatformThemeOption =
+        if builtins.isString cfg.platformTheme then
+          if cfg.platformTheme == "kde6" then
+            [
+              "qt"
+              "platformTheme"
+            ]
+          else
+            null
+        else if cfg.platformTheme != null && cfg.platformTheme.name == "kde6" then
+          [
+            "qt"
+            "platformTheme"
+            "name"
+          ]
         else
-          name;
+          null;
 
       platformTheme =
         if (builtins.isString cfg.platformTheme) then
           {
             option = "qt.platformTheme";
-            name = deprecateKde6 cfg.platformTheme "qt.platformTheme";
+            name = deprecateKde6 cfg.platformTheme;
             package = null;
           }
         else if cfg.platformTheme == null then
@@ -346,7 +355,7 @@ in
         else
           {
             option = "qt.platformTheme.name";
-            name = deprecateKde6 cfg.platformTheme.name "qt.platformTheme.name";
+            name = deprecateKde6 cfg.platformTheme.name;
             inherit (cfg.platformTheme) package;
           };
 
@@ -392,7 +401,14 @@ in
         ) "The option `qt.platformTheme` has been renamed to `qt.platformTheme.name`.")
         ++ (lib.lists.optional (
           platformTheme.name == "gnome" && platformTheme.package == null
-        ) "The value `gnome` for option `${platformTheme.option}` is deprecated. Use `adwaita` instead.");
+        ) "The value `gnome` for option `${platformTheme.option}` is deprecated. Use `adwaita` instead.")
+        ++ (lib.optional (deprecatedKde6PlatformThemeOption != null) (
+          lib.hm.deprecations.mkDeprecatedOptionValueRenameWarning {
+            option = deprecatedKde6PlatformThemeOption;
+            old = ''"kde6"'';
+            replacement = ''"kde"'';
+          }
+        ));
 
       qt.style.package = lib.mkIf (cfg.style.name != null) (
         lib.mkDefault (stylePackages.${lib.toLower cfg.style.name} or null)
