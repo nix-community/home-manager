@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -85,17 +86,9 @@ in
     languages = mkOption {
       type =
         with types;
-        coercedTo (listOf tomlFormat.type) (
-          language:
-          lib.warn ''
-            The syntax of programs.helix.languages has changed.
-            It now generates the whole languages.toml file instead of just the language array in that file.
-
-            Use
-            programs.helix.languages = { language = <languages list>; }
-            instead.
-          '' { inherit language; }
-        ) (addCheck tomlFormat.type builtins.isAttrs);
+        coercedTo (listOf tomlFormat.type) (language: { inherit language; }) (
+          addCheck tomlFormat.type builtins.isAttrs
+        );
       default = { };
       example = literalExpression ''
         {
@@ -210,6 +203,24 @@ in
   };
 
   config = mkIf cfg.enable {
+    warnings = lib.optional (lib.any builtins.isList options.programs.helix.languages.definitions) (
+      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+        option = [
+          "programs"
+          "helix"
+          "languages"
+        ];
+        old = "a list";
+        replacement = "`programs.helix.languages.language`";
+        details = ''
+          This option now generates the whole languages.toml file instead of just the language array in that file.
+
+          Use:
+            programs.helix.languages = { language = <languages list>; }
+        '';
+      }
+    );
+
     home.packages =
       if cfg.extraPackages != [ ] then
         [
