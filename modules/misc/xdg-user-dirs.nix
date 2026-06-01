@@ -113,25 +113,6 @@ in
           MISC = "''${config.home.homeDirectory}/Misc";
         }
       '';
-      apply =
-        if lib.versionOlder config.home.stateVersion "26.05" then
-          lib.mapAttrs' (
-            k:
-            let
-              matches = lib.match "XDG_(.*)_DIR" k;
-            in
-            lib.nameValuePair (
-              if matches == null then
-                k
-              else
-                let
-                  name = lib.elemAt matches 0;
-                in
-                lib.warn "using keys like ‘${k}’ for xdg.userDirs.extraConfig is deprecated in favor of keys like ‘${name}’" name
-            )
-          )
-        else
-          lib.id;
       description = ''
         Other user directories.
 
@@ -175,6 +156,23 @@ in
 
   config =
     let
+      legacyExtraConfigKeys = lib.filter (key: lib.match "XDG_(.*)_DIR" key != null) (
+        lib.attrNames cfg.extraConfig
+      );
+
+      normalizeExtraConfigKey =
+        key:
+        let
+          matches = lib.match "XDG_(.*)_DIR" key;
+        in
+        if matches == null then key else lib.elemAt matches 0;
+
+      extraConfig =
+        if lib.versionOlder config.home.stateVersion "26.05" then
+          lib.mapAttrs' (key: lib.nameValuePair (normalizeExtraConfigKey key)) cfg.extraConfig
+        else
+          cfg.extraConfig;
+
       directories =
         (lib.filterAttrs (_n: v: !isNull v) {
           DESKTOP = cfg.desktop;
@@ -187,11 +185,26 @@ in
           TEMPLATES = cfg.templates;
           VIDEOS = cfg.videos;
         })
-        // cfg.extraConfig;
+        // extraConfig;
 
       bindings = lib.mapAttrs' (k: lib.nameValuePair "XDG_${k}_DIR") directories;
     in
     lib.mkIf cfg.enable {
+      warnings = lib.optionals (lib.versionOlder config.home.stateVersion "26.05") (
+        map (
+          key:
+          lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+            option = [
+              "xdg"
+              "userDirs"
+              "extraConfig"
+            ];
+            old = "keys like `${key}`";
+            replacement = "keys like `${normalizeExtraConfigKey key}`";
+          }
+        ) legacyExtraConfigKeys
+      );
+
       xdg.configFile."user-dirs.dirs".text =
         let
           # For some reason, these need to be wrapped with quotes to be valid.
