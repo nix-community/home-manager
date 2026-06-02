@@ -7,7 +7,6 @@
 let
   cfg = config.programs.infat;
   tomlFormat = pkgs.formats.toml { };
-  mkCli = lib.cli.toCommandLineShellGNU { };
 
   configDir =
     if config.xdg.enable then
@@ -75,18 +74,12 @@ in
                     '';
                   };
                   extraArgs = lib.mkOption {
-                    type =
-                      with lib.types;
-                      attrsOf (oneOf [
-                        str
-                        bool
-                      ]);
-                    default = {
-                      robust = true;
-                    };
-                    example = {
-                      quiet = true;
-                    };
+                    type = lib.types.listOf lib.types.str;
+                    default = [ "--robust" ];
+                    example = [
+                      "--robust"
+                      "--quiet"
+                    ];
                     description = ''
                       Additional arguments to pass when auto-activating infat.
                       This can be used to customize the behavior of infat when
@@ -104,9 +97,10 @@ in
         default = { };
         example = {
           enable = true;
-          extraArgs = {
-            quiet = true;
-          };
+          extraArgs = [
+            "--robust"
+            "--quiet"
+          ];
         };
         description = ''
           Auto-activation settings for infat.
@@ -122,24 +116,38 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.infat" pkgs lib.platforms.darwin)
     ];
+
     warnings = lib.optional cfg.autoActivate._legacyBoolean ''
       Using `programs.infat.autoActivate` as a Boolean is deprecated and will be
       removed in a future release. Please use `programs.infat.autoActivate.enable`
       instead.
     '';
-    programs.infat.autoActivate.extraArgs = lib.mkIf (cfg.settings != { }) {
-      config = configFile;
-    };
+
     home = {
       packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
       file.${configFile} = lib.mkIf (cfg.settings != { }) {
         source = tomlFormat.generate "infat-settings.toml" cfg.settings;
       };
+
       activation =
-        lib.mkIf (cfg.package != null && cfg.autoActivate.enable && cfg.autoActivate.extraArgs ? config)
+        let
+          autoActivateExtraArgs =
+            cfg.autoActivate.extraArgs
+            ++ lib.optionals (cfg.settings != { } && !lib.elem "--config" cfg.autoActivate.extraArgs) [
+              "--config"
+              configFile
+            ];
+        in
+        lib.mkIf
+          (
+            cfg.package != null
+            && cfg.autoActivate.enable
+            && (cfg.settings != { } || lib.elem "--config" cfg.autoActivate.extraArgs)
+          )
           {
             infat = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              run ${lib.getExe cfg.package} ${mkCli cfg.autoActivate.extraArgs} $VERBOSE_ARG
+              run ${lib.getExe cfg.package} ${lib.escapeShellArgs autoActivateExtraArgs} $VERBOSE_ARG
             '';
           };
     };
