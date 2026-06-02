@@ -42,6 +42,7 @@ in
               ''$"($env.XDG_RUNTIME_DIR | default $"/run/user/(id -u)")/yubikey-agent/yubikey-agent.sock"''
           }";
         };
+      systemd.socketProviderUnit = "yubikey-agent.socket";
     };
 
     systemd.user.services.yubikey-agent = {

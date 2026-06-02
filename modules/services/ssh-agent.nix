@@ -80,6 +80,7 @@ in
               ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"''
           }";
         };
+      systemd.socketProviderUnit = "ssh-agent.service";
     };
 
     systemd.user.services.ssh-agent = {

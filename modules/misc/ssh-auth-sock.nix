@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sshAuthSock;
@@ -44,6 +49,18 @@ in
         };
       };
 
+    systemd.socketProviderUnit = lib.mkOption {
+      description = ''
+        The name of the systemd unit responsible for providing the {env}`SSH_AUTH_SOCK`.
+
+        Services that rely on an active SSH authentication agent can reference
+        this option to declare a dependency onto this unit, ensuring that the
+        socket is available and being served before they start.
+      '';
+      example = "ssh-agent.service";
+      type = lib.types.str;
+    };
+
   };
 
   config =
@@ -78,5 +95,26 @@ in
       programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
       programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
       programs.zsh.envExtra = lib.mkOrder 900 zshIntegration;
+
+      # Replace this service by an environment generator as soon as they are
+      # available per-user. See https://github.com/systemd/systemd/issues/32423
+      # for more information.
+      systemd.user.services.set-SSH_AUTH_SOCK = {
+        Unit = {
+          Description = "Sets SSH_AUTH_SOCK in the D-BUS daemon and systemd";
+          Before = [ cfg.systemd.socketProviderUnit ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellScript "set-SSH_AUTH_SOCK" ''
+            ${bashIntegration}
+            ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+          '';
+        };
+        Install.WantedBy = [
+          "default.target"
+          cfg.systemd.socketProviderUnit
+        ];
+      };
     };
 }
