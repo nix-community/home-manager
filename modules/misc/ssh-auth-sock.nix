@@ -37,6 +37,11 @@ in
         nushell = mkShellInitOption "nushell" // {
           example = "$env.SSH_AUTH_SOCK = $HOME/.ssh/agent.sock";
         };
+        zsh = mkShellInitOption "zsh" // {
+          example = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
+          default = cfg.initialization.bash;
+          defaultText = lib.literalExpression "config.sshAuthSock.initialization.bash";
+        };
       };
 
   };
@@ -45,11 +50,13 @@ in
     let
       # Preserve $SSH_AUTH_SOCK if it stems from a forwarded agent which is the
       # case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
-      bashIntegration = ''
+      mkShIntegration = code: ''
         if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-          ${cfg.initialization.bash}
+          ${code}
         fi
       '';
+      bashIntegration = mkShIntegration cfg.initialization.bash;
+      zshIntegration = mkShIntegration cfg.initialization.zsh;
       fishIntegration = ''
         if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
           ${cfg.initialization.fish}
@@ -70,6 +77,6 @@ in
       programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
       programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
       programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
-      programs.zsh.envExtra = lib.mkOrder 900 bashIntegration;
+      programs.zsh.envExtra = lib.mkOrder 900 zshIntegration;
     };
 }
