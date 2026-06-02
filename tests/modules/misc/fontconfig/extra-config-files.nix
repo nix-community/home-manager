@@ -29,6 +29,10 @@ in
         priority = 37;
         text = "";
       };
+      target = {
+        target = "target";
+        text = "";
+      };
       text.text = sampleText;
       source.source = sampleSource;
     };
@@ -42,6 +46,8 @@ in
     assertFileExists ${fcConfD}/90-hm-custom_label.conf
 
     assertFileExists ${fcConfD}/37-hm-priority.conf
+
+    assertFileExists ${fcConfD}/target
 
     assertFileExists  ${fcConfD}/90-hm-text.conf
     assertFileContent ${fcConfD}/90-hm-text.conf \
