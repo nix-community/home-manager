@@ -393,6 +393,7 @@ in
           $env.SSH_AUTH_SOCK = $"(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
         '';
       };
+      systemd.socketProviderUnit = "gpg-agent-ssh.socket";
     };
 
     programs = {

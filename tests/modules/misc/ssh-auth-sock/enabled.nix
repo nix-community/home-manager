@@ -1,3 +1,5 @@
+{ config, lib, ... }:
+
 {
   programs.bash.enable = true;
   programs.fish.enable = true;
@@ -11,6 +13,7 @@
       fish = "echo fish";
       nushell = "echo nushell";
     };
+    systemd.socketProviderUnit = "foo.socket";
   };
 
   nmt.script = ''
@@ -26,5 +29,10 @@
     assertFileContains \
       home-files/.zshenv \
       'if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then'
+  ''
+  + lib.optionalString config.systemd.user.enable ''
+    assertFileExists home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service
+    assertFileContains home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service 'Before=foo.socket'
+    assertFileContains home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service 'WantedBy=foo.socket'
   '';
 }

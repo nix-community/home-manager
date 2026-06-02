@@ -86,6 +86,7 @@ in
               ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"''
           }";
         };
+        systemd.socketProviderUnit = "proton-pass-agent.service";
       };
 
       systemd.user.services.proton-pass-agent = {

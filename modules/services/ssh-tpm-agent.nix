@@ -80,6 +80,7 @@ in
         fish = ''set -x SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'';
         nushell = ''$env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/ssh-tpm-agent.sock"'';
       };
+      systemd.socketProviderUnit = lib.mkOverride 90 "ssh-tpm-agent.socket";
     };
 
     systemd.user = {
