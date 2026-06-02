@@ -366,30 +366,33 @@ in
       ++ [ cfg.extraConfig ]
     );
 
-    sshAuthSock.initialization = lib.mkIf cfg.enableSshSupport {
-      bash = ''
-        unset SSH_AGENT_PID
-        if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-          export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
-        fi
-      '';
-      fish = ''
-        set -e SSH_AGENT_PID
+    sshAuthSock = lib.mkIf cfg.enableSshSupport {
+      enable = true;
+      initialization = {
+        bash = ''
+          unset SSH_AGENT_PID
+          if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+            export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
+          fi
+        '';
+        fish = ''
+          set -e SSH_AGENT_PID
 
-        begin
-          set -l gnupg_val 0
-          if set -q gnupg_SSH_AUTH_SOCK_by
-            set gnupg_val $gnupg_SSH_AUTH_SOCK_by
-          end
+          begin
+            set -l gnupg_val 0
+            if set -q gnupg_SSH_AUTH_SOCK_by
+              set gnupg_val $gnupg_SSH_AUTH_SOCK_by
+            end
 
-          if test $gnupg_val -ne %self
-            set -x SSH_AUTH_SOCK (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
+            if test $gnupg_val -ne %self
+              set -x SSH_AUTH_SOCK (${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)
+            end
           end
-        end
-      '';
-      nushell = ''
-        $env.SSH_AUTH_SOCK = $"(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
-      '';
+        '';
+        nushell = ''
+          $env.SSH_AUTH_SOCK = $"(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
+        '';
+      };
     };
 
     programs = {
