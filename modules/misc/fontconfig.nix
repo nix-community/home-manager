@@ -88,11 +88,18 @@ let
             - {option}`fonts.fontconfig.configFile.<name>.text`, and
             - {option}`fonts.fontconfig.configFile.<name>.source`,
             exactly one must be set.
+
+            If {option}`fonts.fontconfig.configFile.<name>.text` is set, then this option will
+            point to the file containing the text.
           '';
-          default = null;
-          type = with lib.types; nullOr path;
+          type = lib.types.path;
         };
       };
+      config.source =
+        let
+          name = lib.hm.strings.storeFileName "hm-fontconfig-${config.label}.xml";
+        in
+        lib.mkIf (config.text != null) (pkgs.writeText name config.text);
     }
   );
 
@@ -310,7 +317,6 @@ in
         fonts = {
           enable = true;
           priority = 10;
-          source = null; # Set the source as null explicitly so that it cannot be overwritten by mistake by a user
           text = mkFontconfigConf ''
             <description>Add fonts in the Nix user profile</description>
 
@@ -358,7 +364,6 @@ in
           {
             enable = builtins.length content > 0;
             priority = 10;
-            source = null;
             text = mkFontconfigConf (
               lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
             );
@@ -383,7 +388,6 @@ in
           {
             enable = true;
             priority = 52;
-            source = null;
             text = mkFontconfigConf ''
               <!-- Default fonts -->
               ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
@@ -397,8 +401,7 @@ in
     xdg.configFile = lib.mapAttrs' (
       _name: config:
       lib.nameValuePair "fontconfig/conf.d/${config.target}" {
-        inherit (config) enable text;
-        source = lib.mkIf (config.source != null) config.source;
+        inherit (config) enable source;
       }
     ) cfg.configFile;
   };
