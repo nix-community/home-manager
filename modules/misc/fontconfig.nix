@@ -16,7 +16,19 @@ let
 
   globalConfig = config;
   fontConfigFileType = lib.types.submodule (
-    { config, name, ... }:
+    let
+      noteContentOptionsExclusivity = ''
+        Note that {option}`source` will be derived from {option}`text` if it is set; with override
+        priorities being preserved.  As a consequence, exactly one of {option}`text`, and
+        {option}`source` must be set with highest priority.
+      '';
+    in
+    {
+      config,
+      name,
+      options,
+      ...
+    }:
     {
       options = {
         enable = lib.mkOption {
@@ -71,28 +83,45 @@ let
         text = lib.mkOption {
           description = ''
             Verbatim contents of the config file.
-
-            Note that out of the options
-            - {option}`fonts.fontconfig.configFile.<name>.text`, and
-            - {option}`fonts.fontconfig.configFile.<name>.source`,
-            exactly one must be set.
-          '';
+          ''
+          + noteContentOptionsExclusivity;
           default = null;
           type = with lib.types; nullOr lines;
         };
         source = lib.mkOption {
           description = ''
             Path to the source file.
-
-            Note that out of the options
-            - {option}`fonts.fontconfig.configFile.<name>.text`, and
-            - {option}`fonts.fontconfig.configFile.<name>.source`,
-            exactly one must be set.
-          '';
-          default = null;
-          type = with lib.types; nullOr path;
+          ''
+          + noteContentOptionsExclusivity;
+          type =
+            let
+              thisOption = lib.showOption [
+                "fonts"
+                "fontconfig"
+                "configFile"
+                name
+                "source"
+              ];
+              abortOnNull =
+                x:
+                if x != null then
+                  x
+                else
+                  abort ''
+                    Setting '${thisOption}' to null is not
+                    required anymore and disallowed. You can safely remove this definition.
+                  '';
+            in
+            with lib.types;
+            coercedTo (nullOr path) abortOnNull path;
         };
       };
+      config.source =
+        let
+          fileName = lib.hm.strings.storeFileName "hm-fontconfig-${config.label}.xml";
+          mkTextFile = pkgs.writeText fileName;
+        in
+        lib.mkIf (config.text != null) (lib.mkDerivedConfig options.text mkTextFile);
     }
   );
 
@@ -310,7 +339,6 @@ in
         fonts = {
           enable = true;
           priority = 10;
-          source = null; # Set the source as null explicitly so that it cannot be overwritten by mistake by a user
           text = mkFontconfigConf ''
             <description>Add fonts in the Nix user profile</description>
 
@@ -358,7 +386,6 @@ in
           {
             enable = builtins.length content > 0;
             priority = 10;
-            source = null;
             text = mkFontconfigConf (
               lib.concatStrings ([ "<description>Set the rendering mode</description>\n" ] ++ content)
             );
@@ -383,7 +410,6 @@ in
           {
             enable = true;
             priority = 52;
-            source = null;
             text = mkFontconfigConf ''
               <!-- Default fonts -->
               ${genDefault cfg.defaultFonts.sansSerif "sans-serif"}
@@ -397,8 +423,7 @@ in
     xdg.configFile = lib.mapAttrs' (
       _name: config:
       lib.nameValuePair "fontconfig/conf.d/${config.target}" {
-        inherit (config) enable text;
-        source = lib.mkIf (config.source != null) config.source;
+        inherit (config) enable source;
       }
     ) cfg.configFile;
   };
