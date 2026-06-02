@@ -1,18 +1,7 @@
 {
-  config,
-  pkgs,
-  ...
-}:
-
-let
-  activationScript = pkgs.writeText "activation-script" config.home.activation.infat.data;
-in
-{
   programs.infat = {
     enable = true;
-    autoActivate.extraArgs = {
-      quiet = true;
-    };
+    autoActivate.extraArgs = [ "--quiet" ];
     settings = {
       extensions = {
         md = "TextEdit";
@@ -23,8 +12,8 @@ in
   test.stubs.infat = { };
 
   nmt.script = ''
-    assertFileRegex "${activationScript}" '.*--config'
-    assertFileRegex "${activationScript}" '.*--quiet'
-    assertFileNotRegex "${activationScript}" '.*--robust'
+    assertFileContains activate ' --config'
+    assertFileContains activate ' --quiet'
+    assertFileNotRegex activate '.*--robust'
   '';
 }
