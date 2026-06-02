@@ -9,5 +9,5 @@
   fontconfig-extra-config-files = ./extra-config-files.nix;
   fontconfig-fonts = ./fonts.nix;
 
-  fontconfig-old-default-configFile-toggle = ./old-default-configFile-toggle.nix;
+  fontconfig-legacy-default-configFile-toggle = ./legacy-default-configFile-toggle.nix;
 }
