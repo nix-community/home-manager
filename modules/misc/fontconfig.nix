@@ -16,7 +16,7 @@ let
 
   globalConfig = config;
   fontConfigFileType = lib.types.submodule (
-    { name, ... }:
+    { config, name, ... }:
     {
       options = {
         enable = lib.mkOption {
@@ -58,6 +58,15 @@ let
           '';
           default = 90;
           type = lib.types.ints.between 0 99;
+        };
+        target = lib.mkOption {
+          description = ''
+            Path to the target file relative to
+            {file}`''${config.xdg.configHome}/fontconfig/conf.d/`.
+          '';
+          default = "${toString config.priority}-hm-${config.label}.conf";
+          defaultText = ''"''${toString config.priority}-hm-''${config.label}.conf"'';
+          type = lib.types.nonEmptyStr;
         };
         text = lib.mkOption {
           description = ''
@@ -214,7 +223,6 @@ in
         default = { };
         description = ''
           Config files that will be installed to {file}`~/.config/fontconfig/conf.d/`.
-          Files are named like `fontconfig/conf.d/{priority}-{label}.conf`.
         '';
         example = {
           tamzen-disable-antialiasing = {
@@ -388,7 +396,7 @@ in
 
     xdg.configFile = lib.mapAttrs' (
       _name: config:
-      lib.nameValuePair "fontconfig/conf.d/${toString config.priority}-hm-${config.label}.conf" {
+      lib.nameValuePair "fontconfig/conf.d/${config.target}" {
         inherit (config) enable text;
         source = lib.mkIf (config.source != null) config.source;
       }
