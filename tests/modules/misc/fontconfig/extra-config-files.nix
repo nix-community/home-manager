@@ -3,6 +3,7 @@
 let
   fcConfD = "home-files/.config/fontconfig/conf.d";
   sampleText = "hello world";
+  sampleTextFile = builtins.toFile "sample-text-config" sampleText;
   sampleSource = builtins.toFile "fontconfig-source" ''
     <?xml version="1.0"?>
     <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
@@ -35,6 +36,16 @@ in
       };
       text.text = sampleText;
       source.source = sampleSource;
+
+      # Check that priorities are propagated
+      text-overrides-source = {
+        text = lib.mkForce sampleText;
+        source = sampleSource;
+      };
+      source-overrides-text = {
+        text = sampleText;
+        source = lib.mkForce sampleSource;
+      };
     };
   };
 
@@ -50,10 +61,15 @@ in
     assertFileExists ${fcConfD}/target
 
     assertFileExists  ${fcConfD}/90-hm-text.conf
-    assertFileContent ${fcConfD}/90-hm-text.conf \
-      ${builtins.toFile "sample-text-config" sampleText}
+    assertFileContent ${fcConfD}/90-hm-text.conf ${sampleTextFile}
 
     assertFileExists  ${fcConfD}/90-hm-source.conf
     assertFileContent ${fcConfD}/90-hm-source.conf ${sampleSource}
+
+    assertFileExists  ${fcConfD}/90-hm-text-overrides-source.conf
+    assertFileContent ${fcConfD}/90-hm-text-overrides-source.conf ${sampleTextFile}
+
+    assertFileExists  ${fcConfD}/90-hm-source-overrides-text.conf
+    assertFileContent ${fcConfD}/90-hm-source-overrides-text.conf ${sampleSource}
   '';
 }
