@@ -4,10 +4,13 @@
   programs.nushell.enable = true;
   programs.zsh.enable = true;
 
-  sshAuthSock.initialization = {
-    bash = "echo bash/zsh";
-    fish = "echo fish";
-    nushell = "echo nushell";
+  sshAuthSock = {
+    enable = true;
+    initialization = {
+      bash = "echo bash/zsh";
+      fish = "echo fish";
+      nushell = "echo nushell";
+    };
   };
 
   nmt.script = ''
