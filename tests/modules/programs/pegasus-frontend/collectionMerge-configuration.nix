@@ -1,12 +1,6 @@
 { lib, ... }:
 let
-  metaName = name: "${lib.substring 0 32 (builtins.hashString "sha256" name)}.metadata.pegasus.txt";
-  assertMetaFile =
-    name: expected:
-    lib.concatStringsSep "\n" [
-      "assertFileExists /nix/store/*-pegasus-metadata/${name}"
-      "assertFileContent /nix/store/*-pegasus-metadata/${name} ${./collectionMerge-${expected}.txt}"
-    ];
+  inherit (import ./utils.nix lib) assertMetaFile metaName;
 in
 {
   # testing the merging of games into their assigned collections
@@ -64,10 +58,45 @@ in
     };
 
     nmt.script = ''
-      ${assertMetaFile (metaName "collection abd") "abd"}
-      ${assertMetaFile (metaName "collection bc") "bc"}
-      ${assertMetaFile (metaName "collection d") "d"}
-      ${assertMetaFile "games.metadata.pegasus.txt" "game"}
+      ${assertMetaFile (metaName "collection abd") ''
+        collection: collection abd
+        file: a
+        file: b
+        file: d
+        launch: {file.path}
+      ''}
+      ${assertMetaFile (metaName "collection bc") ''
+        collection: collection bc
+        file: b
+        file: c
+        launch: {file.path}
+      ''}
+      ${assertMetaFile (metaName "collection d") ''
+        collection: collection d
+        file: a
+        file: d
+        launch: {file.path}
+        not_a_setting: testing
+      ''}
+      ${assertMetaFile "games.metadata.pegasus.txt" ''
+        game: game a
+        file: a
+
+
+        game: game b
+        file: b
+
+
+        game: game c
+        file: c
+        multi-key: v1
+        multi-key: v2
+
+
+        game: game ad
+        file: a
+        file: d
+      ''}
     '';
   };
 }

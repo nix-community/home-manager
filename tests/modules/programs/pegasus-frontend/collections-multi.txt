@@ -1,4 +1,0 @@
-collection: Multi-game carts
-file: test
-launch: {file.path}
-regex: \d+.in.1

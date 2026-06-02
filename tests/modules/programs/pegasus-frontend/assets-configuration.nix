@@ -1,4 +1,7 @@
-{ ... }:
+{ lib, ... }:
+let
+  inherit (import ./utils.nix lib) assertMetaFile;
+in
 {
   # test asset management
   config = {
@@ -17,15 +20,19 @@
               "./logo.png"
               "./other-logo.png"
             ];
-            tile = ./assets-tile.txt;
+            tile = ./fake-image.txt;
           };
         }
       ];
     };
 
-    nmt.script = ''
-      assertFileExists /nix/store/*-pegasus-metadata/games.metadata.pegasus.txt
-      assertFileContent $(normalizeStorePaths /nix/store/*-pegasus-metadata/games.metadata.pegasus.txt) ${./assets-game.txt}
+    nmt.script = assertMetaFile "games.metadata.pegasus.txt" ''
+      game: My Game
+      assets.boxFront: /nix/store/00000000000000000000000000000000-boxfront.png
+      assets.logo: ./logo.png
+      assets.logo: ./other-logo.png
+      assets.tile: /nix/store/00000000000000000000000000000000-fake-image.txt
+      file: /nix/store/00000000000000000000000000000000-mygame.txt
     '';
   };
 }

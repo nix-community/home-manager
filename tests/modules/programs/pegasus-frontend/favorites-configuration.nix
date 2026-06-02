@@ -1,12 +1,6 @@
 { lib, ... }:
 let
-  metaName = name: "${lib.substring 0 32 (builtins.hashString "sha256" name)}.metadata.pegasus.txt";
-  assertMetaFile =
-    name: expected:
-    lib.concatStringsSep "\n" [
-      "assertFileExists /nix/store/*-pegasus-metadata/${name}"
-      "assertFileContent /nix/store/*-pegasus-metadata/${name} ${./favorites-${expected}.txt}"
-    ];
+  inherit (import ./utils.nix lib) assertMetaFile metaName;
 in
 {
   # test favorites management
@@ -50,8 +44,35 @@ in
     nmt.script = ''
       cfg=home-files/.config/pegasus-frontend
 
-      ${assertMetaFile (metaName "coll") "coll"}
-      ${assertMetaFile "games.metadata.pegasus.txt" "game"}
+      ${assertMetaFile (metaName "coll") ''
+        collection: coll
+        file: a
+        file: b
+        file: c
+        file: d
+        file: e
+        launch: {file.path}
+      ''}
+      ${assertMetaFile "games.metadata.pegasus.txt" ''
+        game: Game A
+        file: a
+
+
+        game: Game B
+        file: b
+
+
+        game: Game C
+        file: c
+
+
+        game: Game D
+        file: d
+
+
+        game: Game E
+        file: e
+      ''}
 
       assertFileExists $cfg/favorites.txt
       assertFileContent $cfg/favorites.txt ${builtins.toFile "favorites.txt" "a\nc"}
