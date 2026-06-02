@@ -13,9 +13,11 @@ let
     types
     ;
 
-  inherit (import ../lib.nix { inherit config lib; }) dotDirRel;
+  inherit (import ../lib.nix { inherit config lib; }) dotDirRel mkShellVarPathStr;
 
   cfg = config.programs.zsh;
+
+  shellVarPathArg = path: ''"${lib.escape [ "\\" "\"" "`" ] (mkShellVarPathStr path)}"'';
 
   ohMyZshModule = types.submodule {
     options = {
@@ -98,7 +100,7 @@ in
       ${optionalString (
         cfg.oh-my-zsh.plugins != [ ]
       ) "plugins=(${escapeShellArgs cfg.oh-my-zsh.plugins})"}
-      ${optionalString (cfg.oh-my-zsh.custom != "") "ZSH_CUSTOM=${escapeShellArg cfg.oh-my-zsh.custom}"}
+      ${optionalString (cfg.oh-my-zsh.custom != "") "ZSH_CUSTOM=${shellVarPathArg cfg.oh-my-zsh.custom}"}
       ${optionalString (cfg.oh-my-zsh.theme != "") "ZSH_THEME=${escapeShellArg cfg.oh-my-zsh.theme}"}
       source $ZSH/oh-my-zsh.sh
     '';
