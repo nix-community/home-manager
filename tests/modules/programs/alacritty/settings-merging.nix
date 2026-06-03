@@ -15,6 +15,11 @@
           mods = "Control";
           chars = "\\u000c";
         }
+        {
+          key = "RBracket";
+          mods = "Alt";
+          chars = "\\u001d";
+        }
       ];
 
       font =

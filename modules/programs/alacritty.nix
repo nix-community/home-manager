@@ -100,8 +100,20 @@ in
         _finalAttrs: prevAttrs: {
           buildCommand = lib.concatStringsSep "\n" [
             prevAttrs.buildCommand
-            # TODO: why is this needed? Is there a better way to retain escape sequences?
-            "substituteInPlace $out --replace-quiet '\\\\' '\\'"
+            # Nix cannot spell TOML escape sequences like "\u001d" directly:
+            # "\\u001d" is a literal backslash-u string, while fromJSON creates
+            # a control character and fails for "\u0000". Normalize both TOML
+            # generator outputs to the Alacritty escape form:
+            #   chars = "\\u001d" -> chars = "\u001d"
+            #   chars = '\u001d'  -> chars = "\u001d"
+            ''
+              sed \
+                -E \
+                -e "s/= \"\\\\\\\\u([0-9a-fA-F]{4})\"\$/= \"\\\\u\1\"/" \
+                -e "s/= '\\\\u([0-9a-fA-F]{4})'\$/= \"\\\\u\1\"/" \
+                "$out" > "$TMPDIR/alacritty.toml"
+              cp "$TMPDIR/alacritty.toml" "$out"
+            ''
           ];
         }
       );

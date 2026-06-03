@@ -9,6 +9,11 @@ chars = "\u000c"
 key = "K"
 mods = "Control"
 
+[[keyboard.bindings]]
+chars = "\u001d"
+key = "RBracket"
+mods = "Alt"
+
 [window.dimensions]
 columns = 200
 lines = 3
