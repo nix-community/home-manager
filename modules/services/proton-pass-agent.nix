@@ -75,7 +75,7 @@ in
       home.packages = [ cfg.package ];
 
       sshAuthSock.initialization = {
-        bash = ''export SSH_AUTH_SOCK="${socketPath}"'';
+        sh = ''export SSH_AUTH_SOCK="${socketPath}"'';
         fish = ''set -x SSH_AUTH_SOCK "${socketPath}"'';
         nushell = "$env.SSH_AUTH_SOCK = ${
           if pkgs.stdenv.isDarwin then

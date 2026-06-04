@@ -25,6 +25,7 @@ in
       '';
     };
 
+    enableShIntegration = lib.hm.shell.mkShIntegrationOption shellIntegrationParameters;
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption shellIntegrationParameters;
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption shellIntegrationParameters;
     enableIonIntegration = lib.hm.shell.mkIonIntegrationOption shellIntegrationParameters;

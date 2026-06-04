@@ -333,6 +333,8 @@ in
         };
       };
 
+      enableShIntegration = lib.hm.shell.mkShIntegrationOption { inherit config; };
+
       enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
       enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -367,7 +369,7 @@ in
     );
 
     sshAuthSock.initialization = lib.mkIf cfg.enableSshSupport {
-      bash = ''
+      sh = ''
         unset SSH_AGENT_PID
         if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
           export SSH_AUTH_SOCK="$(${gpgPkg}/bin/gpgconf --list-dirs agent-ssh-socket)"
@@ -393,6 +395,7 @@ in
     };
 
     programs = {
+      sh.initExtra = mkIf cfg.enableShIntegration gpgBashInitStr;
       bash.initExtra = mkIf cfg.enableBashIntegration gpgBashInitStr;
       zsh.initContent = mkIf cfg.enableZshIntegration gpgZshInitStr;
       fish.interactiveShellInit = mkIf cfg.enableFishIntegration gpgFishInitStr;
