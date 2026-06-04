@@ -529,6 +529,12 @@
     github = "rszamszur";
     githubId = 10353018;
   };
+  semi710 = {
+    name = "Nikhil Singh";
+    email = "nik.singh710@gmail.com";
+    github = "semi710";
+    githubId = 60490474;
+  };
   silmarp = {
     name = "Silmar Pereira da Silva Junior";
     email = "silmarjr2@gmail.com";
