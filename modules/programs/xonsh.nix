@@ -18,19 +18,12 @@ in
       internal = true;
       description = "Package that will actually get installed";
     };
-    xonshrc = mkOption {
+    config = mkOption {
       type = types.lines;
       default = "";
       description = ''
-        The contents of .xonshrc
-      '';
-    };
-    pythonPackages = mkOption {
-      type = types.raw;
-      default = pkgs.python3Packages;
-      defaultText = "pkgs.python3Packages";
-      description = ''
-        The pythonPackages set extraPackages are taken from
+          Extra text added to the end of `/etc/xonsh/xonshrc`,
+          the system-wide control file for xonsh.
       '';
     };
     shellAliases = mkOption {
@@ -50,25 +43,22 @@ in
     };
     extraPackages = lib.mkOption {
       default = (ps: [ ]);
+        defaultText = lib.literalExpression "ps: [ ]";
+        example = lib.literalExpression ''
+          ps: with ps; [ numpy xonsh.xontribs.xontrib-vox ]
+        '';
       type =
         with lib.types;
         coercedTo (listOf lib.types.package) (v: (_: v)) (functionTo (listOf lib.types.package));
       description = ''
-        Add the specified extra packages to the xonsh package.
-        Preferred over using `programs.xonsh.package` as it composes with `pkgs.xonsh.xontribs`.
-        Take care in using this option along with manually defining the package
-        option above, as the two can result in conflicting sets of build dependencies.
-        This option assumes that the package option has an overridable argument
-        called `extraPackages`, so if you override the package option but also
-        intend to use this option as in the case of many enableXonshIntegration options,
-        be sure that your resulting package still honors the necessary option.
+        Xontribs and extra Python packages to be available in xonsh.
       '';
     };
   };
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.finalPackage ];
     programs.xonsh = {
-      xonshrc = lib.mkMerge (
+      config = lib.mkMerge (
         lib.mapAttrsToList (n: v: "aliases['${n}']=${builtins.toJSON v}") cfg.shellAliases
       );
       shellAliases = lib.mapAttrs (n: lib.mkDefault) config.home.shellAliases;

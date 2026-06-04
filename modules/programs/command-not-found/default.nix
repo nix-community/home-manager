@@ -53,7 +53,7 @@ in
         "${commandNotFound}/bin/command-not-found" $argv
       end
     '';
-    programs.xonsh.xonshrc = ''
+    programs.xonsh.config = ''
       @events.on_command_not_found
       def _command_not_found_nix(cmd):
         import os.path

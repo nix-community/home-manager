@@ -68,7 +68,7 @@ in
         source <(${bin} _carapace zsh)
       '';
 
-      xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration ''
+      xonsh.config = lib.mkIf cfg.enableXonshIntegration ''
         execx($(${bin} _carapace xonsh))
       '';
 

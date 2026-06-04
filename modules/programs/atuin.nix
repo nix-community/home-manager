@@ -229,7 +229,7 @@ in
             '';
           };
 
-          programs.xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+          programs.xonsh.config = mkIf cfg.enableXonshIntegration ''
             execx($(${cfg.package}/bin/atuin init xonsh))
           '';
 

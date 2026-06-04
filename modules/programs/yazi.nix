@@ -285,7 +285,7 @@ in
 
         zsh.initContent = mkIf cfg.enableZshIntegration bashIntegration;
 
-        xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration xonshIntegration;
+        xonsh.config = lib.mkIf cfg.enableXonshIntegration xonshIntegration;
 
         fish.functions.${cfg.shellWrapperName} = mkIf cfg.enableFishIntegration fishIntegration;
 

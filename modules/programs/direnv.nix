@@ -176,7 +176,7 @@ in
           )
         '');
         xonsh = mkIf cfg.enableXonshIntegration {
-          xonshrc = "xontrib load direnv";
+          config = "xontrib load direnv";
           extraPackages = ps: [ ps.xonsh.xontribs.xonsh-direnv ];
         };
       };

@@ -73,7 +73,7 @@ in
       '';
     };
 
-    programs.xonsh.xonshrc = lib.mkIf cfg.enableXonshIntegration ''
+    programs.xonsh.config = lib.mkIf cfg.enableXonshIntegration ''
       execx($(${cfg.package}/bin/zoxide init xonsh), 'exec', __xonsh__.ctx, filename='zoxide')
     '';
   };

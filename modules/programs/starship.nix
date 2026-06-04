@@ -156,7 +156,7 @@ in
         fi
       '';
 
-      xonsh.xonshrc = mkIf cfg.enableXonshIntegration ''
+      xonsh.config = mkIf cfg.enableXonshIntegration ''
         if $TERM != "dumb":
           execx($(${lib.getExe cfg.package} init xonsh))
       '';
