@@ -69,8 +69,8 @@ in
       );
     };
     xdg.configFile."xonsh/rc.xsh" = {
-      enable = cfg.xonshrc != "";
-      text = cfg.xonshrc;
+      enable = cfg.config != "";
+      text = cfg.config;
     };
   };
 }
