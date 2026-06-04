@@ -79,11 +79,6 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-
-    enableXonshIntegration = lib.mkEnableOption "Xonsh integration" // {
-      default = true;
-    };
-
   };
 
   config = lib.mkIf cfg.enable {
@@ -121,11 +116,6 @@ in
             ''
           }
         '';
-
-      xonsh.config = mkIf cfg.enableXonshIntegration ''
-        execx($(${payRespectsCmd} xonsh ${cfgOptions}))
-      '';
-
       };
   };
 }
