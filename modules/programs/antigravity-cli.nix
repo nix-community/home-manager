@@ -1,11 +1,31 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
 let
   cfg = config.programs.antigravity-cli;
+
+  renamedGeminiOptions = [
+    "commands"
+    "context"
+    "defaultModel"
+    "enable"
+    "enableMcpIntegration"
+    "mcpServers"
+    "package"
+    "permissions"
+    "policies"
+    "settings"
+    "skills"
+    "useLegacyGeminiConfig"
+  ];
+
+  oldGeminiCliDefined = lib.any (
+    name: (lib.getAttrFromPath [ "programs" "gemini-cli" name ] options).isDefined
+  ) renamedGeminiOptions;
 
   jsonFormat = pkgs.formats.json { };
   tomlFormat = pkgs.formats.toml { };
@@ -31,9 +51,23 @@ in
 {
   meta.maintainers = [ lib.maintainers.rrvsh ];
 
-  imports = [
-    (lib.mkRenamedOptionModule [ "programs" "gemini-cli" ] [ "programs" "antigravity-cli" ])
-  ];
+  imports =
+    let
+      renamedGeminiOption =
+        name:
+        lib.mkRenamedOptionModule
+          [
+            "programs"
+            "gemini-cli"
+            name
+          ]
+          [
+            "programs"
+            "antigravity-cli"
+            name
+          ];
+    in
+    map renamedGeminiOption renamedGeminiOptions;
 
   options.programs.antigravity-cli = {
     enable = lib.mkEnableOption "Antigravity CLI";
@@ -353,6 +387,12 @@ in
     in
     lib.mkIf cfg.enable (
       lib.mkMerge [
+        (lib.mkIf oldGeminiCliDefined {
+          programs.antigravity-cli = {
+            package = lib.mkDefault pkgs.gemini-cli;
+            useLegacyGeminiConfig = lib.mkDefault true;
+          };
+        })
         {
           home = {
             packages = lib.mkIf (cfg.package != null) [ cfg.package ];

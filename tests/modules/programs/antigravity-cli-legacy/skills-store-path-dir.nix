@@ -6,6 +6,18 @@
 }:
 
 let
+  renamedWarning =
+    name:
+    "The option `programs.gemini-cli.${name}' defined in ${
+      lib.showFiles (
+        lib.getAttrFromPath [
+          "programs"
+          "gemini-cli"
+          name
+          "files"
+        ] options
+      )
+    } has been renamed to `programs.antigravity-cli.${name}'.";
   src = pkgs.writeTextDir "skills/external-skill/SKILL.md" ''
     # External Skill
   '';
@@ -17,8 +29,10 @@ in
     skills = "${src}/skills";
   };
 
-  test.asserts.warnings.expected = [
-    "The option `programs.gemini-cli' defined in ${lib.showFiles options.programs.gemini-cli.files} has been renamed to `programs.antigravity-cli'."
+  test.asserts.warnings.expected = map renamedWarning [
+    "skills"
+    "package"
+    "enable"
   ];
 
   nmt.script = ''
