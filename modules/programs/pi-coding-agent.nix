@@ -17,12 +17,6 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
-  isPathLike =
-    content:
-    lib.isPath content
-    || (builtins.isString content && lib.hasPrefix "${builtins.storeDir}/" content)
-    || lib.isDerivation content;
-
   upstreamConfigDir = "${config.home.homeDirectory}/.pi/agent";
 
   packageWithExtraPackages =
@@ -210,7 +204,7 @@ in
         })
 
         (
-          if isPathLike cfg.context then
+          if lib.hm.strings.isPathLike cfg.context then
             { "${cfg.configDir}/AGENTS.md".source = cfg.context; }
           else
             (mkIf (cfg.context != "") {
