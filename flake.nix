@@ -45,9 +45,19 @@
     }
     // (
       let
-        forAllPkgs =
-          f:
-          nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system: f nixpkgs.legacyPackages.${system});
+        supportedSystems = [
+          "aarch64-darwin"
+          "aarch64-linux"
+          "i686-linux"
+          "x86_64-darwin"
+          "x86_64-linux"
+        ];
+
+        forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+
+        forAllPkgs = forSystems nixpkgs.lib.systems.flakeExposed;
+
+        forSupportedPkgs = forSystems supportedSystems;
 
         forCI = nixpkgs.lib.genAttrs [
           "aarch64-darwin"
@@ -156,7 +166,7 @@
           lib.mapAttrs' renameTestPkg tests;
       in
       {
-        formatter = forAllPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
+        formatter = forSupportedPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
 
         # TODO: increase buildbot testing scope
         buildbot = forCI (
@@ -187,6 +197,8 @@
           {
             default = hmPkg;
             home-manager = hmPkg;
+          }
+          // nixpkgs.lib.optionalAttrs (nixpkgs.lib.elem pkgs.stdenv.hostPlatform.system supportedSystems) {
 
             ci-parse = pkgs.callPackage ./ci/parse.nix { nix = pkgs.nixVersions.latest; };
             ci-parse-lix = pkgs.callPackage ./ci/parse.nix {
@@ -212,11 +224,11 @@
           }
         );
 
-        devShells = forAllPkgs (pkgs: {
+        devShells = forSupportedPkgs (pkgs: {
           default = pkgs.callPackage ./home-manager/devShell.nix { };
         });
 
-        legacyPackages = forAllPkgs (
+        legacyPackages = forSupportedPkgs (
           pkgs:
           let
             inherit (pkgs.stdenv.hostPlatform) system;
