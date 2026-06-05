@@ -22,6 +22,7 @@ in
 {
   meta.maintainers = [
     lib.maintainers.khaneliman
+    lib.maintainers.PerchunPak
     lib.hm.maintainers.mainrs
   ];
 
