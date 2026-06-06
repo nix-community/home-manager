@@ -175,6 +175,12 @@
     github = "epixtm";
     githubId = 168025607;
   };
+  ErinaYip = {
+    name = "erina";
+    email = "erinayip@outlook.com";
+    github = "ErinaYip";
+    githubId = 227132255;
+  };
   exzombie = {
     name = "Jure Varlec";
     email = "jure@varlec.si";
