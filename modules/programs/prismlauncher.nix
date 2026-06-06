@@ -27,6 +27,7 @@ in
 
 {
   meta.maintainers = with lib.maintainers; [
+    ErinaYip
     mikaeladev
   ];
 
