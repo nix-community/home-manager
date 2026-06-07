@@ -38,6 +38,11 @@
       "z" = "__zoxide_z";
     };
 
+    abbreviations = {
+      "gs" = "git status";
+      "ll" = "ls -l";
+    };
+
     settings = {
       show_banner = false;
       display_errors.exit_code = false;
