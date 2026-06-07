@@ -29,3 +29,8 @@ let config = {
 alias "ll" = ls -a
 alias "multi word alias" = cd -
 alias "z" = __zoxide_z
+
+$env.config.abbreviations = {
+    "gs": "git status"
+    "ll": "ls -l"
+}
