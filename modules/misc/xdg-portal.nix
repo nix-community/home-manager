@@ -50,11 +50,6 @@ in
       description = ''
         List of additional portals that should be added to the environment.
 
-        The directory where the portal definitions have been merged together
-        (likely `~/.nix-profile/share/xdg-desktop-portal/portals`) will get
-        passed to `xdg-desktop-portal.service` via the
-        `NIX_XDG_DESKTOP_PORTAL_DIR` environment variable.
-
         Portals allow interaction with system, like choosing files or taking
         screenshots. At minimum, a desktop portal implementation should be
         listed.
@@ -124,7 +119,6 @@ in
     let
       cfg = config.xdg.portal;
       packages = [ pkgs.xdg-desktop-portal ] ++ cfg.extraPortals;
-      portalsDir = "${config.home.profileDirectory}/share/xdg-desktop-portal/portals";
     in
     mkIf cfg.enable {
       assertions = [
@@ -172,11 +166,7 @@ in
         packages = packages ++ cfg.configPackages;
         sessionVariables = mkMerge [
           (mkIf cfg.xdgOpenUsePortal { NIXOS_XDG_OPEN_USE_PORTAL = "1"; })
-          { NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir; }
         ];
-      };
-      systemd.user.sessionVariables = {
-        NIX_XDG_DESKTOP_PORTAL_DIR = portalsDir;
       };
 
       xdg.configFile = lib.concatMapAttrs (
