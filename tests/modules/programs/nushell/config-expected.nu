@@ -13,6 +13,8 @@ load-env {
     "PROMPT_COMMAND": ({|| "> "})
 }
 
+$env.config.abbreviations.gs = "git status"
+$env.config.abbreviations.ll = "ls -l"
 $env.config.display_errors.exit_code = false
 $env.config.hooks.pre_execution = [
     ({|| "pre_execution hook"})
@@ -29,8 +31,3 @@ let config = {
 alias "ll" = ls -a
 alias "multi word alias" = cd -
 alias "z" = __zoxide_z
-
-$env.config.abbreviations = {
-    "gs": "git status"
-    "ll": "ls -l"
-}
