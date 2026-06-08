@@ -286,7 +286,7 @@ in
             preferLocalBuild = true;
             nativeBuildInputs = [ pkgs.makeWrapper ];
             postBuild = ''
-              wrapProgram $out/bin/zeditor \
+              wrapProgram $out/bin/${cfg.package.meta.mainProgram or "zeditor"} \
                 --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
             '';
           })
