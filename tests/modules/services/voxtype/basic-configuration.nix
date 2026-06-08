@@ -29,6 +29,7 @@
     assertFileRegex "$serviceFile" 'Environment=PATH=.*/bin'
     assertFileRegex "$serviceFile" 'Environment=WAYLAND_DISPLAY=wayland-1'
     assertFileRegex "$serviceFile" 'Environment=VOXTYPE_TEST_ENV=1'
+    assertFileRegex "$serviceFile" 'X-Restart-Triggers=/nix/store/.*-voxtype-config.toml'
 
     assertFileContent "$configFile" ${./expected-config.toml}
   '';

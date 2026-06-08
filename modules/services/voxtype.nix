@@ -129,6 +129,9 @@ in
       Unit = {
         Description = "Voxtype speech-to-text daemon";
         PartOf = [ "default.target" ];
+        X-Restart-Triggers = mkIf (cfg.settings != { }) [
+          "${config.xdg.configFile."voxtype/config.toml".source}"
+        ];
       }
       // optionalAttrs (cfg.loadModels != [ ]) {
         Wants = [ "voxtype-model-loader.service" ];
