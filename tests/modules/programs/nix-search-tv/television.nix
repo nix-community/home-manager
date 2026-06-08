@@ -19,12 +19,12 @@
           mode = "execute"
 
           [actions.run]
-          command = "nix run {replace:s/\\/ /#/g}"
+          command = 'nix run {replace:s/\/ /#/g}'
           description = "Run the package"
           mode = "execute"
 
           [actions.shell]
-          command = "nix shell {replace:s/\\/ /#/g}"
+          command = 'nix shell {replace:s/\/ /#/g}'
           description = "Enter new nix shell with this package"
           mode = "execute"
 
@@ -44,7 +44,7 @@
           name = "nix-search-tv"
 
           [preview]
-          command = "${lib.getExe pkgs.nix-search-tv} preview \"{}\""
+          command = '${lib.getExe pkgs.nix-search-tv} preview "{}"'
 
           [source]
           command = "${lib.getExe pkgs.nix-search-tv} print"

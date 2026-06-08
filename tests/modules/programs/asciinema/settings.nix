@@ -35,7 +35,7 @@
     assertFileContent home-files/.config/asciinema/config.toml \
     ${builtins.toFile "expected.asciinema_config.toml" ''
       [notifications]
-      command = "tmux display-message \"$TEXT\""
+      command = 'tmux display-message "$TEXT"'
       enable = false
 
       [playback]

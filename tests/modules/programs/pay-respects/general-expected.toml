@@ -1,3 +1,6 @@
 [[match_err]]
 pattern = ["permission denied"]
-suggest = ["#[executable(sudo), !cmd_contains(sudo)]\nsudo {{command}}\n"]
+suggest = ["""
+#[executable(sudo), !cmd_contains(sudo)]
+sudo {{command}}
+"""]

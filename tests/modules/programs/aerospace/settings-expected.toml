@@ -8,7 +8,13 @@ right = 8
 top = 8
 
 [mode.main.binding]
-alt-enter = "exec-and-forget osascript -e '\n           tell application \"Terminal\"\n               do script\n               activate\n           end tell'\n"
+alt-enter = """
+exec-and-forget osascript -e '
+           tell application "Terminal"
+               do script
+               activate
+           end tell'
+"""
 alt-h = "focus left"
 alt-j = "focus down"
 alt-k = "focus up"

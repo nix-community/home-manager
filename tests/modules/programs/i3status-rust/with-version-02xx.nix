@@ -19,6 +19,7 @@
         ${pkgs.writeText "i3status-rust-expected-config" ''
           icons = "none"
           theme = "plain"
+
           [[block]]
           alert = 10.0
           block = "disk_space"
