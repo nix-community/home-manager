@@ -1467,6 +1467,13 @@
     name = "Nikolaos Karaolidis";
     source = "nixpkgs";
   };
+  kayskayskays = {
+    email = "115312476+kayskayskays@users.noreply.github.com";
+    github = "kayskayskays";
+    githubId = 115312476;
+    name = "Kays";
+    source = "home-manager";
+  };
   khaneliman = {
     email = "khaneliman12@gmail.com";
     github = "khaneliman";
@@ -2177,6 +2184,13 @@
     githubId = 11665236;
     name = "Seong Yong-ju";
     source = "nixpkgs";
+  };
+  semi710 = {
+    email = "nik.singh710@gmail.com";
+    github = "semi710";
+    githubId = 60490474;
+    name = "Nikhil Singh";
+    source = "home-manager";
   };
   shikanime = {
     email = "william.phetsinorath@shikanime.studio";
