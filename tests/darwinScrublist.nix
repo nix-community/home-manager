@@ -152,6 +152,7 @@ let
     "pay-respects"
     "pet"
     "pgcli"
+    "pi-coding-agent"
     "pimsync"
     "pistol"
     "pls"
