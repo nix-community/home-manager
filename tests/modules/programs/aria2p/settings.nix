@@ -28,7 +28,7 @@
 
         [key_bindings]
         AUTOCLEAR = "c"
-        FILTER = ["F4", "\\"]
+        FILTER = ["F4", '\']
       ''}
   '';
 }
