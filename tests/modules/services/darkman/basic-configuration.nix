@@ -17,7 +17,7 @@
     '';
 
     lightModeScripts.color-scheme-light = pkgs.writeScript "my-python-script" ''
-      #!${pkgs.python2}/bin/python
+      #!${pkgs.python3}/bin/python
 
       print('Do something!')
     '';
@@ -54,7 +54,7 @@
 
     ''}
     assertFileContent $lightModeScriptFile ${builtins.toFile "expected" ''
-      #!@python@/bin/python
+      #!@python3@/bin/python
 
       print('Do something!')
     ''}
