@@ -13,7 +13,7 @@
       fish = "echo fish";
       nushell = "echo nushell";
     };
-    systemd.socketProviderUnit = "foo.socket";
+    systemd.socketProviderUnit = "foo.service";
   };
 
   nmt.script = ''
@@ -32,7 +32,7 @@
   ''
   + lib.optionalString config.systemd.user.enable ''
     assertFileExists home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service
-    assertFileContains home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service 'Before=foo.socket'
-    assertFileContains home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service 'WantedBy=foo.socket'
+    assertFileContains home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service 'Before=foo.service'
+    assertFileContains home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service 'WantedBy=foo.service'
   '';
 }

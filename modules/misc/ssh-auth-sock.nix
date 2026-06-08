@@ -7,6 +7,8 @@
 
 let
   cfg = config.sshAuthSock;
+  socketProviderIsSocket = lib.hasSuffix ".socket" cfg.systemd.socketProviderUnit;
+  orderedProviderUnits = lib.optional (!socketProviderIsSocket) cfg.systemd.socketProviderUnit;
 in
 {
   meta.maintainers = [ lib.maintainers.bmrips ];
@@ -102,7 +104,9 @@ in
       systemd.user.services.set-SSH_AUTH_SOCK = {
         Unit = {
           Description = "Sets SSH_AUTH_SOCK in the D-BUS daemon and systemd";
-          Before = [ cfg.systemd.socketProviderUnit ];
+          # Socket units are ordered before sockets.target by systemd. Ordering
+          # this service before them creates a cycle through basic.target.
+          Before = orderedProviderUnits;
         };
         Service = {
           Type = "oneshot";
@@ -113,8 +117,8 @@ in
         };
         Install.WantedBy = [
           "default.target"
-          cfg.systemd.socketProviderUnit
-        ];
+        ]
+        ++ orderedProviderUnits;
       };
     };
 }
