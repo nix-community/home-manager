@@ -191,21 +191,6 @@ in
       '';
     };
 
-    abbreviations = lib.mkOption {
-      type = types.attrsOf types.str;
-      default = { };
-      example = {
-        ll = "ls -l";
-        gs = "git status";
-      };
-      description = ''
-        An attribute set that maps each abbreviation (the top level attribute
-        names in this option) to its expansion. Unlike aliases, abbreviations
-        are expanded inline in the line editor when a space or enter is pressed,
-        so the expanded command is what ends up in the command history.
-      '';
-    };
-
     environmentVariables = lib.mkOption {
       type = types.attrsOf lib.hm.types.nushellValue;
       default = { };
@@ -247,16 +232,11 @@ in
             || cfg.extraConfig != ""
             || aliasesStr != ""
             || cfg.settings != { }
-            || cfg.abbreviations != { }
             || cfg.environmentVariables != { };
 
           aliasesStr = lib.concatLines (
             lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}") cfg.shellAliases
           );
-
-          abbreviationsStr =
-            lib.optionalString (cfg.abbreviations != { })
-              "$env.config.abbreviations = ${toNushell { } cfg.abbreviations}";
         in
         lib.mkIf writeConfig {
           "${cfg.configDir}/config.nu".text = lib.mkMerge [
@@ -295,7 +275,6 @@ in
             (lib.mkIf (cfg.configFile != null) cfg.configFile.text)
             cfg.extraConfig
             aliasesStr
-            abbreviationsStr
           ];
         }
       )

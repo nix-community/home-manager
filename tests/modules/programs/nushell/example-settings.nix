@@ -38,12 +38,11 @@
       "z" = "__zoxide_z";
     };
 
-    abbreviations = {
-      "gs" = "git status";
-      "ll" = "ls -l";
-    };
-
     settings = {
+      abbreviations = {
+        "gs" = "git status";
+        "ll" = "ls -l";
+      };
       show_banner = false;
       display_errors.exit_code = false;
       hooks.pre_execution = [ (lib.hm.nushell.mkNushellInline ''{|| "pre_execution hook"}'') ];
