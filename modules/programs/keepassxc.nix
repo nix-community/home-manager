@@ -99,10 +99,18 @@ in
         xdg.autostart.entries = lib.mkIf cfg.autostart [
           "${cfg.package}/share/applications/org.keepassxc.KeePassXC.desktop"
         ];
-        xdg.configFile."keepassxc/keepassxc.ini" = lib.mkIf (cfg.settings != { }) {
+      }
+
+      (lib.mkIf (cfg.settings != { }) {
+        xdg.configFile."keepassxc/keepassxc.ini" = {
+          enable = !pkgs.stdenv.hostPlatform.isDarwin;
           source = iniFormat.generate "keepassxc-settings" cfg.settings;
         };
-      }
+        home.file."Library/Application Support/KeePassXC/keepassxc.ini" = {
+          enable = pkgs.stdenv.hostPlatform.isDarwin;
+          source = iniFormat.generate "keepassxc-settings" cfg.settings;
+        };
+      })
 
       (lib.mkIf (cfg.package != null) {
         home.packages = [ cfg.package ];
