@@ -25,11 +25,26 @@
     assertFileExists "$serviceFile"
     assertFileExists "$configFile"
 
-    assertFileRegex "$serviceFile" 'ExecStart=@voxtype@/bin/dummy daemon --verbose'
-    assertFileRegex "$serviceFile" 'Environment=PATH=.*/bin'
-    assertFileRegex "$serviceFile" 'Environment=WAYLAND_DISPLAY=wayland-1'
-    assertFileRegex "$serviceFile" 'Environment=VOXTYPE_TEST_ENV=1'
-    assertFileRegex "$serviceFile" 'X-Restart-Triggers=/nix/store/.*-voxtype-config.toml'
+    serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
+    assertFileContent "$serviceFileNormalized" ${builtins.toFile "expected.service" ''
+      [Install]
+      WantedBy=default.target
+
+      [Service]
+      Environment=PATH=@which@/bin:@wl-clipboard@/bin:@wtype@/bin
+      Environment=XDG_RUNTIME_DIR=%t
+      Environment=WAYLAND_DISPLAY=wayland-1
+      Environment=VOXTYPE_TEST_ENV=1
+      ExecStart=@voxtype@/bin/dummy daemon --verbose
+      Restart=on-failure
+      RestartSec=5s
+      Type=exec
+
+      [Unit]
+      Description=Voxtype speech-to-text daemon
+      PartOf=default.target
+      X-Restart-Triggers=/nix/store/00000000000000000000000000000000-voxtype-config.toml
+    ''}
 
     assertFileContent "$configFile" ${./expected-config.toml}
   '';
