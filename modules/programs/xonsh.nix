@@ -22,8 +22,8 @@ in
       type = types.lines;
       default = "";
       description = ''
-          Extra text added to the end of `/etc/xonsh/xonshrc`,
-          the system-wide control file for xonsh.
+        Extra text added to the end of `/etc/xonsh/xonshrc`,
+        the system-wide control file for xonsh.
       '';
     };
     shellAliases = mkOption {
@@ -43,10 +43,10 @@ in
     };
     extraPackages = lib.mkOption {
       default = (ps: [ ]);
-        defaultText = lib.literalExpression "ps: [ ]";
-        example = lib.literalExpression ''
-          ps: with ps; [ numpy xonsh.xontribs.xontrib-vox ]
-        '';
+      defaultText = lib.literalExpression "ps: [ ]";
+      example = lib.literalExpression ''
+        ps: with ps; [ numpy xonsh.xontribs.xontrib-vox ]
+      '';
       type =
         with lib.types;
         coercedTo (listOf lib.types.package) (v: (_: v)) (functionTo (listOf lib.types.package));
