@@ -67,9 +67,14 @@ in
 
     home.packages = [ cfg.package ];
 
-    xdg.configFile."shikane/config.toml" = lib.mkIf (cfg.settings != { }) {
-      source = tomlFormat.generate "shikane-config" cfg.settings;
-    };
+    # shikane >=1.1.0 opens config.toml O_RDWR|O_CREAT;
+    # https://gitlab.com/w0lff/shikane/-/blob/b242dcd1c05f6e902f82ba45fc56165f538696f8/CHANGELOG.md
+    home.activation.shikaneConfig = lib.mkIf (cfg.settings != { }) (
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run install -Dm644 ${tomlFormat.generate "shikane-config" cfg.settings} \
+          "${config.xdg.configHome}/shikane/config.toml"
+      ''
+    );
 
     systemd.user.services.shikane = {
       Unit = {

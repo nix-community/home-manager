@@ -37,11 +37,18 @@
     };
 
     nmt.script = ''
-      serviceFile=home-files/.config/systemd/user/shikane.service
-      assertFileExists $serviceFile
+      assertFileExists home-files/.config/systemd/user/shikane.service
 
-      assertFileExists home-files/.config/shikane/config.toml
-      assertFileContent home-files/.config/shikane/config.toml ${./expected.toml}
+      # shikane >=1.1.0 opens config.toml O_RDWR, so HM installs it as a writable
+      # file at activation time rather than a read-only home-files symlink.
+      assertFileRegex activate 'install -Dm644 /nix/store/[^ ]*-shikane-config'
+
+      # Validate the generated TOML via the store path the activation installs from.
+      storePath=$(grep -oE '/nix/store/[^ "]*-shikane-config' "$TESTED/activate" | head -n1)
+      if ! cmp -s "$storePath" ${./expected.toml}; then
+        fail "shikane config.toml content mismatch:
+      $(diff -u "$storePath" ${./expected.toml})"
+      fi
     '';
   };
 }
