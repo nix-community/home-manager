@@ -46,7 +46,6 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
-    da157
     kranzes
   ];
 
