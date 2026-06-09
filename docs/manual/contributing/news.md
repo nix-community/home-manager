@@ -60,5 +60,5 @@ but you should follow some basic guidelines:
     condition = hostPlatform.isLinux;
     ```
 
-    should be added. If you contribute a module then you don't need to
-    add this entry, the merger will create an entry for you.
+    should be added. Use the `create-news-entry` generator described
+    above to scaffold this entry as part of your contribution.
