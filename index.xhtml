@@ -1343,8 +1343,8 @@ use &#x27;services.myservice.bar&#x27; instead.
 has a message along the lines of</p><pre><code class="programlisting">A new module is available: &#x27;services.foo&#x27;.
 </code></pre><p>If the module is platform specific, e.g., a service module using
 systemd, then a condition like</p><pre><code class="programlisting  nix">condition = hostPlatform.isLinux;
-</code></pre><p>should be added. If you contribute a module then you don’t need to
-add this entry, the merger will create an entry for you.</p></li></ul></div>
+</code></pre><p>should be added. Use the <code class="literal">create-news-entry</code> generator described
+above to scaffold this entry as part of your contribution.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-tests" class="title" style="clear: both">Tests   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-tests-basic">Writing Basic Tests</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-command">Using the tests command</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-manual">Manual test commands</a> </span></dt> </dl></div><p>Home Manager includes a basic test suite and it is highly recommended to
 include at least one test when adding a module. Tests are typically in
 the form of &quot;golden tests&quot; where, for example, a generated
