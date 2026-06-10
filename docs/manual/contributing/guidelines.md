@@ -159,6 +159,13 @@ formatted as described in [News](#sec-news).
 
 When new modules are added a news entry should be included.
 
+News entries and release notes serve different purposes. Release notes
+should be updated separately when a change affects users migrating
+between stable releases, such as state version default changes, required
+migration steps, or broad behavior changes. See
+[Release Notes](#sec-contributing-release-notes) and [News](#sec-news)
+for more details.
+
 ## Use conditional modules and news {#sec-guidelines-conditional-modules}
 
 Home Manager includes a number of modules that are only usable on some
