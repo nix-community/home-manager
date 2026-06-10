@@ -88,8 +88,8 @@ the <a class="xref" href="options.xhtml#opt-programs.man.man-db.enable"  ><code 
 initialization to <code class="filename">$XDG_CONFIG_HOME/nvim/init.lua</code> by default. If you
 manage that file outside Home Manager, set
 <a class="xref" href="options.xhtml#opt-programs.neovim.sideloadInitLua"  ><code class="option">programs.neovim.sideloadInitLua</code></a> to <code class="literal">true</code> to load the generated Lua
-through the Neovim wrapper instead.</p></li><li class="listitem"><p>A new <a class="xref" href="options.xhtml#opt-sshAuthSock.enable"  ><code class="option">sshAuthSock.enable</code></a> module manages the <code class="literal">SSH_AUTH_SOCK</code>
-environment variable. It is implicitly enabled and configured by the
+through the Neovim wrapper instead.</p></li><li class="listitem"><p>A new <code class="literal">sshAuthSock</code> module manages the <code class="literal">SSH_AUTH_SOCK</code>
+environment variable. It is implicitly configured by the
 SSH-agent-providing modules (e.g. <code class="literal">services.ssh-agent</code>, <code class="literal">services.gpg-agent</code>).
 The old <code class="literal">services.ssh-agent.enable{Bash,Zsh,Fish,Nushell}Integration</code> options
 were removed; shell initialization is now provided through <code class="literal">sshAuthSock</code>.</p></li><li class="listitem"><p>A new <a class="xref" href="options.xhtml#opt-services.pipewire.enable"  ><code class="option">services.pipewire.enable</code></a> module provides client-side
