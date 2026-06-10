@@ -19,6 +19,7 @@
         github = {
           type = "http";
           url = "https://api.githubcopilot.com/mcp/";
+          enabled = true;
         };
         filesystem = {
           type = "stdio";
@@ -61,6 +62,11 @@
           customOption = "value";
           timeout = 5000;
         };
+        disabled-server = {
+          command = "echo";
+          args = [ "test" ];
+          disabled = true;
+        };
       };
     };
   };
@@ -73,10 +79,7 @@
     pluginDir=$(grep -o -- '--plugin-dir /nix/store/[^ ]*' "$wrapperPath")
     pluginDir="''${pluginDir#--plugin-dir }"
     assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
-    assertFileRegex "$pluginDir/.mcp.json" '"github"'
-    assertFileRegex "$pluginDir/.mcp.json" '"database"'
-    assertFileRegex "$pluginDir/.mcp.json" '"/tmp"'
-    (! grep -q -- '/other-tmp' "$pluginDir/.mcp.json")
+    assertFileContent "$pluginDir/.mcp.json" ${./expected-mcp-plugin.json}
     assertPathNotExists "$pluginDir/.lsp.json"
   '';
 }
