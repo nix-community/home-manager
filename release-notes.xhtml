@@ -33,44 +33,118 @@ changes are only active if the <code class="literal">home.stateVersion</code> op
 “26.11” or later.</p>
 </div>
 
-</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05" class="title" >Release 26.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-26.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-26.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 26.05 release branch became stable in May, 2026.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>WezTerm now supports declarative configuration via
-<a class="xref" href="options.xhtml#opt-programs.wezterm.settings"  ><code class="option">programs.wezterm.settings</code></a>. Settings are expressed as a Nix
-attribute set and serialized to Lua using <code class="literal">lib.generators.toLua</code>.
-Raw Lua expressions such as <code class="literal">wezterm.font</code> and <code class="literal">wezterm.action.*</code>
-can be embedded using <code class="literal">lib.generators.mkLuaInline</code>. The existing
-<a class="xref" href="options.xhtml#opt-programs.wezterm.extraConfig"  ><code class="option">programs.wezterm.extraConfig</code></a> option remains fully supported
-and can be combined with <a class="xref" href="options.xhtml#opt-programs.wezterm.settings"  ><code class="option">programs.wezterm.settings</code></a>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.anki.uiScale"  ><code class="option">programs.anki.uiScale</code></a> option now expects a value in the
-range 1.0–2.0, previously it erroneously expected values in the
-range <code class="literal">0.0–1.0</code>.</p></li><li class="listitem"><p>New <a class="xref" href="options.xhtml#opt-home.services"  ><code class="option">home.services</code></a> namespace for nixpkgs
+</div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05" class="title" >Release 26.05   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-26.05-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-26.05-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 26.05 release branch became stable in May, 2026.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Home Manager now supports RFC 42-style SSH configuration through
+<a class="xref" href="options.xhtml#opt-programs.ssh.settings"  ><code class="option">programs.ssh.settings</code></a>. The legacy <code class="literal">programs.ssh.matchBlocks</code> format
+is deprecated and migrated automatically.</p></li><li class="listitem"><p>The new <code class="literal">home-manager.startAsUserService</code> option runs user activation on
+demand at login instead of doing all setup during system boot, which helps on
+systems where home directories are mounted later (for example, pam_mount).</p></li><li class="listitem"><p>New options were added for <code class="literal">services.podman.useDefaultMachine</code> and podman
+machine management on Darwin.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.rclone.enable"  ><code class="option">programs.rclone.enable</code></a> module now supports launchd-backed config,
+mount, and serve agents on Darwin. The new
+<code class="literal">programs.rclone.remotes.&lt;name&gt;.serve</code> option can manage <code class="literal">rclone serve</code>
+sidecar services on both Linux and Darwin. On non-systemd platforms,
+<code class="literal">programs.rclone.requiresUnit</code> is read-only and always <code class="literal">null</code> because there is
+no systemd ordering unit to depend on.</p></li><li class="listitem"><p>The Syncthing credentials flow now uses <code class="literal">services.syncthing.guiCredentials</code>
+instead of the removed <code class="literal">services.syncthing.passwordFile</code> option.</p></li><li class="listitem"><p>Firefox extensions are now managed per-profile through the
+<code class="literal">programs.firefox.profiles.&lt;name&gt;.extensions.packages</code> and
+<code class="literal">programs.firefox.profiles.&lt;name&gt;.extensions.settings</code> options. The top-level
+<code class="literal">programs.firefox.extensions = [ ... ]</code> list was removed; migrate it to
+<code class="literal">programs.firefox.profiles.&lt;name&gt;.extensions.packages</code>.</p></li><li class="listitem"><p>Thunderbird now supports <code class="literal">accounts.email.accounts.&lt;name&gt;.ews</code>, the
+<code class="literal">outlook.office365.com-ews</code> account flavor, declarative language packs, and
+enterprise policies. Thunderbird accounts using the <code class="literal">outlook.office365.com</code>
+flavor now default IMAP and SMTP authentication to OAuth2 when the account
+does not set an authentication method explicitly.</p></li><li class="listitem"><p>A new <code class="literal">systemd.user.packages</code> option provides a user-level equivalent of
+<code class="literal">systemd.packages</code> for installing unit files from packages.</p></li><li class="listitem"><p>WezTerm now supports declarative configuration via
+<a class="xref" href="options.xhtml#opt-programs.wezterm.settings"  ><code class="option">programs.wezterm.settings</code></a>. Settings are expressed as a Nix attribute
+set and serialized to Lua using <code class="literal">lib.generators.toLua</code>. Raw Lua expressions
+such as <code class="literal">wezterm.font</code> and <code class="literal">wezterm.action.*</code> can be embedded using
+<code class="literal">lib.generators.mkLuaInline</code>. The existing
+<a class="xref" href="options.xhtml#opt-programs.wezterm.extraConfig"  ><code class="option">programs.wezterm.extraConfig</code></a> option remains fully supported and can
+be combined with <a class="xref" href="options.xhtml#opt-programs.wezterm.settings"  ><code class="option">programs.wezterm.settings</code></a>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.anki.uiScale"  ><code class="option">programs.anki.uiScale</code></a> option now expects a value in the range
+1.0–2.0, previously it erroneously expected values in the range <code class="literal">0.0–1.0</code>.
+Anki sync options moved from <code class="literal">programs.anki.sync.*</code> to
+<code class="literal">programs.anki.profiles.&quot;User 1&quot;.sync.*</code>, and
+<code class="literal">programs.anki.sync.passwordFile</code> is migrated to
+<code class="literal">programs.anki.profiles.&quot;User 1&quot;.sync.keyFile</code>.</p></li><li class="listitem"><p>New <a class="xref" href="options.xhtml#opt-home.services"  ><code class="option">home.services</code></a> namespace for nixpkgs
 <a class="link" href="https://nixos.org/manual/nixos/unstable/#modular-services"  target="_top">modular services</a>.
 Service modules shipped with packages (e.g.
-<code class="literal">pkgs.&lt;name&gt;.passthru.services.default</code>) drop in unchanged and are
-lifted to user systemd units. See
-<a class="link" href="index.xhtml#sec-usage-modular-services" title="Modular Services" >Modular Services</a> for details.</p></li></ul></div>
-</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These
-changes are only active if the <code class="literal">home.stateVersion</code> option is set to
-&quot;26.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-gtk.gtk4.theme"  ><code class="option">gtk.gtk4.theme</code></a> option does not mirror
-<a class="xref" href="options.xhtml#opt-gtk.theme"  ><code class="option">gtk.theme</code></a> by default anymore.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.zsh.dotDir"  ><code class="option">programs.zsh.dotDir</code></a> option now defaults to the XDG
-configuration directory (usually <code class="literal">~/.config/zsh</code>) when
-<a class="xref" href="options.xhtml#opt-xdg.enable"  ><code class="option">xdg.enable</code></a> is true.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.yazi.shellWrapperName"  ><code class="option">programs.yazi.shellWrapperName</code></a> option now defaults to
-<code class="literal">y</code> instead of <code class="literal">yy</code>. For users with older <code class="literal">home.stateVersion</code> values,
-the legacy default <code class="literal">yy</code> is retained.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-xdg.userDirs.setSessionVariables"  ><code class="option">xdg.userDirs.setSessionVariables</code></a> option now defaults to <code class="literal">false</code>
+<code class="literal">pkgs.&lt;name&gt;.passthru.services.default</code>) drop in unchanged and are lifted to
+user systemd units. See <a class="link" href="index.xhtml#sec-usage-modular-services" title="Modular Services" >Modular Services</a> for
+details.</p></li><li class="listitem"><p>Dedicated modules were added for several VSCode forks (<code class="literal">programs.cursor</code>,
+<code class="literal">programs.vscodium</code>, <code class="literal">programs.windsurf</code>, <code class="literal">programs.kiro</code>, and
+<code class="literal">programs.antigravity</code>), built from a shared <code class="literal">mkVscodeModule</code> factory. Each
+fork can now be configured independently and simultaneously. Users who
+previously selected a fork by setting <code class="literal">programs.vscode.package</code> should migrate
+to the matching module; the <code class="literal">programs.vscode.pname</code> option was removed.</p></li><li class="listitem"><p>The AI coding-assistant modules (<a class="xref" href="options.xhtml#opt-programs.claude-code.enable"  ><code class="option">programs.claude-code.enable</code></a>,
+<a class="xref" href="options.xhtml#opt-programs.codex.enable"  ><code class="option">programs.codex.enable</code></a>, and <a class="xref" href="options.xhtml#opt-programs.opencode.enable"  ><code class="option">programs.opencode.enable</code></a>) now
+share a unified <code class="literal">context</code> option for providing global instructions. The
+previous per-module options (<code class="literal">claude-code.memory</code>,
+<code class="literal">codex.custom-instructions</code>, and <code class="literal">opencode.rules</code>) are deprecated and migrated
+automatically. MCP server configuration via <code class="literal">programs.mcp.servers</code> was also
+extended to more assistant and editor modules through an
+<code class="literal">enableMcpIntegration</code> option.</p></li><li class="listitem"><p>The <code class="literal">programs.man</code> module was split so the man viewer can be selected through
+the <a class="xref" href="options.xhtml#opt-programs.man.man-db.enable"  ><code class="option">programs.man.man-db.enable</code></a> and
+<a class="xref" href="options.xhtml#opt-programs.man.mandoc.enable"  ><code class="option">programs.man.mandoc.enable</code></a> submodules, which are mutually exclusive.</p></li><li class="listitem"><p>The <code class="literal">programs.neovim.extraLuaConfig</code> option was renamed to
+<a class="xref" href="options.xhtml#opt-programs.neovim.initLua"  ><code class="option">programs.neovim.initLua</code></a>. Home Manager now writes generated Lua
+initialization to <code class="filename">$XDG_CONFIG_HOME/nvim/init.lua</code> by default. If you
+manage that file outside Home Manager, set
+<a class="xref" href="options.xhtml#opt-programs.neovim.sideloadInitLua"  ><code class="option">programs.neovim.sideloadInitLua</code></a> to <code class="literal">true</code> to load the generated Lua
+through the Neovim wrapper instead.</p></li><li class="listitem"><p>A new <a class="xref" href="options.xhtml#opt-sshAuthSock.enable"  ><code class="option">sshAuthSock.enable</code></a> module manages the <code class="literal">SSH_AUTH_SOCK</code>
+environment variable. It is implicitly enabled and configured by the
+SSH-agent-providing modules (e.g. <code class="literal">services.ssh-agent</code>, <code class="literal">services.gpg-agent</code>).
+The old <code class="literal">services.ssh-agent.enable{Bash,Zsh,Fish,Nushell}Integration</code> options
+were removed; shell initialization is now provided through <code class="literal">sshAuthSock</code>.</p></li><li class="listitem"><p>A new <a class="xref" href="options.xhtml#opt-services.pipewire.enable"  ><code class="option">services.pipewire.enable</code></a> module provides client-side
+configuration for PipeWire, WirePlumber, and the PulseAudio/JACK compatibility
+layers. It does not install or manage the PipeWire daemon itself.</p></li><li class="listitem"><p>The <code class="literal">services.swww</code> module was renamed to <a class="xref" href="options.xhtml#opt-services.awww.enable"  ><code class="option">services.awww.enable</code></a>
+following the upstream project rename. The <code class="literal">enable</code>, <code class="literal">package</code>, and
+<code class="literal">extraArgs</code> options are migrated automatically from <code class="literal">services.swww.*</code> to
+<code class="literal">services.awww.*</code>.</p></li><li class="listitem"><p>Several modules dropped their freeform <code class="literal">extraConfig</code> escape hatches in favor
+of RFC 42-style <code class="literal">settings</code>: <code class="literal">programs.aerospace.extraConfig</code> (and
+<code class="literal">userSettings</code>) and <code class="literal">programs.aria2.extraConfig</code> were removed.
+<code class="literal">programs.mise.settings</code> was renamed to <code class="literal">programs.mise.globalConfig.settings</code>.
+The <code class="literal">programs.eww.configDir</code> and
+<code class="literal">programs.eww.enable{Bash,Zsh,Fish}Integration</code> options were removed; use
+<a class="xref" href="options.xhtml#opt-programs.eww.yuckConfig"  ><code class="option">programs.eww.yuckConfig</code></a> and <a class="xref" href="options.xhtml#opt-programs.eww.scssConfig"  ><code class="option">programs.eww.scssConfig</code></a> for
+declarative Eww config files. The <code class="literal">programs.niriswitcher</code> options were also
+removed.</p></li><li class="listitem"><p>Darwin integration received several behavior changes. Home Manager launchd
+agents now wait for <code class="literal">/nix/store</code> before starting and use
+<code class="literal">launchctl bootout --wait</code> when replacing agents. nix-darwin activations now
+propagate dry-run mode into Home Manager user activations. On Darwin, Home
+Manager also exports <code class="literal">TERMINFO_DIRS</code> so terminfo entries from Home
+Manager-installed packages are visible to shells.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-nix.assumeXdg"  ><code class="option">nix.assumeXdg</code></a> option was added for installations where Nix is
+configured to use XDG base directories outside Home Manager. Home Manager also
+detects <code class="literal">osConfig.nix.settings.use-xdg-base-directories</code> when deciding where
+to place declarative channel entries.</p></li></ul></div>
+</div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-26.05-state-version-changes" class="title" style="clear: both">State Version Changes   </h2>  </div> </div></div><p>The state version in this release includes the changes below. These changes are
+only active if the <code class="literal">home.stateVersion</code> option is set to &quot;26.05&quot; or later.</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-gtk.gtk4.theme"  ><code class="option">gtk.gtk4.theme</code></a> option does not mirror <a class="xref" href="options.xhtml#opt-gtk.theme"  ><code class="option">gtk.theme</code></a> by
+default anymore.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.zsh.dotDir"  ><code class="option">programs.zsh.dotDir</code></a> option now defaults to the XDG configuration
+directory (usually <code class="literal">~/.config/zsh</code>) when <a class="xref" href="options.xhtml#opt-xdg.enable"  ><code class="option">xdg.enable</code></a> is true.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.yazi.shellWrapperName"  ><code class="option">programs.yazi.shellWrapperName</code></a> option now defaults to <code class="literal">y</code> instead
+of <code class="literal">yy</code>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-xdg.userDirs.setSessionVariables"  ><code class="option">xdg.userDirs.setSessionVariables</code></a> option now defaults to <code class="literal">false</code>
 instead of <code class="literal">true</code>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-xdg.userDirs.extraConfig"  ><code class="option">xdg.userDirs.extraConfig</code></a> option no longer accepts keys of the
 form <code class="literal">XDG_&lt;name&gt;_DIR</code>, they should be now be just the name. For example, if
 you had the key <code class="literal">XDG_DESKTOP_DIR</code> before, you should now use the key
 <code class="literal">DESKTOP</code>. Home Manager 26.05 introduced a warning when the <code class="literal">XDG_&lt;name&gt;_DIR</code>
-form is used.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.man.package"  ><code class="option">programs.man.package</code></a> option now defaults to <code class="literal">null</code> on
-Darwin because the GNU <code class="literal">man</code> from nixpkgs ships <code class="literal">apropos</code>/<code class="literal">man -k</code>
-and <code class="literal">whatis</code>/<code class="literal">man -f</code> binaries that don’t work on Darwin. Nix-installed
-manual pages still work with macOS’s built-in <code class="literal">man</code> via
+form is used.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.man.package"  ><code class="option">programs.man.package</code></a> option now defaults to <code class="literal">null</code> on Darwin
+because the GNU <code class="literal">man</code> from nixpkgs ships <code class="literal">apropos</code>/<code class="literal">man -k</code> and
+<code class="literal">whatis</code>/<code class="literal">man -f</code> binaries that don’t work on Darwin. Nix-installed manual
+pages still work with macOS’s built-in <code class="literal">man</code> via
 <a class="xref" href="options.xhtml#opt-home.extraOutputsToInstall"  ><code class="option">home.extraOutputsToInstall</code></a>.</p></li><li class="listitem"><p>The options <a class="xref" href="options.xhtml#opt-programs.neovim.withPython3"  ><code class="option">programs.neovim.withPython3</code></a> and
-<a class="xref" href="options.xhtml#opt-programs.neovim.withRuby"  ><code class="option">programs.neovim.withRuby</code></a> now default to <code class="literal">false</code> following nixpkgs</p></li><li class="listitem"><p>On Linux, <code class="literal">programs.firefox.configPath</code> now defaults to
-<code class="literal">&quot;${config.xdg.configHome}/mozilla/firefox&quot;</code> for <code class="literal">home.stateVersion = &quot;26.05&quot;</code> and later.
-Older state versions keep the legacy default of <code class="literal">&quot;.mozilla/firefox&quot;</code>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-wayland.windowManager.hyprland.configType"  ><code class="option">wayland.windowManager.hyprland.configType</code></a> option now
-defaults to <code class="literal">&quot;lua&quot;</code> for <code class="literal">home.stateVersion = &quot;26.05&quot;</code> and later.
-Older state versions keep the legacy <code class="literal">&quot;hyprlang&quot;</code> default. Set
-<code class="literal">wayland.windowManager.hyprland.configType = &quot;hyprlang&quot;</code> to keep
-generating <code class="filename">$XDG_CONFIG_HOME/hypr/hyprland.conf</code>.</p></li></ul></div>
+<a class="xref" href="options.xhtml#opt-programs.neovim.withRuby"  ><code class="option">programs.neovim.withRuby</code></a> now default to <code class="literal">false</code> following nixpkgs.</p></li><li class="listitem"><p>Neovim plugin <code class="literal">config</code> fragments are assumed to be Lua by default through
+<code class="literal">programs.neovim.plugins.&lt;name&gt;.type = &quot;lua&quot;</code>, instead of the previous <code class="literal">viml</code>
+default.</p></li><li class="listitem"><p>On Linux, <code class="literal">programs.firefox.configPath</code> now defaults to
+<code class="literal">&quot;${config.xdg.configHome}/mozilla/firefox&quot;</code>, instead of the legacy
+<code class="literal">&quot;.mozilla/firefox&quot;</code>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-wayland.windowManager.hyprland.configType"  ><code class="option">wayland.windowManager.hyprland.configType</code></a> option now defaults to
+<code class="literal">&quot;lua&quot;</code>, instead of the legacy <code class="literal">&quot;hyprlang&quot;</code>. Set
+<code class="literal">wayland.windowManager.hyprland.configType = &quot;hyprlang&quot;</code> to keep generating
+<code class="filename">$XDG_CONFIG_HOME/hypr/hyprland.conf</code>.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.docker-cli.configDir"  ><code class="option">programs.docker-cli.configDir</code></a> option now defaults to
+<code class="literal">&quot;${config.xdg.configHome}/docker&quot;</code> when <a class="xref" href="options.xhtml#opt-xdg.enable"  ><code class="option">xdg.enable</code></a> is true, instead
+of <code class="literal">~/.docker</code>. Similarly, <a class="xref" href="options.xhtml#opt-services.colima.profiles"  ><code class="option">services.colima.profiles</code></a> now sets
+<code class="literal">$DOCKER_HOST</code> for the default context.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-services.home-manager.autoUpgrade.preSwitchCommands"  ><code class="option">services.home-manager.autoUpgrade.preSwitchCommands</code></a> option now
+defaults to an empty list. Previously, when
+<a class="xref" href="options.xhtml#opt-services.home-manager.autoUpgrade.useFlake"  ><code class="option">services.home-manager.autoUpgrade.useFlake</code></a> was <code class="literal">true</code>, it defaulted
+to <code class="literal">[ &quot;nix flake update&quot; ]</code>. Set <code class="literal">preSwitchCommands = [ &quot;nix flake update&quot; ]</code>
+to keep updating flake inputs before each automatic switch.</p></li><li class="listitem"><p>The <a class="xref" href="options.xhtml#opt-programs.mergiraf.enableGitIntegration"  ><code class="option">programs.mergiraf.enableGitIntegration</code></a> and
+<a class="xref" href="options.xhtml#opt-programs.mergiraf.enableJujutsuIntegration"  ><code class="option">programs.mergiraf.enableJujutsuIntegration</code></a> options now default to
+<code class="literal">false</code>, so the integrations must be enabled explicitly.</p></li></ul></div>
 </div>
 
 </div><div class="chapter"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11" class="title" >Release 25.11   </h2>  </div> </div></div><div class="toc"> <p><strong>Table of Contents</strong></p> <dl class="toc">  <dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.11-highlights">Highlights</a> </span></dt><dt> <span class="section">  <a href="release-notes.xhtml#sec-release-25.11-state-version-changes">State Version Changes</a> </span></dt> </dl></div><p>The 25.11 release branch became stable in November, 2025.</p><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-release-25.11-highlights" class="title" style="clear: both">Highlights   </h2>  </div> </div></div><p>This release has the following notable changes:</p><div class="itemizedlist"><ul class="itemizedlist " style="list-style-type: disc;"><li class="listitem"><p>Updating the <code class="literal">home-manager</code> Nix profile inside the activation script
