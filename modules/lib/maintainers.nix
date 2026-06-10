@@ -552,6 +552,12 @@
     github = "SunOfLife1";
     githubId = 30405063;
   };
+  superflash41 = {
+    name = "Saymon Nicho";
+    email = "saymon.nicho@pucp.edu.pe";
+    github = "superflash41";
+    githubId = 102434258;
+  };
   yarn = {
     name = "yarncat";
     email = "30006414+yaaaarn@users.noreply.github.com";
