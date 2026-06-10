@@ -22,6 +22,7 @@ configuration.
 ```{=include=} sections
 contributing/getting-started.md
 contributing/guidelines.md
+contributing/release-notes.md
 contributing/news.md
 contributing/tests.md
 ```

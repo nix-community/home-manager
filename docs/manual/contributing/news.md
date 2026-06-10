@@ -6,6 +6,15 @@ associated news entry. In general, a news entry should only be added for
 truly noteworthy news. For example, a bug fix or new option does
 generally not need a news entry.
 
+Release notes and news entries serve different purposes. A news entry is
+shown during Home Manager activation and is useful for day-to-day
+communication about noteworthy changes, such as a new module, a new
+feature, or a specific deprecation. Release notes are read from the
+website documentation and should summarize what users need to know before
+or during a stable-release upgrade. See
+[Release Notes](#sec-contributing-release-notes) for guidance on changes
+that affect stable-release upgrades.
+
 If you do have a change worthy of a news entry then please add one in
 [`news.nix`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix)
 but you should follow some basic guidelines:
@@ -28,6 +37,8 @@ but you should follow some basic guidelines:
 -   The entry condition should be as specific as possible. For example,
     if you are changing or deprecating a specific option then you could
     restrict the news to those users who actually use this option.
+    Prefer a targeted condition over skipping useful news only to avoid
+    notifying unaffected users.
 
 -   Wrap the news message so that it will fit in the typical terminal,
     that is, at most 80 characters wide. Ideally a bit less.
