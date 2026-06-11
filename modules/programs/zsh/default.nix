@@ -488,7 +488,7 @@ in
             name: pkgs.writeTextDir "share/zsh/site-functions/${name}"
           ) cfg.siteFunctions;
           programs.zsh.initContent = concatStringsSep " " (
-            [ "autoload -Uz" ] ++ lib.attrNames cfg.siteFunctions
+            [ "autoload -Uz --" ] ++ lib.attrNames cfg.siteFunctions
           );
         })
 
