@@ -3,7 +3,7 @@
     enable = true;
     git = {
       enable = true;
-      diffToolMode = false;
+      mode = "external";
     };
     options = {
       color = "always";
@@ -22,7 +22,7 @@
     assertFileContains home-files/.config/git/config '[diff]'
     # Should have diff.external set
     assertFileContains home-files/.config/git/config "external = \"@difftastic@/bin/difft '--color=always' '--display=side-by-side' '--override=*.mill:Scala' '--override=*.yuck:Emacs Lisp'\""
-    # Should NOT have difftool config when diffToolMode is explicitly false
+    # Should NOT have difftool config when mode is "external"
     assertFileNotRegex home-files/.config/git/config 'tool = "difftastic"'
     assertFileNotRegex home-files/.config/git/config '\[difftool "difftastic"\]'
   '';
