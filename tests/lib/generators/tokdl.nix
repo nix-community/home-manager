@@ -7,9 +7,9 @@
     c = ''
       multiline string
       with special characters:
-      \t \n \" "
+      ''\t \" " \
     '';
-    unsafeString = " \" \n 	 ";
+    unsafeString = " \" \n 	 \\";
     flatItems = [
       1
       2

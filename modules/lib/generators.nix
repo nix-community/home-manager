@@ -89,7 +89,7 @@
         stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
 
       # String -> String
-      sanitizeString = replaceStrings [ "\n" ''"'' ] [ "\\n" ''\"'' ];
+      sanitizeString = replaceStrings [ "\n" ''"'' "\\" ] [ "\\n" ''\"'' "\\\\" ];
 
       # OneOf [Int Float String Bool Null] -> String
       literalValueToString =
