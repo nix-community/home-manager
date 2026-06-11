@@ -22,7 +22,7 @@ let
       qadwaitadecorations
       qadwaitadecorations-qt6
     ];
-    gtk = [
+    gtk2 = [
       libsForQt5.qtstyleplugins
       qt6Packages.qt6gtk2
     ];
@@ -41,9 +41,9 @@ let
     ];
   };
 
-  # Maps style names to their QT_QPA_PLATFORMTHEME, if necessary.
+  # Maps platform theme names to their QT_QPA_PLATFORMTHEME, if necessary.
   styleNames = {
-    gtk = "gtk2";
+    gtk = "gtk3";
     qtct = "qt5ct";
   };
 
@@ -99,7 +99,13 @@ in
     ./kvantum.nix
 
     (lib.mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ] (
-      config: if lib.getAttrFromPath [ "qt" "useGtkTheme" ] config then "gtk" else null
+      config:
+      if lib.getAttrFromPath [ "qt" "useGtkTheme" ] config then
+        {
+          name = "gtk2";
+        }
+      else
+        null
     ))
   ];
 
@@ -166,8 +172,12 @@ in
                 Some examples are
 
                 `gtk`
-                : Use GTK theme with
+                : Use Qt's [GTK platform theme plugin](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
+
+                `gtk2`
+                : Use GTK2 theme with
                   [`qtstyleplugins`](https://github.com/qt/qtstyleplugins)
+                  and [`qt6gtk2`](https://github.com/trialuser02/qt6gtk2)
 
                 `gtk3`
                 : Use [GTK3 integration](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
@@ -411,7 +421,10 @@ in
             old = ''"kde6"'';
             replacement = ''"kde"'';
           }
-        ));
+        ))
+        ++ (lib.lists.optional (platformTheme.name == "gtk")
+          "The value `gtk` for option `${platformTheme.option}` is deprecated. Use `gtk2` to keep the legacy qtstyleplugins or `gtk3` to use the modern native Qt GTK3 plugin."
+        );
 
       qt.style.package = lib.mkIf (cfg.style.name != null) (
         lib.mkDefault (stylePackages.${lib.toLower cfg.style.name} or null)

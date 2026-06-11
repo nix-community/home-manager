@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   qt = {
     enable = true;
@@ -11,25 +9,13 @@
     type = "fcitx5";
   };
 
-  nixpkgs.overlays = [
-    (_final: prev: {
-      libsForQt5 = prev.libsForQt5.overrideScope (
-        _qt5final: _qt5prev: {
-          qtstyleplugins = config.lib.test.mkStubPackage { outPath = null; };
-        }
-      );
-
-      qt6Packages = prev.qt6Packages.overrideScope (
-        _qt6final: _qt6prev: {
-          qt6gtk2 = config.lib.test.mkStubPackage { outPath = null; };
-        }
-      );
-    })
+  test.asserts.warnings.expected = [
+    "The value `gtk` for option `qt.platformTheme.name` is deprecated. Use `gtk2` to keep the legacy qtstyleplugins or `gtk3` to use the modern native Qt GTK3 plugin."
   ];
 
   nmt.script = ''
     assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
-      'QT_QPA_PLATFORMTHEME="gtk2"'
+      'QT_QPA_PLATFORMTHEME="gtk3"'
     assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
       'QT_PLUGIN_PATH'
     assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
