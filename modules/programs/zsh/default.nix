@@ -487,8 +487,13 @@ in
           home.packages = lib.mapAttrsToList (
             name: pkgs.writeTextDir "share/zsh/site-functions/${name}"
           ) cfg.siteFunctions;
-          programs.zsh.initContent = concatStringsSep " " (
-            [ "autoload -Uz --" ] ++ lib.attrNames cfg.siteFunctions
+          programs.zsh.initContent = lib.escapeShellArgs (
+            [
+              "autoload"
+              "-Uz"
+              "--"
+            ]
+            ++ (lib.attrNames cfg.siteFunctions)
           );
         })
 
