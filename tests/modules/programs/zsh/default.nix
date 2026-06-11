@@ -22,7 +22,7 @@
   zsh-legacy-warning = ./legacy-warning.nix;
   zsh-oh-my-zsh-custom = ./oh-my-zsh-custom.nix;
   zsh-plugins-completions-renamed = ./plugins-completions-renamed.nix;
-  zsh-siteFunctions-mkcd = ./siteFunctions-mkcd.nix;
+  zsh-siteFunctions = ./siteFunctions.nix;
   zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;
   zsh-session-variables = ./session-variables.nix;
