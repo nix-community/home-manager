@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -44,10 +43,6 @@
       expectedContent = builtins.toFile "expected.json" ''
         [
           {
-            "label": "Compile",
-            "command": "make"
-          },
-          {
             "label": "Format Code",
             "allow_concurrent_runs": false,
             "args": [
@@ -55,32 +50,18 @@
               "$ZED_WORKTREE_ROOT"
             ],
             "command": "nix"
+          },
+          {
+            "label": "Compile",
+            "command": "make"
           }
         ]
       '';
 
       taskPath = ".config/zed/tasks.json";
-      activationScript = pkgs.writeScript "activation" config.home.activation.zedTasksActivation.data;
     in
-    ''
-      export HOME=$TMPDIR/hm-user
-
-      # Simulate preexisting tasks
-      mkdir -p $HOME/.config/zed
-      cat ${preexistingTasks} > $HOME/${taskPath}
-
-      # Run the activation script
-      substitute ${activationScript} $TMPDIR/activate --subst-var TMPDIR
-      chmod +x $TMPDIR/activate
-      $TMPDIR/activate
-
-      # Validate the merged tasks
-      assertFileExists "$HOME/${taskPath}"
-      assertFileContent "$HOME/${taskPath}" "${expectedContent}"
-
-      # Test idempotency
-      $TMPDIR/activate
-      assertFileExists "$HOME/${taskPath}"
-      assertFileContent "$HOME/${taskPath}" "${expectedContent}"
-    '';
+    config.lib.test.runMutableConfigTest {
+      files.${taskPath} = preexistingTasks;
+      expected.${taskPath} = expectedContent;
+    };
 }
