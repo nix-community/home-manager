@@ -484,6 +484,12 @@ in
         })
 
         (lib.mkIf (cfg.siteFunctions != { }) {
+          assertions = lib.mapAttrsToList (funcName: _text: {
+            assertion = !(lib.hasPrefix "/" funcName);
+            message =
+              "programs.zsh.siteFunctions: function name '${funcName}' cannot start with a '/'. "
+              + "either rename it, or don't rely on autoloading for that function (e.g. by defining it inside your '.zshrc')";
+          }) cfg.siteFunctions;
           home.packages = lib.mapAttrsToList (
             name: pkgs.writeTextDir "share/zsh/site-functions/${name}"
           ) cfg.siteFunctions;
