@@ -40,9 +40,9 @@
       assertFileRegex home-path/share/applications/webapp-discord.desktop \
         'Exec=.*brave.*--app=https://discord.com/channels/@me'
 
-      # Check StartupWMClass uses brave
+      # Check StartupWMClass defaults to the desktop entry name
       assertFileRegex home-path/share/applications/webapp-discord.desktop \
-        'StartupWMClass=brave-webapp-discord'
+        'StartupWMClass=webapp-discord'
     '';
   };
 }

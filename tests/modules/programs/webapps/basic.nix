@@ -49,7 +49,7 @@
 
       # Check StartupWMClass
       assertFileRegex home-path/share/applications/webapp-github.desktop \
-        'StartupWMClass=chromium-webapp-github'
+        'StartupWMClass=webapp-github'
     '';
   };
 }
