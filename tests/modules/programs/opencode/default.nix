@@ -1,5 +1,6 @@
 {
   opencode-settings = ./settings.nix;
+  opencode-settings-ordered-permissions = ./settings-ordered-permissions.nix;
   opencode-empty-settings = ./empty-settings.nix;
   opencode-context-inline = ./rules-inline.nix;
   opencode-context-path = ./rules-path.nix;
