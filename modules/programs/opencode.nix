@@ -17,6 +17,9 @@ let
   webCfg = cfg.web;
 
   jsonFormat = pkgs.formats.json { };
+  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+    inherit pkgs jsonFormat;
+  };
 
   toOpencodeShape =
     s:
@@ -115,6 +118,11 @@ in
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/opencode/opencode.json`.
         See <https://opencode.ai/docs/config/> for the documentation.
+
+        Attribute sets containing ordered `lib.hm.dag.entryBefore` or
+        `lib.hm.dag.entryAfter` values are rendered in topological order, with
+        raw sibling values treated as unordered entries. This is useful for
+        OpenCode permission rules, where the last matching rule wins.
 
         Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
       '';
@@ -485,7 +493,7 @@ in
             mergedSettings =
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
           in
-          jsonFormat.generate "opencode.json" (
+          orderedJsonFormat.generate "opencode.json" (
             {
               "$schema" = "https://opencode.ai/config.json";
             }
