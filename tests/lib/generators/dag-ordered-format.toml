@@ -1,0 +1,13 @@
+[ordered]
+before = "ask"
+
+[ordered.plainDagEntryShape]
+after = []
+before = []
+
+[ordered.plainDagEntryShape.data]
+keep = true
+
+[ordered.after.nested]
+before = 1
+after = 2
