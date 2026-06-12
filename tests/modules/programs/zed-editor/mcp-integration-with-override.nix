@@ -16,6 +16,9 @@
           "@modelcontextprotocol/server-everything"
         ];
       };
+      server-no-args = {
+        command = "echo";
+      };
     };
   };
 
@@ -55,7 +58,6 @@
               "headers": {
                 "Authorization": "Bearer token"
               },
-              "type": "http",
               "url": "https://custom.example.com/mcp"
             },
             "everything": {
@@ -63,8 +65,11 @@
                 "-y",
                 "@modelcontextprotocol/server-everything"
               ],
-              "command": "npx",
-              "type": "stdio"
+              "command": "npx"
+            },
+            "server-no-args": {
+              "args": [],
+              "command": "echo"
             }
           }
         }

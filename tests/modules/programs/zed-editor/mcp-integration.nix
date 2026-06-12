@@ -16,6 +16,9 @@
           "@modelcontextprotocol/server-everything"
         ];
       };
+      server-no-args = {
+        command = "echo";
+      };
       context7 = {
         url = "https://mcp.context7.com/mcp";
         headers = {
@@ -47,7 +50,6 @@
               "headers": {
                 "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
               },
-              "type": "http",
               "url": "https://mcp.context7.com/mcp"
             },
             "disabled-server": {
@@ -55,16 +57,18 @@
                 "test"
               ],
               "command": "echo",
-              "enabled": false,
-              "type": "stdio"
+              "enabled": false
             },
             "everything": {
               "args": [
                 "-y",
                 "@modelcontextprotocol/server-everything"
               ],
-              "command": "npx",
-              "type": "stdio"
+              "command": "npx"
+            },
+            "server-no-args": {
+              "args": [],
+              "command": "echo"
             }
           }
         }
