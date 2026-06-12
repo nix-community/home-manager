@@ -91,7 +91,7 @@
       assertFileRegex home-path/share/applications/webapp-simple.desktop \
         'Categories=Network;WebBrowser'
       assertFileRegex home-path/share/applications/webapp-simple.desktop \
-        'StartupWMClass=chromium-webapp-simple'
+        'StartupWMClass=webapp-simple'
     '';
   };
 }

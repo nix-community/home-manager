@@ -139,13 +139,6 @@ let
 
       # Create the launch command
       launchCommand = getBrowserCommand browserPkg appCfg.url appCfg.extraOptions;
-
-      # Get browser name for StartupWMClass
-      browserName = browserPkg.pname or (builtins.parseDrvName browserPkg.name).name;
-
-      # Prepare StartupWMClass
-      startupWmClass =
-        if appCfg.startupWmClass != null then appCfg.startupWmClass else "${browserName}-webapp-${name}";
     in
     nameValuePair "webapp-${name}" {
       inherit (appCfg) name;
@@ -157,7 +150,7 @@ let
       inherit (appCfg) categories;
       mimeType = appCfg.mimeTypes;
       settings = {
-        StartupWMClass = startupWmClass;
+        StartupWMClass = appCfg.startupWmClass;
       };
     };
 
@@ -245,9 +238,12 @@ in
               };
 
               startupWmClass = mkOption {
-                type = types.nullOr types.str;
-                default = null;
-                description = "The StartupWMClass to use in the .desktop file.";
+                type = types.str;
+                default = "webapp-${name}";
+                description = ''
+                  The StartupWMClass to use in the .desktop file.
+                  Defaults to the desktop entry name, `webapp-<name>`.
+                '';
                 example = "github.com";
               };
 
