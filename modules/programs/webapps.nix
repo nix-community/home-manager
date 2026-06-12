@@ -8,7 +8,6 @@
 let
   inherit (lib)
     concatStringsSep
-    hasAttr
     literalExpression
     mapAttrs'
     mapAttrsToList
@@ -21,33 +20,17 @@ let
 
   cfg = config.programs.webapps;
 
-  # Browser configurations for known browsers
-  browserConfigs = {
-    chromium = {
-      isChromiumBased = true;
-      appFlag = true;
-    };
-    brave = {
-      isChromiumBased = true;
-      appFlag = true;
-    };
-    google-chrome = {
-      isChromiumBased = true;
-      appFlag = true;
-    };
-    google-chrome-stable = {
-      isChromiumBased = true;
-      appFlag = true;
-    };
-    vivaldi = {
-      isChromiumBased = true;
-      appFlag = true;
-    };
-    firefox = {
-      isChromiumBased = false;
-      appFlag = false;
-    };
-  };
+  # Browsers that support Chromium's --app=URL standalone-window mode, keyed by
+  # executable name (meta.mainProgram). Any browser not listed opens the URL in
+  # a normal window, which works everywhere; passing --app to a non-Chromium
+  # browser would produce a broken launcher.
+  chromiumBasedBrowsers = [
+    "chromium"
+    "brave"
+    "google-chrome"
+    "google-chrome-stable"
+    "vivaldi"
+  ];
 
   # Get browser command based on package
   getBrowserCommand =
@@ -98,24 +81,18 @@ let
 
       optionArgs = builtins.concatLists (mapAttrsToList renderOption extraOptions);
 
-      # Detect browser type from package name
+      # Resolve the launch binary from the package's meta.mainProgram, falling
+      # back to the pname-derived name, since a browser's executable name often
+      # differs from its package name (e.g. ungoogled-chromium ships `chromium`).
       browserName = browserPkg.pname or (builtins.parseDrvName browserPkg.name).name;
+      browserExe = browserPkg.meta.mainProgram or browserName;
 
-      browserConfig =
-        if hasAttr browserName browserConfigs then
-          browserConfigs.${browserName}
-        else
-          # Fallback: assume chromium-based behavior
-          {
-            isChromiumBased = true;
-            appFlag = true;
-          };
+      binary = lib.getExe' browserPkg browserExe;
 
-      binary = "${toString browserPkg}/bin/${browserName}";
-
-      # Chromium-based browsers open a dedicated app window via --app=URL;
-      # other browsers (e.g. Firefox) just open the URL in a normal window.
-      urlArg = if browserConfig.isChromiumBased then "--app=${toString url}" else toString url;
+      # Chromium-based browsers open a dedicated app window via --app=URL; any
+      # other browser just opens the URL in a normal window.
+      isChromiumBased = builtins.elem browserExe chromiumBasedBrowsers;
+      urlArg = if isChromiumBased then "--app=${toString url}" else toString url;
     in
     concatStringsSep " " ([ binary ] ++ map quoteExecArg ([ urlArg ] ++ optionArgs));
 
@@ -161,7 +138,11 @@ in
     browser = mkOption {
       type = types.package;
       default = detectedBrowser;
-      defaultText = literalExpression "pkgs.firefox";
+      defaultText = lib.literalMD ''
+        auto-detected from the first enabled browser program
+        (`programs.chromium`, `programs.brave`, `programs.firefox`),
+        otherwise `pkgs.firefox`
+      '';
       example = literalExpression "pkgs.chromium";
       description = ''
         Browser package to use for launching web applications.
