@@ -134,11 +134,8 @@ let
   makeWebAppDesktopEntry =
     name: appCfg:
     let
-      # Get the browser package
-      browserPkg = cfg.browser;
-
       # Create the launch command
-      launchCommand = getBrowserCommand browserPkg appCfg.url appCfg.extraOptions;
+      launchCommand = getBrowserCommand appCfg.browser appCfg.url appCfg.extraOptions;
     in
     nameValuePair "webapp-${name}" {
       inherit (appCfg) name;
@@ -195,6 +192,17 @@ in
                 default = name;
                 description = "Name of the web application. Defaults to the attribute name.";
                 example = "GitHub";
+              };
+
+              browser = mkOption {
+                type = types.package;
+                default = cfg.browser;
+                defaultText = literalExpression "config.programs.webapps.browser";
+                example = literalExpression "pkgs.firefox";
+                description = ''
+                  Browser package to use for this web application.
+                  Defaults to the top-level `programs.webapps.browser`.
+                '';
               };
 
               icon = mkOption {
