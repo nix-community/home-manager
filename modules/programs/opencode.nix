@@ -604,6 +604,9 @@ in
           ExecStart = "${lib.getExe packageWithExtraPackages} serve ${lib.escapeShellArgs webCfg.extraArgs}";
           Restart = "always";
           RestartSec = 5;
+          Environment = [
+            "PATH=${config.home.profileDirectory}/bin"
+          ];
         }
         // lib.optionalAttrs (webCfg.environmentFile != null) {
           EnvironmentFile = webCfg.environmentFile;
@@ -628,7 +631,7 @@ in
               ++ webCfg.extraArgs;
               opencodeLaunchdWrapper = pkgs.writeShellScriptBin "opencode-launchd-wrapper" ''
                 source ${webCfg.environmentFile}
-                ${lib.escapeShellArgs programArguments}
+                exec ${lib.escapeShellArgs programArguments}
               '';
             in
             if webCfg.environmentFile == null then
@@ -643,6 +646,9 @@ in
           };
           ProcessType = "Background";
           RunAtLoad = true;
+          EnvironmentVariables = {
+            PATH = "${config.home.profileDirectory}/bin";
+          };
         };
       };
     };
