@@ -17,7 +17,6 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.amfora = {
     enable = mkEnableOption "amfora";
     package = mkPackageOption pkgs "amfora" { nullable = true; };

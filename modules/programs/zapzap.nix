@@ -16,7 +16,6 @@ let
   cfg = config.programs.zapzap;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.zapzap = {
     enable = mkEnableOption "zapzap";
     package = mkPackageOption pkgs "zapzap" { nullable = true; };

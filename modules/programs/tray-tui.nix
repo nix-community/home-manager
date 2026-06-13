@@ -16,7 +16,6 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.tray-tui = {
     enable = mkEnableOption "tray-tui";

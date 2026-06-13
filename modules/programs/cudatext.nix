@@ -20,7 +20,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.cudatext = {
     enable = mkEnableOption "cudatext";
     package = mkPackageOption pkgs "cudatext" { nullable = true; };

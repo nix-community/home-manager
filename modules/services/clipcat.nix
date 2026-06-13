@@ -18,7 +18,6 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.services.clipcat = {
     enable = mkEnableOption "clipcat";
