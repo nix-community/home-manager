@@ -31,7 +31,7 @@
       WantedBy=default.target
 
       [Service]
-      Environment=PATH=@which@/bin:@wl-clipboard@/bin:@wtype@/bin
+      Environment=PATH=/nix/store/00000000000000000000000000000000-coreutils/bin:@which@/bin:@wl-clipboard@/bin:@wtype@/bin
       Environment=XDG_RUNTIME_DIR=%t
       Environment=WAYLAND_DISPLAY=wayland-1
       Environment=VOXTYPE_TEST_ENV=1
