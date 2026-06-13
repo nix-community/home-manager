@@ -20,10 +20,14 @@ let
   cfg = config.programs.prismlauncher;
 
   iniFormat = pkgs.formats.ini { };
+  jsonFormat = pkgs.formats.json { };
+  isStorePathString = value: builtins.isString value && lib.hasPrefix "${builtins.storeDir}/" value;
+  isPathLike = value: lib.isPath value || isStorePathString value || lib.isDerivation value;
 in
 
 {
   meta.maintainers = with lib.maintainers; [
+    ErinaYip
     mikaeladev
   ];
 
@@ -52,6 +56,64 @@ in
 
         These will be linked in {file}`$XDG_DATA_HOME/PrismLauncher/icons` on Linux and
         {file}`~/Library/Application Support/PrismLauncher/icons` on macOS.
+      '';
+    };
+
+    themes = mkOption {
+      type = types.attrsOf (
+        types.either types.path (
+          types.submodule {
+            options = {
+              theme = mkOption {
+                inherit (jsonFormat) type;
+                default = { };
+                description = ''
+                  Contents of the theme's {file}`theme.json`.
+                '';
+              };
+
+              style = mkOption {
+                type = types.nullOr (types.either types.lines types.path);
+                default = null;
+                description = ''
+                  Contents of, or path to, the theme's {file}`themeStyle.css`.
+                '';
+              };
+            };
+          }
+        )
+      );
+      default = { };
+      example = literalExpression ''
+        {
+          Tokyo-Night = ./Tokyo-Night;
+
+          custom = {
+            theme = {
+              name = "Custom";
+              colors = {
+                background = "#1a1b26";
+                foreground = "#c0caf5";
+              };
+            };
+            style = '''
+              QWidget {
+                font-family: "Inter";
+              }
+            ''';
+          };
+        }
+      '';
+      description = ''
+        Prism Launcher widget themes.
+
+        Attribute names are used as theme directory names. A theme can either be
+        a path to a complete theme directory, or an attribute set used to
+        generate {file}`theme.json` and optionally {file}`themeStyle.css`.
+
+        These will be linked in {file}`$XDG_DATA_HOME/PrismLauncher/themes` on
+        Linux and {file}`~/Library/Application Support/PrismLauncher/themes` on
+        macOS.
       '';
     };
 
@@ -86,8 +148,39 @@ in
         ${lib.getExe pkgs.crudini} --merge --ini-options=nospace \
           ${escapeShellArg filePath} < ${escapeShellArg staticSettingsFile}
       '';
+
+      themeFiles = lib.concatMapAttrs (
+        name: theme:
+        if isPathLike theme then
+          {
+            "${dataDir}/themes/${name}" = {
+              source = theme;
+              recursive = true;
+            };
+          }
+        else
+          {
+            "${dataDir}/themes/${name}/theme.json" = {
+              source = jsonFormat.generate "prismlauncher-${name}-theme.json" theme.theme;
+            };
+          }
+          // lib.optionalAttrs (theme.style != null) {
+            "${dataDir}/themes/${name}/themeStyle.css" =
+              if isPathLike theme.style then { source = theme.style; } else { text = theme.style; };
+          }
+      ) cfg.themes;
     in
     mkIf cfg.enable {
+      assertions =
+        lib.mapAttrsToList (name: theme: {
+          assertion = !isPathLike theme || lib.pathIsDirectory theme;
+          message = "`programs.prismlauncher.themes.${name}` must be a directory when set to a path.";
+        }) cfg.themes
+        ++ lib.mapAttrsToList (name: theme: {
+          assertion = isPathLike theme || theme.theme != { };
+          message = "`programs.prismlauncher.themes.${name}.theme` must not be empty.";
+        }) cfg.themes;
+
       home = {
         packages = lib.mkMerge ([ (mkIf (cfg.package != null) [ cfg.package ]) ] ++ cfg.extraPackages);
 
@@ -99,14 +192,17 @@ in
           );
         };
 
-        file = mkIf (cfg.icons != [ ]) (
-          listToAttrs (
-            map (source: {
-              name = "${dataDir}/icons/${baseNameOf source}";
-              value = { inherit source; };
-            }) cfg.icons
-          )
-        );
+        file = lib.mkMerge [
+          (mkIf (cfg.icons != [ ]) (
+            listToAttrs (
+              map (source: {
+                name = "${dataDir}/icons/${baseNameOf source}";
+                value = { inherit source; };
+              }) cfg.icons
+            )
+          ))
+          themeFiles
+        ];
       };
     };
 }
