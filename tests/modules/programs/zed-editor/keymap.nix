@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -63,42 +62,24 @@
           },
           {
             "bindings": {
+              "down": "select"
+            },
+            "context": "Terminal"
+          },
+          {
+            "bindings": {
               "enter": "newline",
               "escape": "editor::Cancel"
             },
             "context": "Editor"
-          },
-          {
-            "bindings": {
-              "down": "select"
-            },
-            "context": "Terminal"
           }
         ]
       '';
 
       keymapPath = ".config/zed/keymap.json";
-      activationScript = pkgs.writeScript "activation" config.home.activation.zedKeymapActivation.data;
     in
-    ''
-      export HOME=$TMPDIR/hm-user
-
-      # Simulate preexisting keymaps
-      mkdir -p $HOME/.config/zed
-      cat ${preexistingKeymaps} > $HOME/${keymapPath}
-
-      # Run the activation script
-      substitute ${activationScript} $TMPDIR/activate --subst-var TMPDIR
-      chmod +x $TMPDIR/activate
-      $TMPDIR/activate
-
-      # Validate the merged keymaps
-      assertFileExists "$HOME/${keymapPath}"
-      assertFileContent "$HOME/${keymapPath}" "${expectedContent}"
-
-      # Test idempotency
-      $TMPDIR/activate
-      assertFileExists "$HOME/${keymapPath}"
-      assertFileContent "$HOME/${keymapPath}" "${expectedContent}"
-    '';
+    config.lib.test.runMutableConfigTest {
+      files.${keymapPath} = preexistingKeymaps;
+      expected.${keymapPath} = expectedContent;
+    };
 }

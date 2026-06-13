@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -75,18 +74,8 @@
       '';
 
       settingsPath = ".config/zed/settings.json";
-      activationScript = pkgs.writeScript "activation" config.home.activation.zedSettingsActivation.data;
     in
-    ''
-      export HOME=$TMPDIR/hm-user
-
-      # Run the activation script
-      substitute ${activationScript} $TMPDIR/activate --subst-var TMPDIR
-      chmod +x $TMPDIR/activate
-      $TMPDIR/activate
-
-      # Validate the settings file exists and contains MCP servers
-      assertFileExists "$HOME/${settingsPath}"
-      assertFileContent "$HOME/${settingsPath}" "${expectedContent}"
-    '';
+    config.lib.test.runMutableConfigTest {
+      expected.${settingsPath} = expectedContent;
+    };
 }

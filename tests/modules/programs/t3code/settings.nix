@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -147,13 +146,13 @@
         [
           {
             "key": "mod+d",
-            "command": "diff.toggle",
-            "when": "!terminalFocus"
+            "command": "terminal.split",
+            "when": "terminalFocus"
           },
           {
             "key": "mod+d",
-            "command": "terminal.split",
-            "when": "terminalFocus"
+            "command": "diff.toggle",
+            "when": "!terminalFocus"
           },
           {
             "key": "mod+j",
@@ -181,9 +180,6 @@
       settingsPath = ".t3/userdata/settings.json";
       keybindingsPath = ".t3/userdata/keybindings.json";
       clientSettingsPath = ".t3/userdata/client-settings.json";
-      settingsActivation = pkgs.writeScript "settings-activation" config.home.activation.t3codeSettingsActivation.data;
-      keybindingsActivation = pkgs.writeScript "keybindings-activation" config.home.activation.t3codeKeybindingsActivation.data;
-      clientSettingsActivation = pkgs.writeScript "client-settings-activation" config.home.activation.t3codeClientSettingsActivation.data;
     in
     ''
       export HOME=$TMPDIR/hm-user
@@ -193,25 +189,13 @@
       cat ${preexistingKeybindings} > $HOME/${keybindingsPath}
       cat ${preexistingClientSettings} > $HOME/${clientSettingsPath}
 
-      substitute ${settingsActivation} $TMPDIR/settings-activate --subst-var TMPDIR
-      chmod +x $TMPDIR/settings-activate
-      $TMPDIR/settings-activate
-
-      substitute ${keybindingsActivation} $TMPDIR/keybindings-activate --subst-var TMPDIR
-      chmod +x $TMPDIR/keybindings-activate
-      $TMPDIR/keybindings-activate
-
-      substitute ${clientSettingsActivation} $TMPDIR/client-settings-activate --subst-var TMPDIR
-      chmod +x $TMPDIR/client-settings-activate
-      $TMPDIR/client-settings-activate
+      ${config.lib.test.runMutableConfig}
 
       assertFileContent "$HOME/${settingsPath}" "${expectedSettings}"
       assertFileContent "$HOME/${keybindingsPath}" "${expectedKeybindings}"
       assertFileContent "$HOME/${clientSettingsPath}" "${expectedClientSettings}"
 
-      $TMPDIR/settings-activate
-      $TMPDIR/keybindings-activate
-      $TMPDIR/client-settings-activate
+      $TMPDIR/mutable-config-activation
 
       assertFileContent "$HOME/${settingsPath}" "${expectedSettings}"
       assertFileContent "$HOME/${keybindingsPath}" "${expectedKeybindings}"

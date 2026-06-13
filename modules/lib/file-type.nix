@@ -16,7 +16,15 @@ let
     types
     ;
 in
-{
+rec {
+  # Normalizes absolute paths
+  normalizeAbsPath =
+    { path, basePath }:
+    let
+      absPath = if hasPrefix "/" path then path else "${basePath}/${path}";
+    in
+    removePrefix (homeDirectory + "/") absPath;
+
   # Constructs a type suitable for a `home.file` like option. The
   # target path may be either absolute or relative, in which case it
   # is relative the `basePath` argument (which itself must be an
@@ -45,10 +53,10 @@ in
               type = types.nonEmptyStr;
               apply =
                 p:
-                let
-                  absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
-                in
-                removePrefix (homeDirectory + "/") absPath;
+                normalizeAbsPath {
+                  inherit basePath;
+                  path = p;
+                };
               defaultText = literalExpression "name";
               description = ''
                 Path to target file relative to ${basePathDesc}.

@@ -38,6 +38,7 @@ let
       ./misc/gtk.nix
       ./misc/lib.nix
       ./misc/mozilla-messaging-hosts.nix
+      ./misc/mutable-config.nix
       ./misc/news.nix
       ./misc/nix-remote-build.nix
       ./misc/nix.nix
