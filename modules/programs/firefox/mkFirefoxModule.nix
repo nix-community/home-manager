@@ -245,6 +245,54 @@ in
       description = "Upstream release version used to fetch from `releases.mozilla.org`.";
     };
 
+    globalExtensions = mkOption {
+      type = types.listOf (
+        types.oneOf [
+          types.package
+          (types.submodule {
+            options = {
+              package = mkOption {
+                type = types.package;
+              };
+
+              settings = mkOption {
+                type = types.attrsOf jsonFormat.type;
+                default = { };
+                description = "Json formatted options for this extension.";
+              };
+            };
+          })
+        ]
+      );
+      default = [ ];
+      example = literalExpression ''
+        with pkgs.nur.repos.rycee.firefox-addons; [
+          privacy-badger
+          {
+            package = ublock-origin;
+            settings = {
+              private_browsing = true;
+            };
+          }
+        ]
+      '';
+      description = ''
+        Add-on package to install under policies.
+        For a package to work here it needs and addonId exposed in it's passthru.
+        This will be included in all add-ons accessible from the Nix User Repository.
+        Once you have NUR installed run
+
+        ```console
+        $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
+        ```
+
+        to list the available ${name} add-ons.
+
+        Installing extensions this way will automatically enable extensions
+        inside ${name} after the first installation.
+      '';
+    };
+
     languagePacks = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -364,7 +412,11 @@ in
     profiles = mkOption {
       type = types.attrsOf (
         types.submodule (
-          { config, name, ... }:
+          {
+            config,
+            name,
+            ...
+          }:
           let
             profilePath = modulePath ++ [
               "profiles"
@@ -896,7 +948,10 @@ in
                 ]
               ) config.extensions.packages)
               ++ (builtins.concatMap (
-                { name, value }:
+                {
+                  name,
+                  value,
+                }:
                 let
                   packages = builtins.filter (pkg: (pkg.addonId or pkg.name) == name) config.extensions.packages;
                 in
@@ -1000,6 +1055,17 @@ in
           '';
         }
 
+        {
+          assertion = builtins.all (
+            elem:
+            let
+              package = elem.package or elem;
+            in
+            package ? addonId
+          ) cfg.globalExtensions;
+          message = "${moduleName}.globalExtensions requires each package to expose addonId in passthru.";
+        }
+
         (mkNoDuplicateAssertion cfg.profiles "profile")
       ]
       ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
@@ -1069,7 +1135,6 @@ in
         );
       targets.darwin.defaults = (
         mkIf (cfg.darwinDefaultsId != null && isDarwin) {
-
           ${cfg.darwinDefaultsId} = {
             EnterprisePoliciesEnabled = true;
           }
@@ -1176,17 +1241,38 @@ in
         NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
           builtins.attrValues cfg.profiles
         )) false;
-        ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
-          lib.listToAttrs (
-            map (
-              lang:
-              lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
-                installation_mode = "normal_installed";
-                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
-              }
-            ) cfg.languagePacks
-          )
-        );
+        ExtensionSettings = mkMerge [
+          (lib.mkIf (cfg.languagePacks != [ ]) (
+            lib.listToAttrs (
+              map (
+                lang:
+                lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+                  installation_mode = "normal_installed";
+                  install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
+                }
+              ) cfg.languagePacks
+            )
+          ))
+
+          (lib.mkIf (cfg.globalExtensions != [ ]) (
+            lib.listToAttrs (
+              map (
+                elem:
+                let
+                  package = elem.package or elem;
+                  settings = elem.settings or { };
+                in
+                lib.nameValuePair package.addonId (
+                  {
+                    installation_mode = "force_installed";
+                    install_url = "file://${package.outPath}/share/mozilla/${extensionPath}/${package.addonId}.xpi";
+                  }
+                  // settings
+                )
+              ) cfg.globalExtensions
+            )
+          ))
+        ];
       };
     }
   );
