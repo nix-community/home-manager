@@ -16,7 +16,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.alistral = {
     enable = mkEnableOption "alistral";
     package = mkPackageOption pkgs "alistral" { nullable = true; };

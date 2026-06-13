@@ -16,7 +16,6 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.andcli = {
     enable = mkEnableOption "andcli";
     package = mkPackageOption pkgs "andcli" { nullable = true; };

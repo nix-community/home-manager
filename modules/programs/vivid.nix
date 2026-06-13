@@ -27,7 +27,6 @@ let
 in
 {
   meta.maintainers = [
-    lib.hm.maintainers.aguirre-matteo
     lib.maintainers.arunoruto
   ];
 

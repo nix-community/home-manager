@@ -17,7 +17,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.anvil-editor = {
     enable = mkEnableOption "anvil-editor";
     package = mkPackageOption pkgs "anvil-editor" { nullable = true; };

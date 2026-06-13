@@ -15,7 +15,6 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.lazyworktree = {
     enable = mkEnableOption "lazyworktree";
 

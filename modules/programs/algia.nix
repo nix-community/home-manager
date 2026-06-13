@@ -16,7 +16,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.algia = {
     enable = mkEnableOption "algia";
     package = mkPackageOption pkgs "algia" { nullable = true; };

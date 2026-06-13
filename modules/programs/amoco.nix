@@ -16,7 +16,6 @@ let
   cfg = config.programs.amoco;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.amoco = {
     enable = mkEnableOption "amoco";
     package = mkPackageOption pkgs "amoco" { nullable = true; };

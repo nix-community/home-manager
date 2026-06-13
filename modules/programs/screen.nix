@@ -16,7 +16,6 @@ let
   cfg = config.programs.screen;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.screen = {
     enable = mkEnableOption "screen";
     package = mkPackageOption pkgs "screen" { nullable = true; };

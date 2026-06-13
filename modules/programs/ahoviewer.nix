@@ -16,7 +16,6 @@ let
   cfg = config.programs.ahoviewer;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.ahoviewer = {
     enable = mkEnableOption "ahoviewer";
     package = mkPackageOption pkgs "ahoviewer" { nullable = true; };

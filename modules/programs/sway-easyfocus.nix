@@ -16,7 +16,6 @@ let
   formatter = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.sway-easyfocus = {
     enable = mkEnableOption "sway-easyfocus";

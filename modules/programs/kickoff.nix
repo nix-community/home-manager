@@ -17,7 +17,6 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.kickoff = {
     enable = mkEnableOption "kickoff";
