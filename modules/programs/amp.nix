@@ -16,7 +16,6 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.amp = {
     enable = mkEnableOption "amp";
     package = mkPackageOption pkgs "amp" { nullable = true; };

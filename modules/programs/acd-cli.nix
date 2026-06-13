@@ -16,7 +16,6 @@ let
   iniFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.acd-cli = {
     enable = mkEnableOption "acd-cli";
     package = mkPackageOption pkgs "acd-cli" { nullable = true; };
