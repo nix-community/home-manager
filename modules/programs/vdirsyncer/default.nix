@@ -41,6 +41,13 @@ let
             (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook + "/bin/post-hook")
           else
             null;
+        preDeletionHook =
+          if a.vdirsyncer.preDeletionHook != null then
+            (
+              pkgs.writeShellScriptBin "pre-deletion-hook" a.vdirsyncer.preDeletionHook + "/bin/pre-deletion-hook"
+            )
+          else
+            null;
       }
     );
 
@@ -91,6 +98,8 @@ let
       ''encoding = "${v}"''
     else if (n == "postHook") then
       ''post_hook = "${v}"''
+    else if (n == "preDeletionHook") then
+      ''pre_deletion_hook = "${v}"''
     else if (n == "url") then
       ''url = "${v}"''
     else if (n == "urlCommand") then
@@ -183,7 +192,6 @@ let
       mapAttrsToList (n: v: "[storage ${n}_remote]" + "\n" + attrsString v) remoteStorages
     )}
   '';
-
 in
 {
   imports = [
@@ -213,7 +221,6 @@ in
   config = lib.mkIf cfg.enable {
     assertions =
       let
-
         mutuallyExclusiveOptions = [
           [
             "url"
@@ -275,6 +282,7 @@ in
               "fileExt"
               "encoding"
               "postHook"
+              "preDeletionHook"
             ]
           else if (t == "singlefile") then
             [ "encoding" ]
@@ -303,7 +311,7 @@ in
               a: _v':
               [
                 {
-                  assertion = (lib.elem a allowed);
+                  assertion = lib.elem a allowed;
                   message = ''
                     Storage ${n} is of type ${v.type}. Option
                     ${a} is not allowed for this type.
@@ -345,7 +353,6 @@ in
         storageAssertions =
           lib.flatten (mapAttrsToList assertStorage localStorages)
           ++ lib.flatten (mapAttrsToList assertStorage remoteStorages);
-
       in
       storageAssertions;
     home.packages = [ cfg.package ];
