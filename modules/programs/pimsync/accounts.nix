@@ -28,12 +28,17 @@ in
 
     extraPairDirectives = mkOption {
       type = SCFGDirectives;
-      default = [ ];
-      description = "Extra directives that should be added under this accounts pair directive";
-      example = [
+      default = [
         {
           name = "collections";
           params = [ "all" ];
+        }
+      ];
+      description = "Extra directives that should be added under this accounts pair directive";
+      example = [
+        {
+          name = "conflict_resolution";
+          params = [ "keep a" ];
         }
       ];
     };
