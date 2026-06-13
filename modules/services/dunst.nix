@@ -146,12 +146,11 @@ in
     xdg.configFile."dunst/dunstrc" = lib.mkIf (cfg.settings != { }) {
       text =
         let
-          sortedSettings = lib.hm.dag.topoSort cfg.settings;
-          sections =
-            sortedSettings.result
-              or (abort "Dependency cycle in dunst settings: ${builtins.toJSON sortedSettings}");
+          sections = lib.hm.generators.sortDAGEntries {
+            cycleErrorMessage = "Dependency cycle in dunst settings";
+          } cfg.settings;
         in
-        lib.concatStringsSep "\n" (map (section: toDunstIni { ${section.name} = section.data; }) sections);
+        lib.concatStringsSep "\n" (map (section: toDunstIni { ${section.name} = section.value; }) sections);
     };
 
     services.dunst.settings.global.icon_path =
