@@ -37,6 +37,7 @@ let
       ./misc/fontconfig.nix
       ./misc/gtk.nix
       ./misc/lib.nix
+      ./misc/material-icons.nix
       ./misc/mozilla-messaging-hosts.nix
       ./misc/news.nix
       ./misc/nix-remote-build.nix

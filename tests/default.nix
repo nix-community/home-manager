@@ -185,6 +185,7 @@ import nmtSrc {
           ./modules/home-environment
           ./modules/misc/fontconfig
           ./modules/misc/manual
+          ./modules/misc/material-icons
           ./modules/misc/news
           ./modules/misc/nix
           ./modules/misc/nix-remote-build
