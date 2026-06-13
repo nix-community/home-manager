@@ -29,6 +29,17 @@ in
         priority = 37;
         text = "";
       };
+      target = {
+        target = "target";
+        text = "";
+      };
+      settings.settings.a = [
+        {
+          "@attr" = "value";
+          b = 1;
+        }
+        { c = "string"; }
+      ];
       text.text = sampleText;
       source.source = sampleSource;
     };
@@ -42,6 +53,21 @@ in
     assertFileExists ${fcConfD}/90-hm-custom_label.conf
 
     assertFileExists ${fcConfD}/37-hm-priority.conf
+
+    assertFileExists ${fcConfD}/target
+
+    assertFileExists  ${fcConfD}/90-hm-settings.conf
+    assertFileContent ${fcConfD}/90-hm-settings.conf ${builtins.toFile "sample-settings-config" ''
+      <?xml version="1.0" encoding="utf-8"?>
+      <fontconfig>
+        <a attr="value">
+          <b>1</b>
+        </a>
+        <a>
+          <c>string</c>
+        </a>
+      </fontconfig>
+    ''}
 
     assertFileExists  ${fcConfD}/90-hm-text.conf
     assertFileContent ${fcConfD}/90-hm-text.conf \
