@@ -141,7 +141,10 @@ in
       Service =
         let
           runtimePath = makeBinPath (
-            [ pkgs.which ]
+            [
+              pkgs.coreutils
+              pkgs.which
+            ]
             ++ optionals (cfg.x11.display != null) [ pkgs.xclip ]
             ++ optionals (cfg.wayland.display != null) [
               pkgs.wl-clipboard
