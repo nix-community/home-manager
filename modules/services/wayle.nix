@@ -19,6 +19,7 @@ in
   meta.maintainers = with lib.maintainers; [
     isaacST08
     PerchunPak
+    csanthiago
   ];
 
   options.services.wayle = {
@@ -76,6 +77,22 @@ in
         };
       };
     };
+
+    themes = mkOption {
+      type = with lib.types; lazyAttrsOf (either path lines);
+      default = { };
+      example = {
+        tokyo-night = ''
+          bg = "#1a1b26"
+          fg = "#c0caf5"
+          primary = "#7aa2f7"
+          red = "#f7768e"
+        '';
+      };
+      description = ''
+        Themes to be written to {file}`$XDG_CONFIG_HOME/wayle/themes/''${name}.toml`
+      '';
+    };
   };
 
   config = mkIf cfg.enable (
@@ -107,10 +124,27 @@ in
         ) pkgs.${settings_with_fallbacks.styling.theme-provider})
       );
 
-      # Main config file.
-      xdg.configFile."wayle/config.toml" = mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "wayle-config" cfg.settings;
-      };
+      # Main config file and themes.
+      xdg.configFile =
+        let
+          mkThemeConfig = name: theme: {
+            name = "wayle/themes/${name}.toml";
+            value = {
+              source = (
+                if builtins.isPath theme || lib.isStorePath theme then
+                  theme
+                else
+                  pkgs.writeText "wayle-theme.toml" theme
+              );
+            };
+          };
+        in
+        {
+          "wayle/config.toml" = mkIf (cfg.settings != { }) {
+            source = tomlFormat.generate "wayle-config" cfg.settings;
+          };
+        }
+        // lib.mapAttrs' mkThemeConfig cfg.themes;
 
       # Systemd service for main wayle shell.
       systemd.user.services.wayle = {
