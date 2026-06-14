@@ -9,6 +9,8 @@ let
   cfg = config.programs.keepassxc;
 
   iniFormat = pkgs.formats.ini { };
+
+  settingsFile = iniFormat.generate "keepassxc-settings" cfg.settings;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -104,11 +106,11 @@ in
       (lib.mkIf (cfg.settings != { }) {
         xdg.configFile."keepassxc/keepassxc.ini" = {
           enable = !pkgs.stdenv.hostPlatform.isDarwin;
-          source = iniFormat.generate "keepassxc-settings" cfg.settings;
+          source = settingsFile;
         };
         home.file."Library/Application Support/KeePassXC/keepassxc.ini" = {
           enable = pkgs.stdenv.hostPlatform.isDarwin;
-          source = iniFormat.generate "keepassxc-settings" cfg.settings;
+          source = settingsFile;
         };
       })
 
