@@ -195,11 +195,14 @@ let
     if package == null then
       null
     else if isWrapped then
-      package.override (old: {
-        cfg = old.cfg or { } // fcfg;
-        extraPolicies = (old.extraPolicies or { }) // cfg.policies;
-        pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
-      })
+      package.override (
+        old:
+        lib.optionalAttrs (package.override.__functionArgs ? cfg) {
+          cfg = old.cfg or { } // fcfg;
+          extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+          pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
+        }
+      )
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
