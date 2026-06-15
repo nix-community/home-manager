@@ -50,6 +50,12 @@
             DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
           };
         };
+        remote-server = {
+          url = "https://remote.example/mcp";
+          headers = {
+            "Authorization" = "Bearer token";
+          };
+        };
       };
     };
   };
@@ -62,5 +68,8 @@
     assertFileRegex home-files/.gemini/config/mcp_config.json '"filesystem"'
     assertFileRegex home-files/.gemini/config/mcp_config.json '"database"'
     assertFileNotRegex home-files/.gemini/config/mcp_config.json '"other-tmp"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"remote-server"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"serverUrl": "https://remote.example/mcp"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"type": "http"'
   '';
 }

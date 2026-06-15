@@ -474,19 +474,6 @@ in
                   lib.hm.mcp.transformMcpServer {
                     inherit server;
                     extraTransforms = [
-                      (
-                        s:
-                        removeAttrs s [
-                          "httpUrl"
-                          "url"
-                        ]
-                        // lib.optionalAttrs (s ? httpUrl) {
-                          serverUrl = s.httpUrl;
-                        }
-                        // lib.optionalAttrs (s ? url) {
-                          serverUrl = s.url;
-                        }
-                      )
                       lib.hm.mcp.addType
                       (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
                       (s: lib.mapAttrs (_: lib.mkDefault) s)
