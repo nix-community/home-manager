@@ -197,7 +197,7 @@ let
     else if isWrapped then
       package.override (
         old:
-        lib.optionalAttrs (package.override.__functionArgs ? cfg) {
+        lib.optionalAttrs (lib.functionArgs package.override ? cfg) {
           cfg = old.cfg or { } // fcfg;
           extraPolicies = (old.extraPolicies or { }) // cfg.policies;
           pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
