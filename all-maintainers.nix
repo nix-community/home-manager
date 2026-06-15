@@ -2271,6 +2271,13 @@
     name = "Sumner Evans";
     source = "nixpkgs";
   };
+  superflash41 = {
+    email = "saymon.nicho@pucp.edu.pe";
+    github = "superflash41";
+    githubId = 102434258;
+    name = "Saymon Nicho";
+    source = "home-manager";
+  };
   surfaceflinger = {
     email = "nat@nekopon.pl";
     github = "surfaceflinger";
