@@ -68,6 +68,8 @@ let
     };
 
   hmPath = toString ./..;
+  # NOTE: Assume `pkgs.path` is the same Nixpkgs used to eval Home Manager
+  # That is currently true when building Home Manager's docs website, but may not be true when end-users build Home Manager docs.
   nixpkgsPath = toString pkgs.path;
 
   # Keep submodule option docs visible when wrapped in `either` (and therefore
