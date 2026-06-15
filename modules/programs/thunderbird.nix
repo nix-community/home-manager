@@ -190,7 +190,7 @@ let
     };
 
   toThunderbirdAccount =
-    account: profile:
+    account:
     let
       inherit (account) id;
       addresses = [ account.address ] ++ account.aliases;
@@ -205,7 +205,6 @@ let
       "mail.accountmanager.defaultaccount" = "account_${id}";
     }
     // optionalAttrs (account.imap != null) {
-      "mail.server.server_${id}.directory" = "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]ImapMail/${id}";
       "mail.server.server_${id}.hostname" = account.imap.host;
       "mail.server.server_${id}.login_at_startup" = true;
@@ -245,7 +244,6 @@ let
       "mail.outgoingserver.ews_${id}.key" = "ews_${id}";
       "mail.outgoingserver.ews_${id}.username" = account.userName;
 
-      "mail.server.server_${id}.directory" = "${thunderbirdProfilesPath}/${profile.name}/Mail/${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]Mail/${id}";
       "mail.server.server_${id}.hostname" = account.ews.host;
       "mail.server.server_${id}.ews_url" = account.ews.serviceDescriptionURL;
@@ -330,7 +328,7 @@ let
     );
 
   toThunderbirdFeed =
-    feed: profile:
+    feed:
     let
       inherit (feed) id;
     in
@@ -338,8 +336,6 @@ let
       "mail.account.account_${id}.server" = "server_${id}";
       "mail.server.server_${id}.name" = feed.name;
       "mail.server.server_${id}.type" = "rss";
-      "mail.server.server_${id}.directory" =
-        "${thunderbirdProfilesPath}/${profile.name}/Mail/Feeds-${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]Mail/Feeds-${id}";
       "mail.server.server_${id}.hostname" = "Feeds-${id}";
     };
@@ -1202,10 +1198,10 @@ in
 
                   profile.settings
                 ]
-                ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
+                ++ (map toThunderbirdAccount emailAccounts)
                 ++ (map (calendar: toThunderbirdCalendar calendar profile) calendarAccounts)
                 ++ (map (contact: toThunderbirdContact contact profile) contactAccounts)
-                ++ (map (feed: toThunderbirdFeed feed profile) feedAccounts)
+                ++ (map toThunderbirdFeed feedAccounts)
               )) profile.extraConfig;
             };
 
