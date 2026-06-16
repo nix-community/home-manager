@@ -10,6 +10,6 @@
     and emit rename warnings. The Antigravity CLI module writes settings and
     permissions to `~/.gemini/antigravity-cli`, MCP server configuration to
     `~/.gemini/config/mcp_config.json`, and skills to
-    `~/.gemini/config/skills`.
+    `~/.gemini/antigravity-cli/skills`.
   '';
 }

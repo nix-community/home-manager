@@ -19,6 +19,6 @@
     assertFileRegex home-files/.gemini/settings.json '"github"'
     assertPathNotExists home-files/.gemini/antigravity-cli/settings.json
     assertPathNotExists home-files/.gemini/config/mcp_config.json
-    assertPathNotExists home-files/.gemini/config/skills/review/SKILL.md
+    assertPathNotExists home-files/.gemini/antigravity-cli/skills/review/SKILL.md
   '';
 }

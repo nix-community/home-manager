@@ -33,15 +33,15 @@
     assertFileExists home-files/.gemini/antigravity-cli/settings.json
     assertFileContent home-files/.gemini/antigravity-cli/settings.json \
       ${./settings.json}
-    assertFileExists home-files/.gemini/config/skills/changelog/SKILL.md
-    assertFileRegex home-files/.gemini/config/skills/changelog/SKILL.md \
+    assertFileExists home-files/.gemini/antigravity-cli/skills/changelog/SKILL.md
+    assertFileRegex home-files/.gemini/antigravity-cli/skills/changelog/SKILL.md \
       'name: changelog'
-    assertFileRegex home-files/.gemini/config/skills/changelog/SKILL.md \
+    assertFileRegex home-files/.gemini/antigravity-cli/skills/changelog/SKILL.md \
       "Adds a new entry to the project's CHANGELOG.md file."
-    assertFileExists home-files/.gemini/config/skills/git:fix/SKILL.md
-    assertFileRegex home-files/.gemini/config/skills/git:fix/SKILL.md \
+    assertFileExists home-files/.gemini/antigravity-cli/skills/git:fix/SKILL.md
+    assertFileRegex home-files/.gemini/antigravity-cli/skills/git:fix/SKILL.md \
       'name: git:fix'
-    assertFileRegex home-files/.gemini/config/skills/git:fix/SKILL.md \
+    assertFileRegex home-files/.gemini/antigravity-cli/skills/git:fix/SKILL.md \
       'Generates a fix for a given GitHub issue.'
 
     assertFileExists home-path/etc/profile.d/hm-session-vars.sh
