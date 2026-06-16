@@ -408,6 +408,8 @@ in
       home = {
         packages = mkIf (cfg.package != null) [ cfg.package ];
 
+        # This is needed because codex will convert the symlinked plugin directory into
+        # an actual directory (which will not be overwritten by home-manager)
         activation.cleanCodexPluginCache = lib.mkIf (cfg.plugins != [ ]) (
           lib.hm.dag.entryBefore [ "linkGeneration" ] (
             lib.concatMapStringsSep "\n" (
