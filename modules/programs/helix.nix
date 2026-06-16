@@ -22,7 +22,10 @@ in
   options.programs.helix = {
     enable = lib.mkEnableOption "helix text editor";
 
-    package = lib.mkPackageOption pkgs "helix" { example = "pkgs.evil-helix"; };
+    package = lib.mkPackageOption pkgs "helix" {
+      nullable = true;
+      example = "pkgs.evil-helix";
+    };
 
     extraPackages = mkOption {
       type = with types; listOf package;
@@ -203,6 +206,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = lib.singleton {
+      assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+      message = "programs.helix.extraPackages require programs.helix.package to not be null";
+    };
+
     warnings = lib.optional (lib.any builtins.isList options.programs.helix.languages.definitions) (
       lib.hm.deprecations.mkDeprecatedOptionValueWarning {
         option = [
@@ -221,7 +229,7 @@ in
       }
     );
 
-    home.packages =
+    home.packages = lib.mkIf (cfg.package != null) (
       if cfg.extraPackages != [ ] then
         [
           (pkgs.symlinkJoin {
@@ -236,7 +244,8 @@ in
           })
         ]
       else
-        [ cfg.package ];
+        [ cfg.package ]
+    );
 
     home.sessionVariables = mkIf cfg.defaultEditor {
       EDITOR = "hx";
