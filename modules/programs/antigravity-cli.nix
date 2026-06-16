@@ -32,16 +32,33 @@ let
 
   transformMcpServer =
     server:
-    removeAttrs server [
-      "httpUrl"
-      "url"
-    ]
-    // lib.optionalAttrs (server ? httpUrl) {
-      serverUrl = server.httpUrl;
-    }
-    // lib.optionalAttrs (server ? url) {
-      serverUrl = server.url;
-    };
+    let
+      isRemote =
+        (server.httpUrl or null) != null
+        || (server.url or null) != null
+        || (server.serverUrl or null) != null;
+      cleaned =
+        if isRemote then
+          removeAttrs server [
+            "command"
+            "args"
+            "env"
+          ]
+        else
+          server;
+      transformed =
+        removeAttrs cleaned [
+          "httpUrl"
+          "url"
+        ]
+        // lib.optionalAttrs (server ? httpUrl) {
+          serverUrl = server.httpUrl;
+        }
+        // lib.optionalAttrs (server ? url) {
+          serverUrl = server.url;
+        };
+    in
+    lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) transformed;
 
   transformMcpServers = lib.mapAttrs (_name: transformMcpServer);
 
