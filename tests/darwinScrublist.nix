@@ -194,6 +194,7 @@ let
     "topgrade"
     "translate-shell"
     "tray-tui"
+    "usage"
     "vesktop"
     "vifm"
     "vim-vint"
