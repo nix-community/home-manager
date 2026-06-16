@@ -32,7 +32,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.file = lib.foldl' (a: b: a // b) { } (
+    home.file = lib.mergeAttrsList (
       lib.concatMap (
         x:
         with pkgs.stdenv;
