@@ -117,12 +117,12 @@ in
       example = lib.literalExpression ''
         [
           ./my-local-plugin
-          fetchFromGithub {
+          (fetchFromGitHub {
             owner = "some-github-org";
             repo = "codex-plugin";
             rev = "779a68ebc2a75e4a184d2c87e5a43a758e6458a1";
             sha256 = "228fdd7e5908ea1d2f65218ecd9c71e1eefa0834d200d55fbb8bf8b5563acec0";
-          }
+          })
         ]
       '';
     };
@@ -141,7 +141,7 @@ in
       example = lib.literalExpression ''
         {
           local-marketplace = ./my-local-marketplace;
-          gh-marketplace = fetchFromGithub {
+          gh-marketplace = fetchFromGitHub {
             owner = "some-github-org";
             repo = "codex-marketplace";
             rev = "8a873a220b8427b25b03ce1a821593a24e098c34";
