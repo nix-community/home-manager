@@ -8,6 +8,7 @@ let
   inherit (lib) mkIf;
 
   cfg = config.programs.codex;
+  remoteControlCfg = cfg.remoteControl;
 
   tomlFormat = pkgs.formats.toml { };
   yamlFormat = pkgs.formats.yaml { };
@@ -178,6 +179,117 @@ in
         }
       '';
     };
+
+    remoteControl = {
+      enable = lib.mkEnableOption "the Codex remote-control app-server systemd user service";
+
+      package = lib.mkOption {
+        type = lib.types.nullOr lib.types.package;
+        default = cfg.package;
+        defaultText = lib.literalExpression "config.programs.codex.package";
+        description = ''
+          Codex package to use for the remote-control service.
+
+          This defaults to {option}`programs.codex.package`, but can be
+          overridden when the service should run a different Codex build.
+        '';
+      };
+
+      codexHome = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        example = "\${config.home.homeDirectory}/.codex";
+        description = ''
+          Value for the {env}`CODEX_HOME` environment variable used by the
+          remote-control service.
+
+          If unset, this follows the same Codex home directory managed by this
+          module.
+        '';
+      };
+
+      listen = lib.mkOption {
+        type = lib.types.str;
+        default = "off";
+        example = "unix://";
+        description = ''
+          Local app-server transport endpoint passed to
+          {command}`codex app-server --listen`.
+
+          The default disables local transports and exposes only the outbound
+          remote-control websocket. Set this to `unix://` if local
+          tools should also be able to connect through the Codex app-server
+          control socket.
+        '';
+      };
+
+      target = lib.mkOption {
+        type = lib.types.str;
+        default = "default.target";
+        description = ''
+          Systemd user target that starts the Codex remote-control service.
+        '';
+      };
+
+      environment = lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.nullOr (
+            lib.types.oneOf [
+              lib.types.bool
+              lib.types.int
+              lib.types.str
+            ]
+          )
+        );
+        default = { };
+        description = ''
+          Environment variables to set for the Codex remote-control service.
+
+          Sensitive values should be provided through
+          [](#opt-programs.codex.remoteControl.environmentFile), since values
+          configured here are visible in the Nix store and systemd unit.
+        '';
+        example = lib.literalExpression ''
+          {
+            RUST_LOG = "codex_app_server=info";
+          }
+        '';
+      };
+
+      environmentFile = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        example = "/run/secrets/codex-remote-control.env";
+        description = ''
+          Additional environment file as defined in {manpage}`systemd.exec(5)`.
+
+          This can be used for machine-local settings that should not be
+          written into the generated systemd unit.
+        '';
+      };
+
+      extraPackages = lib.mkOption {
+        type = lib.types.listOf lib.types.package;
+        default = [ ];
+        example = lib.literalExpression "with pkgs; [ gitMinimal nix openssh ]";
+        description = ''
+          Extra packages to add to {env}`PATH` for commands launched by Codex.
+
+          The service also includes the Home Manager profile in {env}`PATH`.
+        '';
+      };
+
+      extraArgs = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = [
+          "--analytics-default-enabled"
+        ];
+        description = ''
+          Additional arguments passed to {command}`codex app-server`.
+        '';
+      };
+    };
   };
 
   config =
@@ -187,6 +299,28 @@ in
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
       skillsDir = "${configDir}/skills";
+      codexHome =
+        if remoteControlCfg.codexHome != null then
+          remoteControlCfg.codexHome
+        else if useXdgDirectories then
+          "${config.xdg.configHome}/codex"
+        else
+          "${config.home.homeDirectory}/.codex";
+      remoteControlPath = lib.makeSearchPath "bin" (
+        [
+          config.home.profileDirectory
+        ]
+        ++ remoteControlCfg.extraPackages
+      );
+      remoteControlPackage = remoteControlCfg.package;
+      remoteControlEnvironment = {
+        CODEX_HOME = codexHome;
+        PATH = remoteControlPath;
+      }
+      // remoteControlCfg.environment;
+      remoteControlEnvironmentList = lib.mapAttrsToList (
+        name: value: "${name}=${if lib.isBool value then lib.boolToString value else toString value}"
+      ) (lib.filterAttrs (_name: value: value != null) remoteControlEnvironment);
 
       # TODO: Remove this workaround once Codex supports symlinked SKILL.md
       # files again. Upstream only supports symlinking the containing skill
@@ -258,6 +392,14 @@ in
           );
           message = "`programs.codex.rules` attribute values must be files when set to paths";
         }
+        {
+          assertion = !remoteControlCfg.enable || pkgs.stdenv.hostPlatform.isLinux;
+          message = "`programs.codex.remoteControl.enable` is only supported on Linux";
+        }
+        {
+          assertion = !remoteControlCfg.enable || remoteControlPackage != null;
+          message = "`programs.codex.remoteControl.enable` requires `programs.codex.remoteControl.package` to be set";
+        }
       ];
 
       home = {
@@ -282,5 +424,37 @@ in
           CODEX_HOME = "${config.xdg.configHome}/codex";
         };
       };
+
+      systemd.user.services.codex-remote-control =
+        mkIf (remoteControlCfg.enable && remoteControlPackage != null && pkgs.stdenv.hostPlatform.isLinux)
+          {
+            Unit = {
+              Description = "Codex remote-control app-server";
+              After = [ "network.target" ];
+            };
+
+            Service = {
+              Environment = remoteControlEnvironmentList;
+              ExecStart = lib.escapeShellArgs (
+                [
+                  (lib.getExe remoteControlPackage)
+                  "app-server"
+                  "--remote-control"
+                  "--listen"
+                  remoteControlCfg.listen
+                ]
+                ++ remoteControlCfg.extraArgs
+              );
+              Restart = "on-failure";
+              RestartSec = 5;
+            }
+            // lib.optionalAttrs (remoteControlCfg.environmentFile != null) {
+              EnvironmentFile = remoteControlCfg.environmentFile;
+            };
+
+            Install = {
+              WantedBy = [ remoteControlCfg.target ];
+            };
+          };
     };
 }
