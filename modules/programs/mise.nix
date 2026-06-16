@@ -102,7 +102,11 @@ in
           The shell integration will not be added.
         '';
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [
+      cfg.package
+      # The generated completions call the `usage` CLI at completion time.
+      pkgs.usage
+    ];
 
     xdg.configFile = {
       "mise/config.toml" = mkIf (cfg.globalConfig != { }) {
