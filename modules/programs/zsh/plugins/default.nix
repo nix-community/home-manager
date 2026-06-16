@@ -108,7 +108,7 @@ in
     ) options.programs.zsh.plugins.definitionsWithLocations;
 
     home.file = lib.mkIf cfg.enable (
-      lib.foldl' (a: b: a // b) { } (
+      lib.mergeAttrsList (
         map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; }) cfg.plugins
       )
     );
