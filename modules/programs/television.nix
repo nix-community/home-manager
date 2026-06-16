@@ -84,6 +84,47 @@ in
 
     };
 
+    themes = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.oneOf [
+          tomlFormat.type
+          lib.types.lines
+          lib.types.path
+        ]
+      );
+      default = { };
+      example = {
+        default = {
+          border_fg = "bright-black";
+          text_fg = "bright-blue";
+          dimmed_text_fg = "white";
+          input_text_fg = "bright-red";
+          result_count_fg = "bright-red";
+          result_name_fg = "bright-blue";
+          result_line_number_fg = "bright-yellow";
+          result_value_fg = "white";
+          selection_fg = "bright-green";
+          selection_bg = "bright-black";
+          match_fg = "bright-red";
+          preview_title_fg = "bright-magenta";
+          channel_mode_fg = "black";
+          channel_mode_bg = "green";
+          remote_control_mode_fg = "black";
+          remote_control_mode_bg = "yellow";
+          action_picker_mode_fg = "black";
+          action_picker_mode_bg = "magenta";
+          send_to_channel_mode_fg = "cyan";
+        };
+      };
+      description = ''
+        Each theme is written to
+        {file}`$XDG_CONFIG_HOME/television/themes/NAME.toml`.
+
+        See <https://alexpasmantier.github.io/television/user-guide/themes>
+        for more information.
+      '';
+    };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -105,6 +146,18 @@ in
           source = tomlFormat.generate "television-${name}-channels" value;
         }
       ) cfg.channels)
+      (lib.mapAttrs' (
+        name: value:
+        lib.nameValuePair "television/themes/${name}.toml" {
+          source =
+            if lib.isString value then
+              pkgs.writeText "television-theme-${name}" value
+            else if lib.hm.strings.isPathLike value then
+              value
+            else
+              tomlFormat.generate "television-theme-${name}" value;
+        }
+      ) cfg.themes)
     ];
 
     programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
