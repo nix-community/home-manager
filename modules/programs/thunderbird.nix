@@ -60,7 +60,7 @@ let
   profilesWithId = lib.imap0 (i: v: v // { id = toString i; }) (attrValues cfg.profiles);
 
   profilesIni =
-    lib.foldl lib.recursiveUpdate
+    lib.foldl' lib.recursiveUpdate
       {
         General = {
           StartWithLastProfile = 1;
