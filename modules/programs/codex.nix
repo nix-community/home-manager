@@ -113,6 +113,9 @@ in
         - The plugin package, whether a nix package or the output of a fetcher
         Plugins are installed into Codex's plugin cache and enabled through
         {file}`CODEX_HOME/config.toml`.
+
+        Warning: If using a derivation as the source for a plugin, make sure that
+        the derivation name matches the name of the plugin in the manifest file.
       '';
       example = lib.literalExpression ''
         [
