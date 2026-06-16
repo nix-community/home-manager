@@ -9,7 +9,10 @@ let
   cfg = config.programs.television;
 in
 {
-  meta.maintainers = [ lib.maintainers.PopeRigby ];
+  meta.maintainers = with lib.maintainers; [
+    PopeRigby
+    csanthiago
+  ];
 
   options.programs.television = {
     enable = lib.mkEnableOption "television";
