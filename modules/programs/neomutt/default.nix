@@ -498,7 +498,7 @@ in
           "${accountFilename account}".text = accountStr account;
         };
       in
-      lib.foldl' (a: b: a // b) { } (map rcFile neomuttAccounts);
+      lib.mergeAttrsList (map rcFile neomuttAccounts);
 
     xdg.configFile."neomutt/neomuttrc" = mkIf (neomuttAccounts != [ ]) {
       text =
