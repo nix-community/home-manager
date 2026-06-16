@@ -10,11 +10,11 @@
     let
       inherit (lib)
         all
+        any
         concatMapStringsSep
         concatStrings
         concatStringsSep
         filterAttrs
-        foldl
         generators
         hasPrefix
         isAttrs
@@ -29,8 +29,7 @@
       toHyprconf' =
         indent: attrs:
         let
-          isImportantField =
-            n: _: foldl (acc: prev: if hasPrefix prev n then true else acc) false importantPrefixes;
+          isImportantField = n: _: any (prev: hasPrefix prev n) importantPrefixes;
           importantFields = filterAttrs isImportantField attrs;
           withoutImportantFields = fields: removeAttrs fields (attrNames importantFields);
 
