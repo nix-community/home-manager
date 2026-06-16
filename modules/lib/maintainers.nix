@@ -121,6 +121,12 @@
     github = "ckgxrg-salt";
     githubId = 165614491;
   };
+  csanthiago = {
+    name = "csanthiago";
+    email = "git@csanthiago.dev";
+    github = "csanthiago";
+    githubId = 8346803;
+  };
   d-dervishi = {
     email = "david.dervishi@epfl.ch";
     github = "d-dervishi";
