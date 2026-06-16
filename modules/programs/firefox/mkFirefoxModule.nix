@@ -195,14 +195,22 @@ let
     if package == null then
       null
     else if isWrapped then
-      package.override (
-        old:
-        lib.optionalAttrs (lib.functionArgs package.override ? cfg) {
-          cfg = old.cfg or { } // fcfg;
-          extraPolicies = (old.extraPolicies or { }) // cfg.policies;
-          pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
-        }
-      )
+      let
+        acceptsCfg = lib.functionArgs package.override ? cfg;
+        droppedOptions = cfg.policies != { } || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
+      in
+      lib.warnIf (!acceptsCfg && droppedOptions)
+        "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
+        (
+          package.override (
+            old:
+            lib.optionalAttrs acceptsCfg {
+              cfg = old.cfg or { } // fcfg;
+              extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+              pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
+            }
+          )
+        )
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
