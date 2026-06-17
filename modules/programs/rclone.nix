@@ -273,6 +273,12 @@ in
           # Helper to convert nix bools to strings expected by rclone CLI
           toRcloneVal = v: if builtins.isBool v then (if v then "true" else "false") else toString v;
 
+          # Custom escaping that allows variable expansion but escapes special chars
+          escapePathForShell =
+            path:
+            # Escape only double quotes and backslashes to allow variable expansion
+            builtins.replaceStrings [ "\"" "\\" ] [ "\\\"" "\\\\" ] path;
+
           # Generate a script that runs 'rclone config update' for each remote
           rcloneConfigScript = lib.concatStringsSep "\n" (
             lib.mapAttrsToList (
@@ -298,7 +304,7 @@ in
                 echo "Updating remote: ${remoteName}"
                 # Ensure all secret files exist before running the command
                 ${lib.concatMapStrings (path: ''
-                  if [ ! -r ${lib.escapeShellArg path} ]; then
+                  if [ ! -r "${escapePathForShell path}" ]; then
                     echo "Error: Secret file not found: ${path}"
                     exit 1
                   fi
