@@ -529,14 +529,6 @@
     name = "David Chocholatý";
     source = "nixpkgs";
   };
-  adisbladis = {
-    email = "adisbladis@gmail.com";
-    github = "adisbladis";
-    githubId = 63286;
-    matrix = "@adis:blad.is";
-    name = "Adam Hose";
-    source = "nixpkgs";
-  };
   afresquet = {
     email = "alvarofresquet@gmail.com";
     github = "afresquet";
