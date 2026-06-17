@@ -48,12 +48,7 @@ in
         };
 
         Service = {
-          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
-          ExecStart =
-            if lib.strings.versionAtLeast (lib.versions.majorMinor cfg.package.version) "24.05" then
-              "${cfg.package}/bin/kdeconnectd"
-            else
-              "${cfg.package}/libexec/kdeconnectd";
+          ExecStart = "${cfg.package}/bin/kdeconnectd";
           Restart = "on-abort";
         };
       };
@@ -80,7 +75,6 @@ in
         };
 
         Service = {
-          Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
           ExecStart = "${cfg.package}/bin/kdeconnect-indicator";
           Restart = "on-abort";
         };
