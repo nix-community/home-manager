@@ -685,6 +685,13 @@
     name = "Filippo Berto";
     source = "nixpkgs";
   };
+  bittner = {
+    email = "peter@painless.software";
+    github = "bittner";
+    githubId = 665072;
+    name = "Peter Bittner";
+    source = "home-manager";
+  };
   bjpbakker = {
     email = "bart@thesoftwarecraft.com";
     github = "bjpbakker";
