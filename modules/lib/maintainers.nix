@@ -91,6 +91,12 @@
     github = "b1kku";
     githubId = 77858854;
   };
+  bittner = {
+    name = "Peter Bittner";
+    email = "peter@painless.software";
+    github = "bittner";
+    githubId = 665072;
+  };
   bjpbakker = {
     email = "bart@thesoftwarecraft.com";
     github = "bjpbakker";
