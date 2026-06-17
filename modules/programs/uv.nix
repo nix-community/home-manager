@@ -19,7 +19,10 @@ let
 
 in
 {
-  meta.maintainers = with lib.maintainers; [ mirkolenz ];
+  meta.maintainers = with lib.maintainers; [
+    mirkolenz
+    bittner
+  ];
 
   options.programs.uv = {
     enable = mkEnableOption "uv";
