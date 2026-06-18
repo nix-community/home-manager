@@ -197,7 +197,8 @@ let
     else if isWrapped then
       let
         acceptsCfg = lib.functionArgs package.override ? cfg;
-        droppedOptions = cfg.policies != { } || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
+        droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
+        droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
       in
       lib.warnIf (!acceptsCfg && droppedOptions)
         "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
