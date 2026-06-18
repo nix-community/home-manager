@@ -218,6 +218,7 @@ in
 
     launchd.agents.emacs = {
       enable = true;
+      domain = lib.mkDefault (if cfg.startWithUserSession == "graphical" then "gui" else "user");
       config = {
         ProgramArguments = [
           "${cfg.package}/bin/emacs"
