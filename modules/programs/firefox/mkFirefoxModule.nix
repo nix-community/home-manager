@@ -1065,6 +1065,15 @@ in
         }
 
         {
+          assertion =
+            cfg.globalExtensions == [ ] || cfg.package != null || (isDarwin && cfg.darwinDefaultsId != null);
+          message =
+            "'${moduleName}.globalExtensions' requires '${moduleName}.package'"
+            + " to be set to a non-null value unless"
+            + " '${moduleName}.darwinDefaultsId' is set on Darwin.";
+        }
+
+        {
           assertion = builtins.all (
             elem:
             let
