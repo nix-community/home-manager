@@ -195,23 +195,20 @@ let
     if package == null then
       null
     else if isWrapped then
-      let
-        acceptsCfg = lib.functionArgs package.override ? cfg;
-        droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
-        droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
-      in
-      lib.warnIf (!acceptsCfg && droppedOptions)
-        "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
-        (
-          package.override (
-            old:
-            lib.optionalAttrs acceptsCfg {
-              cfg = old.cfg or { } // fcfg;
-              extraPolicies = (old.extraPolicies or { }) // cfg.policies;
-              pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
-            }
-          )
-        )
+      if lib.functionArgs package.override ? cfg then
+        package.override (old: {
+          cfg = old.cfg or { } // fcfg;
+          extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+          pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
+        })
+      else
+        let
+          droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
+          droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
+        in
+        lib.warnIf droppedOptions
+          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
+          package
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
