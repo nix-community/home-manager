@@ -130,20 +130,21 @@ in
     let
       go =
         i: before: after: entries:
-        let
-          name = "${tag}-${toString i}";
-        in
         if entries == [ ] then
           hm.dag.empty
-        else if length entries == 1 then
-          {
-            "${name}" = hm.dag.entryBetween before after (head entries);
-          }
         else
-          {
-            "${name}" = hm.dag.entryAfter after (head entries);
-          }
-          // go (i + 1) before [ name ] (tail entries);
+          let
+            name = "${tag}-${toString i}";
+          in
+          if length entries == 1 then
+            {
+              "${name}" = hm.dag.entryBetween before after (head entries);
+            }
+          else
+            {
+              "${name}" = hm.dag.entryAfter after (head entries);
+            }
+            // go (i + 1) before [ name ] (tail entries);
     in
     go 0;
 
