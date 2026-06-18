@@ -15,7 +15,7 @@ let
     attrNames
     attrValues
     elem
-    filterAttrs
+    filter
     head
     hm
     isAttrs
@@ -101,11 +101,12 @@ in
     in
     dag:
     let
-      dagBefore = dag: name: attrNames (filterAttrs (_n: v: elem name v.before) dag);
+      names = attrNames dag;
+      dagBefore = name: filter (n: elem name dag.${n}.before) names;
       normalizedDag = mapAttrs (n: v: {
         name = n;
         inherit (v) data;
-        after = v.after ++ dagBefore dag n;
+        after = v.after ++ dagBefore n;
       }) dag;
       sorted = toposort before (attrValues normalizedDag);
     in
