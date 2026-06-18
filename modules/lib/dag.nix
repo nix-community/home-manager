@@ -88,6 +88,9 @@ in
   #              }
   #    true
   topoSort =
+    let
+      before = a: b: elem a.name b.after;
+    in
     dag:
     let
       dagBefore = dag: name: attrNames (filterAttrs (_n: v: elem name v.before) dag);
@@ -96,7 +99,6 @@ in
         inherit (v) data;
         after = v.after ++ dagBefore dag n;
       }) dag;
-      before = a: b: elem a.name b.after;
       sorted = toposort before (attrValues normalizedDag);
     in
     if sorted ? result then
