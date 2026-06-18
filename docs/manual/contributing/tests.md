@@ -54,6 +54,13 @@ The `default.nix` file should list all test cases:
 }
 ```
 
+Prefer keeping related assertions in as few test files as practical.
+Exercising several cases in one evaluation keeps the test suite cheaper
+to evaluate and reduces maintenance burden. Split cases into separate
+files when they need incompatible module configuration, platform
+conditions, expected assertion failures, or otherwise cannot share one
+evaluation.
+
 ### Common NMT Assertions {#sec-tests-assertions}
 
 NMT provides several assertion functions:
@@ -161,6 +168,12 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
 For cross-platform modules that have packages which need to be stubbed on Darwin,
 add the package names to `tests/darwinScrublist.nix` to prevent build failures
 during cross-platform test runs.
+
+On Linux, packages are automatically scrubbed by the test infrastructure,
+so tests should normally use the module's default package. Use
+`test.stubs` or `config.lib.test.mkStubPackage` only when the automatic
+scrubbing does not model the behavior that the test needs, such as a
+package with additional files or a non-default executable layout.
 
 ## Using the tests command {#sec-tests-command}
 
