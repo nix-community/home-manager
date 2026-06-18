@@ -18,6 +18,22 @@ let
     {
       options = {
         enable = lib.mkEnableOption name;
+        domain = lib.mkOption {
+          type = lib.types.enum [
+            "gui"
+            "user"
+          ];
+          default = "gui";
+          example = "user";
+          description = ''
+            The launchd domain to bootstrap this agent into.
+
+            The `gui` domain is appropriate for agents that need the user's
+            Aqua session, such as window managers, hotkey daemons, and other
+            graphical tools. The `user` domain is appropriate for background
+            services that do not require a graphical login session.
+          '';
+        };
         config = lib.mkOption {
           type = lib.types.submodule (import ./launchd.nix);
           default = { };
@@ -74,6 +90,13 @@ let
     _n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)
   ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
 
+  agentDomains = lib.mapAttrs' (
+    _n: v:
+    lib.nameValuePair "${v.config.Label}.domain" (
+      pkgs.writeText "${v.config.Label}.domain" "${v.domain}\n"
+    )
+  ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
+
   agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"
 
@@ -84,6 +107,20 @@ let
 
     for dest in "''${!plists[@]}"; do
       src="''${plists[$dest]}"
+      ln -s "$src" "$out/$dest"
+    done
+  '';
+
+  agentDomainsDrv = pkgs.runCommand "home-manager-agent-domains" { } ''
+    mkdir -p "$out"
+
+    declare -A domains
+    domains=(${
+      lib.concatStringsSep " " (lib.mapAttrsToList (name: value: "['${name}']='${value}'") agentDomains)
+    })
+
+    for dest in "''${!domains[@]}"; do
+      src="''${domains[$dest]}"
       ln -s "$src" "$out/$dest"
     done
   '';
@@ -129,6 +166,7 @@ in
     (lib.mkIf isDarwin {
       home.extraBuilderCommands = ''
         ln -s "${agentsDrv}" $out/LaunchAgents
+        ln -s "${agentDomainsDrv}" $out/LaunchAgentDomains
       '';
 
       # NOTE: Launch Agent configurations can't be symlinked from the Nix store
@@ -138,6 +176,40 @@ in
           ''
             # Disable errexit to ensure we process all agents even if some fail
             set +e
+
+            readAgentDomain() {
+              local domainsDir="$1"
+              local agentName="$2"
+              local domainFile="$domainsDir/$agentName.domain"
+
+              if [[ -n "$domainsDir" && -f "$domainFile" ]]; then
+                local domainName
+                domainName="$(<"$domainFile")"
+                case "$domainName" in
+                  gui|user)
+                    printf '%s\n' "$domainName"
+                    ;;
+                  *)
+                    printf 'gui\n'
+                    ;;
+                esac
+              else
+                printf 'gui\n'
+              fi
+            }
+
+            resolveDomain() {
+              local domainName="$1"
+
+              case "$domainName" in
+                gui)
+                  printf 'gui/%s\n' "$UID"
+                  ;;
+                user)
+                  printf 'user/%s\n' "$UID"
+                  ;;
+              esac
+            }
 
             # Stop an agent if it's running
             bootoutAgent() {
@@ -190,26 +262,36 @@ in
             processAgent() {
               local srcPath="$1"
               local dstDir="$2"
-              local domain="$3"
+              local oldDomainsDir="$3"
+              local newDomainsDir="$4"
 
               local agentFile="''${srcPath##*/}"
               local agentName="''${agentFile%.plist}"
               local dstPath="$dstDir/$agentFile"
+              local oldDomainName
+              local newDomainName
+              local oldDomain
+              local newDomain
+
+              oldDomainName="$(readAgentDomain "$oldDomainsDir" "$agentName")"
+              newDomainName="$(readAgentDomain "$newDomainsDir" "$agentName")"
+              oldDomain="$(resolveDomain "$oldDomainName")"
+              newDomain="$(resolveDomain "$newDomainName")"
 
               # Skip if unchanged
-              if cmp -s "$srcPath" "$dstPath"; then
-                verboseEcho "Agent '$agentName' is already up-to-date"
+              if cmp -s "$srcPath" "$dstPath" && [[ "$oldDomainName" == "$newDomainName" ]]; then
+                verboseEcho "Agent '$newDomain/$agentName' is already up-to-date"
                 return 0
               fi
 
-              verboseEcho "Processing agent '$agentName'"
+              verboseEcho "Processing agent '$newDomain/$agentName'"
 
               # Stop/Unload agent if it's already running
               if [[ -f "$dstPath" ]]; then
-                bootoutAgent "$domain" "$agentName"
+                bootoutAgent "$oldDomain" "$agentName"
               fi
 
-              installAndBootstrapAgent "$srcPath" "$dstPath" "$domain" "$agentName"
+              installAndBootstrapAgent "$srcPath" "$dstPath" "$newDomain" "$agentName"
               # Note: We continue processing even if this agent fails
               return 0
             }
@@ -218,11 +300,16 @@ in
               local srcPath="$1"
               local dstDir="$2"
               local newDir="$3"
-              local domain="$4"
+              local oldDomainsDir="$4"
 
               local agentFile="''${srcPath##*/}"
               local agentName="''${agentFile%.plist}"
               local dstPath="$dstDir/$agentFile"
+              local domainName
+              local domain
+
+              domainName="$(readAgentDomain "$oldDomainsDir" "$agentName")"
+              domain="$(resolveDomain "$domainName")"
 
               if [[ -e "$newDir/$agentFile" ]]; then
                 verboseEcho "Agent '$agentName' still exists in new generation, skipping cleanup"
@@ -253,11 +340,11 @@ in
             }
 
             setupLaunchAgents() {
-              local oldDir newDir dstDir domain
+              local oldDir newDir oldDomainsDir newDomainsDir dstDir
 
               newDir="$(readlink -m "$newGenPath/LaunchAgents")"
+              newDomainsDir="$(readlink -m "$newGenPath/LaunchAgentDomains")"
               dstDir=${lib.escapeShellArg dstDir}
-              domain="gui/$UID"
 
               if [[ -n "''${oldGenPath:-}" ]]; then
                 oldDir="$(readlink -m "$oldGenPath/LaunchAgents")"
@@ -265,8 +352,14 @@ in
                   verboseEcho "No previous LaunchAgents directory found"
                   oldDir=""
                 fi
+
+                oldDomainsDir="$(readlink -m "$oldGenPath/LaunchAgentDomains")"
+                if [[ ! -d "$oldDomainsDir" ]]; then
+                  oldDomainsDir=""
+                fi
               else
                 oldDir=""
+                oldDomainsDir=""
               fi
 
               verboseEcho "Setting up LaunchAgents in $dstDir"
@@ -274,7 +367,7 @@ in
 
               verboseEcho "Processing new/updated LaunchAgents..."
               find -L "$newDir" -maxdepth 1 -name '*.plist' -type f | while read -r srcPath; do
-                processAgent "$srcPath" "$dstDir" "$domain"
+                processAgent "$srcPath" "$dstDir" "$oldDomainsDir" "$newDomainsDir"
               done
 
               # Skip cleanup if there's no previous generation
@@ -285,7 +378,7 @@ in
 
               verboseEcho "Cleaning up removed LaunchAgents..."
               find -L "$oldDir" -maxdepth 1 -name '*.plist' -type f | while read -r srcPath; do
-                removeAgent "$srcPath" "$dstDir" "$newDir" "$domain"
+                removeAgent "$srcPath" "$dstDir" "$newDir" "$oldDomainsDir"
               done
             }
 
