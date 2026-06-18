@@ -12,9 +12,13 @@
 let
   inherit (lib)
     all
+    attrNames
+    attrValues
+    elem
     filterAttrs
     head
     hm
+    isAttrs
     mapAttrs
     length
     tail
@@ -25,7 +29,7 @@ in
   empty = { };
 
   isEntry = e: e ? data && e ? after && e ? before;
-  isDag = dag: builtins.isAttrs dag && all hm.dag.isEntry (builtins.attrValues dag);
+  isDag = dag: isAttrs dag && all hm.dag.isEntry (attrValues dag);
 
   # Takes an attribute set containing entries built by entryAnywhere,
   # entryAfter, and entryBefore to a topologically sorted list of
@@ -86,14 +90,14 @@ in
   topoSort =
     dag:
     let
-      dagBefore = dag: name: builtins.attrNames (filterAttrs (_n: v: builtins.elem name v.before) dag);
+      dagBefore = dag: name: attrNames (filterAttrs (_n: v: elem name v.before) dag);
       normalizedDag = mapAttrs (n: v: {
         name = n;
         inherit (v) data;
         after = v.after ++ dagBefore dag n;
       }) dag;
-      before = a: b: builtins.elem a.name b.after;
-      sorted = toposort before (builtins.attrValues normalizedDag);
+      before = a: b: elem a.name b.after;
+      sorted = toposort before (attrValues normalizedDag);
     in
     if sorted ? result then
       {
