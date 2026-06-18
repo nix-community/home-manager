@@ -24,12 +24,20 @@ let
     tail
     toposort
     ;
+
+  inherit (hm.dag)
+    empty
+    entriesBetween
+    entryAfter
+    entryBetween
+    isEntry
+    ;
 in
 {
   empty = { };
 
   isEntry = e: e ? data && e ? after && e ? before;
-  isDag = dag: isAttrs dag && all hm.dag.isEntry (attrValues dag);
+  isDag = dag: isAttrs dag && all isEntry (attrValues dag);
 
   # Takes an attribute set containing entries built by entryAnywhere,
   # entryAfter, and entryBefore to a topologically sorted list of
@@ -114,10 +122,10 @@ in
   entryBetween = before: after: data: { inherit data before after; };
 
   # Create a DAG entry with no particular dependency information.
-  entryAnywhere = hm.dag.entryBetween [ ] [ ];
+  entryAnywhere = entryBetween [ ] [ ];
 
-  entryAfter = hm.dag.entryBetween [ ];
-  entryBefore = before: hm.dag.entryBetween before [ ];
+  entryAfter = entryBetween [ ];
+  entryBefore = before: entryBetween before [ ];
 
   # Given a list of entries, this function places them in order within the DAG.
   # Each entry is labeled "${tag}-${entry index}" and other DAG entries can be
@@ -131,24 +139,24 @@ in
       go =
         i: before: after: entries:
         if entries == [ ] then
-          hm.dag.empty
+          empty
         else
           let
             name = "${tag}-${toString i}";
           in
           if length entries == 1 then
             {
-              "${name}" = hm.dag.entryBetween before after (head entries);
+              "${name}" = entryBetween before after (head entries);
             }
           else
             {
-              "${name}" = hm.dag.entryAfter after (head entries);
+              "${name}" = entryAfter after (head entries);
             }
             // go (i + 1) before [ name ] (tail entries);
     in
     go 0;
 
-  entriesAnywhere = tag: hm.dag.entriesBetween tag [ ] [ ];
-  entriesAfter = tag: hm.dag.entriesBetween tag [ ];
-  entriesBefore = tag: before: hm.dag.entriesBetween tag before [ ];
+  entriesAnywhere = tag: entriesBetween tag [ ] [ ];
+  entriesAfter = tag: entriesBetween tag [ ];
+  entriesBefore = tag: before: entriesBetween tag before [ ];
 }
