@@ -121,6 +121,7 @@ in
 
     launchd.agents.nix-gc = {
       enable = true;
+      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           "${nixPackage}/bin/nix-collect-garbage"

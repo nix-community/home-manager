@@ -108,6 +108,7 @@ in
     launchd.agents = services (
       _name: repo: {
         enable = true;
+        domain = lib.mkDefault "user";
         config = {
           StartInterval = repo.interval;
           ProcessType = "Background";

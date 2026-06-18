@@ -298,6 +298,7 @@ in
 
           launchd.agents.atuin-daemon = {
             enable = true;
+            domain = lib.mkDefault "user";
             config = {
               ProgramArguments = [ (lib.getExe cfg.package) ] ++ daemonArgs;
               EnvironmentVariables = lib.optionalAttrs (daemonCfg.logLevel != null) {

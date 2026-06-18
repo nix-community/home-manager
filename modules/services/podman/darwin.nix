@@ -311,6 +311,7 @@ in
           name: machine:
           nameValuePair "podman-machine-${name}" {
             enable = true;
+            domain = lib.mkDefault "user";
             config = {
               ProgramArguments = [ "${mkWatchdogScript name machine}" ];
               KeepAlive = {
