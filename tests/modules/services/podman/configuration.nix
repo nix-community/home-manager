@@ -25,12 +25,26 @@
         };
       };
       registries = {
+        search = [ "docker.io" ];
         block = [
           "ghcr.io"
           "gallery.ecr.aws"
         ];
         insecure = [ "quay.io" ];
-        search = [ "docker.io" ];
+        registry = [
+          {
+            location = "quay.io";
+            blocked = true;
+          }
+          {
+            location = "gallery.ecr.aws";
+            blocked = false;
+          }
+          {
+            location = "registry.fedoraproject.org";
+            insecure = true;
+          }
+        ];
       };
       policy = {
         default = [ { type = "insecureAcceptAnything"; } ];
@@ -38,6 +52,17 @@
       mounts = [ "/usr/share/secrets:/run/secrets" ];
     };
   };
+
+  test.asserts.warnings.expected = [
+    ''
+      `services.podman.settings.registries.insecure` and
+      `services.podman.settings.registries.block` are deprecated and will be
+      removed in a future release.
+
+      Use `services.podman.settings.registries.registry` entries with
+      `location`, `insecure`, and `blocked` instead.
+    ''
+  ];
 
   nmt.script =
     if pkgs.stdenv.hostPlatform.isDarwin then
