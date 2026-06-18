@@ -394,17 +394,23 @@ in
       };
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start bash)"
+        if [[ "$TERM" != "dumb" ]]; then
+            eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start bash)"
+        fi
       '';
 
       programs.zsh.initContent = mkIf cfg.enableZshIntegration (
         lib.mkOrder 200 ''
-          eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start zsh)"
+          if [[ "$TERM" != "dumb" ]]; then
+              eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start zsh)"
+          fi
         ''
       );
 
       programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        eval (${lib.getExe cfg.finalPackage} setup --generate-auto-start fish | string collect)
+        if test "$TERM" != "dumb"
+            eval (${lib.getExe cfg.finalPackage} setup --generate-auto-start fish | string collect)
+        end
       '';
 
       home.sessionVariables = mkIf shellIntegrationEnabled {
