@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-501f0983.js";
+            window.path_to_searchindex_js = "../../../searchindex-fbf356ce.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-2bd0036d.js"></script>
@@ -277,7 +277,10 @@ list of string</p>
 start with <code>Host </code> or <code>Match </code>, in which case they are written
 literally as block headers. If the order of rules matter then
 use the DAG functions to express the dependencies as shown in
-the example.</p>
+the example. Use <code>programs.ssh.settings.&lt;name&gt;.header</code>
+when the block should have a short stable name for DAG ordering,
+and use <code>lib.hm.dag.entriesBefore</code> or
+<code>lib.hm.dag.entriesAfter</code> to order generated groups of blocks.</p>
 <p>See
 <code>ssh_config(5)</code>
 for more information.</p>
@@ -287,13 +290,29 @@ DAG of open submodule of attribute set of anything</p>
 <pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  "github.com" = {
-    HostName = "github.com";
+<pre><code class="language-nix"># Tagged hosts must appear before Match blocks that select those tags.
+lib.hm.dag.entriesBefore "corp-host" [ "corp-match" ] [
+  {
+    header = "Host build.corp";
+    HostName = "build.corp.example.org";
+    User = "builder";
+    Tag = "corp";
+  }
+
+  {
+    header = "Host git.corp";
+    HostName = "git.corp.example.org";
     User = "git";
-    IdentityFile = "~/.ssh/github";
+    Tag = "corp";
+  }
+]
+// {
+  # Bare attribute names become Host patterns.
+  "*.internal.example.org" = {
+    User = "internal";
   };
 
+  # Literal Host headers can use the full OpenSSH syntax.
   "Host *.example.org" = lib.hm.dag.entryBefore [ "github.com" ] {
     IdentityFile = "~/.ssh/example";
     LocalForward = [
@@ -307,7 +326,20 @@ DAG of open submodule of attribute set of anything</p>
     DynamicForward = "127.0.0.1:1080";
   };
 
-  "Match host *.corp exec \"test -f ~/.corp\"" = {
+  # Literal Match headers can be ordered by their attribute name.
+  "Match host *.vpn.example.org" = lib.hm.dag.entryAfter [ "github.com" ] {
+    ProxyJump = "vpn";
+  };
+
+  "github.com" = {
+    HostName = "github.com";
+    User = "git";
+    IdentityFile = "~/.ssh/github";
+  };
+
+  # Keep long or dynamic SSH headers out of DAG references.
+  corp-match = lib.hm.dag.entryAfter [ "github.com" ] {
+    header = "Match tagged corp exec \"test -f ~/.corp\"";
     ProxyJump = "bastion";
     RemoteForward = {
       bind.port = 8081;
@@ -316,6 +348,13 @@ DAG of open submodule of attribute set of anything</p>
     };
   };
 }
+# Generated groups can also be placed after named blocks.
+// lib.hm.dag.entriesAfter "corp-fallback" [ "corp-match" ] [
+  {
+    header = "Host *.corp";
+    User = "corp";
+  }
+]
 
 </code></pre>
 <p><em>Declared by:</em></p>
