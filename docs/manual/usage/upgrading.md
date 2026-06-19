@@ -16,7 +16,7 @@ use Home Manager's `master` branch.
 
 Home Manager follows NixOS release cycles and provides corresponding branches:
 
-- **release-<version>**: Stable branch for the matching NixOS or
+- **release-\<version\>**: Stable branch for the matching NixOS or
   Nixpkgs release, such as `release-25.11`.
 
 - **master**: Development branch (tracks nixpkgs-unstable)

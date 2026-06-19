@@ -1,0 +1,11 @@
+[book]
+title = "Home Manager Manual"
+language = "en"
+src = "."
+
+[output.html]
+git-repository-url = "https://github.com/nix-community/home-manager"
+
+[output.html.fold]
+enable = true
+level = 0
