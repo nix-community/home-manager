@@ -116,7 +116,7 @@ the man page version of the module options looks good:
 
 ``` shell
 $ nix-build -A docs.manPages
-$ man ./result/share/man/man5/home-configuration.nix.5.gz
+$ man ./result/share/man/man5/home-configuration.nix.5
 ```
 
 ## Module Auto-importing {#sec-module-auto-importing}
