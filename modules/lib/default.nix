@@ -13,6 +13,7 @@ rec {
   gvariant = import ./gvariant.nix { inherit lib; };
   maintainers = import ./maintainers.nix;
   mcp = import ./mcp.nix { inherit lib; };
+  mutableConfig = import ./mutable-config.nix;
   strings = import ./strings.nix { inherit lib; };
   types = import ./types.nix { inherit gvariant lib; };
 

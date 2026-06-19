@@ -93,6 +93,72 @@ let
     in
     stubbedPkg;
 
+  runActivation =
+    name: activation:
+    let
+      activationScript = pkgs.writeScript name activation.data;
+    in
+    ''
+      substitute ${activationScript} $TMPDIR/${name} --subst-var TMPDIR
+      chmod +x $TMPDIR/${name}
+      $TMPDIR/${name}
+    '';
+
+  runMutableConfigTest =
+    {
+      home ? "$TMPDIR/hm-user",
+      files ? { },
+      expected ? { },
+      setup ? "",
+      assertions ? "",
+      idempotent ? true,
+      idempotentPaths ? lib.attrNames expected,
+    }:
+    let
+      seedFiles = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (path: source: ''
+          mkdir -p "$(dirname "$HOME/${path}")"
+          cat ${source} > "$HOME/${path}"
+        '') files
+      );
+
+      assertExpected = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (path: expectedContent: ''
+          assertFileExists "$HOME/${path}"
+          assertFileContent "$HOME/${path}" "${expectedContent}"
+        '') expected
+      );
+
+      idempotentFiles = lib.concatStringsSep " " (map (path: ''"$HOME/${path}"'') idempotentPaths);
+    in
+    ''
+      export HOME=${home}
+
+      ${seedFiles}
+      ${setup}
+
+      ${runActivation "mutable-config-activation" config.home.activation.mutableConfigMerge}
+
+      ${assertExpected}
+      ${assertions}
+
+      ${lib.optionalString (idempotent && idempotentPaths != [ ]) ''
+        pre_hashes="$(sha256sum ${idempotentFiles})"
+        pre_inodes="$(stat -c '%i %n' ${idempotentFiles})"
+
+        $TMPDIR/mutable-config-activation
+
+        post_hashes="$(sha256sum ${idempotentFiles})"
+        post_inodes="$(stat -c '%i %n' ${idempotentFiles})"
+
+        test "$pre_hashes" = "$post_hashes"
+        test "$pre_inodes" = "$post_inodes"
+
+        ${assertExpected}
+        ${assertions}
+      ''}
+    '';
+
 in
 {
   options.test = {
@@ -116,6 +182,9 @@ in
 
   config = {
     lib.test.mkStubPackage = mkStubPackage;
+    lib.test.runActivation = runActivation;
+    lib.test.runMutableConfig = runActivation "mutable-config-activation" config.home.activation.mutableConfigMerge;
+    lib.test.runMutableConfigTest = runMutableConfigTest;
 
     test.stubOverlays =
       lib.optional (config.test.stubs != { }) (
