@@ -45,8 +45,12 @@ module argument from within the module graph itself. For values that originate
 outside the module graph, such as flake inputs, prefer
 `home-manager.extraSpecialArgs`.
 
-and it is also rebuilt with the nix-darwin generations. The rebuild
-command here may be `darwin-rebuild switch --flake ~/.config/darwin`.
+Use `home-manager.sharedModules` for Home Manager modules or settings that
+should be imported by every user declared in `home-manager.users`.
+
+The Home Manager configuration is also rebuilt with the nix-darwin
+generations. The rebuild command here may be
+`darwin-rebuild switch --flake ~/.config/darwin`.
 
 You can use the above `flake.nix` as a template in `~/.config/darwin` by
 

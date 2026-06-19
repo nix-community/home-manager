@@ -52,6 +52,9 @@ home-manager.users.eve = { pkgs, ... }: {
 and after a `darwin-rebuild switch` the user eve's environment should
 include a basic Bash configuration and the packages atool and httpie.
 
+Home Manager activation runs as part of nix-darwin activation for each
+configured user.
+
 If you do not plan on having Home Manager manage your shell
 configuration then you must add either
 
@@ -103,12 +106,22 @@ Nixpkgs.
 :::
 
 :::{.note}
-Home Manager will pass `osConfig` as a module argument to any modules
-you create. This contains the system's nix-darwin configuration.
+Home Manager passes extra module arguments to each
+`home-manager.users.<name>` module:
 
 ``` nix
-{ lib, pkgs, osConfig, ... }:
+{ lib, pkgs, osConfig, darwinConfig, osClass, modulesPath, ... }:
 ```
+
+Here `osConfig` contains the system's nix-darwin configuration and
+`darwinConfig` is a Darwin-specific alias for the same value. The `lib`
+argument is Home Manager's extended library. You can pass additional module
+arguments with `home-manager.extraSpecialArgs`.
+:::
+
+:::{.note}
+Use `home-manager.sharedModules` to add Home Manager modules to every user
+declared under `home-manager.users`.
 :::
 
 Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
