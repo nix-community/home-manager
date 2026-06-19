@@ -24,6 +24,13 @@ options = [
 ]
 includes = [ "*.nix" ]
 
+[formatter.ruff]
+command = "ruff"
+options = [ "format" ]
+includes = [ "*.py" ]
+# Test fixtures are sample inputs (some intentionally invalid Python).
+excludes = [ "tests/modules/**/*.py" ]
+
 [formatter.keep-sorted]
 command = "keep-sorted"
 includes = [ "*" ]
