@@ -1,0 +1,3098 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>wayland - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="opt-wayland.systemd.target"><a class="header" href="#opt-wayland.systemd.target">wayland.systemd.target</a></h2>
+<p>The systemd target that will automatically start the graphical Wayland services.
+This option is a generalization of individual <code>systemd.target</code> or <code>systemdTarget</code>,
+and affect all Wayland services by default.</p>
+<p>When setting this value to <code>"sway-session.target"</code>,
+make sure to also enable <code>wayland.windowManager.sway.systemd.enable</code>,
+otherwise the service may never be started.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"graphical-session.target"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"sway-session.target"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/wayland.nix">&lt;home-manager/modules/wayland.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.enable"><a class="header" href="#opt-wayland.windowManager.hyprland.enable">wayland.windowManager.hyprland.enable</a></h2>
+<p>Whether to enable configuration for Hyprland, a tiling Wayland
+compositor that doesn’t sacrifice on its looks.</p>
+<p><strong>Note:</strong> This module configures Hyprland and adds it to your user’s <code>PATH</code>,
+but does not make certain system-level changes. NixOS users should
+enable the NixOS module with <code>programs.hyprland.enable</code>, which
+makes system-level changes such as adding a desktop session entry.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.package"><a class="header" href="#opt-wayland.windowManager.hyprland.package">wayland.windowManager.hyprland.package</a></h2>
+<p>The hyprland package to use. Set this to null if you use the NixOS module to install Hyprland.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.hyprland
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.configType"><a class="header" href="#opt-wayland.windowManager.hyprland.configType">wayland.windowManager.hyprland.configType</a></h2>
+<p>The type of Hyprland configuration to generate.</p>
+<p><code>hyprlang</code> writes <code>$XDG_CONFIG_HOME/hypr/hyprland.conf</code>.
+<code>lua</code> writes <code>$XDG_CONFIG_HOME/hypr/hyprland.lua</code>.</p>
+<p><em>Type:</em>
+one of “hyprlang”, “lua”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if lib.versionAtLeast config.home.stateVersion "26.05" then "lua" else "hyprlang"
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.extraConfig"><a class="header" href="#opt-wayland.windowManager.hyprland.extraConfig">wayland.windowManager.hyprland.extraConfig</a></h2>
+<p>Extra configuration content appended to the generated Hyprland file.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  hl.on("window.open", function()
+    hl.timer(function()
+      hl.dispatch(hl.dsp.exec_cmd("notify-send 'Window opened'"))
+    end, {
+      timeout = 100,
+      type = "oneshot",
+    })
+  end)
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.extraLuaFiles"><a class="header" href="#opt-wayland.windowManager.hyprland.extraLuaFiles">wayland.windowManager.hyprland.extraLuaFiles</a></h2>
+<p>Extra Lua files written under <code>$XDG_CONFIG_HOME/hypr</code>.</p>
+<p>Attribute names are used as Lua module names and converted to file
+names with a <code>.lua</code> suffix added when missing. For example,
+<code>bindings</code> writes
+<code>$XDG_CONFIG_HOME/hypr/bindings.lua</code>, while
+<code>lib.helpers</code> writes <code>$XDG_CONFIG_HOME/hypr/lib/helpers.lua</code>.</p>
+<p>Files with <code>autoLoad</code> enabled generate <code>require(...)</code> calls in
+<code>$XDG_CONFIG_HOME/hypr/hyprland.lua</code> after adding the Hypr config
+directory to Lua’s <code>package.path</code>. Use <code>autoLoad = false</code> for
+helper modules that are imported by other Lua files.</p>
+<p>This option only affects generated files when
+<code>wayland.windowManager.hyprland.configType</code> is <code>"lua"</code>.</p>
+<p><em>Type:</em>
+attribute set of ((submodule) or (absolute path or strings concatenated with “\n”) convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "00-vars" = '\'
+    local M = {}
+    M.mainMod = "SUPER"
+    return M
+  '\';
+
+  "ui.bindings" = {
+    content = ./bindings.lua;
+    autoLoad = true;
+  };
+
+  "lib.helpers" = {
+    content = ./helpers.lua;
+    autoLoad = false;
+  };
+
+  "from-path.lua" = ./startup.lua;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.extraLuaFiles._name_.autoLoad"><a class="header" href="#opt-wayland.windowManager.hyprland.extraLuaFiles._name_.autoLoad">wayland.windowManager.hyprland.extraLuaFiles.&lt;name&gt;.autoLoad</a></h2>
+<p>Whether to generate a <code>require(...)</code> call for this file in
+<code>$XDG_CONFIG_HOME/hypr/hyprland.lua</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.extraLuaFiles._name_.content"><a class="header" href="#opt-wayland.windowManager.hyprland.extraLuaFiles._name_.content">wayland.windowManager.hyprland.extraLuaFiles.&lt;name&gt;.content</a></h2>
+<p>Lua file content, set either by specifying a path to a Lua
+file or by providing a multi-line Lua string.</p>
+<p><em>Type:</em>
+absolute path or strings concatenated with “\n”</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.finalPackage"><a class="header" href="#opt-wayland.windowManager.hyprland.finalPackage">wayland.windowManager.hyprland.finalPackage</a></h2>
+<p>The Hyprland package after applying configuration.</p>
+<p><em>Type:</em>
+null or package <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>wayland.windowManager.hyprland.package</code> with applied configuration</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.finalPortalPackage"><a class="header" href="#opt-wayland.windowManager.hyprland.finalPortalPackage">wayland.windowManager.hyprland.finalPortalPackage</a></h2>
+<p>The xdg-desktop-portal-hyprland package after overriding its hyprland input.</p>
+<p><em>Type:</em>
+null or package <em>(read only)</em></p>
+<p><em>Default:</em>
+<code>wayland.windowManager.hyprland.portalPackage</code> with
+<code>wayland.windowManager.hyprland.finalPackage</code> override</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.importantPrefixes"><a class="header" href="#opt-wayland.windowManager.hyprland.importantPrefixes">wayland.windowManager.hyprland.importantPrefixes</a></h2>
+<p>List of prefix of attributes to source at the top of the config.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "$"
+  "bezier"
+  "curve"
+  "name"
+  "output"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "$"
+  "bezier"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.plugins"><a class="header" href="#opt-wayland.windowManager.hyprland.plugins">wayland.windowManager.hyprland.plugins</a></h2>
+<p>List of Hyprland plugins to use. Can either be packages or
+absolute plugin paths.</p>
+<p><em>Type:</em>
+list of (package or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.portalPackage"><a class="header" href="#opt-wayland.windowManager.hyprland.portalPackage">wayland.windowManager.hyprland.portalPackage</a></h2>
+<p>The xdg-desktop-portal-hyprland package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.xdg-desktop-portal-hyprland
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.settings"><a class="header" href="#opt-wayland.windowManager.hyprland.settings">wayland.windowManager.hyprland.settings</a></h2>
+<p>Hyprland configuration written in Nix. Entries with the same key
+should be written as lists. Variables’ and colors’ names should be
+quoted. See <a href="https://wiki.hypr.land">https://wiki.hypr.land</a> for more examples.</p>
+<p><strong>Note:</strong> Use the <a href="#opt-wayland.windowManager.hyprland.plugins"></a> option to
+declare plugins.</p>
+<p>When <code>wayland.windowManager.hyprland.configType</code> is <code>"lua"</code>,
+each attribute maps to an <code>hl.&lt;name&gt;(...)</code> call. List values generate
+one call per element.</p>
+<p>Attribute values with an <code>_args</code> list generate multi-argument calls.
+Attribute values with <code>_var</code> generate a Lua local variable instead of
+an <code>hl.&lt;name&gt;(...)</code> call. If no <code>name</code> is set, the attribute name is
+used as the Lua variable name.
+Values created with <code>lib.generators.mkLuaInline</code> are rendered as raw
+Lua expressions.</p>
+<p><em>Type:</em>
+Hyprland configuration value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  mod = {
+    _var = "SUPER";
+  };
+
+  config = {
+    general = {
+      gaps_in = 5;
+      gaps_out = 20;
+      border_size = 2;
+    };
+
+    decoration = {
+      rounding = 10;
+    };
+  };
+
+  bind = [
+    {
+      _args = [
+        (lib.generators.mkLuaInline "mod .. \" + Q\"")
+        (lib.generators.mkLuaInline "hl.dsp.window.close()")
+        { locked = true; }
+      ];
+    }
+    {
+      _args = [
+        "SUPER + RETURN"
+        (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"kitty\")")
+      ];
+    }
+    {
+      _args = [
+        "ALT + R"
+        (lib.generators.mkLuaInline "hl.dsp.submap(\"resize\")")
+      ];
+    }
+  ];
+
+  define_submap = {
+    _args = [
+      "resize"
+      (lib.generators.mkLuaInline "function()\n  hl.bind(\"right\", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })\n  hl.bind(\"left\", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })\n  hl.bind(\"escape\", hl.dsp.submap(\"reset\"))\nend")
+    ];
+  };
+
+  window_rule = {
+    match.class = "kitty";
+    border_size = 2;
+  };
+
+  on = {
+    _args = [
+      "hyprland.start"
+      (lib.generators.mkLuaInline "function()\n  hl.exec_cmd(\"waybar\")\nend")
+    ];
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.sourceFirst"><a class="header" href="#opt-wayland.windowManager.hyprland.sourceFirst">wayland.windowManager.hyprland.sourceFirst</a></h2>
+<p>Whether to enable putting source entries at the top of the configuration
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.submaps"><a class="header" href="#opt-wayland.windowManager.hyprland.submaps">wayland.windowManager.hyprland.submaps</a></h2>
+<p>Attribute set of Hyprland submaps.</p>
+<p>See <a href="https://wiki.hypr.land/Configuring/Basics/Binds/#submaps">https://wiki.hypr.land/Configuring/Basics/Binds/#submaps</a> to learn about submaps.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  # submap to change window focus with vim keys
+  move_focus = {
+    settings = {
+      bind = [
+        ", h, movefocus, l"
+        ", j, movefocus, d"
+        ", k, movefocus, u"
+        ", l, movefocus, r"
+
+        ", escape, submap, reset"
+      ];
+    };
+  };
+
+  other_submap = {
+    settings = {
+      # ...
+    };
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.submaps._name_.onDispatch"><a class="header" href="#opt-wayland.windowManager.hyprland.submaps._name_.onDispatch">wayland.windowManager.hyprland.submaps.&lt;name&gt;.onDispatch</a></h2>
+<p>Submap to use after a dispatch. Can either be a name or <code>reset</code> to disable submap after any dispatch.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"reset"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.submaps._name_.settings"><a class="header" href="#opt-wayland.windowManager.hyprland.submaps._name_.settings">wayland.windowManager.hyprland.submaps.&lt;name&gt;.settings</a></h2>
+<p>Hyprland binds to be put in the submap.</p>
+<p>String entries render only when
+<code>wayland.windowManager.hyprland.configType</code> is
+<code>"hyprlang"</code>.</p>
+<p>Attribute set entries render only when
+<code>wayland.windowManager.hyprland.configType</code> is <code>"lua"</code>.
+Attribute values with an <code>_args</code> list generate multi-argument
+calls. Values created with <code>lib.generators.mkLuaInline</code> are
+rendered as raw Lua expressions.</p>
+<p><em>Type:</em>
+Hyprland binds</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  binde = [
+   ", right, resizeactive, 10 0"
+   ", left, resizeactive, -10 0"
+   ", up, resizeactive, 0 -10"
+   ", down, resizeactive, 0 10"
+  ];
+
+  bind = [
+    ", escape, submap, reset"
+    {
+      _args = [
+        "escape"
+        (lib.generators.mkLuaInline "hl.dsp.submap(\"reset\")")
+      ];
+    }
+  ];
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.systemd.enable"><a class="header" href="#opt-wayland.windowManager.hyprland.systemd.enable">wayland.windowManager.hyprland.systemd.enable</a></h2>
+<p>Whether to enable <code>hyprland-session.target</code> on
+hyprland startup. This links to <code>graphical-session.target</code>.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p>
+<ul>
+<li><code>DISPLAY</code></li>
+<li><code>HYPRLAND_INSTANCE_SIGNATURE</code></li>
+<li><code>WAYLAND_DISPLAY</code></li>
+<li><code>XDG_CURRENT_DESKTOP</code></li>
+<li><code>XDG_SESSION_TYPE</code></li>
+</ul>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.systemd.enableXdgAutostart"><a class="header" href="#opt-wayland.windowManager.hyprland.systemd.enableXdgAutostart">wayland.windowManager.hyprland.systemd.enableXdgAutostart</a></h2>
+<p>Whether to enable autostart of applications using
+<code>systemd-xdg-autostart-generator(8)</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.systemd.extraCommands"><a class="header" href="#opt-wayland.windowManager.hyprland.systemd.extraCommands">wayland.windowManager.hyprland.systemd.extraCommands</a></h2>
+<p>Extra commands to be run after D-Bus activation.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "systemctl --user stop hyprland-session.target"
+  "systemctl --user start hyprland-session.target"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.systemd.variables"><a class="header" href="#opt-wayland.windowManager.hyprland.systemd.variables">wayland.windowManager.hyprland.systemd.variables</a></h2>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "DISPLAY"
+  "HYPRLAND_INSTANCE_SIGNATURE"
+  "WAYLAND_DISPLAY"
+  "XDG_CURRENT_DESKTOP"
+  "XDG_SESSION_TYPE"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--all"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.hyprland.xwayland.enable"><a class="header" href="#opt-wayland.windowManager.hyprland.xwayland.enable">wayland.windowManager.hyprland.xwayland.enable</a></h2>
+<p>Whether or not to enable XWayland.</p>
+<p>Overrides the <code>enableXWayland</code> option of the Hyprland package.</p>
+<p>In newer versions of Hyprland, you can use the <code>wayland.windowManager.hyprland.settings.xwayland</code>
+option to avoid recompiling Hyprland.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland">&lt;home-manager/modules/services/window-managers/hyprland&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.enable"><a class="header" href="#opt-wayland.windowManager.labwc.enable">wayland.windowManager.labwc.enable</a></h2>
+<p>Whether to enable Labwc, a wayland window-stacking compositor.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.package"><a class="header" href="#opt-wayland.windowManager.labwc.package">wayland.windowManager.labwc.package</a></h2>
+<p>The labwc package to use. Set to <code>null</code> to use Nixos labwc package.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.labwc
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.autostart"><a class="header" href="#opt-wayland.windowManager.labwc.autostart">wayland.windowManager.labwc.autostart</a></h2>
+<p>Command to autostart when labwc start.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "wayvnc &amp;"
+  "waybar &amp;"
+  "swaybg -c '#113344' &gt;/dev/null 2&gt;&amp;1 &amp;"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.environment"><a class="header" href="#opt-wayland.windowManager.labwc.environment">wayland.windowManager.labwc.environment</a></h2>
+<p>Environment variable to add when labwc start.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "XDG_CURRENT_DESKTOP=labwc:wlroots"
+  "XKB_DEFAULT_LAYOUT=us"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.extraConfig"><a class="header" href="#opt-wayland.windowManager.labwc.extraConfig">wayland.windowManager.labwc.extraConfig</a></h2>
+<p>Extra lines appended to <code>$XDG_CONFIG_HOME/labwc/rc.xml</code>.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  &lt;tablet mapToOutput="" rotate="0" mouseEmulation="no"&gt;
+    &lt;!-- Active area dimensions are in mm --&gt;
+    &lt;area top="0.0" left="0.0" width="0.0" height="0.0" /&gt;
+    &lt;map button="Tip" to="Left" /&gt;
+    &lt;map button="Stylus" to="Right" /&gt;
+    &lt;map button="Stylus2" to="Middle" /&gt;
+  &lt;/tablet&gt;
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.menu"><a class="header" href="#opt-wayland.windowManager.labwc.menu">wayland.windowManager.labwc.menu</a></h2>
+<p>Config to configure labwc menu</p>
+<p><em>Type:</em>
+list of (XML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    label = "pipemenu";
+    menuId = "menu";
+    execute = "/home/user/nix/scripts/pipe.sh";
+  }
+  {
+    menuId = "client-menu";
+    label = "Client Menu";
+    icon = "";
+    items = [
+      {
+        label = "Maximize";
+        icon = "";
+        action = {
+          name = "ToggleMaximize";
+        };
+      }
+      {
+        label = "Fullscreen";
+        action = {
+          name = "ToggleFullscreen";
+        };
+      }
+      {
+        label = "Alacritty";
+        action = {
+          name = "Execute";
+          command = "alacritty";
+        };
+      }
+      {
+        label = "Move Left";
+        action = {
+          name = "SendToDesktop";
+          to = "left";
+        };
+      }
+      {
+        separator = { };
+      }
+      {
+        label = "Workspace";
+        menuId = "workspace";
+        icon = "";
+        items = [
+          {
+            label = "Move Left";
+            action = {
+              name = "SendToDesktop";
+              to = "left";
+            };
+          }
+        ];
+      }
+      {
+        separator = true;
+      }
+    ];
+  }
+];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.rc"><a class="header" href="#opt-wayland.windowManager.labwc.rc">wayland.windowManager.labwc.rc</a></h2>
+<p>Config to configure labwc options.
+Use “@attributes” for attributes.
+See <a href="https://labwc.github.io/labwc-config.5.html">https://labwc.github.io/labwc-config.5.html</a> for configuration.</p>
+<p><em>Type:</em>
+open submodule of (XML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  theme = {
+    name = "nord";
+    cornerRadius = 8;
+    font = {
+      "@name" = "FiraCode";
+      "@size" = "11";
+    };
+  };
+  keyboard = {
+    default = true;
+    keybind = [
+      # &lt;keybind key="W-Return"&gt;&lt;action name="Execute" command="foot"/&gt;&lt;/keybind&gt;
+      {
+        "@key" = "W-Return";
+        action = {
+          "@name" = "Execute";
+          "@command" = "foot";
+        };
+      }
+      # &lt;keybind key="W-Esc"&gt;&lt;action name="Execute" command="loot"/&gt;&lt;/keybind&gt;
+      {
+        "@key" = "W-Esc";
+        action = {
+          "@name" = "Execute";
+          "@command" = "loot";
+        };
+      }
+    ];
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.systemd.enable"><a class="header" href="#opt-wayland.windowManager.labwc.systemd.enable">wayland.windowManager.labwc.systemd.enable</a></h2>
+<p>Whether to enable <code>labwc-session.target</code> on
+labwc startup. This links to <code>graphical-session.target</code>.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p>
+<ul>
+<li><code>DISPLAY</code></li>
+<li><code>WAYLAND_DISPLAY</code></li>
+<li><code>XDG_CURRENT_DESKTOP</code></li>
+</ul>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.systemd.extraCommands"><a class="header" href="#opt-wayland.windowManager.labwc.systemd.extraCommands">wayland.windowManager.labwc.systemd.extraCommands</a></h2>
+<p>Extra commands to be run after D-Bus activation.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "systemctl --user stop labwc-session.target"
+  "systemctl --user start labwc-session.target"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.systemd.variables"><a class="header" href="#opt-wayland.windowManager.labwc.systemd.variables">wayland.windowManager.labwc.systemd.variables</a></h2>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "DISPLAY"
+  "WAYLAND_DISPLAY"
+  "XDG_CURRENT_DESKTOP"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "-all"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.labwc.xwayland.enable"><a class="header" href="#opt-wayland.windowManager.labwc.xwayland.enable">wayland.windowManager.labwc.xwayland.enable</a></h2>
+<p>Whether to enable XWayland.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.enable"><a class="header" href="#opt-wayland.windowManager.river.enable">wayland.windowManager.river.enable</a></h2>
+<p>Whether to enable the river window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.package"><a class="header" href="#opt-wayland.windowManager.river.package">wayland.windowManager.river.package</a></h2>
+<p>The river-classic package to use. Set to <code>null</code> to not add any river package to your path.
+This should be done if you want to use the NixOS river module to install river.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.river-classic
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.extraConfig"><a class="header" href="#opt-wayland.windowManager.river.extraConfig">wayland.windowManager.river.extraConfig</a></h2>
+<p>Extra lines appended to <code>$XDG_CONFIG_HOME/river/init</code>.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  rivertile -view-padding 6 -outer-padding 6 &amp;
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.extraSessionVariables"><a class="header" href="#opt-wayland.windowManager.river.extraSessionVariables">wayland.windowManager.river.extraSessionVariables</a></h2>
+<p>Extra session variables set when running the compositor.</p>
+<p><em>Type:</em>
+attribute set</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  MOZ_ENABLE_WAYLAND = "1";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.settings"><a class="header" href="#opt-wayland.windowManager.river.settings">wayland.windowManager.river.settings</a></h2>
+<p>General settings given to <code>riverctl</code>.</p>
+<p><em>Type:</em>
+River configuration value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  border-width = 2;
+  declare-mode = [
+    "locked"
+    "normal"
+    "passthrough"
+  ];
+  input = {
+    pointer-foo-bar = {
+      accel-profile = "flat";
+      events = true;
+      pointer-accel = -0.3;
+      tap = false;
+    };
+  };
+  map = {
+    normal = {
+      "Alt Q" = "close";
+    };
+  };
+  rule-add = {
+    "-app-id" = {
+      "'bar'" = "csd";
+      "'float*'" = {
+        "-title" = {
+          "'foo'" = "float";
+        };
+      };
+    };
+  };
+  set-cursor-warp = "on-output-change";
+  set-repeat = "50 300";
+  spawn = [
+    "firefox"
+    "'foot -a terminal'"
+  ];
+  xcursor-theme = "someGreatTheme 12";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.systemd.enable"><a class="header" href="#opt-wayland.windowManager.river.systemd.enable">wayland.windowManager.river.systemd.enable</a></h2>
+<p>Whether to enable <code>river-session.target</code> on
+river startup. This links to <code>graphical-session.target</code>}.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p>
+<ul>
+<li><code>DISPLAY</code></li>
+<li><code>WAYLAND_DISPLAY</code></li>
+<li><code>XDG_CURRENT_DESKTOP</code></li>
+<li><code>NIXOS_OZONE_WL</code></li>
+<li><code>XCURSOR_THEME</code></li>
+<li><code>XCURSOR_SIZE</code></li>
+</ul>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.systemd.extraCommands"><a class="header" href="#opt-wayland.windowManager.river.systemd.extraCommands">wayland.windowManager.river.systemd.extraCommands</a></h2>
+<p>Extra commands to be run after D-Bus activation.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "systemctl --user stop river-session.target"
+  "systemctl --user start river-session.target"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.systemd.variables"><a class="header" href="#opt-wayland.windowManager.river.systemd.variables">wayland.windowManager.river.systemd.variables</a></h2>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "DISPLAY"
+  "WAYLAND_DISPLAY"
+  "XDG_CURRENT_DESKTOP"
+  "NIXOS_OZONE_WL"
+  "XCURSOR_THEME"
+  "XCURSOR_SIZE"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "-all"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.river.xwayland.enable"><a class="header" href="#opt-wayland.windowManager.river.xwayland.enable">wayland.windowManager.river.xwayland.enable</a></h2>
+<p>Whether to enable XWayland.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/river.nix">&lt;home-manager/modules/services/window-managers/river.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.enable"><a class="header" href="#opt-wayland.windowManager.sway.enable">wayland.windowManager.sway.enable</a></h2>
+<p>Whether to enable sway wayland compositor.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.package"><a class="header" href="#opt-wayland.windowManager.sway.package">wayland.windowManager.sway.package</a></h2>
+<p>Sway package to use. Will override the options
+‘wrapperFeatures’, ‘extraSessionCommands’, and ‘extraOptions’.
+Set to <code>null</code> to not add any Sway package to your
+path. This should be done if you want to use the NixOS Sway
+module to install Sway. Beware setting to <code>null</code> will also disable
+reloading Sway when new config is activated.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">${pkgs.sway}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.checkConfig"><a class="header" href="#opt-wayland.windowManager.sway.checkConfig">wayland.windowManager.sway.checkConfig</a></h2>
+<p>If enabled, validates the generated config file.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">wayland.windowManager.sway.package != null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config"><a class="header" href="#opt-wayland.windowManager.sway.config">wayland.windowManager.sway.config</a></h2>
+<p>Sway configuration options.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.assigns"><a class="header" href="#opt-wayland.windowManager.sway.config.assigns">wayland.windowManager.sway.config.assigns</a></h2>
+<p>An attribute set that assigns applications to workspaces based
+on criteria.</p>
+<p><em>Type:</em>
+attribute set of list of attribute set of (string or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "0: extra" = [
+    {
+      class = "^Firefox$";
+      window_role = "About";
+    }
+  ];
+  "1: web" = [
+    {
+      class = "^Firefox$";
+    }
+  ];
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars"><a class="header" href="#opt-wayland.windowManager.sway.config.bars">wayland.windowManager.sway.config.bars</a></h2>
+<p>Sway bars settings blocks. Set to empty list to remove bars completely.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">see code
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors">wayland.windowManager.sway.config.bars.*.colors</a></h2>
+<p>Bar color settings. All color classes can be specified using submodules
+with ‘border’, ‘background’, ‘text’, fields and RGB color hex-codes as values.
+See default values for the reference.
+Note that ‘background’, ‘status’, and ‘separator’ parameters take a single RGB value.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_colors">https://i3wm.org/docs/userguide.html#_colors</a>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.activeWorkspace"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.activeWorkspace">wayland.windowManager.sway.config.bars.*.colors.activeWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace is active.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.background"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.background">wayland.windowManager.sway.config.bars.*.colors.background</a></h2>
+<p>Background color of the bar.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.bindingMode"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.bindingMode">wayland.windowManager.sway.config.bars.*.colors.bindingMode</a></h2>
+<p>Border, background and text color for the binding mode indicator</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.focusedBackground"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.focusedBackground">wayland.windowManager.sway.config.bars.*.colors.focusedBackground</a></h2>
+<p>Background color of the bar on the currently focused monitor output.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"#000000"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.focusedSeparator"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.focusedSeparator">wayland.windowManager.sway.config.bars.*.colors.focusedSeparator</a></h2>
+<p>Text color to be used for the separator on the currently focused monitor output.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"#666666"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.focusedStatusline"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.focusedStatusline">wayland.windowManager.sway.config.bars.*.colors.focusedStatusline</a></h2>
+<p>Text color to be used for the statusline on the currently focused monitor output.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"#ffffff"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.focusedWorkspace"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.focusedWorkspace">wayland.windowManager.sway.config.bars.*.colors.focusedWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace has focus.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.inactiveWorkspace"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.inactiveWorkspace">wayland.windowManager.sway.config.bars.*.colors.inactiveWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace does not
+have focus and is not active.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.separator"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.separator">wayland.windowManager.sway.config.bars.*.colors.separator</a></h2>
+<p>Text color to be used for the separator.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.statusline"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.statusline">wayland.windowManager.sway.config.bars.*.colors.statusline</a></h2>
+<p>Text color to be used for the statusline.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.colors.urgentWorkspace"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.colors.urgentWorkspace">wayland.windowManager.sway.config.bars.*.colors.urgentWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace contains
+a window with the urgency hint set.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.command"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.command">wayland.windowManager.sway.config.bars.*.command</a></h2>
+<p>Command that will be used to start a bar.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">i3bar
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"\${pkgs.waybar}/bin/waybar"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.extraConfig"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.extraConfig">wayland.windowManager.sway.config.bars.*.extraConfig</a></h2>
+<p>Extra configuration lines for this bar.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.fonts"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts">wayland.windowManager.sway.config.bars.*.fonts</a></h2>
+<p>Font configuration for this bar.</p>
+<p><em>Type:</em>
+(list of string) or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  names = [
+    "DejaVu Sans Mono"
+    "FontAwesome5Free"
+  ];
+  size = 11.0;
+  style = "Bold Semi-Condensed";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.fonts.names"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts.names">wayland.windowManager.sway.config.bars.*.fonts.names</a></h2>
+<p>List of font names list used for window titles. Only FreeType fonts are supported.
+The order here is important (e.g. icons font should go before the one used for text).</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ "monospace" ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "FontAwesome"
+  "Terminus"
+]
+</code></pre>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.fonts.size"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts.size">wayland.windowManager.sway.config.bars.*.fonts.size</a></h2>
+<p>The font size to use for window titles.</p>
+<p><em>Type:</em>
+floating point number or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">8.0
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">11.5
+</code></pre>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.fonts.style"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts.style">wayland.windowManager.sway.config.bars.*.fonts.style</a></h2>
+<p>The font style to use for window titles.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Bold Semi-Condensed"
+</code></pre>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.hiddenState"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.hiddenState">wayland.windowManager.sway.config.bars.*.hiddenState</a></h2>
+<p>The default bar mode when ‘bar.mode’ == ‘hide’.</p>
+<p><em>Type:</em>
+null or one of “hide”, “show”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.id"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.id">wayland.windowManager.sway.config.bars.*.id</a></h2>
+<p>Specifies the bar ID for the configured bar instance.
+If this option is missing, the ID is set to bar-x, where x corresponds
+to the position of the embedding bar block in the config file.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.mode"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.mode">wayland.windowManager.sway.config.bars.*.mode</a></h2>
+<p>Bar visibility mode.</p>
+<p><em>Type:</em>
+null or one of “dock”, “hide”, “invisible”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.position"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.position">wayland.windowManager.sway.config.bars.*.position</a></h2>
+<p>The edge of the screen swaybar should show up.</p>
+<p><em>Type:</em>
+null or one of “top”, “bottom”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.statusCommand"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.statusCommand">wayland.windowManager.sway.config.bars.*.statusCommand</a></h2>
+<p>Command that will be used to get status lines.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.trayOutput"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.trayOutput">wayland.windowManager.sway.config.bars.*.trayOutput</a></h2>
+<p>Where to output tray.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.trayPadding"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.trayPadding">wayland.windowManager.sway.config.bars.*.trayPadding</a></h2>
+<p>Sets the pixel padding of the system tray.
+This padding will surround the tray on all sides and between each item.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.workspaceButtons"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.workspaceButtons">wayland.windowManager.sway.config.bars.*.workspaceButtons</a></h2>
+<p>Whether workspace buttons should be shown or not.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bars._.workspaceNumbers"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.workspaceNumbers">wayland.windowManager.sway.config.bars.*.workspaceNumbers</a></h2>
+<p>Whether workspace numbers should be displayed within the workspace buttons.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bindkeysToCode"><a class="header" href="#opt-wayland.windowManager.sway.config.bindkeysToCode">wayland.windowManager.sway.config.bindkeysToCode</a></h2>
+<p>Whether to make use of <code>--to-code</code> in keybindings.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bindswitches"><a class="header" href="#opt-wayland.windowManager.sway.config.bindswitches">wayland.windowManager.sway.config.bindswitches</a></h2>
+<p>Binds &lt;switch&gt; to execute the sway command command on state changes. Supported switches are lid (laptop
+lid) and tablet (tablet mode) switches. Valid values for state are on, off and toggle. These switches are
+on when the device lid is shut and when tablet mode is active respectively. toggle is also supported to run
+a command both when the switch is toggled on or off.
+See sway(5).</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"No bindswitches by default"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">let
+  laptop = "eDP-1";
+in
+{
+  "lid:on" = {
+    reload = true;
+    locked = true;
+    action = "output ${laptop} disable";
+  };
+  "lid:off" = {
+    reload = true;
+    locked = true;
+    action = "output ${laptop} enable";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bindswitches._name_.action"><a class="header" href="#opt-wayland.windowManager.sway.config.bindswitches._name_.action">wayland.windowManager.sway.config.bindswitches.&lt;name&gt;.action</a></h2>
+<p>The sway command to execute on state changes</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bindswitches._name_.locked"><a class="header" href="#opt-wayland.windowManager.sway.config.bindswitches._name_.locked">wayland.windowManager.sway.config.bindswitches.&lt;name&gt;.locked</a></h2>
+<p>Unless the flag –locked is set, the command
+will not be run when a screen locking program
+is active. If there is a matching binding with
+and without –locked, the one with will be preferred
+when locked and the one without will be
+preferred when unlocked.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.bindswitches._name_.reload"><a class="header" href="#opt-wayland.windowManager.sway.config.bindswitches._name_.reload">wayland.windowManager.sway.config.bindswitches.&lt;name&gt;.reload</a></h2>
+<p>If the –reload flag is given, the binding will
+also be executed when the config is reloaded.
+toggle bindings will not be executed on reload.
+The –locked flag will operate as normal so if
+the config is reloaded while locked and
+–locked is not given, the binding will not be
+executed.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors"><a class="header" href="#opt-wayland.windowManager.sway.config.colors">wayland.windowManager.sway.config.colors</a></h2>
+<p>Color settings. All color classes can be specified using submodules
+with ‘border’, ‘background’, ‘text’, ‘indicator’ and ‘childBorder’ fields
+and RGB color hex-codes as values. See default values for the reference.
+Note that ‘sway.config.colors.background’ parameter takes a single RGB value.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_changing_colors">https://i3wm.org/docs/userguide.html#_changing_colors</a>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors.background"><a class="header" href="#opt-wayland.windowManager.sway.config.colors.background">wayland.windowManager.sway.config.colors.background</a></h2>
+<p>Background color of the window. Only applications which do not cover
+the whole area expose the color.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"#ffffff"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors.focused"><a class="header" href="#opt-wayland.windowManager.sway.config.colors.focused">wayland.windowManager.sway.config.colors.focused</a></h2>
+<p>A window which currently has the focus.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#285577";
+  border = "#4c7899";
+  childBorder = "#285577";
+  indicator = "#2e9ef4";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors.focusedInactive"><a class="header" href="#opt-wayland.windowManager.sway.config.colors.focusedInactive">wayland.windowManager.sway.config.colors.focusedInactive</a></h2>
+<p>A window which is the focused one of its container,
+but it does not have the focus at the moment.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#5f676a";
+  border = "#333333";
+  childBorder = "#5f676a";
+  indicator = "#484e50";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors.placeholder"><a class="header" href="#opt-wayland.windowManager.sway.config.colors.placeholder">wayland.windowManager.sway.config.colors.placeholder</a></h2>
+<p>Background and text color are used to draw placeholder window
+contents (when restoring layouts). Border and indicator are ignored.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#0c0c0c";
+  border = "#000000";
+  childBorder = "#0c0c0c";
+  indicator = "#000000";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors.unfocused"><a class="header" href="#opt-wayland.windowManager.sway.config.colors.unfocused">wayland.windowManager.sway.config.colors.unfocused</a></h2>
+<p>A window which is not focused.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#222222";
+  border = "#333333";
+  childBorder = "#222222";
+  indicator = "#292d2e";
+  text = "#888888";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.colors.urgent"><a class="header" href="#opt-wayland.windowManager.sway.config.colors.urgent">wayland.windowManager.sway.config.colors.urgent</a></h2>
+<p>A window which has its urgency hint activated.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#900000";
+  border = "#2f343a";
+  childBorder = "#900000";
+  indicator = "#900000";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.defaultWorkspace"><a class="header" href="#opt-wayland.windowManager.sway.config.defaultWorkspace">wayland.windowManager.sway.config.defaultWorkspace</a></h2>
+<p>The default workspace to show when sway is launched.
+This must to correspond to the value of the keybinding of the default workspace.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"workspace number 9"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.down"><a class="header" href="#opt-wayland.windowManager.sway.config.down">wayland.windowManager.sway.config.down</a></h2>
+<p>Home row direction key for moving down.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"j"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.floating"><a class="header" href="#opt-wayland.windowManager.sway.config.floating">wayland.windowManager.sway.config.floating</a></h2>
+<p>Floating window settings.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.floating.border"><a class="header" href="#opt-wayland.windowManager.sway.config.floating.border">wayland.windowManager.sway.config.floating.border</a></h2>
+<p>Floating windows border width.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">2
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.floating.criteria"><a class="header" href="#opt-wayland.windowManager.sway.config.floating.criteria">wayland.windowManager.sway.config.floating.criteria</a></h2>
+<p>List of criteria for windows that should be opened in a floating mode.</p>
+<p><em>Type:</em>
+list of attribute set of (string or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    title = "Steam - Update News";
+  }
+  {
+    class = "Pavucontrol";
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.floating.modifier"><a class="header" href="#opt-wayland.windowManager.sway.config.floating.modifier">wayland.windowManager.sway.config.floating.modifier</a></h2>
+<p>Modifier key or keys that can be used to drag floating windows.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"sway.config.modifier"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Mod4"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.floating.titlebar"><a class="header" href="#opt-wayland.windowManager.sway.config.floating.titlebar">wayland.windowManager.sway.config.floating.titlebar</a></h2>
+<p>Whether to show floating window titlebars.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">''
+  true for state version ≥ 23.05
+  false for state version &lt; 23.05
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.focus"><a class="header" href="#opt-wayland.windowManager.sway.config.focus">wayland.windowManager.sway.config.focus</a></h2>
+<p>Focus related settings.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.focus.followMouse"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.followMouse">wayland.windowManager.sway.config.focus.followMouse</a></h2>
+<p>Whether focus should follow the mouse.</p>
+<p><em>Type:</em>
+one of “yes”, “no”, “always” or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"yes"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.focus.forceWrapping"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.forceWrapping">wayland.windowManager.sway.config.focus.forceWrapping</a></h2>
+<p>Whether to force focus wrapping in tabbed or stacked containers.</p>
+<p>This option is deprecated, use <code>focus.wrapping</code> instead.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.focus.mouseWarping"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.mouseWarping">wayland.windowManager.sway.config.focus.mouseWarping</a></h2>
+<p>Whether mouse cursor should be warped to the center of the window when switching focus
+to a window on a different output.</p>
+<p><em>Type:</em>
+boolean or one of “container”, “output”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.focus.newWindow"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.newWindow">wayland.windowManager.sway.config.focus.newWindow</a></h2>
+<p>This option modifies focus behavior on new window activation.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#focus_on_window_activation">https://i3wm.org/docs/userguide.html#focus_on_window_activation</a></p>
+<p><em>Type:</em>
+one of “smart”, “urgent”, “focus”, “none”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"smart"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"none"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.focus.wrapping"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.wrapping">wayland.windowManager.sway.config.focus.wrapping</a></h2>
+<p>Whether the window focus commands automatically wrap around the edge of containers.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_focus_wrapping">https://i3wm.org/docs/userguide.html#_focus_wrapping</a></p>
+<p><em>Type:</em>
+one of “yes”, “no”, “force”, “workspace”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if focus.forceWrapping then "yes" else "no"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.fonts"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts">wayland.windowManager.sway.config.fonts</a></h2>
+<p>Font configuration for window titles, nagbar…</p>
+<p><em>Type:</em>
+(list of string) or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  names = [
+    "DejaVu Sans Mono"
+    "FontAwesome5Free"
+  ];
+  size = 11.0;
+  style = "Bold Semi-Condensed";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.fonts.names"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts.names">wayland.windowManager.sway.config.fonts.names</a></h2>
+<p>List of font names list used for window titles. Only FreeType fonts are supported.
+The order here is important (e.g. icons font should go before the one used for text).</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ "monospace" ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "FontAwesome"
+  "Terminus"
+]
+</code></pre>
+<h2 id="opt-wayland.windowManager.sway.config.fonts.size"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts.size">wayland.windowManager.sway.config.fonts.size</a></h2>
+<p>The font size to use for window titles.</p>
+<p><em>Type:</em>
+floating point number or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">8.0
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">11.5
+</code></pre>
+<h2 id="opt-wayland.windowManager.sway.config.fonts.style"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts.style">wayland.windowManager.sway.config.fonts.style</a></h2>
+<p>The font style to use for window titles.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Bold Semi-Condensed"
+</code></pre>
+<h2 id="opt-wayland.windowManager.sway.config.gaps"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps">wayland.windowManager.sway.config.gaps</a></h2>
+<p>Gaps related settings.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.bottom"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.bottom">wayland.windowManager.sway.config.gaps.bottom</a></h2>
+<p>Bottom gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.horizontal"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.horizontal">wayland.windowManager.sway.config.gaps.horizontal</a></h2>
+<p>Horizontal gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.inner"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.inner">wayland.windowManager.sway.config.gaps.inner</a></h2>
+<p>Inner gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">12
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.left"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.left">wayland.windowManager.sway.config.gaps.left</a></h2>
+<p>Left gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.outer"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.outer">wayland.windowManager.sway.config.gaps.outer</a></h2>
+<p>Outer gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.right"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.right">wayland.windowManager.sway.config.gaps.right</a></h2>
+<p>Right gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.smartBorders"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.smartBorders">wayland.windowManager.sway.config.gaps.smartBorders</a></h2>
+<p>This option controls whether to disable container borders on
+workspace with a single container.</p>
+<p><em>Type:</em>
+one of “on”, “off”, “no_gaps”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"off"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.smartGaps"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.smartGaps">wayland.windowManager.sway.config.gaps.smartGaps</a></h2>
+<p>This option controls whether to disable all gaps (outer and inner)
+on workspace with a single container.</p>
+<p><em>Type:</em>
+boolean or one of “on”, “off”, “inverse_outer”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"off"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"on"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.top"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.top">wayland.windowManager.sway.config.gaps.top</a></h2>
+<p>Top gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.gaps.vertical"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps.vertical">wayland.windowManager.sway.config.gaps.vertical</a></h2>
+<p>Vertical gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.input"><a class="header" href="#opt-wayland.windowManager.sway.config.input">wayland.windowManager.sway.config.input</a></h2>
+<p>An attribute set that defines input modules. See
+<code>sway-input(5)</code>
+for options.</p>
+<p><em>Type:</em>
+attribute set of attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "*" = {
+    xkb_variant = "dvorak";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.keybindings"><a class="header" href="#opt-wayland.windowManager.sway.config.keybindings">wayland.windowManager.sway.config.keybindings</a></h2>
+<p>An attribute set that assigns a key press to an action using a key symbol.
+See <a href="https://i3wm.org/docs/userguide.html#keybindings">https://i3wm.org/docs/userguide.html#keybindings</a>.</p>
+<p>Consider to use <code>lib.mkOptionDefault</code> function to extend or override
+default keybindings instead of specifying all of them from scratch.</p>
+<p><em>Type:</em>
+attribute set of (null or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Default sway keybindings."
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">let
+  modifier = config.wayland.windowManager.sway.config.modifier;
+in lib.mkOptionDefault {
+  "${modifier}+Return" = "exec ${cfg.config.terminal}";
+  "${modifier}+Shift+q" = "kill";
+  "${modifier}+d" = "exec ${cfg.config.menu}";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.keycodebindings"><a class="header" href="#opt-wayland.windowManager.sway.config.keycodebindings">wayland.windowManager.sway.config.keycodebindings</a></h2>
+<p>An attribute set that assigns keypress to an action using key code.
+See <a href="https://i3wm.org/docs/userguide.html#keybindings">https://i3wm.org/docs/userguide.html#keybindings</a>.</p>
+<p><em>Type:</em>
+attribute set of (null or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "214" = "exec /bin/script.sh";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.left"><a class="header" href="#opt-wayland.windowManager.sway.config.left">wayland.windowManager.sway.config.left</a></h2>
+<p>Home row direction key for moving left.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"h"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.menu"><a class="header" href="#opt-wayland.windowManager.sway.config.menu">wayland.windowManager.sway.config.menu</a></h2>
+<p>Default launcher to use.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">${pkgs.dmenu}/bin/dmenu_path | ${pkgs.dmenu}/bin/dmenu | ${pkgs.findutils}/bin/xargs swaymsg exec --
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"bemenu-run"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.modes"><a class="header" href="#opt-wayland.windowManager.sway.config.modes">wayland.windowManager.sway.config.modes</a></h2>
+<p>An attribute set that defines binding modes and keybindings
+inside them</p>
+<p>Only basic keybinding is supported (bindsym keycomb action),
+for more advanced setup use ‘sway.extraConfig’.</p>
+<p><em>Type:</em>
+attribute set of attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  resize = {
+    # Binds arrow keys to resizing commands
+    ${cfg.config.left}" = "resize shrink width 10 px";
+    ${cfg.config.down}" = "resize grow height 10 px";
+    ${cfg.config.up}" = "resize shrink height 10 px";
+    ${cfg.config.right}" = "resize grow width 10 px";
+
+    "Left" = "resize shrink width 10 px";
+    "Down" = "resize grow height 10 px";
+    "Up" = "resize shrink height 10 px";
+    "Right" = "resize grow width 10 px";
+
+    # Exit resize mode
+    "Escape" = "mode default";
+    "Return" = "mode default";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.modifier"><a class="header" href="#opt-wayland.windowManager.sway.config.modifier">wayland.windowManager.sway.config.modifier</a></h2>
+<p>Modifier key that is used for all default keybindings.</p>
+<p><em>Type:</em>
+one of “Shift”, “Control”, “Mod1”, “Mod2”, “Mod3”, “Mod4”, “Mod5” or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Mod1"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Mod4"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.output"><a class="header" href="#opt-wayland.windowManager.sway.config.output">wayland.windowManager.sway.config.output</a></h2>
+<p>An attribute set that defines output modules. See
+<code>sway-output(5)</code>
+for options.</p>
+<p><em>Type:</em>
+attribute set of attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  HDMI-A-2 = {
+    bg = "~/path/to/background.png fill";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.right"><a class="header" href="#opt-wayland.windowManager.sway.config.right">wayland.windowManager.sway.config.right</a></h2>
+<p>Home row direction key for moving right.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"l"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.seat"><a class="header" href="#opt-wayland.windowManager.sway.config.seat">wayland.windowManager.sway.config.seat</a></h2>
+<p>An attribute set that defines seat modules. See
+<code>sway-input(5)</code>
+for options.</p>
+<p><em>Type:</em>
+attribute set of attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "*" = {
+    hide_cursor = "when-typing enable";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.startup"><a class="header" href="#opt-wayland.windowManager.sway.config.startup">wayland.windowManager.sway.config.startup</a></h2>
+<p>Commands that should be executed at startup.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup">https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup</a>.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+{ command = "systemctl --user restart waybar"; always = true; }
+{ command = "dropbox start"; }
+{ command = "firefox"; }
+]
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.startup._.always"><a class="header" href="#opt-wayland.windowManager.sway.config.startup._.always">wayland.windowManager.sway.config.startup.*.always</a></h2>
+<p>Whether to run command on each sway restart.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.startup._.command"><a class="header" href="#opt-wayland.windowManager.sway.config.startup._.command">wayland.windowManager.sway.config.startup.*.command</a></h2>
+<p>Command that will be executed on startup.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.terminal"><a class="header" href="#opt-wayland.windowManager.sway.config.terminal">wayland.windowManager.sway.config.terminal</a></h2>
+<p>Default terminal to run.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">${pkgs.foot}/bin/foot
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"alacritty"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.up"><a class="header" href="#opt-wayland.windowManager.sway.config.up">wayland.windowManager.sway.config.up</a></h2>
+<p>Home row direction key for moving up.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"k"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window"><a class="header" href="#opt-wayland.windowManager.sway.config.window">wayland.windowManager.sway.config.window</a></h2>
+<p>Window titlebar and border settings.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window.border"><a class="header" href="#opt-wayland.windowManager.sway.config.window.border">wayland.windowManager.sway.config.window.border</a></h2>
+<p>Window border width.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">2
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window.commands"><a class="header" href="#opt-wayland.windowManager.sway.config.window.commands">wayland.windowManager.sway.config.window.commands</a></h2>
+<p>List of commands that should be executed on specific windows.
+See <code>for_window</code> swaywm option documentation.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    command = "border pixel 1";
+    criteria = {
+      class = "XTerm";
+    };
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window.commands._.command"><a class="header" href="#opt-wayland.windowManager.sway.config.window.commands._.command">wayland.windowManager.sway.config.window.commands.*.command</a></h2>
+<p>Swaywm command to execute.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"border pixel 1"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window.commands._.criteria"><a class="header" href="#opt-wayland.windowManager.sway.config.window.commands._.criteria">wayland.windowManager.sway.config.window.commands.*.criteria</a></h2>
+<p>Criteria of the windows on which command should be executed.</p>
+<p>A value of <code>true</code> is equivalent to using an empty
+criteria (which is different from an empty string criteria).</p>
+<p><em>Type:</em>
+attribute set of (string or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  title = "x200: ~/work";
+  floating = true;
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window.hideEdgeBorders"><a class="header" href="#opt-wayland.windowManager.sway.config.window.hideEdgeBorders">wayland.windowManager.sway.config.window.hideEdgeBorders</a></h2>
+<p>Hide window borders adjacent to the screen edges.</p>
+<p><em>Type:</em>
+one of “none”, “vertical”, “horizontal”, “both”, “smart”, “smart_no_gaps”, “–i3 none”, “–i3 vertical”, “–i3 horizontal”, “–i3 both”, “–i3 smart”, “–i3 smart_no_gaps”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"none"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.window.titlebar"><a class="header" href="#opt-wayland.windowManager.sway.config.window.titlebar">wayland.windowManager.sway.config.window.titlebar</a></h2>
+<p>Whether to show window titlebars.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">''
+  true for state version ≥ 23.05
+  false for state version &lt; 23.05
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.workspaceAutoBackAndForth"><a class="header" href="#opt-wayland.windowManager.sway.config.workspaceAutoBackAndForth">wayland.windowManager.sway.config.workspaceAutoBackAndForth</a></h2>
+<p>Assume you are on workspace “1: www” and switch to “2: IM” using
+mod+2 because somebody sent you a message. You don’t need to remember
+where you came from now, you can just press $mod+2 again to switch
+back to “1: www”.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.workspaceLayout"><a class="header" href="#opt-wayland.windowManager.sway.config.workspaceLayout">wayland.windowManager.sway.config.workspaceLayout</a></h2>
+<p>The mode in which new containers on workspace level will
+start.</p>
+<p><em>Type:</em>
+one of “default”, “stacking”, “tabbed”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"default"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"tabbed"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.workspaceOutputAssign"><a class="header" href="#opt-wayland.windowManager.sway.config.workspaceOutputAssign">wayland.windowManager.sway.config.workspaceOutputAssign</a></h2>
+<p>Assign workspaces to outputs.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.workspaceOutputAssign._.output"><a class="header" href="#opt-wayland.windowManager.sway.config.workspaceOutputAssign._.output">wayland.windowManager.sway.config.workspaceOutputAssign.*.output</a></h2>
+<p>Name(s) of the output(s) from <code>   swaymsg -t get_outputs </code>.</p>
+<p><em>Type:</em>
+string or list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"eDP"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.config.workspaceOutputAssign._.workspace"><a class="header" href="#opt-wayland.windowManager.sway.config.workspaceOutputAssign._.workspace">wayland.windowManager.sway.config.workspaceOutputAssign.*.workspace</a></h2>
+<p>Name of the workspace to assign.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Web"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.extraConfig"><a class="header" href="#opt-wayland.windowManager.sway.extraConfig">wayland.windowManager.sway.extraConfig</a></h2>
+<p>Extra configuration lines to add to ~/.config/sway/config.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.extraConfigEarly"><a class="header" href="#opt-wayland.windowManager.sway.extraConfigEarly">wayland.windowManager.sway.extraConfigEarly</a></h2>
+<p>Like extraConfig, except lines are added to ~/.config/sway/config before all other configuration.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.extraOptions"><a class="header" href="#opt-wayland.windowManager.sway.extraOptions">wayland.windowManager.sway.extraOptions</a></h2>
+<p>Command line arguments passed to launch Sway. Please DO NOT report
+issues if you use an unsupported GPU (proprietary drivers).</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--verbose"
+  "--debug"
+  "--unsupported-gpu"
+  "--my-next-gpu-wont-be-nvidia"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.extraSessionCommands"><a class="header" href="#opt-wayland.windowManager.sway.extraSessionCommands">wayland.windowManager.sway.extraSessionCommands</a></h2>
+<p>Shell commands executed just before Sway is started.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  export SDL_VIDEODRIVER=wayland
+  # needs qt5.qtwayland in systemPackages
+  export QT_QPA_PLATFORM=wayland
+  export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+  # Fix for some Java AWT applications (e.g. Android Studio),
+  # use this if they aren't displayed properly:
+  export _JAVA_AWT_WM_NONREPARENTING=1
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.swaynag.enable"><a class="header" href="#opt-wayland.windowManager.sway.swaynag.enable">wayland.windowManager.sway.swaynag.enable</a></h2>
+<p>Whether to enable configuration of swaynag, a lightweight error bar for sway.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/swaynag.nix">&lt;home-manager/modules/services/window-managers/i3-sway/swaynag.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.swaynag.settings"><a class="header" href="#opt-wayland.windowManager.sway.swaynag.settings">wayland.windowManager.sway.swaynag.settings</a></h2>
+<p>Configuration written to
+<code>$XDG_CONFIG_HOME/swaynag/config</code>.</p>
+<p>See
+<code>swaynag(5)</code>
+for a list of available options and an example configuration.
+Note, configurations declared under <code>&lt;config&gt;</code>
+will override the default type values of swaynag.</p>
+<p><em>Type:</em>
+attribute set of attribute set of (Swaynag config atom (null, bool, int, float, str))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "&lt;config&gt;" = {
+    edge = "bottom";
+    font = "Dina 12";
+  };
+
+  green = {
+    edge = "top";
+    background = "00AA00";
+    text = "FFFFFF";
+    button-background = "00CC00";
+    message-padding = 10;
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/swaynag.nix">&lt;home-manager/modules/services/window-managers/i3-sway/swaynag.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.systemd.enable"><a class="header" href="#opt-wayland.windowManager.sway.systemd.enable">wayland.windowManager.sway.systemd.enable</a></h2>
+<p>Whether to enable <code>sway-session.target</code> on
+sway startup. This links to
+<code>graphical-session.target</code>.
+Some important environment variables will be imported to systemd
+and dbus user environment before reaching the target, including</p>
+<ul>
+<li><code>DISPLAY</code></li>
+<li><code>WAYLAND_DISPLAY</code></li>
+<li><code>SWAYSOCK</code></li>
+<li><code>XDG_CURRENT_DESKTOP</code></li>
+<li><code>XDG_SESSION_TYPE</code></li>
+<li><code>NIXOS_OZONE_WL</code></li>
+<li><code>XCURSOR_THEME</code></li>
+<li><code>XCURSOR_SIZE</code>
+You can extend this list using the <code>systemd.variables</code> option.</li>
+</ul>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.systemd.dbusImplementation"><a class="header" href="#opt-wayland.windowManager.sway.systemd.dbusImplementation">wayland.windowManager.sway.systemd.dbusImplementation</a></h2>
+<p>The D-Bus implementation used on the system.
+This affects which tool is used to import environment variables when starting the Sway session.
+On NixOS, this should match the value of the option <a href="https://nixos.org/manual/nixos/stable/options#opt-services.dbus.implementation"><code>services.dbus.implementation</code> (NixOS)</a>.
+When set to <code>dbus</code>, <code>dbus-update-activation-environment --systemd &lt;variables&gt;</code> is run.
+Otherwise, when set to <code>broker</code>, <code>systemctl --user import-environment &lt;variables&gt;</code> is run.
+See <a href="https://github.com/swaywm/sway/wiki#systemd-and-dbus-activation-environments">https://github.com/swaywm/sway/wiki#systemd-and-dbus-activation-environments</a> for more documentation.</p>
+<p><em>Type:</em>
+one of “dbus”, “broker”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"dbus"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"broker"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.systemd.extraCommands"><a class="header" href="#opt-wayland.windowManager.sway.systemd.extraCommands">wayland.windowManager.sway.systemd.extraCommands</a></h2>
+<p>Extra commands to run after D-Bus activation.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "systemctl --user reset-failed"
+  "systemctl --user start sway-session.target"
+  "swaymsg -mt subscribe '[]' || true"
+  "systemctl --user stop sway-session.target"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.systemd.variables"><a class="header" href="#opt-wayland.windowManager.sway.systemd.variables">wayland.windowManager.sway.systemd.variables</a></h2>
+<p>Environment variables imported into the systemd and D-Bus user environment.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "DISPLAY"
+  "WAYLAND_DISPLAY"
+  "SWAYSOCK"
+  "XDG_CURRENT_DESKTOP"
+  "XDG_SESSION_TYPE"
+  "NIXOS_OZONE_WL"
+  "XCURSOR_THEME"
+  "XCURSOR_SIZE"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--all"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.systemd.xdgAutostart"><a class="header" href="#opt-wayland.windowManager.sway.systemd.xdgAutostart">wayland.windowManager.sway.systemd.xdgAutostart</a></h2>
+<p>Whether to enable autostart of applications using
+<code>systemd-xdg-autostart-generator(8)</code>
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.wrapperFeatures"><a class="header" href="#opt-wayland.windowManager.sway.wrapperFeatures">wayland.windowManager.sway.wrapperFeatures</a></h2>
+<p>Attribute set of features to enable in the wrapper.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  gtk = true;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.wrapperFeatures.base"><a class="header" href="#opt-wayland.windowManager.sway.wrapperFeatures.base">wayland.windowManager.sway.wrapperFeatures.base</a></h2>
+<p>Whether to make use of the base wrapper to execute extra session commands and prepend a
+dbus-run-session to the sway command.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.wrapperFeatures.gtk"><a class="header" href="#opt-wayland.windowManager.sway.wrapperFeatures.gtk">wayland.windowManager.sway.wrapperFeatures.gtk</a></h2>
+<p>Whether to make use of the wrapGAppsHook wrapper to execute sway with required environment
+variables for GTK applications.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.sway.xwayland"><a class="header" href="#opt-wayland.windowManager.sway.xwayland">wayland.windowManager.sway.xwayland</a></h2>
+<p>Enable xwayland, which is needed for the default configuration of sway.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.enable"><a class="header" href="#opt-wayland.windowManager.wayfire.enable">wayland.windowManager.wayfire.enable</a></h2>
+<p>Whether to enable Wayfire, a wayland compositor based on wlroots.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.package"><a class="header" href="#opt-wayland.windowManager.wayfire.package">wayland.windowManager.wayfire.package</a></h2>
+<p>The wayfire package to use. Set to <code>null</code> to not add any wayfire package to your path.
+This should be done if you want to use the NixOS wayfire module to install wayfire.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.wayfire
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.plugins"><a class="header" href="#opt-wayland.windowManager.wayfire.plugins">wayland.windowManager.wayfire.plugins</a></h2>
+<p>Additional plugins to use with wayfire</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">with pkgs.wayfirePlugins; [ wf-shell ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">with pkgs.wayfirePlugins; [
+  wcm
+  wf-shell
+  wayfire-plugins-extra
+];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.settings"><a class="header" href="#opt-wayland.windowManager.wayfire.settings">wayland.windowManager.wayfire.settings</a></h2>
+<p>Wayfire configuration written in Nix.</p>
+<p>See <a href="https://github.com/WayfireWM/wayfire/wiki/Configuration">https://github.com/WayfireWM/wayfire/wiki/Configuration</a></p>
+<p><em>Type:</em>
+open submodule of attribute set of attribute set of (string or absolute path or boolean or signed integer or floating point number)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  command = {
+    binding_terminal = "alacritty";
+    command_terminal = "alacritty";
+  };
+  core = {
+    plugins = "command expo cube";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.settings.core.plugins"><a class="header" href="#opt-wayland.windowManager.wayfire.settings.core.plugins">wayland.windowManager.wayfire.settings.core.plugins</a></h2>
+<p>Load the specified plugins</p>
+<p><em>Type:</em>
+strings concatenated with “ “</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.systemd.enable"><a class="header" href="#opt-wayland.windowManager.wayfire.systemd.enable">wayland.windowManager.wayfire.systemd.enable</a></h2>
+<p>Whether to enable <code>wayfire-session.target</code> on
+wayfire startup. This links to <code>graphical-session.target</code>}.
+Some important environment variables will be imported to systemd
+and D-Bus user environment before reaching the target, including</p>
+<ul>
+<li><code>DISPLAY</code></li>
+<li><code>WAYLAND_DISPLAY</code></li>
+<li><code>XDG_CURRENT_DESKTOP</code></li>
+<li><code>NIXOS_OZONE_WL</code></li>
+<li><code>XCURSOR_THEME</code></li>
+<li><code>XCURSOR_SIZE</code></li>
+</ul>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.systemd.extraCommands"><a class="header" href="#opt-wayland.windowManager.wayfire.systemd.extraCommands">wayland.windowManager.wayfire.systemd.extraCommands</a></h2>
+<p>Extra commands to be run after D-Bus activation.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "systemctl --user stop wayfire-session.target"
+  "systemctl --user start wayfire-session.target"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.systemd.variables"><a class="header" href="#opt-wayland.windowManager.wayfire.systemd.variables">wayland.windowManager.wayfire.systemd.variables</a></h2>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "DISPLAY"
+  "WAYLAND_DISPLAY"
+  "XDG_CURRENT_DESKTOP"
+  "NIXOS_OZONE_WL"
+  "XCURSOR_THEME"
+  "XCURSOR_SIZE"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "-all"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.wf-shell.enable"><a class="header" href="#opt-wayland.windowManager.wayfire.wf-shell.enable">wayland.windowManager.wayfire.wf-shell.enable</a></h2>
+<p>Whether to enable Manage wf-shell Configuration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.wf-shell.package"><a class="header" href="#opt-wayland.windowManager.wayfire.wf-shell.package">wayland.windowManager.wayfire.wf-shell.package</a></h2>
+<p>The wf-shell package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.wayfirePlugins.wf-shell
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.wf-shell.settings"><a class="header" href="#opt-wayland.windowManager.wayfire.wf-shell.settings">wayland.windowManager.wayfire.wf-shell.settings</a></h2>
+<p>Wf-shell configuration written in Nix.</p>
+<p>See <a href="https://github.com/WayfireWM/wf-shell/blob/master/wf-shell.ini.example">https://github.com/WayfireWM/wf-shell/blob/master/wf-shell.ini.example</a></p>
+<p><em>Type:</em>
+attribute set of attribute set of (string or absolute path or boolean or signed integer or floating point number)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  panel = {
+    autohide = true;
+    widgets_left = "menu spacing4 launchers window-list";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.wayfire.xwayland.enable"><a class="header" href="#opt-wayland.windowManager.wayfire.xwayland.enable">wayland.windowManager.wayfire.xwayland.enable</a></h2>
+<p>Whether to enable XWayland.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/wayfire.nix">&lt;home-manager/modules/services/window-managers/wayfire.nix&gt;</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../options/home-manager/vdirsyncer.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../options/home-manager/xdg.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../options/home-manager/vdirsyncer.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../options/home-manager/xdg.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

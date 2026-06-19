@@ -1,0 +1,1386 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>launchd - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="opt-launchd.enable"><a class="header" href="#opt-launchd.enable">launchd.enable</a></h2>
+<p>Whether to enable Home Manager to define per-user daemons by making use
+of launchd’s LaunchAgents.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.stdenv.hostPlatform.isDarwin
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents"><a class="header" href="#opt-launchd.agents">launchd.agents</a></h2>
+<p>Define LaunchAgents.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.enable"><a class="header" href="#opt-launchd.agents._name_.enable">launchd.agents.&lt;name&gt;.enable</a></h2>
+<p>Whether to enable ‹name›.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config"><a class="header" href="#opt-launchd.agents._name_.config">launchd.agents.&lt;name&gt;.config</a></h2>
+<p>Define a launchd job. See <code>launchd.plist(5)</code> for details.</p>
+<p><em>Type:</em>
+open submodule of attribute set of anything</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  ProgramArguments = [
+    "/usr/bin/say"
+    "Good afternoon"
+  ];
+  StartCalendarInterval = [
+    {
+      Hour = 12;
+      Minute = 0;
+    }
+  ];
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.AbandonProcessGroup"><a class="header" href="#opt-launchd.agents._name_.config.AbandonProcessGroup">launchd.agents.&lt;name&gt;.config.AbandonProcessGroup</a></h2>
+<p>When a job dies, launchd kills any remaining processes with the same process group ID as the job. Setting
+this key to true disables that behavior.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Debug"><a class="header" href="#opt-launchd.agents._name_.config.Debug">launchd.agents.&lt;name&gt;.config.Debug</a></h2>
+<p>This optional key specifies that launchd should adjust its log mask temporarily to LOG_DEBUG while
+dealing with this job.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Disabled"><a class="header" href="#opt-launchd.agents._name_.config.Disabled">launchd.agents.&lt;name&gt;.config.Disabled</a></h2>
+<p>This optional key is used as a hint to <code>launchctl(1)</code> that it should not submit this job to launchd when
+loading a job or jobs. The value of this key does NOT reflect the current state of the job on the running
+system. If you wish to know whether a job is loaded in launchd, reading this key from a configuration
+file yourself is not a sufficient test. You should query launchd for the presence of the job using
+the <code>launchctl(1)</code> list subcommand or use the ServiceManagement framework’s
+<code>SMJobCopyDictionary()</code> method.</p>
+<p>Note that as of Mac OS X v10.6, this key’s value in a configuration file conveys a default value, which
+is changed with the [-w] option of the <code>launchctl(1)</code> load and unload subcommands. These subcommands no
+longer modify the configuration file, so the value displayed in the configuration file is not necessarily
+the value that <code>launchctl(1)</code> will apply. See <code>launchctl(1)</code> for more information.</p>
+<p>Please also be mindful that you should only use this key if the provided on-demand and KeepAlive criteria
+are insufficient to describe the conditions under which your job needs to run. The cost to have a
+job loaded in launchd is negligible, so there is no harm in loading a job which only runs once or very
+rarely.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.EnableGlobbing"><a class="header" href="#opt-launchd.agents._name_.config.EnableGlobbing">launchd.agents.&lt;name&gt;.config.EnableGlobbing</a></h2>
+<p>This flag causes launchd to use the <code>glob(3)</code> mechanism to update the program arguments before invocation.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.EnableTransactions"><a class="header" href="#opt-launchd.agents._name_.config.EnableTransactions">launchd.agents.&lt;name&gt;.config.EnableTransactions</a></h2>
+<p>This flag instructs launchd that the job promises to use <code>vproc_transaction_begin(3)</code> and
+<code>vproc_transaction_end(3)</code> to track outstanding transactions that need to be reconciled before the
+process can safely terminate. If no outstanding transactions are in progress, then launchd is free to
+send the SIGKILL signal.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.EnvironmentVariables"><a class="header" href="#opt-launchd.agents._name_.config.EnvironmentVariables">launchd.agents.&lt;name&gt;.config.EnvironmentVariables</a></h2>
+<p>This optional key is used to specify additional environment variables to be set before running the
+job.</p>
+<p><em>Type:</em>
+null or (attribute set of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.ExitTimeOut"><a class="header" href="#opt-launchd.agents._name_.config.ExitTimeOut">launchd.agents.&lt;name&gt;.config.ExitTimeOut</a></h2>
+<p>The amount of time launchd waits before sending a SIGKILL signal. The default value is 20 seconds. The
+value zero is interpreted as infinity.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.GroupName"><a class="header" href="#opt-launchd.agents._name_.config.GroupName">launchd.agents.&lt;name&gt;.config.GroupName</a></h2>
+<p>This optional key specifies the group to run the job as. This key is only applicable when launchd is
+running as root. If UserName is set and GroupName is not, the the group will be set to the default
+group of the user.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits">launchd.agents.&lt;name&gt;.config.HardResourceLimits</a></h2>
+<p>Resource limits to be imposed on the job. These adjust variables set with <code>setrlimit(2)</code>.  The following
+keys apply:</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  NumberOfFiles = 4096;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.CPU"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.CPU">launchd.agents.&lt;name&gt;.config.HardResourceLimits.CPU</a></h2>
+<p>The maximum amount of cpu time (in seconds) to be used by each process.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.Core"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.Core">launchd.agents.&lt;name&gt;.config.HardResourceLimits.Core</a></h2>
+<p>The largest size (in bytes) core file that may be created.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.Data"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.Data">launchd.agents.&lt;name&gt;.config.HardResourceLimits.Data</a></h2>
+<p>The maximum size (in bytes) of the data segment for a process; this defines how far a program may
+extend its break with the <code>sbrk(2)</code> system call.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.FileSize"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.FileSize">launchd.agents.&lt;name&gt;.config.HardResourceLimits.FileSize</a></h2>
+<p>The largest size (in bytes) file that may be created.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.MemoryLock"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.MemoryLock">launchd.agents.&lt;name&gt;.config.HardResourceLimits.MemoryLock</a></h2>
+<p>The maximum size (in bytes) which a process may lock into memory using the <code>mlock(2)</code> function.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.NumberOfFiles"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.NumberOfFiles">launchd.agents.&lt;name&gt;.config.HardResourceLimits.NumberOfFiles</a></h2>
+<p>The maximum number of open files for this process.  Setting this value in a system wide daemon
+will set the <code>sysctl(3)</code> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+value in addition to the <code>setrlimit(2)</code> values.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.NumberOfProcesses"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.NumberOfProcesses">launchd.agents.&lt;name&gt;.config.HardResourceLimits.NumberOfProcesses</a></h2>
+<p>The maximum number of simultaneous processes for this user id.  Setting this value in a system
+wide daemon will set the <code>sysctl(3)</code> kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
+(HardResourceLimits) value in addition to the <code>setrlimit(2)</code> values.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.ResidentSetSize"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.ResidentSetSize">launchd.agents.&lt;name&gt;.config.HardResourceLimits.ResidentSetSize</a></h2>
+<p>The maximum size (in bytes) to which a process’s resident set size may grow.  This imposes a
+limit on the amount of physical memory to be given to a process; if memory is tight, the system
+will prefer to take memory from processes that are exceeding their declared resident set size.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.HardResourceLimits.Stack"><a class="header" href="#opt-launchd.agents._name_.config.HardResourceLimits.Stack">launchd.agents.&lt;name&gt;.config.HardResourceLimits.Stack</a></h2>
+<p>The maximum size (in bytes) of the stack segment for a process; this defines how far a program’s
+stack segment may be extended.  Stack extension is performed automatically by the system.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.InitGroups"><a class="header" href="#opt-launchd.agents._name_.config.InitGroups">launchd.agents.&lt;name&gt;.config.InitGroups</a></h2>
+<p>This optional key specifies whether <code>initgroups(3)</code> should be called before running the job.  The default
+is true in 10.5 and false in 10.4. This key will be ignored if the UserName key is not set.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive">launchd.agents.&lt;name&gt;.config.KeepAlive</a></h2>
+<p>This optional key is used to control whether your job is to be kept continuously running or to let
+demand and conditions control the invocation. The default is false and therefore only demand will start
+the job. The value may be set to true to unconditionally keep the job alive. Alternatively, a dictionary
+of conditions may be specified to selectively control whether launchd keeps a job alive or not. If
+multiple keys are provided, launchd ORs them, thus providing maximum flexibility to the job to refine
+the logic and stall if necessary. If launchd finds no reason to restart the job, it falls back on
+demand based invocation.  Jobs that exit quickly and frequently when configured to be kept alive will
+be throttled to conserve system resources.</p>
+<p><em>Type:</em>
+null or boolean or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive.AfterInitialDemand"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive.AfterInitialDemand">launchd.agents.&lt;name&gt;.config.KeepAlive.AfterInitialDemand</a></h2>
+<p>Whether to defer evaluating other <code>KeepAlive</code> conditions until
+the job has been started at least once by demand.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive.Crashed"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive.Crashed">launchd.agents.&lt;name&gt;.config.KeepAlive.Crashed</a></h2>
+<p>If true, the the job will be restarted as long as it exited due to a signal which is typically
+associated with a crash (SIGILL, SIGSEGV, etc.). If false, the job will be restarted in the
+inverse condition.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive.NetworkState"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive.NetworkState">launchd.agents.&lt;name&gt;.config.KeepAlive.NetworkState</a></h2>
+<p>If true, the job will be kept alive as long as the network is up, where up is defined as at least
+one non-loopback interface being up and having IPv4 or IPv6 addresses assigned to them.  If
+false, the job will be kept alive in the inverse condition.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive.OtherJobEnabled"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive.OtherJobEnabled">launchd.agents.&lt;name&gt;.config.KeepAlive.OtherJobEnabled</a></h2>
+<p>Each key in this dictionary is the label of another job. If the value of the key is true, then
+this job is kept alive as long as that other job is enabled. Otherwise, if the value is false,
+then this job is kept alive as long as the other job is disabled.  This feature should not be
+considered a substitute for the use of IPC.</p>
+<p><em>Type:</em>
+null or (attribute set of boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive.PathState"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive.PathState">launchd.agents.&lt;name&gt;.config.KeepAlive.PathState</a></h2>
+<p>Each key in this dictionary is a file-system path. If the value of the key is true, then the job
+will be kept alive as long as the path exists.  If false, the job will be kept alive in the
+inverse condition. The intent of this feature is that two or more jobs may create semaphores in
+the file-system namespace.</p>
+<p><em>Type:</em>
+null or (attribute set of boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.KeepAlive.SuccessfulExit"><a class="header" href="#opt-launchd.agents._name_.config.KeepAlive.SuccessfulExit">launchd.agents.&lt;name&gt;.config.KeepAlive.SuccessfulExit</a></h2>
+<p>If true, the job will be restarted as long as the program exits and with an exit status of zero.
+If false, the job will be restarted in the inverse condition.  This key implies that “RunAtLoad”
+is set to true, since the job needs to run at least once before we can get an exit status.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.Label"><a class="header" href="#opt-launchd.agents._name_.config.Label">launchd.agents.&lt;name&gt;.config.Label</a></h2>
+<p>This required key uniquely identifies the job to launchd.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LaunchEvents"><a class="header" href="#opt-launchd.agents._name_.config.LaunchEvents">launchd.agents.&lt;name&gt;.config.LaunchEvents</a></h2>
+<p>Specifies higher-level event types to be used as launch-on-demand event
+sources.  Each sub-dictionary defines events for a particular event
+subsystem, such as “com.apple.iokit.matching”, which can be used to
+launch jobs based on the appearance of nodes in the IORegistry. Each
+dictionary within the sub-dictionary specifies an event descriptor that
+is specified to each event subsystem. With this key, the job promises to
+use the xpc_set_event_stream_handler(3) API to consume events. See
+xpc_events(3) for more details on event sources.</p>
+<p><em>Type:</em>
+null or (attribute set)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "com.apple.iokit.matching" = {
+    "com.apple.usb.device" = {
+      IOMatchLaunchStream = true;
+      IOProviderClass = "IOUSBDevice";
+      idProduct = "*";
+      idVendor = "*";
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LaunchOnlyOnce"><a class="header" href="#opt-launchd.agents._name_.config.LaunchOnlyOnce">launchd.agents.&lt;name&gt;.config.LaunchOnlyOnce</a></h2>
+<p>This optional key specifies whether the job can only be run once and only once.  In other words, if the
+job cannot be safely respawned without a full machine reboot, then set this key to be true.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LimitLoadFromHosts"><a class="header" href="#opt-launchd.agents._name_.config.LimitLoadFromHosts">launchd.agents.&lt;name&gt;.config.LimitLoadFromHosts</a></h2>
+<p>This configuration file only applies to hosts NOT listed with this key. Note: One should set kern.hostname
+in <code>sysctl.conf(5)</code> for this feature to work reliably.</p>
+<p><em>Type:</em>
+null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LimitLoadToHosts"><a class="header" href="#opt-launchd.agents._name_.config.LimitLoadToHosts">launchd.agents.&lt;name&gt;.config.LimitLoadToHosts</a></h2>
+<p>This configuration file only applies to the hosts listed with this key. Note: One should set kern.hostname
+in <code>sysctl.conf(5)</code> for this feature to work reliably.</p>
+<p><em>Type:</em>
+null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LimitLoadToSessionType"><a class="header" href="#opt-launchd.agents._name_.config.LimitLoadToSessionType">launchd.agents.&lt;name&gt;.config.LimitLoadToSessionType</a></h2>
+<p>This configuration file only applies to sessions of the type specified. This key is used in concert
+with the -S flag to <code>launchctl</code>.</p>
+<p><em>Type:</em>
+null or string or list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LowPriorityBackgroundIO"><a class="header" href="#opt-launchd.agents._name_.config.LowPriorityBackgroundIO">launchd.agents.&lt;name&gt;.config.LowPriorityBackgroundIO</a></h2>
+<p>This optional key specifies whether the kernel should consider this daemon to be low priority when
+doing file system I/O when the process is throttled with the Darwin-background classification.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.LowPriorityIO"><a class="header" href="#opt-launchd.agents._name_.config.LowPriorityIO">launchd.agents.&lt;name&gt;.config.LowPriorityIO</a></h2>
+<p>This optional key specifies whether the kernel should consider this daemon to be low priority when
+doing file system I/O.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.MachServices"><a class="header" href="#opt-launchd.agents._name_.config.MachServices">launchd.agents.&lt;name&gt;.config.MachServices</a></h2>
+<p>This optional key is used to specify Mach services to be registered with the Mach bootstrap sub-system.
+Each key in this dictionary should be the name of service to be advertised. The value of the key must
+be a boolean and set to true.  Alternatively, a dictionary can be used instead of a simple true value.</p>
+<p>Finally, for the job itself, the values will be replaced with Mach ports at the time of check-in with
+launchd.</p>
+<p><em>Type:</em>
+null or (attribute set of (boolean or (submodule)))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "org.nixos.service" = {
+    ResetAtClose = true;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.MachServices._name_.HideUntilCheckIn"><a class="header" href="#opt-launchd.agents._name_.config.MachServices._name_.HideUntilCheckIn">launchd.agents.&lt;name&gt;.config.MachServices.&lt;name&gt;.HideUntilCheckIn</a></h2>
+<p>Reserve the name in the namespace, but cause bootstrap_look_up() to fail until the job has
+checked in with launchd.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.MachServices._name_.ResetAtClose"><a class="header" href="#opt-launchd.agents._name_.config.MachServices._name_.ResetAtClose">launchd.agents.&lt;name&gt;.config.MachServices.&lt;name&gt;.ResetAtClose</a></h2>
+<p>If this boolean is false, the port is recycled, thus leaving clients to remain oblivious to the
+demand nature of job. If the value is set to true, clients receive port death notifications when
+the job lets go of the receive right. The port will be recreated atomically with respect to bootstrap_look_up()
+calls, so that clients can trust that after receiving a port death notification,
+the new port will have already been recreated. Setting the value to true should be done with
+care. Not all clients may be able to handle this behavior. The default value is false.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<h2 id="opt-launchd.agents._name_.config.Nice"><a class="header" href="#opt-launchd.agents._name_.config.Nice">launchd.agents.&lt;name&gt;.config.Nice</a></h2>
+<p>This optional key specifies what nice(3) value should be applied to the daemon.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.OnDemand"><a class="header" href="#opt-launchd.agents._name_.config.OnDemand">launchd.agents.&lt;name&gt;.config.OnDemand</a></h2>
+<p>This key was used in Mac OS X 10.4 to control whether a job was kept alive or not. The default was
+true.  This key has been deprecated and replaced in Mac OS X 10.5 and later with the more powerful
+KeepAlive option.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.ProcessType"><a class="header" href="#opt-launchd.agents._name_.config.ProcessType">launchd.agents.&lt;name&gt;.config.ProcessType</a></h2>
+<p>This optional key describes, at a high level, the intended purpose of the job.  The system will apply
+resource limits based on what kind of job it is. If left unspecified, the system will apply light
+resource limits to the job, throttling its CPU usage and I/O bandwidth. The following are valid values:</p>
+<ul>
+<li>
+<p><em>‌Background‌</em></p>
+<p>Background jobs are generally processes that do work that was not directly requested by the user.
+The resource limits applied to Background jobs are intended to prevent them from disrupting the
+user experience.</p>
+</li>
+<li>
+<p><em>‌Standard‌</em></p>
+<p>Standard jobs are equivalent to no ProcessType being set.</p>
+</li>
+<li>
+<p><em>‌Adaptive‌</em></p>
+<p>Adaptive jobs move between the Background and Interactive classifications based on activity over
+XPC connections. See <code>xpc_transaction_begin(3)</code> for details.</p>
+</li>
+<li>
+<p><em>‌Interactive‌</em></p>
+<p>Interactive jobs run with the same resource limitations as apps, that is to say, none. Interactive
+jobs are critical to maintaining a responsive user experience, and this key should only be
+used if an app’s ability to be responsive depends on it, and cannot be made Adaptive.</p>
+</li>
+</ul>
+<p><em>Type:</em>
+null or one of “Background”, “Standard”, “Adaptive”, “Interactive”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Background"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Program"><a class="header" href="#opt-launchd.agents._name_.config.Program">launchd.agents.&lt;name&gt;.config.Program</a></h2>
+<p>This key maps to the first argument of <code>execvp(3)</code>.  If this key is missing, then the first element of
+the array of strings provided to the ProgramArguments will be used instead.  This key is required in
+the absence of the ProgramArguments key.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.ProgramArguments"><a class="header" href="#opt-launchd.agents._name_.config.ProgramArguments">launchd.agents.&lt;name&gt;.config.ProgramArguments</a></h2>
+<p>This key maps to the second argument of <code>execvp(3)</code>.  This key is required in the absence of the Program
+key. Please note: many people are confused by this key. Please read <code>execvp(3)</code> very carefully!</p>
+<p><em>Type:</em>
+null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.QueueDirectories"><a class="header" href="#opt-launchd.agents._name_.config.QueueDirectories">launchd.agents.&lt;name&gt;.config.QueueDirectories</a></h2>
+<p>Much like the WatchPaths option, this key will watch the paths for modifications. The difference being
+that the job will only be started if the path is a directory and the directory is not empty.</p>
+<p><em>Type:</em>
+null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.RootDirectory"><a class="header" href="#opt-launchd.agents._name_.config.RootDirectory">launchd.agents.&lt;name&gt;.config.RootDirectory</a></h2>
+<p>This optional key is used to specify a directory to <code>chroot(2)</code> to before running the job.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.RunAtLoad"><a class="header" href="#opt-launchd.agents._name_.config.RunAtLoad">launchd.agents.&lt;name&gt;.config.RunAtLoad</a></h2>
+<p>This optional key is used to control whether your job is launched once at the time the job is loaded.
+The default is false.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.ServiceIPC"><a class="header" href="#opt-launchd.agents._name_.config.ServiceIPC">launchd.agents.&lt;name&gt;.config.ServiceIPC</a></h2>
+<p>This optional key specifies whether the job participates in advanced
+communication with launchd. The default is false. This flag is
+incompatible with the inetdCompatibility key.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SessionCreate"><a class="header" href="#opt-launchd.agents._name_.config.SessionCreate">launchd.agents.&lt;name&gt;.config.SessionCreate</a></h2>
+<p>This key specifies that the job should be spawned into a new security
+audit session rather than the default session for the context is belongs
+to. See auditon(2) for details.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets"><a class="header" href="#opt-launchd.agents._name_.config.Sockets">launchd.agents.&lt;name&gt;.config.Sockets</a></h2>
+<p>This optional key is used to specify launch on demand sockets that can be used to let launchd know when
+to run the job. The job must check-in to get a copy of the file descriptors using APIs outlined in
+launch(3).  The keys of the top level Sockets dictionary can be anything. They are meant for the application
+developer to use to differentiate which descriptors correspond to which application level protocols
+(e.g. http vs. ftp vs. DNS…).  At check-in time, the value of each Sockets dictionary key will
+be an array of descriptors. Daemon/Agent writers should consider all descriptors of a given key to be
+to be effectively equivalent, even though each file descriptor likely represents a different networking
+protocol which conforms to the criteria specified in the job configuration file.</p>
+<p>The parameters below are used as inputs to call <code>getaddrinfo(3)</code>.</p>
+<p><em>Type:</em>
+null or (attribute set of (submodule))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.Bonjour"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.Bonjour">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.Bonjour</a></h2>
+<p>This optional key can be used to request that the service be registered with the
+<code>mDNSResponder(8)</code>.  If the value is boolean, the service name is inferred from the SockServiceName.</p>
+<p><em>Type:</em>
+null or boolean or list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.MulticastGroup"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.MulticastGroup">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.MulticastGroup</a></h2>
+<p>This optional key can be used to request that the datagram socket join a multicast group.  If the
+value is a hostname, then <code>getaddrinfo(3)</code> will be used to join the correct multicast address for a
+given socket family.  If an explicit IPv4 or IPv6 address is given, it is required that the SockFamily
+family also be set, otherwise the results are undefined.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SecureSocketWithKey"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SecureSocketWithKey">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SecureSocketWithKey</a></h2>
+<p>This optional key is a variant of SockPathName. Instead of binding to a known path, a securely
+generated socket is created and the path is assigned to the environment variable that is inherited
+by all jobs spawned by launchd.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockFamily"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockFamily">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockFamily</a></h2>
+<p>This optional key can be used to specifically request that “IPv4” or “IPv6” socket(s) be created.</p>
+<p><em>Type:</em>
+null or one of “IPv4”, “IPv6”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockNodeName"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockNodeName">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockNodeName</a></h2>
+<p>This optional key specifies the node to <code>connect(2)</code> or <code>bind(2)</code> to.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockPassive"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockPassive">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockPassive</a></h2>
+<p>This optional key specifies whether <code>listen(2)</code> or <code>connect(2)</code> should be called on the created file
+descriptor. The default is true (“to listen”).</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockPathMode"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockPathMode">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockPathMode</a></h2>
+<p>This optional key specifies the mode of the socket. Known bug: Property lists don’t support
+octal, so please convert the value to decimal.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockPathName"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockPathName">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockPathName</a></h2>
+<p>This optional key implies SockFamily is set to “Unix”. It specifies the path to <code>connect(2)</code> or
+<code>bind(2)</code> to.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockProtocol"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockProtocol">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockProtocol</a></h2>
+<p>This optional key specifies the protocol to be passed to <code>socket(2)</code>.  The only value understood by
+this key at the moment is “TCP”.</p>
+<p><em>Type:</em>
+null or value “TCP” (singular enum)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockServiceName"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockServiceName">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockServiceName</a></h2>
+<p>This optional key specifies the service on the node to <code>connect(2)</code> or <code>bind(2)</code> to.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Sockets._name_.SockType"><a class="header" href="#opt-launchd.agents._name_.config.Sockets._name_.SockType">launchd.agents.&lt;name&gt;.config.Sockets.&lt;name&gt;.SockType</a></h2>
+<p>This optional key tells launchctl what type of socket to create. The default is “stream” and
+other valid values for this key are “dgram” and “seqpacket” respectively.</p>
+<p><em>Type:</em>
+null or one of “stream”, “dgram”, “seqpacket”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits">launchd.agents.&lt;name&gt;.config.SoftResourceLimits</a></h2>
+<p>Resource limits to be imposed on the job. These adjust variables set with <code>setrlimit(2)</code>.  The following
+keys apply:</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.CPU"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.CPU">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.CPU</a></h2>
+<p>The maximum amount of cpu time (in seconds) to be used by each process.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.Core"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.Core">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.Core</a></h2>
+<p>The largest size (in bytes) core file that may be created.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.Data"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.Data">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.Data</a></h2>
+<p>The maximum size (in bytes) of the data segment for a process; this defines how far a program may
+extend its break with the <code>sbrk(2)</code> system call.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.FileSize"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.FileSize">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.FileSize</a></h2>
+<p>The largest size (in bytes) file that may be created.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.MemoryLock"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.MemoryLock">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.MemoryLock</a></h2>
+<p>The maximum size (in bytes) which a process may lock into memory using the mlock(2) function.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.NumberOfFiles"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.NumberOfFiles">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.NumberOfFiles</a></h2>
+<p>The maximum number of open files for this process.  Setting this value in a system wide daemon
+will set the <code>sysctl(3)</code> kern.maxfiles (SoftResourceLimits) or kern.maxfilesperproc (HardResourceLimits)
+value in addition to the <code>setrlimit(2)</code> values.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.NumberOfProcesses"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.NumberOfProcesses">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.NumberOfProcesses</a></h2>
+<p>The maximum number of simultaneous processes for this user id.  Setting this value in a system
+wide daemon will set the <code>sysctl(3)</code> kern.maxproc (SoftResourceLimits) or kern.maxprocperuid
+(HardResourceLimits) value in addition to the <code>setrlimit(2)</code> values.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.ResidentSetSize"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.ResidentSetSize">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.ResidentSetSize</a></h2>
+<p>The maximum size (in bytes) to which a process’s resident set size may grow.  This imposes a
+limit on the amount of physical memory to be given to a process; if memory is tight, the system
+will prefer to take memory from processes that are exceeding their declared resident set size.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.SoftResourceLimits.Stack"><a class="header" href="#opt-launchd.agents._name_.config.SoftResourceLimits.Stack">launchd.agents.&lt;name&gt;.config.SoftResourceLimits.Stack</a></h2>
+<p>The maximum size (in bytes) of the stack segment for a process; this defines how far a program’s
+stack segment may be extended.  Stack extension is performed automatically by the system.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.StandardErrorPath"><a class="header" href="#opt-launchd.agents._name_.config.StandardErrorPath">launchd.agents.&lt;name&gt;.config.StandardErrorPath</a></h2>
+<p>This optional key specifies what file should be used for data being sent to stderr when using <code>stdio(3)</code>.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.StandardInPath"><a class="header" href="#opt-launchd.agents._name_.config.StandardInPath">launchd.agents.&lt;name&gt;.config.StandardInPath</a></h2>
+<p>This optional key specifies what file should be used for data being supplied to stdin when using
+<code>stdio(3)</code>.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.StandardOutPath"><a class="header" href="#opt-launchd.agents._name_.config.StandardOutPath">launchd.agents.&lt;name&gt;.config.StandardOutPath</a></h2>
+<p>This optional key specifies what file should be used for data being sent to stdout when using <code>stdio(3)</code>.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.StartCalendarInterval"><a class="header" href="#opt-launchd.agents._name_.config.StartCalendarInterval">launchd.agents.&lt;name&gt;.config.StartCalendarInterval</a></h2>
+<p>This optional key causes the job to be started every calendar interval as specified. The semantics are
+much like <code>crontab(5)</code>: Missing attributes are considered to be wildcard. Unlike cron which skips
+job invocations when the computer is asleep, launchd will start the job the next time the computer wakes
+up.  If multiple intervals transpire before the computer is woken, those events will be coalesced into
+one event upon waking from sleep.</p>
+<p><strong>Important:</strong> The list must not be empty and must not contain duplicate entries (attrsets which compare equally).</p>
+<p><strong>Caution:</strong> Since missing attrs become wildcards, an empty attrset effectively means “every minute”.</p>
+<p><em>Type:</em>
+null or (submodule) or unique (non-empty (list of (submodule)))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    Hour = 2;
+    Minute = 30;
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.StartInterval"><a class="header" href="#opt-launchd.agents._name_.config.StartInterval">launchd.agents.&lt;name&gt;.config.StartInterval</a></h2>
+<p>This optional key causes the job to be started every N seconds.  If the system is asleep, the job will
+be started the next time the computer wakes up.  If multiple intervals transpire before the computer is
+woken, those events will be coalesced into one event upon wake from sleep.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.StartOnMount"><a class="header" href="#opt-launchd.agents._name_.config.StartOnMount">launchd.agents.&lt;name&gt;.config.StartOnMount</a></h2>
+<p>This optional key causes the job to be started every time a filesystem is mounted.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.ThrottleInterval"><a class="header" href="#opt-launchd.agents._name_.config.ThrottleInterval">launchd.agents.&lt;name&gt;.config.ThrottleInterval</a></h2>
+<p>This key lets one override the default throttling policy imposed on jobs by launchd.  The value is in
+seconds, and by default, jobs will not be spawned more than once every 10 seconds.  The principle
+behind this is that jobs should linger around just in case they are needed again in the near future.
+This not only reduces the latency of responses, but it encourages developers to amortize the cost of
+program invocation.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.TimeOut"><a class="header" href="#opt-launchd.agents._name_.config.TimeOut">launchd.agents.&lt;name&gt;.config.TimeOut</a></h2>
+<p>The recommended idle time out (in seconds) to pass to the job. If no value is specified, a default time
+out will be supplied by launchd for use by the job at check in time.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.Umask"><a class="header" href="#opt-launchd.agents._name_.config.Umask">launchd.agents.&lt;name&gt;.config.Umask</a></h2>
+<p>This optional key specifies what value should be passed to <code>umask(2)</code> before running the job. Known bug:
+Property lists don’t support octal, so please convert the value to decimal.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.UserName"><a class="header" href="#opt-launchd.agents._name_.config.UserName">launchd.agents.&lt;name&gt;.config.UserName</a></h2>
+<p>This optional key specifies the user to run the job as. This key is only applicable when launchd is
+running as root.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.WaitForDebugger"><a class="header" href="#opt-launchd.agents._name_.config.WaitForDebugger">launchd.agents.&lt;name&gt;.config.WaitForDebugger</a></h2>
+<p>This optional key specifies that launchd should instruct the kernel to have the job wait for a debugger
+to attach before any code in the job is executed.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.WatchPaths"><a class="header" href="#opt-launchd.agents._name_.config.WatchPaths">launchd.agents.&lt;name&gt;.config.WatchPaths</a></h2>
+<p>This optional key causes the job to be started if any one of the listed paths are modified.</p>
+<p><em>Type:</em>
+null or (list of absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.WorkingDirectory"><a class="header" href="#opt-launchd.agents._name_.config.WorkingDirectory">launchd.agents.&lt;name&gt;.config.WorkingDirectory</a></h2>
+<p>This optional key is used to specify a directory to <code>chdir(2)</code> to before running the job.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.inetdCompatibility"><a class="header" href="#opt-launchd.agents._name_.config.inetdCompatibility">launchd.agents.&lt;name&gt;.config.inetdCompatibility</a></h2>
+<p>The presence of this key specifies that the daemon expects to be run as if it were launched from inetd.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Wait = true;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.config.inetdCompatibility.Wait"><a class="header" href="#opt-launchd.agents._name_.config.inetdCompatibility.Wait">launchd.agents.&lt;name&gt;.config.inetdCompatibility.Wait</a></h2>
+<p>This flag corresponds to the “wait” or “nowait” option of inetd. If true, then the listening
+socket is passed via the standard in/out/error file descriptors. If false, then <code>accept(2)</code> is
+called on behalf of the job, and the result is passed via the standard in/out/error descriptors.</p>
+<p><em>Type:</em>
+null or boolean or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../options/home-manager/i18n.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../options/home-manager/lib.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../options/home-manager/i18n.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../options/home-manager/lib.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Option Types - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <p><a id="sec-option-types"></a></p>
+<h1 id="option-types"><a class="header" href="#option-types">Option Types</a></h1>
+<p>Overall the basic option types are the same in Home Manager as NixOS. A
+few Home Manager options, however, make use of custom types that are
+worth describing in more detail. These are the option types <code>dagOf</code> and
+<code>gvariant</code> that are used, for example, by
+<a href="../options/home-manager/programs/ssh.html#opt-programs.ssh.settings">programs.ssh.settings</a> and <a href="../options/home-manager/dconf.html#opt-dconf.settings">dconf.settings</a>.</p>
+<dl>
+<dt id="hmtypesdagof"><a class="header" href="#hmtypesdagof"><a id="sec-option-types-dag"></a><code>hm.types.dagOf</code></a></dt>
+<dd>
+<p>Options of this type have attribute sets as values where each member
+is a node in a <a href="https://en.wikipedia.org/w/index.php?title=Directed_acyclic_graph&amp;oldid=939656095">directed acyclic
+graph</a>
+(DAG). This allows the attribute set entries to express dependency
+relations among themselves. This can, for example, be used to
+control the order of match blocks in a OpenSSH client configuration
+or the order of activation script blocks in
+<a href="../options/home-manager/home.html#opt-home.activation">home.activation</a>.</p>
+<p>A number of functions are provided to create DAG nodes. The
+functions are shown below with examples using an option <code>foo.bar</code> of
+type <code>hm.types.dagOf types.int</code>.</p>
+<dl>
+<dt id="hmdagentryanywhere-value-t--dagentryt"><a class="header" href="#hmdagentryanywhere-value-t--dagentryt"><a id="sec-option-types-dag-entryAnywhere"></a><code>hm.dag.entryAnywhere (value: T) : DagEntry&lt;T&gt;</code></a></dt>
+<dd>
+<p>Indicates that <code>value</code> can be placed anywhere within the DAG.
+This is also the default for plain attribute set entries, that
+is</p>
+<pre><code class="language-nix">foo.bar = {
+  a = hm.dag.entryAnywhere 0;
+}
+</code></pre>
+<p>and</p>
+<pre><code class="language-nix">foo.bar = {
+  a = 0;
+}
+</code></pre>
+<p>are equivalent.</p>
+</dd>
+<dt id="hmdagentryafter-afters-list-string-value-t--dagentryt"><a class="header" href="#hmdagentryafter-afters-list-string-value-t--dagentryt"><a id="sec-option-types-dag-entryAfter"></a><code>hm.dag.entryAfter (afters: list string) (value: T) : DagEntry&lt;T&gt;</code></a></dt>
+<dd>
+<p>Indicates that <code>value</code> must be placed <em>after</em> each of the
+attribute names in the given list. For example</p>
+<pre><code class="language-nix">foo.bar = {
+  a = 0;
+  b = hm.dag.entryAfter [ "a" ] 1;
+}
+</code></pre>
+<p>would place <code>b</code> after <code>a</code> in the graph.</p>
+</dd>
+<dt id="hmdagentrybefore-befores-list-string-value-t--dagentryt"><a class="header" href="#hmdagentrybefore-befores-list-string-value-t--dagentryt"><a id="sec-option-types-dag-entryBefore"></a><code>hm.dag.entryBefore (befores: list string) (value: T) : DagEntry&lt;T&gt;</code></a></dt>
+<dd>
+<p>Indicates that <code>value</code> must be placed <em>before</em> each of the
+attribute names in the given list. For example</p>
+<pre><code class="language-nix">foo.bar = {
+  b = hm.dag.entryBefore [ "a" ] 1;
+  a = 0;
+}
+</code></pre>
+<p>would place <code>b</code> before <code>a</code> in the graph.</p>
+</dd>
+<dt id="hmdagentrybetween-befores-list-string-afters-list-string-value-t--dagentryt"><a class="header" href="#hmdagentrybetween-befores-list-string-afters-list-string-value-t--dagentryt"><a id="sec-option-types-dag-entryBetween"></a><code>hm.dag.entryBetween (befores: list string) (afters: list string) (value: T) : DagEntry&lt;T&gt;</code></a></dt>
+<dd>
+<p>Indicates that <code>value</code> must be placed <em>before</em> the attribute
+names in the first list and <em>after</em> the attribute names in the
+second list. For example</p>
+<pre><code class="language-nix">foo.bar = {
+  a = 0;
+  c = hm.dag.entryBetween [ "b" ] [ "a" ] 2;
+  b = 1;
+}
+</code></pre>
+<p>would place <code>c</code> before <code>b</code> and after <code>a</code> in the graph.</p>
+</dd>
+</dl>
+<p>There are also a set of functions that generate a DAG from a list.
+These are convenient when you just want to have a linear list of DAG
+entries, without having to manually enter the relationship between
+each entry. Each of these functions take a <code>tag</code> as argument and the
+DAG entries will be named <code>${tag}-${index}</code>.</p>
+<dl>
+<dt id="hmdagentriesanywhere-tag-string-values-t--dagt"><a class="header" href="#hmdagentriesanywhere-tag-string-values-t--dagt"><a id="sec-option-types-dag-entriesAnywhere"></a><code>hm.dag.entriesAnywhere (tag: string) (values: [T]) : Dag&lt;T&gt;</code></a></dt>
+<dd>
+<p>Creates a DAG with the given values with each entry labeled
+using the given tag. For example</p>
+<pre><code class="language-nix">foo.bar = hm.dag.entriesAnywhere "a" [ 0 1 ];
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = {
+  a-0 = 0;
+  a-1 = hm.dag.entryAfter [ "a-0" ] 1;
+}
+</code></pre>
+</dd>
+<dt id="hmdagentriesafter-tag-string-afters-list-string-values-t--dagt"><a class="header" href="#hmdagentriesafter-tag-string-afters-list-string-values-t--dagt"><a id="sec-option-types-dag-entriesAfter"></a><code>hm.dag.entriesAfter (tag: string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code></a></dt>
+<dd>
+<p>Creates a DAG with the given values with each entry labeled
+using the given tag. The list of values are placed are placed
+<em>after</em> each of the attribute names in <code>afters</code>. For example</p>
+<pre><code class="language-nix">foo.bar =
+  { b = 0; }
+  // hm.dag.entriesAfter "a" [ "b" ] [ 1 2 ];
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = {
+  b = 0;
+  a-0 = hm.dag.entryAfter [ "b" ] 1;
+  a-1 = hm.dag.entryAfter [ "a-0" ] 2;
+}
+</code></pre>
+</dd>
+<dt id="hmdagentriesbefore-tag-string-befores-list-string-values-t--dagt"><a class="header" href="#hmdagentriesbefore-tag-string-befores-list-string-values-t--dagt"><a id="sec-option-types-dag-entriesBefore"></a><code>hm.dag.entriesBefore (tag: string) (befores: list string) (values: [T]) : Dag&lt;T&gt;</code></a></dt>
+<dd>
+<p>Creates a DAG with the given values with each entry labeled
+using the given tag. The list of values are placed <em>before</em> each
+of the attribute names in <code>befores</code>. For example</p>
+<pre><code class="language-nix">foo.bar =
+  { b = 0; }
+  // hm.dag.entriesBefore "a" [ "b" ] [ 1 2 ];
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = {
+  b = 0;
+  a-0 = 1;
+  a-1 = hm.dag.entryBetween [ "b" ] [ "a-0" ] 2;
+}
+</code></pre>
+</dd>
+<dt id="hmdagentriesbetween-tag-string-befores-list-string-afters-list-string-values-t--dagt"><a class="header" href="#hmdagentriesbetween-tag-string-befores-list-string-afters-list-string-values-t--dagt"><a id="sec-option-types-dag-entriesBetween"></a><code>hm.dag.entriesBetween (tag: string) (befores: list string) (afters: list string) (values: [T]) : Dag&lt;T&gt;</code></a></dt>
+<dd>
+<p>Creates a DAG with the given values with each entry labeled
+using the given tag. The list of values are placed <em>before</em> each
+of the attribute names in <code>befores</code> and <em>after</em> each of the
+attribute names in <code>afters</code>. For example</p>
+<pre><code class="language-nix">foo.bar =
+  { b = 0; c = 3; }
+  // hm.dag.entriesBetween "a" [ "b" ] [ "c" ] [ 1 2 ];
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = {
+  b = 0;
+  c = 3;
+  a-0 = hm.dag.entryAfter [ "c" ] 1;
+  a-1 = hm.dag.entryBetween [ "b" ] [ "a-0" ] 2;
+}
+</code></pre>
+</dd>
+</dl>
+</dd>
+<dt id="hmtypesgvariant"><a class="header" href="#hmtypesgvariant"><a id="sec-option-types-gvariant"></a><code>hm.types.gvariant</code></a></dt>
+<dd>
+<p>This type is useful for options representing
+<a href="https://docs.gtk.org/glib/struct.Variant.html#description">GVariant</a>
+values. The type accepts all primitive GVariant types as well as
+arrays, tuples, “maybe” types, and dictionaries.</p>
+<p>Some Nix values are automatically coerced to matching GVariant value
+but the GVariant model is richer so you may need to use one of the
+provided constructor functions. Examples assume an option <code>foo.bar</code>
+of type <code>hm.types.gvariant</code>.</p>
+<dl>
+<dt id="hmgvariantmkboolean-v-bool"><a class="header" href="#hmgvariantmkboolean-v-bool"><a id="sec-option-types-gvariant-mkBoolean"></a><code>hm.gvariant.mkBoolean (v: bool)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>boolean</code> value (GVariant
+format string <code>b</code>). Note, Nix booleans are automatically coerced
+using this function. That is,</p>
+<pre><code class="language-nix">foo.bar = hm.gvariant.mkBoolean true;
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = true;
+</code></pre>
+</dd>
+<dt id="hmgvariantmkstring-v-string"><a class="header" href="#hmgvariantmkstring-v-string"><a id="sec-option-types-gvariant-mkString"></a><code>hm.gvariant.mkString (v: string)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>string</code> value (GVariant
+format string <code>s</code>). Note, Nix strings are automatically coerced
+using this function. That is,</p>
+<pre><code class="language-nix">foo.bar = hm.gvariant.mkString "a string";
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = "a string";
+</code></pre>
+</dd>
+<dt id="hmgvariantmkobjectpath-v-string"><a class="header" href="#hmgvariantmkobjectpath-v-string"><a id="sec-option-types-gvariant-mkObjectpath"></a><code>hm.gvariant.mkObjectpath (v: string)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>objectpath</code> value (GVariant
+format string <code>o</code>).</p>
+</dd>
+<dt id="hmgvariantmkuchar-v-string"><a class="header" href="#hmgvariantmkuchar-v-string"><a id="sec-option-types-gvariant-mkUchar"></a><code>hm.gvariant.mkUchar (v: string)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>uchar</code> value (GVariant
+format string <code>y</code>).</p>
+</dd>
+<dt id="hmgvariantmkint16-v-int"><a class="header" href="#hmgvariantmkint16-v-int"><a id="sec-option-types-gvariant-mkInt16"></a><code>hm.gvariant.mkInt16 (v: int)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>int16</code> value (GVariant
+format string <code>n</code>).</p>
+</dd>
+<dt id="hmgvariantmkuint16-v-int"><a class="header" href="#hmgvariantmkuint16-v-int"><a id="sec-option-types-gvariant-mkUint16"></a><code>hm.gvariant.mkUint16 (v: int)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>uint16</code> value (GVariant
+format string <code>q</code>).</p>
+</dd>
+<dt id="hmgvariantmkint32-v-int"><a class="header" href="#hmgvariantmkint32-v-int"><a id="sec-option-types-gvariant-mkInt32"></a><code>hm.gvariant.mkInt32 (v: int)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>int32</code> value (GVariant
+format string <code>i</code>). Note, Nix integers are automatically coerced
+using this function. That is,</p>
+<pre><code class="language-nix">foo.bar = hm.gvariant.mkInt32 7;
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = 7;
+</code></pre>
+</dd>
+<dt id="hmgvariantmkuint32-v-int"><a class="header" href="#hmgvariantmkuint32-v-int"><a id="sec-option-types-gvariant-mkUint32"></a><code>hm.gvariant.mkUint32 (v: int)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>uint32</code> value (GVariant
+format string <code>u</code>).</p>
+</dd>
+<dt id="hmgvariantmkint64-v-int"><a class="header" href="#hmgvariantmkint64-v-int"><a id="sec-option-types-gvariant-mkInt64"></a><code>hm.gvariant.mkInt64 (v: int)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>int64</code> value (GVariant
+format string <code>x</code>).</p>
+</dd>
+<dt id="hmgvariantmkuint64-v-int"><a class="header" href="#hmgvariantmkuint64-v-int"><a id="sec-option-types-gvariant-mkUint64"></a><code>hm.gvariant.mkUint64 (v: int)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>uint64</code> value (GVariant
+format string <code>t</code>).</p>
+</dd>
+<dt id="hmgvariantmkdouble-v-double"><a class="header" href="#hmgvariantmkdouble-v-double"><a id="sec-option-types-gvariant-mkDouble"></a><code>hm.gvariant.mkDouble (v: double)</code></a></dt>
+<dd>
+<p>Takes a Nix value <code>v</code> to a GVariant <code>double</code> value (GVariant
+format string <code>d</code>). Note, Nix floats are automatically coerced
+using this function. That is,</p>
+<pre><code class="language-nix">foo.bar = hm.gvariant.mkDouble 3.14;
+</code></pre>
+<p>is equivalent to</p>
+<pre><code class="language-nix">foo.bar = 3.14;
+</code></pre>
+</dd>
+<dt id="hmgvariantmkarray-type-elements"><a class="header" href="#hmgvariantmkarray-type-elements"><a id="sec-option-types-gvariant-mkArray"></a><code>hm.gvariant.mkArray type elements</code></a></dt>
+<dd>
+<p>Builds a GVariant array containing the given list of elements,
+where each element is a GVariant value of the given type
+(GVariant format string <code>a${type}</code>). The <code>type</code> value can be
+constructed using</p>
+<ul>
+<li>
+<p><code>hm.gvariant.type.string</code> (GVariant format string <code>s</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.boolean</code> (GVariant format string <code>b</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.uchar</code> (GVariant format string <code>y</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.int16</code> (GVariant format string <code>n</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.uint16</code> (GVariant format string <code>q</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.int32</code> (GVariant format string <code>i</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.uint32</code> (GVariant format string <code>u</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.int64</code> (GVariant format string <code>x</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.uint64</code> (GVariant format string <code>t</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.double</code> (GVariant format string <code>d</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.variant</code> (GVariant format string <code>v</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.arrayOf type</code> (GVariant format string
+<code>a${type}</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.maybeOf type</code> (GVariant format string
+<code>m${type}</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.tupleOf types</code> (GVariant format string
+<code>(${lib.concatStrings types})</code>)</p>
+</li>
+<li>
+<p><code>hm.gvariant.type.dictionaryEntryOf [keyType valueType]</code>
+(GVariant format string <code>{${keyType}${valueType}}</code>)</p>
+</li>
+</ul>
+<p>where <code>type</code> and <code>types</code> are themselves a type and list of
+types, respectively.</p>
+</dd>
+<dt id="hmgvariantmkemptyarray-type"><a class="header" href="#hmgvariantmkemptyarray-type"><a id="sec-option-types-gvariant-mkEmptyArray"></a><code>hm.gvariant.mkEmptyArray type</code></a></dt>
+<dd>
+<p>An alias of
+<a href="#sec-option-types-gvariant-mkArray"><code>hm.gvariant.mkArray type []</code></a>.</p>
+</dd>
+<dt id="hmgvariantmknothing-type"><a class="header" href="#hmgvariantmknothing-type"><a id="sec-option-types-gvariant-mkNothing"></a><code>hm.gvariant.mkNothing type</code></a></dt>
+<dd>
+<p>Builds a GVariant maybe value (GVariant format string
+<code>m${type}</code>) whose (non-existent) element is of the given type.
+The <code>type</code> value is constructed as described for the
+<a href="#sec-option-types-gvariant-mkArray"><code>mkArray</code></a> function above.</p>
+</dd>
+<dt id="hmgvariantmkjust-element"><a class="header" href="#hmgvariantmkjust-element"><a id="sec-option-types-gvariant-mkJust"></a><code>hm.gvariant.mkJust element</code></a></dt>
+<dd>
+<p>Builds a GVariant maybe value (GVariant format string
+<code>m${element.type}</code>) containing the given GVariant element.</p>
+</dd>
+<dt id="hmgvariantmktuple-elements"><a class="header" href="#hmgvariantmktuple-elements"><a id="sec-option-types-gvariant-mkTuple"></a><code>hm.gvariant.mkTuple elements</code></a></dt>
+<dd>
+<p>Builds a GVariant tuple containing the given list of elements,
+where each element is a GVariant value.</p>
+</dd>
+<dt id="hmgvariantmkvariant-element"><a class="header" href="#hmgvariantmkvariant-element"><a id="sec-option-types-gvariant-mkVariant"></a><code>hm.gvariant.mkVariant element</code></a></dt>
+<dd>
+<p>Builds a GVariant variant (GVariant format string <code>v</code>) which
+contains the value of a GVariant element.</p>
+</dd>
+<dt id="hmgvariantmkdictionaryentry-key-value"><a class="header" href="#hmgvariantmkdictionaryentry-key-value"><a id="sec-option-types-gvariant-mkDictionaryEntry"></a><code>hm.gvariant.mkDictionaryEntry [key value]</code></a></dt>
+<dd>
+<p>Builds a GVariant dictionary entry containing the given list of
+elements (GVariant format string <code>{${key.type}${value.type}}</code>),
+where each element is a GVariant value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../writing-modules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../contributing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../writing-modules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../contributing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

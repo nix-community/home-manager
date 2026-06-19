@@ -1,0 +1,2689 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>xsession - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="opt-xsession.enable"><a class="header" href="#opt-xsession.enable">xsession.enable</a></h2>
+<p>Whether to enable X Session.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.initExtra"><a class="header" href="#opt-xsession.initExtra">xsession.initExtra</a></h2>
+<p>Extra shell commands to run during initialization.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.numlock.enable"><a class="header" href="#opt-xsession.numlock.enable">xsession.numlock.enable</a></h2>
+<p>Whether to enable Num Lock.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/numlock.nix">&lt;home-manager/modules/misc/numlock.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.pointerCursor.package"><a class="header" href="#opt-xsession.pointerCursor.package">xsession.pointerCursor.package</a></h2>
+<p>Alias of <code>home.pointerCursor.package</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix">&lt;home-manager/modules/config/home-cursor.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.pointerCursor.defaultCursor"><a class="header" href="#opt-xsession.pointerCursor.defaultCursor">xsession.pointerCursor.defaultCursor</a></h2>
+<p>Alias of <code>home.pointerCursor.x11.defaultCursor</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix">&lt;home-manager/modules/config/home-cursor.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.pointerCursor.name"><a class="header" href="#opt-xsession.pointerCursor.name">xsession.pointerCursor.name</a></h2>
+<p>Alias of <code>home.pointerCursor.name</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix">&lt;home-manager/modules/config/home-cursor.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.pointerCursor.size"><a class="header" href="#opt-xsession.pointerCursor.size">xsession.pointerCursor.size</a></h2>
+<p>Alias of <code>home.pointerCursor.size</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/config/home-cursor.nix">&lt;home-manager/modules/config/home-cursor.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.preferStatusNotifierItems"><a class="header" href="#opt-xsession.preferStatusNotifierItems">xsession.preferStatusNotifierItems</a></h2>
+<p>Whether tray applets should prefer using the Status Notifier
+Items (SNI) protocol, commonly called App Indicators. Note,
+not all tray applets or status bars support SNI.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.profileExtra"><a class="header" href="#opt-xsession.profileExtra">xsession.profileExtra</a></h2>
+<p>Extra shell commands to run before session start.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.profilePath"><a class="header" href="#opt-xsession.profilePath">xsession.profilePath</a></h2>
+<p>Path, relative to <code>HOME</code>, where Home Manager
+should write the X profile script.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">".xprofile"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">".xprofile-hm"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.scriptPath"><a class="header" href="#opt-xsession.scriptPath">xsession.scriptPath</a></h2>
+<p>Path, relative to <code>HOME</code>, where Home Manager
+should write the X session script.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">".xsession"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">".xsession-hm"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.awesome.enable"><a class="header" href="#opt-xsession.windowManager.awesome.enable">xsession.windowManager.awesome.enable</a></h2>
+<p>Whether to enable Awesome window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/awesome.nix">&lt;home-manager/modules/services/window-managers/awesome.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.awesome.package"><a class="header" href="#opt-xsession.windowManager.awesome.package">xsession.windowManager.awesome.package</a></h2>
+<p>The awesome package to use. to use for running the Awesome WM</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.awesome
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/awesome.nix">&lt;home-manager/modules/services/window-managers/awesome.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.awesome.luaModules"><a class="header" href="#opt-xsession.windowManager.awesome.luaModules">xsession.windowManager.awesome.luaModules</a></h2>
+<p>List of lua packages available for being
+used in the Awesome configuration.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[ pkgs.luaPackages.vicious ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/awesome.nix">&lt;home-manager/modules/services/window-managers/awesome.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.awesome.noArgb"><a class="header" href="#opt-xsession.windowManager.awesome.noArgb">xsession.windowManager.awesome.noArgb</a></h2>
+<p>Disable client transparency support, which can be greatly
+detrimental to performance in some setups</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/awesome.nix">&lt;home-manager/modules/services/window-managers/awesome.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.enable"><a class="header" href="#opt-xsession.windowManager.bspwm.enable">xsession.windowManager.bspwm.enable</a></h2>
+<p>Whether to enable bspwm window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.package"><a class="header" href="#opt-xsession.windowManager.bspwm.package">xsession.windowManager.bspwm.package</a></h2>
+<p>The bspwm package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.bspwm
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.bspwm-unstable
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.alwaysResetDesktops"><a class="header" href="#opt-xsession.windowManager.bspwm.alwaysResetDesktops">xsession.windowManager.bspwm.alwaysResetDesktops</a></h2>
+<p>If set to <code>true</code>, desktops configured in <code>monitors</code> will be reset
+every time the config is run.</p>
+<p>If set to <code>false</code>, desktops will only be configured the first time the config is run.
+This is useful if you want to dynamically add desktops and you don’t want them to be destroyed if you
+re-run <code>bspwmrc</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.extraConfig"><a class="header" href="#opt-xsession.windowManager.bspwm.extraConfig">xsession.windowManager.bspwm.extraConfig</a></h2>
+<p>Additional shell commands to be run at the end of the config file.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  bspc subscribe all &gt; ~/bspc-report.log &amp;
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.extraConfigEarly"><a class="header" href="#opt-xsession.windowManager.bspwm.extraConfigEarly">xsession.windowManager.bspwm.extraConfigEarly</a></h2>
+<p>Like extraConfig, except commands are run at the start of the config file.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.monitors"><a class="header" href="#opt-xsession.windowManager.bspwm.monitors">xsession.windowManager.bspwm.monitors</a></h2>
+<p>Specifies the names of desktops to create on each monitor.</p>
+<p><em>Type:</em>
+attribute set of list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  HDMI-0 = [
+    "web"
+    "terminal"
+    "III"
+    "IV"
+  ];
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules"><a class="header" href="#opt-xsession.windowManager.bspwm.rules">xsession.windowManager.bspwm.rules</a></h2>
+<p>Rule configuration. The keys of the attribute set are the targets of the rules.</p>
+<p><em>Type:</em>
+attribute set of (open submodule of attribute set of (boolean or signed integer or floating point number or string))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Gimp = {
+    desktop = "^8";
+    follow = true;
+    state = "floating";
+  };
+  "Kupfer.py" = {
+    focus = true;
+  };
+  Screenkey = {
+    manage = false;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.border"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.border">xsession.windowManager.bspwm.rules.&lt;name&gt;.border</a></h2>
+<p>Whether the node should have border.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.center"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.center">xsession.windowManager.bspwm.rules.&lt;name&gt;.center</a></h2>
+<p>Whether the node will be put in the center, in floating mode.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.desktop"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.desktop">xsession.windowManager.bspwm.rules.&lt;name&gt;.desktop</a></h2>
+<p>The desktop where the rule should be applied.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"^8"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.focus"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.focus">xsession.windowManager.bspwm.rules.&lt;name&gt;.focus</a></h2>
+<p>Whether the node should gain focus on creation.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.follow"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.follow">xsession.windowManager.bspwm.rules.&lt;name&gt;.follow</a></h2>
+<p>Whether focus should follow the node when it is moved.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.hidden"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.hidden">xsession.windowManager.bspwm.rules.&lt;name&gt;.hidden</a></h2>
+<p>Whether the node should occupy any space.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.layer"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.layer">xsession.windowManager.bspwm.rules.&lt;name&gt;.layer</a></h2>
+<p>The layer where a new window should spawn.</p>
+<p><em>Type:</em>
+null or one of “below”, “normal”, “above”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"above"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.locked"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.locked">xsession.windowManager.bspwm.rules.&lt;name&gt;.locked</a></h2>
+<p>Whether the node should ignore <code>node --close</code>
+messages.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.manage"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.manage">xsession.windowManager.bspwm.rules.&lt;name&gt;.manage</a></h2>
+<p>Whether the window should be managed by bspwm. If false, the window
+will be ignored by bspwm entirely. This is useful for overlay apps,
+e.g. screenshot tools.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.marked"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.marked">xsession.windowManager.bspwm.rules.&lt;name&gt;.marked</a></h2>
+<p>Whether the node will be marked for deferred actions.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.monitor"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.monitor">xsession.windowManager.bspwm.rules.&lt;name&gt;.monitor</a></h2>
+<p>The monitor where the rule should be applied.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"HDMI-0"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.node"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.node">xsession.windowManager.bspwm.rules.&lt;name&gt;.node</a></h2>
+<p>The node where the rule should be applied.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"1"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.private"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.private">xsession.windowManager.bspwm.rules.&lt;name&gt;.private</a></h2>
+<p>Whether the node should stay in the same tiling position and size.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.rectangle"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.rectangle">xsession.windowManager.bspwm.rules.&lt;name&gt;.rectangle</a></h2>
+<p>The node’s geometry, in the format <code>WxH+X+Y</code>.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"800x600+32+32"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.splitDir"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.splitDir">xsession.windowManager.bspwm.rules.&lt;name&gt;.splitDir</a></h2>
+<p>The direction where the container is going to be split.</p>
+<p><em>Type:</em>
+null or one of “north”, “west”, “south”, “east”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"south"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.splitRatio"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.splitRatio">xsession.windowManager.bspwm.rules.&lt;name&gt;.splitRatio</a></h2>
+<p>The ratio between the new window and the previous existing window in
+the desktop.</p>
+<p><em>Type:</em>
+null or floating point number</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">0.65
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.state"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.state">xsession.windowManager.bspwm.rules.&lt;name&gt;.state</a></h2>
+<p>The state in which a new window should spawn.</p>
+<p><em>Type:</em>
+null or one of “tiled”, “pseudo_tiled”, “floating”, “fullscreen”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"floating"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.rules._name_.sticky"><a class="header" href="#opt-xsession.windowManager.bspwm.rules._name_.sticky">xsession.windowManager.bspwm.rules.&lt;name&gt;.sticky</a></h2>
+<p>Whether the node should stay on the focused desktop.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.settings"><a class="header" href="#opt-xsession.windowManager.bspwm.settings">xsession.windowManager.bspwm.settings</a></h2>
+<p>General settings given to <code>bspc config</code>.</p>
+<p><em>Type:</em>
+attribute set of (boolean or signed integer or floating point number or string or list of (boolean or signed integer or floating point number or string))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  border_width = 2;
+  gapless_monocle = true;
+  split_ratio = 0.52;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.bspwm.startupPrograms"><a class="header" href="#opt-xsession.windowManager.bspwm.startupPrograms">xsession.windowManager.bspwm.startupPrograms</a></h2>
+<p>Programs to be executed during startup.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "numlockx on"
+  "tilda"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/bspwm">&lt;home-manager/modules/services/window-managers/bspwm&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.command"><a class="header" href="#opt-xsession.windowManager.command">xsession.windowManager.command</a></h2>
+<p>Command to use to start the window manager.</p>
+<p>The default value allows integration with NixOS’ generated xserver configuration.</p>
+<p>Extra actions and commands can be specified in <code>xsession.initExtra</code>.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"test -n \"$1\" &amp;&amp; eval \"$@\""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">let
+  xmonad = pkgs.xmonad-with-packages.override {
+    packages = self: [ self.xmonad-contrib self.taffybar ];
+  };
+in
+  "${xmonad}/bin/xmonad";
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/xsession.nix">&lt;home-manager/modules/xsession.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.exwm.enable"><a class="header" href="#opt-xsession.windowManager.exwm.enable">xsession.windowManager.exwm.enable</a></h2>
+<p>Whether to enable exwm.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/exwm.nix">&lt;home-manager/modules/services/window-managers/exwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.exwm.package"><a class="header" href="#opt-xsession.windowManager.exwm.package">xsession.windowManager.exwm.package</a></h2>
+<p>The emacs package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.emacs
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.emacs-gtk
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/exwm.nix">&lt;home-manager/modules/services/window-managers/exwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.exwm.extraPackages"><a class="header" href="#opt-xsession.windowManager.exwm.extraPackages">xsession.windowManager.exwm.extraPackages</a></h2>
+<p>Extra packages available to Emacs. The value must be a
+function which receives the attrset defined in
+<code>emacs.pkgs</code> as the sole argument.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">epkgs: []
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">epkgs: [
+  epkgs.emms
+  epkgs.magit
+  epkgs.proof-general
+]
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/exwm.nix">&lt;home-manager/modules/services/window-managers/exwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.exwm.loadScript"><a class="header" href="#opt-xsession.windowManager.exwm.loadScript">xsession.windowManager.exwm.loadScript</a></h2>
+<p>Emacs lisp code to be run after loading the user’s init
+file.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"(require 'exwm)"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  (require 'exwm)
+  (exwm-enable)
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/exwm.nix">&lt;home-manager/modules/services/window-managers/exwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.enable"><a class="header" href="#opt-xsession.windowManager.fluxbox.enable">xsession.windowManager.fluxbox.enable</a></h2>
+<p>Whether to enable Fluxbox window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.package"><a class="header" href="#opt-xsession.windowManager.fluxbox.package">xsession.windowManager.fluxbox.package</a></h2>
+<p>The fluxbox package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.fluxbox
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.apps"><a class="header" href="#opt-xsession.windowManager.fluxbox.apps">xsession.windowManager.fluxbox.apps</a></h2>
+<p>Apps configuration for Fluxbox, written to
+<code>~/.fluxbox/apps</code>. Look at the
+<code>fluxbox(1)</code> manpage for details.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.extraCommandLineArgs"><a class="header" href="#opt-xsession.windowManager.fluxbox.extraCommandLineArgs">xsession.windowManager.fluxbox.extraCommandLineArgs</a></h2>
+<p>Extra command line arguments to pass to <code>fluxbox</code>.
+Look at the
+<code>fluxbox(1)</code> manpage for details.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "-log"
+  "/tmp/fluxbox.log"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.init"><a class="header" href="#opt-xsession.windowManager.fluxbox.init">xsession.windowManager.fluxbox.init</a></h2>
+<p>Init configuration for Fluxbox, written to
+<code>~/.fluxbox/init</code>. Look at the
+<code>fluxbox(1)</code> manpage for details.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.keys"><a class="header" href="#opt-xsession.windowManager.fluxbox.keys">xsession.windowManager.fluxbox.keys</a></h2>
+<p>Keyboard shortcuts configuration for Fluxbox, written to
+<code>~/.fluxbox/keys</code>. Look at the
+<code>fluxbox-keys(1)</code> manpage for details.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.menu"><a class="header" href="#opt-xsession.windowManager.fluxbox.menu">xsession.windowManager.fluxbox.menu</a></h2>
+<p>Menu configuration for Fluxbox, written to
+<code>~/.fluxbox/menu</code>. Look at the
+<code>fluxbox-menu(1)</code> manpage for details.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.slitlist"><a class="header" href="#opt-xsession.windowManager.fluxbox.slitlist">xsession.windowManager.fluxbox.slitlist</a></h2>
+<p>Slitlist configuration for Fluxbox, written to
+<code>~/.fluxbox/slitlist</code>. Look at the
+<code>fluxbox(1)</code> manpage for details.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.fluxbox.windowmenu"><a class="header" href="#opt-xsession.windowManager.fluxbox.windowmenu">xsession.windowManager.fluxbox.windowmenu</a></h2>
+<p>Window menu configuration for Fluxbox, written to
+<code>~/.fluxbox/windowmenu</code>. Look at the
+<code>fluxbox-menu(1)</code>
+manpage for details.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/fluxbox.nix">&lt;home-manager/modules/services/window-managers/fluxbox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.enable"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.enable">xsession.windowManager.herbstluftwm.enable</a></h2>
+<p>Whether to enable herbstluftwm window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.enableAlias"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.enableAlias">xsession.windowManager.herbstluftwm.enableAlias</a></h2>
+<p>Set an alias for the <code>herbstclient</code> command in the
+<code>autostart</code> script that only stores its arguments and executes
+them all at once at the end of the <code>autostart</code> script.</p>
+<p>This reduces the amount of flickering you get while all options are
+being applied and improves the performance.</p>
+<p>On the other hand, this makes it more difficult to write bash functions
+that call <code>herbstclient</code>. You can work around this by calling
+<code>command herbstclient</code> in your functions to still get some of
+the benefits of enabling this alias.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.package"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.package">xsession.windowManager.herbstluftwm.package</a></h2>
+<p>The herbstluftwm package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.herbstluftwm
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.extraConfig"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.extraConfig">xsession.windowManager.herbstluftwm.extraConfig</a></h2>
+<p>Extra configuration lines to add verbatim to
+<code>$XDG_CONFIG_HOME/herbstluftwm/autostart</code>.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  herbstclient set_layout max
+  herbstclient detect_monitors
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.keybinds"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.keybinds">xsession.windowManager.herbstluftwm.keybinds</a></h2>
+<p>Herbstluftwm keybinds.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Mod4-o = "split right";
+  Mod4-u = "split bottom";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.mousebinds"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.mousebinds">xsession.windowManager.herbstluftwm.mousebinds</a></h2>
+<p>Herbstluftwm mousebinds.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Mod4-B1 = "move";
+  Mod4-B3 = "resize";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.rules"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.rules">xsession.windowManager.herbstluftwm.rules</a></h2>
+<p>Herbstluftwm rules.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' focus=on pseudotile=on"
+  "windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.settings"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.settings">xsession.windowManager.herbstluftwm.settings</a></h2>
+<p>Herbstluftwm settings.</p>
+<p><em>Type:</em>
+attribute set of (boolean or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  gapless_grid = false;
+  window_border_width = 1;
+  window_border_active_color = "#FF0000";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.herbstluftwm.tags"><a class="header" href="#opt-xsession.windowManager.herbstluftwm.tags">xsession.windowManager.herbstluftwm.tags</a></h2>
+<p>Tags to create on startup.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "work"
+  "browser"
+  "music"
+  "gaming"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/herbstluftwm.nix">&lt;home-manager/modules/services/window-managers/herbstluftwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.enable"><a class="header" href="#opt-xsession.windowManager.i3.enable">xsession.windowManager.i3.enable</a></h2>
+<p>Whether to enable i3 window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.package"><a class="header" href="#opt-xsession.windowManager.i3.package">xsession.windowManager.i3.package</a></h2>
+<p>The i3 package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.i3
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config"><a class="header" href="#opt-xsession.windowManager.i3.config">xsession.windowManager.i3.config</a></h2>
+<p>i3 configuration options.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.assigns"><a class="header" href="#opt-xsession.windowManager.i3.config.assigns">xsession.windowManager.i3.config.assigns</a></h2>
+<p>An attribute set that assigns applications to workspaces based
+on criteria.</p>
+<p><em>Type:</em>
+attribute set of list of attribute set of (string or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "0: extra" = [
+    {
+      class = "^Firefox$";
+      window_role = "About";
+    }
+  ];
+  "1: web" = [
+    {
+      class = "^Firefox$";
+    }
+  ];
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars"><a class="header" href="#opt-xsession.windowManager.i3.config.bars">xsession.windowManager.i3.config.bars</a></h2>
+<p>i3 bars settings blocks. Set to empty list to remove bars completely.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">see code
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors">xsession.windowManager.i3.config.bars.*.colors</a></h2>
+<p>Bar color settings. All color classes can be specified using submodules
+with ‘border’, ‘background’, ‘text’, fields and RGB color hex-codes as values.
+See default values for the reference.
+Note that ‘background’, ‘status’, and ‘separator’ parameters take a single RGB value.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_colors">https://i3wm.org/docs/userguide.html#_colors</a>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.activeWorkspace"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.activeWorkspace">xsession.windowManager.i3.config.bars.*.colors.activeWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace is active.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.background"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.background">xsession.windowManager.i3.config.bars.*.colors.background</a></h2>
+<p>Background color of the bar.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.bindingMode"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.bindingMode">xsession.windowManager.i3.config.bars.*.colors.bindingMode</a></h2>
+<p>Border, background and text color for the binding mode indicator</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.focusedBackground"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.focusedBackground">xsession.windowManager.i3.config.bars.*.colors.focusedBackground</a></h2>
+<p>Background color of the bar on the currently focused monitor output.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"#000000"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.focusedSeparator"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.focusedSeparator">xsession.windowManager.i3.config.bars.*.colors.focusedSeparator</a></h2>
+<p>Text color to be used for the separator on the currently focused monitor output.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"#666666"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.focusedStatusline"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.focusedStatusline">xsession.windowManager.i3.config.bars.*.colors.focusedStatusline</a></h2>
+<p>Text color to be used for the statusline on the currently focused monitor output.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"#ffffff"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.focusedWorkspace"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.focusedWorkspace">xsession.windowManager.i3.config.bars.*.colors.focusedWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace has focus.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.inactiveWorkspace"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.inactiveWorkspace">xsession.windowManager.i3.config.bars.*.colors.inactiveWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace does not
+have focus and is not active.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.separator"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.separator">xsession.windowManager.i3.config.bars.*.colors.separator</a></h2>
+<p>Text color to be used for the separator.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.statusline"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.statusline">xsession.windowManager.i3.config.bars.*.colors.statusline</a></h2>
+<p>Text color to be used for the statusline.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.colors.urgentWorkspace"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.colors.urgentWorkspace">xsession.windowManager.i3.config.bars.*.colors.urgentWorkspace</a></h2>
+<p>Border, background and text color for a workspace button when the workspace contains
+a window with the urgency hint set.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.command"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.command">xsession.windowManager.i3.config.bars.*.command</a></h2>
+<p>Command that will be used to start a bar.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">i3bar
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"\${pkgs.i3}/bin/i3bar -t"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.extraConfig"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.extraConfig">xsession.windowManager.i3.config.bars.*.extraConfig</a></h2>
+<p>Extra configuration lines for this bar.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.fonts"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts">xsession.windowManager.i3.config.bars.*.fonts</a></h2>
+<p>Font configuration for this bar.</p>
+<p><em>Type:</em>
+(list of string) or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  names = [
+    "DejaVu Sans Mono"
+    "FontAwesome5Free"
+  ];
+  size = 11.0;
+  style = "Bold Semi-Condensed";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.names"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.names">xsession.windowManager.i3.config.bars.*.fonts.names</a></h2>
+<p>List of font names list used for window titles. Only FreeType fonts are supported.
+The order here is important (e.g. icons font should go before the one used for text).</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ "monospace" ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "FontAwesome"
+  "Terminus"
+]
+</code></pre>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.size"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.size">xsession.windowManager.i3.config.bars.*.fonts.size</a></h2>
+<p>The font size to use for window titles.</p>
+<p><em>Type:</em>
+floating point number or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">8.0
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">11.5
+</code></pre>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.style"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.style">xsession.windowManager.i3.config.bars.*.fonts.style</a></h2>
+<p>The font style to use for window titles.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Bold Semi-Condensed"
+</code></pre>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.hiddenState"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.hiddenState">xsession.windowManager.i3.config.bars.*.hiddenState</a></h2>
+<p>The default bar mode when ‘bar.mode’ == ‘hide’.</p>
+<p><em>Type:</em>
+null or one of “hide”, “show”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.id"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.id">xsession.windowManager.i3.config.bars.*.id</a></h2>
+<p>Specifies the bar ID for the configured bar instance.
+If this option is missing, the ID is set to bar-x, where x corresponds
+to the position of the embedding bar block in the config file.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.mode"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.mode">xsession.windowManager.i3.config.bars.*.mode</a></h2>
+<p>Bar visibility mode.</p>
+<p><em>Type:</em>
+null or one of “dock”, “hide”, “invisible”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.position"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.position">xsession.windowManager.i3.config.bars.*.position</a></h2>
+<p>The edge of the screen i3bar should show up.</p>
+<p><em>Type:</em>
+null or one of “top”, “bottom”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.statusCommand"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.statusCommand">xsession.windowManager.i3.config.bars.*.statusCommand</a></h2>
+<p>Command that will be used to get status lines.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.trayOutput"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.trayOutput">xsession.windowManager.i3.config.bars.*.trayOutput</a></h2>
+<p>Where to output tray.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.trayPadding"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.trayPadding">xsession.windowManager.i3.config.bars.*.trayPadding</a></h2>
+<p>Sets the pixel padding of the system tray.
+This padding will surround the tray on all sides and between each item.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.workspaceButtons"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.workspaceButtons">xsession.windowManager.i3.config.bars.*.workspaceButtons</a></h2>
+<p>Whether workspace buttons should be shown or not.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.bars._.workspaceNumbers"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.workspaceNumbers">xsession.windowManager.i3.config.bars.*.workspaceNumbers</a></h2>
+<p>Whether workspace numbers should be displayed within the workspace buttons.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null for state version ≥ 20.09, as example otherwise
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors"><a class="header" href="#opt-xsession.windowManager.i3.config.colors">xsession.windowManager.i3.config.colors</a></h2>
+<p>Color settings. All color classes can be specified using submodules
+with ‘border’, ‘background’, ‘text’, ‘indicator’ and ‘childBorder’ fields
+and RGB color hex-codes as values. See default values for the reference.
+Note that ‘i3.config.colors.background’ parameter takes a single RGB value.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_changing_colors">https://i3wm.org/docs/userguide.html#_changing_colors</a>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors.background"><a class="header" href="#opt-xsession.windowManager.i3.config.colors.background">xsession.windowManager.i3.config.colors.background</a></h2>
+<p>Background color of the window. Only applications which do not cover
+the whole area expose the color.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"#ffffff"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors.focused"><a class="header" href="#opt-xsession.windowManager.i3.config.colors.focused">xsession.windowManager.i3.config.colors.focused</a></h2>
+<p>A window which currently has the focus.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#285577";
+  border = "#4c7899";
+  childBorder = "#285577";
+  indicator = "#2e9ef4";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors.focusedInactive"><a class="header" href="#opt-xsession.windowManager.i3.config.colors.focusedInactive">xsession.windowManager.i3.config.colors.focusedInactive</a></h2>
+<p>A window which is the focused one of its container,
+but it does not have the focus at the moment.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#5f676a";
+  border = "#333333";
+  childBorder = "#5f676a";
+  indicator = "#484e50";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors.placeholder"><a class="header" href="#opt-xsession.windowManager.i3.config.colors.placeholder">xsession.windowManager.i3.config.colors.placeholder</a></h2>
+<p>Background and text color are used to draw placeholder window
+contents (when restoring layouts). Border and indicator are ignored.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#0c0c0c";
+  border = "#000000";
+  childBorder = "#0c0c0c";
+  indicator = "#000000";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors.unfocused"><a class="header" href="#opt-xsession.windowManager.i3.config.colors.unfocused">xsession.windowManager.i3.config.colors.unfocused</a></h2>
+<p>A window which is not focused.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#222222";
+  border = "#333333";
+  childBorder = "#222222";
+  indicator = "#292d2e";
+  text = "#888888";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.colors.urgent"><a class="header" href="#opt-xsession.windowManager.i3.config.colors.urgent">xsession.windowManager.i3.config.colors.urgent</a></h2>
+<p>A window which has its urgency hint activated.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  background = "#900000";
+  border = "#2f343a";
+  childBorder = "#900000";
+  indicator = "#900000";
+  text = "#ffffff";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.defaultWorkspace"><a class="header" href="#opt-xsession.windowManager.i3.config.defaultWorkspace">xsession.windowManager.i3.config.defaultWorkspace</a></h2>
+<p>The default workspace to show when i3 is launched.
+This must to correspond to the value of the keybinding of the default workspace.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"workspace number 9"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.floating"><a class="header" href="#opt-xsession.windowManager.i3.config.floating">xsession.windowManager.i3.config.floating</a></h2>
+<p>Floating window settings.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.floating.border"><a class="header" href="#opt-xsession.windowManager.i3.config.floating.border">xsession.windowManager.i3.config.floating.border</a></h2>
+<p>Floating windows border width.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">2
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.floating.criteria"><a class="header" href="#opt-xsession.windowManager.i3.config.floating.criteria">xsession.windowManager.i3.config.floating.criteria</a></h2>
+<p>List of criteria for windows that should be opened in a floating mode.</p>
+<p><em>Type:</em>
+list of attribute set of (string or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    title = "Steam - Update News";
+  }
+  {
+    class = "Pavucontrol";
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.floating.modifier"><a class="header" href="#opt-xsession.windowManager.i3.config.floating.modifier">xsession.windowManager.i3.config.floating.modifier</a></h2>
+<p>Modifier key or keys that can be used to drag floating windows.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"i3.config.modifier"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Mod4"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.floating.titlebar"><a class="header" href="#opt-xsession.windowManager.i3.config.floating.titlebar">xsession.windowManager.i3.config.floating.titlebar</a></h2>
+<p>Whether to show floating window titlebars.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">''
+  true for state version ≥ 23.05
+  config.gaps == null for state version &lt; 23.05
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.focus"><a class="header" href="#opt-xsession.windowManager.i3.config.focus">xsession.windowManager.i3.config.focus</a></h2>
+<p>Focus related settings.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.focus.followMouse"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.followMouse">xsession.windowManager.i3.config.focus.followMouse</a></h2>
+<p>Whether focus should follow the mouse.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.focus.forceWrapping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.forceWrapping">xsession.windowManager.i3.config.focus.forceWrapping</a></h2>
+<p>Whether to force focus wrapping in tabbed or stacked containers.</p>
+<p>This option is deprecated, use <code>focus.wrapping</code> instead.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.focus.mouseWarping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.mouseWarping">xsession.windowManager.i3.config.focus.mouseWarping</a></h2>
+<p>Whether mouse cursor should be warped to the center of the window when switching focus
+to a window on a different output.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.focus.newWindow"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.newWindow">xsession.windowManager.i3.config.focus.newWindow</a></h2>
+<p>This option modifies focus behavior on new window activation.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#focus_on_window_activation">https://i3wm.org/docs/userguide.html#focus_on_window_activation</a></p>
+<p><em>Type:</em>
+one of “smart”, “urgent”, “focus”, “none”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"smart"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"none"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.focus.wrapping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.wrapping">xsession.windowManager.i3.config.focus.wrapping</a></h2>
+<p>Whether the window focus commands automatically wrap around the edge of containers.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_focus_wrapping">https://i3wm.org/docs/userguide.html#_focus_wrapping</a></p>
+<p><em>Type:</em>
+one of “yes”, “no”, “force”, “workspace”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if focus.forceWrapping then "force" else "yes"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.fonts"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts">xsession.windowManager.i3.config.fonts</a></h2>
+<p>Font configuration for window titles, nagbar…</p>
+<p><em>Type:</em>
+(list of string) or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  names = [
+    "DejaVu Sans Mono"
+    "FontAwesome5Free"
+  ];
+  size = 11.0;
+  style = "Bold Semi-Condensed";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.fonts.names"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.names">xsession.windowManager.i3.config.fonts.names</a></h2>
+<p>List of font names list used for window titles. Only FreeType fonts are supported.
+The order here is important (e.g. icons font should go before the one used for text).</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ "monospace" ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "FontAwesome"
+  "Terminus"
+]
+</code></pre>
+<h2 id="opt-xsession.windowManager.i3.config.fonts.size"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.size">xsession.windowManager.i3.config.fonts.size</a></h2>
+<p>The font size to use for window titles.</p>
+<p><em>Type:</em>
+floating point number or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">8.0
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">11.5
+</code></pre>
+<h2 id="opt-xsession.windowManager.i3.config.fonts.style"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.style">xsession.windowManager.i3.config.fonts.style</a></h2>
+<p>The font style to use for window titles.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Bold Semi-Condensed"
+</code></pre>
+<h2 id="opt-xsession.windowManager.i3.config.gaps"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps">xsession.windowManager.i3.config.gaps</a></h2>
+<p>Gaps related settings.</p>
+<p><em>Type:</em>
+null or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.bottom"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.bottom">xsession.windowManager.i3.config.gaps.bottom</a></h2>
+<p>Bottom gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.horizontal"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.horizontal">xsession.windowManager.i3.config.gaps.horizontal</a></h2>
+<p>Horizontal gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.inner"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.inner">xsession.windowManager.i3.config.gaps.inner</a></h2>
+<p>Inner gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">12
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.left"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.left">xsession.windowManager.i3.config.gaps.left</a></h2>
+<p>Left gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.outer"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.outer">xsession.windowManager.i3.config.gaps.outer</a></h2>
+<p>Outer gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.right"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.right">xsession.windowManager.i3.config.gaps.right</a></h2>
+<p>Right gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.smartBorders"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.smartBorders">xsession.windowManager.i3.config.gaps.smartBorders</a></h2>
+<p>This option controls whether to disable container borders on
+workspace with a single container.</p>
+<p><em>Type:</em>
+one of “on”, “off”, “no_gaps”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"off"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.smartGaps"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.smartGaps">xsession.windowManager.i3.config.gaps.smartGaps</a></h2>
+<p>This option controls whether to disable all gaps (outer and inner)
+on workspace with a single container.</p>
+<p><em>Type:</em>
+boolean or one of “on”, “off”, “inverse_outer”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"off"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"on"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.top"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.top">xsession.windowManager.i3.config.gaps.top</a></h2>
+<p>Top gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.gaps.vertical"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps.vertical">xsession.windowManager.i3.config.gaps.vertical</a></h2>
+<p>Vertical gaps value.</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.keybindings"><a class="header" href="#opt-xsession.windowManager.i3.config.keybindings">xsession.windowManager.i3.config.keybindings</a></h2>
+<p>An attribute set that assigns a key press to an action using a key symbol.
+See <a href="https://i3wm.org/docs/userguide.html#keybindings">https://i3wm.org/docs/userguide.html#keybindings</a>.</p>
+<p>Consider to use <code>lib.mkOptionDefault</code> function to extend or override
+default keybindings instead of specifying all of them from scratch.</p>
+<p><em>Type:</em>
+attribute set of (null or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Default i3 keybindings."
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">let
+  modifier = config.xsession.windowManager.i3.config.modifier;
+in lib.mkOptionDefault {
+  "${modifier}+Return" = "exec i3-sensible-terminal";
+  "${modifier}+Shift+q" = "kill";
+  "${modifier}+d" = "exec ${pkgs.dmenu}/bin/dmenu_run";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.keycodebindings"><a class="header" href="#opt-xsession.windowManager.i3.config.keycodebindings">xsession.windowManager.i3.config.keycodebindings</a></h2>
+<p>An attribute set that assigns keypress to an action using key code.
+See <a href="https://i3wm.org/docs/userguide.html#keybindings">https://i3wm.org/docs/userguide.html#keybindings</a>.</p>
+<p><em>Type:</em>
+attribute set of (null or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "214" = "exec /bin/script.sh";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.menu"><a class="header" href="#opt-xsession.windowManager.i3.config.menu">xsession.windowManager.i3.config.menu</a></h2>
+<p>Default launcher to use.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">${pkgs.dmenu}/bin/dmenu_run
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"bemenu-run"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.modes"><a class="header" href="#opt-xsession.windowManager.i3.config.modes">xsession.windowManager.i3.config.modes</a></h2>
+<p>An attribute set that defines binding modes and keybindings
+inside them</p>
+<p>Only basic keybinding is supported (bindsym keycomb action),
+for more advanced setup use ‘i3.extraConfig’.</p>
+<p><em>Type:</em>
+attribute set of attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  resize = {
+    Down = "resize grow height 10 px or 10 ppt";
+    Escape = "mode default";
+    Left = "resize shrink width 10 px or 10 ppt";
+    Return = "mode default";
+    Right = "resize grow width 10 px or 10 ppt";
+    Up = "resize shrink height 10 px or 10 ppt";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.modifier"><a class="header" href="#opt-xsession.windowManager.i3.config.modifier">xsession.windowManager.i3.config.modifier</a></h2>
+<p>Modifier key that is used for all default keybindings.</p>
+<p><em>Type:</em>
+one of “Shift”, “Control”, “Mod1”, “Mod2”, “Mod3”, “Mod4”, “Mod5” or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Mod1"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Mod4"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.startup"><a class="header" href="#opt-xsession.windowManager.i3.config.startup">xsession.windowManager.i3.config.startup</a></h2>
+<p>Commands that should be executed at startup.</p>
+<p>See <a href="https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup">https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup</a>.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+{ command = "systemctl --user restart polybar"; always = true; notification = false; }
+{ command = "dropbox start"; notification = false; }
+{ command = "firefox"; }
+];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.startup._.always"><a class="header" href="#opt-xsession.windowManager.i3.config.startup._.always">xsession.windowManager.i3.config.startup.*.always</a></h2>
+<p>Whether to run command on each i3 restart.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.startup._.command"><a class="header" href="#opt-xsession.windowManager.i3.config.startup._.command">xsession.windowManager.i3.config.startup.*.command</a></h2>
+<p>Command that will be executed on startup.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.startup._.notification"><a class="header" href="#opt-xsession.windowManager.i3.config.startup._.notification">xsession.windowManager.i3.config.startup.*.notification</a></h2>
+<p>Whether to enable startup-notification support for the command.
+See <code>--no-startup-id</code> option description in the i3 user guide.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.startup._.workspace"><a class="header" href="#opt-xsession.windowManager.i3.config.startup._.workspace">xsession.windowManager.i3.config.startup.*.workspace</a></h2>
+<p>Launch application on a particular workspace. DEPRECATED:
+Use <a href="#opt-xsession.windowManager.i3.config.assigns"></a>
+instead. See <a href="https://github.com/nix-community/home-manager/issues/265">https://github.com/nix-community/home-manager/issues/265</a>.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.terminal"><a class="header" href="#opt-xsession.windowManager.i3.config.terminal">xsession.windowManager.i3.config.terminal</a></h2>
+<p>Default terminal to run.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"i3-sensible-terminal"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"alacritty"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window"><a class="header" href="#opt-xsession.windowManager.i3.config.window">xsession.windowManager.i3.config.window</a></h2>
+<p>Window titlebar and border settings.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window.border"><a class="header" href="#opt-xsession.windowManager.i3.config.window.border">xsession.windowManager.i3.config.window.border</a></h2>
+<p>Window border width.</p>
+<p><em>Type:</em>
+signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">2
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window.commands"><a class="header" href="#opt-xsession.windowManager.i3.config.window.commands">xsession.windowManager.i3.config.window.commands</a></h2>
+<p>List of commands that should be executed on specific windows.
+See <code>for_window</code> i3wm option documentation.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    command = "border pixel 1";
+    criteria = {
+      class = "XTerm";
+    };
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window.commands._.command"><a class="header" href="#opt-xsession.windowManager.i3.config.window.commands._.command">xsession.windowManager.i3.config.window.commands.*.command</a></h2>
+<p>i3wm command to execute.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"border pixel 1"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window.commands._.criteria"><a class="header" href="#opt-xsession.windowManager.i3.config.window.commands._.criteria">xsession.windowManager.i3.config.window.commands.*.criteria</a></h2>
+<p>Criteria of the windows on which command should be executed.</p>
+<p>A value of <code>true</code> is equivalent to using an empty
+criteria (which is different from an empty string criteria).</p>
+<p><em>Type:</em>
+attribute set of (string or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  title = "x200: ~/work";
+  floating = true;
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window.hideEdgeBorders"><a class="header" href="#opt-xsession.windowManager.i3.config.window.hideEdgeBorders">xsession.windowManager.i3.config.window.hideEdgeBorders</a></h2>
+<p>Hide window borders adjacent to the screen edges.</p>
+<p><em>Type:</em>
+one of “none”, “vertical”, “horizontal”, “both”, “smart”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"none"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.window.titlebar"><a class="header" href="#opt-xsession.windowManager.i3.config.window.titlebar">xsession.windowManager.i3.config.window.titlebar</a></h2>
+<p>Whether to show window titlebars.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">''
+  true for state version ≥ 23.05
+  config.gaps == null for state version &lt; 23.05
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.workspaceAutoBackAndForth"><a class="header" href="#opt-xsession.windowManager.i3.config.workspaceAutoBackAndForth">xsession.windowManager.i3.config.workspaceAutoBackAndForth</a></h2>
+<p>Assume you are on workspace “1: www” and switch to “2: IM” using
+mod+2 because somebody sent you a message. You don’t need to remember
+where you came from now, you can just press $mod+2 again to switch
+back to “1: www”.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.workspaceLayout"><a class="header" href="#opt-xsession.windowManager.i3.config.workspaceLayout">xsession.windowManager.i3.config.workspaceLayout</a></h2>
+<p>The mode in which new containers on workspace level will
+start.</p>
+<p><em>Type:</em>
+one of “default”, “stacking”, “tabbed”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"default"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"tabbed"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.workspaceOutputAssign"><a class="header" href="#opt-xsession.windowManager.i3.config.workspaceOutputAssign">xsession.windowManager.i3.config.workspaceOutputAssign</a></h2>
+<p>Assign workspaces to outputs.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.workspaceOutputAssign._.output"><a class="header" href="#opt-xsession.windowManager.i3.config.workspaceOutputAssign._.output">xsession.windowManager.i3.config.workspaceOutputAssign.*.output</a></h2>
+<p>Name(s) of the output(s) from <code>   i3-msg -t get_outputs </code>.</p>
+<p><em>Type:</em>
+string or list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"eDP"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.config.workspaceOutputAssign._.workspace"><a class="header" href="#opt-xsession.windowManager.i3.config.workspaceOutputAssign._.workspace">xsession.windowManager.i3.config.workspaceOutputAssign.*.workspace</a></h2>
+<p>Name of the workspace to assign.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Web"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.i3.extraConfig"><a class="header" href="#opt-xsession.windowManager.i3.extraConfig">xsession.windowManager.i3.extraConfig</a></h2>
+<p>Extra configuration lines to add to ~/.config/i3/config.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.enable"><a class="header" href="#opt-xsession.windowManager.spectrwm.enable">xsession.windowManager.spectrwm.enable</a></h2>
+<p>Whether to enable Spectrwm window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.package"><a class="header" href="#opt-xsession.windowManager.spectrwm.package">xsession.windowManager.spectrwm.package</a></h2>
+<p>The spectrwm package to use. providing the spectrwm command</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.spectrwm
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.bindings"><a class="header" href="#opt-xsession.windowManager.spectrwm.bindings">xsession.windowManager.spectrwm.bindings</a></h2>
+<p>Spectrwm keybindings.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  quit = "Mod+Shift+q";
+  restart = "Mod+Shift+r";
+  term = "Mod+Return";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.programs"><a class="header" href="#opt-xsession.windowManager.spectrwm.programs">xsession.windowManager.spectrwm.programs</a></h2>
+<p>Spectrwm programs variables.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  term = "alacritty";
+  search = "dmenu -ip -p 'Window name/id:';
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.quirks"><a class="header" href="#opt-xsession.windowManager.spectrwm.quirks">xsession.windowManager.spectrwm.quirks</a></h2>
+<p>Spectrwm quicks (custom window rules).</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Matplotlib = "FLOAT";
+  Pavucontrol = "FLOAT";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.settings"><a class="header" href="#opt-xsession.windowManager.spectrwm.settings">xsession.windowManager.spectrwm.settings</a></h2>
+<p>Spectrwm settings.</p>
+<p><em>Type:</em>
+attribute set of (boolean or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  focus_close = "next";
+  focus_mode = "manual";
+  modkey = "Mod4";
+  workspace_limit = 5;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.spectrwm.unbindings"><a class="header" href="#opt-xsession.windowManager.spectrwm.unbindings">xsession.windowManager.spectrwm.unbindings</a></h2>
+<p>List of keybindings to disable from default Spectrwm configuration.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "MOD+e"
+  "MOD+f"
+  "MOD+m"
+  "MOD+s"
+  "MOD+u"
+  "MOD+t"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/spectrwm.nix">&lt;home-manager/modules/services/window-managers/spectrwm.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.enable"><a class="header" href="#opt-xsession.windowManager.xmonad.enable">xsession.windowManager.xmonad.enable</a></h2>
+<p>Whether to enable xmonad window manager.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.enableContribAndExtras"><a class="header" href="#opt-xsession.windowManager.xmonad.enableContribAndExtras">xsession.windowManager.xmonad.enableContribAndExtras</a></h2>
+<p>Enable xmonad-{contrib,extras} in xmonad.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.buildScript"><a class="header" href="#opt-xsession.windowManager.xmonad.buildScript">xsession.windowManager.xmonad.buildScript</a></h2>
+<p>Build script for your xmonad configuration.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.writeText "build" ''
+  #!/bin/sh
+
+  # Enable -threaded
+  ghc --make xmonad.hs -threaded -i -ilib -fforce-recomp -main-is main -v0 -O2 -o "$1"
+''
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.config"><a class="header" href="#opt-xsession.windowManager.xmonad.config">xsession.windowManager.xmonad.config</a></h2>
+<p>The configuration file to be used for xmonad. This must be
+an absolute path or <code>null</code> in which case
+<code>~/.xmonad/xmonad.hs</code> will not be managed
+by Home Manager.</p>
+<p>If this option is set to a non-<code>null</code> value,
+recompilation of xmonad outside of Home Manager (e.g. via
+<code>xmonad --recompile</code>) will fail.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.writeText "xmonad.hs" ''
+  import XMonad
+  main = xmonad defaultConfig
+      { terminal    = "urxvt"
+      , modMask     = mod4Mask
+      , borderWidth = 3
+      }
+''
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.extraPackages"><a class="header" href="#opt-xsession.windowManager.xmonad.extraPackages">xsession.windowManager.xmonad.extraPackages</a></h2>
+<p>Extra packages available to GHC when rebuilding xmonad. The
+value must be a function which receives the attribute set
+defined in <code>haskellPackages</code> as the sole
+argument.</p>
+<p><em>Type:</em>
+unspecified value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"self: []"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">haskellPackages: [
+  haskellPackages.xmonad-contrib
+  haskellPackages.monad-logger
+]
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.haskellPackages"><a class="header" href="#opt-xsession.windowManager.xmonad.haskellPackages">xsession.windowManager.xmonad.haskellPackages</a></h2>
+<p>The <code>haskellPackages</code> used to build xmonad
+and other packages. This can be used to change the GHC
+version used to build xmonad and the packages listed in
+<code>extraPackages</code>.</p>
+<p><em>Type:</em>
+unspecified value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.haskellPackages
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.haskell.packages.ghc784
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xsession.windowManager.xmonad.libFiles"><a class="header" href="#opt-xsession.windowManager.xmonad.libFiles">xsession.windowManager.xmonad.libFiles</a></h2>
+<p>Additional files that will be saved in
+<code>~/.xmonad/lib/</code> and included in the configuration
+build. The keys are the file names while the values are paths to the
+contents of the files.</p>
+<p><em>Type:</em>
+attribute set of absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "Tools.hs" = pkgs.writeText "Tools.hs" ''
+     module Tools where
+     screenshot = "scrot"
+   '';
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/xmonad.nix">&lt;home-manager/modules/services/window-managers/xmonad.nix&gt;</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../options/home-manager/xresources.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../options/nixos/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../options/home-manager/xresources.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../options/nixos/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

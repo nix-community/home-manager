@@ -1,0 +1,1634 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>podman - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="opt-services.podman.enable"><a class="header" href="#opt-services.podman.enable">services.podman.enable</a></h2>
+<p>Whether to enable Podman, a daemonless container engine.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.enableTypeChecks"><a class="header" href="#opt-services.podman.enableTypeChecks">services.podman.enableTypeChecks</a></h2>
+<p>Whether to enable type checks for podman quadlets.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/options.nix">&lt;home-manager/modules/services/podman/linux/options.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.package"><a class="header" href="#opt-services.podman.package">services.podman.package</a></h2>
+<p>The podman package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.podman
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.autoUpdate.enable"><a class="header" href="#opt-services.podman.autoUpdate.enable">services.podman.autoUpdate.enable</a></h2>
+<p>Automatically update the podman images.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/services.nix">&lt;home-manager/modules/services/podman/linux/services.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.autoUpdate.onCalendar"><a class="header" href="#opt-services.podman.autoUpdate.onCalendar">services.podman.autoUpdate.onCalendar</a></h2>
+<p>The systemd <code>OnCalendar</code> expression for the update. See
+<a href="https://www.freedesktop.org/software/systemd/man/systemd.time.html"><code>systemd.time(7)</code></a> for a description of the format.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Sun *-*-* 00:00"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/services.nix">&lt;home-manager/modules/services/podman/linux/services.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds"><a class="header" href="#opt-services.podman.builds">services.podman.builds</a></h2>
+<p>Defines Podman build quadlet configurations.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.authFile"><a class="header" href="#opt-services.podman.builds._name_.authFile">services.podman.builds.&lt;name&gt;.authFile</a></h2>
+<p>Path of the authentication file.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.autoStart"><a class="header" href="#opt-services.podman.builds._name_.autoStart">services.podman.builds.&lt;name&gt;.autoStart</a></h2>
+<p>Whether to start the build on boot. Requires user lingering.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.description"><a class="header" href="#opt-services.podman.builds._name_.description">services.podman.builds.&lt;name&gt;.description</a></h2>
+<p>The description of the build.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Service for build \${name}"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"My Build"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.environment"><a class="header" href="#opt-services.podman.builds._name_.environment">services.podman.builds.&lt;name&gt;.environment</a></h2>
+<p>Environment variables to set in the build.</p>
+<p><em>Type:</em>
+attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  VAR1 = "0:100";
+  VAR2 = true;
+  VAR3 = 5;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.extraConfig"><a class="header" href="#opt-services.podman.builds._name_.extraConfig">services.podman.builds.&lt;name&gt;.extraConfig</a></h2>
+<p>INI sections and values to populate the Build Quadlet.</p>
+<p><em>Type:</em>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Build = {
+    Arch = "aarch64";
+  };
+  Service = {
+    TimeoutStartSec = 15;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.extraPodmanArgs"><a class="header" href="#opt-services.podman.builds._name_.extraPodmanArgs">services.podman.builds.&lt;name&gt;.extraPodmanArgs</a></h2>
+<p>Extra arguments to pass to the podman build command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--retries 5"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.file"><a class="header" href="#opt-services.podman.builds._name_.file">services.podman.builds.&lt;name&gt;.file</a></h2>
+<p>Path to a Containerfile which contains instructions to build the image.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">`"xdg.configFile."containerfiles/my-img/Containerfile"`
+or
+`"https://github.com/.../my-img/Containerfile"`
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.labels"><a class="header" href="#opt-services.podman.builds._name_.labels">services.podman.builds.&lt;name&gt;.labels</a></h2>
+<p>The labels to apply to the build.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  app = "myapp";
+  some-label = "somelabel";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.tags"><a class="header" href="#opt-services.podman.builds._name_.tags">services.podman.builds.&lt;name&gt;.tags</a></h2>
+<p>Name associated with the build.
+First tag will always be “homemanager/&lt;name&gt;”.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.tlsVerify"><a class="header" href="#opt-services.podman.builds._name_.tlsVerify">services.podman.builds.&lt;name&gt;.tlsVerify</a></h2>
+<p>Require HTTPS and verification of certificates when contacting registries.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.builds._name_.workingDirectory"><a class="header" href="#opt-services.podman.builds._name_.workingDirectory">services.podman.builds.&lt;name&gt;.workingDirectory</a></h2>
+<p>WorkingDirectory of the systemd unit file.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/builds.nix">&lt;home-manager/modules/services/podman/linux/builds.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers"><a class="header" href="#opt-services.podman.containers">services.podman.containers</a></h2>
+<p>Defines Podman container quadlet configurations.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.addCapabilities"><a class="header" href="#opt-services.podman.containers._name_.addCapabilities">services.podman.containers.&lt;name&gt;.addCapabilities</a></h2>
+<p>The capabilities to add to the container.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "CAP_DAC_OVERRIDE"
+  "CAP_IPC_OWNER"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.autoStart"><a class="header" href="#opt-services.podman.containers._name_.autoStart">services.podman.containers.&lt;name&gt;.autoStart</a></h2>
+<p>Whether to start the container on boot (requires user lingering).</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.autoUpdate"><a class="header" href="#opt-services.podman.containers._name_.autoUpdate">services.podman.containers.&lt;name&gt;.autoUpdate</a></h2>
+<p>The autoupdate policy for the container.</p>
+<p><em>Type:</em>
+one of &lt;null&gt;, “registry”, “local”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"registry"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.description"><a class="header" href="#opt-services.podman.containers._name_.description">services.podman.containers.&lt;name&gt;.description</a></h2>
+<p>The description of the container.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"My Container"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.devices"><a class="header" href="#opt-services.podman.containers._name_.devices">services.podman.containers.&lt;name&gt;.devices</a></h2>
+<p>The devices to mount into the container</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "/dev/&lt;host&gt;:/dev/&lt;container&gt;"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.dropCapabilities"><a class="header" href="#opt-services.podman.containers._name_.dropCapabilities">services.podman.containers.&lt;name&gt;.dropCapabilities</a></h2>
+<p>The capabilities to drop from the container.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "CAP_DAC_OVERRIDE"
+  "CAP_IPC_OWNER"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.entrypoint"><a class="header" href="#opt-services.podman.containers._name_.entrypoint">services.podman.containers.&lt;name&gt;.entrypoint</a></h2>
+<p>The container entrypoint.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"/foo.sh"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.environment"><a class="header" href="#opt-services.podman.containers._name_.environment">services.podman.containers.&lt;name&gt;.environment</a></h2>
+<p>Environment variables to set in the container.</p>
+<p><em>Type:</em>
+attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  VAR1 = "0:100";
+  VAR2 = true;
+  VAR3 = 5;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.environmentFile"><a class="header" href="#opt-services.podman.containers._name_.environmentFile">services.podman.containers.&lt;name&gt;.environmentFile</a></h2>
+<p>Paths to files containing container environment variables.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "/etc/environment"
+  "/etc/other-env"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.exec"><a class="header" href="#opt-services.podman.containers._name_.exec">services.podman.containers.&lt;name&gt;.exec</a></h2>
+<p>The command to run after the container start.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"sleep inf"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.extraConfig"><a class="header" href="#opt-services.podman.containers._name_.extraConfig">services.podman.containers.&lt;name&gt;.extraConfig</a></h2>
+<p>INI sections and values to populate the Container Quadlet.</p>
+<p><em>Type:</em>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Container = {
+    User = 1000;
+  };
+  Service = {
+    TimeoutStartSec = 15;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.extraPodmanArgs"><a class="header" href="#opt-services.podman.containers._name_.extraPodmanArgs">services.podman.containers.&lt;name&gt;.extraPodmanArgs</a></h2>
+<p>Extra arguments to pass to the podman run command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--security-opt=no-new-privileges"
+  "--security-opt=seccomp=unconfined"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.group"><a class="header" href="#opt-services.podman.containers._name_.group">services.podman.containers.&lt;name&gt;.group</a></h2>
+<p>The group ID inside the container.</p>
+<p><em>Type:</em>
+null or signed integer or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.image"><a class="header" href="#opt-services.podman.containers._name_.image">services.podman.containers.&lt;name&gt;.image</a></h2>
+<p>The container image.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"registry.access.redhat.com/ubi9-minimal:latest"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.ip4"><a class="header" href="#opt-services.podman.containers._name_.ip4">services.podman.containers.&lt;name&gt;.ip4</a></h2>
+<p>Set an IPv4 address for the container.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.ip6"><a class="header" href="#opt-services.podman.containers._name_.ip6">services.podman.containers.&lt;name&gt;.ip6</a></h2>
+<p>Set an IPv6 address for the container.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.labels"><a class="header" href="#opt-services.podman.containers._name_.labels">services.podman.containers.&lt;name&gt;.labels</a></h2>
+<p>The labels to apply to the container.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  app = "myapp";
+  some-label = "somelabel";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.network"><a class="header" href="#opt-services.podman.containers._name_.network">services.podman.containers.&lt;name&gt;.network</a></h2>
+<p>The network mode or network/s to connect the container to. Equivalent
+to <code>podman run --network=&lt;option&gt;</code>.</p>
+<p><em>Type:</em>
+string or list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em>
+<code>"host"</code>
+or
+<code>"bridge_network_1"</code>
+or
+<code>[ "bridge_network_1" "bridge_network_2" ]</code></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.networkAlias"><a class="header" href="#opt-services.podman.containers._name_.networkAlias">services.podman.containers.&lt;name&gt;.networkAlias</a></h2>
+<p>Network aliases for the container.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "mycontainer"
+  "web"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.ports"><a class="header" href="#opt-services.podman.containers._name_.ports">services.podman.containers.&lt;name&gt;.ports</a></h2>
+<p>A mapping of ports between host and container</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "8080:80"
+  "8443:443"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.user"><a class="header" href="#opt-services.podman.containers._name_.user">services.podman.containers.&lt;name&gt;.user</a></h2>
+<p>The user ID inside the container.</p>
+<p><em>Type:</em>
+null or signed integer or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.userNS"><a class="header" href="#opt-services.podman.containers._name_.userNS">services.podman.containers.&lt;name&gt;.userNS</a></h2>
+<p>Use a user namespace for the container.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.containers._name_.volumes"><a class="header" href="#opt-services.podman.containers._name_.volumes">services.podman.containers.&lt;name&gt;.volumes</a></h2>
+<p>The volumes to mount into the container.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "/tmp:/tmp"
+  "/var/run/test.secret:/etc/secret:ro"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/containers.nix">&lt;home-manager/modules/services/podman/linux/containers.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.extraPackages"><a class="header" href="#opt-services.podman.extraPackages">services.podman.extraPackages</a></h2>
+<p>Extra packages added to <code>PATH</code> when creating Podman machines.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ pkgs.openssh ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">with pkgs; [ openssh hello ];
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images"><a class="header" href="#opt-services.podman.images">services.podman.images</a></h2>
+<p>Defines Podman image quadlet configurations.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.authFile"><a class="header" href="#opt-services.podman.images._name_.authFile">services.podman.images.&lt;name&gt;.authFile</a></h2>
+<p>Path of the authentication file used to connect to registry.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.autoStart"><a class="header" href="#opt-services.podman.images._name_.autoStart">services.podman.images.&lt;name&gt;.autoStart</a></h2>
+<p>Whether to pull the image on boot. Requires user lingering.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.certDir"><a class="header" href="#opt-services.podman.images._name_.certDir">services.podman.images.&lt;name&gt;.certDir</a></h2>
+<p>Path of certificates (*.{crt,cert,key}) used to connect to registry.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.decryptionKeyFile"><a class="header" href="#opt-services.podman.images._name_.decryptionKeyFile">services.podman.images.&lt;name&gt;.decryptionKeyFile</a></h2>
+<p>Path to key used for decryption of images.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.description"><a class="header" href="#opt-services.podman.images._name_.description">services.podman.images.&lt;name&gt;.description</a></h2>
+<p>The description of the image.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Service for image \${name}"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"My Image"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.extraConfig"><a class="header" href="#opt-services.podman.images._name_.extraConfig">services.podman.images.&lt;name&gt;.extraConfig</a></h2>
+<p>INI sections and values to populate the Image Quadlet.</p>
+<p><em>Type:</em>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Image = {
+    ContainersConfModule = "/etc/nvd.conf";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.extraPodmanArgs"><a class="header" href="#opt-services.podman.images._name_.extraPodmanArgs">services.podman.images.&lt;name&gt;.extraPodmanArgs</a></h2>
+<p>Extra arguments to pass to the podman image pull command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--os=linux"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.image"><a class="header" href="#opt-services.podman.images._name_.image">services.podman.images.&lt;name&gt;.image</a></h2>
+<p>Image to pull.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"quay.io/centos/centos:latest"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.password"><a class="header" href="#opt-services.podman.images._name_.password">services.podman.images.&lt;name&gt;.password</a></h2>
+<p>Password used to connect to registry. (Will be visible in nix store)</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"P@ssw0rd"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.tag"><a class="header" href="#opt-services.podman.images._name_.tag">services.podman.images.&lt;name&gt;.tag</a></h2>
+<p>FQIN of referenced Image when source is a file or directory archive.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"quay.io/centos/centos:latest"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.tlsVerify"><a class="header" href="#opt-services.podman.images._name_.tlsVerify">services.podman.images.&lt;name&gt;.tlsVerify</a></h2>
+<p>Require HTTPS and verification of certificates when contacting registries.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.images._name_.username"><a class="header" href="#opt-services.podman.images._name_.username">services.podman.images.&lt;name&gt;.username</a></h2>
+<p>Username used to connect to registry.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"bob"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/images.nix">&lt;home-manager/modules/services/podman/linux/images.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines"><a class="header" href="#opt-services.podman.machines">services.podman.machines</a></h2>
+<p>Declarative podman machine configurations.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  dev-machine = {
+    autoStart = true;
+    cpus = 4;
+    diskSize = 100;
+    memory = 8192;
+    swap = 2048;
+    timezone = "UTC";
+    volumes = [
+      "/Users:/Users"
+    ];
+    watchdogInterval = 30;
+  };
+  testing = {
+    autoStart = false;
+    cpus = 2;
+    diskSize = 50;
+    image = "ghcr.io/your-org/custom-image:latest";
+    memory = 4096;
+    username = "podman";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.autoStart"><a class="header" href="#opt-services.podman.machines._name_.autoStart">services.podman.machines.&lt;name&gt;.autoStart</a></h2>
+<p>Whether to automatically start this machine on login.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.cpus"><a class="header" href="#opt-services.podman.machines._name_.cpus">services.podman.machines.&lt;name&gt;.cpus</a></h2>
+<p>Number of CPUs to allocate to the machine. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or (positive integer, meaning &gt;0)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">2
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.diskSize"><a class="header" href="#opt-services.podman.machines._name_.diskSize">services.podman.machines.&lt;name&gt;.diskSize</a></h2>
+<p>Disk size in GB for the machine. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or (positive integer, meaning &gt;0)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">200
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.image"><a class="header" href="#opt-services.podman.machines._name_.image">services.podman.machines.&lt;name&gt;.image</a></h2>
+<p>Bootable image to use for the machine. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.memory"><a class="header" href="#opt-services.podman.machines._name_.memory">services.podman.machines.&lt;name&gt;.memory</a></h2>
+<p>Memory in MB to allocate to the machine. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or (positive integer, meaning &gt;0)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">8192
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.rootful"><a class="header" href="#opt-services.podman.machines._name_.rootful">services.podman.machines.&lt;name&gt;.rootful</a></h2>
+<p>Whether to run the machine in rootful mode. If null, uses podman’s default.
+Rootful mode runs containers as root inside the VM.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.swap"><a class="header" href="#opt-services.podman.machines._name_.swap">services.podman.machines.&lt;name&gt;.swap</a></h2>
+<p>Swap size in MB for the machine. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or (positive integer, meaning &gt;0)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">2048
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.timezone"><a class="header" href="#opt-services.podman.machines._name_.timezone">services.podman.machines.&lt;name&gt;.timezone</a></h2>
+<p>Timezone to set in the machine. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"UTC"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.username"><a class="header" href="#opt-services.podman.machines._name_.username">services.podman.machines.&lt;name&gt;.username</a></h2>
+<p>Username used in the machine image. If null, uses podman’s default.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"user"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.volumes"><a class="header" href="#opt-services.podman.machines._name_.volumes">services.podman.machines.&lt;name&gt;.volumes</a></h2>
+<p>Volumes to mount in the machine, specified as source:target pairs.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "/Users:/Users"
+  "/private:/private"
+  "/var/folders:/var/folders"
+]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "/Users:/Users"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.machines._name_.watchdogInterval"><a class="header" href="#opt-services.podman.machines._name_.watchdogInterval">services.podman.machines.&lt;name&gt;.watchdogInterval</a></h2>
+<p>Interval in seconds to check if the machine is running</p>
+<p><em>Type:</em>
+positive integer, meaning &gt;0</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">30
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">60
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks"><a class="header" href="#opt-services.podman.networks">services.podman.networks</a></h2>
+<p>Defines Podman network quadlet configurations.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.autoStart"><a class="header" href="#opt-services.podman.networks._name_.autoStart">services.podman.networks.&lt;name&gt;.autoStart</a></h2>
+<p>Whether to start the network on boot (requires user lingering).</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.description"><a class="header" href="#opt-services.podman.networks._name_.description">services.podman.networks.&lt;name&gt;.description</a></h2>
+<p>The description of the network.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"My Network"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.driver"><a class="header" href="#opt-services.podman.networks._name_.driver">services.podman.networks.&lt;name&gt;.driver</a></h2>
+<p>The network driver to use.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"bridge"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.extraConfig"><a class="header" href="#opt-services.podman.networks._name_.extraConfig">services.podman.networks.&lt;name&gt;.extraConfig</a></h2>
+<p>INI sections and values to populate the Network Quadlet</p>
+<p><em>Type:</em>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Network = {
+    ContainerConfModule = "/etc/nvd.conf";
+  };
+  Service = {
+    TimeoutStartSec = 30;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.extraPodmanArgs"><a class="header" href="#opt-services.podman.networks._name_.extraPodmanArgs">services.podman.networks.&lt;name&gt;.extraPodmanArgs</a></h2>
+<p>Extra arguments to pass to the podman network create command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--dns=192.168.55.1"
+  "--ipam-driver"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.gateway"><a class="header" href="#opt-services.podman.networks._name_.gateway">services.podman.networks.&lt;name&gt;.gateway</a></h2>
+<p>The gateway IP to use for the network.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"192.168.20.1"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.internal"><a class="header" href="#opt-services.podman.networks._name_.internal">services.podman.networks.&lt;name&gt;.internal</a></h2>
+<p>Whether the network should be internal</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.labels"><a class="header" href="#opt-services.podman.networks._name_.labels">services.podman.networks.&lt;name&gt;.labels</a></h2>
+<p>The labels to apply to the network.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  app = "myapp";
+  some-label = "somelabel";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.networks._name_.subnet"><a class="header" href="#opt-services.podman.networks._name_.subnet">services.podman.networks.&lt;name&gt;.subnet</a></h2>
+<p>The subnet to use for the network.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"192.168.20.0/24"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/networks.nix">&lt;home-manager/modules/services/podman/linux/networks.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.containers"><a class="header" href="#opt-services.podman.settings.containers">services.podman.settings.containers</a></h2>
+<p>containers.conf configuration</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.mounts"><a class="header" href="#opt-services.podman.settings.mounts">services.podman.settings.mounts</a></h2>
+<p>mounts.conf configuration</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.policy"><a class="header" href="#opt-services.podman.settings.policy">services.podman.settings.policy</a></h2>
+<p>Signature verification policy file.
+If this option is empty the default policy file from
+<code>skopeo</code> will be used.</p>
+<p><em>Type:</em>
+attribute set</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  default = [
+    {
+      type = "insecureAcceptAnything";
+    }
+  ];
+  transports = {
+    docker-daemon = {
+      "" = [
+        {
+          type = "insecureAcceptAnything";
+        }
+      ];
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.block"><a class="header" href="#opt-services.podman.settings.registries.block">services.podman.settings.registries.block</a></h2>
+<p>List of blocked repositories.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.insecure"><a class="header" href="#opt-services.podman.settings.registries.insecure">services.podman.settings.registries.insecure</a></h2>
+<p>List of insecure repositories.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.search"><a class="header" href="#opt-services.podman.settings.registries.search">services.podman.settings.registries.search</a></h2>
+<p>List of repositories to search.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[
+  "docker.io"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.storage"><a class="header" href="#opt-services.podman.settings.storage">services.podman.settings.storage</a></h2>
+<p>storage.conf configuration</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.useDefaultMachine"><a class="header" href="#opt-services.podman.useDefaultMachine">services.podman.useDefaultMachine</a></h2>
+<p>Whether to create and use the default podman machine.</p>
+<p>The default machine will be named <code>podman-machine-default</code> and configured with podmans default values.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/darwin.nix">&lt;home-manager/modules/services/podman/darwin.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes"><a class="header" href="#opt-services.podman.volumes">services.podman.volumes</a></h2>
+<p>Defines Podman volume quadlet configurations.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.autoStart"><a class="header" href="#opt-services.podman.volumes._name_.autoStart">services.podman.volumes.&lt;name&gt;.autoStart</a></h2>
+<p>Whether to create the volume on boot.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.copy"><a class="header" href="#opt-services.podman.volumes._name_.copy">services.podman.volumes.&lt;name&gt;.copy</a></h2>
+<p>Copy content of the image located at the mountpoint of the volume on first run.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.description"><a class="header" href="#opt-services.podman.volumes._name_.description">services.podman.volumes.&lt;name&gt;.description</a></h2>
+<p>The description of the volume.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Service for volume \${name}"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"My Volume"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.device"><a class="header" href="#opt-services.podman.volumes._name_.device">services.podman.volumes.&lt;name&gt;.device</a></h2>
+<p>The path of a device which is mounted for the volume.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"tmpfs"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.driver"><a class="header" href="#opt-services.podman.volumes._name_.driver">services.podman.volumes.&lt;name&gt;.driver</a></h2>
+<p>The volume driver to use.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"image"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.extraConfig"><a class="header" href="#opt-services.podman.volumes._name_.extraConfig">services.podman.volumes.&lt;name&gt;.extraConfig</a></h2>
+<p>INI sections and values to populate the Volume Quadlet.</p>
+<p><em>Type:</em>
+attribute set of attribute set of ((attribute set of (null or boolean or signed integer or string or absolute path or list of (null or boolean or signed integer or string or absolute path))) or list of (null or boolean or signed integer or string or absolute path) or null or boolean or signed integer or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Volume = {
+    ContainerConfModule = "/etc/nvd.conf";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.extraPodmanArgs"><a class="header" href="#opt-services.podman.volumes._name_.extraPodmanArgs">services.podman.volumes.&lt;name&gt;.extraPodmanArgs</a></h2>
+<p>Extra arguments to pass to the podman volume create command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--opt copy"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.group"><a class="header" href="#opt-services.podman.volumes._name_.group">services.podman.volumes.&lt;name&gt;.group</a></h2>
+<p>The group ID owning the volume inside the container.</p>
+<p><em>Type:</em>
+null or signed integer or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.image"><a class="header" href="#opt-services.podman.volumes._name_.image">services.podman.volumes.&lt;name&gt;.image</a></h2>
+<p>Specifies the image the volume is based on when Driver is set to the image.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"quay.io/centos/centos:latest"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.labels"><a class="header" href="#opt-services.podman.volumes._name_.labels">services.podman.volumes.&lt;name&gt;.labels</a></h2>
+<p>The labels to apply to the volume.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  app = "myapp";
+  some-label = "somelabel";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.preserve"><a class="header" href="#opt-services.podman.volumes._name_.preserve">services.podman.volumes.&lt;name&gt;.preserve</a></h2>
+<p>Whether the volume should be preserved if it is removed from the configuration.
+Setting this to false will cause the volume to be deleted if the volume is removed from the configuration</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.type"><a class="header" href="#opt-services.podman.volumes._name_.type">services.podman.volumes.&lt;name&gt;.type</a></h2>
+<p>Filesystem type of Device. (used as -t in mount commands)</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"tmpfs"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.volumes._name_.user"><a class="header" href="#opt-services.podman.volumes._name_.user">services.podman.volumes.&lt;name&gt;.user</a></h2>
+<p>The user ID owning the volume inside the container.</p>
+<p><em>Type:</em>
+null or signed integer or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman/linux/volumes.nix">&lt;home-manager/modules/services/podman/linux/volumes.nix&gt;</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../options/home-manager/services/plex-mpv-shim.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../options/home-manager/services/polkit-gnome.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../options/home-manager/services/plex-mpv-shim.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../options/home-manager/services/polkit-gnome.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

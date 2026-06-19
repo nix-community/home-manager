@@ -1,0 +1,1660 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>xdg - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h2 id="opt-xdg.enable"><a class="header" href="#opt-xdg.enable">xdg.enable</a></h2>
+<p>Whether to enable management of XDG base directories.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.autostart.enable"><a class="header" href="#opt-xdg.autostart.enable">xdg.autostart.enable</a></h2>
+<p>Whether to enable creation of XDG autostart entries.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/autostart.nix">&lt;home-manager/modules/misc/xdg/autostart.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.autostart.entries"><a class="header" href="#opt-xdg.autostart.entries">xdg.autostart.entries</a></h2>
+<p>Paths to desktop files that should be linked to <code>XDG_CONFIG_HOME/autostart</code></p>
+<p><em>Type:</em>
+list of absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "${pkgs.evolution}/share/applications/org.gnome.Evolution.desktop"
+]
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/autostart.nix">&lt;home-manager/modules/misc/xdg/autostart.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.autostart.readOnly"><a class="header" href="#opt-xdg.autostart.readOnly">xdg.autostart.readOnly</a></h2>
+<p>Make <code>XDG_CONFIG_HOME/autostart</code> a symlink to a readonly directory so that
+programs cannot install arbitrary autostart services.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/autostart.nix">&lt;home-manager/modules/misc/xdg/autostart.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.binHome"><a class="header" href="#opt-xdg.binHome">xdg.binHome</a></h2>
+<p>Absolute path to directory holding user-specific executables.</p>
+<p>Sets <code>XDG_BIN_HOME</code> for the user if <code>xdg.enable</code> is set <code>true</code>.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"~/.local/bin"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile"><a class="header" href="#opt-xdg.cacheFile">xdg.cacheFile</a></h2>
+<p>Attribute set of files to link into the user’s XDG
+cache home.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.enable"><a class="header" href="#opt-xdg.cacheFile._name_.enable">xdg.cacheFile.&lt;name&gt;.enable</a></h2>
+<p>Whether this file should be generated. This option allows specific
+files to be disabled.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.executable"><a class="header" href="#opt-xdg.cacheFile._name_.executable">xdg.cacheFile.&lt;name&gt;.executable</a></h2>
+<p>Set the execute bit. If <code>null</code>, defaults to the mode
+of the <code>source</code> file or to <code>false</code>
+for files created through the <code>text</code> option.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.force"><a class="header" href="#opt-xdg.cacheFile._name_.force">xdg.cacheFile.&lt;name&gt;.force</a></h2>
+<p>Whether the target path should be unconditionally replaced
+by the managed file source. Warning, this will silently
+delete the target regardless of whether it is a file or
+link.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.ignorelinks"><a class="header" href="#opt-xdg.cacheFile._name_.ignorelinks">xdg.cacheFile.&lt;name&gt;.ignorelinks</a></h2>
+<p>When <code>recursive</code> is enabled, adds the <code>-ignorelinks</code> flag to lndir.</p>
+<p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+symbolic link in the source directory. If that link points to a directory, the
+resulting target will be a link to the source tree’s symlink rather than a
+recursively linked directory tree.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.onChange"><a class="header" href="#opt-xdg.cacheFile._name_.onChange">xdg.cacheFile.&lt;name&gt;.onChange</a></h2>
+<p>Shell commands to run when file has changed between
+generations. The script will be run
+<em>after</em> the new files have been linked
+into place.</p>
+<p>Note, this code is always run when <code>recursive</code> is
+enabled.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.recursive"><a class="header" href="#opt-xdg.cacheFile._name_.recursive">xdg.cacheFile.&lt;name&gt;.recursive</a></h2>
+<p>If the file source is a directory, then this option
+determines whether the directory should be recursively
+linked to the target location. This option has no effect
+if the source is a file.</p>
+<p>If <code>false</code> (the default) then the target
+will be a symbolic link to the source directory. If
+<code>true</code> then the target will be a
+directory structure matching the source’s but whose leaves
+are symbolic links to the files of the source directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.source"><a class="header" href="#opt-xdg.cacheFile._name_.source">xdg.cacheFile.&lt;name&gt;.source</a></h2>
+<p>Path of the source file or directory. If
+<a href="#opt-xdg.cacheFile._name_.text"></a>
+is non-null then this option will automatically point to a file
+containing that text.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.target"><a class="header" href="#opt-xdg.cacheFile._name_.target">xdg.cacheFile.&lt;name&gt;.target</a></h2>
+<p>Path to target file relative to <code>xdg.cacheHome</code>.</p>
+<p><em>Type:</em>
+non-empty string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">name
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheFile._name_.text"><a class="header" href="#opt-xdg.cacheFile._name_.text">xdg.cacheFile.&lt;name&gt;.text</a></h2>
+<p>Text of the file. If this option is null then
+<a href="#opt-xdg.cacheFile._name_.source"></a>
+must be set.</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.cacheHome"><a class="header" href="#opt-xdg.cacheHome">xdg.cacheHome</a></h2>
+<p>Absolute path to directory holding application caches.</p>
+<p>Sets <code>XDG_CACHE_HOME</code> for the user if <code>xdg.enable</code> is set <code>true</code>.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"~/.cache"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile"><a class="header" href="#opt-xdg.configFile">xdg.configFile</a></h2>
+<p>Attribute set of files to link into the user’s XDG
+configuration home.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.enable"><a class="header" href="#opt-xdg.configFile._name_.enable">xdg.configFile.&lt;name&gt;.enable</a></h2>
+<p>Whether this file should be generated. This option allows specific
+files to be disabled.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.executable"><a class="header" href="#opt-xdg.configFile._name_.executable">xdg.configFile.&lt;name&gt;.executable</a></h2>
+<p>Set the execute bit. If <code>null</code>, defaults to the mode
+of the <code>source</code> file or to <code>false</code>
+for files created through the <code>text</code> option.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.force"><a class="header" href="#opt-xdg.configFile._name_.force">xdg.configFile.&lt;name&gt;.force</a></h2>
+<p>Whether the target path should be unconditionally replaced
+by the managed file source. Warning, this will silently
+delete the target regardless of whether it is a file or
+link.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.ignorelinks"><a class="header" href="#opt-xdg.configFile._name_.ignorelinks">xdg.configFile.&lt;name&gt;.ignorelinks</a></h2>
+<p>When <code>recursive</code> is enabled, adds the <code>-ignorelinks</code> flag to lndir.</p>
+<p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+symbolic link in the source directory. If that link points to a directory, the
+resulting target will be a link to the source tree’s symlink rather than a
+recursively linked directory tree.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.onChange"><a class="header" href="#opt-xdg.configFile._name_.onChange">xdg.configFile.&lt;name&gt;.onChange</a></h2>
+<p>Shell commands to run when file has changed between
+generations. The script will be run
+<em>after</em> the new files have been linked
+into place.</p>
+<p>Note, this code is always run when <code>recursive</code> is
+enabled.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.recursive"><a class="header" href="#opt-xdg.configFile._name_.recursive">xdg.configFile.&lt;name&gt;.recursive</a></h2>
+<p>If the file source is a directory, then this option
+determines whether the directory should be recursively
+linked to the target location. This option has no effect
+if the source is a file.</p>
+<p>If <code>false</code> (the default) then the target
+will be a symbolic link to the source directory. If
+<code>true</code> then the target will be a
+directory structure matching the source’s but whose leaves
+are symbolic links to the files of the source directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.source"><a class="header" href="#opt-xdg.configFile._name_.source">xdg.configFile.&lt;name&gt;.source</a></h2>
+<p>Path of the source file or directory. If
+<a href="#opt-xdg.configFile._name_.text"></a>
+is non-null then this option will automatically point to a file
+containing that text.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.target"><a class="header" href="#opt-xdg.configFile._name_.target">xdg.configFile.&lt;name&gt;.target</a></h2>
+<p>Path to target file relative to <code>xdg.configHome</code>.</p>
+<p><em>Type:</em>
+non-empty string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">name
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configFile._name_.text"><a class="header" href="#opt-xdg.configFile._name_.text">xdg.configFile.&lt;name&gt;.text</a></h2>
+<p>Text of the file. If this option is null then
+<a href="#opt-xdg.configFile._name_.source"></a>
+must be set.</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.configHome"><a class="header" href="#opt-xdg.configHome">xdg.configHome</a></h2>
+<p>Absolute path to directory holding application configurations.</p>
+<p>Sets <code>XDG_CONFIG_HOME</code> for the user if <code>xdg.enable</code> is set <code>true</code>.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"~/.config"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile"><a class="header" href="#opt-xdg.dataFile">xdg.dataFile</a></h2>
+<p>Attribute set of files to link into the user’s XDG
+data home.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.enable"><a class="header" href="#opt-xdg.dataFile._name_.enable">xdg.dataFile.&lt;name&gt;.enable</a></h2>
+<p>Whether this file should be generated. This option allows specific
+files to be disabled.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.executable"><a class="header" href="#opt-xdg.dataFile._name_.executable">xdg.dataFile.&lt;name&gt;.executable</a></h2>
+<p>Set the execute bit. If <code>null</code>, defaults to the mode
+of the <code>source</code> file or to <code>false</code>
+for files created through the <code>text</code> option.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.force"><a class="header" href="#opt-xdg.dataFile._name_.force">xdg.dataFile.&lt;name&gt;.force</a></h2>
+<p>Whether the target path should be unconditionally replaced
+by the managed file source. Warning, this will silently
+delete the target regardless of whether it is a file or
+link.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.ignorelinks"><a class="header" href="#opt-xdg.dataFile._name_.ignorelinks">xdg.dataFile.&lt;name&gt;.ignorelinks</a></h2>
+<p>When <code>recursive</code> is enabled, adds the <code>-ignorelinks</code> flag to lndir.</p>
+<p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+symbolic link in the source directory. If that link points to a directory, the
+resulting target will be a link to the source tree’s symlink rather than a
+recursively linked directory tree.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.onChange"><a class="header" href="#opt-xdg.dataFile._name_.onChange">xdg.dataFile.&lt;name&gt;.onChange</a></h2>
+<p>Shell commands to run when file has changed between
+generations. The script will be run
+<em>after</em> the new files have been linked
+into place.</p>
+<p>Note, this code is always run when <code>recursive</code> is
+enabled.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.recursive"><a class="header" href="#opt-xdg.dataFile._name_.recursive">xdg.dataFile.&lt;name&gt;.recursive</a></h2>
+<p>If the file source is a directory, then this option
+determines whether the directory should be recursively
+linked to the target location. This option has no effect
+if the source is a file.</p>
+<p>If <code>false</code> (the default) then the target
+will be a symbolic link to the source directory. If
+<code>true</code> then the target will be a
+directory structure matching the source’s but whose leaves
+are symbolic links to the files of the source directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.source"><a class="header" href="#opt-xdg.dataFile._name_.source">xdg.dataFile.&lt;name&gt;.source</a></h2>
+<p>Path of the source file or directory. If
+<a href="#opt-xdg.dataFile._name_.text"></a>
+is non-null then this option will automatically point to a file
+containing that text.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.target"><a class="header" href="#opt-xdg.dataFile._name_.target">xdg.dataFile.&lt;name&gt;.target</a></h2>
+<p>Path to target file relative to &lt;varname&gt;xdg.dataHome&lt;/varname&gt;.</p>
+<p><em>Type:</em>
+non-empty string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">name
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataFile._name_.text"><a class="header" href="#opt-xdg.dataFile._name_.text">xdg.dataFile.&lt;name&gt;.text</a></h2>
+<p>Text of the file. If this option is null then
+<a href="#opt-xdg.dataFile._name_.source"></a>
+must be set.</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.dataHome"><a class="header" href="#opt-xdg.dataHome">xdg.dataHome</a></h2>
+<p>Absolute path to directory holding application data.</p>
+<p>Sets <code>XDG_DATA_HOME</code> for the user if <code>xdg.enable</code> is set <code>true</code>.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"~/.local/share"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries"><a class="header" href="#opt-xdg.desktopEntries">xdg.desktopEntries</a></h2>
+<p>Desktop Entries allow applications to be shown in your desktop environment’s app launcher.</p>
+<p>You can define entries for programs without entries or override existing entries.</p>
+<p>See <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html">https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html</a> for more information on options.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  firefox = {
+    categories = [
+      "Network"
+      "WebBrowser"
+    ];
+    exec = "firefox %U";
+    genericName = "Web Browser";
+    mimeType = [
+      "text/html"
+      "text/xml"
+    ];
+    name = "Firefox";
+    terminal = false;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.actions"><a class="header" href="#opt-xdg.desktopEntries._name_.actions">xdg.desktopEntries.&lt;name&gt;.actions</a></h2>
+<p>The set of actions made available to application launchers.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "New Window" = {
+    exec = "${pkgs.firefox}/bin/firefox --new-window %u";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.actions._name_.exec"><a class="header" href="#opt-xdg.desktopEntries._name_.actions._name_.exec">xdg.desktopEntries.&lt;name&gt;.actions.&lt;name&gt;.exec</a></h2>
+<p>Program to execute, possibly with arguments.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.actions._name_.icon"><a class="header" href="#opt-xdg.desktopEntries._name_.actions._name_.icon">xdg.desktopEntries.&lt;name&gt;.actions.&lt;name&gt;.icon</a></h2>
+<p>Icon to display in file manager, menus, etc.</p>
+<p><em>Type:</em>
+null or string or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.actions._name_.name"><a class="header" href="#opt-xdg.desktopEntries._name_.actions._name_.name">xdg.desktopEntries.&lt;name&gt;.actions.&lt;name&gt;.name</a></h2>
+<p>Name of the action.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">&lt;name&gt;
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.categories"><a class="header" href="#opt-xdg.desktopEntries._name_.categories">xdg.desktopEntries.&lt;name&gt;.categories</a></h2>
+<p>Categories in which the entry should be shown in a menu.</p>
+<p><em>Type:</em>
+null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.comment"><a class="header" href="#opt-xdg.desktopEntries._name_.comment">xdg.desktopEntries.&lt;name&gt;.comment</a></h2>
+<p>Tooltip for the entry.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.exec"><a class="header" href="#opt-xdg.desktopEntries._name_.exec">xdg.desktopEntries.&lt;name&gt;.exec</a></h2>
+<p>Program to execute, possibly with arguments.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.genericName"><a class="header" href="#opt-xdg.desktopEntries._name_.genericName">xdg.desktopEntries.&lt;name&gt;.genericName</a></h2>
+<p>Generic name of the application.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.icon"><a class="header" href="#opt-xdg.desktopEntries._name_.icon">xdg.desktopEntries.&lt;name&gt;.icon</a></h2>
+<p>Icon to display in file manager, menus, etc.</p>
+<p><em>Type:</em>
+null or string or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.mimeType"><a class="header" href="#opt-xdg.desktopEntries._name_.mimeType">xdg.desktopEntries.&lt;name&gt;.mimeType</a></h2>
+<p>The MIME type(s) supported by this application.</p>
+<p><em>Type:</em>
+null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.name"><a class="header" href="#opt-xdg.desktopEntries._name_.name">xdg.desktopEntries.&lt;name&gt;.name</a></h2>
+<p>Specific name of the application.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.noDisplay"><a class="header" href="#opt-xdg.desktopEntries._name_.noDisplay">xdg.desktopEntries.&lt;name&gt;.noDisplay</a></h2>
+<p>Means “this application exists, but don’t display it in the menus”.
+This can be useful to e.g. associate this application with MIME types.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.prefersNonDefaultGPU"><a class="header" href="#opt-xdg.desktopEntries._name_.prefersNonDefaultGPU">xdg.desktopEntries.&lt;name&gt;.prefersNonDefaultGPU</a></h2>
+<p>If true, the application prefers to be run on a more powerful discrete GPU if available.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.settings"><a class="header" href="#opt-xdg.desktopEntries._name_.settings">xdg.desktopEntries.&lt;name&gt;.settings</a></h2>
+<p>Extra key-value pairs to add to the <code>[Desktop Entry]</code> section.
+This may override other values.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  DBusActivatable = "false";
+  Keywords = "calc;math";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.startupNotify"><a class="header" href="#opt-xdg.desktopEntries._name_.startupNotify">xdg.desktopEntries.&lt;name&gt;.startupNotify</a></h2>
+<p>If true, it is KNOWN that the application will send a “remove”
+message when started with the <code>DESKTOP_STARTUP_ID</code>
+environment variable set. If false, it is KNOWN that the application
+does not work with startup notification at all.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.terminal"><a class="header" href="#opt-xdg.desktopEntries._name_.terminal">xdg.desktopEntries.&lt;name&gt;.terminal</a></h2>
+<p>Whether the program runs in a terminal window.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.desktopEntries._name_.type"><a class="header" href="#opt-xdg.desktopEntries._name_.type">xdg.desktopEntries.&lt;name&gt;.type</a></h2>
+<p>The type of the desktop entry.</p>
+<p><em>Type:</em>
+one of “Application”, “Link”, “Directory”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Application"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/desktop-entries.nix">&lt;home-manager/modules/misc/xdg/desktop-entries.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.localBinInPath"><a class="header" href="#opt-xdg.localBinInPath">xdg.localBinInPath</a></h2>
+<p>Whether to add <code>xdg.binHome</code> to <code>PATH</code> when
+<code>xdg.enable</code> is enabled.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mime.enable"><a class="header" href="#opt-xdg.mime.enable">xdg.mime.enable</a></h2>
+<p>Whether to install programs and files to support the
+XDG Shared MIME-info specification and XDG MIME Applications
+specification at
+<a href="https://specifications.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html">https://specifications.freedesktop.org/shared-mime-info-spec/shared-mime-info-spec-latest.html</a>
+and
+<a href="https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-latest.html">https://specifications.freedesktop.org/mime-apps-spec/mime-apps-spec-latest.html</a>,
+respectively.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true if host platform is Linux, false otherwise
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime.nix">&lt;home-manager/modules/misc/xdg/mime.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mime.desktopFileUtilsPackage"><a class="header" href="#opt-xdg.mime.desktopFileUtilsPackage">xdg.mime.desktopFileUtilsPackage</a></h2>
+<p>The desktop-file-utils package to use. Used when running update-desktop-database.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.desktop-file-utils
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime.nix">&lt;home-manager/modules/misc/xdg/mime.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mime.sharedMimeInfoPackage"><a class="header" href="#opt-xdg.mime.sharedMimeInfoPackage">xdg.mime.sharedMimeInfoPackage</a></h2>
+<p>The shared-mime-info package to use. Used when running update-mime-database.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.shared-mime-info
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime.nix">&lt;home-manager/modules/misc/xdg/mime.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mimeApps.enable"><a class="header" href="#opt-xdg.mimeApps.enable">xdg.mimeApps.enable</a></h2>
+<p>Whether to manage <code>$XDG_CONFIG_HOME/mimeapps.list</code>.</p>
+<p>The generated file is read-only.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime-apps.nix">&lt;home-manager/modules/misc/xdg/mime-apps.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mimeApps.associations.added"><a class="header" href="#opt-xdg.mimeApps.associations.added">xdg.mimeApps.associations.added</a></h2>
+<p>Defines additional associations of applications with
+mimetypes, as if the .desktop file was listing this mimetype
+in the first place.</p>
+<p><em>Type:</em>
+attribute set of ((list of string) or ((list of string) or string) convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  mimetype1 = [
+    "foo1.desktop"
+    "foo2.desktop"
+    "foo3.desktop"
+  ];
+  mimetype2 = "foo4.desktop";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime-apps.nix">&lt;home-manager/modules/misc/xdg/mime-apps.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mimeApps.associations.removed"><a class="header" href="#opt-xdg.mimeApps.associations.removed">xdg.mimeApps.associations.removed</a></h2>
+<p>Removes associations of applications with mimetypes, as if the
+.desktop file was <em>not</em> listing this
+mimetype in the first place.</p>
+<p><em>Type:</em>
+attribute set of ((list of string) or ((list of string) or string) convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  mimetype1 = "foo5.desktop";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime-apps.nix">&lt;home-manager/modules/misc/xdg/mime-apps.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mimeApps.defaultApplicationPackages"><a class="header" href="#opt-xdg.mimeApps.defaultApplicationPackages">xdg.mimeApps.defaultApplicationPackages</a></h2>
+<p>Packages whose <code>.desktop</code> files will be used to establish default
+mimetype associations.</p>
+<p>These associations are appended to the associations in
+<a href="#opt-xdg.mimeApps.defaultApplications"></a>. If multiple packages
+associate with the same mime type, then the priority among them is
+determined by their order in the list.</p>
+<p><strong>Note:</strong> Passing a large number of packages (for example, the system
+package set or all of <code>home.packages</code>) will
+significantly slow down builds. Prefer listing only the specific
+packages whose MIME associations you want to set as defaults.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  &lt;derivation eog-50.1&gt;
+  &lt;derivation evince-48.4&gt;
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime-apps.nix">&lt;home-manager/modules/misc/xdg/mime-apps.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.mimeApps.defaultApplications"><a class="header" href="#opt-xdg.mimeApps.defaultApplications">xdg.mimeApps.defaultApplications</a></h2>
+<p>The default application to be used for a given mimetype. This
+is, for instance, the one that will be started when
+double-clicking on a file in a file manager. If the
+application is no longer installed, the next application in
+the list is attempted, and so on.</p>
+<p><em>Type:</em>
+attribute set of ((list of string) or ((list of string) or string) convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  mimetype1 = [
+    "default1.desktop"
+    "default2.desktop"
+  ];
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/mime-apps.nix">&lt;home-manager/modules/misc/xdg/mime-apps.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.portal.enable"><a class="header" href="#opt-xdg.portal.enable">xdg.portal.enable</a></h2>
+<p>Whether to enable <a href="https://github.com/flatpak/xdg-desktop-portal">XDG desktop integration</a>.</p>
+<p>Note, if you installed Home Manager via its NixOS module and
+‘home-manager.useUserPackages’ is enabled, make sure to add</p>
+<pre><code class="language-nix">environment.pathsToLink = [ "/share/xdg-desktop-portal" "/share/applications" ];
+</code></pre>
+<p>to your NixOS configuration so that the portal definitions and DE
+provided configurations get linked.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/portal.nix">&lt;home-manager/modules/misc/xdg/portal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.portal.config"><a class="header" href="#opt-xdg.portal.config">xdg.portal.config</a></h2>
+<p>Sets which portal backend should be used to provide the implementation
+for the requested interface. For details check <code>portals.conf(5)</code>.</p>
+<p>These will be written with the name <code>$desktop-portals.conf</code> for
+<code>xdg.portal.config.$desktop</code> and <code>portals.conf</code> for
+<code>xdg.portal.config.common</code> as an exception.</p>
+<p>These, together with <code>xdg.portal.configPackages</code>, will be joined into a
+directory and passed to <code>xdg-desktop-portal.service</code> through a
+<code>NIXOS_XDG_DESKTOP_PORTAL_CONFIG_DIR</code> variable.</p>
+<p><em>Type:</em>
+attribute set of attribute set of (string or ((list of string) or string) convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  common = {
+    default = [
+      "gtk"
+    ];
+  };
+  pantheon = {
+    default = [
+      "pantheon"
+      "gtk"
+    ];
+    "org.freedesktop.impl.portal.Secret" = [
+      "gnome-keyring"
+    ];
+  };
+  x-cinnamon = {
+    default = [
+      "xapp"
+      "gtk"
+    ];
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/portal.nix">&lt;home-manager/modules/misc/xdg/portal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.portal.configPackages"><a class="header" href="#opt-xdg.portal.configPackages">xdg.portal.configPackages</a></h2>
+<p>List of packages that provide XDG desktop portal configuration, usually in
+the form of <code>share/xdg-desktop-portal/$desktop-portals.conf</code>.</p>
+<p>Note that configs in <code>xdg.portal.config</code> will be preferred if set.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[ pkgs.gnome.gnome-session ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/portal.nix">&lt;home-manager/modules/misc/xdg/portal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.portal.extraPortals"><a class="header" href="#opt-xdg.portal.extraPortals">xdg.portal.extraPortals</a></h2>
+<p>List of additional portals that should be added to the environment.</p>
+<p>The directory where the portal definitions have been merged together
+(likely <code>~/.nix-profile/share/xdg-desktop-portal/portals</code>) will get
+passed to <code>xdg-desktop-portal.service</code> via the
+<code>NIX_XDG_DESKTOP_PORTAL_DIR</code> environment variable.</p>
+<p>Portals allow interaction with system, like choosing files or taking
+screenshots. At minimum, a desktop portal implementation should be
+listed.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/portal.nix">&lt;home-manager/modules/misc/xdg/portal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.portal.xdgOpenUsePortal"><a class="header" href="#opt-xdg.portal.xdgOpenUsePortal">xdg.portal.xdgOpenUsePortal</a></h2>
+<p>Sets environment variable <code>NIXOS_XDG_OPEN_USE_PORTAL</code> to <code>1</code>
+This will make <code>xdg-open</code> use the portal to open programs, which resolves bugs involving
+programs opening inside FHS envs or with unexpected env vars set from wrappers.
+See <a href="https://github.com/NixOS/nixpkgs/issues/160923">#160923</a> for more info.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/portal.nix">&lt;home-manager/modules/misc/xdg/portal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile"><a class="header" href="#opt-xdg.stateFile">xdg.stateFile</a></h2>
+<p>Attribute set of files to link into the user’s XDG
+state home.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.enable"><a class="header" href="#opt-xdg.stateFile._name_.enable">xdg.stateFile.&lt;name&gt;.enable</a></h2>
+<p>Whether this file should be generated. This option allows specific
+files to be disabled.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.executable"><a class="header" href="#opt-xdg.stateFile._name_.executable">xdg.stateFile.&lt;name&gt;.executable</a></h2>
+<p>Set the execute bit. If <code>null</code>, defaults to the mode
+of the <code>source</code> file or to <code>false</code>
+for files created through the <code>text</code> option.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.force"><a class="header" href="#opt-xdg.stateFile._name_.force">xdg.stateFile.&lt;name&gt;.force</a></h2>
+<p>Whether the target path should be unconditionally replaced
+by the managed file source. Warning, this will silently
+delete the target regardless of whether it is a file or
+link.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.ignorelinks"><a class="header" href="#opt-xdg.stateFile._name_.ignorelinks">xdg.stateFile.&lt;name&gt;.ignorelinks</a></h2>
+<p>When <code>recursive</code> is enabled, adds the <code>-ignorelinks</code> flag to lndir.</p>
+<p>It causes lndir to not treat symbolic links in the source directory specially.
+The link created in the target directory will point back to the corresponding
+symbolic link in the source directory. If that link points to a directory, the
+resulting target will be a link to the source tree’s symlink rather than a
+recursively linked directory tree.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.onChange"><a class="header" href="#opt-xdg.stateFile._name_.onChange">xdg.stateFile.&lt;name&gt;.onChange</a></h2>
+<p>Shell commands to run when file has changed between
+generations. The script will be run
+<em>after</em> the new files have been linked
+into place.</p>
+<p>Note, this code is always run when <code>recursive</code> is
+enabled.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.recursive"><a class="header" href="#opt-xdg.stateFile._name_.recursive">xdg.stateFile.&lt;name&gt;.recursive</a></h2>
+<p>If the file source is a directory, then this option
+determines whether the directory should be recursively
+linked to the target location. This option has no effect
+if the source is a file.</p>
+<p>If <code>false</code> (the default) then the target
+will be a symbolic link to the source directory. If
+<code>true</code> then the target will be a
+directory structure matching the source’s but whose leaves
+are symbolic links to the files of the source directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.source"><a class="header" href="#opt-xdg.stateFile._name_.source">xdg.stateFile.&lt;name&gt;.source</a></h2>
+<p>Path of the source file or directory. If
+<a href="#opt-xdg.stateFile._name_.text"></a>
+is non-null then this option will automatically point to a file
+containing that text.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.target"><a class="header" href="#opt-xdg.stateFile._name_.target">xdg.stateFile.&lt;name&gt;.target</a></h2>
+<p>Path to target file relative to &lt;varname&gt;xdg.stateHome&lt;/varname&gt;.</p>
+<p><em>Type:</em>
+non-empty string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">name
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateFile._name_.text"><a class="header" href="#opt-xdg.stateFile._name_.text">xdg.stateFile.&lt;name&gt;.text</a></h2>
+<p>Text of the file. If this option is null then
+<a href="#opt-xdg.stateFile._name_.source"></a>
+must be set.</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.stateHome"><a class="header" href="#opt-xdg.stateHome">xdg.stateHome</a></h2>
+<p>Absolute path to directory holding application states.</p>
+<p>Sets <code>XDG_STATE_HOME</code> for the user if <code>xdg.enable</code> is set <code>true</code>.</p>
+<p><em>Type:</em>
+absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"~/.local/state"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg">&lt;home-manager/modules/misc/xdg&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.systemDirs.config"><a class="header" href="#opt-xdg.systemDirs.config">xdg.systemDirs.config</a></h2>
+<p>Directory names to add to <code>XDG_CONFIG_DIRS</code>
+in the user session.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "/etc/xdg"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/system-dirs.nix">&lt;home-manager/modules/misc/xdg/system-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.systemDirs.data"><a class="header" href="#opt-xdg.systemDirs.data">xdg.systemDirs.data</a></h2>
+<p>Directory names to add to <code>XDG_DATA_DIRS</code>
+in the user session.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "/usr/share"
+  "/usr/local/share"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/system-dirs.nix">&lt;home-manager/modules/misc/xdg/system-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.terminal-exec.enable"><a class="header" href="#opt-xdg.terminal-exec.enable">xdg.terminal-exec.enable</a></h2>
+<p>Whether to enable xdg-terminal-exec, the
+<a href="https://gitlab.freedesktop.org/xdg/xdg-specs/-/merge_requests/46">proposed</a>
+Default Terminal Execution Specification.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/terminal-exec.nix">&lt;home-manager/modules/misc/xdg/terminal-exec.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.terminal-exec.package"><a class="header" href="#opt-xdg.terminal-exec.package">xdg.terminal-exec.package</a></h2>
+<p>The xdg-terminal-exec package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.xdg-terminal-exec
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/terminal-exec.nix">&lt;home-manager/modules/misc/xdg/terminal-exec.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.terminal-exec.settings"><a class="header" href="#opt-xdg.terminal-exec.settings">xdg.terminal-exec.settings</a></h2>
+<p>Configuration options for the Default Terminal Execution Specification.</p>
+<p>The keys are the desktop environments that are matched (case-insensitively) against <code>XDG_CURRENT_DESKTOP</code>,
+or <code>default</code> which is used when the current desktop environment is not found in the configuration.
+The values are a list of terminals’ <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s02.html#desktop-file-id">desktop file IDs</a> to try in order of decreasing priority.</p>
+<p><em>Type:</em>
+attribute set of list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  GNOME = [
+    "com.raggesilver.BlackBox.desktop"
+    "org.gnome.Terminal.desktop"
+  ];
+  default = [
+    "kitty.desktop"
+  ];
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/terminal-exec.nix">&lt;home-manager/modules/misc/xdg/terminal-exec.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.enable"><a class="header" href="#opt-xdg.userDirs.enable">xdg.userDirs.enable</a></h2>
+<p>Whether to manage <code>$XDG_CONFIG_HOME/user-dirs.dirs</code>.</p>
+<p>The generated file is read-only.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.package"><a class="header" href="#opt-xdg.userDirs.package">xdg.userDirs.package</a></h2>
+<p>The xdg-user-dirs package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.xdg-user-dirs
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.createDirectories"><a class="header" href="#opt-xdg.userDirs.createDirectories">xdg.userDirs.createDirectories</a></h2>
+<p>Whether to enable automatic creation of the XDG user directories.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.desktop"><a class="header" href="#opt-xdg.userDirs.desktop">xdg.userDirs.desktop</a></h2>
+<p>The Desktop directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Desktop"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.documents"><a class="header" href="#opt-xdg.userDirs.documents">xdg.userDirs.documents</a></h2>
+<p>The Documents directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Documents"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.download"><a class="header" href="#opt-xdg.userDirs.download">xdg.userDirs.download</a></h2>
+<p>The Downloads directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Downloads"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.extraConfig"><a class="header" href="#opt-xdg.userDirs.extraConfig">xdg.userDirs.extraConfig</a></h2>
+<p>Other user directories.</p>
+<p>The key ‘MISC’ corresponds to the user-dirs entry ‘XDG_MISC_DIR’.</p>
+<p><em>Type:</em>
+attribute set of (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  MISC = "${config.home.homeDirectory}/Misc";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.music"><a class="header" href="#opt-xdg.userDirs.music">xdg.userDirs.music</a></h2>
+<p>The Music directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Music"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.pictures"><a class="header" href="#opt-xdg.userDirs.pictures">xdg.userDirs.pictures</a></h2>
+<p>The Pictures directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Pictures"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.projects"><a class="header" href="#opt-xdg.userDirs.projects">xdg.userDirs.projects</a></h2>
+<p>The Projects directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Projects"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.publicShare"><a class="header" href="#opt-xdg.userDirs.publicShare">xdg.userDirs.publicShare</a></h2>
+<p>The Public share directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Public"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.setSessionVariables"><a class="header" href="#opt-xdg.userDirs.setSessionVariables">xdg.userDirs.setSessionVariables</a></h2>
+<p>Whether to set the XDG user dir environment variables, like
+<code>XDG_DESKTOP_DIR</code>.</p>
+<p><strong>Note:</strong> The recommended way to get these values is via the <code>xdg-user-dir</code>
+command or by processing <code>$XDG_CONFIG_HOME/user-dirs.dirs</code> directly in
+your application.</p>
+<p>This defaults to <code>true</code> for state version &lt; 26.05 and <code>false</code> otherwise.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if lib.versionAtLeast config.home.stateVersion "26.05" then false else true
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.templates"><a class="header" href="#opt-xdg.userDirs.templates">xdg.userDirs.templates</a></h2>
+<p>The Templates directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Templates"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+<h2 id="opt-xdg.userDirs.videos"><a class="header" href="#opt-xdg.userDirs.videos">xdg.userDirs.videos</a></h2>
+<p>The Videos directory.</p>
+<p><em>Type:</em>
+null or (string or absolute path convertible to it)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/Videos"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/xdg/user-dirs.nix">&lt;home-manager/modules/misc/xdg/user-dirs.nix&gt;</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../options/home-manager/wayland.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../options/home-manager/xfconf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../options/home-manager/wayland.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../options/home-manager/xfconf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

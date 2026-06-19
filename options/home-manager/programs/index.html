@@ -1,0 +1,641 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>programs - Home Manager Manual</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-501f0983.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-2bd0036d.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Home Manager Manual</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/nix-community/home-manager" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="programs"><a class="header" href="#programs">programs</a></h1>
+<h2 id="modules"><a class="header" href="#modules">Modules</a></h2>
+<ul>
+<li><a href="abaddon.html">abaddon</a></li>
+<li><a href="abook.html">abook</a></li>
+<li><a href="acd-cli.html">acd-cli</a></li>
+<li><a href="aerc.html">aerc</a></li>
+<li><a href="aerospace.html">aerospace</a></li>
+<li><a href="afew.html">afew</a></li>
+<li><a href="ahoviewer.html">ahoviewer</a></li>
+<li><a href="aiac.html">aiac</a></li>
+<li><a href="aichat.html">aichat</a></li>
+<li><a href="aider-chat.html">aider-chat</a></li>
+<li><a href="airlift.html">airlift</a></li>
+<li><a href="alacritty.html">alacritty</a></li>
+<li><a href="algia.html">algia</a></li>
+<li><a href="aliae.html">aliae</a></li>
+<li><a href="alistral.html">alistral</a></li>
+<li><a href="alot.html">alot</a></li>
+<li><a href="am2rlauncher.html">am2rlauncher</a></li>
+<li><a href="amber.html">amber</a></li>
+<li><a href="amfora.html">amfora</a></li>
+<li><a href="amoco.html">amoco</a></li>
+<li><a href="amp.html">amp</a></li>
+<li><a href="andcli.html">andcli</a></li>
+<li><a href="animdl.html">animdl</a></li>
+<li><a href="anime-downloader.html">anime-downloader</a></li>
+<li><a href="anki.html">anki</a></li>
+<li><a href="antigravity.html">antigravity</a></li>
+<li><a href="antigravity-cli.html">antigravity-cli</a></li>
+<li><a href="anup.html">anup</a></li>
+<li><a href="anvil-editor.html">anvil-editor</a></li>
+<li><a href="anyrun.html">anyrun</a></li>
+<li><a href="aperture.html">aperture</a></li>
+<li><a href="aphorme.html">aphorme</a></li>
+<li><a href="aria2.html">aria2</a></li>
+<li><a href="aria2p.html">aria2p</a></li>
+<li><a href="asciinema.html">asciinema</a></li>
+<li><a href="ashell.html">ashell</a></li>
+<li><a href="astroid.html">astroid</a></li>
+<li><a href="atool.html">atool</a></li>
+<li><a href="atuin.html">atuin</a></li>
+<li><a href="autojump.html">autojump</a></li>
+<li><a href="autorandr.html">autorandr</a></li>
+<li><a href="awscli.html">awscli</a></li>
+<li><a href="bacon.html">bacon</a></li>
+<li><a href="bash.html">bash</a></li>
+<li><a href="bashmount.html">bashmount</a></li>
+<li><a href="bat.html">bat</a></li>
+<li><a href="beets.html">beets</a></li>
+<li><a href="bemenu.html">bemenu</a></li>
+<li><a href="bluetuith.html">bluetuith</a></li>
+<li><a href="borgmatic.html">borgmatic</a></li>
+<li><a href="bottom.html">bottom</a></li>
+<li><a href="boxxy.html">boxxy</a></li>
+<li><a href="brave.html">brave</a></li>
+<li><a href="broot.html">broot</a></li>
+<li><a href="browserpass.html">browserpass</a></li>
+<li><a href="btop.html">btop</a></li>
+<li><a href="bun.html">bun</a></li>
+<li><a href="calibre.html">calibre</a></li>
+<li><a href="carapace.html">carapace</a></li>
+<li><a href="cargo.html">cargo</a></li>
+<li><a href="cava.html">cava</a></li>
+<li><a href="cavalier.html">cavalier</a></li>
+<li><a href="chawan.html">chawan</a></li>
+<li><a href="chromium.html">chromium</a></li>
+<li><a href="claude-code.html">claude-code</a></li>
+<li><a href="clock-rs.html">clock-rs</a></li>
+<li><a href="cmus.html">cmus</a></li>
+<li><a href="codex.html">codex</a></li>
+<li><a href="command-not-found.html">command-not-found</a></li>
+<li><a href="comodoro.html">comodoro</a></li>
+<li><a href="cudatext.html">cudatext</a></li>
+<li><a href="cursor.html">cursor</a></li>
+<li><a href="darcs.html">darcs</a></li>
+<li><a href="dbeaver.html">dbeaver</a></li>
+<li><a href="delta.html">delta</a></li>
+<li><a href="desktoppr.html">desktoppr</a></li>
+<li><a href="diff-highlight.html">diff-highlight</a></li>
+<li><a href="diff-so-fancy.html">diff-so-fancy</a></li>
+<li><a href="difftastic.html">difftastic</a></li>
+<li><a href="dircolors.html">dircolors</a></li>
+<li><a href="direnv.html">direnv</a></li>
+<li><a href="discocss.html">discocss</a></li>
+<li><a href="discord.html">discord</a></li>
+<li><a href="distrobox.html">distrobox</a></li>
+<li><a href="docker-cli.html">docker-cli</a></li>
+<li><a href="earthly.html">earthly</a></li>
+<li><a href="ec.html">ec</a></li>
+<li><a href="eclipse.html">eclipse</a></li>
+<li><a href="element-desktop.html">element-desktop</a></li>
+<li><a href="emacs.html">emacs</a></li>
+<li><a href="equibop.html">equibop</a></li>
+<li><a href="eww.html">eww</a></li>
+<li><a href="eza.html">eza</a></li>
+<li><a href="fabric-ai.html">fabric-ai</a></li>
+<li><a href="fastfetch.html">fastfetch</a></li>
+<li><a href="fd.html">fd</a></li>
+<li><a href="feedr.html">feedr</a></li>
+<li><a href="feh.html">feh</a></li>
+<li><a href="firefox.html">firefox</a></li>
+<li><a href="firefoxpwa.html">firefoxpwa</a></li>
+<li><a href="fish.html">fish</a></li>
+<li><a href="flashspace.html">flashspace</a></li>
+<li><a href="floorp.html">floorp</a></li>
+<li><a href="foliate.html">foliate</a></li>
+<li><a href="foot.html">foot</a></li>
+<li><a href="formiko.html">formiko</a></li>
+<li><a href="freetube.html">freetube</a></li>
+<li><a href="fresh-editor.html">fresh-editor</a></li>
+<li><a href="fuzzel.html">fuzzel</a></li>
+<li><a href="fzf.html">fzf</a></li>
+<li><a href="gallery-dl.html">gallery-dl</a></li>
+<li><a href="gcc.html">gcc</a></li>
+<li><a href="gh.html">gh</a></li>
+<li><a href="gh-dash.html">gh-dash</a></li>
+<li><a href="ghostty.html">ghostty</a></li>
+<li><a href="git.html">git</a></li>
+<li><a href="git-cliff.html">git-cliff</a></li>
+<li><a href="git-credential-keepassxc.html">git-credential-keepassxc</a></li>
+<li><a href="git-credential-oauth.html">git-credential-oauth</a></li>
+<li><a href="git-worktree-switcher.html">git-worktree-switcher</a></li>
+<li><a href="github-copilot-cli.html">github-copilot-cli</a></li>
+<li><a href="gitui.html">gitui</a></li>
+<li><a href="gnome-shell.html">gnome-shell</a></li>
+<li><a href="gnome-terminal.html">gnome-terminal</a></li>
+<li><a href="go.html">go</a></li>
+<li><a href="google-chrome.html">google-chrome</a></li>
+<li><a href="google-chrome-beta.html">google-chrome-beta</a></li>
+<li><a href="google-chrome-dev.html">google-chrome-dev</a></li>
+<li><a href="goto.html">goto</a></li>
+<li><a href="gpg.html">gpg</a></li>
+<li><a href="gradle.html">gradle</a></li>
+<li><a href="granted.html">granted</a></li>
+<li><a href="grep.html">grep</a></li>
+<li><a href="grype.html">grype</a></li>
+<li><a href="gurk-rs.html">gurk-rs</a></li>
+<li><a href="halloy.html">halloy</a></li>
+<li><a href="havoc.html">havoc</a></li>
+<li><a href="helix.html">helix</a></li>
+<li><a href="hexchat.html">hexchat</a></li>
+<li><a href="himalaya.html">himalaya</a></li>
+<li><a href="home-manager.html">home-manager</a></li>
+<li><a href="hstr.html">hstr</a></li>
+<li><a href="htop.html">htop</a></li>
+<li><a href="hwatch.html">hwatch</a></li>
+<li><a href="hyfetch.html">hyfetch</a></li>
+<li><a href="hyprlock.html">hyprlock</a></li>
+<li><a href="hyprpanel.html">hyprpanel</a></li>
+<li><a href="hyprshot.html">hyprshot</a></li>
+<li><a href="i3bar-river.html">i3bar-river</a></li>
+<li><a href="i3blocks.html">i3blocks</a></li>
+<li><a href="i3status.html">i3status</a></li>
+<li><a href="i3status-rust.html">i3status-rust</a></li>
+<li><a href="iamb.html">iamb</a></li>
+<li><a href="imv.html">imv</a></li>
+<li><a href="infat.html">infat</a></li>
+<li><a href="info.html">info</a></li>
+<li><a href="inori.html">inori</a></li>
+<li><a href="intelli-shell.html">intelli-shell</a></li>
+<li><a href="ion.html">ion</a></li>
+<li><a href="irssi.html">irssi</a></li>
+<li><a href="java.html">java</a></li>
+<li><a href="jetbrains-remote.html">jetbrains-remote</a></li>
+<li><a href="jjui.html">jjui</a></li>
+<li><a href="joplin-desktop.html">joplin-desktop</a></li>
+<li><a href="joshuto.html">joshuto</a></li>
+<li><a href="jq.html">jq</a></li>
+<li><a href="jqp.html">jqp</a></li>
+<li><a href="jrnl.html">jrnl</a></li>
+<li><a href="jujutsu.html">jujutsu</a></li>
+<li><a href="k9s.html">k9s</a></li>
+<li><a href="kakoune.html">kakoune</a></li>
+<li><a href="keepassxc.html">keepassxc</a></li>
+<li><a href="keychain.html">keychain</a></li>
+<li><a href="khal.html">khal</a></li>
+<li><a href="khard.html">khard</a></li>
+<li><a href="kickoff.html">kickoff</a></li>
+<li><a href="kiro.html">kiro</a></li>
+<li><a href="kiro-cli.html">kiro-cli</a></li>
+<li><a href="kitty.html">kitty</a></li>
+<li><a href="kodi.html">kodi</a></li>
+<li><a href="kraftkit.html">kraftkit</a></li>
+<li><a href="kubecolor.html">kubecolor</a></li>
+<li><a href="kubeswitch.html">kubeswitch</a></li>
+<li><a href="lapce.html">lapce</a></li>
+<li><a href="lazydocker.html">lazydocker</a></li>
+<li><a href="lazygit.html">lazygit</a></li>
+<li><a href="lazysql.html">lazysql</a></li>
+<li><a href="lazyworktree.html">lazyworktree</a></li>
+<li><a href="ledger.html">ledger</a></li>
+<li><a href="less.html">less</a></li>
+<li><a href="lesspipe.html">lesspipe</a></li>
+<li><a href="lf.html">lf</a></li>
+<li><a href="librewolf.html">librewolf</a></li>
+<li><a href="lieer.html">lieer</a></li>
+<li><a href="looking-glass-client.html">looking-glass-client</a></li>
+<li><a href="lsd.html">lsd</a></li>
+<li><a href="lutris.html">lutris</a></li>
+<li><a href="macchina.html">macchina</a></li>
+<li><a href="macos-terminal.html">macos-terminal</a></li>
+<li><a href="man.html">man</a></li>
+<li><a href="mangohud.html">mangohud</a></li>
+<li><a href="matplotlib.html">matplotlib</a></li>
+<li><a href="mbsync.html">mbsync</a></li>
+<li><a href="mc.html">mc</a></li>
+<li><a href="mcfly.html">mcfly</a></li>
+<li><a href="mcp.html">mcp</a></li>
+<li><a href="meli.html">meli</a></li>
+<li><a href="mercurial.html">mercurial</a></li>
+<li><a href="mergiraf.html">mergiraf</a></li>
+<li><a href="micro.html">micro</a></li>
+<li><a href="microsoft-edge.html">microsoft-edge</a></li>
+<li><a href="mise.html">mise</a></li>
+<li><a href="mistral-vibe.html">mistral-vibe</a></li>
+<li><a href="mods.html">mods</a></li>
+<li><a href="mpv.html">mpv</a></li>
+<li><a href="mpvpaper.html">mpvpaper</a></li>
+<li><a href="mr.html">mr</a></li>
+<li><a href="msmtp.html">msmtp</a></li>
+<li><a href="mu.html">mu</a></li>
+<li><a href="mujmap.html">mujmap</a></li>
+<li><a href="mullvad-vpn.html">mullvad-vpn</a></li>
+<li><a href="mypy.html">mypy</a></li>
+<li><a href="navi.html">navi</a></li>
+<li><a href="ncmpcpp.html">ncmpcpp</a></li>
+<li><a href="ncspot.html">ncspot</a></li>
+<li><a href="ne.html">ne</a></li>
+<li><a href="neomutt.html">neomutt</a></li>
+<li><a href="neovide.html">neovide</a></li>
+<li><a href="neovim.html">neovim</a></li>
+<li><a href="newsboat.html">newsboat</a></li>
+<li><a href="nh.html">nh</a></li>
+<li><a href="nheko.html">nheko</a></li>
+<li><a href="nix-index.html">nix-index</a></li>
+<li><a href="nix-init.html">nix-init</a></li>
+<li><a href="nix-search-tv.html">nix-search-tv</a></li>
+<li><a href="nix-your-shell.html">nix-your-shell</a></li>
+<li><a href="nnn.html">nnn</a></li>
+<li><a href="nom.html">nom</a></li>
+<li><a href="noti.html">noti</a></li>
+<li><a href="notmuch.html">notmuch</a></li>
+<li><a href="npm.html">npm</a></li>
+<li><a href="numbat.html">numbat</a></li>
+<li><a href="nushell.html">nushell</a></li>
+<li><a href="nvchecker.html">nvchecker</a></li>
+<li><a href="nyxt.html">nyxt</a></li>
+<li><a href="obs-studio.html">obs-studio</a></li>
+<li><a href="obsidian.html">obsidian</a></li>
+<li><a href="offlineimap.html">offlineimap</a></li>
+<li><a href="oh-my-posh.html">oh-my-posh</a></li>
+<li><a href="onagre.html">onagre</a></li>
+<li><a href="onedrive.html">onedrive</a></li>
+<li><a href="onlyoffice.html">onlyoffice</a></li>
+<li><a href="opam.html">opam</a></li>
+<li><a href="opencode.html">opencode</a></li>
+<li><a href="openstackclient.html">openstackclient</a></li>
+<li><a href="opkssh.html">opkssh</a></li>
+<li><a href="pandoc.html">pandoc</a></li>
+<li><a href="papis.html">papis</a></li>
+<li><a href="parallel.html">parallel</a></li>
+<li><a href="password-store.html">password-store</a></li>
+<li><a href="patdiff.html">patdiff</a></li>
+<li><a href="pay-respects.html">pay-respects</a></li>
+<li><a href="pazi.html">pazi</a></li>
+<li><a href="pet.html">pet</a></li>
+<li><a href="pgcli.html">pgcli</a></li>
+<li><a href="pi-coding-agent.html">pi-coding-agent</a></li>
+<li><a href="pianobar.html">pianobar</a></li>
+<li><a href="pidgin.html">pidgin</a></li>
+<li><a href="pimsync.html">pimsync</a></li>
+<li><a href="pistol.html">pistol</a></li>
+<li><a href="piston-cli.html">piston-cli</a></li>
+<li><a href="pls.html">pls</a></li>
+<li><a href="poetry.html">poetry</a></li>
+<li><a href="powerline-go.html">powerline-go</a></li>
+<li><a href="pqiv.html">pqiv</a></li>
+<li><a href="prismlauncher.html">prismlauncher</a></li>
+<li><a href="ptyxis.html">ptyxis</a></li>
+<li><a href="pubs.html">pubs</a></li>
+<li><a href="pyenv.html">pyenv</a></li>
+<li><a href="pylint.html">pylint</a></li>
+<li><a href="pyradio.html">pyradio</a></li>
+<li><a href="pywal.html">pywal</a></li>
+<li><a href="qalculate.html">qalculate</a></li>
+<li><a href="qcal.html">qcal</a></li>
+<li><a href="quickshell.html">quickshell</a></li>
+<li><a href="qutebrowser.html">qutebrowser</a></li>
+<li><a href="radicle.html">radicle</a></li>
+<li><a href="radio-active.html">radio-active</a></li>
+<li><a href="radio-cli.html">radio-cli</a></li>
+<li><a href="ranger.html">ranger</a></li>
+<li><a href="rbenv.html">rbenv</a></li>
+<li><a href="rbw.html">rbw</a></li>
+<li><a href="rclone.html">rclone</a></li>
+<li><a href="readline.html">readline</a></li>
+<li><a href="rectangle.html">rectangle</a></li>
+<li><a href="retext.html">retext</a></li>
+<li><a href="retroarch.html">retroarch</a></li>
+<li><a href="riff.html">riff</a></li>
+<li><a href="rio.html">rio</a></li>
+<li><a href="ripgrep.html">ripgrep</a></li>
+<li><a href="ripgrep-all.html">ripgrep-all</a></li>
+<li><a href="rizin.html">rizin</a></li>
+<li><a href="rmpc.html">rmpc</a></li>
+<li><a href="rofi.html">rofi</a></li>
+<li><a href="rtorrent.html">rtorrent</a></li>
+<li><a href="ruff.html">ruff</a></li>
+<li><a href="sagemath.html">sagemath</a></li>
+<li><a href="sapling.html">sapling</a></li>
+<li><a href="satty.html">satty</a></li>
+<li><a href="sbt.html">sbt</a></li>
+<li><a href="scmpuff.html">scmpuff</a></li>
+<li><a href="screen.html">screen</a></li>
+<li><a href="script-directory.html">script-directory</a></li>
+<li><a href="senpai.html">senpai</a></li>
+<li><a href="sesh.html">sesh</a></li>
+<li><a href="sftpman.html">sftpman</a></li>
+<li><a href="sheldon.html">sheldon</a></li>
+<li><a href="sherlock.html">sherlock</a></li>
+<li><a href="sioyek.html">sioyek</a></li>
+<li><a href="sketchybar.html">sketchybar</a></li>
+<li><a href="skim.html">skim</a></li>
+<li><a href="sm64ex.html">sm64ex</a></li>
+<li><a href="smug.html">smug</a></li>
+<li><a href="spotify-player.html">spotify-player</a></li>
+<li><a href="sqls.html">sqls</a></li>
+<li><a href="ssh.html">ssh</a></li>
+<li><a href="starship.html">starship</a></li>
+<li><a href="streamlink.html">streamlink</a></li>
+<li><a href="superfile.html">superfile</a></li>
+<li><a href="swappy.html">swappy</a></li>
+<li><a href="sway-easyfocus.html">sway-easyfocus</a></li>
+<li><a href="swayimg.html">swayimg</a></li>
+<li><a href="swaylock.html">swaylock</a></li>
+<li><a href="swayr.html">swayr</a></li>
+<li><a href="t3code.html">t3code</a></li>
+<li><a href="taskwarrior.html">taskwarrior</a></li>
+<li><a href="tealdeer.html">tealdeer</a></li>
+<li><a href="television.html">television</a></li>
+<li><a href="terminator.html">terminator</a></li>
+<li><a href="termite.html">termite</a></li>
+<li><a href="tex-fmt.html">tex-fmt</a></li>
+<li><a href="texlive.html">texlive</a></li>
+<li><a href="thunderbird.html">thunderbird</a></li>
+<li><a href="timidity.html">timidity</a></li>
+<li><a href="tint2.html">tint2</a></li>
+<li><a href="tiny.html">tiny</a></li>
+<li><a href="tirith.html">tirith</a></li>
+<li><a href="tmate.html">tmate</a></li>
+<li><a href="tmux.html">tmux</a></li>
+<li><a href="todoman.html">todoman</a></li>
+<li><a href="tofi.html">tofi</a></li>
+<li><a href="topgrade.html">topgrade</a></li>
+<li><a href="translate-shell.html">translate-shell</a></li>
+<li><a href="tray-tui.html">tray-tui</a></li>
+<li><a href="trippy.html">trippy</a></li>
+<li><a href="ttyper.html">ttyper</a></li>
+<li><a href="twitch-tui.html">twitch-tui</a></li>
+<li><a href="ty.html">ty</a></li>
+<li><a href="urxvt.html">urxvt</a></li>
+<li><a href="uv.html">uv</a></li>
+<li><a href="vdirsyncer.html">vdirsyncer</a></li>
+<li><a href="vesktop.html">vesktop</a></li>
+<li><a href="vicinae.html">vicinae</a></li>
+<li><a href="vifm.html">vifm</a></li>
+<li><a href="vim.html">vim</a></li>
+<li><a href="vim-vint.html">vim-vint</a></li>
+<li><a href="vinegar.html">vinegar</a></li>
+<li><a href="visidata.html">visidata</a></li>
+<li><a href="vivaldi.html">vivaldi</a></li>
+<li><a href="vivid.html">vivid</a></li>
+<li><a href="vscode.html">vscode</a></li>
+<li><a href="vscodium.html">vscodium</a></li>
+<li><a href="w3m.html">w3m</a></li>
+<li><a href="wallust.html">wallust</a></li>
+<li><a href="watson.html">watson</a></li>
+<li><a href="waveterm.html">waveterm</a></li>
+<li><a href="waybar.html">waybar</a></li>
+<li><a href="waylogout.html">waylogout</a></li>
+<li><a href="wayprompt.html">wayprompt</a></li>
+<li><a href="wezterm.html">wezterm</a></li>
+<li><a href="windsurf.html">windsurf</a></li>
+<li><a href="wleave.html">wleave</a></li>
+<li><a href="wlogout.html">wlogout</a></li>
+<li><a href="wofi.html">wofi</a></li>
+<li><a href="workstyle.html">workstyle</a></li>
+<li><a href="xmobar.html">xmobar</a></li>
+<li><a href="xplr.html">xplr</a></li>
+<li><a href="yambar.html">yambar</a></li>
+<li><a href="yarn.html">yarn</a></li>
+<li><a href="yazi.html">yazi</a></li>
+<li><a href="yofi.html">yofi</a></li>
+<li><a href="yt-dlp.html">yt-dlp</a></li>
+<li><a href="z-lua.html">z-lua</a></li>
+<li><a href="zapzap.html">zapzap</a></li>
+<li><a href="zathura.html">zathura</a></li>
+<li><a href="zed-editor.html">zed-editor</a></li>
+<li><a href="zellij.html">zellij</a></li>
+<li><a href="zk.html">zk</a></li>
+<li><a href="zoxide.html">zoxide</a></li>
+<li><a href="zsh.html">zsh</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../options/home-manager/pam.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../options/home-manager/programs/abaddon.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../options/home-manager/pam.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../options/home-manager/programs/abaddon.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
