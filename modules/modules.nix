@@ -35,17 +35,14 @@ let
       ./misc/debug.nix
       ./misc/editorconfig.nix
       ./misc/fontconfig.nix
-      ./misc/gtk.nix
+      ./misc/gtk
       ./misc/lib.nix
       ./misc/mozilla-messaging-hosts.nix
-      ./misc/news.nix
-      ./misc/nix-remote-build.nix
-      ./misc/nix.nix
+      ./misc/news
+      ./misc/nix
       ./misc/numlock.nix
       ./misc/pam.nix
-      ./misc/qt.nix
-      ./misc/qt/kconfig.nix
-      ./misc/qt/kvantum.nix
+      ./misc/qt
       ./misc/shell.nix
       ./misc/specialisation.nix
       ./misc/ssh-auth-sock.nix
@@ -54,15 +51,7 @@ let
       ./misc/uninstall.nix
       ./misc/version.nix
       ./misc/vte.nix
-      ./misc/xdg-autostart.nix
-      ./misc/xdg-desktop-entries.nix
-      ./misc/xdg-mime-apps.nix
-      ./misc/xdg-mime.nix
-      ./misc/xdg-portal.nix
-      ./misc/xdg-system-dirs.nix
-      ./misc/xdg-terminal-exec.nix
-      ./misc/xdg-user-dirs.nix
-      ./misc/xdg.nix
+      ./misc/xdg
       ./misc/xfconf.nix
       ./services-modular
       ./systemd.nix

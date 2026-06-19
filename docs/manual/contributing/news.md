@@ -16,7 +16,7 @@ or during a stable-release upgrade. See
 that affect stable-release upgrades.
 
 If you do have a change worthy of a news entry then please add one in
-[`news.nix`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news.nix)
+[`news`](https://github.com/nix-community/home-manager/blob/master/modules/misc/news)
 but you should follow some basic guidelines:
 
 -   Use the included news entry generator to create a news entry file:

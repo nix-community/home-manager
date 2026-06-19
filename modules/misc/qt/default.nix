@@ -95,6 +95,9 @@ in
   ];
 
   imports = [
+    ./kconfig.nix
+    ./kvantum.nix
+
     (lib.mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ] (
       config: if lib.getAttrFromPath [ "qt" "useGtkTheme" ] config then "gtk" else null
     ))
