@@ -11,9 +11,13 @@ list *pattern:
 test *pattern:
   nix run .#tests -- {{pattern}}
 
+# List integration tests
+list_integration_tests:
+  nix run .#tests -- -t -l
+
 # Run integration tests
 integration_tests:
-  nix run .#tests -- -t -l
+  nix run .#tests -- -t integration-test-
 
 # Create a news entry
 create-news-entry:

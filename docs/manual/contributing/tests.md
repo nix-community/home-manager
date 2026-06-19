@@ -192,15 +192,21 @@ $ nix run .#tests -- alacritty
 # Run a specific test
 $ nix run .#tests -- test-alacritty-empty-settings
 
-# Run integration tests
+# List integration tests
 $ nix run .#tests -- -t -l
 
+# Run all integration tests
+$ nix run .#tests -- -t integration-test-
+
 # Interactive test selection (requires fzf)
-$ python3 tests/tests.py -i
+$ nix run .#tests -- -i
 
 # Pass additional nix build flags
 $ nix run .#tests -- alacritty -- --verbose
 ```
+
+Integration tests are only exposed on Linux. On other platforms, integration
+test discovery may report no matching tests.
 
 ## Manual test commands {#sec-tests-manual}
 
@@ -215,7 +221,7 @@ $ nix-build --pure --option allow-import-from-derivation false tests -A build.al
 in the project root. List all test cases through
 
 ``` shell
-$ nix-build --pure tests --option allow-import-from-derivation false -A list
+$ nix run .#tests -- -l
 ```
 
 and run an individual test, for example `alacritty-empty-settings`,
@@ -230,13 +236,13 @@ and may cause failures. To run against the Nixpkgs from the `flake.lock` file,
 use instead e.g.
 
 ``` shell
-$ nix build --option allow-import-from-derivation false .#test-all
+$ nix build .#test-all
 ```
 
 or
 
 ``` shell
-$ nix build --option allow-import-from-derivation false .#test-alacritty-empty-settings
+$ nix build .#test-alacritty-empty-settings
 ```
 
 Some tests may be marked with `enableLegacyIfd`, those may be run by run with e.g.
