@@ -52,26 +52,26 @@ let
     }
   );
 
-  isNixFile = n: v: v == "regular" && lib.hasSuffix ".nix" n;
+  isNewsFile = n: v: v == "regular" && lib.hasSuffix ".nix" n && n != "default.nix";
   isDirectory = _n: v: v == "directory";
 
-  # Recursively collect all .nix files from a directory
-  collectNixFiles =
+  # Recursively collect all news .nix files from a directory
+  collectNewsFiles =
     dir:
     let
       contents = builtins.readDir dir;
-      files = lib.filterAttrs isNixFile contents;
+      files = lib.filterAttrs isNewsFile contents;
       fileList = map (file: dir + "/${file}") (builtins.attrNames files);
 
       # Process subdirectories
       subdirs = lib.filterAttrs isDirectory contents;
-      subdirFiles = lib.concatMap (subdir: collectNixFiles (dir + "/${subdir}")) (
+      subdirFiles = lib.concatMap (subdir: collectNewsFiles (dir + "/${subdir}")) (
         builtins.attrNames subdirs
       );
     in
     fileList ++ subdirFiles;
 
-  newsFiles = collectNixFiles ./news;
+  newsFiles = collectNewsFiles ./.;
   newsEntries = map (
     newsFile:
     let

@@ -18,7 +18,7 @@ let
 
   inherit
     (
-      (import ../lib/file-type.nix {
+      (import ../../lib/file-type.nix {
         inherit (config.home) homeDirectory;
         inherit lib pkgs;
       })
@@ -41,6 +41,17 @@ let
 
 in
 {
+  imports = [
+    ./autostart.nix
+    ./desktop-entries.nix
+    ./mime.nix
+    ./mime-apps.nix
+    ./portal.nix
+    ./system-dirs.nix
+    ./terminal-exec.nix
+    ./user-dirs.nix
+  ];
+
   options.xdg = {
     enable = lib.mkEnableOption "management of XDG base directories";
 

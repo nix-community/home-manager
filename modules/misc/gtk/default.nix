@@ -13,7 +13,7 @@ let
   cfg3 = config.gtk.gtk3;
   cfg4 = config.gtk.gtk4;
 
-  gtkLib = import ./gtk/lib.nix { inherit lib; };
+  gtkLib = import ./lib.nix { inherit lib; };
 
   themeType = gtkLib.mkThemeType {
     typeName = "theme";
@@ -41,9 +41,9 @@ in
   ];
 
   imports = [
-    ./gtk/gtk2.nix
-    ./gtk/gtk3.nix
-    ./gtk/gtk4.nix
+    ./gtk2.nix
+    ./gtk3.nix
+    ./gtk4.nix
   ];
 
   options.gtk = {

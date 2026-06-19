@@ -187,7 +187,6 @@ import nmtSrc {
           ./modules/misc/manual
           ./modules/misc/news
           ./modules/misc/nix
-          ./modules/misc/nix-remote-build
           ./modules/misc/nixpkgs-disabled
           ./modules/misc/specialisation
           ./modules/misc/ssh-auth-sock/default.nix

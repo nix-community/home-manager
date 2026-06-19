@@ -151,6 +151,8 @@ in
 {
   meta.maintainers = [ ];
 
+  imports = [ ./remote-build.nix ];
+
   options.nix = {
     enable =
       mkEnableOption ''
