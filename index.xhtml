@@ -1215,7 +1215,21 @@ software that provides sensible default values for all settings would
 require no explicit options at all.</p><p>If the software uses a structured configuration format like a JSON,
 YAML, INI, TOML, or even a plain list of key/value pairs then consider
 using a <code class="literal">settings</code> option as described in <a class="link" href="https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md"  target="_top">Nix RFC
-42</a>.</p>
+42</a>.</p><p>These guidelines describe the minimum option design requirements. Before
+submitting a module, compare it against the upstream documentation or
+source code and verify that the generated files, services, environment
+variables, and command line arguments all match the upstream behavior
+you intend to expose.</p><p>If a module installs a package, try to make the package option nullable,
+for example</p><pre><code class="programlisting  nix">package = lib.mkPackageOption pkgs &quot;xdg-terminal-exec&quot; { nullable = true; };
+</code></pre><p>This lets users keep installation outside Home Manager, for example via
+<code class="literal">apt</code> or because the program is built into macOS, while still using the
+module for configuration. Keeping the package non-nullable is fine when
+the enabled behavior structurally requires the executable or when
+package-less support would make the module significantly more complex.</p><p>Avoid generating files for empty settings, null packages, or optional
+features that are not configured.</p><p>If upstream does not use XDG paths by default but supports changing the
+configuration location with an environment variable, for example
+<code class="literal">FOO_HOME</code>, expose a <code class="literal">configDir</code> option and use it to respect
+<code class="literal">home.preferXdgDirectories</code>.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-guidelines-add-tests" class="title" >Add relevant tests   </h3>  </div> </div></div><p>If at all possible, make sure to add new tests and expand existing tests
 so that your change will keep working in the future. See
 <a class="link" href="index.xhtml#sec-tests" title="Tests" >Tests</a> for more information about the Home Manager test
@@ -1289,7 +1303,10 @@ license.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-commit-style" class="title" >Commits   </h3>  </div> </div></div><p>The commits in your pull request should be reasonably self-contained,
 that is, each commit should make sense in isolation. In particular, you
 will be asked to amend any commit that introduces syntax errors or
-similar problems even if they are fixed in a later commit.</p><p>The commit messages should follow the <a class="link" href="https://chris.beams.io/posts/git-commit/#seven-rules"  target="_top">seven
+similar problems even if they are fixed in a later commit.</p><p>Keep commits atomic and separated by concern. For example, a new
+maintainer entry should be a separate first commit, and a shared module
+should be committed separately from integrations in existing modules.
+Pull requests should not include merge commits or fixup commits.</p><p>The commit messages should follow the <a class="link" href="https://chris.beams.io/posts/git-commit/#seven-rules"  target="_top">seven
 rules</a>, except for
 &quot;Capitalize the subject line&quot;. We also ask you to include the affected
 code component or module in the first line. That is, a commit message
@@ -1365,10 +1382,14 @@ is, instead of writing</p><pre><code class="programlisting">The option &#x27;foo
 use &#x27;services.myservice.bar&#x27; instead.
 </code></pre></li><li class="listitem"><p>A new module, say <code class="literal">foo.nix</code>, should always include a news entry that
 has a message along the lines of</p><pre><code class="programlisting">A new module is available: &#x27;services.foo&#x27;.
-</code></pre><p>If the module is platform specific, e.g., a service module using
+</code></pre><p>Since this news is specific to the module, its condition should use
+the module enable option to avoid spamming non-users of the module,
+for example <code class="literal">condition = config.services.foo.enable;</code>.</p><p>If the module is platform specific, e.g., a service module using
 systemd, then a condition like</p><pre><code class="programlisting  nix">condition = hostPlatform.isLinux;
-</code></pre><p>should be added. Use the <code class="literal">create-news-entry</code> generator described
-above to scaffold this entry as part of your contribution.</p></li></ul></div>
+</code></pre><p>should be added, either by itself for platform-scoped news or in
+combination with the module enable option. Use the <code class="literal">create-news-entry</code>
+generator described above to scaffold this entry as part of your
+contribution.</p></li></ul></div>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h2 id="sec-tests" class="title" style="clear: both">Tests   </h2>  </div> </div></div><div class="toc"> <dl class="toc">  <dt> <span class="section">  <a href="index.xhtml#sec-tests-basic">Writing Basic Tests</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-command">Using the tests command</a> </span></dt><dt> <span class="section">  <a href="index.xhtml#sec-tests-manual">Manual test commands</a> </span></dt> </dl></div><p>Home Manager includes a basic test suite and it is highly recommended to
 include at least one test when adding a module. Tests are typically in
 the form of &quot;golden tests&quot; where, for example, a generated
@@ -1396,7 +1417,12 @@ Home Manager configuration and the test assertions.</p><div class="section"> <di
   myprogram-basic-configuration = ./basic-configuration.nix;
   myprogram-empty-settings = ./empty-settings.nix;
 }
-</code></pre>
+</code></pre><p>Prefer keeping related assertions in as few test files as practical.
+Exercising several cases in one evaluation keeps the test suite cheaper
+to evaluate and reduces maintenance burden. Split cases into separate
+files when they need incompatible module configuration, platform
+conditions, expected assertion failures, or otherwise cannot share one
+evaluation.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-assertions" class="title" >Common NMT Assertions   </h4>  </div> </div></div><p>NMT provides several assertion functions:</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc;"><li class="listitem"><p><code class="literal">assertFileExists &quot;path&quot;</code> - Verify a file was created</p></li><li class="listitem"><p><code class="literal">assertPathNotExists &quot;path&quot;</code> - Verify a file was NOT created</p></li><li class="listitem"><p><code class="literal">assertFileContent &quot;path&quot; expected-file</code> - Compare file contents</p></li><li class="listitem"><p><code class="literal">assertFileRegex &quot;path&quot; &quot;regex&quot;</code> - Check file matches regex</p></li></ul></div><p>For a full reference to the functions available in test scripts, you can look at NMT’s
 <a class="link" href="https://git.sr.ht/~rycee/nmt/tree/master/item/bash-lib"  target="_top">bash-lib</a>.</p>
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h4 id="sec-tests-examples" class="title" >Practical Examples   </h4>  </div> </div></div><p>Here are some real-world examples of common test patterns:</p><p><span class="strong"><strong>Testing that a configuration file is generated:</strong></span></p><pre><code class="programlisting nix">{
@@ -1462,7 +1488,11 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
 }
 </code></pre><p>For cross-platform modules that have packages which need to be stubbed on Darwin,
 add the package names to <code class="literal">tests/darwinScrublist.nix</code> to prevent build failures
-during cross-platform test runs.</p>
+during cross-platform test runs.</p><p>On Linux, packages are automatically scrubbed by the test infrastructure,
+so tests should normally use the module’s default package. Use
+<code class="literal">test.stubs</code> or <code class="literal">config.lib.test.mkStubPackage</code> only when the automatic
+scrubbing does not model the behavior that the test needs, such as a
+package with additional files or a non-default executable layout.</p>
 </div>
 
 </div><div class="section"> <div class="titlepage">  <div>   <div>    <h3 id="sec-tests-command" class="title" >Using the tests command   </h3>  </div> </div></div><p>Home Manager provides a convenient <code class="literal">tests</code> command for discovering and running tests:</p><pre><code class="programlisting  shell"># List all available tests
