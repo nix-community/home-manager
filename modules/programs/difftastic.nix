@@ -83,7 +83,7 @@ in
         attrsOf (either atom (listOf atom));
       default = { };
       example = {
-        color = "dark";
+        color = "always";
         sort-paths = true;
         tab-width = 8;
       };
