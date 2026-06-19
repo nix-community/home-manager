@@ -128,9 +128,11 @@ in
       xdgConfigHome,
     }:
     let
-      pluginLoadCommands = map (entry: "hyprctl plugin load ${pluginPath entry}") config.plugins;
-      startupCommands =
-        lib.optionals config.systemd.enable [ systemdActivationCommand ] ++ pluginLoadCommands;
+      renderPluginLoad = renderSection "plugins" (
+        concatMapStrings (entry: "hl.plugin.load(${toLua (pluginPath entry)})\n") config.plugins
+      );
+
+      startupCommands = lib.optionals config.systemd.enable [ systemdActivationCommand ];
 
       renderSettings =
         let
@@ -225,6 +227,7 @@ in
         -- See https://wiki.hypr.land/Configuring/Start/
 
       ''
+      + renderPluginLoad
       + renderLuaFiles
       + renderSettings
       + renderSubmaps
