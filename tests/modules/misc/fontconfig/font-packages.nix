@@ -56,6 +56,7 @@ in
 
   nmt.script = ''
     assertFileExists ${configFile}
+    assertFileRegex activate 'run .*/bin/fc-cache -f'
     assertFileContent ${configFile} ${pkgs.writeText "font-packages.conf" ''
       <?xml version="1.0" encoding="utf-8"?>
       <fontconfig>

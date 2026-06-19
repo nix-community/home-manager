@@ -446,9 +446,12 @@ in
     };
 
     xdg.configFile = lib.mapAttrs' (
-      _name: config:
+      name: config:
       lib.nameValuePair "fontconfig/conf.d/${config.target}" {
         inherit (config) enable source;
+        onChange = lib.optionalString (name == "fonts") ''
+          run ${lib.getExe' pkgs.fontconfig "fc-cache"} -f $VERBOSE_ARG
+        '';
       }
     ) cfg.configFile;
   };
