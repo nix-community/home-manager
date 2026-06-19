@@ -8,11 +8,13 @@ includes = [ "*.nix" ]
 [formatter.statix]
 command = "treefmt-statix"
 includes = [ "*.nix" ]
+excludes = [ "tests/integration/standalone/*-init.nix" ]
 
 [formatter.deadnix]
 command = "deadnix"
 options = [ "--edit" ]
 includes = [ "*.nix" ]
+excludes = [ "tests/integration/standalone/*-init.nix" ]
 
 [formatter.nixf-diagnose]
 command = "nixf-diagnose"
