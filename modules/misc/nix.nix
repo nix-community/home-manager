@@ -105,6 +105,7 @@ let
         ${mkKeyValuePairs cfg.settings}
         ${cfg.extraOptions}
       '';
+      passthru.doCheck = cfg.checkConfig;
       checkPhase =
         if pkgs.stdenv.hostPlatform != pkgs.stdenv.buildPlatform then
           ''
@@ -122,7 +123,8 @@ let
             NIX_CONF_DIR=$PWD \
               ${cfg.package}/bin/nix ${showCommand} ${optionalString (isNixAtLeast "2.3pre") "--no-net --option experimental-features nix-command"} \
               |& sed -e 's/^warning:/error:/' \
-              | (! grep '${if cfg.checkConfig then "^error:" else "^error: unknown setting"}')
+              | ${if cfg.allowUnknownSettings then "grep -v '^error: unknown setting'" else "cat"} \
+              | (! grep '^error:')
             set -o pipefail
           '';
     };
@@ -294,7 +296,16 @@ in
       default = true;
       description = ''
         If enabled (the default), checks for data type mismatches and that Nix
-        can parse the generated nix.conf.
+        can parse the generated {file}`nix.conf`.
+      '';
+    };
+
+    allowUnknownSettings = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        If enabled, unknown setting errors will be allowed when checking the
+        generated {file}`nix.conf`. This has no effect if {option}`checkConfig` is false.
       '';
     };
 
