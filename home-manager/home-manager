@@ -291,6 +291,7 @@ function doInspectOption() {
     for path in "${paths[@]}"; do
         nix-instantiate --eval --json \
             --arg nixos "$modulesExpr" \
+            "${extraArgs[@]}" \
             --argstr path "$path" \
             --arg recursive "$recursive" \
             "$NIXOS_OPTION_NIX" \
