@@ -148,6 +148,7 @@ let
     "openssh"
     "openstackclient"
     "papis"
+    "parallel-full"
     "patdiff"
     "pay-respects"
     "pet"
