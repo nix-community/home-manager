@@ -64,10 +64,22 @@
           "x86_64-linux"
         ];
 
+        testPkgsFor =
+          system:
+          import nixpkgs {
+            inherit system;
+            config.allowInsecurePredicate =
+              pkg:
+              builtins.elem (nixpkgs.lib.getName pkg) [
+                "librewolf"
+                "librewolf-unwrapped"
+              ];
+          };
+
         testChunks =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = testPkgsFor system;
             inherit (pkgs) lib;
 
             # Create chunked test packages for better CI parallelization
@@ -122,7 +134,7 @@
         buildTests =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = testPkgsFor system;
             tests = import ./tests { inherit pkgs; };
             renameTestPkg = n: nixpkgs.lib.nameValuePair "test-${n}";
           in
@@ -131,7 +143,7 @@
         buildTestsNoBig =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = testPkgsFor system;
             tests = import ./tests {
               inherit pkgs;
               enableBig = false;
@@ -144,7 +156,7 @@
         buildTestsNoBigIfd =
           system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = testPkgsFor system;
             tests = import ./tests {
               inherit pkgs;
               enableBig = false;
