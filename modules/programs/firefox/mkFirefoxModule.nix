@@ -20,6 +20,7 @@ let
     length
     literalExpression
     mapAttrsToList
+    mkDefault
     mkIf
     mkMerge
     mkOption
@@ -884,6 +885,10 @@ in
             };
 
             config = {
+              settings = mkIf (config.userChrome != "") {
+                "toolkit.legacyUserProfileCustomizations.stylesheets" = mkDefault true;
+              };
+
               assertions = [
                 (mkNoDuplicateAssertion config.containers "container")
                 {
