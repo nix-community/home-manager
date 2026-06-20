@@ -53,10 +53,10 @@
         name = "storage";
         params = [ "${if calendar then "calendar" else "contacts"}-${name}-local" ];
         children =
-          (attrsToDirectives {
+          (attrsToDirectives { type = if calendar then "vdir/icalendar" else "vdir/vcard"; })
+          ++ (attrsToDirectives {
             inherit (acc.local) path;
             fileext = acc.local.fileExt;
-            type = if calendar then "vdir/icalendar" else "vdir/vcard";
           })
           ++ acc.pimsync.extraLocalStorageDirectives;
       };
@@ -66,8 +66,6 @@
         params = [ "${if calendar then "calendar" else "contacts"}-${name}-remote" ];
         children =
           (attrsToDirectives {
-            inherit (acc.remote) url;
-            username = acc.remote.userName;
             type =
               if !calendar then
                 "carddav"
@@ -75,6 +73,10 @@
                 acc.remote.type
               else
                 "webcal";
+          })
+          ++ (attrsToDirectives {
+            inherit (acc.remote) url;
+            username = acc.remote.userName;
           })
           ++ lib.optional (acc.remote.passwordCommand != null) {
             name = "password";
