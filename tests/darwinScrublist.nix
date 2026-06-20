@@ -110,6 +110,8 @@ let
     "less"
     "lesspipe"
     "lf"
+    "librewolf"
+    "librewolf-unwrapped"
     "lieer"
     "lsd"
     "ludusavi"
