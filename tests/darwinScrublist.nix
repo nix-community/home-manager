@@ -217,6 +217,7 @@ let
     "zoxide"
     "zplug"
     "zsh"
+    "zsh-fast-syntax-highlighting"
     "zsh-history-substring-search"
     # keep-sorted end
   ];
