@@ -1,4 +1,8 @@
-{ lib, name }:
+{
+  lib,
+  name,
+  excludeTests ? [ ],
+}:
 let
   withDefaultStateVersion = module: {
     imports = [ module ];
@@ -18,32 +22,34 @@ builtins.mapAttrs
       ]
     )
   )
-  {
-    "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
-    "${name}-null-package" = ./null-package.nix;
-    "${name}-final-package" = ./final-package.nix;
-    "${name}-global-extensions-assertions" = ./global-extensions-assertions.nix;
-    "${name}-policies" = ./policies.nix;
-    "${name}-profiles-bookmarks" = ./profiles/bookmarks;
-    "${name}-profiles-bookmarks-attrset" = ./profiles/bookmarks/attrset.nix;
-    "${name}-profiles-containers" = ./profiles/containers;
-    "${name}-profiles-containers-duplicate-ids" = ./profiles/containers/duplicate-ids.nix;
-    "${name}-profiles-containers-id-out-of-range" = ./profiles/containers/id-out-of-range.nix;
-    "${name}-profiles-containers-id-zero" = ./profiles/containers/id-zero.nix;
-    "${name}-profiles-duplicate-ids" = ./profiles/duplicate-ids.nix;
-    "${name}-profiles-extensions" = ./profiles/extensions;
-    "${name}-profiles-extensions-assertions" = ./profiles/extensions/assertions.nix;
-    "${name}-profiles-extensions-extensible" = ./profiles/extensions/extensible.nix;
-    "${name}-profiles-extensions-per-extension-force" = ./profiles/extensions/per-extension-force.nix;
-    "${name}-profiles-extensions-per-extension-force-assertions" =
-      ./profiles/extensions/per-extension-force-assertions.nix;
-    "${name}-profiles-extensions-exhaustive" = ./profiles/extensions/exhaustive.nix;
-    "${name}-profiles-extensions-exact" = ./profiles/extensions/exact.nix;
-    "${name}-profiles-handlers" = ./profiles/handlers;
-    "${name}-profiles-overwrite" = ./profiles/overwrite;
-    "${name}-profiles-search" = ./profiles/search;
-    "${name}-profiles-settings" = ./profiles/settings;
-    "${name}-profiles-userchrome" = ./profiles/userchrome;
-    "${name}-state-version-19_09" = ./state-version-19_09.nix;
-    "${name}-profiles-shared-path" = ./profiles/shared-path.nix;
-  }
+  (
+    removeAttrs {
+      "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
+      "${name}-null-package" = ./null-package.nix;
+      "${name}-final-package" = ./final-package.nix;
+      "${name}-global-extensions-assertions" = ./global-extensions-assertions.nix;
+      "${name}-policies" = ./policies.nix;
+      "${name}-profiles-bookmarks" = ./profiles/bookmarks;
+      "${name}-profiles-bookmarks-attrset" = ./profiles/bookmarks/attrset.nix;
+      "${name}-profiles-containers" = ./profiles/containers;
+      "${name}-profiles-containers-duplicate-ids" = ./profiles/containers/duplicate-ids.nix;
+      "${name}-profiles-containers-id-out-of-range" = ./profiles/containers/id-out-of-range.nix;
+      "${name}-profiles-containers-id-zero" = ./profiles/containers/id-zero.nix;
+      "${name}-profiles-duplicate-ids" = ./profiles/duplicate-ids.nix;
+      "${name}-profiles-extensions" = ./profiles/extensions;
+      "${name}-profiles-extensions-assertions" = ./profiles/extensions/assertions.nix;
+      "${name}-profiles-extensions-extensible" = ./profiles/extensions/extensible.nix;
+      "${name}-profiles-extensions-per-extension-force" = ./profiles/extensions/per-extension-force.nix;
+      "${name}-profiles-extensions-per-extension-force-assertions" =
+        ./profiles/extensions/per-extension-force-assertions.nix;
+      "${name}-profiles-extensions-exhaustive" = ./profiles/extensions/exhaustive.nix;
+      "${name}-profiles-extensions-exact" = ./profiles/extensions/exact.nix;
+      "${name}-profiles-handlers" = ./profiles/handlers;
+      "${name}-profiles-overwrite" = ./profiles/overwrite;
+      "${name}-profiles-search" = ./profiles/search;
+      "${name}-profiles-settings" = ./profiles/settings;
+      "${name}-profiles-userchrome" = ./profiles/userchrome;
+      "${name}-state-version-19_09" = ./state-version-19_09.nix;
+      "${name}-profiles-shared-path" = ./profiles/shared-path.nix;
+    } excludeTests
+  )
