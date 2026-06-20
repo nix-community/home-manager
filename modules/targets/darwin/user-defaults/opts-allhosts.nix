@@ -135,6 +135,176 @@ in
         example = 64;
         description = "Sets the size of the dock.";
       };
+      persistent-apps = mkNullableOption {
+        description = "Persistent applications, spacers, files, and folders in the dock.";
+        type =
+          let
+            taggedType = types.attrTag {
+              app = mkNullableOption {
+                description = "An application to be added to the dock.";
+                type = types.str;
+              };
+              file = mkNullableOption {
+                description = "A file to be added to the dock.";
+                type = types.str;
+              };
+              folder = mkNullableOption {
+                description = "A folder to be added to the dock.";
+                type = types.str;
+              };
+              spacer = mkNullableOption {
+                description = "A spacer to be added to the dock. Can be small or regular size.";
+                type = types.submodule {
+                  options.small = mkNullableOption {
+                    type = types.bool;
+                    description = "Whether the spacer is small.";
+                  };
+                };
+              };
+            };
+
+            simpleType = types.either types.str types.path;
+            toTagged = path: { app = path; };
+          in
+          types.listOf (types.coercedTo simpleType toTagged taggedType);
+        apply =
+          let
+            toTile =
+              item:
+              if item ? app then
+                {
+                  tile-data.file-data = {
+                    _CFURLString = item.app;
+                    _CFURLStringType = 0;
+                  };
+                }
+              else if item ? spacer then
+                {
+                  tile-data = { };
+                  tile-type = if item.spacer.small then "small-spacer-tile" else "spacer-tile";
+                }
+              else if item ? folder then
+                {
+                  tile-data.file-data = {
+                    _CFURLString = "file://" + item.folder;
+                    _CFURLStringType = 15;
+                  };
+                  tile-type = "directory-tile";
+                }
+              else if item ? file then
+                {
+                  tile-data.file-data = {
+                    _CFURLString = "file://" + item.file;
+                    _CFURLStringType = 15;
+                  };
+                  tile-type = "file-tile";
+                }
+              else
+                item;
+          in
+          value: if value == null then null else map toTile value;
+      };
+
+      persistent-others = mkNullableOption {
+        description = "Persistent files, and folders in the dock.";
+        type =
+          let
+            folderType = types.submodule {
+              options.path = mkNullableOption {
+                description = "Path to a folder to be added to the dock.";
+                type = types.str;
+              };
+              options.arrangement = mkNullableOption {
+                description = "Sort order for files in folder when clicked.";
+                type = types.enum [
+                  "name"
+                  "date-added"
+                  "date-modified"
+                  "date-created"
+                  "kind"
+                ];
+                default = "name";
+              };
+              options.displayas = mkNullableOption {
+                description = "How to display the folder before clicked. stack: Stack of file previews. folder: A folder icon";
+                type = types.enum [
+                  "stack"
+                  "folder"
+                ];
+                default = "stack";
+              };
+              options.showas = mkNullableOption {
+                description = "Effect to show files when clicked. fan: fan-out effect, grid: box, list: list";
+                type = types.enum [
+                  "automatic"
+                  "fan"
+                  "grid"
+                  "list"
+                ];
+                default = "automatic";
+              };
+            };
+            taggedType = types.attrTag {
+              file = mkNullableOption {
+                description = "A file to be added to the dock.";
+                type = types.str;
+              };
+              folder = mkNullableOption {
+                description = "A folder to be added to the dock.";
+                type = types.coercedTo types.str (str: { path = str; }) folderType;
+              };
+            };
+            simpleType = types.either types.str types.path;
+            toTagged = path: { folder = path; };
+          in
+          types.listOf (types.coercedTo simpleType toTagged taggedType);
+        apply =
+          let
+            arrangement_map = {
+              name = 1;
+              date-added = 2;
+              date-modified = 3;
+              date-created = 4;
+              kind = 5;
+            };
+            displayas_map = {
+              stack = 0;
+              folder = 1;
+            };
+            showas_map = {
+              automatic = 0;
+              fan = 1;
+              grid = 2;
+              list = 3;
+            };
+            parseFolder =
+              folder:
+              builtins.mapAttrs (
+                name: val:
+                if name == "arrangement" then
+                  arrangement_map.${val}
+                else if name == "displayas" then
+                  displayas_map.${val}
+                else if name == "showas" then
+                  showas_map.${val}
+                else
+                  val
+              ) folder;
+            toTile = item: {
+              tile-data = {
+                file-data = {
+                  _CFURLString = "file://" + (item.folder or item.file);
+                  _CFURLStringType = 15;
+                };
+              }
+              // (
+                if item ? folder then { inherit (parseFolder item.folder) arrangement displayas showas; } else { }
+              );
+              tile-type = if item ? folder then "directory-tile" else "file-tile";
+            };
+          in
+          value: if value == null then null else map toTile value;
+      };
     };
 
     "com.apple.finder" = {
