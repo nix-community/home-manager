@@ -133,6 +133,26 @@ in
       '';
     };
 
+    contextOverride = lib.mkOption {
+      type = lib.types.nullOr (lib.types.either lib.types.lines lib.types.path);
+      description = ''
+        Global override context for Codex.
+
+        This has the same value format as {option}`programs.codex.context`,
+        but writes {file}`CODEX_HOME/AGENTS.override.md`.
+
+        Codex prefers {file}`AGENTS.override.md` over
+        {file}`AGENTS.md` in the same directory.
+      '';
+      default = null;
+      example = lib.literalExpression ''
+        '''
+          - Temporarily ignore default global guidance
+          - Prefer brief answers while debugging
+        '''
+      '';
+    };
+
     plugins = lib.mkOption {
       type = with lib.types; listOf (either package path);
       default = [ ];
@@ -306,6 +326,12 @@ in
         lib.nameValuePair "${configDir}/rules/${name}.rules" (
           if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
         );
+      mkTextOrPathEntry =
+        path: content:
+        if lib.isPath content then
+          lib.nameValuePair path { source = content; }
+        else
+          lib.nameValuePair path (lib.mkIf (content != "") { text = content; });
       mkPluginName =
         plugin:
         let
@@ -510,6 +536,9 @@ in
                 text = cfg.context;
               };
         }
+        // lib.optionalAttrs (cfg.contextOverride != null) (
+          lib.listToAttrs [ (mkTextOrPathEntry "${configDir}/AGENTS.override.md" cfg.contextOverride) ]
+        )
         // lib.mapAttrs' mkProfileEntry mergedProfiles
         // lib.mapAttrs' mkSkillEntry skillSources
         // lib.listToAttrs (map mkPluginFileEntry cfg.plugins)
