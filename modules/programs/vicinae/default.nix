@@ -53,6 +53,12 @@ in
         instead.
       '';
     };
+    enableFirefoxIntegration = lib.mkOption {
+      default = true;
+      description = ''
+        Whether to install the messaging host so that the firefox extension <https://addons.mozilla.org/en-US/firefox/addon/vicinae/> works.
+      '';
+    };
 
     extensions = lib.mkOption {
       type = lib.types.listOf lib.types.package;
@@ -212,6 +218,25 @@ in
           verboseEcho "Refreshing the vicinae app list"
           run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
         ''
+      );
+      mozilla = lib.mkIf (cfg.enableFirefoxIntegration && cfg.package != null) (
+        let
+          vicinaeNativeMessagingHost =
+            pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/com.vicinae.vicinae.json"
+              (
+                builtins.toJSON {
+                  name = "com.vicinae.vicinae";
+                  description = "Vicinae Native Messaging Host";
+                  path = "${cfg.package}/libexec/vicinae/vicinae-browser-link";
+                  type = "stdio";
+                  allowed_extensions = [ "firefox@vicinae.com" ];
+                }
+              );
+        in
+        {
+          firefoxNativeMessagingHosts = [ vicinaeNativeMessagingHost ];
+          librewolfNativeMessagingHosts = [ vicinaeNativeMessagingHost ];
+        }
       );
 
       systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
