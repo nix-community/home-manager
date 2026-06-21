@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-d677dc02.js";
+            window.path_to_searchindex_js = "../../../searchindex-856cbbcb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-2bd0036d.js"></script>
@@ -1349,6 +1349,48 @@ list of string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">[ ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.registry"><a class="header" href="#opt-services.podman.settings.registries.registry">services.podman.settings.registries.registry</a></h2>
+<p>List of per-registry configuration entries.</p>
+<p>Prefer this over the deprecated <code>insecure</code> and <code>block</code> lists.</p>
+<p><em>Type:</em>
+list of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.registry._.blocked"><a class="header" href="#opt-services.podman.settings.registries.registry._.blocked">services.podman.settings.registries.registry.*.blocked</a></h2>
+<p>Whether the registry is blocked.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.registry._.insecure"><a class="header" href="#opt-services.podman.settings.registries.registry._.insecure">services.podman.settings.registries.registry.*.insecure</a></h2>
+<p>Whether the registry is insecure.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
+</ul>
+<h2 id="opt-services.podman.settings.registries.registry._.location"><a class="header" href="#opt-services.podman.settings.registries.registry._.location">services.podman.settings.registries.registry.*.location</a></h2>
+<p>Registry location.</p>
+<p><em>Type:</em>
+string</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/podman">&lt;home-manager/modules/services/podman&gt;</a></li>
