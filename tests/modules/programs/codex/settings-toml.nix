@@ -25,6 +25,10 @@ in
       - Always respond with emojis
       - Only use git commands when explicitly requested
     '';
+    contextOverride = ''
+      - Temporarily prefer terse answers
+      - Use exact dates in status notes
+    '';
   };
   nmt.script = ''
     assertFileExists home-files/.codex/config.toml
@@ -33,6 +37,12 @@ in
     assertFileExists home-files/.codex/AGENTS.md
     assertFileContent home-files/.codex/AGENTS.md \
       ${./AGENTS.md}
+    assertFileExists home-files/.codex/AGENTS.override.md
+    assertFileContent home-files/.codex/AGENTS.override.md \
+      ${builtins.toFile "expected-codex-context-override.md" ''
+        - Temporarily prefer terse answers
+        - Use exact dates in status notes
+      ''}
     assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'CODEX_HOME'
   '';
 }
