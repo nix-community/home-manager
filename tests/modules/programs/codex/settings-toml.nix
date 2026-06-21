@@ -29,6 +29,31 @@ in
       - Temporarily prefer terse answers
       - Use exact dates in status notes
     '';
+    hooks = {
+      PreToolUse = [
+        {
+          matcher = "^Bash$";
+          hooks = [
+            {
+              type = "command";
+              command = "/usr/local/bin/codex-pre-tool-use";
+              timeout = 30;
+              statusMessage = "Checking Bash command";
+            }
+          ];
+        }
+      ];
+      Stop = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "/usr/local/bin/codex-stop";
+            }
+          ];
+        }
+      ];
+    };
   };
   nmt.script = ''
     assertFileExists home-files/.codex/config.toml
@@ -43,6 +68,9 @@ in
         - Temporarily prefer terse answers
         - Use exact dates in status notes
       ''}
+    assertFileExists home-files/.codex/hooks.json
+    assertFileContent home-files/.codex/hooks.json \
+      ${./hooks.json}
     assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'CODEX_HOME'
   '';
 }
