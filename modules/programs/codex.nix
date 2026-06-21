@@ -59,7 +59,7 @@ in
         Configuration written to {file}`CODEX_HOME/config.toml` (0.2.0+)
         or {file}`~/.codex/config.yaml` (<0.2.0). Per default {env}`CODEX_HOME`
         defaults to ~/.codex.
-        See <https://github.com/openai/codex/blob/main/codex-rs/config.md> for supported values.
+        See <https://developers.openai.com/codex/config-reference> for supported values.
       '';
       default = { };
       defaultText = lib.literalExpression "{ }";
@@ -70,8 +70,8 @@ in
           model_providers = {
             ollama = {
               name = "Ollama";
-              baseURL = "http://localhost:11434/v1";
-              envKey = "OLLAMA_API_KEY";
+              base_url = "http://localhost:11434/v1";
+              env_key = "OLLAMA_API_KEY";
             };
           };
           mcp_servers = {
