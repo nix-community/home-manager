@@ -153,6 +153,39 @@ in
       '';
     };
 
+    hooks = lib.mkOption {
+      inherit (jsonFormat) type;
+      default = { };
+      description = ''
+        Lifecycle hook events written to {file}`CODEX_HOME/hooks.json`.
+
+        This option uses the same event structure as
+        {option}`programs.codex.settings.hooks` and writes it under the
+        top-level `hooks` key expected by Codex's JSON hooks file.
+
+        Hooks can also be configured inline through
+        {option}`programs.codex.settings.hooks`; prefer using only one hook
+        representation per layer.
+      '';
+      example = lib.literalExpression ''
+        {
+          PreToolUse = [
+            {
+              matcher = "^Bash$";
+              hooks = [
+                {
+                  type = "command";
+                  command = "/usr/local/bin/codex-pre-tool-use";
+                  timeout = 30;
+                  statusMessage = "Checking Bash command";
+                }
+              ];
+            }
+          ];
+        }
+      '';
+    };
+
     plugins = lib.mkOption {
       type = with lib.types; listOf (either package path);
       default = [ ];
@@ -535,6 +568,9 @@ in
               lib.mkIf (cfg.context != "") {
                 text = cfg.context;
               };
+          "${configDir}/hooks.json" = lib.mkIf (cfg.hooks != { }) {
+            source = jsonFormat.generate "codex-hooks" { inherit (cfg) hooks; };
+          };
         }
         // lib.optionalAttrs (cfg.contextOverride != null) (
           lib.listToAttrs [ (mkTextOrPathEntry "${configDir}/AGENTS.override.md" cfg.contextOverride) ]
