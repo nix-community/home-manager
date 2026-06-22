@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-096acde6.js";
+            window.path_to_searchindex_js = "../searchindex-39721307.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2bd0036d.js"></script>
@@ -342,15 +342,20 @@ $ nix run .#tests -- alacritty
 # Run a specific test
 $ nix run .#tests -- test-alacritty-empty-settings
 
-# Run integration tests
+# List integration tests
 $ nix run .#tests -- -t -l
 
+# Run all integration tests
+$ nix run .#tests -- -t integration-test-
+
 # Interactive test selection (requires fzf)
-$ python3 tests/tests.py -i
+$ nix run .#tests -- -i
 
 # Pass additional nix build flags
 $ nix run .#tests -- alacritty -- --verbose
 </code></pre>
+<p>Integration tests are only exposed on Linux. On other platforms, integration
+test discovery may report no matching tests.</p>
 <p><a id="sec-tests-manual"></a></p>
 <h2 id="manual-test-commands"><a class="header" href="#manual-test-commands">Manual test commands</a></h2>
 <p>For advanced usage or CI environments, you can also run tests manually using nix build commands.</p>
@@ -358,7 +363,7 @@ $ nix run .#tests -- alacritty -- --verbose
 <pre><code class="language-shell">$ nix-build --pure --option allow-import-from-derivation false tests -A build.all
 </code></pre>
 <p>in the project root. List all test cases through</p>
-<pre><code class="language-shell">$ nix-build --pure tests --option allow-import-from-derivation false -A list
+<pre><code class="language-shell">$ nix run .#tests -- -l
 </code></pre>
 <p>and run an individual test, for example <code>alacritty-empty-settings</code>,
 through</p>
@@ -367,10 +372,10 @@ through</p>
 <p>However, those invocations will impurely source the system’s Nixpkgs,
 and may cause failures. To run against the Nixpkgs from the <code>flake.lock</code> file,
 use instead e.g.</p>
-<pre><code class="language-shell">$ nix build --option allow-import-from-derivation false .#test-all
+<pre><code class="language-shell">$ nix build .#test-all
 </code></pre>
 <p>or</p>
-<pre><code class="language-shell">$ nix build --option allow-import-from-derivation false .#test-alacritty-empty-settings
+<pre><code class="language-shell">$ nix build .#test-alacritty-empty-settings
 </code></pre>
 <p>Some tests may be marked with <code>enableLegacyIfd</code>, those may be run by run with e.g.</p>
 <pre><code class="language-shell">$ nix-build --pure tests --arg enableLegacyIfd true -A build.mytest
