@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9d7a8e91.js";
+            window.path_to_searchindex_js = "../searchindex-6e4e871c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2bd0036d.js"></script>
@@ -344,9 +344,13 @@ for more details.</p>
 of the supported platforms. The most common example of platform specific
 modules are those that define systemd user services, which only works on
 Linux systems.</p>
-<p>If you add a module that is platform specific then make sure to include
-a condition in the <code>loadModule</code> function call. This will make the module
-accessible only on systems where the condition evaluates to <code>true</code>.</p>
+<p>If you add a module that is platform specific then make sure the module
+guards platform-specific configuration with an appropriate condition, for
+example <code>pkgs.stdenv.hostPlatform.isLinux</code> or
+<code>pkgs.stdenv.hostPlatform.isDarwin</code>. Modules in <code>modules/programs/</code> and
+<code>modules/services/</code> are auto-imported, so the platform condition should live
+in the module behavior and in any platform-specific tests rather than in a
+separate module discovery call.</p>
 <p>Similarly, if you are adding a news entry then it should be shown only
 to users that may find it relevant, see <a href="#sec-news">News</a> for a
 description of conditional news.</p>
