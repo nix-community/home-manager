@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-39721307.js";
+            window.path_to_searchindex_js = "../searchindex-9d7a8e91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2bd0036d.js"></script>
@@ -219,8 +219,11 @@ so they can declare arguments such as <code>{ inputs, ... }:</code>.</p>
 module argument from within the module graph itself. For values that originate
 outside the module graph, such as flake inputs, prefer
 <code>home-manager.extraSpecialArgs</code>.</p>
-<p>and it is also rebuilt with the nix-darwin generations. The rebuild
-command here may be <code>darwin-rebuild switch --flake ~/.config/darwin</code>.</p>
+<p>Use <code>home-manager.sharedModules</code> for Home Manager modules or settings that
+should be imported by every user declared in <code>home-manager.users</code>.</p>
+<p>The Home Manager configuration is also rebuilt with the nix-darwin
+generations. The rebuild command here may be
+<code>darwin-rebuild switch --flake ~/.config/darwin</code>.</p>
 <p>You can use the above <code>flake.nix</code> as a template in <code>~/.config/darwin</code> by</p>
 <pre><code class="language-shell">$ nix flake new ~/.config/darwin -t github:nix-community/home-manager#nix-darwin
 </code></pre>

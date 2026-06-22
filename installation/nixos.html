@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-39721307.js";
+            window.path_to_searchindex_js = "../searchindex-9d7a8e91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-2bd0036d.js"></script>
@@ -248,10 +248,17 @@ httpie.</p>
 <blockquote>
 <p><strong>Note</strong>
 If <code>nixos-rebuild switch</code> does not result in the environment you expect,
-you can take a look at the output of the Home Manager activation script
-output using</p>
+then the service to inspect depends on the activation mode.</p>
+<p>By default, Home Manager activates each configured user during boot and
+system rebuilds through a NixOS system service:</p>
 </blockquote>
 <pre><code class="language-shell">$ systemctl status "home-manager-$USER.service"
+</code></pre>
+<blockquote>
+<p>If <code>home-manager.startAsUserService = true</code> is set, Home Manager instead
+activates through the user’s systemd service:</p>
+</blockquote>
+<pre><code class="language-shell">$ systemctl --user status home-manager.service
 </code></pre>
 <p>If you do not plan on having Home Manager manage your shell
 configuration then you must add either</p>
@@ -296,11 +303,22 @@ Nixpkgs.</p>
 </blockquote>
 <blockquote>
 <p><strong>Note</strong>
-Home Manager will pass <code>osConfig</code> as a module argument to any modules
-you create. This contains the system’s NixOS configuration.</p>
+Home Manager passes extra module arguments to each
+<code>home-manager.users.&lt;name&gt;</code> module:</p>
 </blockquote>
-<pre><code class="language-nix">{ lib, pkgs, osConfig, ... }:
+<pre><code class="language-nix">{ lib, pkgs, osConfig, nixosConfig, osClass, modulesPath, ... }:
 </code></pre>
+<blockquote>
+<p>Here <code>osConfig</code> contains the system’s NixOS configuration and <code>nixosConfig</code>
+is a NixOS-specific alias for the same value. The <code>lib</code> argument is Home
+Manager’s extended library. You can pass additional module arguments with
+<code>home-manager.extraSpecialArgs</code>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong>
+Use <code>home-manager.sharedModules</code> to add Home Manager modules to every user
+declared under <code>home-manager.users</code>.</p>
+</blockquote>
 <p>Once installed you can see <a href="#ch-usage">Using Home Manager</a> for a more detailed
 description of Home Manager and how to use it.</p>
 
