@@ -109,15 +109,16 @@ in
         description = ''
           Whether to make the set of managed Python versions fully declarative.
 
-          When enabled, {command}`uv python uninstall --all` is run before
-          installing {option}`programs.uv.python.versions`, so versions that are
-          no longer listed are removed.
+          When enabled, managed Python versions that no longer match any entry in
+          {option}`programs.uv.python.versions` are uninstalled before the listed
+          versions are installed, so the set is fully declarative. uv resolves
+          each requested version to the install target it would produce, so only
+          the difference is removed; versions that are already correct are left
+          untouched rather than reinstalled.
 
           ::: {.warning}
-          uv has no declarative install command, so this uninstalls and
-          reinstalls all listed versions on every activation, which is slow.
           Versions installed manually with {command}`uv python install` are also
-          removed.
+          removed, since they are not listed here.
           :::
         '';
       };
@@ -151,14 +152,15 @@ in
         description = ''
           Whether to make the set of installed tools fully declarative.
 
-          When enabled, {command}`uv tool uninstall --all` is run before
-          installing {option}`programs.uv.tool.packages`, so tools that are no
-          longer listed are removed.
+          When enabled, installed tools whose package name is no longer listed in
+          {option}`programs.uv.tool.packages` are uninstalled before the listed
+          tools are installed, so the set is fully declarative. Only the
+          difference is removed; tools that are already installed are left for the
+          upgrade step rather than reinstalled.
 
           ::: {.warning}
-          uv has no declarative install command, so this uninstalls and
-          reinstalls all listed tools on every activation, which is slow. Tools
-          installed manually with {command}`uv tool install` are also removed.
+          Tools installed manually with {command}`uv tool install` are also
+          removed, since they are not listed here.
           :::
         '';
       };
@@ -168,6 +170,27 @@ in
   config = lib.mkIf cfg.enable (
     let
       uvBin = if cfg.package != null then lib.getExe cfg.package else "uv";
+
+      # PEP 503 normalization: collapse every run of `-`, `_`, `.` to a single
+      # `-`, then lowercase. `builtins.split` returns string segments
+      # interleaved with match sublists, so replacing each match with `-` and
+      # keeping the segments verbatim reproduces `re.sub("[-_.]+", "-", name)`.
+      canonicalName =
+        name:
+        lib.toLower (
+          lib.concatMapStrings (x: if builtins.isList x then "-" else x) (builtins.split "[-_.]+" name)
+        );
+
+      # Requested tool names to keep, computed at build time: take the leading
+      # PEP 508 name (dropping extras and version specifiers) and PEP 503
+      # normalize it. uv keys its tool directory by this same normalized name.
+      toolName =
+        spec:
+        let
+          m = builtins.match "([A-Za-z0-9._-]+).*" spec;
+        in
+        canonicalName (if m == null then spec else builtins.head m);
+      toolKeep = lib.unique (map toolName toolCfg.packages);
     in
     {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -233,7 +256,29 @@ in
           in
           ''
             ${optionalString pyCfg.prune ''
-              run ${uvBin} python uninstall $VERBOSE_ARG --all
+              # Prune declaratively, but only touch what actually changed. uv has
+              # no declarative install, so instead of uninstalling and
+              # reinstalling everything we ask uv for the target each request
+              # would install (delegating all matching to uv, `--managed-python`
+              # keeps system Pythons out of reach) and uninstall every managed
+              # install that is not one of those targets. uv retains superseded
+              # patch releases on upgrade, so we resolve to the install target
+              # (`.[0]`, the newest match) rather than every installed match;
+              # otherwise stale patches would match a request and never be
+              # pruned. jq does the set difference over uv's public JSON output,
+              # so there is no text munging here, and an empty request list
+              # resolves the keep set to `[]`, pruning everything. Kept targets
+              # are left for the install/upgrade path below.
+              uvKeep=$(
+                for uvReq in ${escapeShellArgs pyCfg.versions}; do
+                  ${uvBin} python list "$uvReq" --managed-python --output-format json
+                done | jq -s 'map(.[0].key // empty)'
+              )
+              ${uvBin} python list --only-installed --managed-python --output-format json \
+                | jq -r --argjson keep "$uvKeep" '([.[].key] | unique) - $keep | .[]' \
+                | while read -r uvKey; do
+                    run ${uvBin} python uninstall $VERBOSE_ARG "$uvKey"
+                  done
             ''}
             ${concatMapStringsSep "\n" (
               d: "run ${uvBin} python install $VERBOSE_ARG --default ${upgradeFlag d}${escapeShellArg d}"
@@ -252,7 +297,21 @@ in
         # Run after linkGeneration so uv sees the freshly linked uv.toml.
         lib.hm.dag.entryAfter [ "linkGeneration" ] ''
           ${optionalString toolCfg.prune ''
-            run ${uvBin} tool uninstall $VERBOSE_ARG --all
+            # Prune declaratively, but only uninstall tools that are no longer
+            # requested. uv keeps each installed tool in its own directory under
+            # `uv tool dir`, named by the PEP 503-normalized package name, so the
+            # directory listing is the installed set with no output parsing. We
+            # diff it against the requested names (normalized at build time, see
+            # toolKeep) and uninstall the rest. Kept tools are left for the
+            # install/upgrade path below.
+            uvToolDir=$(${uvBin} tool dir)
+            if [ -d "$uvToolDir" ]; then
+              ls -1 "$uvToolDir" | sort -u \
+                | comm -23 - <(printf '%s\n' ${escapeShellArgs toolKeep} | sort -u) \
+                | while read -r uvTool; do
+                    run ${uvBin} tool uninstall $VERBOSE_ARG "$uvTool"
+                  done
+            fi
           ''}
           ${concatMapStringsSep "\n" (
             t: "run ${uvBin} tool install $VERBOSE_ARG ${escapeShellArg t}"
