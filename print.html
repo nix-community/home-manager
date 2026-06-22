@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3dfc08cc.js";
+            window.path_to_searchindex_js = "searchindex-fdd94644.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-e11635d5.js"></script>
+        <script src="toc-0f118724.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11815,6 +11815,7 @@ string</p>
 <li><a href="#dbeaver">dbeaver</a></li>
 <li><a href="#delta">delta</a></li>
 <li><a href="#desktoppr">desktoppr</a></li>
+<li><a href="#devenv">devenv</a></li>
 <li><a href="#diff-highlight">diff-highlight</a></li>
 <li><a href="#diff-so-fancy">diff-so-fancy</a></li>
 <li><a href="#difftastic">difftastic</a></li>
@@ -21038,6 +21039,85 @@ null or string matching the pattern ^[a-f0-9]{64}$</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/desktoppr.nix">&lt;home-manager/modules/programs/desktoppr.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="devenv"><a href="#devenv" class="header">devenv</a></h1>
+<h2 id="opt-programs.devenv.enable"><a class="header" href="#opt-programs.devenv.enable">programs.devenv.enable</a></h2>
+<p>Whether to enable devenv, Fast, Declarative, Reproducible and Composable Developer Environments using Nix.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.devenv.enableBashIntegration"><a class="header" href="#opt-programs.devenv.enableBashIntegration">programs.devenv.enableBashIntegration</a></h2>
+<p>Whether to enable Bash integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableBashIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.devenv.enableFishIntegration"><a class="header" href="#opt-programs.devenv.enableFishIntegration">programs.devenv.enableFishIntegration</a></h2>
+<p>Whether to enable Fish integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableFishIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.devenv.enableNushellIntegration"><a class="header" href="#opt-programs.devenv.enableNushellIntegration">programs.devenv.enableNushellIntegration</a></h2>
+<p>Whether to enable Nushell integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableNushellIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.devenv.enableZshIntegration"><a class="header" href="#opt-programs.devenv.enableZshIntegration">programs.devenv.enableZshIntegration</a></h2>
+<p>Whether to enable Zsh integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableZshIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.devenv.package"><a class="header" href="#opt-programs.devenv.package">programs.devenv.package</a></h2>
+<p>The devenv package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.devenv
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="diff-highlight"><a href="#diff-highlight" class="header">diff-highlight</a></h1>
