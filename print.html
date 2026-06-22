@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c86aaba7.js";
+            window.path_to_searchindex_js = "searchindex-c98b8699.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2bd0036d.js"></script>
@@ -2429,11 +2429,12 @@ but you should follow some basic guidelines:</p>
 with some placeholder information that you can edit.</p>
 </li>
 <li>
-<p>The entry condition should be as specific as possible. For example,
-if you are changing or deprecating a specific option then you could
-restrict the news to those users who actually use this option.
-Prefer a targeted condition over skipping useful news only to avoid
-notifying unaffected users.</p>
+<p>The entry condition should be as specific as possible for changes
+affecting existing functionality. For example, if you are changing
+or deprecating a specific option then you could restrict the news to
+those users who actually use this option. Prefer a targeted
+condition over skipping useful news only to avoid notifying
+unaffected users.</p>
 </li>
 <li>
 <p>Wrap the news message so that it will fit in the typical terminal,
@@ -2461,17 +2462,16 @@ use 'services.myservice.bar' instead.
 has a message along the lines of</p>
 <pre><code>A new module is available: 'services.foo'.
 </code></pre>
-<p>Since this news is specific to the module, its condition should use
-the module enable option to avoid spamming non-users of the module,
-for example <code>condition = config.services.foo.enable;</code>.</p>
+<p>Since this news announces newly available functionality, its
+condition should not require <code>config.services.foo.enable</code>; otherwise
+users who may want the new module will not see the news.</p>
 <p>If the module is platform specific, e.g., a service module using
 systemd, then a condition like</p>
 <pre><code class="language-nix">condition = hostPlatform.isLinux;
 </code></pre>
-<p>should be added, either by itself for platform-scoped news or in
-combination with the module enable option. Use the <code>create-news-entry</code>
-generator described above to scaffold this entry as part of your
-contribution.</p>
+<p>should be added to avoid showing the news on unsupported platforms.
+Use the <code>create-news-entry</code> generator described above to scaffold
+this entry as part of your contribution.</p>
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
