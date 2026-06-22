@@ -1,9 +1,31 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url=options/home-manager/index.html">
-    <link rel="canonical" href="options/home-manager/index.html">
+    <meta charset="utf-8" />
+    <script>
+      //<![CDATA[
+      (function () {
+        var h = location.hash || "", a = h.slice(1), t = "options/home-manager/index.html";
+        var m = {}, p = {"opt-":"options/home-manager","nixos-opt-":"options/nixos","nix-darwin-opt-":"options/nix-darwin"};
+        function o(a) {
+          for (var k in p) {
+            if (a.indexOf(k) !== 0) continue;
+            var s = a.slice(k.length).replace(/[<>]/g, "_").split("."), q = s[0];
+            if ((q === "programs" || q === "services") && s.length > 1) q += "/" + s[1];
+            return p[k] + "/" + q + ".html";
+          }
+          return null;
+        }
+        if (a) t = Object.prototype.hasOwnProperty.call(m, a) ? m[a] : o(a) || t;
+        if (t === null) return;
+        var n = t + (location.search || "") + h;
+        var c = location.pathname.split("/").pop() + location.search + h;
+        if (n !== c) location.replace(n);
+      }());
+      //]]>
+    </script>
+    <meta http-equiv="refresh" content="0; url=options/home-manager/index.html" />
+    <link rel="canonical" href="options/home-manager/index.html" />
     <title>Redirecting...</title>
   </head>
   <body>

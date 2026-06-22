@@ -1,9 +1,31 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url=release-notes/release-notes.html">
-    <link rel="canonical" href="release-notes/release-notes.html">
+    <meta charset="utf-8" />
+    <script>
+      //<![CDATA[
+      (function () {
+        var h = location.hash || "", a = h.slice(1), t = "release-notes/release-notes.html";
+        var m = {"ch-release-notes":"release-notes/release-notes.html","sec-release-18.09":"release-notes/rl-1809.html","sec-release-19.03":"release-notes/rl-1903.html","sec-release-19.03-highlights":"release-notes/rl-1903.html","sec-release-19.03-state-version-changes":"release-notes/rl-1903.html","sec-release-19.09":"release-notes/rl-1909.html","sec-release-19.09-highlights":"release-notes/rl-1909.html","sec-release-19.09-state-version-changes":"release-notes/rl-1909.html","sec-release-20.03":"release-notes/rl-2003.html","sec-release-20.03-highlights":"release-notes/rl-2003.html","sec-release-20.03-state-version-changes":"release-notes/rl-2003.html","sec-release-20.09":"release-notes/rl-2009.html","sec-release-20.09-highlights":"release-notes/rl-2009.html","sec-release-20.09-state-version-changes":"release-notes/rl-2009.html","sec-release-21.05":"release-notes/rl-2105.html","sec-release-21.05-highlights":"release-notes/rl-2105.html","sec-release-21.05-state-version-changes":"release-notes/rl-2105.html","sec-release-21.11":"release-notes/rl-2111.html","sec-release-21.11-highlights":"release-notes/rl-2111.html","sec-release-21.11-state-version-changes":"release-notes/rl-2111.html","sec-release-22.05":"release-notes/rl-2205.html","sec-release-22.05-highlights":"release-notes/rl-2205.html","sec-release-22.05-state-version-changes":"release-notes/rl-2205.html","sec-release-22.11":"release-notes/rl-2211.html","sec-release-22.11-highlights":"release-notes/rl-2211.html","sec-release-22.11-state-version-changes":"release-notes/rl-2211.html","sec-release-23.05":"release-notes/rl-2305.html","sec-release-23.05-highlights":"release-notes/rl-2305.html","sec-release-23.05-state-version-changes":"release-notes/rl-2305.html","sec-release-23.11":"release-notes/rl-2311.html","sec-release-23.11-highlights":"release-notes/rl-2311.html","sec-release-23.11-state-version-changes":"release-notes/rl-2311.html","sec-release-24.05":"release-notes/rl-2405.html","sec-release-24.05-highlights":"release-notes/rl-2405.html","sec-release-24.05-state-version-changes":"release-notes/rl-2405.html","sec-release-24.11":"release-notes/rl-2411.html","sec-release-24.11-highlights":"release-notes/rl-2411.html","sec-release-24.11-state-version-changes":"release-notes/rl-2411.html","sec-release-25.05":"release-notes/rl-2505.html","sec-release-25.05-highlights":"release-notes/rl-2505.html","sec-release-25.05-state-version-changes":"release-notes/rl-2505.html","sec-release-25.11":"release-notes/rl-2511.html","sec-release-25.11-highlights":"release-notes/rl-2511.html","sec-release-25.11-state-version-changes":"release-notes/rl-2511.html","sec-release-26.05":"release-notes/rl-2605.html","sec-release-26.05-highlights":"release-notes/rl-2605.html","sec-release-26.05-state-version-changes":"release-notes/rl-2605.html","sec-release-26.11":"release-notes/rl-2611.html","sec-release-26.11-highlights":"release-notes/rl-2611.html","sec-release-26.11-state-version-changes":"release-notes/rl-2611.html"}, p = {"opt-":"options/home-manager","nixos-opt-":"options/nixos","nix-darwin-opt-":"options/nix-darwin"};
+        function o(a) {
+          for (var k in p) {
+            if (a.indexOf(k) !== 0) continue;
+            var s = a.slice(k.length).replace(/[<>]/g, "_").split("."), q = s[0];
+            if ((q === "programs" || q === "services") && s.length > 1) q += "/" + s[1];
+            return p[k] + "/" + q + ".html";
+          }
+          return null;
+        }
+        if (a) t = Object.prototype.hasOwnProperty.call(m, a) ? m[a] : o(a) || t;
+        if (t === null) return;
+        var n = t + (location.search || "") + h;
+        var c = location.pathname.split("/").pop() + location.search + h;
+        if (n !== c) location.replace(n);
+      }());
+      //]]>
+    </script>
+    <meta http-equiv="refresh" content="0; url=release-notes/release-notes.html" />
+    <link rel="canonical" href="release-notes/release-notes.html" />
     <title>Redirecting...</title>
   </head>
   <body>
