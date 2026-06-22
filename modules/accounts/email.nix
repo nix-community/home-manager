@@ -9,7 +9,7 @@ let
     ;
 
   cfg = config.accounts.email;
-  enabledAccounts = lib.filterAttrs (n: v: v.enable) cfg.accounts;
+  enabledAccounts = lib.filterAttrs (_n: v: v.enable) cfg.accounts;
 
   gpgModule = types.submodule {
     options = {
@@ -80,6 +80,18 @@ let
         default = "none";
         description = "Method to communicate the signature.";
       };
+
+      htmlFormat = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether Thunderbird should interpret {option}`text` as an HTML signature.
+
+          This maps to Thunderbird's `mail.identity.id_*.htmlSigFormat`
+          preference. The signature content itself is still written through
+          `mail.identity.id_*.htmlSigText`.
+        '';
+      };
     };
   };
 
@@ -97,7 +109,9 @@ let
         type = types.bool;
         default = false;
         description = ''
-          Whether to use STARTTLS.
+          Whether to use STARTTLS. This is discouraged and should be avoided if
+          possible. See <https://datatracker.ietf.org/doc/html/rfc8314> for
+          more.
         '';
       };
 
@@ -216,6 +230,35 @@ let
         description = ''
           The port on which the SMTP server listens. If
           `null` then the default port is used.
+        '';
+      };
+
+      authentication = authenticationOption;
+
+      tls = mkOption {
+        type = tlsModule;
+        default = { };
+        description = ''
+          Configuration for secure connections.
+        '';
+      };
+    };
+  };
+
+  ewsModule = types.submodule {
+    options = {
+      host = mkOption {
+        type = types.str;
+        example = "ews.example.org";
+        description = ''
+          Hostname of EWS server.
+        '';
+      };
+      serviceDescriptionURL = mkOption {
+        type = types.str;
+        example = "https://ews.example.org/ews/exchange.asmx";
+        description = ''
+          URL to EWS service description.
         '';
       };
 
@@ -369,7 +412,9 @@ let
             "davmail"
             "fastmail.com"
             "gmail.com"
+            "mailbox.org"
             "migadu.com"
+            "outlook.office365.com-ews"
             "outlook.office365.com"
             "plain"
             "posteo.de"
@@ -521,6 +566,14 @@ let
           '';
         };
 
+        ews = mkOption {
+          type = types.nullOr ewsModule;
+          default = null;
+          description = ''
+            The EWS configuration to use for this account.
+          '';
+        };
+
         maildir = mkOption {
           type = types.nullOr maildirModule;
           defaultText = {
@@ -534,7 +587,7 @@ let
 
       config = lib.mkMerge [
         {
-          name = name;
+          inherit name;
           maildir = lib.mkOptionDefault { path = "${name}"; };
         }
 
@@ -573,6 +626,17 @@ let
           };
         })
 
+        (mkIf (config.flavor == "outlook.office365.com-ews") {
+          userName = mkDefault config.address;
+
+          ews = {
+            host = "outlook.office365.com";
+            serviceDescriptionURL = "https://outlook.office365.com/EWS/Exchange.asmx";
+            authentication = "xoauth2";
+            tls.enable = true;
+          };
+        })
+
         (mkIf (config.flavor == "fastmail.com") {
           userName = mkDefault config.address;
 
@@ -589,6 +653,19 @@ let
           jmap = {
             host = "fastmail.com";
             sessionUrl = "https://jmap.fastmail.com/.well-known/jmap";
+          };
+        })
+
+        (mkIf (config.flavor == "mailbox.org") {
+          userName = mkDefault config.address;
+          folders.inbox = mkDefault "INBOX";
+          imap = {
+            host = "imap.mailbox.org";
+            port = 993;
+          };
+          smtp = {
+            host = "smtp.mailbox.org";
+            port = 465;
           };
         })
 

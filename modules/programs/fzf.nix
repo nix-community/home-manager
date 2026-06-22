@@ -174,7 +174,7 @@ in
       shellIntegrationOptions = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = literalExpression ''[ "-d 40%" ]'';
+        example = [ "-d 40%" ];
         description = ''
           If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
           shell integration will use these options for fzf-tmux.
@@ -193,8 +193,8 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = lib.mapAttrs (n: v: toString v) (
-      lib.filterAttrs (n: v: v != [ ] && v != null) {
+    home.sessionVariables = lib.mapAttrs (_n: toString) (
+      lib.filterAttrs (_n: v: v != [ ] && v != null) {
         FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
         FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
         FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;

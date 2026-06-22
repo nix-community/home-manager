@@ -10,15 +10,23 @@
 
     xdg.userDirs = {
       enable = true;
-      extraConfig.PROJECTS = "${config.home.homeDirectory}/Projects";
+      extraConfig.CUSTOM = "${config.home.homeDirectory}/Custom";
       ## This will trigger a warning.
       extraConfig.XDG_MISC_DIR = "${config.home.homeDirectory}/Misc";
     };
+
+    test.asserts.warnings.expected = [
+      ''
+        Using `xdg.userDirs.extraConfig` as keys like `XDG_MISC_DIR` is deprecated and will be
+        removed in a future release. Please use keys like `MISC` instead.
+      ''
+    ];
 
     nmt.script = ''
       configFile=home-files/.config/user-dirs.dirs
       assertFileExists $configFile
       assertFileContent $configFile ${pkgs.writeText "expected" ''
+        XDG_CUSTOM_DIR="/home/hm-user/Custom"
         XDG_DESKTOP_DIR="/home/hm-user/Desktop"
         XDG_DOCUMENTS_DIR="/home/hm-user/Documents"
         XDG_DOWNLOAD_DIR="/home/hm-user/Downloads"

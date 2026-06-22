@@ -1,0 +1,12 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+EnvironmentFile=/run/secrets/opencode
+ExecStart=@opencode@/bin/opencode serve 
+Restart=always
+RestartSec=5
+
+[Unit]
+After=network.target
+Description=OpenCode Web Service

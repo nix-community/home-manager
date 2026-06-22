@@ -60,6 +60,7 @@ usage/rollbacks.md
 usage/dotfiles.md
 usage/graphical.md
 usage/gpu-non-nixos.md
+usage/modular-services.md
 usage/updating.md
 usage/upgrading.md
 ```

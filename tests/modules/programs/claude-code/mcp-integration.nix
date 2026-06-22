@@ -13,12 +13,13 @@
       };
       enable = true;
 
-      enableMcpIntagretion = true;
+      enableMcpIntegration = true;
 
       mcpServers = {
         github = {
           type = "http";
           url = "https://api.githubcopilot.com/mcp/";
+          enabled = true;
         };
         filesystem = {
           type = "stdio";
@@ -61,12 +62,24 @@
           customOption = "value";
           timeout = 5000;
         };
+        disabled-server = {
+          command = "echo";
+          args = [ "test" ];
+          disabled = true;
+        };
       };
     };
   };
 
   nmt.script = ''
-    normalizedWrapper=$(normalizeStorePaths home-path/bin/claude)
-    assertFileContent $normalizedWrapper ${./expected-mcp-wrapper}
+    wrapperPath="$TESTED/home-path/bin/claude"
+    normalizedWrapper=$(normalizeStorePaths "$wrapperPath")
+    assertFileContent "$normalizedWrapper" ${./expected-mcp-wrapper}
+
+    pluginDir=$(grep -o -- '--plugin-dir /nix/store/[^ ]*' "$wrapperPath")
+    pluginDir="''${pluginDir#--plugin-dir }"
+    assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
+    assertFileContent "$pluginDir/.mcp.json" ${./expected-mcp-plugin.json}
+    assertPathNotExists "$pluginDir/.lsp.json"
   '';
 }

@@ -41,7 +41,7 @@ in
     };
 
     settings = mkOption {
-      type = javaProperties.type;
+      inherit (javaProperties) type;
       default = { };
       description = ''
         Davmail configuration. Refer to

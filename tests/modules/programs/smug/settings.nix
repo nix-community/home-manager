@@ -53,11 +53,23 @@
           ];
         };
 
+        project = {
+          root = "~/project";
+          session = "project-\${worktree}";
+          windows = [
+            {
+              name = "src";
+              layout = "tiled";
+            }
+          ];
+        };
+
       };
     };
   };
 
   nmt.script = ''
     assertFileContent home-files/.config/smug/blogdemo.yml ${./blogdemo.yml}
+    assertFileContent home-files/.config/smug/project.yml ${./project.yml}
   '';
 }

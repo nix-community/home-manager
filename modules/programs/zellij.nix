@@ -22,6 +22,7 @@ in
 {
   meta.maintainers = [
     lib.maintainers.khaneliman
+    lib.maintainers.PerchunPak
     lib.hm.maintainers.mainrs
   ];
 
@@ -29,6 +30,15 @@ in
     enable = lib.mkEnableOption "Zellij";
 
     package = lib.mkPackageOption pkgs "zellij" { };
+
+    finalPackage = mkOption {
+      type = types.package;
+      visible = false;
+      readOnly = true;
+      description = ''
+        The zellij package with all plugin dependencies.
+      '';
+    };
 
     layouts = lib.mkOption {
       type = types.attrsOf (
@@ -39,98 +49,96 @@ in
         ]
       );
       default = { };
-      example = lib.literalExpression ''
-        {
-          dev = {
-            layout = {
-              _children = [
-                {
-                  default_tab_template = {
-                    _children = [
-                      {
-                        pane = {
-                          size = 1;
-                          borderless = true;
-                          plugin = {
-                            location = "zellij:tab-bar";
-                          };
+      example = {
+        dev = {
+          layout = {
+            _children = [
+              {
+                default_tab_template = {
+                  _children = [
+                    {
+                      pane = {
+                        size = 1;
+                        borderless = true;
+                        plugin = {
+                          location = "zellij:tab-bar";
                         };
-                      }
-                      { "children" = { }; }
-                      {
-                        pane = {
-                          size = 2;
-                          borderless = true;
-                          plugin = {
-                            location = "zellij:status-bar";
-                          };
+                      };
+                    }
+                    { "children" = { }; }
+                    {
+                      pane = {
+                        size = 2;
+                        borderless = true;
+                        plugin = {
+                          location = "zellij:status-bar";
                         };
-                      }
-                    ];
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Project";
+                    focus = true;
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Project";
-                      focus = true;
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "nvim";
-                        };
-                      }
-                    ];
+                  _children = [
+                    {
+                      pane = {
+                        command = "nvim";
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Git";
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Git";
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "lazygit";
-                        };
-                      }
-                    ];
+                  _children = [
+                    {
+                      pane = {
+                        command = "lazygit";
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Files";
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Files";
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "yazi";
-                        };
-                      }
-                    ];
+                  _children = [
+                    {
+                      pane = {
+                        command = "yazi";
+                      };
+                    }
+                  ];
+                };
+              }
+              {
+                tab = {
+                  _props = {
+                    name = "Shell";
                   };
-                }
-                {
-                  tab = {
-                    _props = {
-                      name = "Shell";
-                    };
-                    _children = [
-                      {
-                        pane = {
-                          command = "zsh";
-                        };
-                      }
-                    ];
-                  };
-                }
-              ];
-            };
+                  _children = [
+                    {
+                      pane = {
+                        command = "zsh";
+                      };
+                    }
+                  ];
+                };
+              }
+            ];
           };
-        }
-      '';
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/zellij/layouts/<layout>.kdl`.
@@ -140,8 +148,17 @@ in
       '';
     };
 
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [ ];
+      example = lib.literalExpression ''
+        with pkgs.zellijPlugins; [ jbz vim-plugins-navigator zjstatus ]
+      '';
+      description = "List of Zellij plugins";
+    };
+
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
@@ -264,9 +281,23 @@ in
       shellIntegrationEnabled = (
         cfg.enableBashIntegration || cfg.enableZshIntegration || cfg.enableFishIntegration
       );
+      pluginsWithNames = lib.map (plugin: {
+        inherit plugin;
+        name = lib.removePrefix "zellij-" plugin.pname;
+      }) cfg.plugins;
+      pluginRuntimeDeps = lib.concatLists (
+        lib.map ({ plugin, ... }: plugin.runtimeDeps or [ ]) pluginsWithNames
+      );
     in
     mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home.packages = [ cfg.finalPackage ];
+      programs.zellij.finalPackage =
+        if pluginRuntimeDeps != [ ] then
+          cfg.package.override {
+            extraPackages = pluginRuntimeDeps;
+          }
+        else
+          cfg.package;
 
       # Zellij switched from yaml to KDL in version 0.32.0:
       # https://github.com/zellij-org/zellij/releases/tag/v0.32.0
@@ -274,14 +305,15 @@ in
         {
 
           "zellij/config.yaml" =
-            mkIf ((lib.versionOlder cfg.package.version "0.32.0") && cfg.settings != { })
+            mkIf ((lib.versionOlder cfg.finalPackage.version "0.32.0") && cfg.settings != { })
               {
                 source = yamlFormat.generate "zellij.yaml" cfg.settings;
               };
           "zellij/config.kdl" =
             mkIf
               (
-                (lib.versionAtLeast cfg.package.version "0.32.0") && (cfg.settings != { } || cfg.extraConfig != "")
+                (lib.versionAtLeast cfg.finalPackage.version "0.32.0")
+                && (cfg.settings != { } || cfg.extraConfig != "")
               )
               {
                 text =
@@ -322,20 +354,63 @@ in
                 );
           }
         ) cfg.themes)
+
+        # on every plugin update, zellij asks for permissions again, because
+        # the plugin path has changed (=/nix/store path has changed)
+        # to avoid that, we symlink all plugins to `.config/zellij/plugins` and
+        # use those paths
+        (lib.listToAttrs (
+          lib.map (
+            { plugin, name }:
+            {
+              name = "zellij/plugins/${name}.wasm";
+              value.source = plugin;
+            }
+          ) pluginsWithNames
+        ))
       ];
+      programs.zellij.settings = {
+        # define plugin aliases
+        plugins = mkIf (pluginsWithNames != [ ]) (
+          lib.listToAttrs (
+            lib.map (
+              { name, ... }:
+              {
+                inherit name;
+                value._props.location = "file:${config.xdg.configHome}/zellij/plugins/${name}.wasm";
+              }
+            ) pluginsWithNames
+          )
+        );
+        # auto-load plugins on start
+        load_plugins = mkIf (pluginsWithNames != [ ]) {
+          _children = lib.map (
+            { name, ... }:
+            {
+              ${name} = [ ];
+            }
+          ) pluginsWithNames;
+        };
+      };
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        eval "$(${lib.getExe cfg.package} setup --generate-auto-start bash)"
+        if [[ "$TERM" != "dumb" ]]; then
+            eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start bash)"
+        fi
       '';
 
       programs.zsh.initContent = mkIf cfg.enableZshIntegration (
         lib.mkOrder 200 ''
-          eval "$(${lib.getExe cfg.package} setup --generate-auto-start zsh)"
+          if [[ "$TERM" != "dumb" ]]; then
+              eval "$(${lib.getExe cfg.finalPackage} setup --generate-auto-start zsh)"
+          fi
         ''
       );
 
       programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        eval (${lib.getExe cfg.package} setup --generate-auto-start fish | string collect)
+        if test "$TERM" != "dumb"
+            eval (${lib.getExe cfg.finalPackage} setup --generate-auto-start fish | string collect)
+        end
       '';
 
       home.sessionVariables = mkIf shellIntegrationEnabled {

@@ -5,7 +5,7 @@
     (_: super: {
       inherit (realPkgs) remarshal;
       python3Packages = super.python3Packages.overrideScope (
-        self: super: { inherit (realPkgs.python3Packages) pyyaml; }
+        _self: _super: { inherit (realPkgs.python3Packages) pyyaml; }
       );
     })
   ];

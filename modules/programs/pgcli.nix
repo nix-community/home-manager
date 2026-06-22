@@ -11,7 +11,6 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
-    literalExpression
     ;
 
   iniFormat = pkgs.formats.ini { };
@@ -27,18 +26,16 @@ in
     package = mkPackageOption pkgs "pgcli" { nullable = true; };
 
     settings = mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          main = {
-            smart_completion = true;
-            vi = true;
-          };
+      example = {
+        main = {
+          smart_completion = true;
+          vi = true;
+        };
 
-          "named queries".simple = "select * from abc where a is not Null";
-        }
-      '';
+        "named queries".simple = "select * from abc where a is not Null";
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/pgcli/config`.

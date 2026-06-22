@@ -18,21 +18,19 @@ in
     package = lib.mkPackageOption pkgs "bun" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          smol = true;
-          telemetry = false;
-          test = {
-            coverage = true;
-            coverageThreshold = 0.9;
-          };
-          install.lockfile = {
-            print = "yarn";
-          };
-        }
-      '';
+      example = {
+        smol = true;
+        telemetry = false;
+        test = {
+          coverage = true;
+          coverageThreshold = 0.9;
+        };
+        install.lockfile = {
+          print = "yarn";
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/.bunfig.toml`.

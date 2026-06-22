@@ -11,7 +11,7 @@ lib.mkIf config.test.enableBig {
     fish.enable = true;
   };
 
-  nixpkgs.overlays = [ (self: super: { inherit (realPkgs) carapace; }) ];
+  nixpkgs.overlays = [ (_self: _super: { inherit (realPkgs) carapace; }) ];
 
   nmt.script =
     let

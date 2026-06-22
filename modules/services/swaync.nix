@@ -46,7 +46,7 @@ in
       '';
       description = ''
         CSS style of the bar. See
-        <https://github.com/ErikReider/SwayNotificationCenter/blob/main/src/style.css>
+        <https://github.com/ErikReider/SwayNotificationCenter?tab=readme-ov-file#configuring>
         for the documentation.
 
         If the value is set to a path literal, then the path will be used as the CSS file.
@@ -54,7 +54,7 @@ in
     };
 
     settings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

@@ -13,7 +13,6 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
-    literalExpression
     ;
 
   cfg = config.programs.freetube;
@@ -41,14 +40,12 @@ in
     settings = mkOption {
       type = lib.types.attrs;
       default = { };
-      example = literalExpression ''
-        {
-          allowDashAv1Formats = true;
-          checkForUpdates     = false;
-          defaultQuality      = "1080";
-          baseTheme           = "catppuccinMocha";
-        }
-      '';
+      example = {
+        allowDashAv1Formats = true;
+        checkForUpdates = false;
+        defaultQuality = "1080";
+        baseTheme = "catppuccinMocha";
+      };
       description = ''
         Configuration settings for FreeTube.
 

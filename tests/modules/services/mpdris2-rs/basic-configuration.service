@@ -1,0 +1,12 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+BusName=org.mpris.MediaPlayer2.mpd
+ExecStart=@mpdris2-rs@/bin/mpdris2-rs --no-notification
+Restart=on-failure
+Type=dbus
+
+[Unit]
+After=mpd.service
+Description=Music Player Daemon D-Bus Bridge

@@ -1,0 +1,2 @@
+#! @bash-interactive@/bin/bash -e
+exec -a "$0" "/nix/store/00000000000000000000000000000000-claude-code/bin/.claude-wrapped" --plugin-dir /nix/store/00000000000000000000000000000000-test-plugin "$@"

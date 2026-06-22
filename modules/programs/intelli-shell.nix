@@ -24,7 +24,6 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.intelli-shell = {
     enable = mkEnableOption "intelli-shell";
     package = mkPackageOption pkgs "intelli-shell" { nullable = true; };

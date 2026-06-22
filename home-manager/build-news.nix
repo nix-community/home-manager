@@ -68,7 +68,7 @@ in
 {
   meta = {
     numUnread = length newsUnread;
-    display = newsJson.display;
+    inherit (newsJson) display;
     ids = concatStringsSep "\n" (map (e: e.id) newsJson.entries);
   };
   news = {

@@ -94,10 +94,8 @@ in
 
           # Get the blocks if successful, abort if not
           blocks =
-            if trySortedBlocks ? result then
-              trySortedBlocks.result
-            else
-              abort "Dependency cycle in i3blocks: ${builtins.toJSON trySortedBlocks}";
+            trySortedBlocks.result
+              or (abort "Dependency cycle in i3blocks: ${builtins.toJSON trySortedBlocks}");
 
           # Turn the blocks back into their name value pairs
           orderedBlocks = (map (value: (nameValuePairToAttr (dagEntryToNameValue value))) blocks);

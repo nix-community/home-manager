@@ -1,13 +1,11 @@
 {
   config,
-  lib,
-  pkgs,
   ...
 }:
 
 {
   nixpkgs.overlays = [
-    (self: super: {
+    (_self: super: {
       darwin = super.darwin // {
         DarwinTools = config.lib.test.mkStubPackage {
           name = "DarwinTools";
@@ -46,6 +44,10 @@
     bashPackage = config.lib.test.mkStubPackage {
       name = "bashNonInteractive";
       outPath = "@bashNonInteractive@";
+    };
+    kubectlPackage = config.lib.test.mkStubPackage {
+      name = "kubectl";
+      outPath = "@kubectl@";
     };
   };
 

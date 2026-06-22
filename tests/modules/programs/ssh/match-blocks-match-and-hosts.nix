@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  options,
+  ...
+}:
 {
   config = {
     programs.ssh = {
@@ -23,6 +28,12 @@
     home.file.assertions.text = builtins.toJSON (
       map (a: a.message) (lib.filter (a: !a.assertion) config.assertions)
     );
+
+    test.asserts.warnings.expected = [
+      ''
+        `programs.ssh.matchBlocks` defined in ${lib.showFiles options.programs.ssh.matchBlocks.files} is deprecated. Use `programs.ssh.settings`.
+      ''
+    ];
 
     nmt.script = ''
       assertFileExists home-files/.ssh/config

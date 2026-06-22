@@ -16,7 +16,7 @@ in
     package = lib.mkPackageOption pkgs "jqp" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = {
         theme = {

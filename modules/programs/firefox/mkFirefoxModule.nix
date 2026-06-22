@@ -75,11 +75,18 @@ let
   userPrefValue =
     pref:
     builtins.toJSON (
-      if lib.isBool pref || lib.isInt pref || lib.isString pref then pref else builtins.toJSON pref
+      if lib.isBool pref || lib.isInt pref || lib.isString pref || lib.isPath pref then
+        pref
+      else
+        builtins.toJSON pref
     );
 
   extensionSettingsNeedForce =
     extensionSettings: builtins.any (ext: ext.settings != { }) (attrValues extensionSettings);
+
+  extensionSettingsMissingForce =
+    extensionSettings:
+    builtins.any (ext: ext.settings != { } && !ext.force) (attrValues extensionSettings);
 
   mkUserJs =
     prePrefs: prefs: extraPrefs: bookmarksFile: extensions:
@@ -113,9 +120,7 @@ let
     let
       containerToIdentity = _: container: {
         userContextId = container.id;
-        name = container.name;
-        icon = container.icon;
-        color = container.color;
+        inherit (container) color icon name;
         public = true;
       };
     in
@@ -178,7 +183,7 @@ let
     let
       # The configuration expected by the Firefox wrapper.
       fcfg = {
-        enableGnomeExtensions = cfg.enableGnomeExtensions;
+        inherit (cfg) enableGnomeExtensions;
       };
 
       # A bit of hackery to force a config into the wrapper.
@@ -190,11 +195,20 @@ let
     if package == null then
       null
     else if isWrapped then
-      package.override (old: {
-        cfg = old.cfg or { } // fcfg;
-        extraPolicies = (old.extraPolicies or { }) // cfg.policies;
-        pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
-      })
+      if lib.functionArgs package.override ? cfg then
+        package.override (old: {
+          cfg = old.cfg or { } // fcfg;
+          extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+          pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
+        })
+      else
+        let
+          droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
+          droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
+        in
+        lib.warnIf droppedOptions
+          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
+          package
     else
       (pkgs.wrapFirefox.override { config = bcfg; }) package { };
 
@@ -240,6 +254,54 @@ in
       description = "Upstream release version used to fetch from `releases.mozilla.org`.";
     };
 
+    globalExtensions = mkOption {
+      type = types.listOf (
+        types.oneOf [
+          types.package
+          (types.submodule {
+            options = {
+              package = mkOption {
+                type = types.package;
+              };
+
+              settings = mkOption {
+                type = types.attrsOf jsonFormat.type;
+                default = { };
+                description = "Json formatted options for this extension.";
+              };
+            };
+          })
+        ]
+      );
+      default = [ ];
+      example = literalExpression ''
+        with pkgs.nur.repos.rycee.firefox-addons; [
+          privacy-badger
+          {
+            package = ublock-origin;
+            settings = {
+              private_browsing = true;
+            };
+          }
+        ]
+      '';
+      description = ''
+        Add-on package to install under policies.
+        For a package to work here it needs and addonId exposed in it's passthru.
+        This will be included in all add-ons accessible from the Nix User Repository.
+        Once you have NUR installed run
+
+        ```console
+        $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
+        ```
+
+        to list the available ${name} add-ons.
+
+        Installing extensions this way will automatically enable extensions
+        inside ${name} after the first installation.
+      '';
+    };
+
     languagePacks = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -282,10 +344,13 @@ in
       internal = true;
       type = types.str;
       default =
-        lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
-        + lib.toLower (
-          lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
-        );
+        if platforms.darwin ? "appName" then
+          platforms.darwin.appName
+        else
+          lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
+          + lib.toLower (
+            lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
+          );
       description = "Name of browser app on Darwin.";
     };
 
@@ -356,7 +421,11 @@ in
     profiles = mkOption {
       type = types.attrsOf (
         types.submodule (
-          { config, name, ... }:
+          {
+            config,
+            name,
+            ...
+          }:
           let
             profilePath = modulePath ++ [
               "profiles"
@@ -475,25 +544,11 @@ in
                     (
                       bookmarks:
                       if bookmarks != { } then
-                        lib.warn
-                          ''
-                            ${cfg.name} bookmarks have been refactored into a submodule that now explicitly require a 'force' option to be enabled.
-
-                            Replace:
-
-                            ${moduleName}.profiles.${name}.bookmarks = [ ... ];
-
-                            With:
-
-                            ${moduleName}.profiles.${name}.bookmarks = {
-                              force = true;
-                              settings = [ ... ];
-                            };
-                          ''
-                          {
-                            force = true;
-                            settings = bookmarks;
-                          }
+                        {
+                          force = true;
+                          _legacySettings = if builtins.isList bookmarks then "a list" else "an attribute set";
+                          settings = bookmarks;
+                        }
                       else
                         { }
                     )
@@ -548,6 +603,25 @@ in
                 description = "Declarative search engine configuration.";
               };
 
+              handlers = mkOption {
+                type = types.submodule (
+                  args:
+                  import ./profiles/handlers.nix {
+                    inherit (args) config;
+                    inherit lib pkgs appName;
+                    package = cfg.finalPackage;
+                    modulePath = modulePath ++ [
+                      "profiles"
+                      name
+                      "handlers"
+                    ];
+                    profilePath = config.path;
+                  }
+                );
+                default = { };
+                description = "Declarative handlers configuration for MIME types and URL schemes.";
+              };
+
               containersForce = mkOption {
                 type = types.bool;
                 default = false;
@@ -573,7 +647,7 @@ in
 
                         id = mkOption {
                           type = types.ints.unsigned;
-                          default = 0;
+                          default = 1;
                           description = ''
                             Container ID. This should be set to a unique number per container in this profile.
                           '';
@@ -641,152 +715,151 @@ in
                 '';
               };
               extensions = mkOption {
-                type =
-                  types.coercedTo (types.listOf types.package)
-                    (packages: {
-                      packages = mkIf (builtins.length packages > 0) (
-                        lib.warn ''
-                          In order to support declarative extension configuration,
-                          extension installation has been moved from
-                          ${moduleName}.profiles.<profile>.extensions
-                          to
-                          ${moduleName}.profiles.<profile>.extensions.packages
-                        '' packages
+                type = types.submodule {
+                  options = {
+                    packages = mkOption {
+                      type = types.listOf types.package;
+                      default = [ ];
+                      example = literalExpression ''
+                        with pkgs.nur.repos.rycee.firefox-addons; [
+                          privacy-badger
+                        ]
+                      '';
+                      description = ''
+                        List of ${name} add-on packages to install for this profile.
+                        Some pre-packaged add-ons are accessible from the Nix User Repository.
+                        Once you have NUR installed run
+
+                        ```console
+                        $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
+                        ```
+
+                        to list the available ${name} add-ons.
+
+                        Note that it is necessary to manually enable these extensions
+                        inside ${name} after the first installation.
+
+                        To automatically enable extensions add
+                        `"extensions.autoDisableScopes" = 0;`
+                        to
+                        [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
+
+                        On systems using impermanence, this only prevents
+                        ${name} from requiring manual extension approval. It
+                        does not preserve extension runtime state such as
+                        extension UUIDs, logins, local storage, or
+                        per-extension data. Persist the ${name} profile state
+                        needed by your extensions, or configure supported
+                        extension settings declaratively with
+                        [{option}`${moduleName}.profiles.<profile>.extensions.settings`](#opt-${moduleName}.profiles._name_.extensions.settings).
+
+                        Persisting only the `extensions` directory is generally
+                        not sufficient, because ${name} stores extension state
+                        in other profile files and databases that are managed
+                        outside Home Manager.
+                      '';
+                    };
+
+                    force = mkOption {
+                      description = ''
+                        Whether to override all previous firefox settings.
+
+                        This is required when using `settings`.
+                      '';
+                      default = false;
+                      example = true;
+                      type = types.bool;
+                    };
+
+                    exhaustivePermissions = mkOption {
+                      description = ''
+                        When enabled, the user must authorize requested
+                        permissions for all extensions from
+                        {option}`${moduleName}.profiles.<profile>.extensions.packages`
+                        in
+                        {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
+                      '';
+                      default = false;
+                      example = true;
+                      type = types.bool;
+                    };
+
+                    exactPermissions = mkOption {
+                      description = ''
+                        When enabled,
+                        {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
+                        must specify the exact set of permissions that the
+                        extension will request.
+
+                        This means that if the authorized permissions are
+                        broader than what the extension requests, the
+                        assertion will fail.
+                      '';
+                      default = false;
+                      example = true;
+                      type = types.bool;
+                    };
+
+                    settings = mkOption {
+                      default = { };
+                      example = literalExpression ''
+                        {
+                          # Example with uBlock origin's extensionID
+                          "uBlock0@raymondhill.net".settings = {
+                            selectedFilterLists = [
+                              "ublock-filters"
+                              "ublock-badware"
+                              "ublock-privacy"
+                              "ublock-unbreak"
+                              "ublock-quick-fixes"
+                            ];
+                          };
+
+                          # Example with Stylus' UUID-form extensionID
+                          "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}".settings = {
+                            dbInChromeStorage = true; # required for Stylus
+                          }
+                        }
+                      '';
+                      description = ''
+                        Attribute set of options for each extension.
+                        The keys of the attribute set consist of the ID of the extension
+                        or its UUID wrapped in curly braces.
+                      '';
+                      type = types.attrsOf (
+                        types.submodule {
+                          options = {
+                            settings = mkOption {
+                              type = types.attrsOf jsonFormat.type;
+                              default = { };
+                              description = "Json formatted options for this extension.";
+                            };
+                            permissions = mkOption {
+                              type = types.nullOr (types.listOf types.str);
+                              default = null;
+                              example = [ "activeTab" ];
+                              defaultText = "Any permissions";
+                              description = ''
+                                Allowed permissions for this extension. See
+                                <https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions>
+                                for a list of relevant permissions.
+                              '';
+                            };
+                            force = mkOption {
+                              type = types.bool;
+                              default = false;
+                              example = true;
+                              description = ''
+                                Forcibly override any existing configuration for
+                                this extension.
+                              '';
+                            };
+                          };
+                        }
                       );
-                    })
-                    (
-                      types.submodule {
-                        options = {
-                          packages = mkOption {
-                            type = types.listOf types.package;
-                            default = [ ];
-                            example = literalExpression ''
-                              with pkgs.nur.repos.rycee.firefox-addons; [
-                                privacy-badger
-                              ]
-                            '';
-                            description = ''
-                              List of ${name} add-on packages to install for this profile.
-                              Some pre-packaged add-ons are accessible from the Nix User Repository.
-                              Once you have NUR installed run
-
-                              ```console
-                              $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
-                              ```
-
-                              to list the available ${name} add-ons.
-
-                              Note that it is necessary to manually enable these extensions
-                              inside ${name} after the first installation.
-
-                              To automatically enable extensions add
-                              `"extensions.autoDisableScopes" = 0;`
-                              to
-                              [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
-                            '';
-                          };
-
-                          force = mkOption {
-                            description = ''
-                              Whether to override all previous firefox settings.
-
-                              This is required when using `settings`.
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
-
-                          exhaustivePermissions = mkOption {
-                            description = ''
-                              When enabled, the user must authorize requested
-                              permissions for all extensions from
-                              {option}`${moduleName}.profiles.<profile>.extensions.packages`
-                              in
-                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
-
-                          exactPermissions = mkOption {
-                            description = ''
-                              When enabled,
-                              {option}`${moduleName}.profiles.<profile>.extensions.settings.<extensionID>.permissions`
-                              must specify the exact set of permissions that the
-                              extension will request.
-
-                              This means that if the authorized permissions are
-                              broader than what the extension requests, the
-                              assertion will fail.
-                            '';
-                            default = false;
-                            example = true;
-                            type = types.bool;
-                          };
-
-                          settings = mkOption {
-                            default = { };
-                            example = literalExpression ''
-                              {
-                                # Example with uBlock origin's extensionID
-                                "uBlock0@raymondhill.net".settings = {
-                                  selectedFilterLists = [
-                                    "ublock-filters"
-                                    "ublock-badware"
-                                    "ublock-privacy"
-                                    "ublock-unbreak"
-                                    "ublock-quick-fixes"
-                                  ];
-                                };
-
-                                # Example with Stylus' UUID-form extensionID
-                                "{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}".settings = {
-                                  dbInChromeStorage = true; # required for Stylus
-                                }
-                              }
-                            '';
-                            description = ''
-                              Attribute set of options for each extension.
-                              The keys of the attribute set consist of the ID of the extension
-                              or its UUID wrapped in curly braces.
-                            '';
-                            type = types.attrsOf (
-                              types.submodule {
-                                options = {
-                                  settings = mkOption {
-                                    type = types.attrsOf jsonFormat.type;
-                                    default = { };
-                                    description = "Json formatted options for this extension.";
-                                  };
-                                  permissions = mkOption {
-                                    type = types.nullOr (types.listOf types.str);
-                                    default = null;
-                                    example = [ "activeTab" ];
-                                    defaultText = "Any permissions";
-                                    description = ''
-                                      Allowed permissions for this extension. See
-                                      <https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions>
-                                      for a list of relevant permissions.
-                                    '';
-                                  };
-                                  force = mkOption {
-                                    type = types.bool;
-                                    default = false;
-                                    example = true;
-                                    description = ''
-                                      Forcibly override any existing configuration for
-                                      this extension.
-                                    '';
-                                  };
-                                };
-                              }
-                            );
-                          };
-                        };
-                      }
-                    );
+                    };
+                  };
+                };
                 default = { };
                 description = ''
                   Submodule for installing and configuring extensions.
@@ -814,11 +887,13 @@ in
               assertions = [
                 (mkNoDuplicateAssertion config.containers "container")
                 {
-                  assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
+                  assertion = !(extensionSettingsMissingForce config.extensions.settings) || config.extensions.force;
                   message = ''
                     Using '${lib.showOption profilePath}.extensions.settings' will override all
-                    previous extensions settings. Enable
-                    '${lib.showOption profilePath}.extensions.force' to acknowledge this.
+                    previous extensions settings. Enable either
+                    '${lib.showOption profilePath}.extensions.force' or the corresponding
+                    '${lib.showOption profilePath}.extensions.settings.<extensionId>.force'
+                    to acknowledge this.
                   '';
                 }
               ]
@@ -882,7 +957,10 @@ in
                 ]
               ) config.extensions.packages)
               ++ (builtins.concatMap (
-                { name, value }:
+                {
+                  name,
+                  value,
+                }:
                 let
                   packages = builtins.filter (pkg: (pkg.addonId or pkg.name) == name) config.extensions.packages;
                 in
@@ -902,7 +980,27 @@ in
         )
       );
       default = { };
-      description = "Attribute set of ${appName} profiles.";
+      example = lib.optionalAttrs (moduleName == "programs.firefox") (literalExpression ''
+        {
+          "dev-edition-default" = {
+            id = 0;
+            path = config.home.username;
+
+            settings = {
+              "browser.aboutConfig.showWarning" = false;
+            };
+          };
+        }
+      '');
+      description = ''
+        Attribute set of ${appName} profiles.
+
+        ${lib.optionalString (moduleName == "programs.firefox") ''
+          When using Firefox Developer Edition, the profile name should be
+          `dev-edition-default`. You can still set {option}`path` to store the
+          profile in a custom directory.
+        ''}
+      '';
     };
 
     enableGnomeExtensions = mkOption {
@@ -949,11 +1047,12 @@ in
               profiles: lib.flatten (mapAttrsToList (_: value: (attrValues value.containers)) profiles);
 
             findInvalidContainerIds =
-              profiles: lib.filter (container: container.id >= 4294967294) (getContainers profiles);
+              profiles:
+              lib.filter (container: container.id == 0 || container.id >= 4294967294) (getContainers profiles);
           in
           {
             assertion = cfg.profiles == { } || length (findInvalidContainerIds cfg.profiles) == 0;
-            message = "Container id must be smaller than 4294967294 (2^32 - 2)";
+            message = "Container id must be between 1 and 4294967293";
           }
         )
 
@@ -963,6 +1062,26 @@ in
             '${moduleName}.languagePacks' requires '${moduleName}.package'
             to be set to a non-null value.
           '';
+        }
+
+        {
+          assertion =
+            cfg.globalExtensions == [ ] || cfg.package != null || (isDarwin && cfg.darwinDefaultsId != null);
+          message =
+            "'${moduleName}.globalExtensions' requires '${moduleName}.package'"
+            + " to be set to a non-null value unless"
+            + " '${moduleName}.darwinDefaultsId' is set on Darwin.";
+        }
+
+        {
+          assertion = builtins.all (
+            elem:
+            let
+              package = elem.package or elem;
+            in
+            package ? addonId
+          ) cfg.globalExtensions;
+          message = "${moduleName}.globalExtensions requires each package to expose addonId in passthru.";
         }
 
         (mkNoDuplicateAssertion cfg.profiles "profile")
@@ -979,10 +1098,61 @@ in
         ++ optional (cfg.vendorPath != null) ''
           Using '${moduleName}.vendorPath' has been deprecated and
           will be removed in the future. Native messaging hosts will function normally without specifying this path.
-        '';
+        ''
+        ++ lib.flatten (
+          lib.mapAttrsToList (
+            name: profile:
+            lib.optional (profile.bookmarks._legacySettings != null) (
+              let
+                legacySettingsExample =
+                  if profile.bookmarks._legacySettings == "a list" then "[ ... ]" else "{ ... }";
+              in
+              lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+                option = modulePath ++ [
+                  "profiles"
+                  name
+                  "bookmarks"
+                ];
+                old = profile.bookmarks._legacySettings;
+                replacement = "`${
+                  lib.showOption (
+                    modulePath
+                    ++ [
+                      "profiles"
+                      name
+                      "bookmarks"
+                      "settings"
+                    ]
+                  )
+                }` with `${
+                  lib.showOption (
+                    modulePath
+                    ++ [
+                      "profiles"
+                      name
+                      "bookmarks"
+                      "force"
+                    ]
+                  )
+                } = true`";
+                details = ''
+                  Set `force = true` to acknowledge replacing existing custom bookmarks.
+
+                  Replace:
+                    ${moduleName}.profiles.${name}.bookmarks = ${legacySettingsExample};
+
+                  With:
+                    ${moduleName}.profiles.${name}.bookmarks = {
+                      force = true;
+                      settings = ${legacySettingsExample};
+                    };
+                '';
+              }
+            )
+          ) cfg.profiles
+        );
       targets.darwin.defaults = (
         mkIf (cfg.darwinDefaultsId != null && isDarwin) {
-
           ${cfg.darwinDefaultsId} = {
             EnterprisePoliciesEnabled = true;
           }
@@ -1043,9 +1213,13 @@ in
               };
 
               "${cfg.profilesPath}/${profile.path}/search.json.mozlz4" = mkIf (profile.search.enable) {
-                enable = profile.search.enable;
-                force = profile.search.force;
+                inherit (profile.search) enable force;
                 source = profile.search.file;
+              };
+
+              "${cfg.profilesPath}/${profile.path}/handlers.json" = mkIf (profile.handlers.enable) {
+                source = profile.handlers.configFile;
+                inherit (profile.handlers) force;
               };
 
               "${cfg.profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions.packages != [ ]) {
@@ -1085,17 +1259,38 @@ in
         NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
           builtins.attrValues cfg.profiles
         )) false;
-        ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
-          lib.listToAttrs (
-            map (
-              lang:
-              lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
-                installation_mode = "normal_installed";
-                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
-              }
-            ) cfg.languagePacks
-          )
-        );
+        ExtensionSettings = mkMerge [
+          (lib.mkIf (cfg.languagePacks != [ ]) (
+            lib.listToAttrs (
+              map (
+                lang:
+                lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+                  installation_mode = "normal_installed";
+                  install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
+                }
+              ) cfg.languagePacks
+            )
+          ))
+
+          (lib.mkIf (cfg.globalExtensions != [ ]) (
+            lib.listToAttrs (
+              map (
+                elem:
+                let
+                  package = elem.package or elem;
+                  settings = elem.settings or { };
+                in
+                lib.nameValuePair package.addonId (
+                  {
+                    installation_mode = "force_installed";
+                    install_url = "file://${package.outPath}/share/mozilla/${extensionPath}/${package.addonId}.xpi";
+                  }
+                  // settings
+                )
+              ) (builtins.filter (elem: (elem.package or elem) ? addonId) cfg.globalExtensions)
+            )
+          ))
+        ];
       };
     }
   );

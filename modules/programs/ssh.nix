@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -11,6 +12,7 @@ let
     mapAttrsToList
     mkOption
     optional
+    optionalString
     types
     ;
 
@@ -20,13 +22,29 @@ let
 
   addressPort =
     entry:
-    if isPath entry.address then " ${entry.address}" else " [${entry.address}]:${toString entry.port}";
-
-  unwords = builtins.concatStringsSep " ";
+    let
+      address = entry.address or "localhost";
+      port = entry.port or null;
+    in
+    (lib.findFirst (candidate: candidate.when)
+      {
+        out = " [${address}]:${toString port}";
+      }
+      [
+        {
+          when = address == null;
+          out = " ${toString port}";
+        }
+        {
+          when = address != null && isPath address;
+          out = " ${address}";
+        }
+      ]
+    ).out;
 
   mkSetEnvStr =
     envStr:
-    unwords (
+    builtins.concatStringsSep " " (
       mapAttrsToList (name: value: ''${name}="${lib.escape [ ''"'' "\\" ] (toString value)}"'') envStr
     );
 
@@ -135,8 +153,8 @@ let
       };
 
       identitiesOnly = mkOption {
-        type = types.bool;
-        default = false;
+        type = types.nullOr types.bool;
+        default = null;
         description = ''
           Specifies that ssh should only use the authentication
           identity explicitly configured in the
@@ -320,7 +338,11 @@ let
       extraOptions = mkOption {
         type = types.attrsOf types.str;
         default = { };
-        description = "Extra configuration options for the host.";
+        visible = false;
+        description = ''
+          Deprecated extra configuration options for this host. Use
+          {option}`programs.ssh.settings` instead.
+        '';
       };
 
       addKeysToAgent = mkOption {
@@ -398,59 +420,147 @@ let
     #    config.host = mkDefault dagName;
   };
 
+  renderValue = value: if lib.isBool value then lib.hm.booleans.yesNo value else toString value;
+
+  renderValues = sep: values: concatStringsSep sep (map renderValue (lib.toList values));
+
+  renderForward =
+    f: if lib.isAttrs f then addressPort f.bind + addressPort f.host else " ${renderValue f}";
+
+  renderDynamicForward = f: if lib.isAttrs f then addressPort f else " ${renderValue f}";
+
+  renderDuplicateDirective =
+    indent: name: renderItem: values:
+    concatStringsSep "\n" (map (value: "${indent}${name}${renderItem value}") (lib.toList values));
+
+  # Per ssh_config(5), the first obtained value for most parameters wins.
+  # These directives take comma/space-separated lists, so rendering Nix lists as
+  # duplicate directives can silently ignore values after the first line.
+  # Reference: https://man.openbsd.org/ssh_config
+  commaListDirectives = [
+    "CASignatureAlgorithms"
+    "Ciphers"
+    "HostbasedAcceptedAlgorithms"
+    "HostbasedKeyTypes"
+    "HostKeyAlgorithms"
+    "IgnoreUnknown"
+    "KbdInteractiveDevices"
+    "KexAlgorithms"
+    "MACs"
+    "PreferredAuthentications"
+    "ProxyJump"
+    "PubkeyAcceptedAlgorithms"
+    "PubkeyAcceptedKeyTypes"
+  ];
+
+  spaceListDirectives = [
+    "CanonicalDomains"
+    "CanonicalizePermittedCNAMEs"
+    "ChannelTimeout"
+    "GlobalKnownHostsFile"
+    "PermitRemoteOpen"
+    "SendEnv"
+    "UserKnownHostsFile"
+  ];
+
+  directiveRenderers =
+    indent:
+    lib.genAttrs commaListDirectives (name: value: "${indent}${name} ${renderValues "," value}")
+    // lib.genAttrs spaceListDirectives (name: value: "${indent}${name} ${renderValues " " value}")
+    // {
+      SetEnv = value: "${indent}SetEnv ${mkSetEnvStr value}";
+      LocalForward = renderDuplicateDirective indent "LocalForward" renderForward;
+      RemoteForward = renderDuplicateDirective indent "RemoteForward" renderForward;
+      DynamicForward = renderDuplicateDirective indent "DynamicForward" renderDynamicForward;
+    };
+
+  sshDirectiveStrWithIndent =
+    indent: name: value:
+    let
+      renderDirective =
+        (directiveRenderers indent).${name}
+          or (values: renderDuplicateDirective indent name (v: " ${renderValue v}") values);
+    in
+    optionalString (value != null && value != [ ] && value != { }) (renderDirective value);
+
+  sshDirectiveStr = sshDirectiveStrWithIndent "  ";
+
+  blockHeader =
+    name:
+    let
+      isLiteralHeader = lib.any (prefix: lib.hasPrefix prefix name) [
+        "Host "
+        "Match "
+      ];
+    in
+    optionalString (!isLiteralHeader) "Host " + name;
+
   matchBlockStr =
-    key: cf:
+    _key: cf:
+    let
+      inherit (cf) header;
+      extraOptions = cf.__hmSshBlockExtraOptions or { };
+      settings = lib.removeAttrs cf [
+        "header"
+        "__hmSshBlockExtraOptions"
+        "extraOptions"
+      ];
+      orderedNames =
+        # IgnoreUnknown only applies to unknown options that appear after it.
+        optional (builtins.hasAttr "IgnoreUnknown" settings) "IgnoreUnknown"
+        ++ builtins.filter (name: name != "IgnoreUnknown") (lib.attrNames settings);
+    in
     concatStringsSep "\n" (
-      let
-        hostOrDagName = if cf.host != null then cf.host else key;
-        matchHead = if cf.match != null then "Match ${cf.match}" else "Host ${hostOrDagName}";
-      in
-      [ "${matchHead}" ]
-      ++ optional (cf.port != null) "  Port ${toString cf.port}"
-      ++ optional (cf.forwardAgent != null) "  ForwardAgent ${lib.hm.booleans.yesNo cf.forwardAgent}"
-      ++ optional cf.forwardX11 "  ForwardX11 yes"
-      ++ optional cf.forwardX11Trusted "  ForwardX11Trusted yes"
-      ++ optional cf.identitiesOnly "  IdentitiesOnly yes"
-      ++ optional (cf.user != null) "  User ${cf.user}"
-      ++ optional (cf.hostname != null) "  HostName ${cf.hostname}"
-      ++ optional (cf.addressFamily != null) "  AddressFamily ${cf.addressFamily}"
-      ++ optional (cf.sendEnv != [ ]) "  SendEnv ${unwords cf.sendEnv}"
-      ++ optional (cf.setEnv != { }) "  SetEnv ${mkSetEnvStr cf.setEnv}"
-      ++ optional (
-        cf.serverAliveInterval != null
-      ) "  ServerAliveInterval ${toString cf.serverAliveInterval}"
-      ++ optional (
-        cf.serverAliveCountMax != null
-      ) "  ServerAliveCountMax ${toString cf.serverAliveCountMax}"
-      ++ optional (cf.compression != null) "  Compression ${lib.hm.booleans.yesNo cf.compression}"
-      ++ optional (!cf.checkHostIP) "  CheckHostIP no"
-      ++ optional (cf.proxyCommand != null) "  ProxyCommand ${cf.proxyCommand}"
-      ++ optional (cf.proxyJump != null) "  ProxyJump ${cf.proxyJump}"
-      ++ optional (cf.addKeysToAgent != null) "  AddKeysToAgent ${cf.addKeysToAgent}"
-      ++ optional (
-        cf.hashKnownHosts != null
-      ) "  HashKnownHosts ${lib.hm.booleans.yesNo cf.hashKnownHosts}"
-      ++ optional (cf.userKnownHostsFile != null) "  UserKnownHostsFile ${cf.userKnownHostsFile}"
-      ++ optional (cf.controlMaster != null) "  ControlMaster ${cf.controlMaster}"
-      ++ optional (cf.controlPath != null) "  ControlPath ${cf.controlPath}"
-      ++ optional (cf.controlPersist != null) "  ControlPersist ${cf.controlPersist}"
-      ++ map (file: "  IdentityFile ${file}") cf.identityFile
-      ++ map (file: "  IdentityAgent ${file}") cf.identityAgent
-      ++ map (file: "  CertificateFile ${file}") cf.certificateFile
-      ++ map (f: "  LocalForward" + addressPort f.bind + addressPort f.host) cf.localForwards
-      ++ map (f: "  RemoteForward" + addressPort f.bind + addressPort f.host) cf.remoteForwards
-      ++ map (f: "  DynamicForward" + addressPort f) cf.dynamicForwards
-      ++ optional (
-        cf.kexAlgorithms != null
-      ) "  KexAlgorithms ${builtins.concatStringsSep "," cf.kexAlgorithms}"
-      ++ [
-        (lib.generators.toKeyValue {
+      [ header ]
+      ++ lib.filter (line: line != "") (map (name: sshDirectiveStr name settings.${name}) orderedNames)
+      ++ optional (extraOptions != { }) (
+        lib.generators.toKeyValue {
           mkKeyValue = lib.generators.mkKeyValueDefault { } " ";
           listsAsDuplicateKeys = true;
           indent = "  ";
-        } cf.extraOptions)
-      ]
+        } extraOptions
+      )
     );
+
+  legacyBlockSettings =
+    cf:
+    let
+      headers =
+        optional (cf.match != null) "Match ${cf.match}" ++ optional (cf.host != null) "Host ${cf.host}";
+    in
+    lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) {
+      header = lib.head (headers ++ [ null ]);
+      Port = cf.port;
+      ForwardAgent = cf.forwardAgent;
+      ForwardX11 = if cf.forwardX11 then true else null;
+      ForwardX11Trusted = if cf.forwardX11Trusted then true else null;
+      IdentitiesOnly = cf.identitiesOnly;
+      IdentityFile = cf.identityFile;
+      IdentityAgent = cf.identityAgent;
+      User = cf.user;
+      HostName = cf.hostname;
+      ServerAliveInterval = cf.serverAliveInterval;
+      ServerAliveCountMax = cf.serverAliveCountMax;
+      SendEnv = cf.sendEnv;
+      SetEnv = cf.setEnv;
+      Compression = cf.compression;
+      CheckHostIP = if cf.checkHostIP then null else false;
+      ProxyCommand = cf.proxyCommand;
+      ProxyJump = cf.proxyJump;
+      CertificateFile = cf.certificateFile;
+      AddressFamily = cf.addressFamily;
+      LocalForward = cf.localForwards;
+      RemoteForward = cf.remoteForwards;
+      DynamicForward = cf.dynamicForwards;
+      AddKeysToAgent = cf.addKeysToAgent;
+      HashKnownHosts = cf.hashKnownHosts;
+      UserKnownHostsFile = cf.userKnownHostsFile;
+      ControlMaster = cf.controlMaster;
+      ControlPath = cf.controlPath;
+      ControlPersist = cf.controlPersist;
+      KexAlgorithms = cf.kexAlgorithms;
+      __hmSshBlockExtraOptions = cf.extraOptions;
+    };
 
 in
 {
@@ -465,7 +575,7 @@ in
       newPrefix = [
         "programs"
         "ssh"
-        "matchBlocks"
+        "settings"
         "*"
       ];
       renamedOptions = [
@@ -480,9 +590,21 @@ in
         "controlPath"
         "controlPersist"
       ];
+      oldOptionNameToSetting = {
+        forwardAgent = "ForwardAgent";
+        addKeysToAgent = "AddKeysToAgent";
+        compression = "Compression";
+        serverAliveInterval = "ServerAliveInterval";
+        serverAliveCountMax = "ServerAliveCountMax";
+        hashKnownHosts = "HashKnownHosts";
+        userKnownHostsFile = "UserKnownHostsFile";
+        controlMaster = "ControlMaster";
+        controlPath = "ControlPath";
+        controlPersist = "ControlPersist";
+      };
     in
     lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix {
-      transform = x: x;
+      transform = x: oldOptionNameToSetting.${x};
     } renamedOptions;
 
   options.programs.ssh = {
@@ -503,7 +625,7 @@ in
     };
 
     extraOptionOverrides = mkOption {
-      type = types.attrsOf types.str;
+      type = types.attrsOf types.anything;
       default = { };
       description = ''
         Extra SSH configuration options that take precedence over any
@@ -524,9 +646,127 @@ in
       '';
     };
 
+    settings = mkOption {
+      type = lib.hm.types.dagOf (
+        types.submodule (
+          { dagName, ... }:
+          {
+            freeformType = types.attrsOf types.anything;
+            options.header = mkOption {
+              type = types.str;
+              default = blockHeader dagName;
+              defaultText = lib.literalMD ''
+                The attribute name, prefixed with `Host ` unless it already
+                starts with `Host ` or `Match `.
+              '';
+              description = ''
+                The literal `Host` or `Match` line that opens this block.
+
+                By default this is derived from the attribute name: names
+                starting with `Host ` or `Match ` are used literally, and
+                all other names are prefixed with `Host `. This default is
+                suitable for most configurations.
+
+                Set this only when the header cannot be expressed as the
+                attribute name, e.g. when it carries Nix string context
+                (store paths), or when a stable attribute name is wanted
+                for {option}`lib.hm.dag` ordering.
+              '';
+            };
+          }
+        )
+      );
+      default = { };
+      example = literalExpression ''
+        # Tagged hosts must appear before Match blocks that select those tags.
+        lib.hm.dag.entriesBefore "corp-host" [ "corp-match" ] [
+          {
+            header = "Host build.corp";
+            HostName = "build.corp.example.org";
+            User = "builder";
+            Tag = "corp";
+          }
+
+          {
+            header = "Host git.corp";
+            HostName = "git.corp.example.org";
+            User = "git";
+            Tag = "corp";
+          }
+        ]
+        // {
+          # Bare attribute names become Host patterns.
+          "*.internal.example.org" = {
+            User = "internal";
+          };
+
+          # Literal Host headers can use the full OpenSSH syntax.
+          "Host *.example.org" = lib.hm.dag.entryBefore [ "github.com" ] {
+            IdentityFile = "~/.ssh/example";
+            LocalForward = [
+              {
+                bind.port = 8080;
+                host.address = "10.0.0.13";
+                host.port = 80;
+              }
+              "9000 10.0.0.2:90"
+            ];
+            DynamicForward = "127.0.0.1:1080";
+          };
+
+          # Literal Match headers can be ordered by their attribute name.
+          "Match host *.vpn.example.org" = lib.hm.dag.entryAfter [ "github.com" ] {
+            ProxyJump = "vpn";
+          };
+
+          "github.com" = {
+            HostName = "github.com";
+            User = "git";
+            IdentityFile = "~/.ssh/github";
+          };
+
+          # Keep long or dynamic SSH headers out of DAG references.
+          corp-match = lib.hm.dag.entryAfter [ "github.com" ] {
+            header = "Match tagged corp exec \"test -f ~/.corp\"";
+            ProxyJump = "bastion";
+            RemoteForward = {
+              bind.port = 8081;
+              host.address = "10.0.0.14";
+              host.port = 80;
+            };
+          };
+        }
+        # Generated groups can also be placed after named blocks.
+        // lib.hm.dag.entriesAfter "corp-fallback" [ "corp-match" ] [
+          {
+            header = "Host *.corp";
+            User = "corp";
+          }
+        ]
+      '';
+      description = ''
+        OpenSSH client configuration blocks written to
+        {file}`~/.ssh/config`.
+
+        Attribute names are interpreted as `Host` patterns unless they
+        start with `Host ` or `Match `, in which case they are written
+        literally as block headers. If the order of rules matter then
+        use the DAG functions to express the dependencies as shown in
+        the example. Use {option}`programs.ssh.settings.<name>.header`
+        when the block should have a short stable name for DAG ordering,
+        and use `lib.hm.dag.entriesBefore` or
+        `lib.hm.dag.entriesAfter` to order generated groups of blocks.
+
+        See
+        {manpage}`ssh_config(5)`
+        for more information.
+      '';
+    };
+
     matchBlocks = mkOption {
       type = lib.hm.types.dagOf matchBlockModule;
       default = { };
+      visible = false;
       example = literalExpression ''
         {
           "john.example.com" = {
@@ -540,13 +780,7 @@ in
         };
       '';
       description = ''
-        Specify per-host settings. Note, if the order of rules matter
-        then use the DAG functions to express the dependencies as
-        shown in the example.
-
-        See
-        {manpage}`ssh_config(5)`
-        for more information.
+        Deprecated alias for {option}`programs.ssh.settings`.
       '';
     };
 
@@ -560,18 +794,20 @@ in
         For an equivalent, copy and paste the following
         code snippet in your config:
 
-        programs.ssh.matchBlocks."*" = {
-          forwardAgent = false;
-          addKeysToAgent = "no";
-          compression = false;
-          serverAliveInterval = 0;
-          serverAliveCountMax = 3;
-          hashKnownHosts = false;
-          userKnownHostsFile = "~/.ssh/known_hosts";
-          controlMaster = "no";
-          controlPath = "~/.ssh/master-%r@%n:%p";
-          controlPersist = "no";
+        ```nix
+        programs.ssh.settings."*" = {
+          ForwardAgent = false;
+          AddKeysToAgent = "no";
+          Compression = false;
+          ServerAliveInterval = 0;
+          ServerAliveCountMax = 3;
+          HashKnownHosts = false;
+          UserKnownHostsFile = "~/.ssh/known_hosts";
+          ControlMaster = "no";
+          ControlPath = "~/.ssh/master-%r@%n:%p";
+          ControlPersist = "no";
         };
+        ```
       '';
     };
   };
@@ -579,19 +815,32 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
+        programs.ssh.settings = lib.mapAttrs (
+          _name: entry:
+          entry
+          // {
+            data = legacyBlockSettings entry.data;
+          }
+        ) cfg.matchBlocks;
+
         assertions = [
           {
             assertion =
               let
-                # `builtins.any`/`lib.lists.any` does not return `true` if there are no elements.
-                any' = pred: items: if items == [ ] then true else lib.any pred items;
                 # Check that if `entry.address` is defined, and is a path, that `entry.port` has not
                 # been defined.
-                noPathWithPort = entry: entry.address != null && isPath entry.address -> entry.port == null;
-                checkDynamic = block: any' noPathWithPort block.dynamicForwards;
+                noPathWithPort =
+                  entry:
+                  let
+                    address = entry.address or null;
+                    port = entry.port or null;
+                  in
+                  address != null && isPath address -> port == null;
+                checkForwardValues = pred: values: lib.all pred (lib.filter lib.isAttrs (lib.toList values));
+                checkDynamic = block: checkForwardValues noPathWithPort (block.DynamicForward or [ ]);
                 checkBindAndHost = fwd: noPathWithPort fwd.bind && noPathWithPort fwd.host;
-                checkLocal = block: any' checkBindAndHost block.localForwards;
-                checkRemote = block: any' checkBindAndHost block.remoteForwards;
+                checkLocal = block: checkForwardValues checkBindAndHost (block.LocalForward or [ ]);
+                checkRemote = block: checkForwardValues checkBindAndHost (block.RemoteForward or [ ]);
                 checkMatchBlock =
                   block:
                   lib.all (fn: fn block) [
@@ -600,12 +849,20 @@ in
                     checkDynamic
                   ];
               in
-              any' checkMatchBlock (map (block: block.data) (builtins.attrValues cfg.matchBlocks));
+              lib.all checkMatchBlock (map (block: block.data) (builtins.attrValues cfg.settings));
             message = "Forwarded paths cannot have ports.";
           }
           {
-            assertion = (cfg.extraConfig != "") -> (cfg.matchBlocks ? "*");
-            message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.'';
+            assertion = (cfg.extraConfig != "") -> (cfg.settings ? "*");
+            message = ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.settings."*"` (default host config) is not declared.'';
+          }
+          {
+            assertion = lib.all (
+              block: !(builtins.hasAttr "extraOptions" block.data) || block.data.extraOptions == { }
+            ) (builtins.attrValues cfg.settings);
+            message = ''
+              `programs.ssh.settings.*.extraOptions` defined in ${lib.showFiles options.programs.ssh.settings.files} is not supported. Move these OpenSSH options directly into `programs.ssh.settings.*` using upstream directive names.
+            '';
           }
         ];
 
@@ -613,35 +870,39 @@ in
 
         home.file.".ssh/config".text =
           let
-            sortedMatchBlocks = lib.hm.dag.topoSort (lib.removeAttrs cfg.matchBlocks [ "*" ]);
+            sortedMatchBlocks = lib.hm.dag.topoSort (lib.removeAttrs cfg.settings [ "*" ]);
             sortedMatchBlocksStr = builtins.toJSON sortedMatchBlocks;
             matchBlocks =
-              if sortedMatchBlocks ? result then
-                sortedMatchBlocks.result
-              else
-                abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}";
+              sortedMatchBlocks.result or (abort "Dependency cycle in SSH match blocks: ${sortedMatchBlocksStr}");
 
-            defaultHostBlock = cfg.matchBlocks."*" or null;
+            defaultHostBlock = cfg.settings."*" or null;
+            globalConfig =
+              (mapAttrsToList (sshDirectiveStrWithIndent "") cfg.extraOptionOverrides)
+              ++ optional (cfg.includes != [ ]) "Include ${concatStringsSep " " cfg.includes}";
+            blockConfig =
+              (map (block: matchBlockStr block.name block.data) matchBlocks)
+              ++ optional (defaultHostBlock != null) (matchBlockStr "*" defaultHostBlock.data);
+            extraConfig = optional (cfg.extraConfig != "") (
+              "  " + lib.replaceStrings [ "\n" ] [ "\n  " ] (lib.removeSuffix "\n" cfg.extraConfig)
+            );
+            sections =
+              optional (globalConfig != [ ]) (concatStringsSep "\n" globalConfig) ++ blockConfig ++ extraConfig;
           in
-          ''
-            ${concatStringsSep "\n" (
-              (mapAttrsToList (n: v: "${n} ${v}") cfg.extraOptionOverrides)
-              ++ (optional (cfg.includes != [ ]) ''
-                Include ${concatStringsSep " " cfg.includes}
-              '')
-              ++ (map (block: matchBlockStr block.name block.data) matchBlocks)
-            )}
-
-            ${if (defaultHostBlock != null) then (matchBlockStr "*" defaultHostBlock.data) else ""}
-              ${lib.replaceStrings [ "\n" ] [ "\n  " ] cfg.extraConfig}
-          '';
+          optionalString (sections != [ ]) (concatStringsSep "\n\n" sections + "\n");
 
         warnings =
-          mapAttrsToList
-            (n: v: ''
-              The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
-              The match option takes precedence.'')
-            (lib.filterAttrs (n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks);
+          optional (cfg.matchBlocks != { }) ''
+            `programs.ssh.matchBlocks` defined in ${lib.showFiles options.programs.ssh.matchBlocks.files} is deprecated. Use `programs.ssh.settings`.
+          ''
+          ++
+            mapAttrsToList
+              (n: _v: ''
+                The SSH config match block `programs.ssh.matchBlocks.${n}` sets both of the host and match options.
+                The match option takes precedence.'')
+              (lib.filterAttrs (_n: v: v.data.host != null && v.data.match != null) cfg.matchBlocks)
+          ++ mapAttrsToList (n: _v: ''
+            `programs.ssh.matchBlocks.${n}.extraOptions` defined in ${lib.showFiles options.programs.ssh.matchBlocks.files} is deprecated. Move these OpenSSH options to `programs.ssh.settings.${n}` using upstream directive names.
+          '') (lib.filterAttrs (_n: v: v.data.extraOptions != { }) cfg.matchBlocks);
       }
       (lib.mkIf cfg.enableDefaultConfig {
         warnings = [
@@ -649,21 +910,21 @@ in
             `programs.ssh` default values will be removed in the future.
             Consider setting `programs.ssh.enableDefaultConfig` to false,
             and manually set the default values you want to keep at
-            `programs.ssh.matchBlocks."*"`.
+            `programs.ssh.settings."*"`.
           ''
         ];
 
-        programs.ssh.matchBlocks."*" = {
-          forwardAgent = lib.mkDefault false;
-          addKeysToAgent = lib.mkDefault "no";
-          compression = lib.mkDefault false;
-          serverAliveInterval = lib.mkDefault 0;
-          serverAliveCountMax = lib.mkDefault 3;
-          hashKnownHosts = lib.mkDefault false;
-          userKnownHostsFile = lib.mkDefault "~/.ssh/known_hosts";
-          controlMaster = lib.mkDefault "no";
-          controlPath = lib.mkDefault "~/.ssh/master-%r@%n:%p";
-          controlPersist = lib.mkDefault "no";
+        programs.ssh.settings."*" = {
+          ForwardAgent = lib.mkDefault false;
+          AddKeysToAgent = lib.mkDefault "no";
+          Compression = lib.mkDefault false;
+          ServerAliveInterval = lib.mkDefault 0;
+          ServerAliveCountMax = lib.mkDefault 3;
+          HashKnownHosts = lib.mkDefault false;
+          UserKnownHostsFile = lib.mkDefault "~/.ssh/known_hosts";
+          ControlMaster = lib.mkDefault "no";
+          ControlPath = lib.mkDefault "~/.ssh/master-%r@%n:%p";
+          ControlPersist = lib.mkDefault "no";
         };
       })
     ]

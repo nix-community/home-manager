@@ -54,6 +54,13 @@ The `default.nix` file should list all test cases:
 }
 ```
 
+Prefer keeping related assertions in as few test files as practical.
+Exercising several cases in one evaluation keeps the test suite cheaper
+to evaluate and reduces maintenance burden. Split cases into separate
+files when they need incompatible module configuration, platform
+conditions, expected assertion failures, or otherwise cannot share one
+evaluation.
+
 ### Common NMT Assertions {#sec-tests-assertions}
 
 NMT provides several assertion functions:
@@ -162,6 +169,12 @@ For cross-platform modules that have packages which need to be stubbed on Darwin
 add the package names to `tests/darwinScrublist.nix` to prevent build failures
 during cross-platform test runs.
 
+On Linux, packages are automatically scrubbed by the test infrastructure,
+so tests should normally use the module's default package. Use
+`test.stubs` or `config.lib.test.mkStubPackage` only when the automatic
+scrubbing does not model the behavior that the test needs, such as a
+package with additional files or a non-default executable layout.
+
 ## Using the tests command {#sec-tests-command}
 
 Home Manager provides a convenient `tests` command for discovering and running tests:
@@ -179,15 +192,21 @@ $ nix run .#tests -- alacritty
 # Run a specific test
 $ nix run .#tests -- test-alacritty-empty-settings
 
-# Run integration tests
+# List integration tests
 $ nix run .#tests -- -t -l
 
+# Run all integration tests
+$ nix run .#tests -- -t integration-test-
+
 # Interactive test selection (requires fzf)
-$ python3 tests/tests.py -i
+$ nix run .#tests -- -i
 
 # Pass additional nix build flags
 $ nix run .#tests -- alacritty -- --verbose
 ```
+
+Integration tests are only exposed on Linux. On other platforms, integration
+test discovery may report no matching tests.
 
 ## Manual test commands {#sec-tests-manual}
 
@@ -202,7 +221,7 @@ $ nix-build --pure --option allow-import-from-derivation false tests -A build.al
 in the project root. List all test cases through
 
 ``` shell
-$ nix-build --pure tests --option allow-import-from-derivation false -A list
+$ nix run .#tests -- -l
 ```
 
 and run an individual test, for example `alacritty-empty-settings`,
@@ -217,13 +236,13 @@ and may cause failures. To run against the Nixpkgs from the `flake.lock` file,
 use instead e.g.
 
 ``` shell
-$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-all
+$ nix build .#test-all
 ```
 
 or
 
 ``` shell
-$ nix build --reference-lock-file flake.lock --option allow-import-from-derivation false ./tests#test-alacritty-empty-settings
+$ nix build .#test-alacritty-empty-settings
 ```
 
 Some tests may be marked with `enableLegacyIfd`, those may be run by run with e.g.

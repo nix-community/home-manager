@@ -43,7 +43,7 @@ in
     package = lib.mkPackageOption pkgs "k9s" { nullable = true; };
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/k9s/config.yaml` (linux)
@@ -80,7 +80,7 @@ in
     };
 
     aliases = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Aliases written to {file}`$XDG_CONFIG_HOME/k9s/aliases.yaml` (linux)
@@ -96,26 +96,24 @@ in
     };
 
     hotKeys = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Hotkeys written to {file}`$XDG_CONFIG_HOME/k9s/hotkeys.yaml` (linux)
         or {file}`Library/Application Support/k9s/hotkeys.yaml` (darwin). See
         <https://k9scli.io/topics/hotkeys/> for supported values.
       '';
-      example = literalExpression ''
-        {
-          shift-0 = {
-            shortCut = "Shift-0";
-            description = "Viewing pods";
-            command = "pods";
-          };
-        }
-      '';
+      example = {
+        shift-0 = {
+          shortCut = "Shift-0";
+          description = "Viewing pods";
+          command = "pods";
+        };
+      };
     };
 
     plugins = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Plugins written to {file}`$XDG_CONFIG_HOME/k9s/plugins.yaml (linux)`
@@ -147,7 +145,7 @@ in
     };
 
     views = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Resource column views written to
@@ -155,21 +153,19 @@ in
         or {file}`Library/Application Support/k9s/views.yaml` (darwin).
         See <https://k9scli.io/topics/columns/> for supported values.
       '';
-      example = literalExpression ''
-        {
-          "v1/pods" = {
-            columns = [
-              "AGE"
-              "NAMESPACE"
-              "NAME"
-              "IP"
-              "NODE"
-              "STATUS"
-              "READY"
-            ];
-          };
-        }
-      '';
+      example = {
+        "v1/pods" = {
+          columns = [
+            "AGE"
+            "NAMESPACE"
+            "NAME"
+            "IP"
+            "NODE"
+            "STATUS"
+            "READY"
+          ];
+        };
+      };
     };
   };
 

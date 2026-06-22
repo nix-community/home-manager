@@ -1,18 +1,16 @@
 {
   programs.claude-code = {
     enable = true;
-    memory = {
-      text = ''
-        # Project Memory
+    context = ''
+      # Project Memory
 
-        ## Current Task
-        Test implementation of memory management.
+      ## Current Task
+      Test implementation of memory management.
 
-        ## Key Context
-        - This is a test configuration
-        - Memory should be created at ~/.claude/CLAUDE.md
-      '';
-    };
+      ## Key Context
+      - This is a test configuration
+      - Memory should be created at ~/.claude/CLAUDE.md
+    '';
   };
 
   nmt.script = ''

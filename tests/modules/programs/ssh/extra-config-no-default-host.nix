@@ -9,6 +9,6 @@
   };
 
   test.asserts.assertions.expected = [
-    ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.matchBlocks."*"` (default host config) is not declared.''
+    ''Cannot set `programs.ssh.extraConfig` if `programs.ssh.settings."*"` (default host config) is not declared.''
   ];
 }

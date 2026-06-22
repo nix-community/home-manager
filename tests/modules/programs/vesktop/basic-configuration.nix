@@ -1,5 +1,11 @@
-{ config, ... }:
-
+{ pkgs, ... }:
+let
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "home-files/Library/Application Support/vesktop"
+    else
+      "home-files/.config/vesktop";
+in
 {
   config = {
     programs.vesktop = {
@@ -44,15 +50,16 @@
     };
 
     nmt.script = ''
-      configDir=home-files/.config/vesktop
-      assertFileExists $configDir/settings.json
-      assertFileContent $configDir/settings.json \
+      configDir="${configDir}"
+
+      assertFileExists "$configDir/settings.json"
+      assertFileContent "$configDir/settings.json" \
         ${./basic-settings.json}
-      assertFileExists $configDir/settings/settings.json
-      assertFileContent $configDir/settings/settings.json \
+      assertFileExists "$configDir/settings/settings.json"
+      assertFileContent "$configDir/settings/settings.json" \
         ${./basic-vencord-settings.json}
-      assertFileExists $configDir/themes/my_theme.css
-      assertFileContent $configDir/themes/my_theme.css \
+      assertFileExists "$configDir/themes/my_theme.css"
+      assertFileContent "$configDir/themes/my_theme.css" \
         ${./basic-theme.css}
     '';
   };

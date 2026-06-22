@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 
 {
   programs.go = {
@@ -14,7 +14,7 @@
 
   nmt.script =
     let
-      goCfgDir = if !pkgs.stdenv.isDarwin then ".config/go" else "Library/Application\ Support/go";
+      goCfgDir = if !pkgs.stdenv.isDarwin then ".config/go" else "Library/Application Support/go";
     in
     ''
       assertFileExists "home-files/${goCfgDir}/env"

@@ -42,7 +42,7 @@ in
               '';
             };
             target = mkOption {
-              type = types.str;
+              type = types.nonEmptyStr;
               apply =
                 p:
                 let
@@ -97,7 +97,7 @@ in
                 If `false` (the default) then the target
                 will be a symbolic link to the source directory. If
                 `true` then the target will be a
-                directory structure matching the source's but whose leafs
+                directory structure matching the source's but whose leaves
                 are symbolic links to the files of the source directory.
               '';
             };
@@ -106,11 +106,13 @@ in
               type = types.bool;
               default = false;
               description = ''
-                When `recursive` is enabled, adds `-ignorelinks` flag to lndir
+                When `recursive` is enabled, adds the `-ignorelinks` flag to lndir.
 
                 It causes lndir to not treat symbolic links in the source directory specially.
                 The link created in the target directory will point back to the corresponding
-                (symbolic link) file in the source directory. If the link is to a directory
+                symbolic link in the source directory. If that link points to a directory, the
+                resulting target will be a link to the source tree's symlink rather than a
+                recursively linked directory tree.
               '';
             };
 

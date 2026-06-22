@@ -3,7 +3,7 @@
 lib.mkMerge [
   {
     test.stubs.writers = {
-      extraAttrs.writeBash = (name: fn: "@syncthing-wrapper@");
+      extraAttrs.writeBash = (_name: _fn: "@syncthing-wrapper@");
     };
 
     services.syncthing = {
@@ -18,6 +18,8 @@ lib.mkMerge [
   (lib.mkIf pkgs.stdenv.isLinux {
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/syncthing.service
+      assertPathNotExists home-files/.config/systemd/user/syncthing-init.service
+      assertPathNotExists home-files/.config/systemd/user/default.target.wants/syncthing-init.service
       assertFileContains home-files/.config/systemd/user/syncthing.service \
       "ExecStart=@syncthing@/bin/syncthing serve --no-browser --no-restart --no-upgrade '--gui-address=127.0.0.1:8384' -foo '-bar \"baz\"'"
     '';
@@ -27,6 +29,7 @@ lib.mkMerge [
     nmt.script = ''
       serviceFile=LaunchAgents/org.nix-community.home.syncthing.plist
       assertFileExists "$serviceFile"
+      assertPathNotExists LaunchAgents/org.nix-community.home.syncthing-init.plist
       assertFileContent "$serviceFile" ${./expected-agent.plist}
     '';
   })

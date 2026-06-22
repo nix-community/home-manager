@@ -2,7 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "context7": {
-      "enabled": true,
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
@@ -22,6 +21,5 @@
       "type": "local"
     }
   },
-  "model": "anthropic/claude-sonnet-4-20250514",
-  "theme": "opencode"
+  "model": "anthropic/claude-sonnet-4-20250514"
 }

@@ -26,9 +26,9 @@ in
   ];
 
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       lib = prev.lib.extend (
-        final: prev: {
+        _final: prev: {
           trivial = prev.trivial // {
             release = pkgsRelease;
           };

@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "customTransport": {
+      "customOption": "value",
+      "timeout": 5000,
+      "type": "websocket",
+      "url": "wss://example.com/mcp"
+    },
+    "database": {
+      "args": [
+        "-y",
+        "@bytebase/dbhub",
+        "--dsn",
+        "postgresql://user:pass@localhost:5432/db"
+      ],
+      "command": "npx",
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/db"
+      },
+      "type": "stdio"
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "type": "stdio"
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}

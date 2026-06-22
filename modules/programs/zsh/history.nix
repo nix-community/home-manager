@@ -7,7 +7,7 @@
 let
   cfg = config.programs.zsh;
 
-  inherit (lib) literalExpression mkOption types;
+  inherit (lib) mkOption types;
 
   inherit (import ./lib.nix { inherit config lib; }) dotDirAbs mkShellVarPathStr;
 in
@@ -57,7 +57,10 @@ in
             ignorePatterns = mkOption {
               type = types.listOf types.str;
               default = [ ];
-              example = literalExpression ''[ "rm *" "pkill *" ]'';
+              example = [
+                "rm *"
+                "pkill *"
+              ];
               description = ''
                 Do not enter command lines into the history list
                 if they match any one of the given shell patterns.

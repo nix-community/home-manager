@@ -9,7 +9,6 @@ let
   cfg = config.programs.riff;
 
   inherit (lib)
-    literalExpression
     mkEnableOption
     mkIf
     mkOption
@@ -42,7 +41,7 @@ in
     commandLineOptions = mkOption {
       type = types.listOf types.str;
       default = [ ];
-      example = literalExpression ''[ "--no-adds-only-special" ]'';
+      example = [ "--no-adds-only-special" ];
       apply = lib.concatStringsSep " ";
       description = ''
         Command line arguments to include in the <command>RIFF</command> environment variable.
@@ -92,13 +91,8 @@ in
             let
               riffExe = baseNameOf (lib.getExe cfg.package);
             in
-            {
-              pager = {
-                diff = riffExe;
-                log = riffExe;
-                show = riffExe;
-              };
-
+            lib.hm.git.diffPagerConfig riffExe
+            // {
               interactive.diffFilter = "${riffExe} --color=on";
             };
         };

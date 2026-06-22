@@ -161,7 +161,7 @@ in
 
               mkSrc = n: v: { "${mainGoPath}/src/${n}".source = v; };
             in
-            lib.foldl' (a: b: a // b) { } (lib.mapAttrsToList mkSrc cfg.packages)
+            lib.mergeAttrsList (lib.mapAttrsToList mkSrc cfg.packages)
           );
         }
 

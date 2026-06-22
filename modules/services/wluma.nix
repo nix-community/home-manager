@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "wluma" { };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       example = {
         als.iio = {

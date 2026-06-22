@@ -23,7 +23,9 @@ in
       description = ''
         Systemd timer period to create for scheduled {command}`tldr --update`.
 
-        The format is described in {manpage}`systemd.time(7)`.
+        On Linux this is a string as defined by {manpage}`systemd.time(7)`.
+
+        ${lib.hm.darwin.intervalDocumentation}
       '';
     };
   };
@@ -52,6 +54,21 @@ in
       };
 
       Install.WantedBy = [ "timers.target" ];
+    };
+
+    assertions = [
+      (lib.hm.darwin.assertInterval "services.tldr-update.period" cfg.period pkgs)
+    ];
+
+    launchd.agents.tldr-update = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          (lib.getExe cfg.package)
+          "--update"
+        ];
+        StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.period;
+      };
     };
   };
 }

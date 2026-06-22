@@ -102,7 +102,7 @@ in
 
     xdg.configFile."grobi.conf".text = builtins.toJSON {
       execute_after = cfg.executeAfter;
-      rules = cfg.rules;
+      inherit (cfg) rules;
     };
   };
 }

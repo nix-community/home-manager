@@ -16,7 +16,7 @@
   };
 
   i18n-custom-locales =
-    { config, pkgs, ... }:
+    { pkgs, ... }:
     {
       config =
         let

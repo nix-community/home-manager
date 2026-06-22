@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  realPkgs,
   ...
 }:
 
@@ -21,11 +22,11 @@ let
   };
 in
 {
-  imports = [ ./stubs.nix ];
   tests.stubs.wl-clipboard = { };
 
   programs.neovim = {
     enable = true;
+    package = realPkgs.neovim-unwrapped;
     extraName = "-my-suffix";
     withPerl = true;
     withPython3 = true;
@@ -38,6 +39,10 @@ in
 
   nmt.script = ''
     nvimBin="home-path/bin/nvim"
+    export PATH="$TESTED/home-path/bin:$PATH"
+    export HOME="$TMPDIR/hm-user"
+    # Load init.lua from $XDG_CONFIG_HOME/nvim/init.lua
+    export XDG_CONFIG_HOME="$TESTED/home-files/.config"
 
     assertBinaryContains() {
         local file="$TESTED/$1"
@@ -48,6 +53,27 @@ in
         fi
     }
 
+    # Helper function to check host_prog provider configuration
+    assertNeovimExpr() {
+        local var_name="$1"
+        local expected_pattern="$2"
+        # Use -c to evaluate the expression after init.lua is loaded
+        local output=$(nvim -i NONE --headless -c "echo $var_name" +q! 2>&1)
+        local exit_code=$?
+
+        if [ $exit_code -ne 0 ]; then
+          echo "neovim command failed with code: $exit_code and output:"
+          fail "$output"
+        elif ! grep "$expected_pattern" "$output" ; then
+          echo "Provider $var_name doesn't match expected pattern '$expected_pattern'"
+          echo "Output:"
+          fail "$output"
+        fi
+
+        # assuming we enabled all providers
+        assertFileExists "$output"
+    }
+
     # Ensure the main binary exists
     assertFileExists "$nvimBin"
 
@@ -55,21 +81,17 @@ in
     assertBinaryContains "$nvimBin" "-my-suffix/rplugin.vim"
 
     # 2. withPerl: Check if nvim-perl binary exists and host prog is set
-    assertFileExists "home-path/bin/nvim-perl"
-    assertBinaryContains "$nvimBin" "perl_host_prog="
+    assertNeovimExpr "g:perl_host_prog" "perl"
 
     # 3. withPython3: Check if nvim-python3 binary exists and host prog is set
-    assertFileExists "home-path/bin/nvim-python3"
-    assertBinaryContains "$nvimBin" "python3_host_prog="
+    assertNeovimExpr "g:python3_host_prog" "python3"
 
     # 4. withRuby: Check if nvim-ruby binary exists, GEM_HOME and host prog are set
-    assertFileExists "home-path/bin/nvim-ruby"
     assertBinaryContains "$nvimBin" "GEM_HOME="
-    assertBinaryContains "$nvimBin" "ruby_host_prog="
+    assertNeovimExpr "g:ruby_host_prog" "ruby"
 
     # 5. withNodeJs: Check if nvim-node binary exists and host prog is set
-    assertFileExists "home-path/bin/nvim-node"
-    assertBinaryContains "$nvimBin" "node_host_prog="
+    assertNeovimExpr "g:node_host_prog" "node"
 
     # 6. waylandSupport: Check for wl-clipboard path in wrapper's PATH modification
     # We check for the store path of wl-clipboard in the current pkgs

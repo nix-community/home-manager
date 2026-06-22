@@ -11,7 +11,7 @@ in
   meta.maintainers = [ lib.maintainers.justdeeevin ];
 
   options.programs.quickshell = {
-    enable = lib.mkEnableOption "quickshell, a flexbile QtQuick-based desktop shell toolkit.";
+    enable = lib.mkEnableOption "quickshell, a flexible QtQuick-based desktop shell toolkit.";
     package = lib.mkPackageOption pkgs "quickshell" { nullable = true; };
     configs = lib.mkOption {
       type = lib.types.attrsOf lib.types.path;
@@ -63,9 +63,13 @@ in
             assertion = !(builtins.any (name: lib.hasInfix "/" name) (builtins.attrNames cfg.configs));
             message = "The names of configs in `programs.quickshell.configs` must not contain slashes.";
           }
+          {
+            assertion = cfg.systemd.enable -> cfg.package != null;
+            message = "`programs.quickshell.systemd.enable` cannot be true when `programs.quickshell.package` is null";
+          }
         ];
 
-        home.packages = [ cfg.package ];
+        home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
       }
       (lib.mkIf cfg.systemd.enable {

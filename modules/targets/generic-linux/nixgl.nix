@@ -148,7 +148,7 @@ in
       description = ''
         Whether to enable Vulkan in nixGL wrappers.
 
-        This is disabled by default bacause Vulkan brings in several libraries
+        This is disabled by default because Vulkan brings in several libraries
         that can cause symbol version conflicts in wrapped programs. Your
         mileage may vary.
       '';
@@ -220,7 +220,7 @@ in
             # Leave the name unchanged and rely on the hash to differentiate
             # from the original package. Some modules rely on the package name
             # to e.g. compute config directory paths.
-            name = pkg.name;
+            inherit (pkg) name;
 
             # Make sure this is false for the wrapper derivation, so nix doesn't expect
             # a new debug output to be produced. We won't be producing any debug info
@@ -303,7 +303,9 @@ in
             # wouldn't know what to do with them. So, we rewrite the override
             # function to instead forward the arguments to the package's own
             # override function.
-            override = args: makePackageWrapper vendor environment (pkg.override args);
+            override = lib.setFunctionArgs (args: makePackageWrapper vendor environment (pkg.override args)) (
+              lib.functionArgs (pkg.override or (_: { }))
+            );
           };
 
       # Note, if you add/remove/alter attribute names here you need to make a

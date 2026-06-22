@@ -21,7 +21,7 @@ let
   cfg = config.programs.neomutt;
 
   neomuttAccountsCfg = filterAttrs (
-    n: a: a.enable && a.neomutt.enable
+    _n: a: a.enable && a.neomutt.enable
   ) config.accounts.email.accounts;
   neomuttAccounts = attrValues neomuttAccountsCfg;
 
@@ -326,7 +326,7 @@ let
   notmuchSection =
     account:
     let
-      virtualMailboxes = account.notmuch.neomutt.virtualMailboxes;
+      inherit (account.notmuch.neomutt) virtualMailboxes;
     in
     ''
       # notmuch section
@@ -498,7 +498,7 @@ in
           "${accountFilename account}".text = accountStr account;
         };
       in
-      lib.foldl' (a: b: a // b) { } (map rcFile neomuttAccounts);
+      lib.mergeAttrsList (map rcFile neomuttAccounts);
 
     xdg.configFile."neomutt/neomuttrc" = mkIf (neomuttAccounts != [ ]) {
       text =

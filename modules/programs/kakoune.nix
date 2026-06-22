@@ -313,30 +313,6 @@ let
                 '';
               };
 
-              changeColors = mkOption {
-                type = types.bool;
-                default = true;
-                description = ''
-                  Change color palette.
-                '';
-              };
-
-              wheelDownButton = mkOption {
-                type = types.nullOr types.str;
-                default = null;
-                description = ''
-                  Button to send for wheel down events.
-                '';
-              };
-
-              wheelUpButton = mkOption {
-                type = types.nullOr types.str;
-                default = null;
-                description = ''
-                  Button to send for wheel up events.
-                '';
-              };
-
               shiftFunctionKeys = mkOption {
                 type = types.nullOr types.ints.unsigned;
                 default = null;
@@ -344,14 +320,6 @@ let
                   Amount by which shifted function keys are offset. That
                   is, if the terminal sends F13 for Shift-F1, this
                   should be `12`.
-                '';
-              };
-
-              useBuiltinKeyParser = mkOption {
-                type = types.bool;
-                default = false;
-                description = ''
-                  Bypass ncurses key parser and use an internal one.
                 '';
               };
             };
@@ -543,7 +511,7 @@ let
 
   kakouneWithPlugins = pkgs.wrapKakoune cfg.package {
     configure = {
-      plugins = cfg.plugins;
+      inherit (cfg) plugins;
     };
   };
 
@@ -594,13 +562,9 @@ let
           "terminal_status_on_top=${if (statusLine == "top") then "true" else "false"}"
           "terminal_assistant=${assistant}"
           "terminal_enable_mouse=${if enableMouse then "true" else "false"}"
-          "terminal_change_colors=${if changeColors then "true" else "false"}"
-          "${optionalString (wheelDownButton != null) "terminal_wheel_down_button=${wheelDownButton}"}"
-          "${optionalString (wheelUpButton != null) "terminal_wheel_up_button=${wheelUpButton}"}"
           "${optionalString (
             shiftFunctionKeys != null
           ) "terminal_shift_function_key=${toString shiftFunctionKeys}"}"
-          "terminal_builtin_key_parser=${if useBuiltinKeyParser then "true" else "false"}"
         ];
 
       userModeString =

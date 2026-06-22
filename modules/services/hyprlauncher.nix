@@ -15,7 +15,6 @@ let
   cfg = config.services.hyprlauncher;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.services.hyprlauncher = {
     enable = mkEnableOption "hyprlauncher";

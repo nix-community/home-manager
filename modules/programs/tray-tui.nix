@@ -16,13 +16,12 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.tray-tui = {
     enable = mkEnableOption "tray-tui";
     package = mkPackageOption pkgs "tray-tui" { nullable = true; };
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         sorting = false;

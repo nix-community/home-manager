@@ -6,4 +6,8 @@
   nix-example-channels = ./example-channels.nix;
   nix-example-channels-xdg = ./example-channels-xdg.nix;
   nix-use-xdg = ./use-xdg.nix;
+
+  # remote-build
+  nix-remote-build-empty = ./remote-build/empty-settings.nix;
+  nix-remote-build-example = ./remote-build/example-settings.nix;
 }

@@ -18,19 +18,17 @@ in
     package = lib.mkPackageOption pkgs "sqls" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-           lowercaseKeywords = true;
-           connections = [
-             {
-               driver = "mysql";
-               dataSourceName = "root:root@tcp(127.0.0.1:13306)/world";
-             }
-           ];
-        }
-      '';
+      example = {
+        lowercaseKeywords = true;
+        connections = [
+          {
+            driver = "mysql";
+            dataSourceName = "root:root@tcp(127.0.0.1:13306)/world";
+          }
+        ];
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/sqls/config.yml`. See

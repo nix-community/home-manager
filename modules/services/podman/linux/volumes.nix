@@ -78,8 +78,6 @@ let
     resourceType = "volume";
   };
 
-in
-let
   volumeDefinitionType = types.submodule (
     { name, ... }:
     {
@@ -122,13 +120,11 @@ let
         extraConfig = mkOption {
           type = podman-lib.extraConfigType;
           default = { };
-          example = lib.literalExpression ''
-            {
-              Volume = {
-                ContainerConfModule = "/etc/nvd.conf";
-              };
-            }
-          '';
+          example = {
+            Volume = {
+              ContainerConfModule = "/etc/nvd.conf";
+            };
+          };
           description = "INI sections and values to populate the Volume Quadlet.";
         };
 

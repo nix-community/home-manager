@@ -24,7 +24,8 @@ let
     vicmd = "bindkey -a";
   };
 
-  inherit (import ./lib.nix { inherit config lib; }) homeDir dotDirAbs dotDirRel;
+  zshLib = import ./lib.nix { inherit config lib; };
+  inherit (zshLib) homeDir dotDirAbs dotDirRel;
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -127,12 +128,10 @@ in
 
         shellAliases = mkOption {
           default = { };
-          example = literalExpression ''
-            {
-              ll = "ls -l";
-              ".." = "cd ..";
-            }
-          '';
+          example = {
+            ll = "ls -l";
+            ".." = "cd ..";
+          };
           description = ''
             An attribute set that maps aliases (the top level attribute names in
             this option) to command strings or directly to build outputs.
@@ -142,12 +141,10 @@ in
 
         shellGlobalAliases = mkOption {
           default = { };
-          example = literalExpression ''
-            {
-              UUID = "$(uuidgen | tr -d \\n)";
-              G = "| grep";
-            }
-          '';
+          example = {
+            UUID = "$(uuidgen | tr -d \\n)";
+            G = "| grep";
+          };
           description = ''
             Similar to [](#opt-programs.zsh.shellAliases),
             but are substituted anywhere on a line.
@@ -246,11 +243,26 @@ in
 
         sessionVariables = mkOption {
           default = { };
-          type = types.attrs;
+          type =
+            with types;
+            lazyAttrsOf (
+              nullOr (oneOf [
+                str
+                path
+                int
+                float
+                bool
+              ])
+            );
           example = {
             MAILCHECK = 30;
           };
-          description = "Environment variables that will be set for zsh session.";
+          description = ''
+            Environment variables that will be set for zsh session.
+
+            Setting a value to `null` will skip setting the variable at all, which
+            may be useful when overriding.
+          '';
         };
 
         initContent = mkOption {
@@ -361,6 +373,21 @@ in
     let
       envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
+      sessionVarsStr = lib.removeSuffix "\n" ''
+        # Environment variables
+        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
+
+        # Only source this once
+        if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
+          export __HM_ZSH_SESS_VARS_SOURCED=1
+          ${envVarsStr}
+        fi
+      '';
+      indentNonEmptyLines =
+        str:
+        concatStringsSep "\n" (
+          map (line: if line == "" then "" else "  ${line}") (lib.splitString "\n" str)
+        );
 
       aliasesStr = concatStringsSep "\n" (
         lib.mapAttrsToList (
@@ -368,9 +395,14 @@ in
         ) cfg.shellAliases
       );
 
+      # Keep double quotes so existing configs using shell variables like
+      # $HOME still expand, while escaping chars special inside them.
       dirHashesStr = concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+        lib.mapAttrsToList (
+          k: v: ''hash -d ${lib.escapeShellArg k}="${lib.escape [ "\\" "\"" "`" ] v}"''
+        ) cfg.dirHashes
       );
+      cdpathStr = concatStringsSep " " (map (v: ''"${lib.escape [ "\\" "\"" "`" ] v}"'') cfg.cdpath);
     in
     mkIf cfg.enable (
       lib.mkMerge [
@@ -429,10 +461,6 @@ in
           home.file."${dotDirRel}/.zshenv".text = cfg.envExtra;
         })
 
-        (mkIf (cfg.profileExtra != "") {
-          home.file."${dotDirRel}/.zprofile".text = cfg.profileExtra;
-        })
-
         (mkIf (cfg.loginExtra != "") {
           home.file."${dotDirRel}/.zlogin".text = cfg.loginExtra;
         })
@@ -456,29 +484,48 @@ in
         })
 
         (lib.mkIf (cfg.siteFunctions != { }) {
+          assertions = lib.mapAttrsToList (funcName: _text: {
+            assertion = !(lib.hasPrefix "/" funcName);
+            message =
+              "programs.zsh.siteFunctions: function name '${funcName}' cannot start with a '/'. "
+              + "either rename it, or don't rely on autoloading for that function (e.g. by defining it inside your '.zshrc')";
+          }) cfg.siteFunctions;
           home.packages = lib.mapAttrsToList (
             name: pkgs.writeTextDir "share/zsh/site-functions/${name}"
           ) cfg.siteFunctions;
-          programs.zsh.initContent = concatStringsSep " " (
-            [ "autoload -Uz" ] ++ lib.attrNames cfg.siteFunctions
+          programs.zsh.initContent = lib.escapeShellArgs (
+            [
+              "autoload"
+              "-Uz"
+              "--"
+            ]
+            ++ (lib.attrNames cfg.siteFunctions)
           );
         })
 
         {
           home.file."${dotDirRel}/.zshenv".text = ''
-            # Environment variables
-            . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-
-            # Only source this once
-            if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
-              export __HM_ZSH_SESS_VARS_SOURCED=1
-              ${envVarsStr}
+            if [[ ! -o login ]]; then
+            ${indentNonEmptyLines sessionVarsStr}
             fi
+          '';
+
+          home.file."${dotDirRel}/.zprofile".text = ''
+            ${sessionVarsStr}
+          ''
+          + optionalString (cfg.profileExtra != "") ''
+
+            ${cfg.profileExtra}
           '';
         }
 
         {
-          home.packages = [ cfg.package ] ++ lib.optional cfg.enableCompletion pkgs.nix-zsh-completions;
+          lib.zsh = zshLib;
+
+          home.packages = [
+            cfg.package
+          ]
+          ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions);
 
           # NOTE: Always include "main" highlighter with normal priority.
           # Option default priority will cause `main` to get dropped by customization.
@@ -489,7 +536,7 @@ in
 
             (lib.mkIf (cfg.cdpath != [ ]) (
               mkOrder 510 ''
-                cdpath+=(${concatStringsSep " " cfg.cdpath})
+                cdpath+=(${cdpathStr})
               ''
             ))
 

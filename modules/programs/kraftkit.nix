@@ -25,7 +25,7 @@ in
     package = mkPackageOption pkgs "kraft" { nullable = true; };
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/kraftkit/config.yaml`.

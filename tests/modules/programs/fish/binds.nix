@@ -7,6 +7,19 @@
       binds = {
         "ctrl-d".command = "exit";
 
+        # Tests `name` field to specify multiple binds for the same key (`ctrl-d`) but different `mode`
+        "visual_ctrl-d" = {
+          name = "ctrl-d";
+          mode = "visual";
+          command = "exit";
+        };
+
+        # Allow arbitrary modes
+        "f" = {
+          mode = "something-non-default";
+          command = "exit";
+        };
+
         "ctrl-c" = {
           mode = "insert";
           command = [
@@ -48,6 +61,10 @@
           "bind -e --preset alt-s"
         assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
           "bind --preset alt-s 'fish_commandline_prepend sudo"
+        assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
+          "bind --mode visual ctrl-d exit"
+        assertFileContains home-files/.config/fish/functions/fish_user_key_bindings.fish \
+          "bind --mode something-non-default f exit"
       '';
     };
   };

@@ -1,12 +1,28 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
+
+let
+  atuinPackage = pkgs.writeShellScriptBin "atuin" ''
+    if [ "$1" = init ] && [ "$2" = fish ]; then
+      printf 'atuin fish init args:'
+      printf ' %s' "$@"
+      printf '\n'
+    else
+      echo "unexpected atuin invocation: $*" >&2
+      exit 1
+    fi
+  '';
+in
 
 {
   programs = {
-    atuin.enable = true;
-    atuin.flags = [
-      "--disable-ctrl-r"
-      "--disable-up-arrow"
-    ];
+    atuin = {
+      enable = true;
+      package = atuinPackage;
+      flags = [
+        "--disable-ctrl-r"
+        "--disable-up-arrow"
+      ];
+    };
     bash = {
       enable = true;
       enableCompletion = false;
@@ -22,17 +38,26 @@
 
   nmt.script = ''
     assertFileExists home-files/.bashrc
-    assertFileContains \
+    assertFileRegex \
       home-files/.bashrc \
-      "eval \"\$(@atuin@/bin/atuin init bash --disable-ctrl-r --disable-up-arrow)\""
+      'eval "\$(/nix/store/[^/]*/bin/atuin init bash --disable-ctrl-r --disable-up-arrow)"'
 
     assertFileExists home-files/.zshrc
-    assertFileContains \
+    assertFileRegex \
       home-files/.zshrc \
-      "eval \"\$(@atuin@/bin/atuin init zsh --disable-ctrl-r --disable-up-arrow)\""
+      'eval "\$(/nix/store/[^/]*/bin/atuin init zsh --disable-ctrl-r --disable-up-arrow)"'
     assertFileExists home-files/.config/fish/config.fish
-    assertFileContains \
+    assertFileRegex \
       home-files/.config/fish/config.fish \
-      "@atuin@/bin/atuin init fish --disable-ctrl-r --disable-up-arrow | source"
+      'source /nix/store/[^/]*-atuin-fish-config\.fish'
+    assertFileNotRegex home-files/.config/fish/config.fish 'atuin init fish'
+
+    atuinFishConfig=$(
+      sed -n 's|^[[:space:]]*source \(/nix/store/[^ ]*-atuin-fish-config\.fish\).*|\1|p' \
+        "$TESTED/home-files/.config/fish/config.fish" | head -n1
+    )
+    assertFileExists "$atuinFishConfig"
+    assertFileContains "$atuinFishConfig" \
+      'atuin fish init args: init fish --disable-ctrl-r --disable-up-arrow'
   '';
 }

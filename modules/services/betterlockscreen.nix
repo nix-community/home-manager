@@ -8,7 +8,7 @@ let
   cfg = config.services.betterlockscreen;
 in
 {
-  meta.maintainers = with lib.maintainers; [ sebtm ];
+  meta.maintainers = [ ];
 
   options = {
     services.betterlockscreen = {
@@ -41,7 +41,7 @@ in
 
     services.screen-locker = {
       enable = true;
-      inactiveInterval = cfg.inactiveInterval;
+      inherit (cfg) inactiveInterval;
       lockCmd = "${cfg.package}/bin/betterlockscreen --lock ${lib.concatStringsSep " " cfg.arguments}";
     };
   };

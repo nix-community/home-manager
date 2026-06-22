@@ -33,6 +33,16 @@ in
       description = "Path of the directory to look for TPM sealed keys in, defaults to $HOME/.ssh if unset";
       default = null;
     };
+
+    extraArgs = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [
+        "--no-cache"
+        "-d"
+      ];
+      description = "Extra arguments to be passed to the ssh-tpm-agent executable.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -59,11 +69,18 @@ in
 
     home.packages = [ cfg.package ];
 
-    home.sessionVariables = {
-      # Override ssh-agent's $SSH_AUTH_SOCK definition since ssh-tpm-agent is a
-      # proxy to it.
-      SSH_AUTH_SOCK = lib.mkOverride 90 "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
-      SSH_TPM_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
+    home.sessionVariables.SSH_TPM_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock";
+
+    # Override ssh-agent's $SSH_AUTH_SOCK definition since ssh-tpm-agent is a
+    # proxy to it.
+    sshAuthSock = {
+      enable = true;
+      initialization = lib.mkOverride 90 {
+        bash = ''export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'';
+        fish = ''set -x SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"'';
+        nushell = ''$env.SSH_AUTH_SOCK = $"($env.XDG_RUNTIME_DIR)/ssh-tpm-agent.sock"'';
+      };
+      systemd.socketProviderUnit = lib.mkOverride 90 "ssh-tpm-agent.socket";
     };
 
     systemd.user = {
@@ -83,7 +100,8 @@ in
               in
               (lib.getExe cfg.package)
               + lib.optionalString (cfg.keyDir != null) " --key-dir ${cfg.keyDir}"
-              + lib.optionalString ssh-agent.enable " -A %t/${ssh-agent.socket}";
+              + lib.optionalString ssh-agent.enable " -A %t/${ssh-agent.socket}"
+              + lib.optionalString (cfg.extraArgs != [ ]) " ${lib.escapeShellArgs cfg.extraArgs}";
             SuccessExitStatus = 2;
             Type = "simple";
           };

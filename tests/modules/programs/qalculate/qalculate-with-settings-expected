@@ -1,0 +1,8 @@
+[General]
+colorize=1
+precision=10
+save_mode_on_exit=1
+
+[Mode]
+angle_unit=1
+number_base=10

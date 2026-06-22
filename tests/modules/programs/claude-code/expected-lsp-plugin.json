@@ -1,0 +1,21 @@
+{
+  "go": {
+    "args": [
+      "serve"
+    ],
+    "command": "gopls",
+    "extensionToLanguage": {
+      ".go": "go"
+    }
+  },
+  "typescript": {
+    "args": [
+      "--stdio"
+    ],
+    "command": "typescript-language-server",
+    "extensionToLanguage": {
+      ".ts": "typescript",
+      ".tsx": "typescriptreact"
+    }
+  }
+}

@@ -35,5 +35,6 @@
     ''
       assertFileExists "${expectedConfigPath}"
       assertFileContent "${expectedConfigPath}" "${expectedConfigContent}"
+      assertFileContains activate ' --robust'
     '';
 }

@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "swayimg" { };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to

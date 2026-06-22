@@ -18,13 +18,18 @@ in
     (lib.mkIf (cfg.users != { }) {
       system.activationScripts.postActivation.text = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
-          username: usercfg:
+          _username: usercfg:
           let
             driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
           in
           ''
             echo Activating home-manager configuration for ${usercfg.home.username} >&2
-            launchctl asuser "$(id -u ${usercfg.home.username})" sudo -u ${usercfg.home.username} --set-home ${pkgs.writeShellScript "activation-${usercfg.home.username}" ''
+            hmDryRunArgs=()
+            hmParentArgs="$(ps -p "$PPID" -ww -o args= || true)"
+            if [[ -v DRY_RUN || "$hmParentArgs" == *" --dry-run"* ]]; then
+              hmDryRunArgs=(env DRY_RUN=1)
+            fi
+            launchctl asuser "$(id -u ${usercfg.home.username})" sudo -u ${usercfg.home.username} --set-home "''${hmDryRunArgs[@]}" ${pkgs.writeShellScript "activation-${usercfg.home.username}" ''
               ${lib.optionalString (
                 cfg.backupFileExtension != null
               ) "export HOME_MANAGER_BACKUP_EXT=${lib.escapeShellArg cfg.backupFileExtension}"}

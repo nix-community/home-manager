@@ -45,18 +45,16 @@ in
       package = lib.mkPackageOption pkgs "jellyfin-mpv-shim" { };
 
       settings = lib.mkOption {
-        type = jsonFormat.type;
+        inherit (jsonFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            allow_transcode_to_h265 = false;
-            always_transcode = false;
-            audio_output = "hdmi";
-            auto_play = true;
-            fullscreen = true;
-            player_name = "mpv-shim";
-          }
-        '';
+        example = {
+          allow_transcode_to_h265 = false;
+          always_transcode = false;
+          audio_output = "hdmi";
+          auto_play = true;
+          fullscreen = true;
+          player_name = "mpv-shim";
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/jellyfin-mpv-shim/conf.json`. See
@@ -74,11 +72,10 @@ in
           )
         );
         default = null;
-        example = lib.literalExpression ''
-          {
-                    profile = "gpu-hq";
-                    force-window = true;
-                  }'';
+        example = {
+          profile = "gpu-hq";
+          force-window = true;
+        };
         description = ''
           mpv configuration options to use for jellyfin-mpv-shim.
           If null, jellyfin-mpv-shim will use its default mpv configuration.
@@ -88,11 +85,10 @@ in
       mpvBindings = lib.mkOption {
         type = lib.types.nullOr (lib.types.attrsOf lib.types.str);
         default = null;
-        example = lib.literalExpression ''
-          {
-                    WHEEL_UP = "seek 10";
-                    WHEEL_DOWN = "seek -10";
-                  }'';
+        example = {
+          WHEEL_UP = "seek 10";
+          WHEEL_DOWN = "seek -10";
+        };
         description = ''
           mpv input bindings to use for jellyfin-mpv-shim.
           If null, jellyfin-mpv-shim will use its default input configuration.

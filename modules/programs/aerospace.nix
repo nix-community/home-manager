@@ -103,43 +103,41 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          gaps = {
-            outer.left = 8;
-            outer.bottom = 8;
-            outer.top = 8;
-            outer.right = 8;
-          };
-          mode.main.binding = {
-            alt-h = "focus left";
-            alt-j = "focus down";
-            alt-k = "focus up";
-            alt-l = "focus right";
-          };
-          on-window-detected = [
-            {
-              "if".app-id = "com.apple.finder";
-              run = "move-node-to-workspace 9";
-            }
+      example = {
+        gaps = {
+          outer.left = 8;
+          outer.bottom = 8;
+          outer.top = 8;
+          outer.right = 8;
+        };
+        mode.main.binding = {
+          alt-h = "focus left";
+          alt-j = "focus down";
+          alt-k = "focus up";
+          alt-l = "focus right";
+        };
+        on-window-detected = [
+          {
+            "if".app-id = "com.apple.finder";
+            run = "move-node-to-workspace 9";
+          }
 
-            {
-              "if" = {
-                app-id = "com.apple.systempreferences";
-                app-name-regex-substring = "settings";
-                window-title-regex-substring = "substring";
-                workspace = "workspace-name";
-                during-aerospace-startup = true;
-              };
-              check-further-callbacks = true;
-              run = [
-                "layout floating"
-                "move-node-to-workspace S"
-              ];
-            }
-          ];
-        }
-      '';
+          {
+            "if" = {
+              app-id = "com.apple.systempreferences";
+              app-name-regex-substring = "settings";
+              window-title-regex-substring = "substring";
+              workspace = "workspace-name";
+              during-aerospace-startup = true;
+            };
+            check-further-callbacks = true;
+            run = [
+              "layout floating"
+              "move-node-to-workspace S"
+            ];
+          }
+        ];
+      };
       description = ''
         AeroSpace configuration, see
         <https://nikitabobko.github.io/AeroSpace/guide#configuring-aerospace>
@@ -210,13 +208,17 @@ in
 
         onChange = lib.mkIf cfg.launchd.enable ''
           echo "AeroSpace config changed, reloading..."
-          ${lib.getExe cfg.package} reload-config
+          if ${lib.getExe cfg.package} list-modes --current >/dev/null 2>&1; then
+            ${lib.getExe cfg.package} reload-config
+          else
+            echo "AeroSpace is not running yet, skipping reload-config."
+          fi
         '';
       };
     };
 
     launchd.agents.aerospace = {
-      enable = cfg.launchd.enable;
+      inherit (cfg.launchd) enable;
       config = {
         Program = "${cfg.package}/Applications/AeroSpace.app/Contents/MacOS/AeroSpace";
         KeepAlive = cfg.launchd.keepAlive;

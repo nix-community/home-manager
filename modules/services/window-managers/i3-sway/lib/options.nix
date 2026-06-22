@@ -24,7 +24,10 @@ let
           List of font names list used for window titles. Only FreeType fonts are supported.
           The order here is important (e.g. icons font should go before the one used for text).
         '';
-        example = literalExpression ''[ "FontAwesome" "Terminus" ]'';
+        example = [
+          "FontAwesome"
+          "Terminus"
+        ];
       };
 
       style = mkOption {
@@ -104,13 +107,14 @@ let
         fonts = mkOption {
           type = with types; either (listOf str) fontOptions;
           default = { };
-          example = literalExpression ''
-            {
-              names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
-              style = "Bold Semi-Condensed";
-              size = 11.0;
-            }
-          '';
+          example = {
+            names = [
+              "DejaVu Sans Mono"
+              "FontAwesome5Free"
+            ];
+            style = "Bold Semi-Condensed";
+            size = 11.0;
+          };
           description = "Font configuration for this bar.";
         };
 
@@ -403,13 +407,14 @@ in
   fonts = mkOption {
     type = with types; either (listOf str) fontOptions;
     default = { };
-    example = literalExpression ''
-      {
-        names = [ "DejaVu Sans Mono" "FontAwesome5Free" ];
-        style = "Bold Semi-Condensed";
-        size = 11.0;
-      }
-    '';
+    example = {
+      names = [
+        "DejaVu Sans Mono"
+        "FontAwesome5Free"
+      ];
+      style = "Bold Semi-Condensed";
+      size = 11.0;
+    };
     description = "Font configuration for window titles, nagbar...";
   };
 
@@ -636,12 +641,15 @@ in
       An attribute set that assigns applications to workspaces based
       on criteria.
     '';
-    example = literalExpression ''
-      {
-      "1: web" = [{ class = "^Firefox$"; }];
-      "0: extra" = [{ class = "^Firefox$"; window_role = "About"; }];
-      }
-    '';
+    example = {
+      "1: web" = [ { class = "^Firefox$"; } ];
+      "0: extra" = [
+        {
+          class = "^Firefox$";
+          window_role = "About";
+        }
+      ];
+    };
   };
 
   modifier = mkOption {
@@ -932,13 +940,27 @@ in
           };
 
           smartGaps = mkOption {
-            type = types.bool;
-            default = false;
+            type = types.either types.bool (
+              types.enum [
+                "on"
+                "off"
+                "inverse_outer"
+              ]
+            );
+            apply =
+              value:
+              if value == true then
+                "on"
+              else if value == false then
+                "off"
+              else
+                value;
+            default = "off";
             description = ''
               This option controls whether to disable all gaps (outer and inner)
               on workspace with a single container.
             '';
-            example = true;
+            example = "on";
           };
 
           smartBorders = mkOption {

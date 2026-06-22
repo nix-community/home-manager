@@ -38,14 +38,14 @@
     assertFileExists home-files/.claude/commands/path-command.md
     assertFileExists home-files/.claude/agents/inline-agent.md
     assertFileExists home-files/.claude/agents/path-agent.md
-    assertFileExists home-files/.claude/skills/inline-skill.md
-    assertFileExists home-files/.claude/skills/path-skill.md
+    assertFileExists home-files/.claude/skills/inline-skill/SKILL.md
+    assertFileExists home-files/.claude/skills/path-skill/SKILL.md
 
     assertFileContent home-files/.claude/commands/path-command.md \
       ${./test-command.md}
     assertFileContent home-files/.claude/agents/path-agent.md \
       ${./test-agent.md}
-    assertFileContent home-files/.claude/skills/path-skill.md \
+    assertFileContent home-files/.claude/skills/path-skill/SKILL.md \
       ${./test-skill.md}
   '';
 }

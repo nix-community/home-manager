@@ -31,8 +31,8 @@ in
   config = {
     programs.sbt = {
       enable = true;
-      plugins = plugins;
-      pluginsExtra = pluginsExtra;
+      inherit plugins;
+      inherit pluginsExtra;
       package = pkgs.writeScriptBin "sbt" "";
     };
 

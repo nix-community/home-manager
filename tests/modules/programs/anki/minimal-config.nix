@@ -1,7 +1,28 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
+let
+  fakeAnkiPython = config.lib.test.mkStubPackage {
+    name = "python3";
+    extraAttrs = {
+      isPy3 = true;
+      interpreter = pkgs.writeShellScript "fake-anki-python" ''
+        mkdir -p "$2"
+        touch "$2/prefs21.db"
+      '';
+    };
+  };
+
+  fakeAnki = config.lib.test.mkStubPackage {
+    name = "anki";
+    extraAttrs = {
+      nativeBuildInputs = [ fakeAnkiPython ];
+      withAddons = _: fakeAnki;
+    };
+  };
+in
 {
   programs.anki = {
     enable = true;
+    package = fakeAnki;
   };
 
   nmt.script =

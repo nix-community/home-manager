@@ -4,6 +4,7 @@ WantedBy=default.target
 [Service]
 ExecStart=@proton-pass-cli@/bin/pass-cli ssh-agent start --socket-path %t/proton-pass-agent/socket
 KeyringMode=shared
+Restart=on-failure
 
 [Unit]
 Description=Proton Pass SSH agent

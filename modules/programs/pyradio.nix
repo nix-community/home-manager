@@ -60,6 +60,54 @@ in
               type = str;
               description = "Stream URL of the radio station.";
             };
+
+            buffering = mkOption {
+              type = nullOr (submodule {
+                options = {
+                  seconds = mkOption {
+                    type = ints.positive;
+                    description = "Number of seconds to buffer the stream.";
+                  };
+                  bitrate = mkOption {
+                    type = ints.positive;
+                    default = 128;
+                    description = "Bitrate of the stream in kbps (modify only if using MPlayer).";
+                  };
+                };
+              });
+              description = "Buffering configuration to apply to the station.";
+              default = null;
+            };
+
+            encoding = mkOption {
+              type = str;
+              default = "";
+              description = "Encoding of the station's metadata block.";
+            };
+
+            forceHttp = mkOption {
+              type = bool;
+              default = false;
+              description = "If enabled, the connection is forced to use http (note when false it can either use http or https).";
+            };
+
+            iconUrl = mkOption {
+              type = str;
+              default = "";
+              description = "URL of an icon to be shown in desktop notifications.";
+            };
+
+            profile = mkOption {
+              type = str;
+              default = "";
+              description = "Name of the profile to use when using mpv or mplayer.";
+            };
+
+            volume = mkOption {
+              type = ints.between 0 130;
+              default = 50;
+              description = "Volume to use for the station.";
+            };
           };
         });
       default = [ ];
@@ -76,6 +124,10 @@ in
       description = ''
         Radio stations to add to the {file}`stations.csv` file.
         If empty, {file}`stations.csv` defaults to the built-in playlist.
+
+        To add a group, add a station with the url set to "-" and the name set
+        to the name of the group. Its order in the list will be where it appears
+        in `pyradio`.
       '';
     };
   };
@@ -111,7 +163,19 @@ in
             stations:
             let
               body = lib.concatMapStringsSep "\n" (
-                station: "${escapeCSV station.name},${escapeCSV station.url}"
+                station:
+                lib.concatStringsSep "," [
+                  (escapeCSV station.name)
+                  (escapeCSV station.url)
+                  station.encoding
+                  (escapeCSV station.iconUrl)
+                  (escapeCSV station.profile)
+                  (lib.optionalString (
+                    station.buffering != null
+                  ) "${toString station.buffering.seconds}@${toString station.buffering.bitrate}")
+                  (if station.forceHttp then "1" else "0")
+                  (toString station.volume)
+                ]
               ) stations;
             in
             "${body}\n";

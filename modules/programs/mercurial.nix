@@ -43,7 +43,7 @@ in
       };
 
       iniContent = mkOption {
-        type = iniFormat.type;
+        inherit (iniFormat) type;
         internal = true;
       };
 

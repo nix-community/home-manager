@@ -21,13 +21,12 @@ let
     if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.element-desktop = {
     enable = mkEnableOption "element-desktop";
     package = mkPackageOption pkgs "element-desktop" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {
@@ -112,7 +111,7 @@ in
       in
       defaultConfig
       // (lib.mapAttrs' (
-        name: value:
+        name: _value:
         lib.nameValuePair "${prefix}/Element-${name}/config.json" {
           source = (formatter.generate "element-desktop-${name}" cfg.profiles."${name}");
         }

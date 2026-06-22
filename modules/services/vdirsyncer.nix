@@ -11,8 +11,7 @@ let
   cfg = config.services.vdirsyncer;
 
   vdirsyncerOptions =
-    [ ]
-    ++ optional (cfg.verbosity != null) "--verbosity ${cfg.verbosity}"
+    optional (cfg.verbosity != null) "--verbosity ${cfg.verbosity}"
     ++ optional (cfg.configFile != null) "--config ${cfg.configFile}";
 
 in
@@ -65,7 +64,6 @@ in
     systemd.user.services.vdirsyncer = {
       Unit = {
         Description = "vdirsyncer calendar&contacts synchronization";
-        PartOf = [ "network-online.target" ];
       };
 
       Service = {

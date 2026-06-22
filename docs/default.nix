@@ -153,11 +153,15 @@ let
           config = lib.listToAttrs (map poisonAttr (lib.filter (n: n != "_module") (lib.attrNames options)));
         };
 
-      options =
-        (docsLib.evalModules {
-          modules = modules ++ [ poisonModule ];
-          class = "homeManager";
-        }).options;
+      inherit
+        (
+          (docsLib.evalModules {
+            modules = modules ++ [ poisonModule ];
+            class = "homeManager";
+          })
+        )
+        options
+        ;
     in
     pkgs.buildPackages.nixosOptionsDoc (
       {
@@ -249,9 +253,15 @@ let
   # Generate the HTML manual pages
   home-manager-manual = pkgs.callPackage ./home-manager-manual.nix {
     home-manager-options = {
-      home-manager = hmOptionsDocs.optionsJSON;
-      nixos = nixosOptionsDocs.optionsJSON;
-      nix-darwin = nixDarwinOptionsDocs.optionsJSON;
+      home-manager = {
+        json = hmOptionsDocs.optionsJSON;
+      };
+      nixos = {
+        json = nixosOptionsDocs.optionsJSON;
+      };
+      nix-darwin = {
+        json = nixDarwinOptionsDocs.optionsJSON;
+      };
     };
     inherit revision;
   };

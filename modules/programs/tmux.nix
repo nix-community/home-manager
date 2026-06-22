@@ -57,7 +57,11 @@ let
       # We need to set default-shell before calling new-session
       set  -g default-shell "${cfg.shell}"
     ''}
-    ${optionalString cfg.newSession "new-session"}
+    ${optionalString cfg.newSession ''
+      # Use -A to make new-session idempotent: attach if session "0" exists,
+      # otherwise create it. This prevents duplicate sessions when multiple
+      # configs (e.g., system and user) both enable newSession.
+      new-session -A -s 0''}
 
     ${optionalString cfg.reverseSplit ''
       bind -N "Split the pane into two, left and right" v split-window -h
@@ -92,7 +96,7 @@ let
         # rebind main key: ${prefix}
         unbind ${defaultPrefix}
         set -g prefix ${prefix}
-        bind -n -N "Send the prefix key through to the application" \
+        bind -N "Send the prefix key through to the application" \
           ${prefix} send-prefix
       ''
     }
@@ -189,7 +193,7 @@ in
       enable = mkEnableOption "tmux";
 
       escapeTime = mkOption {
-        default = 500;
+        default = 10;
         example = 0;
         type = types.ints.unsigned;
         description = ''
@@ -313,8 +317,6 @@ in
 
       tmuxp.enable = mkEnableOption "tmuxp";
 
-      tmuxinator.enable = mkEnableOption "tmuxinator";
-
       plugins = mkOption {
         type =
           with types;
@@ -352,9 +354,7 @@ in
     lib.mkMerge [
       {
         home.packages =
-          lib.optional (cfg.package != null) cfg.package
-          ++ lib.optional cfg.tmuxinator.enable pkgs.tmuxinator
-          ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
+          lib.optional (cfg.package != null) cfg.package ++ lib.optional cfg.tmuxp.enable pkgs.tmuxp;
       }
 
       { xdg.configFile."tmux/tmux.conf".text = lib.mkBefore tmuxConf; }

@@ -17,14 +17,12 @@ in
     package = lib.mkPackageOption pkgs "git-cliff" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          header = "Changelog";
-          trim = true;
-        }
-      '';
+      example = {
+        header = "Changelog";
+        trim = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/git-cliff/cliff.toml`. See

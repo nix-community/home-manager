@@ -42,7 +42,7 @@ let
     };
 
   extraConfigOption = mkOption {
-    type = yamlFormat.type;
+    inherit (yamlFormat) type;
     default = { };
     description = "Extra settings.";
   };
@@ -118,15 +118,13 @@ let
 
               Mutually exclusive with [](#opt-programs.borgmatic.backups._name_.location.sourceDirectories).
             '';
-            example = literalExpression ''
-              [
-                "R /home/user"
-                "- home/user/.cache"
-                "- home/user/Downloads"
-                "+ home/user/Videos/Important Video"
-                "- home/user/Videos"
-              ]
-            '';
+            example = [
+              "R /home/user"
+              "- home/user/.cache"
+              "- home/user/Downloads"
+              "+ home/user/Videos/Important Video"
+              "- home/user/Videos"
+            ];
           };
 
           repositories = mkOption {
@@ -232,7 +230,7 @@ let
     }
   );
 
-  removeNullValues = attrSet: lib.filterAttrs (key: value: value != null) attrSet;
+  removeNullValues = attrSet: lib.filterAttrs (_key: value: value != null) attrSet;
 
   hmFiles = builtins.attrValues config.home.file;
   hmSymlinks = (lib.filter (file: !file.recursive) hmFiles);
@@ -248,8 +246,8 @@ let
       removeNullValues (
         {
           source_directories = config.location.sourceDirectories;
-          patterns = config.location.patterns;
-          repositories = config.location.repositories;
+          inherit (config.location) patterns repositories;
+          inherit (config.consistency) checks;
           encryption_passcommand = config.storage.encryptionPasscommand;
           keep_within = config.retention.keepWithin;
           keep_secondly = config.retention.keepSecondly;
@@ -259,7 +257,6 @@ let
           keep_weekly = config.retention.keepWeekly;
           keep_monthly = config.retention.keepMonthly;
           keep_yearly = config.retention.keepYearly;
-          checks = config.consistency.checks;
         }
         // config.location.extraConfig
         // config.storage.extraConfig

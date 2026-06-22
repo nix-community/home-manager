@@ -10,7 +10,7 @@ let
   cfg = config.xsession.windowManager.xmonad;
 
   xmonad = pkgs.xmonad-with-packages.override {
-    ghcWithPackages = cfg.haskellPackages.ghcWithPackages;
+    inherit (cfg.haskellPackages) ghcWithPackages;
     packages =
       self:
       cfg.extraPackages self
@@ -48,7 +48,7 @@ in
       };
 
       extraPackages = mkOption {
-        default = self: [ ];
+        default = _self: [ ];
         defaultText = "self: []";
         example = literalExpression ''
           haskellPackages: [

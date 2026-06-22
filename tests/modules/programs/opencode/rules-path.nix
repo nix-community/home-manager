@@ -1,7 +1,7 @@
 {
   programs.opencode = {
     enable = true;
-    rules = ./AGENTS.md;
+    context = ./AGENTS.md;
   };
   nmt.script = ''
     assertFileExists home-files/.config/opencode/AGENTS.md

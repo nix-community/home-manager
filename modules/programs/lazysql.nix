@@ -17,13 +17,12 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.lazysql = {
     enable = mkEnableOption "lazysql";
     package = mkPackageOption pkgs "lazysql" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = { };
       description = ''

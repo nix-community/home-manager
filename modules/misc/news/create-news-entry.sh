@@ -16,9 +16,13 @@ cd "$DIRNAME" || {
 }
 
 cat - <<EOF >"$YEAR/$MONTH/$FILENAME_BASE.nix"
+{ config, pkgs, ... }:
 {
   time = "$DATE";
+  # condition = pkgs.stdenv.hostPlatform.isLinux;
+  # condition = config.programs.neovim.enable;
   condition = true;
+  # if behavior changed, explain how to restore previous behavior.
   message = ''
     PLACEHOLDER
   '';

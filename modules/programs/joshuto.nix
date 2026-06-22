@@ -19,7 +19,7 @@ in
     package = lib.mkPackageOption pkgs "joshuto" { };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to
@@ -31,7 +31,7 @@ in
     };
 
     keymap = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to
@@ -43,7 +43,7 @@ in
     };
 
     mimetype = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to
@@ -55,7 +55,7 @@ in
     };
 
     theme = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Configuration written to

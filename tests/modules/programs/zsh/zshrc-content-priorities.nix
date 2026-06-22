@@ -3,6 +3,23 @@
   programs.zsh = {
     enable = true;
 
+    cdpath = [
+      "$HOME/projects"
+      "/tmp/with space"
+      "/tmp/with[glob]"
+    ];
+    dirHashes = {
+      docs = "/tmp/with space";
+      glob = "/tmp/with[glob]";
+      home = "$HOME/Documents";
+      quoted = ''/tmp/with "quotes"'';
+    };
+    localVariables = {
+      BACKTICK = "`literal`";
+      QUOTED = ''value "quoted"'';
+      RUNTIME = "$HOME/bin";
+    };
+
     initContent = lib.mkMerge [
       (lib.mkBefore ''
         # High priority (mkBefore)
@@ -34,12 +51,17 @@
           echo "High priority content"
 
           typeset -U path cdpath fpath manpath
+          cdpath+=("$HOME/projects" "/tmp/with space" "/tmp/with[glob]")
+
           for profile in ''${(z)NIX_PROFILES}; do
             fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
           done
 
           HELPDIR="@zsh@/share/zsh/$ZSH_VERSION/help"
 
+          BACKTICK="\`literal\`"
+          QUOTED="value \"quoted\""
+          RUNTIME="$HOME/bin"
           autoload -U compinit && compinit
           # History options should be set in .zshrc and after oh-my-zsh sourcing.
           # See https://github.com/nix-community/home-manager/issues/177.
@@ -62,6 +84,12 @@
 
           # Default priority
           echo "Default priority content"
+
+          # Named Directory Hashes
+          hash -d docs="/tmp/with space"
+          hash -d glob="/tmp/with[glob]"
+          hash -d home="$HOME/Documents"
+          hash -d quoted="/tmp/with \"quotes\""
 
           zprof
           # Low priority (mkAfter)

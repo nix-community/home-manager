@@ -1,0 +1,16 @@
+active_model = "tracer-vibe"
+
+[[models]]
+alias = "tracer-vibe"
+input_price = 0.0
+name = "mistralai/devstral-2512:free"
+output_price = 0.0
+provider = "tracer-proxy"
+temperature = 0.1
+
+[[providers]]
+api_base = "http://tracer:8081/proxy"
+api_key_env_var = "OPENROUTER_API_KEY"
+api_style = "openai"
+backend = "generic"
+name = "tracer-proxy"

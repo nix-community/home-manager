@@ -26,7 +26,7 @@ let
     name: value:
     if lib.isStorePath value then
       pkgs.symlinkJoin {
-        name = name;
+        inherit name;
         paths = [ value ];
         postBuild = ''
           mkdir '${name}'

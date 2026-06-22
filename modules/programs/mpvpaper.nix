@@ -16,7 +16,6 @@ let
   cfg = config.programs.mpvpaper;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.mpvpaper = {
     enable = mkEnableOption "mpvpaper";

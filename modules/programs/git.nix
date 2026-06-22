@@ -7,7 +7,6 @@
 let
   inherit (lib)
     concatStringsSep
-    literalExpression
     mkDefault
     mkEnableOption
     mkIf
@@ -17,6 +16,19 @@ let
     ;
 
   cfg = config.programs.git;
+
+  signingFormatStateVersionDefault = lib.hm.deprecations.mkStateVersionOptionDefault {
+    inherit (config.home) stateVersion;
+    since = "25.05";
+    optionPath = [
+      "programs"
+      "git"
+      "signing"
+      "format"
+    ];
+    legacy.value = "openpgp";
+    current.value = null;
+  };
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -69,10 +81,7 @@ in
                 "x509"
               ]
             );
-            defaultText = literalExpression ''
-              "openpgp" for state version < 25.05,
-              undefined for state version ≥ 25.05
-            '';
+            inherit (signingFormatStateVersionDefault) defaultText;
             description = ''
               The signing method to use when signing commits and tags.
               Valid values are `openpgp` (OpenPGP/GnuPG), `ssh` (SSH), and `x509` (X.509 certificates).
@@ -92,16 +101,28 @@ in
         };
 
         settings = mkOption {
-          type = gitIniType;
+          type = with types; either gitIniType (listOf gitIniType);
           default = { };
-          example = {
-            core = {
-              whitespace = "trailing-space,space-before-tab";
-            };
-            url."ssh://git@host".insteadOf = "otherhost";
-          };
+          example = [
+            {
+              core = {
+                whitespace = "trailing-space,space-before-tab";
+              };
+              url."ssh://git@host".insteadOf = "otherhost";
+            }
+            {
+              credential."https://example.com".helper = "";
+            }
+            {
+              credential."https://example.com".helper = "oauth";
+            }
+          ];
           description = ''
             Configuration written to {file}`$XDG_CONFIG_HOME/git/config`.
+            This may be either a single attrset of Git settings or an ordered
+            list of attrset fragments when repeated sections or explicit
+            ordering matter.
+
             See {manpage}`git-config(1)` for details.
           '';
         };
@@ -109,7 +130,7 @@ in
         hooks = mkOption {
           type = types.attrsOf types.path;
           default = { };
-          example = literalExpression ''
+          example = lib.literalExpression ''
             {
               pre-commit = ./pre-commit-script;
             }
@@ -167,18 +188,16 @@ in
                   contents = mkOption {
                     type = types.attrsOf types.anything;
                     default = { };
-                    example = literalExpression ''
-                      {
-                        user = {
-                          email = "bob@work.example.com";
-                          name = "Bob Work";
-                          signingKey = "1A2B3C4D5E6F7G8H";
-                        };
-                        commit = {
-                          gpgSign = true;
-                        };
+                    example = {
+                      user = {
+                        email = "bob@work.example.com";
+                        name = "Bob Work";
+                        signingKey = "1A2B3C4D5E6F7G8H";
                       };
-                    '';
+                      commit = {
+                        gpgSign = true;
+                      };
+                    };
                     description = ''
                       Configuration to include. If empty then a path must be given.
 
@@ -208,15 +227,13 @@ in
             )
           );
           default = [ ];
-          example = literalExpression ''
-            [
-              { path = "~/path/to/config.inc"; }
-              {
-                path = "~/path/to/conditional.inc";
-                condition = "gitdir:~/src/dir";
-              }
-            ]
-          '';
+          example = [
+            { path = "~/path/to/config.inc"; }
+            {
+              path = "~/path/to/conditional.inc";
+              condition = "gitdir:~/src/dir";
+            }
+          ];
           description = "List of configuration files to include.";
         };
 
@@ -327,6 +344,14 @@ in
     );
 
   config = mkIf cfg.enable (
+    let
+      settingsFragments = lib.filter (fragment: fragment != { }) (
+        if builtins.isList cfg.settings then cfg.settings else [ ]
+      );
+      renderedIniFragments = lib.filter (text: lib.match "[[:space:]]*" text == null) (
+        [ (lib.generators.toGitINI cfg.iniContent) ] ++ map lib.generators.toGitINI settingsFragments
+      );
+    in
     lib.mkMerge [
       {
         home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
@@ -372,7 +397,7 @@ in
         ];
 
         xdg.configFile = {
-          "git/config".text = lib.generators.toGitINI cfg.iniContent;
+          "git/config".text = concatStringsSep "\n" renderedIniFragments;
 
           "git/ignore" = mkIf (cfg.ignores != [ ]) {
             text = concatStringsSep "\n" cfg.ignores + "\n";
@@ -429,11 +454,7 @@ in
       (mkIf (cfg.signing != { }) {
         programs.git = {
           signing = {
-            format =
-              if (lib.versionOlder config.home.stateVersion "25.05") then
-                (mkOptionDefault "openpgp")
-              else
-                (mkOptionDefault null);
+            format = mkOptionDefault signingFormatStateVersionDefault.effectiveDefault;
             signer =
               let
                 defaultSigners = {
@@ -473,7 +494,7 @@ in
         };
       })
 
-      (mkIf (cfg.settings != { }) {
+      (mkIf (!builtins.isList cfg.settings && cfg.settings != { }) {
         programs.git.iniContent = cfg.settings;
       })
 
@@ -501,12 +522,13 @@ in
         programs.git.iniContent.filter.lfs =
           let
             skipArg = lib.optional cfg.lfs.skipSmudge "--skip";
+            lfsPath = if cfg.lfs.package != null then lib.getExe cfg.lfs.package else "git-lfs";
           in
           {
-            clean = "git-lfs clean -- %f";
+            clean = "${lfsPath} clean -- %f";
             process = concatStringsSep " " (
               [
-                "git-lfs"
+                lfsPath
                 "filter-process"
               ]
               ++ skipArg
@@ -514,7 +536,7 @@ in
             required = true;
             smudge = concatStringsSep " " (
               [
-                "git-lfs"
+                lfsPath
                 "smudge"
               ]
               ++ skipArg

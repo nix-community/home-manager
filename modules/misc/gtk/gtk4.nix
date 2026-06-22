@@ -45,8 +45,24 @@ in
           packageExample = "pkgs.gnome.gnome-themes-extra";
         }
       );
-      default = if lib.versionOlder config.home.stateVersion "26.05" then cfg.theme else null;
-      defaultText = literalExpression ''if lib.versionOlder config.home.stateVersion "26.05" then cfg.theme else null'';
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.05";
+          optionPath = [
+            "gtk"
+            "gtk4"
+            "theme"
+          ];
+          legacy = {
+            value = cfg.theme;
+            text = "config.gtk.theme";
+          };
+          current.value = null;
+        })
+        default
+        defaultText
+        ;
       description = ''
         Theme for GTK 4 applications.
 

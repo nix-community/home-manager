@@ -2,7 +2,7 @@
 
 {
   nixpkgs.overlays = [
-    (self: super: rec {
+    (_self: super: rec {
       emacs = pkgs.writeShellScriptBin "dummy-emacs-27.2" "" // {
         outPath = "@emacs@";
       };

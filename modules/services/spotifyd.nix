@@ -6,7 +6,6 @@
 }:
 
 let
-  inherit (lib) literalExpression;
 
   cfg = config.services.spotifyd;
 
@@ -27,18 +26,16 @@ in
     };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = "Configuration for spotifyd";
-      example = literalExpression ''
-        {
-          global = {
-            username = "Alex";
-            password = "foo";
-            device_name = "nix";
-          };
-        }
-      '';
+      example = {
+        global = {
+          username = "Alex";
+          password = "foo";
+          device_name = "nix";
+        };
+      };
     };
   };
 

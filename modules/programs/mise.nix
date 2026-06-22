@@ -102,7 +102,11 @@ in
           The shell integration will not be added.
         '';
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [
+      cfg.package
+      # The generated completions call the `usage` CLI at completion time.
+      pkgs.usage
+    ];
 
     xdg.configFile = {
       "mise/config.toml" = mkIf (cfg.globalConfig != { }) {
@@ -111,9 +115,17 @@ in
     };
 
     programs = {
-      bash.initExtra = mkIf (cfg.enableBashIntegration && cfg.package != null) ''
-        eval "$(${getExe cfg.package} activate bash)"
-      '';
+      bash.initExtra =
+        let
+          # TODO: Upstream to nixpkgs
+          bashCompletion = pkgs.runCommand "mise-bash-completion.bash" { } ''
+            ${getExe cfg.package} completion bash --include-bash-completion-lib > $out
+          '';
+        in
+        mkIf (cfg.enableBashIntegration && cfg.package != null) ''
+          eval "$(${getExe cfg.package} activate bash)"
+          source ${bashCompletion}
+        '';
 
       zsh.initContent = mkIf (cfg.enableZshIntegration && cfg.package != null) ''
         eval "$(${getExe cfg.package} activate zsh)"

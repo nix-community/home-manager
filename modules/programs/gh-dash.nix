@@ -21,16 +21,16 @@ in
     package = lib.mkPackageOption pkgs "gh-dash" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          prSections = [{
+      example = {
+        prSections = [
+          {
             title = "My Pull Requests";
             filters = "is:open author:@me";
-          }];
-        }
-      '';
+          }
+        ];
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/gh-dash/config.yml`.
       '';

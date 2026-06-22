@@ -17,10 +17,10 @@ $ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/m
 $ sudo nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 25.11 channel, you can run
+and if you follow a Nixpkgs version 26.05 channel, you can run
 
 ``` shell
-$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
+$ sudo nix-channel --add https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz home-manager
 $ sudo nix-channel --update
 ```
 
@@ -39,7 +39,7 @@ Alternatively, home-manager installation can be done declaratively through confi
 { config, pkgs, lib, ... }:
 
 let
-  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz;
+  home-manager = builtins.fetchTarball https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz;
 in
 {
   imports =
@@ -54,7 +54,7 @@ in
 
     # The state version is required and should stay at the version you
     # originally installed.
-    home.stateVersion = "25.11";
+    home.stateVersion = "26.05";
   };
 }
 ```
@@ -74,7 +74,7 @@ home-manager.users.eve = { pkgs, ... }: {
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "25.11"; # Please read the comment before changing. 
+  home.stateVersion = "26.05"; # Please read the comment before changing.
 
 };
 ```
@@ -85,11 +85,20 @@ httpie.
 
 :::{.note}
 If `nixos-rebuild switch` does not result in the environment you expect,
-you can take a look at the output of the Home Manager activation script
-output using
+then the service to inspect depends on the activation mode.
+
+By default, Home Manager activates each configured user during boot and
+system rebuilds through a NixOS system service:
 
 ``` shell
 $ systemctl status "home-manager-$USER.service"
+```
+
+If `home-manager.startAsUserService = true` is set, Home Manager instead
+activates through the user's systemd service:
+
+``` shell
+$ systemctl --user status home-manager.service
 ```
 :::
 
@@ -144,14 +153,23 @@ Nixpkgs.
 :::
 
 :::{.note}
-Home Manager will pass `osConfig` as a module argument to any modules
-you create. This contains the system's NixOS configuration.
+Home Manager passes extra module arguments to each
+`home-manager.users.<name>` module:
 
 ``` nix
-{ lib, pkgs, osConfig, ... }:
+{ lib, pkgs, osConfig, nixosConfig, osClass, modulesPath, ... }:
 ```
+
+Here `osConfig` contains the system's NixOS configuration and `nixosConfig`
+is a NixOS-specific alias for the same value. The `lib` argument is Home
+Manager's extended library. You can pass additional module arguments with
+`home-manager.extraSpecialArgs`.
+:::
+
+:::{.note}
+Use `home-manager.sharedModules` to add Home Manager modules to every user
+declared under `home-manager.users`.
 :::
 
 Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
 description of Home Manager and how to use it.
-

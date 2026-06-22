@@ -69,7 +69,7 @@ let
             let
               quadletName = extractQuadletReference type value;
               quadletsOfType = lib.filterAttrs (
-                n: v: v.quadletData.resourceType == type
+                _n: v: v.quadletData.resourceType == type
               ) cfg.internal.builtQuadlets;
             in
             if (lib.hasAttr quadletName quadletsOfType) then
@@ -166,7 +166,7 @@ let
     in
     {
       assertions = podman-lib.buildConfigAsserts name containerDef.extraConfig;
-      dependencies = src.dependencies;
+      inherit (src) dependencies;
       resourceType = "container";
       serviceName = "podman-${src.attrs.Container.ContainerName}"; # generated service name: 'podman-<name>.service'
       source = podman-lib.removeBlankLines src.text;
@@ -239,13 +239,11 @@ let
       environment = mkOption {
         type = podman-lib.primitiveAttrs;
         default = { };
-        example = lib.literalExpression ''
-          {
-            VAR1 = "0:100";
-            VAR2 = true;
-            VAR3 = 5;
-          }
-        '';
+        example = {
+          VAR1 = "0:100";
+          VAR2 = true;
+          VAR3 = 5;
+        };
         description = "Environment variables to set in the container.";
       };
 
@@ -281,16 +279,14 @@ let
       extraConfig = mkOption {
         type = podman-lib.extraConfigType;
         default = { };
-        example = lib.literalExpression ''
-          {
-            Container = {
-              User = 1000;
-            };
-            Service = {
-              TimeoutStartSec = 15;
-            };
-          }
-        '';
+        example = {
+          Container = {
+            User = 1000;
+          };
+          Service = {
+            TimeoutStartSec = 15;
+          };
+        };
         description = ''
           INI sections and values to populate the Container Quadlet.
         '';

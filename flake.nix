@@ -1,7 +1,7 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
   outputs =
     {
@@ -45,43 +45,189 @@
     }
     // (
       let
-        forAllPkgs =
-          f:
-          nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system: f nixpkgs.legacyPackages.${system});
+        supportedSystems = [
+          "aarch64-darwin"
+          "aarch64-linux"
+          "i686-linux"
+          "x86_64-darwin"
+          "x86_64-linux"
+        ];
+
+        forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+
+        forAllPkgs = forSystems nixpkgs.lib.systems.flakeExposed;
+
+        forSupportedPkgs = forSystems supportedSystems;
+
+        forCI = nixpkgs.lib.genAttrs [
+          "aarch64-darwin"
+          "x86_64-linux"
+        ];
+
+        releaseInfo = nixpkgs.lib.importJSON ./release.json;
+
+        docsFor =
+          pkgs:
+          import ./docs {
+            inherit pkgs;
+            inherit (releaseInfo) release isReleaseBranch;
+          };
+
+        testChunks =
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            inherit (pkgs) lib;
+
+            # Create chunked test packages for better CI parallelization
+            tests = import ./tests {
+              inherit pkgs;
+              enableBig = true;
+            };
+            allTests = lib.attrNames tests.build;
+            # Remove 'all' from the test list as it's a meta-package
+            filteredTests = lib.filter (name: name != "all") allTests;
+            # NOTE: Just a starting value, we can tweak this to find a good value.
+            targetTestsPerChunk = 50;
+            numChunks = lib.max 1 (
+              builtins.ceil ((builtins.length filteredTests) / (targetTestsPerChunk * 1.0))
+            );
+            chunkSize = builtins.ceil ((builtins.length filteredTests) / (numChunks * 1.0));
+
+            makeChunk =
+              chunkNum: testList:
+              let
+                start = (chunkNum - 1) * chunkSize;
+                end = lib.min (start + chunkSize) (builtins.length testList);
+                chunkTests = lib.sublist start (end - start) testList;
+                chunkAttrs = lib.genAttrs chunkTests (name: tests.build.${name});
+              in
+              pkgs.symlinkJoin {
+                name = "test-chunk-${toString chunkNum}";
+                paths = lib.attrValues chunkAttrs;
+                passthru.tests = chunkTests;
+              };
+          in
+          lib.listToAttrs (
+            lib.genList (
+              i: lib.nameValuePair "test-chunk-${toString (i + 1)}" (makeChunk (i + 1) filteredTests)
+            ) numChunks
+          );
+
+        integrationTests =
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            inherit (pkgs) lib;
+          in
+          lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (
+            let
+              tests = import ./tests/integration { inherit pkgs lib; };
+              renameTestPkg = n: v: lib.nameValuePair "integration-${n}" v;
+            in
+            lib.mapAttrs' renameTestPkg (lib.removeAttrs tests [ "all" ])
+          );
+
+        buildTests =
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            tests = import ./tests { inherit pkgs; };
+            renameTestPkg = n: nixpkgs.lib.nameValuePair "test-${n}";
+          in
+          nixpkgs.lib.mapAttrs' renameTestPkg tests.build;
+
+        buildTestsNoBig =
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            tests = import ./tests {
+              inherit pkgs;
+              enableBig = false;
+            };
+          in
+          {
+            test-all-enableBig-false-enableLegacyIfd-false = tests.build.all;
+          };
+
+        buildTestsNoBigIfd =
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            tests = import ./tests {
+              inherit pkgs;
+              enableBig = false;
+              enableLegacyIfd = true;
+            };
+          in
+          {
+            test-all-enableBig-false-enableLegacyIfd-true = tests.build.all;
+          };
+
+        integrationTestPackages =
+          system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            inherit (pkgs) lib;
+            tests = import ./tests/integration { inherit pkgs lib; };
+            renameTestPkg = n: lib.nameValuePair "integration-test-${n}";
+          in
+          lib.mapAttrs' renameTestPkg tests;
       in
       {
-        formatter = forAllPkgs (
-          pkgs:
-          pkgs.treefmt.withConfig {
-            runtimeInputs = with pkgs; [
-              nixfmt
-              deadnix
-              keep-sorted
-              nixf-diagnose
-            ];
-            settings = pkgs.lib.importTOML ./treefmt.toml;
+        formatter = forSupportedPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
+
+        # TODO: increase buildbot testing scope
+        buildbot = forCI (
+          system:
+          let
+            docs = docsFor nixpkgs.legacyPackages.${system};
+            allIntegrationTests = integrationTests system;
+            workingIntegrationTests = nixpkgs.lib.filterAttrs (
+              name: _:
+              nixpkgs.lib.elem name [
+                "integration-nixos-basics"
+                "integration-nixos-legacy-profile-management"
+              ]
+            ) allIntegrationTests;
+          in
+          (testChunks system)
+          // workingIntegrationTests
+          // {
+            docs-html = docs.manual.html;
+            docs-json = docs.options.json;
+            docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
+            docs-manpages = docs.manPages;
           }
         );
 
         packages = forAllPkgs (
           pkgs:
           let
-            releaseInfo = nixpkgs.lib.importJSON ./release.json;
-            docs = import ./docs {
-              inherit pkgs;
-              inherit (releaseInfo) release isReleaseBranch;
-            };
+            docs = docsFor pkgs;
             hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
           in
           {
             default = hmPkg;
             home-manager = hmPkg;
+          }
+          // nixpkgs.lib.optionalAttrs (nixpkgs.lib.elem pkgs.stdenv.hostPlatform.system supportedSystems) {
+
+            ci-parse = pkgs.callPackage ./ci/parse.nix { nix = pkgs.nixVersions.latest; };
+            ci-parse-lix = pkgs.callPackage ./ci/parse.nix {
+              nix = pkgs.lixPackageSets.latest.lix;
+            };
 
             create-news-entry = pkgs.writeShellScriptBin "create-news-entry" ''
               ./modules/misc/news/create-news-entry.sh
             '';
 
-            tests = pkgs.callPackage ./tests/package.nix { flake = self; };
+            tests = pkgs.callPackage ./tests/package.nix {
+              flake = self;
+              inputOverrides = {
+                inherit nixpkgs;
+              };
+            };
 
             docs-html = docs.manual.html;
             docs-htmlOpenTool = docs.manual.htmlOpenTool;
@@ -89,6 +235,23 @@
             docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
             docs-manpages = docs.manPages;
           }
+        );
+
+        devShells = forSupportedPkgs (pkgs: {
+          default = pkgs.callPackage ./home-manager/devShell.nix { };
+        });
+
+        legacyPackages = forSupportedPkgs (
+          pkgs:
+          let
+            inherit (pkgs.stdenv.hostPlatform) system;
+          in
+          (buildTests system)
+          // (integrationTestPackages system)
+          // (buildTestsNoBig system)
+          // (buildTestsNoBigIfd system)
+          // (testChunks system)
+          // (integrationTests system)
         );
       }
     );

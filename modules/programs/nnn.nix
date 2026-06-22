@@ -49,7 +49,7 @@ let
   };
 in
 {
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+  meta.maintainers = [ ];
 
   options = {
     programs.nnn = {
@@ -100,6 +100,35 @@ in
         '';
         default = { };
       };
+
+      options = mkOption {
+        type =
+          with lib.types;
+          let
+            scalar = oneOf [
+              bool
+              int
+              str
+            ];
+            attrs = attrsOf scalar;
+          in
+          coercedTo attrs (lib.cli.toCommandLineGNU { }) (listOf str);
+        default = { };
+        example = {
+          s = "session_name";
+          t = 8;
+          A = true;
+        };
+        description = "Configuration options for {command}`nnn`. See {command}`nnn -h`";
+      };
+
+      enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+      enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+      enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+      quitcd = lib.mkEnableOption "cd on quit";
     };
   };
 
@@ -107,19 +136,42 @@ in
     let
       nnnPackage = cfg.package.overrideAttrs (oldAttrs: {
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
-        postInstall = ''
-          ${oldAttrs.postInstall or ""}
+        postInstall =
+          let
+            args = lib.concatMap (arg: [
+              "--add-flags"
+              arg
+            ]) cfg.options;
+          in
+          ''
+            ${oldAttrs.postInstall or ""}
 
-          wrapProgram $out/bin/nnn \
-            --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
-            --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
-            --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}"
-        '';
+            wrapProgram $out/bin/nnn \
+              --prefix PATH : "${lib.makeBinPath cfg.extraPackages}" \
+              --prefix NNN_BMS : "${renderSettings cfg.bookmarks}" \
+              --prefix NNN_PLUG : "${renderSettings cfg.plugins.mappings}" \
+              ${lib.concatStringsSep " " args}
+          '';
       });
+
+      quitcd = {
+        bash_sh_zsh = "source ${nnnPackage}/share/quitcd/quitcd.bash_sh_zsh";
+        fish = "source ${nnnPackage}/share/quitcd/quitcd.fish";
+      };
     in
     lib.mkIf cfg.enable {
       programs.nnn.finalPackage = nnnPackage;
       home.packages = [ nnnPackage ];
       xdg.configFile."nnn/plugins" = lib.mkIf (cfg.plugins.src != null) { source = cfg.plugins.src; };
+
+      programs.bash.initExtra = lib.mkIf (cfg.enableBashIntegration && cfg.quitcd) (
+        lib.mkAfter quitcd.bash_sh_zsh
+      );
+      programs.fish.interactiveShellInit = lib.mkIf (cfg.enableFishIntegration && cfg.quitcd) (
+        lib.mkAfter quitcd.fish
+      );
+      programs.zsh.initContent = lib.mkIf (cfg.enableZshIntegration && cfg.quitcd) (
+        lib.mkAfter quitcd.bash_sh_zsh
+      );
     };
 }

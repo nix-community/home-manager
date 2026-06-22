@@ -113,9 +113,9 @@ in
           may use '~' to represent your home directory but you should
           protect it to avoid shell substitution.
         '';
-        example = lib.literalExpression ''
-          { "\\~/projects/home-manager" = "prj:home-manager"; }
-        '';
+        example = {
+          "\\~/projects/home-manager" = "prj:home-manager";
+        };
       };
 
       settings = mkOption {
@@ -132,14 +132,15 @@ in
           This can be any key/value pair as described in
           <https://github.com/justjanne/powerline-go>.
         '';
-        example = lib.literalExpression ''
-          {
-            hostname-only-if-ssh = true;
-            numeric-exit-codes = true;
-            cwd-max-depth = 7;
-            ignore-repos = [ "/home/me/big-project" "/home/me/huge-project" ];
-          }
-        '';
+        example = {
+          hostname-only-if-ssh = true;
+          numeric-exit-codes = true;
+          cwd-max-depth = 7;
+          ignore-repos = [
+            "/home/me/big-project"
+            "/home/me/huge-project"
+          ];
+        };
       };
 
       extraUpdatePS1 = mkOption {

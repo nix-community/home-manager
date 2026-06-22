@@ -24,7 +24,7 @@ in
     package = lib.mkPackageOption pkgs "hyprpanel" { };
 
     settings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = lib.literalExpression ''
         bar.battery.label = true;
@@ -89,29 +89,30 @@ in
 
     xdg.configFile.hyprpanel = lib.mkIf (cfg.settings != { }) {
       target = "hyprpanel/config.json";
-      source = jsonFormat.generate "hyprpanel-config" (
-        if cfg.settings ? theme && cfg.settings.theme ? name then
-          lib.warn ''
-            `settings.theme.name` option has been removed, because the
-            hyprpanel module has been ported to downstream home-manager and
-            implementing it would require IFD
-            (https://nix.dev/manual/nix/2.26/language/import-from-derivation)
-
-            Replace it with:
-            ```nix
-            programs.hyprpanel = {
-              theme = {
-                # paste content of https://github.com/Jas-SinghFSU/HyprPanel/blob/2c0c66a/themes/${cfg.settings.theme.name}.json
-              };
-            };
-            ```
-          '' cfg.settings
-        else
-          cfg.settings
-      );
+      source = jsonFormat.generate "hyprpanel-config" cfg.settings;
       # hyprpanel replaces it with the same file, but without new line in the end
       force = true;
     };
+
+    warnings = lib.optional (cfg.settings ? theme && cfg.settings.theme ? name) (
+      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+        option = [
+          "programs"
+          "hyprpanel"
+          "settings"
+          "theme"
+          "name"
+        ];
+        old = "a named theme";
+        replacement = "`programs.hyprpanel.settings.theme`";
+        details = ''
+          Named theme loading was removed because it requires import-from-derivation.
+
+          Paste theme contents from:
+            https://github.com/Jas-SinghFSU/HyprPanel/blob/2c0c66a/themes/${cfg.settings.theme.name}.json
+        '';
+      }
+    );
 
     systemd.user.services.hyprpanel = lib.mkIf cfg.systemd.enable {
       Unit = {

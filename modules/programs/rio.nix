@@ -35,7 +35,7 @@ in
     package = mkPackageOption pkgs "rio" { nullable = true; };
 
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/rio/config.toml`. See

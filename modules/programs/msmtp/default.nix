@@ -22,7 +22,7 @@ let
       [ "account ${name}" ]
       ++ lib.mapAttrsToList (n: v: n + " " + v) (
         {
-          host = smtp.host;
+          inherit (smtp) host;
           from = address;
           auth = "on";
           user = userName;

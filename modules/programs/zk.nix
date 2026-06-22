@@ -20,25 +20,23 @@ in
     package = lib.mkPackageOption pkgs "zk" { nullable = true; };
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          note = {
-            language = "en";
-            default-title = "Untitled";
-            filename = "{{id}}-{{slug title}}";
-            extension = "md";
-            template = "default.md";
-            id-charset = "alphanum";
-            id-length = 4;
-            id-case = "lower";
-          };
-          extra = {
-            author = "Mickaël";
-          };
-        }
-      '';
+      example = {
+        note = {
+          language = "en";
+          default-title = "Untitled";
+          filename = "{{id}}-{{slug title}}";
+          extension = "md";
+          template = "default.md";
+          id-charset = "alphanum";
+          id-length = 4;
+          id-case = "lower";
+        };
+        extra = {
+          author = "Mickaël";
+        };
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/zk/config.toml`.
 

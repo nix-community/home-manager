@@ -15,7 +15,7 @@ in
     enable = lib.mkEnableOption "the pylint Python linter";
     package = lib.mkPackageOption pkgs [ "python3Packages" "pylint" ] { };
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       defaultText = lib.literalExpression "{}";
       description = "The pylint configuration.";

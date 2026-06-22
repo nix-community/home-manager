@@ -20,10 +20,32 @@ flake in three ways:
     `nixos-rebuild`. See [NixOS module](#sec-flakes-nixos-module) for a
     description of this setup.
 
-3.  This allows the user profiles to be built together with the system
-    when running `darwin-rebuild`. See [nix-darwin
-    module](#sec-flakes-nix-darwin-module) for a description of this
-    setup.
+3.  As a module within a [nix-darwin](https://github.com/nix-darwin/nix-darwin/)
+    system configuration. This allows the user profiles to be built
+    together with the system when running `darwin-rebuild`. See
+    [nix-darwin module](#sec-flakes-nix-darwin-module) for a
+    description of this setup.
+
+Advanced users may want Home Manager's `nixpkgs` input to follow the
+same Nixpkgs input as the rest of their flake. This avoids a second
+Nixpkgs input and makes Home Manager use the same pinned Nixpkgs source
+revision as the rest of the configuration:
+
+``` nix
+home-manager.inputs.nixpkgs.follows = "nixpkgs";
+```
+
+This removes the compatibility assumption between Home Manager and the
+Nixpkgs revision in Home Manager's own lock file, so use it carefully,
+especially when tracking unstable branches.
+
+This does not by itself make Home Manager use the same `pkgs` value as
+your NixOS or nix-darwin system. In NixOS and nix-darwin module setups,
+`home-manager.useGlobalPkgs = true` controls that behavior by making
+Home Manager modules receive the system `pkgs` value. When
+`home-manager.useGlobalPkgs` is enabled, configure Nixpkgs overlays and
+configuration at the system level instead of through Home Manager
+`nixpkgs.*` options.
 
 ```{=include=} sections
 nix-flakes/prerequisites.md
@@ -32,5 +54,3 @@ nix-flakes/nixos.md
 nix-flakes/nix-darwin.md
 nix-flakes/flake-parts.md
 ```
-
-

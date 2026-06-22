@@ -5,9 +5,9 @@ environments directly from the
 [nix-darwin](https://github.com/nix-darwin/nix-darwin/) configuration file,
 which often is more convenient than using the `home-manager` tool.
 
-To make the NixOS module available for use you must `import` it into
-your system configuration. This is most conveniently done by adding a
-Home Manager channel. For example, if you are following Nixpkgs master
+To make the nix-darwin module available for use you must `import` it
+into your system configuration. This is most conveniently done by adding
+a Home Manager channel. For example, if you are following Nixpkgs master
 or an unstable channel, you can run
 
 ``` shell
@@ -15,10 +15,10 @@ $ nix-channel --add https://github.com/nix-community/home-manager/archive/master
 $ nix-channel --update
 ```
 
-and if you follow a Nixpkgs version 25.11 channel, you can run
+and if you follow a Nixpkgs version 26.05 channel, you can run
 
 ``` shell
-$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz home-manager
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz home-manager
 $ nix-channel --update
 ```
 
@@ -28,9 +28,9 @@ It is then possible to add
 imports = [ <home-manager/nix-darwin> ];
 ```
 
-to your nix-darwin `configuration.nix` file, which will introduce a new
-NixOS option called `home-manager` whose type is an attribute set that
-maps user names to Home Manager configurations.
+to your nix-darwin `configuration.nix` file, which will introduce a
+`home-manager.users` option whose type is an attribute set that maps
+user names to Home Manager configurations.
 
 For example, a nix-darwin configuration may include the lines
 
@@ -45,12 +45,15 @@ home-manager.users.eve = { pkgs, ... }: {
 
   # The state version is required and should stay at the version you
   # originally installed.
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 };
 ```
 
 and after a `darwin-rebuild switch` the user eve's environment should
 include a basic Bash configuration and the packages atool and httpie.
+
+Home Manager activation runs as part of nix-darwin activation for each
+configured user.
 
 If you do not plan on having Home Manager manage your shell
 configuration then you must add either
@@ -103,12 +106,22 @@ Nixpkgs.
 :::
 
 :::{.note}
-Home Manager will pass `osConfig` as a module argument to any modules
-you create. This contains the system's nix-darwin configuration.
+Home Manager passes extra module arguments to each
+`home-manager.users.<name>` module:
 
 ``` nix
-{ lib, pkgs, osConfig, ... }:
+{ lib, pkgs, osConfig, darwinConfig, osClass, modulesPath, ... }:
 ```
+
+Here `osConfig` contains the system's nix-darwin configuration and
+`darwinConfig` is a Darwin-specific alias for the same value. The `lib`
+argument is Home Manager's extended library. You can pass additional module
+arguments with `home-manager.extraSpecialArgs`.
+:::
+
+:::{.note}
+Use `home-manager.sharedModules` to add Home Manager modules to every user
+declared under `home-manager.users`.
 :::
 
 Once installed you can see [Using Home Manager](#ch-usage) for a more detailed

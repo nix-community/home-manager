@@ -45,17 +45,15 @@ in
     };
 
     defaults = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          metadata = {
-            author = "John Doe";
-          };
-          pdf-engine = "xelatex";
-          citeproc = true;
-        }
-      '';
+      example = {
+        metadata = {
+          author = "John Doe";
+        };
+        pdf-engine = "xelatex";
+        citeproc = true;
+      };
       description = ''
         Options to set by default.
         These will be converted to JSON and written to a defaults

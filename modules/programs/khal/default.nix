@@ -213,19 +213,17 @@ in
     };
 
     settings = mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          default = {
-            default_calendar = "Calendar";
-            timedelta = "5d";
-          };
-          view = {
-            agenda_event_format =
-              "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
-          };
-        }'';
+      example = {
+        default = {
+          default_calendar = "Calendar";
+          timedelta = "5d";
+        };
+        view = {
+          agenda_event_format = "{calendar-color}{cancelled}{start-end-time-style} {title}{repeat-symbol}{reset}";
+        };
+      };
       description = ''
         Configuration options to add to the various sections in the configuration file.
       '';
@@ -236,21 +234,26 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."khal/config".text = lib.concatStringsSep "\n" (
-      [ "[calendars]" ]
-      ++ lib.mapAttrsToList genCalendarStr khalAccounts
-      ++ [
-        (lib.generators.toINI { } (
-          recursiveUpdate cfg.settings {
-            locale = definedAttrs (cfg.locale // { _module = null; });
-
-            default = lib.optionalAttrs (!isNull primaryAccount) {
+      let
+        settingsWithPrimaryDefaults =
+          cfg.settings
+          // lib.optionalAttrs (!isNull primaryAccount) {
+            default = recursiveUpdate {
               highlight_event_days = true;
               default_calendar =
                 if isNull primaryAccount.primaryCollection then
                   primaryAccount.name
                 else
                   primaryAccount.primaryCollection;
-            };
+            } (cfg.settings.default or { });
+          };
+      in
+      [ "[calendars]" ]
+      ++ lib.mapAttrsToList genCalendarStr khalAccounts
+      ++ [
+        (lib.generators.toINI { } (
+          recursiveUpdate settingsWithPrimaryDefaults {
+            locale = definedAttrs (cfg.locale // { _module = null; });
           }
         ))
       ]

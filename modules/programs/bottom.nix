@@ -23,7 +23,7 @@ in
       package = lib.mkPackageOption pkgs "bottom" { nullable = true; };
 
       settings = lib.mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
         default = { };
         description = ''
           Configuration written to
@@ -32,18 +32,16 @@ in
           See <https://github.com/ClementTsang/bottom/blob/master/sample_configs/default_config.toml>
           for the default configuration.
         '';
-        example = lib.literalExpression ''
-          {
-            flags = {
-              avg_cpu = true;
-              temperature_type = "c";
-            };
+        example = {
+          flags = {
+            avg_cpu = true;
+            temperature_type = "c";
+          };
 
-            colors = {
-              low_battery_color = "red";
-            };
-          }
-        '';
+          colors = {
+            low_battery_color = "red";
+          };
+        };
       };
     };
   };

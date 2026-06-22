@@ -1,8 +1,8 @@
 {
   cfg,
-  config,
   lib,
   moduleName,
+  ...
 }:
 let
   inherit (lib) concatStringsSep mapAttrsToList optionalString;
@@ -16,11 +16,11 @@ rec {
     "[${concatStringsSep " " (mapAttrsToList toCriteria criteria)}]";
 
   keybindingDefaultWorkspace = lib.filterAttrs (
-    n: v: cfg.config.defaultWorkspace != null && v == cfg.config.defaultWorkspace
+    _n: v: cfg.config.defaultWorkspace != null && v == cfg.config.defaultWorkspace
   ) cfg.config.keybindings;
 
   keybindingsRest = lib.filterAttrs (
-    n: v: cfg.config.defaultWorkspace == null || v != cfg.config.defaultWorkspace
+    _n: v: cfg.config.defaultWorkspace == null || v != cfg.config.defaultWorkspace
   ) cfg.config.keybindings;
 
   keybindingsStr =
@@ -120,7 +120,7 @@ rec {
       ...
     }:
     let
-      colorsNotNull = lib.filterAttrs (n: v: v != null) colors != { };
+      colorsNotNull = lib.filterAttrs (_n: v: v != null) colors != { };
     in
     lib.concatMapStrings (x: x + "\n") (
       indent (lib.lists.subtractLists [ "" null ] (
@@ -189,7 +189,7 @@ rec {
           (optionalString (bottom != null) "gaps bottom ${toString bottom}")
           (optionalString (left != null) "gaps left ${toString left}")
           (optionalString (right != null) "gaps right ${toString right}")
-          (optionalString smartGaps "smart_gaps on")
+          (optionalString (smartGaps != "off") "smart_gaps ${smartGaps}")
           (optionalString (smartBorders != "off") "smart_borders ${smartBorders}")
         ]
     );
@@ -221,7 +221,7 @@ rec {
       level ? 1,
     }:
     let
-      prefix = concatStringsSep "" (lib.genList (x: " ") (level * 2));
+      prefix = concatStringsSep "" (lib.genList (_x: " ") (level * 2));
 
     in
     (lib.imap1 (

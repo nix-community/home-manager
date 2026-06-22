@@ -1,6 +1,684 @@
 { lib }:
 
+let
+  isDAGEntryWithOrdering' =
+    entry: lib.hm.dag.isEntry entry && (entry.after != [ ] || entry.before != [ ]);
+  hasDAGEntryWithOrdering' = attrs: lib.any isDAGEntryWithOrdering' (lib.attrValues attrs);
+  sortDAGEntries' =
+    {
+      cycleErrorMessage ? "Dependency cycle in DAG entries",
+    }:
+    attrs:
+    let
+      dag = lib.mapAttrs (
+        _: entry: if lib.hm.dag.isEntry entry then entry else lib.hm.dag.entryAnywhere entry
+      ) attrs;
+      sortedDag = lib.hm.dag.topoSort dag;
+      entries = sortedDag.result or (abort "${cycleErrorMessage}: ${builtins.toJSON sortedDag}");
+    in
+    map (entry: {
+      inherit (entry) name;
+      value = entry.data;
+    }) entries;
+
+  # Freeform generators can use this to support DAG ordering while preserving
+  # entryAnywhere-shaped plain values beside ordered DAG entries.
+  toDAGOrderedAttrs' =
+    {
+      cycleErrorMessage ? "Dependency cycle in DAG entries",
+    }:
+    attrs:
+    if hasDAGEntryWithOrdering' attrs then
+      sortDAGEntries' { inherit cycleErrorMessage; } (
+        lib.mapAttrs (
+          _: entry: if isDAGEntryWithOrdering' entry then entry else lib.hm.dag.entryAnywhere entry
+        ) attrs
+      )
+    else
+      lib.mapAttrsToList (name: value: { inherit name value; }) attrs;
+
+  toDAGOrderedText' =
+    {
+      renderAttrs,
+      renderList,
+      renderValue,
+      cycleErrorMessage ? "Dependency cycle in DAG entries",
+    }:
+    let
+      render =
+        value:
+        if lib.isDerivation value || builtins.isPath value then
+          renderValue value
+        else if builtins.isAttrs value then
+          renderAttrs (
+            map (entry: entry // { value = render entry.value; }) (
+              toDAGOrderedAttrs' { inherit cycleErrorMessage; } value
+            )
+          )
+        else if builtins.isList value then
+          renderList (map render value)
+        else
+          renderValue value;
+    in
+    render;
+
+  toDAGOrderedJsonText' =
+    {
+      cycleErrorMessage ? "Dependency cycle in DAG entries",
+    }:
+    toDAGOrderedText' {
+      inherit cycleErrorMessage;
+      renderValue = builtins.toJSON;
+      renderList = values: "[${lib.concatStringsSep "," values}]";
+      renderAttrs =
+        attrs:
+        let
+          renderAttr = entry: "${builtins.toJSON entry.name}:${entry.value}";
+        in
+        "{${lib.concatMapStringsSep "," renderAttr attrs}}";
+    };
+
+  toDAGOrderedKeyValue' =
+    {
+      mkKeyValue ? lib.generators.mkKeyValueDefault { } "=",
+      listsAsDuplicateKeys ? false,
+      listToValue ? null,
+      indent ? "",
+      cycleErrorMessage ? "Dependency cycle in DAG entries",
+    }:
+    assert listsAsDuplicateKeys -> listToValue == null;
+    attrs:
+    let
+      normalizeValue =
+        value: if listToValue != null && builtins.isList value then listToValue value else value;
+      mkLine = name: value: indent + mkKeyValue name value + "\n";
+      mkLines =
+        if listsAsDuplicateKeys then
+          name: value: map (mkLine name) (if builtins.isList value then value else [ value ])
+        else
+          name: value: [ (mkLine name (normalizeValue value)) ];
+    in
+    lib.concatStrings (
+      lib.concatMap (entry: mkLines entry.name entry.value) (
+        toDAGOrderedAttrs' { inherit cycleErrorMessage; } attrs
+      )
+    );
+
+  toDAGOrderedINI' =
+    {
+      mkSectionName ? (name: lib.escape [ "[" "]" ] name),
+      mkKeyValue ? lib.generators.mkKeyValueDefault { } "=",
+      listsAsDuplicateKeys ? false,
+      listToValue ? null,
+      cycleErrorMessage ? "Dependency cycle in INI sections",
+    }:
+    assert listsAsDuplicateKeys -> listToValue == null;
+    attrsOfAttrs:
+    let
+      mkSection =
+        section:
+        ''
+          [${mkSectionName section.name}]
+        ''
+        + toDAGOrderedKeyValue' {
+          inherit
+            cycleErrorMessage
+            listToValue
+            listsAsDuplicateKeys
+            mkKeyValue
+            ;
+        } section.value;
+    in
+    lib.concatStringsSep "\n" (
+      map mkSection (toDAGOrderedAttrs' { inherit cycleErrorMessage; } attrsOfAttrs)
+    );
+
+  mkDAGOrderedFormat' =
+    {
+      pkgs,
+      format,
+      generator,
+      nativeBuildInputs ? [ ],
+      buildCommand ? ''
+        cp "$valuePath" "$out"
+      '',
+      cycleErrorMessage ? null,
+    }:
+    format
+    // {
+      generate =
+        name: value:
+        pkgs.runCommandLocal name {
+          inherit nativeBuildInputs;
+          value = generator {
+            cycleErrorMessage =
+              if cycleErrorMessage == null then "Dependency cycle in ${name}" else cycleErrorMessage;
+          } value;
+          # Nix does not populate $valuePath when __structuredAttrs is true.
+          passAsFile = [ "value" ];
+        } buildCommand;
+    };
+in
 {
+  /**
+    Returns whether a value is a Home Manager DAG entry with ordering metadata.
+
+    # Inputs
+
+    `entry`
+
+    : 1\. Function argument
+
+    # Type
+
+    ```
+    isDAGEntryWithOrdering :: Any -> Bool
+    ```
+  */
+  isDAGEntryWithOrdering = isDAGEntryWithOrdering';
+
+  /**
+    Returns whether an attribute set contains any Home Manager DAG entry with
+    ordering metadata.
+
+    # Inputs
+
+    `attrs`
+
+    : 1\. Function argument
+
+    # Type
+
+    ```
+    hasDAGEntryWithOrdering :: AttrSet -> Bool
+    ```
+  */
+  hasDAGEntryWithOrdering = hasDAGEntryWithOrdering';
+
+  /**
+    Topologically sort an attribute set that contains Home Manager DAG entries.
+    Plain sibling values are treated as unordered DAG entries.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `cycleErrorMessage` (string; optional)
+      : Message prefix to use when a dependency cycle is detected.
+
+    `attrs`
+
+    : Attribute set to sort
+
+    # Type
+
+    ```
+    sortDAGEntries :: { cycleErrorMessage ? String } -> AttrSet -> [ { name :: String; value :: Any; } ]
+    ```
+
+    # Examples
+    :::{.example}
+    ## `lib.hm.generators.sortDAGEntries` usage example
+
+    ```nix
+    lib.hm.generators.sortDAGEntries { } {
+      after = lib.hm.dag.entryAfter [ "before" ] "2";
+      before = "1";
+    }
+    => [
+      { name = "before"; value = "1"; }
+      { name = "after"; value = "2"; }
+    ]
+    ```
+
+    :::
+  */
+  sortDAGEntries = sortDAGEntries';
+
+  /**
+    Convert an attribute set to a list of name/value pairs, using topological
+    ordering when any value is a Home Manager DAG entry with non-empty ordering
+    metadata.
+
+    This is intended for freeform generators that should support optional DAG
+    ordering while preserving entryAnywhere-shaped plain values.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `cycleErrorMessage` (string; optional)
+      : Message prefix to use when a dependency cycle is detected.
+
+    `attrs`
+
+    : Attribute set to convert
+
+    # Type
+
+    ```
+    toDAGOrderedAttrs :: { cycleErrorMessage ? String } -> AttrSet -> [ { name :: String; value :: Any; } ]
+    ```
+  */
+  toDAGOrderedAttrs = toDAGOrderedAttrs';
+
+  /**
+    Render Nix values to text using caller-provided render functions while
+    preserving ordering from nested Home Manager DAG entries.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `renderAttrs` (function)
+      : Render ordered attribute entries. Receives a list of
+        `{ name, value }` entries where `value` is already rendered text.
+
+      `renderList` (function)
+      : Render list values. Receives rendered element strings.
+
+      `renderValue` (function)
+      : Render scalar values, paths, and derivations.
+
+      `cycleErrorMessage` (string; optional)
+      : Message prefix to use when a dependency cycle is detected.
+
+    `value`
+
+    : Value to render
+
+    # Type
+
+    ```
+    toDAGOrderedText :: { renderAttrs :: Function; renderList :: Function; renderValue :: Function; cycleErrorMessage ? String; } -> Any -> String
+    ```
+  */
+  toDAGOrderedText = toDAGOrderedText';
+
+  /**
+    Generate a key-value-style config file from an attribute set, preserving
+    ordering from Home Manager DAG entries.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `mkKeyValue` (function; optional)
+      : Format a setting line from name and value.
+
+      `listsAsDuplicateKeys` (boolean; optional)
+      : Render list values as duplicate keys.
+
+      `listToValue` (function or null; optional)
+      : Convert list values to scalar values before rendering.
+
+      `indent` (string; optional)
+      : Initial indentation level.
+
+      `cycleErrorMessage` (string; optional)
+      : Message prefix to use when a dependency cycle is detected.
+
+    `attrs`
+
+    : Attribute set to render
+
+    # Type
+
+    ```
+    toDAGOrderedKeyValue :: { mkKeyValue ? Function; listsAsDuplicateKeys ? Bool; listToValue ? NullOr Function; indent ? String; cycleErrorMessage ? String; } -> AttrSet -> String
+    ```
+  */
+  toDAGOrderedKeyValue = toDAGOrderedKeyValue';
+
+  /**
+    Generate an INI-style config file from an attribute set of sections while
+    preserving ordering from Home Manager DAG entries.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `mkSectionName` (function; optional)
+      : Format a section name.
+
+      `mkKeyValue` (function; optional)
+      : Format a setting line from name and value.
+
+      `listsAsDuplicateKeys` (boolean; optional)
+      : Render list values as duplicate keys.
+
+      `listToValue` (function or null; optional)
+      : Convert list values to scalar values before rendering.
+
+      `cycleErrorMessage` (string; optional)
+      : Message prefix to use when a dependency cycle is detected.
+
+    `attrsOfAttrs`
+
+    : Attribute set of sections to render
+
+    # Type
+
+    ```
+    toDAGOrderedINI :: { mkSectionName ? Function; mkKeyValue ? Function; listsAsDuplicateKeys ? Bool; listToValue ? NullOr Function; cycleErrorMessage ? String; } -> AttrSet -> String
+    ```
+  */
+  toDAGOrderedINI = toDAGOrderedINI';
+
+  /**
+    Wrap a `pkgs.formats` format so its `generate` function can render
+    Home Manager DAG entries in order.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to create the generated derivation.
+
+      `format` (attribute set)
+      : Existing format value, for example `pkgs.formats.json { }`.
+
+      `generator` (function)
+      : Text renderer. Receives `{ cycleErrorMessage }` and returns a function
+        from value to rendered text.
+
+      `nativeBuildInputs` (list; optional)
+      : Build inputs needed by `buildCommand`.
+
+      `buildCommand` (string; optional)
+      : Builder script. Defaults to copying rendered text to `$out`.
+
+      `cycleErrorMessage` (string or null; optional)
+      : Message prefix to use when a dependency cycle is detected. When `null`,
+        the generated file name is used.
+
+    # Type
+
+    ```
+    mkDAGOrderedFormat :: { pkgs :: AttrSet; format :: AttrSet; generator :: Function; nativeBuildInputs ? [Derivation]; buildCommand ? String; cycleErrorMessage ? NullOr String; } -> AttrSet
+    ```
+  */
+  mkDAGOrderedFormat = mkDAGOrderedFormat';
+
+  /**
+    Create a JSON format whose `generate` function renders nested ordered Home
+    Manager DAG entries in order.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to create the generated derivation.
+
+      `jsonFormat` (attribute set; optional)
+      : Existing JSON format value. Defaults to `pkgs.formats.json { }`.
+
+      `cycleErrorMessage` (string or null; optional)
+      : Message prefix to use when a dependency cycle is detected. When `null`,
+        the generated file name is used.
+
+    # Type
+
+    ```
+    mkDAGOrderedJsonFormat :: { pkgs :: AttrSet; jsonFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    ```
+  */
+  mkDAGOrderedJsonFormat =
+    {
+      pkgs,
+      jsonFormat ? pkgs.formats.json { },
+      cycleErrorMessage ? null,
+    }:
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        cycleErrorMessage
+        ;
+      format = jsonFormat;
+      generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
+      nativeBuildInputs = [ pkgs.buildPackages.jq ];
+      buildCommand = ''
+        jq . "$valuePath" > "$out"
+      '';
+    };
+
+  /**
+    Create a YAML format whose `generate` function renders nested ordered Home
+    Manager DAG entries in order.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to create the generated derivation.
+
+      `yamlFormat` (attribute set; optional)
+      : Existing YAML format value. Defaults to `pkgs.formats.yaml { }`.
+
+      `cycleErrorMessage` (string or null; optional)
+      : Message prefix to use when a dependency cycle is detected. When `null`,
+        the generated file name is used.
+
+    # Type
+
+    ```
+    mkDAGOrderedYamlFormat :: { pkgs :: AttrSet; yamlFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    ```
+  */
+  mkDAGOrderedYamlFormat =
+    {
+      pkgs,
+      yamlFormat ? pkgs.formats.yaml { },
+      cycleErrorMessage ? null,
+    }:
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        cycleErrorMessage
+        ;
+      format = yamlFormat;
+      generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
+      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      buildCommand = ''
+        json2yaml "$valuePath" "$out"
+      '';
+    };
+
+  /**
+    Create a TOML format whose `generate` function renders nested ordered Home
+    Manager DAG entries in order.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to create the generated derivation.
+
+      `tomlFormat` (attribute set; optional)
+      : Existing TOML format value. Defaults to `pkgs.formats.toml { }`.
+
+      `cycleErrorMessage` (string or null; optional)
+      : Message prefix to use when a dependency cycle is detected. When `null`,
+        the generated file name is used.
+
+    # Type
+
+    ```
+    mkDAGOrderedTomlFormat :: { pkgs :: AttrSet; tomlFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    ```
+  */
+  mkDAGOrderedTomlFormat =
+    {
+      pkgs,
+      tomlFormat ? pkgs.formats.toml { },
+      cycleErrorMessage ? null,
+    }:
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        cycleErrorMessage
+        ;
+      format = tomlFormat;
+      generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
+      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      buildCommand = ''
+        json2toml "$valuePath" "$out"
+      '';
+    };
+
+  /**
+    Create an INI format whose `generate` function renders ordered Home Manager
+    DAG entries in order.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to create the generated derivation.
+
+      `iniFormat` (attribute set; optional)
+      : Existing INI format value. Defaults to `pkgs.formats.ini { ... }`.
+
+      `listsAsDuplicateKeys`, `listToValue`, `atomsCoercedToLists`
+      : Format options matching `pkgs.formats.ini`.
+
+      `mkSectionName`, `mkKeyValue`
+      : Format options for rendering section and setting lines.
+
+      `cycleErrorMessage` (string or null; optional)
+      : Message prefix to use when a dependency cycle is detected. When `null`,
+        the generated file name is used.
+
+    # Type
+
+    ```
+    mkDAGOrderedIniFormat :: { pkgs :: AttrSet; iniFormat ? AttrSet; mkSectionName ? Function; mkKeyValue ? Function; listsAsDuplicateKeys ? Bool; listToValue ? NullOr Function; atomsCoercedToLists ? NullOr Bool; cycleErrorMessage ? NullOr String; } -> AttrSet
+    ```
+  */
+  mkDAGOrderedIniFormat =
+    {
+      pkgs,
+      mkSectionName ? (name: lib.escape [ "[" "]" ] name),
+      mkKeyValue ? lib.generators.mkKeyValueDefault { } "=",
+      listsAsDuplicateKeys ? false,
+      listToValue ? null,
+      atomsCoercedToLists ? null,
+      iniFormat ? pkgs.formats.ini {
+        inherit
+          atomsCoercedToLists
+          listsAsDuplicateKeys
+          listToValue
+          ;
+      },
+      cycleErrorMessage ? null,
+    }:
+    assert listsAsDuplicateKeys -> listToValue == null;
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        cycleErrorMessage
+        ;
+      format = iniFormat;
+      generator =
+        { cycleErrorMessage }:
+        toDAGOrderedINI' {
+          inherit
+            cycleErrorMessage
+            listToValue
+            listsAsDuplicateKeys
+            mkKeyValue
+            mkSectionName
+            ;
+        };
+    };
+
+  /**
+    Create a key-value format whose `generate` function renders ordered Home
+    Manager DAG entries in order.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to create the generated derivation.
+
+      `keyValueFormat` (attribute set; optional)
+      : Existing key-value format value. Defaults to `pkgs.formats.keyValue`.
+
+      `listsAsDuplicateKeys`, `listToValue`
+      : Format options matching `pkgs.formats.keyValue`.
+
+      `mkKeyValue`
+      : Format option for rendering setting lines.
+
+      `cycleErrorMessage` (string or null; optional)
+      : Message prefix to use when a dependency cycle is detected. When `null`,
+        the generated file name is used.
+
+    # Type
+
+    ```
+    mkDAGOrderedKeyValueFormat :: { pkgs :: AttrSet; keyValueFormat ? AttrSet; mkKeyValue ? Function; listsAsDuplicateKeys ? Bool; listToValue ? NullOr Function; cycleErrorMessage ? NullOr String; } -> AttrSet
+    ```
+  */
+  mkDAGOrderedKeyValueFormat =
+    {
+      pkgs,
+      mkKeyValue ? lib.generators.mkKeyValueDefault { } "=",
+      listsAsDuplicateKeys ? false,
+      listToValue ? null,
+      keyValueFormat ? pkgs.formats.keyValue {
+        inherit listsAsDuplicateKeys listToValue;
+      },
+      cycleErrorMessage ? null,
+    }:
+    assert listsAsDuplicateKeys -> listToValue == null;
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        cycleErrorMessage
+        ;
+      format = keyValueFormat;
+      generator =
+        { cycleErrorMessage }:
+        toDAGOrderedKeyValue' {
+          inherit
+            cycleErrorMessage
+            listToValue
+            listsAsDuplicateKeys
+            mkKeyValue
+            ;
+        };
+    };
+
   toHyprconf =
     {
       attrs,
@@ -10,11 +688,11 @@
     let
       inherit (lib)
         all
+        any
         concatMapStringsSep
         concatStrings
         concatStringsSep
         filterAttrs
-        foldl
         generators
         hasPrefix
         isAttrs
@@ -29,12 +707,11 @@
       toHyprconf' =
         indent: attrs:
         let
-          isImportantField =
-            n: _: foldl (acc: prev: if hasPrefix prev n then true else acc) false importantPrefixes;
+          isImportantField = n: _: any (prev: hasPrefix prev n) importantPrefixes;
           importantFields = filterAttrs isImportantField attrs;
           withoutImportantFields = fields: removeAttrs fields (attrNames importantFields);
 
-          allSections = filterAttrs (n: v: isAttrs v || isList v) attrs;
+          allSections = filterAttrs (_n: v: isAttrs v || isList v) attrs;
           sections = withoutImportantFields allSections;
 
           mkSection =
@@ -57,7 +734,7 @@
             inherit indent;
           };
 
-          allFields = filterAttrs (n: v: !(isAttrs v || isList v)) attrs;
+          allFields = filterAttrs (_n: v: !(isAttrs v || isList v)) attrs;
           fields = withoutImportantFields allFields;
         in
         mkFields importantFields
@@ -67,7 +744,7 @@
     toHyprconf' initialIndent attrs;
 
   toKDL =
-    { }:
+    _:
     let
       inherit (lib)
         concatStringsSep
@@ -223,7 +900,7 @@
     '';
 
   toSCFG =
-    { }:
+    _:
     let
       inherit (lib) concatStringsSep any;
       inherit (builtins) typeOf replaceStrings elem;

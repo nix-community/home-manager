@@ -8,6 +8,7 @@
 lib.recursiveUpdate (import ./thunderbird.nix { inherit config lib pkgs; }) {
   programs.firefox = {
     enable = true;
+    configPath = lib.mkIf pkgs.stdenv.hostPlatform.isLinux ".mozilla/firefox";
     package = null;
   };
 }

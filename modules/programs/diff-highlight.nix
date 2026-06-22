@@ -55,7 +55,9 @@ in
       description = ''
         Whether to enable git integration for diff-highlight.
 
-        When enabled, diff-highlight will be configured as git's pager and diff filter.
+        When enabled, diff-highlight will be configured as git's pager for
+        {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
+        filter for interactive staging.
       '';
     };
   };
@@ -96,9 +98,10 @@ in
             let
               gitPackage = config.programs.git.package;
               dhCommand = "${gitPackage}/share/git/contrib/diff-highlight/diff-highlight";
+              pagerCommand = "${dhCommand} | ${lib.getExe pkgs.less} ${lib.escapeShellArgs cfg.pagerOpts}";
             in
-            {
-              core.pager = "${dhCommand} | ${lib.getExe pkgs.less} ${lib.escapeShellArgs cfg.pagerOpts}";
+            lib.hm.git.diffPagerConfig pagerCommand
+            // {
               interactive.diffFilter = dhCommand;
             };
         };

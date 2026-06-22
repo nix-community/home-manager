@@ -16,13 +16,12 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.twitch-tui = {
     enable = mkEnableOption "twitch-tui";
     package = mkPackageOption pkgs "twitch-tui" { nullable = true; };
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         twitch = {

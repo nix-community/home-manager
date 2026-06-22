@@ -42,7 +42,7 @@ let
       let
         labelAttr = " label=\"${escape item.label}\"";
         iconAttr = if item ? icon then " icon=\"${escape item.icon}\"" else "";
-        action = item.action;
+        inherit (item) action;
         nameAttr = " name=\"${escape action.name}\"";
         toAttr = if action ? to then " to=\"${escape action.to}\"" else "";
         commandAttr = if action ? command then " command=\"${escape action.command}\"" else "";
@@ -150,5 +150,5 @@ let
 
 in
 {
-  generateXML = generateXML;
+  inherit generateXML;
 }

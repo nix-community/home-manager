@@ -17,13 +17,12 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.kickoff = {
     enable = mkEnableOption "kickoff";
     package = mkPackageOption pkgs "kickoff" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         padding = 100;

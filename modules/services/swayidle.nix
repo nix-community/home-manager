@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -17,6 +18,14 @@ let
 in
 {
   meta.maintainers = [ lib.maintainers.c0deaddict ];
+
+  imports = [
+    (lib.mkChangedOptionModule
+      [ "services" "swayidle" "systemdTarget" ]
+      [ "services" "swayidle" "systemdTargets" ]
+      (config: lib.toList (lib.getAttrFromPath [ "services" "swayidle" "systemdTarget" ] config))
+    )
+  ];
 
   options.services.swayidle =
     let
@@ -91,22 +100,14 @@ in
       events = mkOption {
         type =
           with types;
-          (coercedTo (listOf attrs)) (
+          coercedTo (listOf attrs) (
             events:
-            lib.warn
-              ''
-                The syntax of services.swayidle.events has changed. While it
-                previously accepted a list of events, it now accepts an attrset
-                keyed by the event name.
-              ''
-              (
-                lib.listToAttrs (
-                  map (e: {
-                    name = e.event;
-                    value = e.command;
-                  }) events
-                )
-              )
+            lib.listToAttrs (
+              map (e: {
+                name = e.event;
+                value = e.command;
+              }) events
+            )
           ) (submodule eventsModule);
         default = { };
         example = literalExpression ''
@@ -124,19 +125,34 @@ in
         description = "Extra arguments to pass to swayidle.";
       };
 
-      systemdTarget = mkOption {
-        type = types.str;
-        default = config.wayland.systemd.target;
-        defaultText = literalExpression "config.wayland.systemd.target";
-        example = "sway-session.target";
+      systemdTargets = mkOption {
+        type = with types; listOf str;
+        default = [ config.wayland.systemd.target ];
+        defaultText = literalExpression "[ config.wayland.systemd.target ]";
+        example = [ "sway-session.target" ];
         description = ''
-          Systemd target to bind to.
+          Systemd targets to bind to.
         '';
       };
 
     };
 
   config = lib.mkIf cfg.enable {
+    warnings = lib.optional (lib.any builtins.isList options.services.swayidle.events.definitions) (
+      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+        option = [
+          "services"
+          "swayidle"
+          "events"
+        ];
+        old = "a list";
+        replacement = "an attribute set keyed by event name";
+        details = ''
+          Use event names as attribute keys and commands as values.
+        '';
+      }
+    );
+
     assertions = [
       (lib.hm.assertions.assertPlatform "services.swayidle" pkgs lib.platforms.linux)
     ];
@@ -148,8 +164,8 @@ in
         Description = "Idle manager for Wayland";
         Documentation = "man:swayidle(1)";
         ConditionEnvironment = "WAYLAND_DISPLAY";
-        PartOf = [ cfg.systemdTarget ];
-        After = [ cfg.systemdTarget ];
+        PartOf = cfg.systemdTargets;
+        After = cfg.systemdTargets;
       };
 
       Service = {
@@ -176,7 +192,7 @@ in
               command
             ];
 
-            nonemptyEvents = lib.filterAttrs (event: command: command != null) cfg.events;
+            nonemptyEvents = lib.filterAttrs (_event: command: command != null) cfg.events;
 
             args =
               cfg.extraArgs
@@ -187,7 +203,7 @@ in
       };
 
       Install = {
-        WantedBy = [ cfg.systemdTarget ];
+        WantedBy = cfg.systemdTargets;
       };
     };
   };

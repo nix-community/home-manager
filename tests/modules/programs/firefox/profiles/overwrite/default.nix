@@ -46,7 +46,7 @@ in
         in
         ''
           assertFileRegex \
-            "home-path/${binPath}/${cfg.wrappedPackageName}" \
+            "home-path/${binPath}/${cfg.finalPackage.meta.mainProgram}" \
             MOZ_APP_LAUNCHER
 
           assertDirectoryExists "home-files/${cfg.profilesPath}/basic"

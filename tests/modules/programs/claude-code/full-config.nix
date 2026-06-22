@@ -135,9 +135,11 @@
     assertFileContent home-files/.claude/commands/commit.md ${./expected-commit}
 
     assertFileExists home-files/.claude/hooks/pre-edit
+    assertFileIsExecutable home-files/.claude/hooks/pre-edit
     assertFileRegex home-files/.claude/hooks/pre-edit "About to edit file"
 
     assertFileExists home-files/.claude/hooks/post-commit
+    assertFileIsExecutable home-files/.claude/hooks/post-commit
     assertFileRegex home-files/.claude/hooks/post-commit "Committed with message"
   '';
 }

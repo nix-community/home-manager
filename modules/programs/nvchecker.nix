@@ -77,20 +77,18 @@ in
             newver = "new_ver.json";
           };
         '';
-        example = lib.literalExpression ''
-          {
-            __config__ = {
-              oldver = "my_custom_oldver.json";
-              newver = "~/seperately_placed_newver.json";
-              keyfile = "keyfile.toml";
-            };
+        example = {
+          __config__ = {
+            oldver = "my_custom_oldver.json";
+            newver = "~/separately_placed_newver.json";
+            keyfile = "keyfile.toml";
+          };
 
-            nvchecker = {
-              source = "github";
-              github = "lilydjwg/nvchecker";
-            };
-          }
-        '';
+          nvchecker = {
+            source = "github";
+            github = "lilydjwg/nvchecker";
+          };
+        };
         description = ''
           Configuration written to
           {file}`$HOME/Library/Application Support/nvchecker/nvchecker.toml` (on Darwin) or

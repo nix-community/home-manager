@@ -3,7 +3,7 @@
 let
 
   boolToString = bool: if bool then "true" else "false";
-  backups = config.programs.borgmatic.backups;
+  inherit (config.programs.borgmatic) backups;
 
 in
 {

@@ -26,8 +26,8 @@ let
   renderBindings =
     bindings:
     let
-      enabled = filterAttrs (n: v: v != null) bindings;
-      disabled = filterAttrs (n: v: v == null) bindings;
+      enabled = filterAttrs (_n: v: v != null) bindings;
+      disabled = filterAttrs (_n: v: v == null) bindings;
       render = mapAttrsToList renderBinding;
     in
     lib.concatStringsSep "\n" (render disabled ++ render enabled);
@@ -139,7 +139,7 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = ((filterAttrs (n: v: v == "") cfg.keybindings) == { });
+        assertion = ((filterAttrs (_n: v: v == "") cfg.keybindings) == { });
         message = "To disable a keybinding, use `null` instead of an empty string.";
       }
     ];

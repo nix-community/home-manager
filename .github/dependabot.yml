@@ -9,8 +9,22 @@ updates:
       prefix: "ci:"
   - package-ecosystem: "github-actions"
     directory: "/"
-    target-branch: "release-25.11"
+    target-branch: "release-26.05"
     schedule:
       interval: "weekly"
     commit-message:
       prefix: "ci:"
+  - package-ecosystem: "nix"
+    directory: "/"
+    target-branch: "master"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "flake:"
+  - package-ecosystem: "nix"
+    directory: "/"
+    target-branch: "release-26.05"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "flake:"

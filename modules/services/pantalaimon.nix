@@ -19,7 +19,7 @@ in
       package = lib.mkPackageOption pkgs "pantalaimon" { };
 
       settings = lib.mkOption {
-        type = iniFmt.type;
+        inherit (iniFmt) type;
         default = { };
         defaultText = lib.literalExpression "{ }";
         example = lib.literalExpression ''
@@ -58,7 +58,6 @@ in
       pantalaimon = {
         Unit = {
           Description = "Pantalaimon - E2EE aware proxy daemon for matrix clients";
-          After = [ "network-online.target" ];
         };
 
         Service = {

@@ -64,8 +64,19 @@ let
             meta.mainProgram = name;
           } buildScript;
 
+      drvExtraAttrs = lib.filterAttrs (_: v: !lib.isFunction v) extraAttrs;
+
+      outerExtraAttrs = lib.filterAttrs (_: lib.isFunction) extraAttrs;
+
+      overriddenPkg =
+        if drvExtraAttrs == { } then
+          pkg
+        else
+          pkg.overrideAttrs (old: lib.recursiveUpdate old drvExtraAttrs);
+
       stubbedPkg =
-        pkg
+        overriddenPkg
+        // outerExtraAttrs
         // lib.optionalAttrs (outPath != null) {
           inherit outPath;
 
@@ -74,12 +85,11 @@ let
 
           # Allow the original package to be used in derivation inputs
           __spliced = {
-            buildHost = pkg;
-            hostTarget = pkg;
+            buildHost = overriddenPkg;
+            hostTarget = overriddenPkg;
           };
         }
-        // lib.optionalAttrs (version != null) { inherit version; }
-        // extraAttrs;
+        // lib.optionalAttrs (version != null) { inherit version; };
     in
     stubbedPkg;
 
@@ -109,7 +119,7 @@ in
 
     test.stubOverlays =
       lib.optional (config.test.stubs != { }) (
-        self: super:
+        _self: super:
         lib.mapAttrs (
           n: v:
           builtins.traceVerbose "${n} - stubbed" (

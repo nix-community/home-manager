@@ -20,24 +20,22 @@ in
     package = lib.mkPackageOption pkgs "mr" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$HOME/.mrconfig`
         See <https://myrepos.branchable.com/>
         for an example configuration.
       '';
-      example = lib.literalExpression ''
-        {
-          foo = {
-            checkout = "git clone git@github.com:joeyh/foo.git";
-            update = "git pull --rebase";
-          };
-          ".local/share/password-store" = {
-            checkout = "git clone git@github.com:myuser/password-store.git";
-          };
-        }
-      '';
+      example = {
+        foo = {
+          checkout = "git clone git@github.com:joeyh/foo.git";
+          update = "git pull --rebase";
+        };
+        ".local/share/password-store" = {
+          checkout = "git clone git@github.com:myuser/password-store.git";
+        };
+      };
     };
   };
 

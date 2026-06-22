@@ -25,15 +25,15 @@ in
     package = mkPackageOption pkgs "onlyoffice-desktopeditors" { nullable = true; };
 
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
-      example = ''
+      example = {
         UITheme = "theme-contrast-dark";
         editorWindowMode = false;
         forcedRtl = false;
         maximized = true;
         titlebar = "custom";
-      '';
+      };
       description = ''
         Configuration settings for Onlyoffice.
 

@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -21,7 +22,10 @@ in
   options.programs.helix = {
     enable = lib.mkEnableOption "helix text editor";
 
-    package = lib.mkPackageOption pkgs "helix" { example = "pkgs.evil-helix"; };
+    package = lib.mkPackageOption pkgs "helix" {
+      nullable = true;
+      example = "pkgs.evil-helix";
+    };
 
     extraPackages = mkOption {
       type = with types; listOf package;
@@ -55,23 +59,24 @@ in
     };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          theme = "base16";
-          editor = {
-            line-number = "relative";
-            lsp.display-messages = true;
-          };
-          keys.normal = {
-            space.space = "file_picker";
-            space.w = ":w";
-            space.q = ":q";
-            esc = [ "collapse_selection" "keep_primary_selection" ];
-          };
-        }
-      '';
+      example = {
+        theme = "base16";
+        editor = {
+          line-number = "relative";
+          lsp.display-messages = true;
+        };
+        keys.normal = {
+          space.space = "file_picker";
+          space.w = ":w";
+          space.q = ":q";
+          esc = [
+            "collapse_selection"
+            "keep_primary_selection"
+          ];
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/helix/config.toml`.
@@ -84,17 +89,9 @@ in
     languages = mkOption {
       type =
         with types;
-        coercedTo (listOf tomlFormat.type) (
-          language:
-          lib.warn ''
-            The syntax of programs.helix.languages has changed.
-            It now generates the whole languages.toml file instead of just the language array in that file.
-
-            Use
-            programs.helix.languages = { language = <languages list>; }
-            instead.
-          '' { inherit language; }
-        ) (addCheck tomlFormat.type builtins.isAttrs);
+        coercedTo (listOf tomlFormat.type) (language: { inherit language; }) (
+          addCheck tomlFormat.type builtins.isAttrs
+        );
       default = { };
       example = literalExpression ''
         {
@@ -209,7 +206,30 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages =
+    assertions = lib.singleton {
+      assertion = cfg.extraPackages != [ ] -> cfg.package != null;
+      message = "programs.helix.extraPackages require programs.helix.package to not be null";
+    };
+
+    warnings = lib.optional (lib.any builtins.isList options.programs.helix.languages.definitions) (
+      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+        option = [
+          "programs"
+          "helix"
+          "languages"
+        ];
+        old = "a list";
+        replacement = "`programs.helix.languages.language`";
+        details = ''
+          This option now generates the whole languages.toml file instead of just the language array in that file.
+
+          Use:
+            programs.helix.languages = { language = <languages list>; }
+        '';
+      }
+    );
+
+    home.packages = lib.mkIf (cfg.package != null) (
       if cfg.extraPackages != [ ] then
         [
           (pkgs.symlinkJoin {
@@ -224,7 +244,8 @@ in
           })
         ]
       else
-        [ cfg.package ];
+        [ cfg.package ]
+    );
 
     home.sessionVariables = mkIf cfg.defaultEditor {
       EDITOR = "hx";
@@ -233,6 +254,9 @@ in
 
     xdg.configFile =
       let
+        pkillPrefix = if pkgs.stdenv.hostPlatform.isDarwin then "/usr" else pkgs.procps;
+        onChange = "${pkillPrefix}/bin/pkill -USR1 -u $USER -x '(hx|\\.hx-wrapped)' || true";
+
         settings =
           let
             hasSettings = cfg.settings != { };
@@ -240,6 +264,7 @@ in
           in
           {
             "helix/config.toml" = mkIf (hasSettings || hasExtraConfig) {
+              inherit onChange;
               source =
                 let
                   configFile = tomlFormat.generate "config.toml" cfg.settings;
@@ -252,6 +277,7 @@ in
                 '';
             };
             "helix/languages.toml" = mkIf (cfg.languages != { }) {
+              inherit onChange;
               source = tomlFormat.generate "helix-languages-config" cfg.languages;
             };
             "helix/ignore" = mkIf (cfg.ignores != [ ]) {
@@ -262,6 +288,7 @@ in
         themes = lib.mapAttrs' (
           n: v:
           lib.nameValuePair "helix/themes/${n}.toml" {
+            inherit onChange;
             source =
               if lib.isString v then
                 pkgs.writeText "helix-theme-${n}" v

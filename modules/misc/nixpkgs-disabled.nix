@@ -1,5 +1,6 @@
 {
   config,
+  options,
   lib,
   pkgs,
   ...
@@ -8,6 +9,14 @@
 let
 
   cfg = config.nixpkgs;
+  opt = options.nixpkgs;
+
+  # Locations of the offending `nixpkgs.config`/`nixpkgs.overlays` definitions,
+  # so users can find what set them.
+  offendingFiles = lib.unique (
+    lib.optionals (cfg.config != null) opt.config.files
+    ++ lib.optionals (cfg.overlays != null) opt.overlays.files
+  );
 
   # Copied from nixpkgs.nix.
   isConfig = x: builtins.isAttrs x || builtins.isFunction x;
@@ -46,7 +55,7 @@ let
         traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
       in
       traceXIfNot isConfig;
-    merge = args: lib.foldr (def: mergeConfig def.value) { };
+    merge = _args: lib.foldr (def: mergeConfig def.value) { };
   };
 
   # Copied from nixpkgs.nix.
@@ -59,7 +68,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+  meta.maintainers = [ ];
 
   options.nixpkgs = {
     config = lib.mkOption {
@@ -82,6 +91,7 @@ in
         assertion = cfg.config == null || cfg.overlays == null;
         message = ''
           `nixpkgs` options are disabled when `home-manager.useGlobalPkgs` is enabled.
+          Definitions found in ${lib.showFiles offendingFiles}.
         '';
       }
     ];
@@ -89,6 +99,7 @@ in
     warnings = lib.optional ((cfg.config != null) || (cfg.overlays != null)) ''
       You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`.
       This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
+      Definitions found in ${lib.showFiles offendingFiles}.
     '';
   };
 }

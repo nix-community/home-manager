@@ -8,11 +8,10 @@ to that of NixOS. The `flake.nix` would be:
   description = "Darwin configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     darwin.url = "github:nix-darwin/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, darwin, ... }: {
@@ -25,10 +24,8 @@ to that of NixOS. The `flake.nix` would be:
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.users.jdoe = ./home.nix;
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
           }
         ];
       };
@@ -37,8 +34,23 @@ to that of NixOS. The `flake.nix` would be:
 }
 ```
 
-and it is also rebuilt with the nix-darwin generations. The rebuild
-command here may be `darwin-rebuild switch --flake <flake-uri>`.
+Use `home-manager.extraSpecialArgs` to pass arguments from your flake to
+`home.nix` and any imported Home Manager modules. For example, the
+configuration above makes the complete `inputs` attrset available to modules,
+so they can declare arguments such as `{ inputs, ... }:`.
+
+The lower-level mechanism behind this is `_module.args`. Set
+`_module.args.<name>` from inside a module only when you need to provide a
+module argument from within the module graph itself. For values that originate
+outside the module graph, such as flake inputs, prefer
+`home-manager.extraSpecialArgs`.
+
+Use `home-manager.sharedModules` for Home Manager modules or settings that
+should be imported by every user declared in `home-manager.users`.
+
+The Home Manager configuration is also rebuilt with the nix-darwin
+generations. The rebuild command here may be
+`darwin-rebuild switch --flake ~/.config/darwin`.
 
 You can use the above `flake.nix` as a template in `~/.config/darwin` by
 

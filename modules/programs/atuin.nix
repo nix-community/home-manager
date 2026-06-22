@@ -10,6 +10,16 @@ let
 
   tomlFormat = pkgs.formats.toml { };
 
+  # atuin 18.13.0 deprecated `atuin daemon` in favour of `atuin daemon start`
+  daemonArgs =
+    if lib.versionAtLeast cfg.package.version "18.13.0" then
+      [
+        "daemon"
+        "start"
+      ]
+    else
+      [ "daemon" ];
+
   inherit (lib) mkIf mkOption types;
 in
 {
@@ -156,6 +166,14 @@ in
   config =
     let
       flagsStr = lib.escapeShellArgs cfg.flags;
+      atuinFishConfig =
+        pkgs.runCommand "atuin-fish-config.fish"
+          {
+            nativeBuildInputs = [ pkgs.writableTmpDirAsHomeHook ];
+          }
+          ''
+            ${lib.getExe cfg.package} init fish ${flagsStr} > "$out"
+          '';
     in
     mkIf cfg.enable (
       lib.mkMerge [
@@ -202,7 +220,7 @@ in
           '';
 
           programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-            ${lib.getExe cfg.package} init fish ${flagsStr} | source
+            source ${atuinFishConfig}
           '';
 
           programs.nushell = mkIf cfg.enableNushellIntegration {
@@ -220,14 +238,14 @@ in
           };
         }
 
+        (mkIf config.home.preferXdgDirectories {
+          programs.atuin.settings.logs = {
+            dir = lib.mkDefault "${config.xdg.stateHome}/atuin/logs";
+          };
+        })
+
         (mkIf daemonCfg.enable {
           assertions = [
-            {
-              assertion = lib.versionAtLeast cfg.package.version "18.2.0";
-              message = ''
-                The Atuin daemon requires at least version 18.2.0 or later.
-              '';
-            }
             {
               assertion = config.systemd.user.enable || config.launchd.enable;
               message = "The Atuin daemon can only be configured on systems with systemd or launchd.";
@@ -252,7 +270,7 @@ in
               WantedBy = [ "default.target" ];
             };
             Service = {
-              ExecStart = "${lib.getExe cfg.package} daemon";
+              ExecStart = "${lib.getExe cfg.package} ${lib.concatStringsSep " " daemonArgs}";
               Environment = lib.optionals (daemonCfg.logLevel != null) [ "ATUIN_LOG=${daemonCfg.logLevel}" ];
               Restart = "on-failure";
               RestartSteps = 3;
@@ -281,10 +299,7 @@ in
           launchd.agents.atuin-daemon = {
             enable = true;
             config = {
-              ProgramArguments = [
-                "${lib.getExe cfg.package}"
-                "daemon"
-              ];
+              ProgramArguments = [ (lib.getExe cfg.package) ] ++ daemonArgs;
               EnvironmentVariables = lib.optionalAttrs (daemonCfg.logLevel != null) {
                 ATUIN_LOG = daemonCfg.logLevel;
               };

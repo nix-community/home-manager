@@ -1,15 +1,19 @@
 { config, pkgs, ... }:
 
 let
-  pkgsSbarlua = pkgs.writeTextFile {
-    name = "sbarlua";
-    destination = "/bin/sbarlua";
-    executable = true;
-    text = ''
-      #!/bin/sh
-      echo "SbarLua mock"
-    '';
-  };
+  pkgsSbarlua =
+    (pkgs.writeTextFile {
+      name = "sbarlua";
+      destination = "/bin/sbarlua";
+      executable = true;
+      text = ''
+        #!/bin/sh
+        echo "SbarLua mock"
+      '';
+    }).overrideAttrs
+      (_: {
+        passthru.luaModule = pkgs.lua5_5;
+      });
 in
 {
   programs.sketchybar = {
@@ -26,6 +30,7 @@ in
     configType = "lua";
 
     sbarLuaPackage = pkgsSbarlua;
+    extraLuaPackages = luaPkgs: [ luaPkgs.luautf8 ];
 
     config = ''
       -- This is a test Lua configuration
@@ -68,5 +73,13 @@ in
     assertFileContent \
       home-files/.config/sketchybar/sketchybarrc \
       ${./sketchybarrc.lua}
+
+    wrappedSketchybar=$(readlink "$TESTED/home-path/bin/sketchybar")
+    grep -F "/lua-5.5.0/bin" "$wrappedSketchybar" >/dev/null || \
+      echo "$wrappedSketchybar should include the Lua 5.5 interpreter on PATH"
+    grep -F "/share/lua/5.5" "$wrappedSketchybar" >/dev/null || \
+      echo "$wrappedSketchybar should include Lua 5.5 module paths"
+    grep -F "/lib/lua/5.5" "$wrappedSketchybar" >/dev/null || \
+      echo "$wrappedSketchybar should include Lua 5.5 C module paths"
   '';
 }

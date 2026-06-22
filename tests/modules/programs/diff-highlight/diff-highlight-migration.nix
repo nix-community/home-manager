@@ -25,8 +25,10 @@
   nmt.script = ''
     # Git config should contain diff-highlight configuration (backward compatibility)
     assertFileExists home-files/.config/git/config
-    assertFileContains home-files/.config/git/config '[core]'
-    assertFileRegex home-files/.config/git/config 'pager = .*/diff-highlight.*less'
+    assertFileContains home-files/.config/git/config '[pager]'
+    assertFileRegex home-files/.config/git/config 'diff = .*/diff-highlight.*less'
+    assertFileRegex home-files/.config/git/config 'log = .*/diff-highlight.*less'
+    assertFileRegex home-files/.config/git/config 'show = .*/diff-highlight.*less'
     assertFileContains home-files/.config/git/config '[interactive]'
     assertFileRegex home-files/.config/git/config 'diffFilter = .*/diff-highlight'
   '';

@@ -27,9 +27,21 @@
     assertFileNotRegex activate '[-][-]swap'
     assertFileNotRegex activate '[-][-]timezone'
     assertFileNotRegex activate '[-][-]username'
-    assertFileNotRegex activate '[-][-]volumes'
+    assertFileRegex activate '[-][-]volume "$HOME/.config/containers:/var/home/core/.config/containers"'
+    assertFileRegex activate '[-][-]volume "/Users:/Users"'
+    assertFileRegex activate '[-][-]volume "/private:/private"'
+    assertFileRegex activate '[-][-]volume "/var/folders:/var/folders"'
 
     # Verify that config directory is automatically mounted into the machine
-    assertFileRegex activate '\$HOME/\.config/containers:/home/core/\.config/containers'
+    # at the canonical /var/home path (because /home is a symlink on the guest)
+    assertFileRegex activate '\$HOME/\.config/containers:/var/home/core/\.config/containers'
+
+    # Verify the install-based config materialization is wired in
+    assertFileRegex activate 'podmanContainersConfig'
+    assertFileRegex activate 'install -m 0644'
+    assertFileRegex activate 'policy\.json'
+    assertFileRegex activate 'registries\.conf'
+    assertFileRegex activate 'storage\.conf'
+    assertFileRegex activate 'containers\.conf'
   '';
 }

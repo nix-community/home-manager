@@ -30,7 +30,7 @@ let
       '';
     };
     settings = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/lapce/settings.toml`.
@@ -97,38 +97,34 @@ let
       description = ''
         Plugins to install.
       '';
-      example = literalExpression ''
-        [
-          {
-            author = "MrFoxPro";
-            name = "lapce-nix";
-            version = "0.0.1";
-            hash = "sha256-...";
-          }
-          {
-            author = "dzhou121";
-            name = "lapce-rust";
-            version = "0.3.1932";
-            hash = "sha256-...";
-          }
-        ]
-      '';
+      example = [
+        {
+          author = "MrFoxPro";
+          name = "lapce-nix";
+          version = "0.0.1";
+          hash = "sha256-...";
+        }
+        {
+          author = "dzhou121";
+          name = "lapce-rust";
+          version = "0.3.1932";
+          hash = "sha256-...";
+        }
+      ];
     };
     keymaps = mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = [ ];
       description = ''
         Keymaps written to {file}`$XDG_CONFIG_HOME/lapce/keymaps.toml`.
         See <https://github.com/lapce/lapce/blob/master/defaults/keymaps-common.toml> for examples.
       '';
-      example = literalExpression ''
-        [
-          {
-            command = "open_log_file";
-            key = "Ctrl+Shift+L";
-          }
-        ]
-      '';
+      example = [
+        {
+          command = "open_log_file";
+          key = "Ctrl+Shift+L";
+        }
+      ];
     };
   };
 
@@ -231,7 +227,7 @@ in
       {
         configFile = {
           "${dir}/settings.toml".source = settingsFormat.generate "settings.toml" cfg.settings;
-          "${dir}/keymaps.toml".source = settingsFormat.generate "keymaps.toml" { keymaps = cfg.keymaps; };
+          "${dir}/keymaps.toml".source = settingsFormat.generate "keymaps.toml" { inherit (cfg) keymaps; };
         };
         dataFile."${dir}/plugins".source = pluginsFromRegistry cfg.plugins;
       };

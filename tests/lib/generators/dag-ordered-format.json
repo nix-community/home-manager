@@ -1,0 +1,18 @@
+{
+  "ordered": {
+    "before": "ask",
+    "plainDagEntryShape": {
+      "after": [],
+      "before": [],
+      "data": {
+        "keep": true
+      }
+    },
+    "after": {
+      "nested": {
+        "before": 1,
+        "after": 2
+      }
+    }
+  }
+}

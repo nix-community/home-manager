@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   ...
 }:
 let
@@ -23,6 +24,10 @@ in
       pluginModule = types.submodule (
         { config, ... }:
         {
+          imports = [
+            (lib.mkRenamedOptionModule [ "completions" ] [ "functions" ])
+          ];
+
           options = {
             src = mkOption {
               type = types.path;
@@ -49,7 +54,7 @@ in
               '';
             };
 
-            completions = mkOption {
+            functions = mkOption {
               default = [ ];
               type = types.listOf types.str;
               description = "Paths of additional functions to add to {env}`fpath`.";
@@ -80,7 +85,7 @@ in
             name = "wd";
             src = pkgs.zsh-wd;
             file = "share/wd/wd.plugin.zsh";
-            completions = [ "share/zsh/site-functions" ];
+            functions = [ "share/zsh/site-functions" ];
           }
           ]
         '';
@@ -89,8 +94,21 @@ in
     };
 
   config = lib.mkIf (cfg.plugins != [ ]) {
+    warnings = lib.concatMap (
+      definition:
+      lib.optionals (builtins.isList definition.value) (
+        lib.concatMap (
+          value:
+          lib.optional (builtins.isAttrs value && value ? completions)
+            "The option `programs.zsh.plugins.*.completions' defined in ${
+              lib.showFiles [ definition.file ]
+            } has been renamed to `programs.zsh.plugins.*.functions'."
+        ) definition.value
+      )
+    ) options.programs.zsh.plugins.definitionsWithLocations;
+
     home.file = lib.mkIf cfg.enable (
-      lib.foldl' (a: b: a // b) { } (
+      lib.mergeAttrsList (
         map (plugin: { "${pluginsDir}/${plugin.name}".source = plugin.src; }) cfg.plugins
       )
     );
@@ -104,8 +122,8 @@ in
         (lib.mkOrder 560 (
           let
             pluginNames = map (plugin: plugin.name) cfg.plugins;
-            completionPaths = lib.flatten (
-              map (plugin: map (completion: "${plugin.name}/${completion}") plugin.completions) cfg.plugins
+            functionPaths = lib.flatten (
+              map (plugin: map (function: "${plugin.name}/${function}") plugin.functions) cfg.plugins
             );
           in
           ''
@@ -114,15 +132,21 @@ in
             for plugin_dir in "''${plugin_dirs[@]}"; do
               path+="${pluginsDir}/$plugin_dir"
               fpath+="${pluginsDir}/$plugin_dir"
-            done
-            unset plugin_dir plugin_dirs
-            ${lib.optionalString (completionPaths != [ ]) ''
-              # Add completion paths to fpath
-              ${lib.hm.zsh.define "completion_paths" completionPaths}
-              for completion_path in "''${completion_paths[@]}"; do
-                fpath+="${pluginsDir}/$completion_path"
+              for plugin_fpath_dir in \
+                "$plugin_dir/share/zsh/plugins/$plugin_dir" \
+                "$plugin_dir/share/zsh/site-functions" \
+                "$plugin_dir/share/zsh/vendor-completions"; do
+                [[ -d "${pluginsDir}/$plugin_fpath_dir" ]] && fpath+="${pluginsDir}/$plugin_fpath_dir"
               done
-              unset completion_path completion_paths
+            done
+            unset plugin_dir plugin_dirs plugin_fpath_dir
+            ${lib.optionalString (functionPaths != [ ]) ''
+              # Add additional function paths to fpath
+              ${lib.hm.zsh.define "function_paths" functionPaths}
+              for function_path in "''${function_paths[@]}"; do
+                fpath+="${pluginsDir}/$function_path"
+              done
+              unset function_path function_paths
             ''}
           ''
         ))

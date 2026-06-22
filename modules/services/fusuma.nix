@@ -57,10 +57,6 @@ let
     '';
   };
 
-  makeBinPath =
-    packages:
-    lib.foldl (a: b: if a == "" then b else "${a}:${b}") "" (map (pkg: "${pkg}/bin") packages);
-
 in
 {
   meta.maintainers = [ lib.maintainers.iosmanthus ];
@@ -71,7 +67,7 @@ in
     package = lib.mkPackageOption pkgs "fusuma" { };
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       example = literalExpression ''
         {
           threshold = {
@@ -127,7 +123,7 @@ in
       };
 
       Service = {
-        Environment = "PATH=${makeBinPath cfg.extraPackages}";
+        Environment = "PATH=${lib.makeBinPath cfg.extraPackages}";
         ExecStart = "${cfg.package}/bin/fusuma";
       };
 

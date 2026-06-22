@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
@@ -24,12 +24,15 @@ in
       base_url = "bitwarden.example.com";
       identity_url = "identity.example.com";
       lock_timeout = 300;
-      pinentry = pkgs.pinentry-gnome3;
+      pinentry = config.lib.test.mkStubPackage {
+        name = "pinentry";
+        outPath = "@pinentry-gnome3@";
+      };
     };
   };
 
   nmt.script = ''
-    assertFileExists home-files/${path}
-    assertFileContent home-files/${path} '${expected}'
+    assertFileExists "home-files/${path}"
+    assertFileContent "home-files/${path}" '${expected}'
   '';
 }

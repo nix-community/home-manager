@@ -1,5 +1,7 @@
 { pkgs, lib, ... }:
 let
+  sshKeys = import "${pkgs.path}/nixos/tests/ssh-keys.nix" pkgs;
+
   testDir = pkgs.runCommand "test-files-to-backup" { } ''
     mkdir $out
     echo some_file > $out/some_file
@@ -12,7 +14,7 @@ let
   '';
 
   dynDir = testDir.overrideAttrs (
-    final: prev: {
+    _final: prev: {
       buildCommand = prev.buildCommand + ''
         echo more secret data > $out/top-secret
         echo shhhh > $out/top-secret-v2
@@ -20,11 +22,8 @@ let
       '';
     }
   );
-in
-{
-  name = "restic";
 
-  nodes.machine = {
+  baseMachine = {
     imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
     virtualisation.memorySize = 2048;
     users.users.alice = {
@@ -33,8 +32,23 @@ in
       password = "foobar";
       uid = 1000;
     };
+  };
+in
+{
+  name = "restic";
 
-    security.polkit.enable = true;
+  nodes = {
+    machine = {
+      imports = [ baseMachine ];
+      security.polkit.enable = true;
+    };
+    remote = {
+      imports = [ baseMachine ];
+      services.openssh.enable = true;
+      users.users.alice.openssh.authorizedKeys.keys = [
+        sshKeys.snakeOilEd25519PublicKey
+      ];
+    };
   };
 
   testScript = ''
@@ -132,6 +146,40 @@ in
       expected2 = "alices-bank-details"
       assert expected1 in actual and expected2 in actual, \
         f"expected diff -ur restore/basic/home/alice/files files to contain \
+          {expected1} and {expected2}, but got {actual}"
+
+    with subtest("Repository with spaces backup"):
+      systemctl_succeed_as_alice("start restic-backups-repository-spaced.service")
+      actual = succeed_as_alice("restic-repository-spaced ls latest")
+      assert_list("restic-repository-spaced ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+    with subtest("Repository with spaces restore"):
+      succeed_as_alice("restic-repository-spaced restore latest --target restore/repository-spaced")
+      actual = fail_as_alice("diff -urNa restore/repository-spaced/home/alice/files files")
+      expected1 = "alices-secret-diary"
+      expected2 = "alices-bank-details"
+      assert expected1 in actual and expected2 in actual, \
+        f"expected diff -ur restore/repository-spaced/home/alice/files files to contain \
+          {expected1} and {expected2}, but got {actual}"
+
+    with subtest("Basic backup (password command)"):
+      systemctl_succeed_as_alice("start restic-backups-basic-command.service")
+      actual = succeed_as_alice("restic-basic-command ls latest")
+      assert_list("restic-basic-command ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+    with subtest("Basic restore (password command)"):
+      succeed_as_alice("restic-basic-command restore latest --target restore/basic-command")
+      actual = fail_as_alice("diff -urNa restore/basic-command/home/alice/files files")
+      expected1 = "alices-secret-diary"
+      expected2 = "alices-bank-details"
+      assert expected1 in actual and expected2 in actual, \
+        f"expected diff -ur restore/basic-command/home/alice/files files to contain \
           {expected1} and {expected2}, but got {actual}"
 
     with subtest("Fails to start with an un-initialized repo"):
@@ -271,6 +319,14 @@ in
       systemctl_succeed_as_alice("start restic-backups-env-file.service")
       actual = succeed_as_alice("restic-env-file ls latest")
       assert_list("restic-env-file ls latest", expectedIncluded, actual)
+
+      assert "exclude" not in actual, \
+        f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"
+
+    with subtest("sftp remote"):
+      systemctl_succeed_as_alice("start restic-backups-sftp.service")
+      actual = succeed_as_alice("restic-sftp ls latest")
+      assert_list("restic-sftp ls latest", expectedIncluded, actual)
 
       assert "exclude" not in actual, \
         f"Paths containing \"*exclude*\" got backed up incorrectly. output: {actual}"

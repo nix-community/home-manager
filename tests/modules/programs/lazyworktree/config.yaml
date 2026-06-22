@@ -1,7 +1,11 @@
-auto_fetch_prs: false
 auto_refresh: true
+ci_auto_refresh: false
+disable_pr: false
 fuzzy_finder_input: false
 icon_set: nerd-font-v3
+layout: default
+palette_mru: true
+palette_mru_limit: 5
 refresh_interval: 10
 search_auto_select: false
 sort_mode: switched

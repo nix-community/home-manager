@@ -29,7 +29,7 @@ in
     package = mkPackageOption pkgs "fuzzel" { nullable = true; };
 
     settings = mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       example = literalExpression ''
         {

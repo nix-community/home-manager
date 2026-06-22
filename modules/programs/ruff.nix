@@ -20,17 +20,23 @@ in
     package = lib.mkPackageOption pkgs "ruff" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
-      example = lib.literalExpression ''
-        {
-          line-length = 100;
-          per-file-ignores = { "__init__.py" = [ "F401" ]; };
-          lint = {
-            select = [ "E4" "E7" "E9" "F" ];
-            ignore = [ ];
-          };
-        }
-      '';
+      inherit (settingsFormat) type;
+      default = { };
+      example = {
+        line-length = 100;
+        per-file-ignores = {
+          "__init__.py" = [ "F401" ];
+        };
+        lint = {
+          select = [
+            "E4"
+            "E7"
+            "E9"
+            "F"
+          ];
+          ignore = [ ];
+        };
+      };
       description = ''
         Ruff configuration.
         For available settings see <https://docs.astral.sh/ruff/settings>.

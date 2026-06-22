@@ -1,9 +1,10 @@
 # Release Notes {#ch-release-notes}
 
-This section lists the release notes for stable versions of Home Manager
-and the current unstable version.
+This section lists the release notes for stable versions of Home Manager and the
+current unstable version.
 
 ```{=include=} chapters
+rl-2611.md
 rl-2605.md
 rl-2511.md
 rl-2505.md

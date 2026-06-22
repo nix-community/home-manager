@@ -2,7 +2,7 @@
   time = "2025-10-11T00:06:01+00:00";
   condition = true;
   message = ''
-    A new option is availabe: `home-manager.minimal`
+    A new option is available: `home-manager.minimal`
 
     By default, Home Manager imports all modules, which leads to increased
     evaluation time. Some users may wish to only import the modules they

@@ -5,11 +5,17 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    literalExpression
+    mkIf
+    mkOption
+    types
+    ;
 
   cfg = config.programs.starship;
 
   tomlFormat = pkgs.formats.toml { };
+  hasGeneratedConfig = cfg.settings != { } || cfg.presets != [ ];
 
   initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in
@@ -21,8 +27,15 @@ in
 
     package = lib.mkPackageOption pkgs "starship" { };
 
+    extraPackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      example = literalExpression "[ pkgs.jj-starship ]";
+      description = "Extra packages available to starship.";
+    };
+
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {
@@ -46,6 +59,17 @@ in
 
         See <https://starship.rs/config/> for the full list
         of options.
+      '';
+    };
+
+    presets = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [ "nerd-font-symbols" ];
+      description = ''
+        Preset files to be merged with settings in order.
+
+        See <https://starship.rs/presets/> for the full list of available presets.
       '';
     };
 
@@ -95,54 +119,92 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages = [ cfg.package ];
+      packages =
+        if cfg.extraPackages != [ ] then
+          [
+            (pkgs.symlinkJoin {
+              name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+              paths = [ cfg.package ];
+              preferLocalBuild = true;
+              nativeBuildInputs = [ pkgs.makeWrapper ];
+              postBuild = ''
+                wrapProgram $out/bin/starship \
+                  --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+              '';
+            })
+          ]
+        else
+          [ cfg.package ];
 
       sessionVariables.STARSHIP_CONFIG = cfg.configPath;
 
-      file.${cfg.configPath} = mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "starship-config" cfg.settings;
-      };
+      file.${cfg.configPath} = mkIf hasGeneratedConfig (
+        let
+          settingsFile = tomlFormat.generate "starship-config" cfg.settings;
+        in
+        if cfg.presets == [ ] then
+          { source = settingsFile; }
+        else
+          {
+            source =
+              pkgs.runCommand "starship.toml"
+                {
+                  nativeBuildInputs = [ pkgs.yq ];
+                }
+                ''
+                  tomlq -s -t 'reduce .[] as $item ({}; . * $item)' \
+                    ${
+                      lib.concatStringsSep " " (map (f: "${cfg.package}/share/starship/presets/${f}.toml") cfg.presets)
+                    } \
+                    ${settingsFile} \
+                    > $out
+                '';
+          }
+      );
+
     };
 
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (
-      lib.mkOrder 1900 ''
+    programs = {
+      bash.initExtra = mkIf cfg.enableBashIntegration (
+        lib.mkOrder 1900 ''
+          if [[ $TERM != "dumb" ]]; then
+            eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
+          fi
+        ''
+      );
+
+      zsh.initContent = mkIf cfg.enableZshIntegration ''
         if [[ $TERM != "dumb" ]]; then
-          eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
+          eval "$(${lib.getExe cfg.package} init zsh)"
         fi
-      ''
-    );
-
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-      if [[ $TERM != "dumb" ]]; then
-        eval "$(${lib.getExe cfg.package} init zsh)"
-      fi
-    '';
-
-    programs.fish.${initFish} = mkIf cfg.enableFishIntegration ''
-      if test "$TERM" != "dumb"
-        ${lib.getExe cfg.package} init fish | source
-        ${lib.optionalString cfg.enableTransience "enable_transience"}
-      end
-    '';
-
-    programs.ion.initExtra = mkIf cfg.enableIonIntegration ''
-      if test $TERM != "dumb"
-        eval $(${lib.getExe cfg.package} init ion)
-      end
-    '';
-
-    programs.nushell = mkIf cfg.enableNushellIntegration {
-      # Unfortunately nushell doesn't allow conditionally sourcing nor
-      # conditionally setting (global) environment variables, which is why the
-      # check for terminal compatibility (as seen above for the other shells) is
-      # not done here.
-      extraConfig = ''
-        use ${
-          pkgs.runCommand "starship-nushell-config.nu" { } ''
-            ${lib.getExe cfg.package} init nu >> "$out"
-          ''
-        }
       '';
+
+      fish.${initFish} = mkIf cfg.enableFishIntegration ''
+        if test "$TERM" != "dumb"
+          ${lib.getExe cfg.package} init fish | source
+          ${lib.optionalString cfg.enableTransience "enable_transience"}
+        end
+      '';
+
+      ion.initExtra = mkIf cfg.enableIonIntegration ''
+        if test $TERM != "dumb"
+          eval $(${lib.getExe cfg.package} init ion)
+        end
+      '';
+
+      nushell = mkIf cfg.enableNushellIntegration {
+        # Unfortunately nushell doesn't allow conditionally sourcing nor
+        # conditionally setting (global) environment variables, which is why the
+        # check for terminal compatibility (as seen above for the other shells) is
+        # not done here.
+        extraConfig = ''
+          use ${
+            pkgs.runCommand "starship-nushell-config.nu" { } ''
+              ${lib.getExe cfg.package} init nu >> "$out"
+            ''
+          }
+        '';
+      };
     };
   };
 }

@@ -28,7 +28,7 @@ in
 
               UR`ircs://`, `irc://`, and `irc+insecure://` URLs are supported,
               in which case only the hostname and port parts will be used. If
-              the scheme is `ircs/irc+insecure`, tls will be overriden and set
+              the scheme is `ircs/irc+insecure`, tls will be overridden and set
               to true/false accordingly.
             '';
           };
@@ -71,13 +71,11 @@ in
           };
         };
       };
-      example = lib.literalExpression ''
-        {
-          address = "libera.chat:6697";
-          nickname = "nicholas";
-          password = "verysecurepassword";
-        }
-      '';
+      example = {
+        address = "libera.chat:6697";
+        nickname = "nicholas";
+        password = "verysecurepassword";
+      };
       description = ''
         Configuration for senpai. For a complete list of options, see
         {manpage}`senpai(5)`.

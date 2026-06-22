@@ -1,61 +1,75 @@
 {
   stdenv,
   lib,
-  documentation-highlighter,
+  callPackage,
+  mdbook,
+  python3,
   revision,
   home-manager-options,
-  nixos-render-docs,
 }:
 let
   outputPath = "share/doc/home-manager";
+  mdbookOptions = callPackage ./mdbook/options.nix {
+    manpageUrls = ./manual/manpage-urls.json;
+    inherit revision;
+    optionDocs = {
+      home-manager = {
+        title = "Home Manager Configuration Options";
+        path = "home-manager";
+        prefix = "opt-";
+        json = "${home-manager-options.home-manager.json}";
+      };
+      nixos = {
+        title = "NixOS Configuration Options";
+        path = "nixos";
+        prefix = "nixos-opt-";
+        json = "${home-manager-options.nixos.json}";
+      };
+      nix-darwin = {
+        title = "nix-darwin Configuration Options";
+        path = "nix-darwin";
+        prefix = "nix-darwin-opt-";
+        json = "${home-manager-options.nix-darwin.json}";
+      };
+    };
+  };
 in
 stdenv.mkDerivation {
   name = "home-manager-manual";
 
-  nativeBuildInputs = [ nixos-render-docs ];
+  nativeBuildInputs = [
+    mdbook
+    python3
+  ];
 
-  src = ./manual;
+  src = ./.;
 
   buildPhase = ''
-    mkdir -p out/{highlightjs,media}
+    runHook preBuild
 
-    cp -t out/highlightjs \
-      ${documentation-highlighter}/highlight.pack.js \
-      ${documentation-highlighter}/LICENSE \
-      ${documentation-highlighter}/mono-blue.css \
-      ${documentation-highlighter}/loader.js
+    mkdir -p source
+    python3 ${./mdbook/convert-markup.py} "$src/manual" source
+    python3 ${./mdbook/convert-markup.py} \
+      --base-depth 1 \
+      "$src/release-notes" \
+      source/release-notes
 
-    substituteInPlace ./options.md \
-      --subst-var-by \
-        OPTIONS_JSON \
-        ${home-manager-options.home-manager}/share/doc/nixos/options.json
+    cp -r ${mdbookOptions}/options source/options
 
-    substituteInPlace ./nixos-options.md \
-      --subst-var-by \
-        OPTIONS_JSON \
-        ${home-manager-options.nixos}/share/doc/nixos/options.json
+    python3 ${./mdbook/substitute-summary.py} \
+      source/SUMMARY.md \
+      ${mdbookOptions}/summary/home-manager.md \
+      ${mdbookOptions}/summary/nixos.md \
+      ${mdbookOptions}/summary/nix-darwin.md
 
-    substituteInPlace ./nix-darwin-options.md \
-      --subst-var-by \
-        OPTIONS_JSON \
-        ${home-manager-options.nix-darwin}/share/doc/nixos/options.json
+    mdbook build source --dest-dir book
 
-    cp ${./options.html} out/options.html
+    mkdir -p out
+    cp -r book/* out/
 
-    cp ${./static/style.css} out/style.css
+    python3 ${./mdbook/legacy-redirects.py} source out
 
-    cp -r ${./release-notes} release-notes
-
-    nixos-render-docs manual html \
-      --manpage-urls ./manpage-urls.json \
-      --revision ${lib.trivial.revisionWithDefault revision} \
-      --stylesheet style.css \
-      --script highlightjs/highlight.pack.js \
-      --script highlightjs/loader.js \
-      --toc-depth 1 \
-      --section-toc-depth 1 \
-      manual.md \
-      out/index.xhtml
+    runHook postBuild
   '';
 
   installPhase = ''
@@ -67,7 +81,9 @@ stdenv.mkDerivation {
     echo "doc manual $dest index.html" >> $out/nix-support/hydra-build-products
   '';
 
-  passthru = { inherit home-manager-options; };
+  passthru = {
+    inherit home-manager-options mdbookOptions;
+  };
 
   meta = {
     maintainers = [ lib.maintainers.considerate ];

@@ -169,12 +169,10 @@ in
 
     settings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
-      example = literalExpression ''
-        {
-          no-comments = false;
-          s2k-cipher-algo = "AES128";
-        }
-      '';
+      example = {
+        no-comments = false;
+        s2k-cipher-algo = "AES128";
+      };
       description = ''
         GnuPG configuration options. Available options are described
         in
@@ -189,11 +187,9 @@ in
     scdaemonSettings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
       default = { };
-      example = literalExpression ''
-        {
-          disable-ccid = true;
-        }
-      '';
+      example = {
+        disable-ccid = true;
+      };
       description = ''
         SCdaemon configuration options. Available options are described
         in
@@ -224,11 +220,9 @@ in
     gpgsmSettings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
       default = { };
-      example = literalExpression ''
-        {
-          with-key-data = true;
-        }
-      '';
+      example = {
+        with-key-data = true;
+      };
       description = ''
         GPGSM configuration options. Available options are described
         in

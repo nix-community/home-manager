@@ -11,7 +11,7 @@ in
 
   config = lib.mkIf config.test.enableBig (
     {
-      test.asserts.assertions.expected = [ "Container id must be smaller than 4294967294 (2^32 - 2)" ];
+      test.asserts.assertions.expected = [ "Container id must be between 1 and 4294967293" ];
     }
     // lib.setAttrByPath modulePath {
       enable = true;

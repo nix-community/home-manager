@@ -73,25 +73,23 @@ in
     mcflyFzfPackage = lib.mkPackageOption pkgs "mcfly-fzf" { };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          colors = {
-            menubar = {
-              bg = "black";
-              fg = "red";
-            };
-            darkmode = {
-              prompt = "cyan";
-              timing = "yellow";
-              results_selection_fg = "cyan";
-              results_selection_bg = "black";
-              results_selection_hl = "red";
-            };
+      example = {
+        colors = {
+          menubar = {
+            bg = "black";
+            fg = "red";
           };
-        }
-      '';
+          darkmode = {
+            prompt = "cyan";
+            timing = "yellow";
+            results_selection_fg = "cyan";
+            results_selection_bg = "black";
+            results_selection_hl = "red";
+          };
+        };
+      };
       description = ''
         Settings written to {file}`~/.config/mcfly/config.toml`.
 

@@ -20,8 +20,10 @@ let
       lhs = optCall lhs_ { inherit pkgs; };
       rhs = optCall rhs_ { inherit pkgs; };
     in
-    lhs
-    // rhs
+    lib.recursiveUpdate lhs rhs
+    // lib.optionalAttrs (lhs ? allowUnfreePackages) {
+      allowUnfreePackages = lhs.allowUnfreePackages ++ (lib.attrByPath [ "allowUnfreePackages" ] [ ] rhs);
+    }
     // lib.optionalAttrs (lhs ? packageOverrides) {
       packageOverrides =
         pkgs:
@@ -43,7 +45,7 @@ let
         traceXIfNot = c: if c x then true else lib.traceSeqN 1 x false;
       in
       traceXIfNot isConfig;
-    merge = args: lib.foldr (def: mergeConfig def.value) { };
+    merge = _args: lib.foldr (def: mergeConfig def.value) { };
   };
 
   overlayType = lib.mkOptionType {
@@ -53,7 +55,7 @@ let
     merge = lib.mergeOneOption;
   };
 
-  _pkgs = import pkgsPath (lib.filterAttrs (n: v: v != null) config.nixpkgs);
+  _pkgs = import pkgsPath (lib.filterAttrs (_n: v: v != null) config.nixpkgs);
 
 in
 {

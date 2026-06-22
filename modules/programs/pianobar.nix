@@ -10,7 +10,6 @@ let
     mkIf
     mkOption
     mkPackageOption
-    literalExpression
     ;
 
   inherit (lib.types)
@@ -52,7 +51,7 @@ in
         freeformType = keyValueFormat.type;
         options = {
           user = mkOption {
-            description = "Username or emaill address for Pandora music service authentication";
+            description = "Username or email address for Pandora music service authentication";
             example = ''"groovy-tunes@example.com"'';
             type = nonEmptyStr;
           };
@@ -75,17 +74,15 @@ in
         `programs.pianobar.settings.password_command` value.
       '';
 
-      example = literalExpression ''
-        {
-          programs.pianobar = {
-            enable = true;
-            settings = {
-              user = "groovy-tunes@example.com";
-              password_command = "cat /run/secrets/pianobar/groovy-tunes";
-            };
+      example = {
+        programs.pianobar = {
+          enable = true;
+          settings = {
+            user = "groovy-tunes@example.com";
+            password_command = "cat /run/secrets/pianobar/groovy-tunes";
           };
-        }
-      '';
+        };
+      };
     };
   };
 

@@ -1,0 +1,6 @@
+check-for-app-update: false
+match:
+  java:
+    using-cpes: false
+search:
+  scope: squashed

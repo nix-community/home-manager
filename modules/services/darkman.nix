@@ -68,16 +68,49 @@ in
     settings = lib.mkOption {
       type = types.submodule { freeformType = yamlFormat.type; };
       default = { };
-      example = lib.literalExpression ''
-        {
-          lat = 52.3;
-          lng = 4.8;
-          usegeoclue = true;
-        }
-      '';
+      example = {
+        lat = 52.3;
+        lng = 4.8;
+        usegeoclue = true;
+      };
       description = ''
         Settings for the {command}`darkman` command. See
         <https://darkman.whynothugo.nl/#CONFIGURATION> for details.
+      '';
+    };
+
+    scripts = lib.mkOption {
+      type = types.attrsOf (
+        types.oneOf [
+          types.path
+          types.lines
+        ]
+      );
+      default = { };
+      example = lib.literalExpression ''
+        {
+          gtk-theme = '''
+            if [ "$1" = "dark" ]; then
+              ''${pkgs.dconf}/bin/dconf write \
+                  /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+            else
+              ''${pkgs.dconf}/bin/dconf write \
+                  /org/gnome/desktop/interface/color-scheme "'prefer-light'"
+            fi
+          ''';
+        }
+      '';
+      description = ''
+        Scripts to run when switching modes, placed in
+        {file}`$XDG_DATA_HOME/darkman/`. Each script receives the new mode
+        (`dark` or `light`) as its first argument, allowing a single script
+        to handle both modes.
+
+        Multiline strings are interpreted as Bash shell scripts and a shebang
+        is not required.
+
+        These scripts take precedence over legacy scripts of the same name in
+        {option}`darkModeScripts` and {option}`lightModeScripts`.
       '';
     };
 
@@ -100,6 +133,7 @@ in
     };
 
     xdg.dataFile = lib.mkMerge [
+      (mkIf (cfg.scripts != { }) (generateScripts "darkman" cfg.scripts))
       (mkIf (cfg.darkModeScripts != { }) (generateScripts "dark-mode.d" cfg.darkModeScripts))
       (mkIf (cfg.lightModeScripts != { }) (generateScripts "light-mode.d" cfg.lightModeScripts))
     ];

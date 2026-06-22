@@ -70,8 +70,7 @@ let
       source = podman-lib.removeBlankLines src.text;
       resourceType = "build";
     };
-in
-let
+
   buildDefinitionType = types.submodule (
     { name, ... }:
     {
@@ -100,29 +99,25 @@ let
         environment = mkOption {
           type = podman-lib.primitiveAttrs;
           default = { };
-          example = lib.literalExpression ''
-            {
-              VAR1 = "0:100";
-              VAR2 = true;
-              VAR3 = 5;
-            }
-          '';
+          example = {
+            VAR1 = "0:100";
+            VAR2 = true;
+            VAR3 = 5;
+          };
           description = "Environment variables to set in the build.";
         };
 
         extraConfig = mkOption {
           type = podman-lib.extraConfigType;
           default = { };
-          example = lib.literalExpression ''
-            {
-              Build = {
-                Arch = "aarch64";
-              };
-              Service = {
-                TimeoutStartSec = 15;
-              };
-            }
-          '';
+          example = {
+            Build = {
+              Arch = "aarch64";
+            };
+            Service = {
+              TimeoutStartSec = 15;
+            };
+          };
           description = "INI sections and values to populate the Build Quadlet.";
         };
 

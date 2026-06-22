@@ -101,7 +101,9 @@ in
       description = ''
         Whether to enable git integration for diff-so-fancy.
 
-        When enabled, diff-so-fancy will be configured as git's pager and diff filter.
+        When enabled, diff-so-fancy will be configured as git's pager for
+        {command}`diff`, {command}`log`, and {command}`show`, and as git's diff
+        filter for interactive staging.
       '';
     };
   };
@@ -133,9 +135,10 @@ in
           iniContent =
             let
               dsfCommand = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
+              pagerCommand = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.pagerOpts}";
             in
-            {
-              core.pager = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.pagerOpts}";
+            lib.hm.git.diffPagerConfig pagerCommand
+            // {
               interactive.diffFilter = "${dsfCommand} --patch";
               diff-so-fancy = cfg.settings;
             };

@@ -1,17 +1,12 @@
 package:
 
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 
 let
-  cfg = config.programs.vscode;
-  willUseIfd = package.pname != "vscode";
-
-  argvPath = "${cfg.dataFolderName}/argv.json";
+  argvPath = ".vscode/argv.json";
 
   content = ''
     {
@@ -22,7 +17,7 @@ let
   expectedArgvSettings = pkgs.writeText "custom-argv.json" content;
 in
 
-lib.mkIf (willUseIfd -> config.test.enableLegacyIfd) {
+{
   programs.vscode = {
     enable = true;
     inherit package;

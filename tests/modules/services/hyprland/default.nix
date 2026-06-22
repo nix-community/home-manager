@@ -2,6 +2,10 @@
 
 lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-simple-config = ./simple-config.nix;
+  hyprland-config-type-default-current = ./config-type-default-current.nix;
+  hyprland-config-type-default-legacy = ./config-type-default-legacy.nix;
+  hyprland-config-type-explicit-hyprlang-current = ./config-type-explicit-hyprlang-current.nix;
+  hyprland-config-type-explicit-lua-legacy = ./config-type-explicit-lua-legacy.nix;
   hyprland-multiple-devices-config = ./multiple-devices-config.nix;
   hyprland-null-all-packages-config = ./null-all-packages-config.nix;
   hyprland-null-package-config = ./null-package-config.nix;
@@ -9,4 +13,8 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-sourceFirst-false-config = ./sourceFirst-false-config.nix;
   hyprland-inconsistent-config = ./inconsistent-config.nix;
   hyprland-submaps-config = ./submaps-config.nix;
+  hyprland-submaps-on-dispatch = ./submaps-on-dispatch.nix;
+  hyprland-lua-config = ./lua-config.nix;
+  hyprland-lua-files-assertions = ./lua-files-assertions.nix;
+  hyprland-lua-files-config = ./lua-files-config.nix;
 }

@@ -1,9 +1,12 @@
 {
+  home.stateVersion = "26.05";
+
   services.home-manager.autoUpgrade = {
     enable = true;
     frequency = "daily";
     useFlake = true;
     flakeDir = "/tmp/my-flake";
+    preSwitchCommands = [ "nix flake update" ];
   };
 
   nmt.script = ''

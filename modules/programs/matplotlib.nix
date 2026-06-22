@@ -28,17 +28,15 @@ in
         Add terms to the {file}`matplotlibrc` file to
         control the default matplotlib behavior.
       '';
-      example = lib.literalExpression ''
-        {
-          backend = "Qt5Agg";
-          axes = {
-            grid = true;
-            facecolor = "black";
-            edgecolor = "FF9900";
-          };
-          grid.color = "FF9900";
-        }
-      '';
+      example = {
+        backend = "Qt5Agg";
+        axes = {
+          grid = true;
+          facecolor = "black";
+          edgecolor = "FF9900";
+        };
+        grid.color = "FF9900";
+      };
     };
 
     extraConfig = mkOption {
@@ -54,8 +52,7 @@ in
   config = mkIf cfg.enable {
     xdg.configFile."matplotlib/matplotlibrc".text =
       lib.concatStringsSep "\n" (
-        [ ]
-        ++ lib.mapAttrsToList (formatLine "") cfg.config
+        lib.mapAttrsToList (formatLine "") cfg.config
         ++ lib.optional (cfg.extraConfig != "") cfg.extraConfig
       )
       + "\n";

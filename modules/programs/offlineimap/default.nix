@@ -151,15 +151,13 @@ in
       extraConfig.mbnames = mkOption {
         type = extraConfigType;
         default = { };
-        example = lib.literalExpression ''
-          {
-            filename = "~/.config/mutt/mailboxes";
-            header = "'mailboxes '";
-            peritem = "'+%(accountname)s/%(foldername)s'";
-            sep = "' '";
-            footer = "'\\n'";
-          }
-        '';
+        example = {
+          filename = "~/.config/mutt/mailboxes";
+          header = "'mailboxes '";
+          peritem = "'+%(accountname)s/%(foldername)s'";
+          sep = "' '";
+          footer = "'\\n'";
+        };
         description = ''
           Extra configuration options added to the
           `mbnames` section.
@@ -180,7 +178,7 @@ in
       pkgs.runCommandLocal "get_settings-compile"
         {
           nativeBuildInputs = [ cfg.package ];
-          pythonFile = cfg.pythonFile;
+          inherit (cfg) pythonFile;
           passAsFile = [ "pythonFile" ];
         }
         ''

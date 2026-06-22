@@ -24,6 +24,7 @@ in
         test = {
           id = 1;
           settings = {
+            "browser.bookmarks.file" = ./bookmarks.html;
             "general.smoothScroll" = false;
             "browser.newtabpage.pinned" = [
               {
@@ -43,17 +44,21 @@ in
               "Applications/${cfg.darwinAppName}.app/Contents/MacOS"
             else
               "bin";
+          expectedUserJs = pkgs.writeText "expected-user.js" (builtins.readFile ./expected-user.js + "\n");
         in
         ''
           assertFileRegex \
-            "home-path/${binPath}/${cfg.wrappedPackageName}" \
+            "home-path/${binPath}/${cfg.finalPackage.meta.mainProgram}" \
             MOZ_APP_LAUNCHER
 
           assertDirectoryExists "home-files/${cfg.profilesPath}/basic"
 
+          settingsUserJs=$(normalizeStorePaths \
+            "home-files/${cfg.profilesPath}/test/user.js")
+
           assertFileContent \
-            "home-files/${cfg.profilesPath}/test/user.js" \
-            ${./expected-user.js}
+            "$settingsUserJs" \
+            ${expectedUserJs}
         '';
     }
   );

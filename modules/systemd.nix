@@ -51,7 +51,7 @@ let
         let
           # Filters out fields that are set to `null` or empty list.
           shouldKeepField =
-            section: key: value:
+            _section: _key: value:
             value != null && value != [ ];
 
           # Filters out empty sections.
@@ -414,11 +414,9 @@ in
                       ])
                     );
                   default = { };
-                  example = literalExpression ''
-                    {
-                      PATH = "%u/bin:%u/.cargo/bin";
-                    }
-                  '';
+                  example = {
+                    PATH = "%u/bin:%u/.cargo/bin";
+                  };
                   apply = value: concatStringsSep " " (mapAttrsToList (n: v: "${n}=${escapeShellArg v}") value);
                 }
                 // args;
@@ -439,11 +437,9 @@ in
             };
         };
         default = { };
-        example = literalExpression ''
-          {
-            Manager.DefaultCPUAccounting = true;
-          }
-        '';
+        example = {
+          Manager.DefaultCPUAccounting = true;
+        };
         description = ''
           Extra config options for user session service manager. See {manpage}`systemd-user.conf(5)` for
           available options.
@@ -454,8 +450,7 @@ in
 
   # If we run under a Linux system we assume that systemd is
   # available, in particular we assume that systemctl is in PATH.
-  # Do not install any user services if username is root.
-  config = mkIf (cfg.enable && config.home.username != "root") {
+  config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "systemd" pkgs lib.platforms.linux)
     ];

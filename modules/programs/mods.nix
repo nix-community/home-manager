@@ -19,7 +19,7 @@ in
     package = lib.mkPackageOption pkgs "mods" { };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = ''
         {

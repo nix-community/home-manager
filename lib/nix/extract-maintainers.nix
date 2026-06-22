@@ -79,6 +79,7 @@ let
           "specialArgs"
           "osConfig"
           "inputs"
+          "configuration"
         ];
         hasNonStandardParams = lib.any (name: !(lib.elem name standardModuleParams)) argNames;
       in
@@ -88,7 +89,7 @@ let
   # Create a mock pkgs that provides helpful error messages
   # instead of cryptic "null has no attribute" errors
   mockPkgs =
-    builtins.mapAttrs
+    (builtins.mapAttrs
       (
         name: _:
         throw ''
@@ -99,11 +100,14 @@ let
       )
       {
         stdenv = null;
-        lib = null;
         system = null;
         pkgsCross = null;
         buildPackages = null;
-      };
+      }
+    )
+    // {
+      inherit lib;
+    };
 
   # Module arguments based on file path
   # Priority: specific file overrides > prefix-based args > default args
@@ -134,7 +138,11 @@ let
             pkgs = mockPkgs;
             inherit (releaseInfo) release isReleaseBranch;
           }
-        else if lib.hasPrefix "lib/" file then
+        else if
+          lib.hasPrefix "lib/" file
+          || lib.hasPrefix "modules/lib/" file
+          || lib.hasPrefix "modules/lib-bash/" file
+        then
           { inherit lib; }
         else
           null;
@@ -167,13 +175,9 @@ let
     optionals (parentModule != { }) (
       let
         parentContent = import parentModule.path;
-        parentArgs = {
-          inherit lib config options;
-          pkgs = mockPkgs;
-        };
-        parent = if isFunction parentContent then parentContent parentArgs else parentContent;
+        evalResult = evaluateModule parentContent parentModule.relPath;
       in
-      parent.meta.maintainers or [ ]
+      getMaintainers evalResult
     );
 
   extractMaintainers =

@@ -28,7 +28,7 @@ in
   config = {
     programs.sbt = {
       enable = true;
-      credentials = credentials;
+      inherit credentials;
       package = pkgs.writeScriptBin "sbt" "";
     };
 

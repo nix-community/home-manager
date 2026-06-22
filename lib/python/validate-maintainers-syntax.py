@@ -13,8 +13,12 @@ def main():
     print("🔍 Validating maintainers.nix syntax...")
 
     try:
-        subprocess.run(['nix', 'eval', '--file', 'modules/lib/maintainers.nix', '--json'],
-                               capture_output=True, text=True, check=True)
+        subprocess.run(
+            ["nix", "eval", "--file", "modules/lib/maintainers.nix", "--json"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
         print("✅ Valid Nix syntax")
     except subprocess.CalledProcessError:
         print("❌ Invalid Nix syntax")

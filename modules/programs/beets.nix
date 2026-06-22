@@ -27,9 +27,24 @@ in
     programs.beets = {
       enable = mkOption {
         type = types.bool;
-        default =
-          if lib.versionAtLeast config.home.stateVersion "19.03" then false else cfg.settings != { };
-        defaultText = "false";
+        inherit
+          (lib.hm.deprecations.mkStateVersionOptionDefault {
+            inherit (config.home) stateVersion;
+            since = "19.03";
+            optionPath = [
+              "programs"
+              "beets"
+              "enable"
+            ];
+            legacy = {
+              value = cfg.settings != { };
+              text = "config.programs.beets.settings != { }";
+            };
+            current.value = false;
+          })
+          default
+          defaultText
+          ;
         description = ''
           Whether to enable the beets music library manager. This
           defaults to `false` for state
@@ -46,7 +61,7 @@ in
       };
 
       settings = mkOption {
-        type = yamlFormat.type;
+        inherit (yamlFormat) type;
         default = { };
         description = ''
           Configuration written to
@@ -86,8 +101,7 @@ in
 
     (mkIf (cfg.mpdIntegration.enableStats || cfg.mpdIntegration.enableUpdate) {
       programs.beets.settings.mpd = {
-        host = cfg.mpdIntegration.host;
-        port = cfg.mpdIntegration.port;
+        inherit (cfg.mpdIntegration) host port;
       };
     })
 

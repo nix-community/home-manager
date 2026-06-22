@@ -1,23 +1,9 @@
 { pkgs, lib, ... }:
 
 let
-  knownPackage = pkgs.writeScriptBin "vscode" "" // {
+  package = pkgs.writeScriptBin "vscode" "" // {
     pname = "vscode";
     version = "1.75.0";
-  };
-
-  unknownPackage = pkgs.writeTextFile rec {
-    name = "${derivationArgs.pname}-${derivationArgs.version}";
-    derivationArgs = {
-      pname = "test-vscode-unknown";
-      version = "0.1.0";
-    };
-    text = builtins.toJSON {
-      dataFolderName = ".test-vscode-unknown";
-      nameShort = passthru.longName;
-    };
-    destination = "/lib/vscode/resources/app/product.json";
-    passthru.longName = "Test VSCode Fork";
   };
 
   tests = {
@@ -28,13 +14,12 @@ let
     mcp-integration = import ./mcp-integration.nix;
     mcp-integration-with-override = import ./mcp-integration-with-override.nix;
     update-checks = import ./update-checks.nix;
+    path-literal = import ./path-literal.nix;
     snippets = import ./snippets.nix;
+    null-package = import ./null-package.nix;
+    fork-package-warning = import ./fork-package-warning.nix;
   };
 
-  knownTests = lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}-known" (v knownPackage)) tests;
-  unknownTests = lib.mapAttrs' (
-    k: v: lib.nameValuePair "vscode-${k}-unknown" (v unknownPackage)
-  ) tests;
 in
 
-knownTests // unknownTests
+lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}" (v package)) tests

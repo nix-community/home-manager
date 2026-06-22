@@ -15,12 +15,6 @@
       };
     };
 
-    # assert fail: cannot set text and source at the same time.
-    memory = {
-      text = "Some text content";
-      source = ./expected-memory.md;
-    };
-
     # assert fail: cannot set agents and agentsDir at the same time.
     agents = {
       test-agent = "test content";
@@ -39,19 +33,12 @@
     };
     hooksDir = ./hooks;
 
-    # assert fail: cannot set skills and skillsDir at the same time.
-    skills = {
-      test-skill = "test content";
-    };
-    skillsDir = ./skills;
   };
 
   test.asserts.assertions.expected = [
-    "`programs.claude-code.package` cannot be null when `mcpServers` or `enableMcpIntegration` is configured"
-    "Cannot specify both `programs.claude-code.memory.text` and `programs.claude-code.memory.source`"
+    "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured"
     "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`"
     "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`"
     "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`"
-    "Cannot specify both `programs.claude-code.skills` and `programs.claude-code.skillsDir`"
   ];
 }

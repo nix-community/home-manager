@@ -65,7 +65,7 @@
 
       # Shut down pueue, then run the activation again. Afterwards, the service
       # should be running.
-      machine.succeed("systemctl --user -M alice@.host stop pueued.service")
+      succeed_as_alice("systemctl --user stop pueued.service")
 
       fail_as_alice("pueue status")
 

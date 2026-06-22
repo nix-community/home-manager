@@ -34,23 +34,21 @@ in
       };
 
       settings = lib.mkOption {
-        type = tomlFormat.type;
+        inherit (tomlFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            window.dimensions = {
-              lines = 3;
-              columns = 200;
-            };
-            keyboard.bindings = [
-              {
-                key = "K";
-                mods = "Control";
-                chars = "\\u000c";
-              }
-            ];
-          }
-        '';
+        example = {
+          window.dimensions = {
+            lines = 3;
+            columns = 200;
+          };
+          keyboard.bindings = [
+            {
+              key = "K";
+              mods = "Control";
+              chars = "\\u000c";
+            }
+          ];
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml` or
@@ -99,11 +97,23 @@ in
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
       source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs (
-        finalAttrs: prevAttrs: {
+        _finalAttrs: prevAttrs: {
           buildCommand = lib.concatStringsSep "\n" [
             prevAttrs.buildCommand
-            # TODO: why is this needed? Is there a better way to retain escape sequences?
-            "substituteInPlace $out --replace-quiet '\\\\' '\\'"
+            # Nix cannot spell TOML escape sequences like "\u001d" directly:
+            # "\\u001d" is a literal backslash-u string, while fromJSON creates
+            # a control character and fails for "\u0000". Normalize both TOML
+            # generator outputs to the Alacritty escape form:
+            #   chars = "\\u001d" -> chars = "\u001d"
+            #   chars = '\u001d'  -> chars = "\u001d"
+            ''
+              sed \
+                -E \
+                -e "s/= \"\\\\\\\\u([0-9a-fA-F]{4})\"\$/= \"\\\\u\1\"/" \
+                -e "s/= '\\\\u([0-9a-fA-F]{4})'\$/= \"\\\\u\1\"/" \
+                "$out" > "$TMPDIR/alacritty.toml"
+              cp "$TMPDIR/alacritty.toml" "$out"
+            ''
           ];
         }
       );

@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ config, ... }:
 let
   package = config.lib.test.mkStubPackage {
     buildScript = ''

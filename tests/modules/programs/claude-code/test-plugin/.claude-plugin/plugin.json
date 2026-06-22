@@ -1,0 +1,4 @@
+{
+  "name": "test-plugin",
+  "description": "A test plugin for home-manager tests"
+}

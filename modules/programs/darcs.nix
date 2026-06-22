@@ -37,6 +37,19 @@ in
         ];
         description = "File patterns to ignore";
       };
+
+      defaults = lib.mkOption {
+        type = lib.types.nullOr lib.types.lines;
+        default = "";
+        example = ''
+          ALL ignore-times
+        '';
+        description = ''
+          Default values for Darcs commands.
+
+          See <https://darcs.net/Using/Configuration#defaults> for details.
+        '';
+      };
     };
   };
 
@@ -52,6 +65,9 @@ in
         home.file.".darcs/boring".text = lib.concatMapStrings (x: x + "\n") cfg.boring;
       })
 
+      (lib.mkIf (cfg.defaults != null) {
+        home.file.".darcs/defaults".text = cfg.defaults;
+      })
     ]
   );
 }

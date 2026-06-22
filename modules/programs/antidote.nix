@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib) escapeShellArg;
+
   cfg = config.programs.zsh.antidote;
 
   zPluginStr = (
@@ -42,19 +44,17 @@ in
 
     programs.zsh.initContent =
       let
-        configFiles = pkgs.runCommand "hm_antidote-files" { } ''
-          echo "${zPluginStr cfg.plugins}" > $out
-        '';
+        configFiles = pkgs.writeText "hm_antidote-files" (zPluginStr cfg.plugins);
         hashId = parseHashId "${configFiles}";
       in
       (lib.mkOrder 550 ''
         ## home-manager/antidote begin :
-        source ${cfg.package}/share/antidote/antidote.zsh
+        source ${escapeShellArg cfg.package}/share/antidote/antidote.zsh
         ${lib.optionalString cfg.useFriendlyNames "zstyle ':antidote:bundle' use-friendly-names 'yes'"}
 
-        bundlefile=${configFiles}
+        bundlefile=${escapeShellArg configFiles}
         zstyle ':antidote:bundle' file $bundlefile
-        staticfile=/tmp/tmp_hm_zsh_plugins.zsh-${hashId}
+        staticfile=/tmp/tmp_hm_zsh_plugins.zsh-${escapeShellArg hashId}
         zstyle ':antidote:static' file $staticfile
 
         antidote load $bundlefile $staticfile

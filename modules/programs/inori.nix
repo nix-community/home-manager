@@ -10,7 +10,6 @@ let
     mkOption
     mkEnableOption
     mkPackageOption
-    literalExpression
     mkIf
     hm
     maintainers
@@ -32,14 +31,12 @@ in
     package = mkPackageOption pkgs "inori" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          seek_seconds = 10;
-          dvorak_keybindings = true;
-        }
-      '';
+      example = {
+        seek_seconds = 10;
+        dvorak_keybindings = true;
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/inori/config.toml`.
 

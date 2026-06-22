@@ -16,6 +16,15 @@ in
   options.programs.discord = {
     enable = lib.mkEnableOption "Discord, the chat platform";
     package = lib.mkPackageOption pkgs "discord" { nullable = true; };
+    configName = lib.mkOption {
+      type = lib.types.str;
+      default = "discord";
+      example = "discordptb";
+      description = ''
+        Name of the subdirectory where {file}`settings.json` is linked under.
+        For example discord-canary uses `discordcanary`.
+      '';
+    };
     settings = lib.mkOption {
       description = ''
         Configuration for Discord.
@@ -62,7 +71,7 @@ in
     in
     {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      home.file."${configDir}/discord/settings.json".source =
+      home.file."${configDir}/${cfg.configName}/settings.json".source =
         jsonFormat.generate "discord-settings" cfg.settings;
     }
   );

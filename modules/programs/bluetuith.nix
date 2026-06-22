@@ -21,22 +21,20 @@ in
     package = lib.mkPackageOption pkgs "bluetuith" { nullable = true; };
 
     settings = lib.mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          adapter = "hci0";
-          receive-dir = "/home/user/files";
+      example = {
+        adapter = "hci0";
+        receive-dir = "/home/user/files";
 
-          keybindings = {
-            Menu = "Alt+m";
-          };
+        keybindings = {
+          Menu = "Alt+m";
+        };
 
-          theme = {
-            Adapter = "red";
-          };
-        }
-      '';
+        theme = {
+          Adapter = "red";
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/bluetuith/bluetuith.conf`.

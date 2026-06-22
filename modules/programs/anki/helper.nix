@@ -117,28 +117,40 @@ let
       profile_manager.set_answer_key(ease, key)
 
     # Profile specific options
+    ${lib.concatMapAttrsStringSep "\n" (name: pCfg: ''
+      profile_manager.create("${name}")
+      profile_manager.openProfile("${name}")
 
-    profile_manager.create("User 1")
-    profile_manager.openProfile("User 1")
+      # Without this, the collection DB won't get automatically optimized.
+      profile_manager.profile["lastOptimize"] = None
 
-    # Without this, the collection DB won't get automatically optimized.
-    profile_manager.profile["lastOptimize"] = None
+      auto_sync: bool | None = ${pyOptionalBool pCfg.sync.autoSync}
+      if auto_sync is not None:
+        profile_manager.profile["autoSync"] = auto_sync
 
-    auto_sync: bool | None = ${pyOptionalBool cfg.sync.autoSync}
-    if auto_sync is not None:
-      profile_manager.profile["autoSync"] = auto_sync
+      sync_media: bool | None = ${pyOptionalBool pCfg.sync.syncMedia}
+      if sync_media is not None:
+        profile_manager.profile["syncMedia"] = sync_media
 
-    sync_media: bool | None = ${pyOptionalBool cfg.sync.syncMedia}
-    if sync_media is not None:
-      profile_manager.profile["syncMedia"] = sync_media
+      media_sync_minutes_str: str = "${toString pCfg.sync.autoSyncMediaMinutes}"
+      if media_sync_minutes_str:
+        profile_manager.set_periodic_sync_media_minutes(int(media_sync_minutes_str))
 
-    media_sync_minutes_str: str = "${toString cfg.sync.autoSyncMediaMinutes}"
-    if media_sync_minutes_str:
-      profile_manager.set_periodic_sync_media_minutes(int(media_sync_minutes_str))
+      network_timeout_str: str = "${toString pCfg.sync.networkTimeout}"
+      if network_timeout_str:
+        profile_manager.set_network_timeout(int(network_timeout_str))
 
-    network_timeout_str: str = "${toString cfg.sync.networkTimeout}"
-    if network_timeout_str:
-      profile_manager.set_network_timeout(int(network_timeout_str))
+      profile_manager.save()
+    '') cfg.profiles}
+
+    default_profile: str | None = ${
+      let
+        defaultProfiles = lib.attrNames (lib.filterAttrs (_: prof: prof.default) cfg.profiles);
+      in
+      if defaultProfiles == [ ] then "None" else ''"${lib.head defaultProfiles}"''
+    }
+    if default_profile is not None:
+      profile_manager.set_last_loaded_profile_name(default_profile)
 
     profile_manager.save()
   '';
@@ -169,24 +181,29 @@ in
       import aqt
       from pathlib import Path
 
-      username: str | None = ${if cfg.sync.username == null then "None" else "'${cfg.sync.username}'"}
-      username_file: Path | None = ${
-        if cfg.sync.usernameFile == null then "None" else "Path('${cfg.sync.usernameFile}')"
-      }
-      key_file: Path | None = ${
-        if cfg.sync.keyFile == null then "None" else "Path('${cfg.sync.keyFile}')"
-      }
-      custom_sync_url: str | None = ${if cfg.sync.url == null then "None" else "'${cfg.sync.url}'"}
-
       def set_server() -> None:
-          if custom_sync_url:
-            aqt.mw.pm.set_custom_sync_url(custom_sync_url)
-          if username:
-            aqt.mw.pm.set_sync_username(username)
-          elif username_file and username_file.exists():
-              aqt.mw.pm.set_sync_username(username_file.read_text().strip())
-          if key_file and key_file.exists():
-              aqt.mw.pm.set_sync_key(key_file.read_text().strip())
+        ${lib.concatMapAttrsStringSep "\n  " (name: pCfg: ''
+          if aqt.mw.pm.name == "${name}":
+              username: str | None = ${
+                if pCfg.sync.username == null then "None" else "'${pCfg.sync.username}'"
+              }
+              username_file: Path | None = ${
+                if pCfg.sync.usernameFile == null then "None" else "Path('${pCfg.sync.usernameFile}')"
+              }
+              key_file: Path | None = ${
+                if pCfg.sync.keyFile == null then "None" else "Path('${pCfg.sync.keyFile}')"
+              }
+              custom_sync_url: str | None = ${if pCfg.sync.url == null then "None" else "'${pCfg.sync.url}'"}
+
+              if custom_sync_url:
+                aqt.mw.pm.set_custom_sync_url(custom_sync_url)
+              if username:
+                aqt.mw.pm.set_sync_username(username)
+              elif username_file and username_file.exists():
+                aqt.mw.pm.set_sync_username(username_file.read_text().strip())
+              if key_file and key_file.exists():
+                aqt.mw.pm.set_sync_key(key_file.read_text().strip())
+        '') cfg.profiles}
 
       aqt.gui_hooks.profile_did_open.append(set_server)
     '';
@@ -197,10 +214,12 @@ in
     pname = "home-manager";
     version = "1.0";
     src = pkgs.writeTextDir "__init__.py" ''
-      import aqt
-      from aqt.qt import QWidget, QMessageBox
-      from anki.hooks import wrap
+      from unittest.mock import patch
       from typing import Any
+
+      import aqt
+      from anki.hooks import wrap
+      from aqt.qt import QWidget, QMessageBox
 
       def make_config_differences_str(initial_config: dict[str, Any],
                                       new_config: dict[str, Any]) -> str:
@@ -243,18 +262,14 @@ in
 
         aqt.mw.pm.save = on_preferences_save
 
-      def state_will_change(new_state: aqt.main.MainWindowState,
-                            old_state: aqt.main.MainWindowState):
-        if new_state != "profileManager":
-          return
-
+      def show_profile_changes_warning() -> None:
         QMessageBox.warning(
           aqt.mw,
           "NixOS Info",
-          ("Profiles cannot be changed or added while settings are managed with "
-           "Home Manager.")
+          ("Profiles cannot be changed here while settings are managed with "
+            "Home Manager.")
         )
-
+        return None
 
       # Ensure Anki doesn't try to save to the read-only DB settings file.
       aqt.mw.pm.save = lambda: None
@@ -262,8 +277,10 @@ in
       # Tell the user when they try to change settings that won't be persisted.
       aqt.gui_hooks.dialog_manager_did_open_dialog.append(dialog_did_open)
 
-      # Show warning when users try to switch or customize profiles.
-      aqt.gui_hooks.state_will_change.append(state_will_change)
+      # Warn the user when they try to change profiles imperatively.
+      patch.object(aqt.mw, "onAddProfile", show_profile_changes_warning).start()
+      patch.object(aqt.mw, "onRenameProfile", show_profile_changes_warning).start()
+      patch.object(aqt.mw, "onRemProfile", show_profile_changes_warning).start()
     '';
   };
 }

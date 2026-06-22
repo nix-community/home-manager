@@ -19,8 +19,8 @@ let
     let
       formatValue = v: if builtins.isBool v then if v then "true" else "false" else toString v;
 
-      globalSettings = lib.filterAttrs (n: v: !(lib.isAttrs v)) config;
-      sectionSettings = lib.filterAttrs (n: v: lib.isAttrs v) config;
+      globalSettings = lib.filterAttrs (_n: v: !(lib.isAttrs v)) config;
+      sectionSettings = lib.filterAttrs (_n: v: lib.isAttrs v) config;
 
       globalLines = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (k: v: "${k}=${formatValue v}") globalSettings
@@ -99,7 +99,7 @@ in
 
   options.services.mako = {
     enable = mkEnableOption "mako";
-    package = mkPackageOption pkgs "mako" { };
+    package = mkPackageOption pkgs "mako" { nullable = true; };
     settings = mkOption {
       type = lib.types.attrsOf (
         lib.types.oneOf [
@@ -151,12 +151,16 @@ in
       (lib.hm.assertions.assertPlatform "services.mako" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
-    dbus.packages = [ cfg.package ];
+    dbus.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."mako/config" = mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-      onChange = "${cfg.package}/bin/makoctl reload || true";
+      onChange =
+        let
+          makoctl = if cfg.package != null then lib.getExe' cfg.package "makoctl" else "makoctl";
+        in
+        "${makoctl} reload || true";
       text = generateConfig cfg.settings;
     };
   };

@@ -22,7 +22,7 @@ in
     enable = mkEnableOption "management of yarn config";
 
     settings = mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

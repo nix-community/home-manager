@@ -24,7 +24,7 @@ let
   jsonFormat = pkgs.formats.json { };
 
   mkMargin =
-    name:
+    _name:
     mkOption {
       type = types.nullOr types.int;
       default = null;
@@ -55,9 +55,11 @@ let
         output = mkOption {
           type = nullOr (either str (listOf str));
           default = null;
-          example = literalExpression ''
-            [ "DP-1" "!DP-2" "!DP-3" ]
-          '';
+          example = [
+            "DP-1"
+            "!DP-2"
+            "!DP-3"
+          ];
           description = ''
             Specifies on which screen this bar will be displayed.
             Exclamation mark(!) can be used to exclude specific output.
@@ -94,18 +96,18 @@ let
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed on the left.";
-          example = literalExpression ''
-            [ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
-          '';
+          example = [
+            "sway/workspaces"
+            "sway/mode"
+            "wlr/taskbar"
+          ];
         };
 
         modules-center = mkOption {
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed in the center.";
-          example = literalExpression ''
-            [ "sway/window" ]
-          '';
+          example = [ "sway/window" ];
         };
 
         modules-right = mkOption {
@@ -118,20 +120,18 @@ let
         };
 
         modules = mkOption {
-          type = jsonFormat.type;
+          inherit (jsonFormat) type;
           visible = false;
           default = null;
           description = "Modules configuration.";
-          example = literalExpression ''
-            {
-              "sway/window" = {
-                max-length = 50;
-              };
-              "clock" = {
-                format-alt = "{:%a, %d. %b  %H:%M}";
-              };
-            }
-          '';
+          example = {
+            "sway/window" = {
+              max-length = 50;
+            };
+            "clock" = {
+              format-alt = "{:%a, %d. %b  %H:%M}";
+            };
+          };
         };
 
         margin = mkOption {
@@ -166,6 +166,14 @@ in
   meta.maintainers = with lib.maintainers; [
     berbiche
     khaneliman
+  ];
+
+  imports = [
+    (lib.mkChangedOptionModule
+      [ "programs" "waybar" "systemd" "target" ]
+      [ "programs" "waybar" "systemd" "targets" ]
+      (config: lib.toList (lib.getAttrFromPath [ "programs" "waybar" "systemd" "target" ] config))
+    )
   ];
 
   options.programs.waybar = with lib.types; {
@@ -227,15 +235,15 @@ in
         '';
       };
 
-      target = mkOption {
-        type = str;
-        default = config.wayland.systemd.target;
-        defaultText = literalExpression "config.wayland.systemd.target";
-        example = "sway-session.target";
+      targets = mkOption {
+        type = with lib.types; listOf str;
+        default = [ config.wayland.systemd.target ];
+        defaultText = literalExpression "[ config.wayland.systemd.target ]";
+        example = [ "sway-session.target" ];
         description = ''
-          The systemd target that will automatically start the Waybar service.
+          The systemd targets that will automatically start the Waybar service.
 
-          When setting this value to `"sway-session.target"`,
+          When setting this value to `[ "sway-session.target" ]`,
           make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,
           otherwise the service may never be started.
         '';
@@ -318,7 +326,7 @@ in
 
         xdg.configFile."waybar/config" = mkIf (settings != [ ]) {
           source = configSource;
-          onChange = ''
+          onChange = mkIf (!cfg.systemd.enable) ''
             ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
           '';
         };
@@ -329,7 +337,7 @@ in
               cfg.style
             else
               pkgs.writeText "waybar/style.css" cfg.style;
-          onChange = ''
+          onChange = mkIf (!cfg.systemd.enable) ''
             ${pkgs.procps}/bin/pkill -u $USER -USR2 waybar || true
           '';
         };
@@ -340,11 +348,8 @@ in
           Unit = {
             Description = "Highly customizable Wayland bar for Sway and Wlroots based compositors.";
             Documentation = "https://github.com/Alexays/Waybar/wiki";
-            PartOf = [
-              cfg.systemd.target
-              "tray.target"
-            ];
-            After = [ cfg.systemd.target ];
+            PartOf = [ "tray.target" ] ++ cfg.systemd.targets;
+            After = cfg.systemd.targets;
             ConditionEnvironment = "WAYLAND_DISPLAY";
             X-Reload-Triggers =
               optional (settings != [ ]) "${config.xdg.configFile."waybar/config".source}"
@@ -359,10 +364,7 @@ in
             Restart = "on-failure";
           };
 
-          Install.WantedBy = [
-            cfg.systemd.target
-            "tray.target"
-          ];
+          Install.WantedBy = [ "tray.target" ] ++ cfg.systemd.targets;
         };
       })
     ]);

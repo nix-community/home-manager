@@ -1,8 +1,11 @@
 { pkgs, ... }:
 let
   passwordFile = "/home/alice/password";
+  passwordCommand = "${pkgs.coreutils}/bin/cat /home/alice/password";
   paths = [ "/home/alice/files" ];
   exclude = [ "*exclude*" ];
+
+  sshKeys = import "${pkgs.path}/nixos/tests/ssh-keys.nix" pkgs;
 in
 {
   home.username = "alice";
@@ -43,6 +46,18 @@ in
         inherit passwordFile paths exclude;
         initialize = true;
         repository = "/home/alice/repos/basic";
+      };
+
+      basic-command = {
+        inherit passwordCommand paths exclude;
+        initialize = true;
+        repository = "/home/alice/repos/basic";
+      };
+
+      repository-spaced = {
+        inherit passwordFile paths exclude;
+        initialize = true;
+        repository = "/home/alice/repos/repository with spaces!";
       };
 
       repo-file = {
@@ -128,6 +143,15 @@ in
           SECRET=1234
           TOKEN=123456789ABcdEF
         ''}";
+      };
+
+      sftp = {
+        inherit paths passwordFile exclude;
+        initialize = true;
+        repository = "sftp:alice@remote:/home/alice/remote-repo";
+        extraOptions = [
+          "sftp.args='-o StrictHostKeyChecking=no -i ${sshKeys.snakeOilEd25519PrivateKey}'"
+        ];
       };
     };
   };

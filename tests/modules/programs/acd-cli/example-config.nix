@@ -1,6 +1,8 @@
 {
   programs.acd-cli = {
     enable = true;
+    # nixpkgs removed acd-cli; this test only exercises config generation.
+    package = null;
     cliSettings = {
       download = {
         keep_corrupt = false;

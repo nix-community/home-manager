@@ -18,7 +18,7 @@ in
     package = lib.mkPackageOption pkgs "cava" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFmt.type;
+      inherit (iniFmt) type;
       default = { };
       example = lib.literalExpression ''
         {

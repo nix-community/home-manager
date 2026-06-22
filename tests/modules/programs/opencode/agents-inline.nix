@@ -29,11 +29,11 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/agent/code-reviewer.md
-    assertFileExists home-files/.config/opencode/agent/documentation.md
-    assertFileContent home-files/.config/opencode/agent/code-reviewer.md \
+    assertFileExists home-files/.config/opencode/agents/code-reviewer.md
+    assertFileExists home-files/.config/opencode/agents/documentation.md
+    assertFileContent home-files/.config/opencode/agents/code-reviewer.md \
       ${./code-reviewer-agent.md}
-    assertFileContent home-files/.config/opencode/agent/documentation.md \
+    assertFileContent home-files/.config/opencode/agents/documentation.md \
       ${./documentation-agent.md}
   '';
 }

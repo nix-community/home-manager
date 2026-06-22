@@ -20,7 +20,7 @@ in
       package = lib.mkPackageOption pkgs "vim-vint" { nullable = true; };
 
       settings = lib.mkOption {
-        type = yamlFormat.type;
+        inherit (yamlFormat) type;
         default = { };
         description = ''
           Configuration written to

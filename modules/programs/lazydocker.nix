@@ -27,19 +27,20 @@ in
     package = lib.mkPackageOption pkgs "lazydocker" { nullable = true; };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = {
         commandTemplates.dockerCompose = "docker compose"; # Lazydocker uses docker-compose by default which will not work
       };
-      example = lib.literalExpression ''
-        {
-          gui.theme = {
-            activeBorderColor = ["red" "bold"];
-            inactiveBorderColor = ["blue"];
-          };
-          commandTemplates.dockerCompose = "docker compose compose -f docker-compose.yml";
-        }
-      '';
+      example = {
+        gui.theme = {
+          activeBorderColor = [
+            "red"
+            "bold"
+          ];
+          inactiveBorderColor = [ "blue" ];
+        };
+        commandTemplates.dockerCompose = "docker compose compose -f docker-compose.yml";
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/lazydocker/config.yml`

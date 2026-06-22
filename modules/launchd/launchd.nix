@@ -278,7 +278,7 @@ in
         multiple keys are provided, launchd ORs them, thus providing maximum flexibility to the job to refine
         the logic and stall if necessary. If launchd finds no reason to restart the job, it falls back on
         demand based invocation.  Jobs that exit quickly and frequently when configured to be kept alive will
-        be throttled to converve system resources.
+        be throttled to conserve system resources.
       '';
     };
 

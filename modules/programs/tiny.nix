@@ -23,7 +23,7 @@ in
       package = lib.mkPackageOption pkgs "tiny" { };
 
       settings = lib.mkOption {
-        type = format.type;
+        inherit (format) type;
         default = { };
         defaultText = lib.literalExpression "{ }";
         example = lib.literalExpression ''

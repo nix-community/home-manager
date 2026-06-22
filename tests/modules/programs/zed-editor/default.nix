@@ -1,5 +1,7 @@
 {
   zed-extensions = ./extensions.nix;
+  zed-mcp-integration = ./mcp-integration.nix;
+  zed-mcp-integration-with-override = ./mcp-integration-with-override.nix;
   zed-extensions-immutable = ./extensions-immutable.nix;
   zed-install-remote-server = ./install-remote-server.nix;
   zed-keymap = ./keymap.nix;

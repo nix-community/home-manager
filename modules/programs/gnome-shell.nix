@@ -74,7 +74,7 @@ in
           { package = pkgs.gnomeExtensions.dash-to-panel; }
           {
             id = "user-theme@gnome-shell-extensions.gcampax.github.com";
-            package = pkgs.gnome-shell-extensions;
+            package = pkgs.gnomeExtensions.user-themes;
           }
         ]
       '';
@@ -114,8 +114,7 @@ in
 
         programs.gnome-shell.extensions = [
           {
-            id = "user-theme@gnome-shell-extensions.gcampax.github.com";
-            package = pkgs.gnome-shell-extensions;
+            package = pkgs.gnomeExtensions.user-themes;
           }
         ];
 

@@ -239,7 +239,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.maintainers; [ thiagokokada ];
+  meta.maintainers = [ ];
 
   options.programs.hexchat = {
     enable = lib.mkEnableOption "HexChat, a graphical IRC client";

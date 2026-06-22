@@ -18,7 +18,6 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.services.clipcat = {
     enable = mkEnableOption "clipcat";
@@ -33,7 +32,7 @@ in
       '';
     };
     daemonSettings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = {
         daemonize = true;
       };
@@ -59,7 +58,7 @@ in
       '';
     };
     ctlSettings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {
@@ -79,7 +78,7 @@ in
       '';
     };
     menuSettings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = ''
         {

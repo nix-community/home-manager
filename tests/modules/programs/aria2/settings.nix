@@ -9,10 +9,6 @@
       max-upload-limit = "50K";
       ftp-pasv = true;
     };
-
-    extraConfig = ''
-      # Extra aria2 configuration.
-    '';
   };
 
   nmt.script = ''
@@ -24,7 +20,6 @@
         listen-port=60000
         max-upload-limit=50K
         seed-ratio=1.000000
-        # Extra aria2 configuration.
       ''}
   '';
 }

@@ -16,7 +16,7 @@ let
 
   # Needed for notmuch config, because the DB is here, and not in each
   # account's dir
-  maildirBasePath = config.accounts.email.maildirBasePath;
+  inherit (config.accounts.email) maildirBasePath;
 
   # make encryption config based on the given home-manager email
   # account TLS config
@@ -43,10 +43,10 @@ let
         display-name = account.realName;
         default = account.primary;
         folder.aliases = {
-          inbox = account.folders.inbox;
-          sent = account.folders.sent;
-          drafts = account.folders.drafts;
-          trash = account.folders.trash;
+          inherit (account.folders) inbox;
+          inherit (account.folders) sent;
+          inherit (account.folders) drafts;
+          inherit (account.folders) trash;
         };
       };
 

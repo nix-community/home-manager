@@ -31,7 +31,7 @@ let
       path = int;
       bool = "0"; # "on/off" opts are disabled with `=0`
       string = option;
-      list = lib.concatStringsSep "," (lib.lists.forEach option (x: toString x));
+      list = lib.concatStringsSep "," (lib.lists.forEach option toString);
     }
     .${builtins.typeOf option};
 
@@ -78,13 +78,11 @@ in
       settingsPerApplication = mkOption {
         type = with types; attrsOf (attrsOf settingsType);
         default = { };
-        example = lib.literalExpression ''
-          {
-            mpv = {
-              no_display = true;
-            };
-          }
-        '';
+        example = {
+          mpv = {
+            no_display = true;
+          };
+        };
         description = ''
           Sets MangoHud settings per application.
           Configuration written to

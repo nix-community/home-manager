@@ -1,14 +1,14 @@
 {
   programs.claude-code = {
     enable = true;
-    skillsDir = ./skills;
+    skills = ./skills;
   };
 
   nmt.script = ''
-    assertFileExists home-files/.claude/skills/test-skill.md
-    assertLinkExists home-files/.claude/skills/test-skill.md
+    assertFileExists home-files/.claude/skills/test-skill/SKILL.md
+    assertLinkExists home-files/.claude/skills/test-skill/SKILL.md
     assertFileContent \
-      home-files/.claude/skills/test-skill.md \
-      ${./skills/test-skill.md}
+      home-files/.claude/skills/test-skill/SKILL.md \
+      ${./skills/test-skill/SKILL.md}
   '';
 }

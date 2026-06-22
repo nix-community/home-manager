@@ -29,9 +29,15 @@ in
       [ "programs" "git" "difftastic" "package" ]
       [ "programs" "difftastic" "package" ]
     )
-    (lib.mkRenamedOptionModule
+    (lib.mkChangedOptionModule
       [ "programs" "git" "difftastic" "enableAsDifftool" ]
+      [ "programs" "difftastic" "git" "mode" ]
+      (config: if config.programs.git.difftastic.enableAsDifftool then "both" else "external")
+    )
+    (lib.mkChangedOptionModule
       [ "programs" "difftastic" "git" "diffToolMode" ]
+      [ "programs" "difftastic" "git" "mode" ]
+      (config: if config.programs.difftastic.git.diffToolMode then "both" else "external")
     )
     (lib.mkRenamedOptionModule
       [ "programs" "git" "difftastic" "options" ]
@@ -67,15 +73,18 @@ in
     options = mkOption {
       type =
         with types;
-        attrsOf (oneOf [
-          str
-          int
-          bool
-        ]);
+        let
+          atom = oneOf [
+            str
+            int
+            bool
+          ];
+        in
+        attrsOf (either atom (listOf atom));
       default = { };
       example = {
-        color = "dark";
-        sort-path = true;
+        color = "always";
+        sort-paths = true;
         tab-width = 8;
       };
       description = "Configuration options for {command}`difftastic`. See {command}`difft --help`";
@@ -88,19 +97,29 @@ in
         description = ''
           Whether to enable git integration for difftastic.
 
-          When enabled, difftastic will be configured as git's external diff tool or difftool
-          depending on the value of {option}`programs.difftastic.git.diffToolMode`.
+          When enabled, difftastic will be configured as git's external diff
+          command, as a git difftool, or both, depending on the value of
+          {option}`programs.difftastic.git.mode`.
         '';
       };
 
-      diffToolMode = mkOption {
-        type = types.bool;
-        default = false;
+      mode = mkOption {
+        type = types.enum [
+          "external"
+          "difftool"
+          "both"
+        ];
+        default = "external";
+        example = "difftool";
         description = ''
-          Whether to additionally configure difftastic as a git difftool.
+          How difftastic integrates with git.
 
-          When `false`, only `diff.external` is set (used for `git diff`).
-          When `true`, both `diff.external` and difftool config are set (supporting both `git diff` and `git difftool`).
+          - `"external"`: set `diff.external` so {command}`git diff` uses
+            difftastic by default.
+          - `"difftool"`: only configure difftastic as a git difftool
+            (`diff.tool` and `difftool.difftastic.cmd`), leaving
+            {command}`git diff` untouched.
+          - `"both"`: configure both `diff.external` and the difftool.
         '';
       };
     };
@@ -142,13 +161,25 @@ in
               difftCommand = "${lib.getExe cfg.package} ${lib.cli.toCommandLineShellGNU { } cfg.options}";
             in
             mkMerge [
-              {
-                diff.external = difftCommand;
-              }
-              (mkIf cfg.git.diffToolMode {
-                diff.tool = lib.mkDefault "difftastic";
-                difftool.difftastic.cmd = "${difftCommand} $LOCAL $REMOTE";
-              })
+              (mkIf
+                (lib.elem cfg.git.mode [
+                  "external"
+                  "both"
+                ])
+                {
+                  diff.external = difftCommand;
+                }
+              )
+              (mkIf
+                (lib.elem cfg.git.mode [
+                  "difftool"
+                  "both"
+                ])
+                {
+                  diff.tool = lib.mkDefault "difftastic";
+                  difftool.difftastic.cmd = "${difftCommand} $LOCAL $REMOTE";
+                }
+              )
             ];
         };
       })

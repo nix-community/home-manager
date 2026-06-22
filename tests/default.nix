@@ -47,7 +47,7 @@ let
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
     let
-      inner = self: super: {
+      inner = _self: _super: {
         inherit (pkgs)
           coreutils
           crudini
@@ -84,12 +84,12 @@ let
     # TODO: fix darwin stdenv stubbing
     if isDarwin then
       let
-        rawPkgs = lib.makeExtensible (final: pkgs);
+        rawPkgs = lib.makeExtensible (_final: pkgs);
       in
       builtins.traceVerbose "eval scrubbed darwin nixpkgs" (rawPkgs.extend darwinScrublist)
     else
       let
-        rawScrubbedPkgs = lib.makeExtensible (final: scrubDerivations pkgs);
+        rawScrubbedPkgs = lib.makeExtensible (_final: scrubDerivations pkgs);
       in
       builtins.traceVerbose "eval scrubbed nixpkgs" (rawScrubbedPkgs.extend whitelist);
 
@@ -115,7 +115,7 @@ let
                   if overlays == [ ] then
                     scrubbedPkgs
                   else
-                    builtins.traceVerbose "eval overlayed nixpkgs" (lib.foldr (o: p: p.extend o) scrubbedPkgs overlays);
+                    builtins.traceVerbose "eval overlaid nixpkgs" (lib.foldr (o: p: p.extend o) scrubbedPkgs overlays);
               in
               lib.mkImageMediaOverride stubbedPkgs;
           };
@@ -152,8 +152,8 @@ let
       )
     ];
 
-  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
-  isLinux = pkgs.stdenv.hostPlatform.isLinux;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 import nmtSrc {
   inherit lib pkgs modules;
@@ -177,7 +177,9 @@ import nmtSrc {
       (
         [
           # keep-sorted start case=no numeric=yes
+          ./lib/deprecations
           ./lib/generators
+          ./lib/mcp
           ./lib/types
           ./modules/files
           ./modules/home-environment
@@ -185,8 +187,9 @@ import nmtSrc {
           ./modules/misc/manual
           ./modules/misc/news
           ./modules/misc/nix
-          ./modules/misc/nix-remote-build
+          ./modules/misc/nixpkgs-disabled
           ./modules/misc/specialisation
+          ./modules/misc/ssh-auth-sock/default.nix
           ./modules/misc/xdg
           ./modules/xresources
           # keep-sorted end
@@ -211,6 +214,7 @@ import nmtSrc {
           ./modules/misc/qt
           ./modules/misc/xdg/linux.nix
           ./modules/misc/xsession
+          ./modules/services-modular
           ./modules/systemd
           ./modules/targets-linux
           # keep-sorted end

@@ -16,13 +16,12 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.i3bar-river = {
     enable = mkEnableOption "i3bar-river";
     package = mkPackageOption pkgs "i3bar-river" { nullable = true; };
     settings = mkOption {
-      type = formatter.type;
+      inherit (formatter) type;
       default = { };
       example = {
         background = "#282828ff";

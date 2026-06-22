@@ -7,7 +7,7 @@
 
 let
   cfg = config.programs.mc;
-  type = (pkgs.formats.ini { }).type;
+  inherit ((pkgs.formats.ini { })) type;
 in
 {
   options.programs.mc = {

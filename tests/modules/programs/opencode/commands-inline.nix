@@ -17,11 +17,11 @@
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/command/changelog.md
-    assertFileExists home-files/.config/opencode/command/commit.md
-    assertFileContent home-files/.config/opencode/command/changelog.md \
+    assertFileExists home-files/.config/opencode/commands/changelog.md
+    assertFileExists home-files/.config/opencode/commands/commit.md
+    assertFileContent home-files/.config/opencode/commands/changelog.md \
       ${./changelog-command.md}
-    assertFileContent home-files/.config/opencode/command/commit.md \
+    assertFileContent home-files/.config/opencode/commands/commit.md \
       ${./commit-command.md}
   '';
 }

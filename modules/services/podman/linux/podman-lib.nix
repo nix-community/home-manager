@@ -15,17 +15,28 @@ let
   normalizeKeyValue =
     k: v:
     let
+      mkValueString = lib.generators.mkValueStringDefault { };
+      quoteIfSpaced =
+        s: if lib.match ".*[[:space:]].*" s == null then s else ''"${lib.escape [ "\\" "\"" ] s}"'';
+
+      normalizeAttrValue =
+        name: value:
+        lib.optionalString (value != null) (
+          if builtins.isAttrs value then
+            normalizeKeyValue name value
+          else
+            quoteIfSpaced "${name}=${mkValueString value}"
+        );
+
       v' =
-        if builtins.isBool v then
-          (if v then "true" else "false")
-        else if builtins.isAttrs v then
+        if builtins.isAttrs v then
           (concatStringsSep ''
 
-            ${k}='' (mapAttrsToList normalizeKeyValue v))
+            ${k}='' (mapAttrsToList normalizeAttrValue v))
         else
-          toString v;
+          mkValueString v;
     in
-    if isNull v then "" else "${k}=${v'}";
+    lib.optionalString (v != null) "${k}=${v'}";
 
   primitiveAttrs = with types; attrsOf (either primitive (listOf primitive));
   primitiveList = with types; listOf primitive;
@@ -188,7 +199,7 @@ in
     in
     if allQuadletsSameType then
       ''
-        ${concatStringsSep "\n" (map (quadlet: formatServiceName quadlet) quadlets)}
+        ${concatStringsSep "\n" (map formatServiceName quadlets)}
       ''
     else
       abort ''

@@ -1,0 +1,5 @@
+root: ~/project
+session: project-${worktree}
+windows:
+- layout: tiled
+  name: src

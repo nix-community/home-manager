@@ -9,7 +9,6 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
-    literalExpression
     ;
 
   tomlFormat = pkgs.formats.toml { };
@@ -24,13 +23,11 @@ in
     package = mkPackageOption pkgs "ty" { nullable = true; };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          rules.index-out-of-bounds = "ignore";
-        }
-      '';
+      example = {
+        rules.index-out-of-bounds = "ignore";
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/ty/ty.toml`.

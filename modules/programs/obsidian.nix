@@ -14,6 +14,8 @@ let
     types
     ;
 
+  settingsFormat = pkgs.formats.json { };
+
   cfg = config.programs.obsidian;
 
   corePluginsList = [
@@ -50,10 +52,6 @@ let
     "zk-prefixer"
   ];
 
-  appSettingsType = with types; nullOr (attrsOf anything);
-
-  appearanceSettingsType = with types; nullOr (attrsOf anything);
-
   corePluginsOptions = {
     options = {
       enable = mkOption {
@@ -68,7 +66,7 @@ let
       };
 
       settings = mkOption {
-        type = with types; nullOr (attrsOf anything);
+        inherit (settingsFormat) type;
         description = "Plugin settings to include.";
         default = null;
       };
@@ -94,7 +92,7 @@ let
       };
 
       settings = mkOption {
-        type = with types; nullOr (attrsOf anything);
+        inherit (settingsFormat) type;
         description = "Settings to include in the plugin's `data.json`.";
         default = null;
       };
@@ -178,7 +176,7 @@ let
   hotkeysSettingsType = with types; nullOr (attrsOf (listOf (submodule hotkeysOptions)));
 
   extraFilesOptions =
-    { name, config, ... }:
+    { name, ... }:
     {
       options = {
         source = mkOption {
@@ -205,11 +203,17 @@ let
   extraFilesSettingsType = with types; nullOr (attrsOf (submodule extraFilesOptions));
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.karaolidis ];
+  meta.maintainers = [ lib.maintainers.karaolidis ];
 
   options.programs.obsidian = {
     enable = mkEnableOption "obsidian";
     package = mkPackageOption pkgs "obsidian" { nullable = true; };
+
+    cli.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether to enable the Obsidian CLI in `obsidian.json`.";
+    };
 
     defaultSettings = {
       app = mkOption {
@@ -218,7 +222,7 @@ in
 
           Vault-specific settings take priority and will override these, if set.
         '';
-        type = appSettingsType;
+        inherit (settingsFormat) type;
         default = null;
       };
 
@@ -228,7 +232,7 @@ in
 
           Vault-specific settings take priority and will override these, if set.
         '';
-        type = appearanceSettingsType;
+        inherit (settingsFormat) type;
         default = null;
       };
 
@@ -297,7 +301,7 @@ in
       description = "List of vaults to create.";
       type = types.attrsOf (
         types.submodule (
-          { name, config, ... }:
+          { name, ... }:
           {
             options = {
               enable = mkOption {
@@ -315,14 +319,14 @@ in
               settings = {
                 app = mkOption {
                   description = "Settings to write to app.json.";
-                  type = appSettingsType;
+                  inherit (settingsFormat) type;
                   default = cfg.defaultSettings.app;
                   defaultText = literalExpression "config.programs.obsidian.defaultSettings.app";
                 };
 
                 appearance = mkOption {
                   description = "Settings to write to appearance.json.";
-                  type = appearanceSettingsType;
+                  inherit (settingsFormat) type;
                   default = cfg.defaultSettings.appearance;
                   defaultText = literalExpression "config.programs.obsidian.defaultSettings.appearance";
                 };
@@ -387,7 +391,7 @@ in
         let
           manifest = builtins.fromJSON (builtins.readFile "${item.pkg}/manifest.json");
         in
-        manifest.id or manifest.name;
+        item.pkg.manifestId or manifest.id or manifest.name;
     in
     lib.mkIf cfg.enable {
       home = {
@@ -400,7 +404,7 @@ in
               lib.lists.optionals (vault.settings.app != null) [
                 {
                   name = "${vault.target}/.obsidian/app.json";
-                  value.source = (pkgs.formats.json { }).generate "app.json" vault.settings.app;
+                  value.source = settingsFormat.generate "app.json" vault.settings.app;
                 }
               ];
 
@@ -416,7 +420,7 @@ in
                   {
                     name = "${vault.target}/.obsidian/appearance.json";
                     value = {
-                      source = (pkgs.formats.json { }).generate "appearance.json" (
+                      source = settingsFormat.generate "appearance.json" (
                         (lib.attrsets.optionalAttrs (vault.settings.appearance != null) vault.settings.appearance)
                         // (lib.attrsets.optionalAttrs (vault.settings.cssSnippets != null) {
                           enabledCssSnippets = map (snippet: snippet.name) (
@@ -444,7 +448,7 @@ in
                 [
                   {
                     name = "${vault.target}/.obsidian/core-plugins.json";
-                    value.source = (pkgs.formats.json { }).generate "core-plugins.json" (
+                    value.source = settingsFormat.generate "core-plugins.json" (
                       builtins.listToAttrs (
                         map (name: {
                           inherit name;
@@ -456,7 +460,7 @@ in
                 ]
                 ++ map (plugin: {
                   name = "${vault.target}/.obsidian/${plugin.name}.json";
-                  value.source = (pkgs.formats.json { }).generate "${plugin.name}.json" plugin.settings;
+                  value.source = settingsFormat.generate "${plugin.name}.json" plugin.settings;
                 }) (builtins.filter (plugin: plugin.settings != null) vault.settings.corePlugins)
               );
 
@@ -466,7 +470,7 @@ in
                 [
                   {
                     name = "${vault.target}/.obsidian/community-plugins.json";
-                    value.source = (pkgs.formats.json { }).generate "community-plugins.json" (
+                    value.source = settingsFormat.generate "community-plugins.json" (
                       map getManifest (builtins.filter (plugin: plugin.enable) vault.settings.communityPlugins)
                     );
                   }
@@ -480,7 +484,7 @@ in
                 }) vault.settings.communityPlugins
                 ++ map (plugin: {
                   name = "${vault.target}/.obsidian/plugins/${getManifest plugin}/data.json";
-                  value.source = (pkgs.formats.json { }).generate "data.json" plugin.settings;
+                  value.source = settingsFormat.generate "data.json" plugin.settings;
                 }) (builtins.filter (plugin: plugin.settings != null) vault.settings.communityPlugins)
               );
 
@@ -515,7 +519,7 @@ in
               lib.lists.optionals (vault.settings.hotkeys != null) [
                 {
                   name = "${vault.target}/.obsidian/hotkeys.json";
-                  value.source = (pkgs.formats.json { }).generate "hotkeys.json" vault.settings.hotkeys;
+                  value.source = settingsFormat.generate "hotkeys.json" vault.settings.hotkeys;
                 }
               ];
 
@@ -553,7 +557,13 @@ in
 
         activation.obsidian =
           let
-            template = (pkgs.formats.json { }).generate "obsidian.json" {
+            obsidianConfigDir =
+              if pkgs.stdenv.isDarwin then
+                "${config.home.homeDirectory}/Library/Application Support/obsidian"
+              else
+                "${config.xdg.configHome}/obsidian";
+
+            template = settingsFormat.generate "obsidian.json" {
               vaults = builtins.listToAttrs (
                 map (vault: {
                   name = builtins.substring 0 16 (builtins.hashString "md5" vault.target);
@@ -563,10 +573,11 @@ in
                 }) vaults
               );
               updateDisabled = true;
+              cli = cfg.cli.enable;
             };
           in
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            OBSIDIAN_CONFIG="$HOME/.config/obsidian/obsidian.json"
+            OBSIDIAN_CONFIG="${obsidianConfigDir}/obsidian.json"
             if [ -f "$OBSIDIAN_CONFIG" ]; then
               verboseEcho "Merging existing Obsidian config with generated template"
               tmp="$(mktemp)"
@@ -586,23 +597,23 @@ in
             vault:
             builtins.all (
               snippet:
-              (snippet.source == null || snippet.text == null) && (snippet.source != null || snippet.text != null)
+              (snippet.source != null && snippet.text == null) || (snippet.source == null && snippet.text != null)
             ) (lib.lists.optionals (vault.settings.cssSnippets != null) vault.settings.cssSnippets)
           ) (builtins.attrValues cfg.vaults);
-          message = "Each CSS snippet must have one of 'source' or 'text' set";
+          message = "Each CSS snippet must have exactly one of 'source' or 'text' set";
         }
         {
           assertion = builtins.all (
             vault:
             builtins.all
-              (file: (file.source == null || file.text == null) && (file.source != null || file.text != null))
+              (file: (file.source != null && file.text == null) || (file.source == null && file.text != null))
               (
                 lib.lists.optionals (vault.settings.extraFiles != null) (
                   builtins.attrValues vault.settings.extraFiles
                 )
               )
           ) (builtins.attrValues cfg.vaults);
-          message = "Each extra file must have one of 'source' or 'text' set";
+          message = "Each extra file must have exactly one of 'source' or 'text' set";
         }
       ];
     };

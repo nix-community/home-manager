@@ -14,24 +14,25 @@ let
   dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
 
   launchdConfig =
-    { config, name, ... }:
+    { name, ... }:
     {
       options = {
         enable = lib.mkEnableOption name;
         config = lib.mkOption {
           type = lib.types.submodule (import ./launchd.nix);
           default = { };
-          example = lib.literalExpression ''
-            {
-              ProgramArguments = [ "/usr/bin/say" "Good afternoon" ];
-              StartCalendarInterval = [
-                {
-                  Hour = 12;
-                  Minute = 0;
-                }
-              ];
-            }
-          '';
+          example = {
+            ProgramArguments = [
+              "/usr/bin/say"
+              "Good afternoon"
+            ];
+            StartCalendarInterval = [
+              {
+                Hour = 12;
+                Minute = 0;
+              }
+            ];
+          };
           description = ''
             Define a launchd job. See {manpage}`launchd.plist(5)` for details.
           '';
@@ -69,9 +70,9 @@ let
   toAgent =
     config: pkgs.writeText "${config.Label}.plist" (toPlist { escape = true; } (mutateConfig config));
 
-  agentPlists = lib.mapAttrs' (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)) (
-    lib.filterAttrs (n: v: v.enable) cfg.agents
-  );
+  agentPlists = lib.mapAttrs' (
+    _n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)
+  ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
 
   agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"
@@ -145,7 +146,7 @@ in
 
               verboseEcho "Stopping agent '$domain/$agentName'..."
               local bootout_output
-              bootout_output=$(run /bin/launchctl bootout "$domain/$agentName" 2>&1) || {
+              bootout_output=$(run /bin/launchctl bootout --wait "$domain/$agentName" 2>&1) || {
                 # Only show warning if it's not the common "No such process" error
                 if [[ "$bootout_output" != *"No such process"* ]]; then
                   warnEcho "Failed to stop agent '$domain/$agentName': $bootout_output"
@@ -153,9 +154,6 @@ in
                   verboseEcho "Agent '$domain/$agentName' was not running"
                 fi
               }
-
-              # Give the system a moment to fully unload the agent
-              sleep 1
             }
 
             installAndBootstrapAgent() {

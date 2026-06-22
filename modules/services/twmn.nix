@@ -193,24 +193,20 @@ in
         easeIn = mkOption {
           type = types.submodule { options = animationOpts; };
           default = { };
-          example = literalExpression ''
-            {
-              curve = 19;
-              duration = 618;
-            }
-          '';
+          example = {
+            curve = 19;
+            duration = 618;
+          };
           description = "Options for the notification appearance's animation.";
         };
 
         easeOut = mkOption {
           type = types.submodule { options = animationOpts; };
           default = { };
-          example = literalExpression ''
-            {
-              curve = 19;
-              duration = 618;
-            }
-          '';
+          example = {
+            curve = 19;
+            duration = 618;
+          };
           description = "Options for the notification disappearance's animation.";
         };
 
@@ -335,7 +331,7 @@ in
             opacity = toString cfg.window.opacity;
             out_animation = toString cfg.window.animation.easeOut.curve;
             out_animation_duration = toString cfg.window.animation.easeOut.duration;
-            position = cfg.window.position;
+            inherit (cfg.window) position;
             screen = toString cfg.screen;
           };
           # map null values to empty strings because formats.toml generator fails
@@ -343,7 +339,7 @@ in
           icons = lib.mapAttrs (_: toString) cfg.icons;
           main = {
             duration = toString cfg.duration;
-            host = cfg.host;
+            inherit (cfg) host;
             port = toString cfg.port;
             sound_command = cfg.soundCommand;
           };

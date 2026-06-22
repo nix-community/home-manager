@@ -30,7 +30,7 @@ in
     package = mkPackageOption pkgs "fastfetch" { nullable = true; };
 
     settings = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
       example = literalExpression ''
         {

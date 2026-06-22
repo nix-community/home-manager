@@ -15,7 +15,7 @@ in
     enable = lib.mkEnableOption "nix-init";
     package = lib.mkPackageOption pkgs "nix-init" { nullable = true; };
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = lib.literalExpression ''
         {

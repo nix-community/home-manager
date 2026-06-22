@@ -27,17 +27,15 @@ in
     package = lib.mkPackageOption pkgs "navi" { };
 
     settings = lib.mkOption {
-      type = yamlFormat.type;
+      inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          cheats = {
-            paths = [
-              "~/cheats/"
-            ];
-          };
-        }
-      '';
+      example = {
+        cheats = {
+          paths = [
+            "~/cheats/"
+          ];
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/navi/config.yaml` on Linux or

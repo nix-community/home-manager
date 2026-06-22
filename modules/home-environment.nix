@@ -266,12 +266,15 @@ in
       default = { };
       type =
         with types;
-        lazyAttrsOf (oneOf [
-          str
-          path
-          int
-          float
-        ]);
+        lazyAttrsOf (
+          nullOr (oneOf [
+            str
+            path
+            int
+            float
+            bool
+          ])
+        );
       example = {
         EDITOR = "emacs";
         GS_OPTIONS = "-sPAPERSIZE=a4";
@@ -307,6 +310,9 @@ in
           BAR = "''${config.home.sessionVariables.FOO} World!";
         };
         ```
+
+        Setting a value to `null` will skip setting the variable at all, which
+        may be useful when overriding.
       '';
     };
 
@@ -655,7 +661,7 @@ in
       destination = "/etc/profile.d/hm-session-vars.sh";
       text = ''
         # Only source this once.
-        if [ -n "$__HM_SESS_VARS_SOURCED" ]; then return; fi
+        if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
         export __HM_SESS_VARS_SOURCED=1
 
         ${config.lib.shell.exportAll cfg.sessionVariables}

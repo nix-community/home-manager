@@ -104,7 +104,7 @@ in
           radio-active =
             if player == "mpv" then
               pkgs.radio-active.overrideAttrs (
-                finalAttrs: previousAttrs: {
+                _finalAttrs: previousAttrs: {
                   postPatch = ''
                     ${previousAttrs.postPatch}
 
@@ -116,7 +116,7 @@ in
               )
             else if player == "vlc" then
               pkgs.radio-active.overrideAttrs (
-                finalAttrs: previousAttrs: {
+                _finalAttrs: previousAttrs: {
                   postPatch = ''
                     ${previousAttrs.postPatch}
 

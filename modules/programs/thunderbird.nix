@@ -24,7 +24,9 @@ let
 
   cfg = config.programs.thunderbird;
 
-  thunderbirdJson = types.attrsOf (pkgs.formats.json { }).type // {
+  jsonFormat = pkgs.formats.json { };
+
+  thunderbirdJson = types.attrsOf jsonFormat.type // {
     description = "Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON string)";
   };
 
@@ -58,7 +60,7 @@ let
   profilesWithId = lib.imap0 (i: v: v // { id = toString i; }) (attrValues cfg.profiles);
 
   profilesIni =
-    lib.foldl lib.recursiveUpdate
+    lib.foldl' lib.recursiveUpdate
       {
         General = {
           StartWithLastProfile = 1;
@@ -87,6 +89,49 @@ let
         if (builtins.isString address) then address else (address.address + address.realName)
       ));
 
+  thunderbirdAuthMethods = {
+    anonymous = 1;
+    clear = 3;
+    cram_md5 = 4;
+    digest_md5 = 4;
+    gssapi = 5;
+    login = 3;
+    ntlm = 6;
+    plain = 3;
+    xoauth2 = 10;
+  };
+
+  toThunderbirdAuthMethod =
+    authentication: if authentication == null then 3 else thunderbirdAuthMethods.${authentication} or 3;
+
+  authMethodWarning =
+    name: authentication:
+    lib.optional (authentication != null && !builtins.hasAttr authentication thunderbirdAuthMethods) ''
+      ${moduleName}: accounts.email.accounts.${name} uses authentication method
+      '${authentication}', which Thunderbird does not support directly. Falling back
+      to password-based authentication.
+    '';
+
+  unsupportedAuthMethodWarnings =
+    account:
+    let
+      aliasWarnings =
+        alias:
+        lib.optionals (builtins.isAttrs alias && alias.smtp != null && alias.smtp != account.smtp) (
+          authMethodWarning "${account.name}.aliases.${alias.address}.smtp" alias.smtp.authentication
+        );
+    in
+    lib.optionals (account.imap != null) (
+      authMethodWarning "${account.name}.imap" account.imap.authentication
+    )
+    ++ lib.optionals (account.smtp != null) (
+      authMethodWarning "${account.name}.smtp" account.smtp.authentication
+    )
+    ++ lib.optionals (account.ews != null) (
+      authMethodWarning "${account.name}.ews" account.ews.authentication
+    )
+    ++ lib.concatMap aliasWarnings account.aliases;
+
   toThunderbirdIdentity =
     account: address:
     # For backwards compatibility, the primary address reuses the account ID.
@@ -102,6 +147,9 @@ let
       "mail.identity.id_${id}.htmlSigText" =
         if identity.signature.showSignature == "none" then "" else identity.signature.text;
     }
+    // optionalAttrs identity.signature.htmlFormat {
+      "mail.identity.id_${id}.htmlSigFormat" = true;
+    }
     // optionalAttrs (identity.gpg != null) {
       "mail.identity.id_${id}.attachPgpKey" = false;
       "mail.identity.id_${id}.autoEncryptDrafts" = true;
@@ -116,6 +164,9 @@ let
     // optionalAttrs (identity.smtp != null) {
       "mail.identity.id_${id}.smtpServer" = "smtp_${identity.id}";
     }
+    // optionalAttrs (identity.smtp == null && account.ews != null) {
+      "mail.identity.id_${id}.smtpServer" = "ews_${account.id}";
+    }
     // account.thunderbird.perIdentitySettings id;
 
   toThunderbirdSMTP =
@@ -125,7 +176,7 @@ let
       addressIsString = builtins.isString address;
     in
     optionalAttrs (!addressIsString && address.smtp != null) {
-      "mail.smtpserver.smtp_${id}.authMethod" = 3;
+      "mail.smtpserver.smtp_${id}.authMethod" = toThunderbirdAuthMethod address.smtp.authentication;
       "mail.smtpserver.smtp_${id}.hostname" = address.smtp.host;
       "mail.smtpserver.smtp_${id}.port" = if (address.smtp.port != null) then address.smtp.port else 587;
       "mail.smtpserver.smtp_${id}.try_ssl" =
@@ -139,9 +190,9 @@ let
     };
 
   toThunderbirdAccount =
-    account: profile:
+    account:
     let
-      id = account.id;
+      inherit (account) id;
       addresses = [ account.address ] ++ account.aliases;
     in
     {
@@ -154,7 +205,6 @@ let
       "mail.accountmanager.defaultaccount" = "account_${id}";
     }
     // optionalAttrs (account.imap != null) {
-      "mail.server.server_${id}.directory" = "${thunderbirdProfilesPath}/${profile.name}/ImapMail/${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]ImapMail/${id}";
       "mail.server.server_${id}.hostname" = account.imap.host;
       "mail.server.server_${id}.login_at_startup" = true;
@@ -170,8 +220,11 @@ let
       "mail.server.server_${id}.type" = "imap";
       "mail.server.server_${id}.userName" = account.userName;
     }
+    // optionalAttrs (account.imap != null && account.imap.authentication != null) {
+      "mail.server.server_${id}.authMethod" = toThunderbirdAuthMethod account.imap.authentication;
+    }
     // optionalAttrs (account.smtp != null) {
-      "mail.smtpserver.smtp_${id}.authMethod" = 3;
+      "mail.smtpserver.smtp_${id}.authMethod" = toThunderbirdAuthMethod account.smtp.authentication;
       "mail.smtpserver.smtp_${id}.hostname" = account.smtp.host;
       "mail.smtpserver.smtp_${id}.port" = if (account.smtp.port != null) then account.smtp.port else 587;
       "mail.smtpserver.smtp_${id}.try_ssl" =
@@ -183,13 +236,41 @@ let
           3;
       "mail.smtpserver.smtp_${id}.username" = account.userName;
     }
-    // builtins.foldl' (a: b: a // b) { } (map (address: toThunderbirdSMTP account address) addresses)
+    // optionalAttrs (account.ews != null) {
+      "mail.smtpserver.ews_${id}.type" = "ews";
+      "mail.outgoingserver.ews_${id}.auth_method" = toThunderbirdAuthMethod account.ews.authentication;
+      "mail.outgoingserver.ews_${id}.description" = account.name;
+      "mail.outgoingserver.ews_${id}.ews_url" = account.ews.serviceDescriptionURL;
+      "mail.outgoingserver.ews_${id}.key" = "ews_${id}";
+      "mail.outgoingserver.ews_${id}.username" = account.userName;
+
+      "mail.server.server_${id}.directory-rel" = "[ProfD]Mail/${id}";
+      "mail.server.server_${id}.hostname" = account.ews.host;
+      "mail.server.server_${id}.ews_url" = account.ews.serviceDescriptionURL;
+      "mail.server.server_${id}.login_at_startup" = true;
+      "mail.server.server_${id}.name" = account.name;
+      "mail.server.server_${id}.port" = 443;
+      "mail.server.server_${id}.socketType" =
+        if !account.ews.tls.enable then
+          0
+        else if account.ews.tls.useStartTls then
+          2
+        else
+          3;
+      "mail.server.server_${id}.type" = "ews";
+      "mail.server.server_${id}.userName" = account.userName;
+    }
+    // optionalAttrs (account.ews != null && account.ews.authentication != null) {
+      "mail.server.server_${id}.authMethod" = toThunderbirdAuthMethod account.ews.authentication;
+    }
+    // lib.mergeAttrsList (map (address: toThunderbirdSMTP account address) addresses)
     // optionalAttrs (account.smtp != null && account.primary) {
       "mail.smtp.defaultserver" = "smtp_${id}";
     }
-    // builtins.foldl' (a: b: a // b) { } (
-      map (address: toThunderbirdIdentity account address) addresses
-    )
+    // optionalAttrs (account.smtp == null && account.ews != null && account.primary) {
+      "mail.smtp.defaultserver" = "ews_${id}";
+    }
+    // lib.mergeAttrsList (map (address: toThunderbirdIdentity account address) addresses)
     // account.thunderbird.settings id;
 
   toThunderbirdCalendar =
@@ -220,14 +301,15 @@ let
     }
     // optionalAttrs (calendar.thunderbird.color != "") {
       "calendar.registry.calendar_${id}.color" = calendar.thunderbird.color;
-    };
+    }
+    // calendar.thunderbird.settings id;
 
   toThunderbirdContact =
     contact: _:
     let
       inherit (contact) id;
     in
-    lib.filterAttrs (n: v: v != null) (
+    lib.filterAttrs (_n: v: v != null) (
       {
         "ldap_2.servers.contact_${id}.description" = contact.name;
         "ldap_2.servers.contact_${id}.filename" = "contact_${id}.sqlite"; # this is needed for carddav to work
@@ -244,16 +326,14 @@ let
     );
 
   toThunderbirdFeed =
-    feed: profile:
+    feed:
     let
-      id = feed.id;
+      inherit (feed) id;
     in
     {
       "mail.account.account_${id}.server" = "server_${id}";
       "mail.server.server_${id}.name" = feed.name;
       "mail.server.server_${id}.type" = "rss";
-      "mail.server.server_${id}.directory" =
-        "${thunderbirdProfilesPath}/${profile.name}/Mail/Feeds-${id}";
       "mail.server.server_${id}.directory-rel" = "[ProfD]Mail/Feeds-${id}";
       "mail.server.server_${id}.hostname" = "Feeds-${id}";
     };
@@ -294,13 +374,14 @@ let
       version="9"
       logging="no"
     ''
-    + lib.concatStrings (map (f: mkFilterToIniString f) filters);
+    + lib.concatStrings (map mkFilterToIniString filters);
 
   getAccountsForProfile =
     profileName: accounts:
     (filter (
       a: a.thunderbird.profiles == [ ] || lib.any (p: p == profileName) a.thunderbird.profiles
     ) accounts);
+
 in
 {
   meta.maintainers = [
@@ -314,6 +395,58 @@ in
 
       package = lib.mkPackageOption pkgs "thunderbird" {
         example = "pkgs.thunderbird-91";
+      };
+
+      finalPackage = mkOption {
+        type = types.package;
+        readOnly = true;
+        description = "Resulting Thunderbird package.";
+      };
+
+      release = mkOption {
+        internal = true;
+        type = types.str;
+        description = ''
+          Upstream release version used to fetch language packs from
+          `releases.mozilla.org`.
+        '';
+      };
+
+      languagePacks = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Thunderbird language packs to install and activate through enterprise
+          policies.
+
+          Available language codes can be found on the releases page:
+          `https://releases.mozilla.org/pub/thunderbird/releases/''${version}/linux-x86_64/xpi/`,
+          replacing `''${version}` with the version of Thunderbird you have. If
+          the version string of your Thunderbird package differs from the
+          upstream version, override the internal `release` option.
+        '';
+        example = [
+          "en-GB"
+          "de"
+        ];
+      };
+
+      policies = mkOption {
+        type = types.attrsOf jsonFormat.type;
+        default = { };
+        description = ''
+          Thunderbird enterprise policies. See the
+          [list of policies](https://thunderbird.github.io/policy-templates/).
+        '';
+        example = {
+          DisableTelemetry = true;
+          ExtensionSettings = {
+            "addoncompatibility@opto.one" = {
+              install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/addon-compatibility-check/latest.xpi";
+              installation_mode = "normal_installed";
+            };
+          };
+        };
       };
 
       profileVersion = mkOption {
@@ -383,21 +516,19 @@ in
                 settings = mkOption {
                   type = thunderbirdJson;
                   default = { };
-                  example = literalExpression ''
-                    {
-                      "mail.spellcheck.inline" = false;
-                      "mailnews.database.global.views.global.columns" = {
-                        selectCol = {
-                          visible = false;
-                          ordinal = 1;
-                        };
-                        threadCol = {
-                          visible = true;
-                          ordinal = 2;
-                        };
+                  example = {
+                    "mail.spellcheck.inline" = false;
+                    "mailnews.database.global.views.global.columns" = {
+                      selectCol = {
+                        visible = false;
+                        ordinal = 1;
                       };
-                    }
-                  '';
+                      threadCol = {
+                        visible = true;
+                        ordinal = 2;
+                      };
+                    };
+                  };
                   description = ''
                     Preferences to add to this profile's
                     {file}`user.js`.
@@ -456,7 +587,16 @@ in
                   type = types.bool;
                   default = false;
                   example = true;
-                  description = "Allow using external GPG keys with GPGME.";
+                  description = ''
+                    Allow Thunderbird to use external GnuPG secret keys through
+                    GPGME, as used by its documented smartcard and external-key
+                    workflow.
+
+                    This installs `gpgme` and sets
+                    `mail.openpgp.allow_external_gnupg`. Public keys and key
+                    acceptance settings still live in Thunderbird's internal
+                    OpenPGP key manager.
+                  '';
                 };
 
                 userChrome = mkOption {
@@ -496,7 +636,7 @@ in
                       inherit (args) config;
                       inherit lib pkgs;
                       appName = "Thunderbird";
-                      package = cfg.package;
+                      inherit (cfg) package;
                       modulePath = [
                         "programs"
                         "thunderbird"
@@ -541,12 +681,10 @@ in
       settings = mkOption {
         type = thunderbirdJson;
         default = { };
-        example = literalExpression ''
-          {
-            "general.useragent.override" = "";
-            "privacy.donottrackheader.enabled" = true;
-          }
-        '';
+        example = {
+          "general.useragent.override" = "";
+          "privacy.donottrackheader.enabled" = true;
+        };
         description = ''
           Attribute set of Thunderbird preferences to be added to
           all profiles.
@@ -572,12 +710,18 @@ in
           { config, ... }:
           {
             config.thunderbird = {
-              settings = lib.mkIf (config.flavor == "gmail.com") (id: {
-                "mail.smtpserver.smtp_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
-                "mail.server.server_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
-                "mail.server.server_${id}.socketType" = mkOptionDefault 3; # SSL/TLS
-                "mail.server.server_${id}.is_gmail" = mkOptionDefault true; # handle labels, trash, etc
-              });
+              settings = lib.mkIf (config.flavor == "gmail.com" || config.flavor == "outlook.office365.com") (
+                id:
+                lib.optionalAttrs (config.smtp != null && config.smtp.authentication == null) {
+                  "mail.smtpserver.smtp_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
+                }
+                // lib.optionalAttrs (config.imap != null && config.imap.authentication == null) {
+                  "mail.server.server_${id}.authMethod" = mkOptionDefault 10; # 10 = OAuth2
+                }
+                // lib.optionalAttrs (config.flavor == "gmail.com") {
+                  "mail.server.server_${id}.is_gmail" = mkOptionDefault true; # handle labels, trash, etc
+                }
+              );
             };
             options.thunderbird = {
               enable = lib.mkEnableOption "the Thunderbird mail client for this account";
@@ -585,9 +729,10 @@ in
               profiles = mkOption {
                 type = with types; listOf str;
                 default = [ ];
-                example = literalExpression ''
-                  [ "profile1" "profile2" ]
-                '';
+                example = [
+                  "profile1"
+                  "profile2"
+                ];
                 description = ''
                   List of Thunderbird profiles for which this account should be
                   enabled. If this list is empty (the default), this account will
@@ -660,7 +805,15 @@ in
                       };
                       type = mkOption {
                         type = str;
-                        description = "Type for this filter.";
+                        description = ''
+                          Thunderbird filter type bitmask written as the
+                          `type="..."` field in `msgFilterRules.dat`.
+
+                          Thunderbird does not publish a stable table for this
+                          bitmask. To reuse an existing value, inspect the
+                          account's `msgFilterRules.dat` file and copy the
+                          `type="..."` field from a comparable filter.
+                        '';
                       };
                       action = mkOption {
                         type = str;
@@ -692,20 +845,26 @@ in
                   });
                 default = [ ];
                 defaultText = literalExpression "[ ]";
-                example = literalExpression ''
-                  [
-                    {
-                      name = "Mark as Read on Archive";
-                      enabled = true;
-                      type = "128";
-                      action = "Mark read";
-                      condition = "ALL";
-                    }
-                  ]
-                '';
+                example = [
+                  {
+                    name = "Mark as Read on Archive";
+                    enabled = true;
+                    type = "128";
+                    action = "Mark read";
+                    condition = "ALL";
+                  }
+                ];
                 description = ''
-                  List of message filters to add to this Thunderbird account
-                  configuration.
+                  List of message filters to add to this Thunderbird account configuration.
+
+                  Home Manager writes these to Thunderbird's per-account
+                  `msgFilterRules.dat` file under the profile mail server
+                  directory, for example `ImapMail/<server>/msgFilterRules.dat`.
+
+                  Thunderbird does not publish a stable reference for all fields
+                  in this file. To migrate existing filters, inspect an existing
+                  `msgFilterRules.dat` file and translate each filter block into
+                  this option.
                 '';
               };
             };
@@ -724,9 +883,10 @@ in
             profiles = mkOption {
               type = with types; listOf str;
               default = [ ];
-              example = literalExpression ''
-                [ "profile1" "profile2" ]
-              '';
+              example = [
+                "profile1"
+                "profile2"
+              ];
               description = ''
                 List of Thunderbird profiles for which this account should be
                 enabled. If this list is empty (the default), this account will
@@ -746,6 +906,37 @@ in
               example = "#dc8add";
               description = "Display color of the calendar in hex";
             };
+
+            settings = mkOption {
+              type =
+                with types;
+                functionTo (
+                  attrsOf (oneOf [
+                    bool
+                    int
+                    str
+                  ])
+                );
+              default = _: { };
+              defaultText = literalExpression "_: { }";
+              example = literalExpression ''
+                id: {
+                  "calendar.registry.''${id}.refreshInterval" = 5;
+
+                  # If "my-awesome-account" is the attribute name of an email account under
+                  # `config.accounts.email.accounts`, the below snippet links this calendar
+                  # account to "my-awesome-account".
+
+                  "calendar.registry.''${id}.imip.identity.key" =
+                    "id_''${builtins.hashString "sha256" "my-awesome-account"}";
+                };
+              '';
+              description = ''
+                Extra settings to add to this Thunderbird calendar configuration.
+                The {var}`id` given as argument is an automatically
+                generated account identifier.
+              '';
+            };
           };
         });
     };
@@ -760,9 +951,10 @@ in
             profiles = mkOption {
               type = with types; listOf str;
               default = [ ];
-              example = literalExpression ''
-                [ "profile1" "profile2" ]
-              '';
+              example = [
+                "profile1"
+                "profile2"
+              ];
               description = ''
                 List of Thunderbird profiles for which this account should be
                 enabled. If this list is empty (the default), this account will
@@ -797,6 +989,14 @@ in
             + optionalString (length defaults > 1) (", namely " + concatStringsSep "," defaults);
         }
       )
+
+      {
+        assertion = cfg.policies == { } || cfg.package ? override;
+        message = ''
+          'programs.thunderbird.policies' requires 'programs.thunderbird.package'
+          to be a package that supports overriding wrapper arguments.
+        '';
+      }
 
       (
         let
@@ -876,20 +1076,22 @@ in
       )
     ];
 
-    warnings = lib.optionals (!cfg.darwinSetupWarning) [
-      ''
-        Using programs.thunderbird.darwinSetupWarning is deprecated and will be
-        removed in the future. Thunderbird is now supported on Darwin.
-      ''
-    ];
+    warnings =
+      lib.optionals (!cfg.darwinSetupWarning) [
+        ''
+          Using programs.thunderbird.darwinSetupWarning is deprecated and will be
+          removed in the future. Thunderbird is now supported on Darwin.
+        ''
+      ]
+      ++ lib.flatten (map unsupportedAuthMethodWarnings enabledEmailAccounts);
 
     home.packages = [
-      cfg.package
+      cfg.finalPackage
     ]
     ++ lib.optional (lib.any (p: p.withExternalGnupg) (attrValues cfg.profiles)) pkgs.gpgme;
 
     mozilla.thunderbirdNativeMessagingHosts = [
-      cfg.package # package configured native messaging hosts (entire mail app actually)
+      cfg.finalPackage # package configured native messaging hosts (entire mail app actually)
     ]
     ++ cfg.nativeMessagingHosts; # user configured native messaging hosts
 
@@ -926,6 +1128,8 @@ in
                 flatten (map getAliasesWithId emailAccounts);
               smtp = accountsSmtp ++ aliasesSmtp;
 
+              ews = filter (a: a.ews != null) emailAccounts;
+
               feedAccounts = addId (attrValues profile.feedAccounts);
 
               # NOTE: `calendarAccounts` not added here as calendars are not part of the 'Mail' view
@@ -935,7 +1139,7 @@ in
                 let
                   accountNameToId = builtins.listToAttrs (
                     map (a: {
-                      name = a.name;
+                      inherit (a) name;
                       value = "account_${a.id}";
                     }) accounts
                   );
@@ -944,7 +1148,7 @@ in
 
                   # Append the default local folder name "account1".
                   # See https://github.com/nix-community/home-manager/issues/5031.
-                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId) ++ [
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (_name: value: value) accountNameToId) ++ [
                     "account1"
                   ];
                 in
@@ -956,21 +1160,21 @@ in
                 let
                   accountNameToId = builtins.listToAttrs (
                     map (a: {
-                      name = a.name;
+                      inherit (a) name;
                       value = "calendar_${a.id}";
                     }) calendarAccounts
                   );
 
                   accountsOrderIds = map (a: accountNameToId."${a}" or a) profile.calendarAccountsOrder;
 
-                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (name: value: value) accountNameToId);
+                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (_name: value: value) accountNameToId);
                 in
                 lib.optionals (calendarAccounts != [ ]) (
                   accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
                 );
             in
             {
-              text = mkUserJs (builtins.foldl' (a: b: a // b) { } (
+              text = mkUserJs (lib.mergeAttrsList (
                 [
                   cfg.settings
 
@@ -982,24 +1186,25 @@ in
                     "calendar.list.sortOrder" = concatStringsSep " " orderedCalendarAccounts;
                   })
 
-                  (optionalAttrs (length smtp != 0) {
-                    "mail.smtpservers" = concatStringsSep "," (map (a: "smtp_${a.id}") smtp);
+                  (optionalAttrs (length smtp != 0 || length ews != 0) {
+                    "mail.smtpservers" = concatStringsSep "," (
+                      (map (a: "smtp_${a.id}") smtp) ++ (map (a: "ews_${a.id}") ews)
+                    );
                   })
 
                   { "mail.openpgp.allow_external_gnupg" = profile.withExternalGnupg; }
 
                   profile.settings
                 ]
-                ++ (map (a: toThunderbirdAccount a profile) emailAccounts)
+                ++ (map toThunderbirdAccount emailAccounts)
                 ++ (map (calendar: toThunderbirdCalendar calendar profile) calendarAccounts)
                 ++ (map (contact: toThunderbirdContact contact profile) contactAccounts)
-                ++ (map (feed: toThunderbirdFeed feed profile) feedAccounts)
+                ++ (map toThunderbirdFeed feedAccounts)
               )) profile.extraConfig;
             };
 
           "${thunderbirdProfilesPath}/${name}/search.json.mozlz4" = mkIf (profile.search.enable) {
-            enable = profile.search.enable;
-            force = profile.search.force;
+            inherit (profile.search) enable force;
             source = profile.search.file;
           };
 
@@ -1018,7 +1223,7 @@ in
         }
       )
       ++ (mapAttrsToList (
-        name: profile:
+        name: _profile:
         let
           emailAccountsWithFilters = (
             filter (a: a.thunderbird.messageFilters != [ ]) (
@@ -1028,7 +1233,10 @@ in
         in
         (builtins.listToAttrs (
           map (a: {
-            name = "${thunderbirdProfilesPath}/${name}/ImapMail/${a.id}/msgFilterRules.dat";
+            name =
+              "${thunderbirdProfilesPath}/${name}/"
+              + (if a.ews != null then "Mail" else "ImapMail")
+              + "/${a.id}/msgFilterRules.dat";
             value = {
               text = mkFilterListToIni a.thunderbird.messageFilters;
             };
@@ -1036,5 +1244,34 @@ in
         ))
       ) cfg.profiles)
     );
+
+    programs.thunderbird = {
+      finalPackage =
+        if cfg.policies == { } then
+          cfg.package
+        else
+          cfg.package.override (old: {
+            extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+          });
+
+      release = mkOptionDefault (
+        builtins.head (lib.splitString "-" (cfg.package.version or (lib.getVersion cfg.package)))
+      );
+
+      policies = {
+        RequestedLocales = lib.mkIf (cfg.languagePacks != [ ]) (concatStringsSep "," cfg.languagePacks);
+        ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
+          lib.listToAttrs (
+            map (
+              lang:
+              lib.nameValuePair "langpack-${lang}@thunderbird.mozilla.org" {
+                installation_mode = "normal_installed";
+                install_url = "https://releases.mozilla.org/pub/thunderbird/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
+              }
+            ) cfg.languagePacks
+          )
+        );
+      };
+    };
   };
 }

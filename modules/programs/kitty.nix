@@ -133,25 +133,21 @@ in
       type = types.nullOr (types.listOf types.str);
       default = null;
       description = "Command-line options to use when launched by Mac OS GUI";
-      example = literalExpression ''
-        [
-          "--single-instance"
-          "--directory=/tmp/my-dir"
-          "--listen-on=unix:/tmp/my-socket"
-        ]
-      '';
+      example = [
+        "--single-instance"
+        "--directory=/tmp/my-dir"
+        "--listen-on=unix:/tmp/my-socket"
+      ];
     };
 
     settings = mkOption {
       type = types.attrsOf settingsValueType;
       default = { };
-      example = literalExpression ''
-        {
-          scrollback_lines = 10000;
-          enable_audio_bell = false;
-          update_check_interval = 0;
-        }
-      '';
+      example = {
+        scrollback_lines = 10000;
+        enable_audio_bell = false;
+        update_check_interval = 0;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/kitty/kitty.conf`. See
@@ -205,13 +201,11 @@ in
         Kitty applies these based on the OS color scheme, and they override
         other color and background image settings.
       '';
-      example = literalExpression ''
-        {
-          light = "GitHub";
-          dark = "TokyoNight";
-          noPreference = "OneDark";
-        }
-      '';
+      example = {
+        light = "GitHub";
+        dark = "TokyoNight";
+        noPreference = "OneDark";
+      };
     };
 
     font = mkOption {
@@ -224,24 +218,20 @@ in
       type = types.attrsOf types.str;
       default = { };
       description = "Define action aliases.";
-      example = literalExpression ''
-        {
-          "launch_tab" = "launch --cwd=current --type=tab";
-          "launch_window" = "launch --cwd=current --type=os-window";
-        }
-      '';
+      example = {
+        "launch_tab" = "launch --cwd=current --type=tab";
+        "launch_window" = "launch --cwd=current --type=os-window";
+      };
     };
 
     keybindings = mkOption {
       type = types.attrsOf types.str;
       default = { };
       description = "Mapping of keybindings to actions.";
-      example = literalExpression ''
-        {
-          "ctrl+c" = "copy_or_interrupt";
-          "ctrl+f>2" = "set_font_size 20";
-        }
-      '';
+      example = {
+        "ctrl+c" = "copy_or_interrupt";
+        "ctrl+f>2" = "set_font_size 20";
+      };
     };
 
     mouseBindings = mkOption {
@@ -260,11 +250,9 @@ in
       type = types.attrsOf types.str;
       default = { };
       description = "Environment variables to set or override.";
-      example = literalExpression ''
-        {
-          "LS_COLORS" = "1";
-        }
-      '';
+      example = {
+        "LS_COLORS" = "1";
+      };
     };
 
     shellIntegration = {
@@ -318,19 +306,57 @@ in
     quickAccessTerminalConfig = mkOption {
       type = types.attrsOf settingsValueType;
       default = { };
-      example = literalExpression ''
-        {
-          start_as_hidden = false;
-          hide_on_focus_loss = false;
-          background_opacity = 0.85;
-        }
-      '';
+      example = {
+        start_as_hidden = false;
+        hide_on_focus_loss = false;
+        background_opacity = 0.85;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/kitty/quick-access-terminal.conf`. See
         <https://sw.kovidgoyal.net/kitty/kittens/quick-access-terminal/>
         for the documentation.
       '';
+    };
+
+    diffConfig = {
+      settings = mkOption {
+        type = types.attrsOf settingsValueType;
+        default = { };
+        example = literalExpression ''
+          diff_cmd = "auto";
+          mark_moved_lines = true;
+        '';
+        description = ''
+          Configuration written to
+          {file}`$XDG_CONFIG_HOME/kitty/diff.conf`. See
+          <https://sw.kovidgoyal.net/kitty/kittens/diff/>
+          for the documentation.
+
+          Configuration set through the `extraConfig` option will take
+          greater priority.
+        '';
+      };
+      keybindings = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        example = literalExpression ''
+          q = "quit";
+          j = "scroll_by 1";
+          k = "scroll_by -1";
+        '';
+        description = ''
+          Mapping of keybindings to use inside kitty's diff tool.
+
+          Configuration set through the `extraConfig` options will take
+          greater priority.
+        '';
+      };
+      extraConfig = mkOption {
+        default = "";
+        type = types.lines;
+        description = "Additional configuration to add kitty's diff.conf";
+      };
     };
   };
 
@@ -370,11 +396,18 @@ in
           shell_integration ${cfg.shellIntegration.mode}
         ''
       ))
-      (mkOrder 540 (toKittyConfig cfg.settings))
-      (mkOrder 550 (toKittyActionAliases cfg.actionAliases))
-      (mkOrder 560 (toKittyKeybindings cfg.keybindings))
-      (mkOrder 570 (toKittyMouseBindings cfg.mouseBindings))
-      (mkOrder 580 (toKittyEnv cfg.environment))
+      (mkIf (cfg.settings != { }) (mkOrder 540 (toKittyConfig cfg.settings)))
+      (mkIf (cfg.actionAliases != { }) (mkOrder 550 (toKittyActionAliases cfg.actionAliases)))
+      (mkIf (cfg.keybindings != { }) (mkOrder 560 (toKittyKeybindings cfg.keybindings)))
+      (mkIf (cfg.mouseBindings != { }) (mkOrder 570 (toKittyMouseBindings cfg.mouseBindings)))
+      (mkIf (cfg.environment != { }) (mkOrder 580 (toKittyEnv cfg.environment)))
+    ];
+
+    programs.kitty.diffConfig.extraConfig = mkMerge [
+      (mkIf (cfg.diffConfig.settings != { }) (mkOrder 510 (toKittyConfig cfg.diffConfig.settings)))
+      (mkIf (cfg.diffConfig.keybindings != { }) (
+        mkOrder 520 (toKittyKeybindings cfg.diffConfig.keybindings)
+      ))
     ];
 
     xdg.configFile."kitty/kitty.conf" = {
@@ -397,6 +430,14 @@ in
         # Generated by Home Manager.
         # See https://sw.kovidgoyal.net/kitty/kittens/quick-access-terminal/
         ${toKittyConfig cfg.quickAccessTerminalConfig}
+      '';
+    };
+
+    xdg.configFile."kitty/diff.conf" = mkIf (cfg.diffConfig != { }) {
+      text = ''
+        # Generated by Home Manager
+        # See https://sw.kovidgoyal.net/kitty/kittens/diff/
+        ${cfg.diffConfig.extraConfig}
       '';
     };
 
@@ -451,7 +492,7 @@ in
       };
       difftool = {
         prompt = lib.mkDefault false;
-        trustExistCode = lib.mkDefault true;
+        trustExitCode = lib.mkDefault true;
         kitty = {
           cmd = "kitten diff $LOCAL $REMOTE";
         };

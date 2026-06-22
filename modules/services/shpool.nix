@@ -25,7 +25,7 @@ in
     package = mkPackageOption pkgs "shpool" { nullable = true; };
 
     settings = lib.mkOption {
-      type = format.type;
+      inherit (format) type;
       default = { };
       example = {
         prompt_prefix = "[$SHPOOL_SESSION_NAME]";

@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    {
+      "name": "test-tool",
+      "source": "./plugins/test-tool"
+    }
+  ]
+}

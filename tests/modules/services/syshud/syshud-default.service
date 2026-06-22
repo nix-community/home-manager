@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@syshud@/bin/syshud
+Restart=always
+RestartSec=10
+
+[Unit]
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+Description=syshud
+PartOf=graphical-session.target

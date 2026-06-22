@@ -71,7 +71,7 @@ in
         "NixOS Wiki" = {
           name = "NixOS Wiki";
           icon = "nixos";
-          exec = "firefox https://nixos.wiki/index.php?search=%s";
+          exec = "firefox https://wiki.nixos.org/w/index.php?search=%s";
           keywords = "nix wiki docs";
         };
       };

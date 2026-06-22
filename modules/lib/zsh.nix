@@ -7,7 +7,7 @@ rec {
     if builtins.isBool v then
       if v then "true" else "false"
     else if builtins.isString v then
-      ''"${v}"''
+      ''"${lib.escape [ "\\" "\"" "`" ] v}"''
     else if builtins.isList v then
       let
         shell = import ./shell.nix { inherit lib; };
@@ -38,5 +38,7 @@ rec {
     let
       separator = if indent == "" then "\n" else "\n" + indent;
     in
-    lib.concatStringsSep separator (lib.mapAttrsToList export vars);
+    lib.concatStringsSep separator (
+      lib.mapAttrsToList export (lib.filterAttrs (_k: v: v != null) vars)
+    );
 }

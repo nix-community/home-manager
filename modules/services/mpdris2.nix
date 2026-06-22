@@ -20,12 +20,11 @@ let
 
   mpdris2Conf = {
     Connection = {
-      host = cfg.mpd.host;
-      port = cfg.mpd.port;
+      inherit (cfg.mpd) host port;
       music_dir = cfg.mpd.musicDirectory;
     }
     // lib.optionalAttrs (cfg.mpd.password != null) {
-      password = cfg.mpd.password;
+      inherit (cfg.mpd) password;
     };
 
     Bling = {

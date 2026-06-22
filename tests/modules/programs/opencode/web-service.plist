@@ -17,7 +17,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @opencode@/bin/opencode web --hostname 0.0.0.0 --port 4096 --mdns --cors https://example.com --cors http://localhost:3000 --print-logs --log-level DEBUG</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec @opencode@/bin/opencode serve --hostname 0.0.0.0 --port 4096 --mdns --cors https://example.com --cors http://localhost:3000 --print-logs --log-level DEBUG</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>

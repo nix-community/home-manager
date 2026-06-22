@@ -17,33 +17,31 @@ in
     package = lib.mkPackageOption pkgs "looking-glass-client" { nullable = true; };
 
     settings = lib.mkOption {
-      type = settingsFormat.type;
+      inherit (settingsFormat) type;
       default = { };
       description = "looking-glass-client settings.";
-      example = lib.literalExpression ''
-        {
-          app = {
-            allowDMA = true;
-            shmFile = "/dev/kvmfr0";
-          };
+      example = {
+        app = {
+          allowDMA = true;
+          shmFile = "/dev/kvmfr0";
+        };
 
-          win = {
-            fullScreen = true;
-            showFPS = false;
-            jitRender = true;
-          };
+        win = {
+          fullScreen = true;
+          showFPS = false;
+          jitRender = true;
+        };
 
-          spice = {
-            enable = true;
-            audio = true;
-          };
+        spice = {
+          enable = true;
+          audio = true;
+        };
 
-          input = {
-            rawMouse = true;
-            escapeKey = 62;
-          };
-        }
-      '';
+        input = {
+          rawMouse = true;
+          escapeKey = 62;
+        };
+      };
     };
   };
 

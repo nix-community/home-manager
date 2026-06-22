@@ -2,7 +2,7 @@
 
 {
   nixpkgs.overlays = [
-    (self: super: {
+    (_self: _super: {
       # Use `cat` instead of `echo` to prevent arguments from being
       # interpreted as an option.
       emacs = pkgs.writeShellScriptBin "emacsclient" ''${pkgs.coreutils}/bin/cat <<< "$*"'';

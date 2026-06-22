@@ -17,7 +17,7 @@ in
     package = lib.mkPackageOption pkgs "havoc" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
       description = ''
         Configuration written to

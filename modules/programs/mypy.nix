@@ -20,16 +20,14 @@ in
     package = lib.mkPackageOption pkgs "mypy" { nullable = true; };
 
     settings = lib.mkOption {
-      type = iniFormat.type;
+      inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          mypy = {
-            warn_return_any = true;
-            warn_unused_configs = true;
-          };
-        }
-      '';
+      example = {
+        mypy = {
+          warn_return_any = true;
+          warn_unused_configs = true;
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/mypy/config`.

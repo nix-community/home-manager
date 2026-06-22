@@ -128,7 +128,9 @@ in
           # Using `mkAfter` to make it more likely to appear after other
           # manipulations of the prompt.
           mkAfter ''
-            ${getExe cfg.package} hook fish | source
+            if not functions -q __direnv_export_eval
+              ${getExe cfg.package} hook fish | source
+            end
           ''
         );
 

@@ -1,7 +1,5 @@
 {
-  config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -15,5 +13,6 @@
     ./copyapps.nix
     ./linkapps.nix
     ./search.nix
+    ./terminfo.nix
   ];
 }

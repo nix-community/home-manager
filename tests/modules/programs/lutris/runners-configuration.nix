@@ -1,7 +1,20 @@
-{ pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+let
+  fakeLutris = config.lib.test.mkStubPackage {
+    name = "lutris";
+    version = "0.5.22";
+    extraAttrs.override = _: fakeLutris;
+  };
+in
 {
   programs.lutris = {
     enable = true;
+    package = fakeLutris;
     defaultWinePackage = pkgs.proton-ge-bin;
     runners = {
       wine.settings = {
