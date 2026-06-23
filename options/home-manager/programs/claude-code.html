@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-073c4975.js";
+            window.path_to_searchindex_js = "../../../searchindex-da621d13.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-5e32c50d.js"></script>
@@ -198,6 +198,11 @@ boolean</p>
 <p>Note: Settings defined in <code>programs.mcp.servers</code> are merged
 with <code>programs.claude-code.mcpServers</code>, with Claude Code servers
 taking precedence.</p>
+<p>Servers marked disabled (via <code>enabled = false</code> or <code>disabled = true</code>)
+are still written to <code>.mcp.json</code> but rejected through
+<code>disabledMcpjsonServers</code> in <code>settings.json</code>, since Claude Code
+has no per-server <code>enabled</code> field. This keeps a disabled server
+present (and re-enableable) instead of dropping it.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>
