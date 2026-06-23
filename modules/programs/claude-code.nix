@@ -38,10 +38,15 @@ let
       ];
     };
 
-  transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
-    lib.mapAttrs transformMcpServer (
-      lib.filterAttrs (_: isMcpServerEnabled) config.programs.mcp.servers
-    )
+  # Shared MCP servers participate only when both integrations are enabled.
+  sharedMcpServers = lib.optionalAttrs (
+    cfg.enableMcpIntegration && config.programs.mcp.enable
+  ) config.programs.mcp.servers;
+
+  transformedMcpServers = lib.mapAttrs transformMcpServer sharedMcpServers;
+
+  disabledMcpServerNames = lib.attrNames (
+    lib.filterAttrs (_: server: !(isMcpServerEnabled server)) (sharedMcpServers // cfg.mcpServers)
   );
 
   mkContentOption =
@@ -111,6 +116,12 @@ in
         Note: Settings defined in {option}`programs.mcp.servers` are merged
         with {option}`programs.claude-code.mcpServers`, with Claude Code servers
         taking precedence.
+
+        Servers marked disabled (via `enabled = false` or `disabled = true`)
+        are still written to {file}`.mcp.json` but rejected through
+        `disabledMcpjsonServers` in {file}`settings.json`, since Claude Code
+        has no per-server `enabled` field. This keeps a disabled server
+        present (and re-enableable) instead of dropping it.
       '';
     };
 
@@ -701,7 +712,7 @@ in
         };
 
         file = lib.mkMerge [
-          (lib.mkIf (cfg.settings != { } || cfg.marketplaces != { }) {
+          (lib.mkIf (cfg.settings != { } || cfg.marketplaces != { } || disabledMcpServerNames != [ ]) {
             "${cfg.configDir}/settings.json".source = jsonFormat.generate "claude-code-settings.json" (
               cfg.settings
               // {
@@ -709,6 +720,11 @@ in
               }
               // optionalAttrs (cfg.marketplaces != { }) {
                 extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
+              }
+              // optionalAttrs (disabledMcpServerNames != [ ]) {
+                disabledMcpjsonServers = lib.unique (
+                  (cfg.settings.disabledMcpjsonServers or [ ]) ++ disabledMcpServerNames
+                );
               }
             );
           })
