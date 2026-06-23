@@ -213,9 +213,18 @@ in
 
     home.profileDirectory = mkOption {
       type = types.path;
-      defaultText = literalExpression ''
-        "''${home.homeDirectory}/.nix-profile"  or
-        "/etc/profiles/per-user/''${home.username}"
+      default =
+        if config.submoduleSupport.enable && config.submoduleSupport.externalPackageInstall then
+          "/etc/profiles/per-user/${cfg.username}"
+        else if config.nix.useXdg then
+          "${config.xdg.stateHome}/nix/profile"
+        else
+          cfg.homeDirectory + "/.nix-profile";
+      defaultText = ''
+        - `/etc/profiles/per-user/''${home.username}`, if Home Manager is installed as
+          a submodule and `home-manager.useUserPackages` is enabled, else
+        - `''${xdg.stateHome}/nix/profile`, if `nix.useXdg` is enabled, else
+        - `''${home.homeDirectory}/.nix-profile`.
       '';
       readOnly = true;
       description = ''
@@ -620,14 +629,6 @@ in
     home.homeDirectory = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "HOME")
     );
-
-    home.profileDirectory =
-      if config.submoduleSupport.enable && config.submoduleSupport.externalPackageInstall then
-        "/etc/profiles/per-user/${cfg.username}"
-      else if config.nix.useXdg then
-        "${config.xdg.stateHome}/nix/profile"
-      else
-        cfg.homeDirectory + "/.nix-profile";
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
