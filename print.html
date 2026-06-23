@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a447e292.js";
+            window.path_to_searchindex_js = "searchindex-23cd6179.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-0f118724.js"></script>
+        <script src="toc-5e32c50d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11885,6 +11885,7 @@ string</p>
 <li><a href="#htop">htop</a></li>
 <li><a href="#hwatch">hwatch</a></li>
 <li><a href="#hyfetch">hyfetch</a></li>
+<li><a href="#hyprland-qt-support">hyprland-qt-support</a></li>
 <li><a href="#hyprlock">hyprlock</a></li>
 <li><a href="#hyprpanel">hyprpanel</a></li>
 <li><a href="#hyprshot">hyprshot</a></li>
@@ -30760,6 +30761,54 @@ JSON value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyfetch.nix">&lt;home-manager/modules/programs/hyfetch.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hyprland-qt-support"><a href="#hyprland-qt-support" class="header">hyprland-qt-support</a></h1>
+<h2 id="opt-programs.hyprland-qt-support.enable"><a class="header" href="#opt-programs.hyprland-qt-support.enable">programs.hyprland-qt-support.enable</a></h2>
+<p>Whether to enable Hyprland Qt support, a Qt6 QML style provider for hypr* apps.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprland-qt-support.nix">&lt;home-manager/modules/programs/hyprland-qt-support.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.hyprland-qt-support.package"><a class="header" href="#opt-programs.hyprland-qt-support.package">programs.hyprland-qt-support.package</a></h2>
+<p>The hyprland-qt-support package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.hyprland-qt-support
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprland-qt-support.nix">&lt;home-manager/modules/programs/hyprland-qt-support.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.hyprland-qt-support.settings"><a class="header" href="#opt-programs.hyprland-qt-support.settings">programs.hyprland-qt-support.settings</a></h2>
+<p>Hyprland Qt Support configuration written in Nix. See
+<a href="https://wiki.hypr.land/Hypr-Ecosystem/hyprland-qt-support/">https://wiki.hypr.land/Hypr-Ecosystem/hyprland-qt-support/</a> for more
+examples.</p>
+<p><em>Type:</em>
+Hyprland configuration value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  roundness = 1;
+  border_width = 1;
+  reduce_motion = false;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/hyprland-qt-support.nix">&lt;home-manager/modules/programs/hyprland-qt-support.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="hyprlock"><a href="#hyprlock" class="header">hyprlock</a></h1>
