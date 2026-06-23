@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-23cd6179.js";
+            window.path_to_searchindex_js = "../../searchindex-073c4975.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-5e32c50d.js"></script>
@@ -940,9 +940,12 @@ boolean</p>
 <p><em>Type:</em>
 absolute path <em>(read only)</em></p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">"${home.homeDirectory}/.nix-profile"  or
-"/etc/profiles/per-user/${home.username}"
-
+<pre><code class="language-nix">''
+  - `/etc/profiles/per-user/''${home.username}`, if Home Manager is installed as
+    a submodule and `home-manager.useUserPackages` is enabled, else
+  - `''${xdg.stateHome}/nix/profile`, if `nix.useXdg` is enabled, else
+  - `''${home.homeDirectory}/.nix-profile`.
+''
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
