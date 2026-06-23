@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fdd94644.js";
+            window.path_to_searchindex_js = "searchindex-a447e292.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-0f118724.js"></script>
@@ -62288,6 +62288,83 @@ else
 strings concatenated with “\n”</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
+</ul>
+<h2 id="opt-programs.zsh.fastSyntaxHighlighting"><a class="header" href="#opt-programs.zsh.fastSyntaxHighlighting">programs.zsh.fastSyntaxHighlighting</a></h2>
+<p>Options related to zsh-fast-syntax-highlighting.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
+</ul>
+<h2 id="opt-programs.zsh.fastSyntaxHighlighting.enable"><a class="header" href="#opt-programs.zsh.fastSyntaxHighlighting.enable">programs.zsh.fastSyntaxHighlighting.enable</a></h2>
+<p>Whether to enable zsh fast syntax highlighting.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
+</ul>
+<h2 id="opt-programs.zsh.fastSyntaxHighlighting.package"><a class="header" href="#opt-programs.zsh.fastSyntaxHighlighting.package">programs.zsh.fastSyntaxHighlighting.package</a></h2>
+<p>The zsh-fast-syntax-highlighting package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.zsh-fast-syntax-highlighting
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
+</ul>
+<h2 id="opt-programs.zsh.fastSyntaxHighlighting.settings"><a class="header" href="#opt-programs.zsh.fastSyntaxHighlighting.settings">programs.zsh.fastSyntaxHighlighting.settings</a></h2>
+<p>Custom values to add to <code>FAST_HIGHLIGHT</code>, like custom chroma
+configuration (see <a href="https://github.com/zdharma-continuum/fast-syntax-highlighting/blob/master/CHROMA_GUIDE.adoc">upstream’s documentation</a>
+and its <a href="https://github.com/zdharma-continuum/fast-syntax-highlighting/tree/master/%E2%86%92chroma">built-in chromas</a>).</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "chroma-," = "→chroma/-precommand.ch";
+  chroma-comma = "→chroma/-precommand.ch";
+  use_brackets = "0";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
+</ul>
+<h2 id="opt-programs.zsh.fastSyntaxHighlighting.theme"><a class="header" href="#opt-programs.zsh.fastSyntaxHighlighting.theme">programs.zsh.fastSyntaxHighlighting.theme</a></h2>
+<p>If non-null, Home Manager will run <code>fast-theme -q</code>
+with this value to select the theme. <code>fast-theme</code> persists the
+selected theme in fast-syntax-highlighting’s work directory, so
+setting this option back to <code>null</code> stops Home Manager from
+invoking <code>fast-theme</code> but does not reset an already
+persisted theme. Run <code>fast-theme -r</code> manually to clear
+upstream state.</p>
+<p>See <a href="https://github.com/zdharma-continuum/fast-syntax-highlighting/blob/master/THEME_GUIDE.md">upstream’s documentation</a></p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"clean"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
