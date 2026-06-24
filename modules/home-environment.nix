@@ -184,7 +184,7 @@ in
 
   options = {
     home.username = mkOption {
-      type = types.str;
+      type = types.nonEmptyStr;
       defaultText = literalExpression ''
         "$USER"   for state version < 20.09,
         undefined for state version ≥ 20.09
@@ -201,12 +201,11 @@ in
     };
 
     home.homeDirectory = mkOption {
-      type = types.path;
+      type = with types; coercedTo path toString nonEmptyStr;
       defaultText = literalExpression ''
         "$HOME"   for state version < 20.09,
         undefined for state version ≥ 20.09
       '';
-      apply = toString;
       example = "/home/jane.doe";
       description = "The user's home directory. Must be an absolute path.";
     };
@@ -578,17 +577,6 @@ in
   };
 
   config = {
-    assertions = [
-      {
-        assertion = config.home.username != "";
-        message = "Username could not be determined";
-      }
-      {
-        assertion = config.home.homeDirectory != "";
-        message = "Home directory could not be determined";
-      }
-    ];
-
     warnings =
       let
         hmRelease = config.home.version.release;
