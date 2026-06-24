@@ -184,7 +184,7 @@ in
 
   options = {
     home.username = mkOption {
-      type = types.str;
+      type = types.nonEmptyStr;
       defaultText = literalExpression ''
         "$USER"   for state version < 20.09,
         undefined for state version ≥ 20.09
@@ -578,13 +578,6 @@ in
   };
 
   config = {
-    assertions = [
-      {
-        assertion = config.home.username != "";
-        message = "Username could not be determined";
-      }
-    ];
-
     warnings =
       let
         hmRelease = config.home.version.release;
