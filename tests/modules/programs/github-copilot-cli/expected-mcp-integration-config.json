@@ -15,6 +15,7 @@
       "type": "local"
     },
     "fetch": {
+      "args": [],
       "command": "mcp-server-fetch",
       "tools": [
         "*"

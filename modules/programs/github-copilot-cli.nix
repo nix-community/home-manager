@@ -19,14 +19,15 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.copilot";
 
+  # Applied after transformMcpServer so that args = [] is not filtered out.
   forCopilotFormat =
     server:
     let
-      isLocal = server.type == "stdio";
+      isLocal = server.type == "stdio" || server.type == "local";
     in
     server
     // {
-      type = if server.type == "stdio" then "local" else server.type or "local";
+      type = if isLocal then "local" else server.type;
     }
     // lib.optionalAttrs isLocal {
       args = server.args or [ ];
@@ -43,14 +44,15 @@ let
     if cfg.enableMcpIntegration && config.programs.mcp.enable && enabledServers != { } then
       lib.mapAttrs (
         name: server:
-        lib.hm.mcp.transformMcpServer {
-          inherit server;
-          extraTransforms = [
-            lib.hm.mcp.addType
-            (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
-            forCopilotFormat
-          ];
-        }
+        forCopilotFormat (
+          lib.hm.mcp.transformMcpServer {
+            inherit server;
+            extraTransforms = [
+              lib.hm.mcp.addType
+              (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+            ];
+          }
+        )
       ) enabledServers
     else
       { };
@@ -59,16 +61,17 @@ let
     transformedMcpServers
     // lib.mapAttrs (
       name: server:
-      lib.hm.mcp.transformMcpServer {
-        inherit server;
-        extraTransforms = [
-          lib.hm.mcp.addType
-          (lib.hm.mcp.wrapEnvFilesCommand {
-            inherit pkgs name;
-          })
-          forCopilotFormat
-        ];
-      }
+      forCopilotFormat (
+        lib.hm.mcp.transformMcpServer {
+          inherit server;
+          extraTransforms = [
+            lib.hm.mcp.addType
+            (lib.hm.mcp.wrapEnvFilesCommand {
+              inherit pkgs name;
+            })
+          ];
+        }
+      )
     ) cfg.mcpServers;
 in
 {
