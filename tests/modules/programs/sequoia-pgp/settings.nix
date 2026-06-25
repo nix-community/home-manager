@@ -4,6 +4,8 @@
   ...
 }:
 {
+  home.enableNixpkgsReleaseCheck = false;
+
   programs.sequoia-pgp = {
     enable = true;
     package = config.lib.test.mkStubPackage {
@@ -50,11 +52,14 @@
     in
     ''
       assertFileExists "${configFile}"
-      assertFileRegex "${configFile}" "verbosity = 'quiet'"
-      assertFileRegex "${configFile}" "keyservers = \\['hkps://keys.openpgp.org'\\]"
-      assertFileRegex "${configFile}" "path = '/etc/crypto-policies/back-ends/sequoia.config'"
-      assertFileRegex "${configFile}" "sha1 = 'never'"
-      assertFileRegex "${configFile}" "'signature.v5' = 'never'"
+      assertFileRegex "${configFile}" "verbosity = \"quiet\""
+      assertFileRegex "${configFile}" "keyservers = \\[\"hkps://keys.openpgp.org\"\\]"
+      assertFileRegex "${configFile}" "path = \"/etc/crypto-policies/back-ends/sequoia.config\""
+      assertFileRegex "${configFile}" "sha1 = \"never\""
+      assertFileRegex "${configFile}" "\"signature.v5\" = \"never\""
       assertFileRegex "${configFile}" "rsa1024 = 2014-02-01"
+      assertFileRegex "${configFile}" "hints = false"
+      assertFileRegex "${configFile}" "for-self = \\["
+      assertFileRegex "${configFile}" "rsa1024"
     '';
 }
