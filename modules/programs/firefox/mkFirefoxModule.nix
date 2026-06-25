@@ -975,6 +975,10 @@ in
                 ]
               ) (lib.attrsToList config.extensions.settings))
               ++ config.bookmarks.assertions;
+
+              settings."toolkit.legacyUserProfileCustomizations.stylesheets" = mkIf (
+                config.userChrome != "" || config.userContent != ""
+              ) true;
             };
           }
         )
