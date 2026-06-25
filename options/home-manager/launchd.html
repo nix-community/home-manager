@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-da621d13.js";
+            window.path_to_searchindex_js = "../../searchindex-44e22fef.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-5e32c50d.js"></script>
@@ -1321,6 +1321,24 @@ called on behalf of the job, and the result is passed via the standard in/out/er
 null or boolean or string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.domain"><a class="header" href="#opt-launchd.agents._name_.domain">launchd.agents.&lt;name&gt;.domain</a></h2>
+<p>The launchd domain to bootstrap this agent into.</p>
+<p>The <code>gui</code> domain is appropriate for agents that need the user’s
+Aqua session, such as window managers, hotkey daemons, and other
+graphical tools. The <code>user</code> domain is appropriate for background
+services that do not require a graphical login session.</p>
+<p><em>Type:</em>
+one of “gui”, “user”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"gui"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"user"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

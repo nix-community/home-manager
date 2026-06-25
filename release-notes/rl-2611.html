@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-da621d13.js";
+            window.path_to_searchindex_js = "../searchindex-44e22fef.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-5e32c50d.js"></script>
@@ -185,12 +185,21 @@ section is therefore not final.</p>
 <h2 id="highlights"><a class="header" href="#highlights">Highlights</a></h2>
 <p>This release has the following notable changes:</p>
 <ul>
-<li>The <a href="../options/home-manager/programs/uv.html#opt-programs.uv.enable">programs.uv.enable</a> module can now install uv-managed Python
+<li>
+<p>The <a href="../options/home-manager/programs/uv.html#opt-programs.uv.enable">programs.uv.enable</a> module can now install uv-managed Python
 versions and tools through the new <code>programs.uv.python.versions</code>,
 <code>programs.uv.python.default</code>, and <code>programs.uv.tool.packages</code> options. Unpinned
 entries track the latest release on each activation while pinned ones stay put,
 and <code>programs.uv.python.prune</code> / <code>programs.uv.tool.prune</code> make the managed set
-fully declarative by removing versions and tools that are no longer listed.</li>
+fully declarative by removing versions and tools that are no longer listed.</p>
+</li>
+<li>
+<p>On Darwin, Home Manager launchd agents now support
+<a href="../options/home-manager/launchd.html#opt-launchd.agents._name_.domain">launchd.agents.<em>name</em>.domain</a> to choose either the user’s GUI or
+background launchd domain. Background services provided by Home Manager now
+use the user domain, which allows activations from contexts such as SSH
+sessions without requiring an active graphical login session.</p>
+</li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
 <h2 id="state-version-changes"><a class="header" href="#state-version-changes">State Version Changes</a></h2>
