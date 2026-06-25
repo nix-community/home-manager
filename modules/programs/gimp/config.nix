@@ -6,7 +6,7 @@
 }:
 let
   gimprc = import ./gimprc.nix { inherit lib; };
-  menurc = import ./menurc.nix { inherit lib; };
+  shortcutsrc = import ./shortcutsrc.nix { inherit lib; };
   ctrlrc = import ./controllerrc.nix { inherit lib; };
 
   cfg = config.programs.gimp;
@@ -60,7 +60,7 @@ in
       }) cfg.environ)
 
       (lib.mkIf (cfg.keyboardShortcuts != { }) {
-        "${configDir}/menurc".text = menurc.toMenurc cfg.keyboardShortcuts;
+        "${configDir}/shortcutsrc".text = shortcutsrc.toShortcutSource cfg.keyboardShortcuts;
       })
 
       (lib.mkIf (cfg.controllers != { } || cfg.extraControllerrc != "") {

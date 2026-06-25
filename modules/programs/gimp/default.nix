@@ -317,29 +317,24 @@ in
             modifiers = mkOption {
               type = types.listOf (
                 types.enum [
-                  "Primary"
-                  "Control"
-                  "Shift"
-                  "Alt"
-                  "Super"
-                  "Meta"
-                  "Hyper"
-                  "Mod1"
-                  "Mod2"
-                  "Mod3"
-                  "Mod4"
-                  "Mod5"
+                  "primary"
+                  "shift"
+                  "alt"
+                  "super"
                 ]
               );
               default = [ ];
-              description = "GTK modifier keys combined before {option}`key`.";
+              description = ''
+                Modifier keys. `primary` is Ctrl on Linux/Windows and Cmd on macOS.
+              '';
             };
             key = mkOption {
               type = types.str;
               default = "";
               description = ''
-                GTK key name such as `"c"`, `"Return"`, `"F1"`, or `"Delete"`.
-                Set to `""` to explicitly unassign the shortcut.
+                Key name: a letter such as `"c"`, or a named key such as
+                `"Return"`, `"F1"`, or `"Delete"`.
+                Leave empty with no modifiers to unassign the shortcut.
               '';
             };
           };
@@ -348,18 +343,23 @@ in
       default = { };
       example = literalExpression ''
         {
-          "<Actions>/edit/edit-copy"  = { modifiers = [ "Primary" ];          key = "c"; };
-          "<Actions>/edit/edit-paste" = { modifiers = [ "Primary" ];          key = "v"; };
-          "<Actions>/edit/edit-undo"  = { modifiers = [ "Primary" "Shift" ];  key = "z"; };
-          "<Actions>/file/file-quit"  = { modifiers = [ "Primary" ];          key = "q"; };
-          "<Actions>/gimp-app-quit"   = { modifiers = [ ];                    key = "q"; };
+          "edit-copy"  = { modifiers = [ "primary" ];            key = "c"; };
+          "edit-paste" = { modifiers = [ "primary" ];            key = "v"; };
+          "edit-undo"  = { modifiers = [ "primary" "shift" ];    key = "z"; };
+          "file-quit"  = { modifiers = [ "primary" ];            key = "q"; };
+          "select-all" = { };
         }
       '';
       description = ''
-        Keyboard shortcuts written to {file}`$XDG_CONFIG_HOME/GIMP/<version>/menurc`
-        as GTK accelerator map entries: `(gtk_accel_path "<path>" "<Mod…>key")`.
+        Keyboard shortcuts written to {file}`$XDG_CONFIG_HOME/GIMP/<version>/shortcutsrc`.
 
-        Note: GIMP rewrites `menurc` on exit, overwriting this file.
+        Attribute names are GIMP 3.0 action names such as `"edit-copy"`, `"file-new"`,
+        or `"select-all"`. Open **Edit → Keyboard Shortcuts** in GIMP to browse
+        available action names.
+
+        An empty attrset `{ }` writes `(action "name")`, unassigning that shortcut.
+
+        Note: GIMP rewrites `shortcutsrc` on exit, overwriting this file.
       '';
     };
 
