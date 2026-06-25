@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-44e22fef.js";
+            window.path_to_searchindex_js = "searchindex-6283a9eb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5e32c50d.js"></script>
@@ -19909,7 +19909,7 @@ boolean</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.enableMcpIntegration"><a class="header" href="#opt-programs.codex.enableMcpIntegration">programs.codex.enableMcpIntegration</a></h2>
 <p>Whether to integrate the MCP server config from
@@ -19925,7 +19925,7 @@ boolean</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.package"><a class="header" href="#opt-programs.codex.package">programs.codex.package</a></h2>
 <p>The codex package to use.</p>
@@ -19936,7 +19936,7 @@ null or package</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.context"><a class="header" href="#opt-programs.codex.context">programs.codex.context</a></h2>
 <p>Global context for Codex.</p>
@@ -19961,7 +19961,64 @@ strings concatenated with “\n” or absolute path</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.codex.contextOverride"><a class="header" href="#opt-programs.codex.contextOverride">programs.codex.contextOverride</a></h2>
+<p>Global override context for Codex.</p>
+<p>This has the same value format as <code>programs.codex.context</code>,
+but writes <code>CODEX_HOME/AGENTS.override.md</code>.</p>
+<p>Codex prefers <code>AGENTS.override.md</code> over
+<code>AGENTS.md</code> in the same directory.</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n” or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  - Temporarily ignore default global guidance
+  - Prefer brief answers while debugging
+''
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.codex.hooks"><a class="header" href="#opt-programs.codex.hooks">programs.codex.hooks</a></h2>
+<p>Lifecycle hook events written to <code>CODEX_HOME/hooks.json</code>.</p>
+<p>This option uses the same event structure as
+<code>programs.codex.settings.hooks</code> and writes it under the
+top-level <code>hooks</code> key expected by Codex’s JSON hooks file.</p>
+<p>Hooks can also be configured inline through
+<code>programs.codex.settings.hooks</code>; prefer using only one hook
+representation per layer.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  PreToolUse = [
+    {
+      matcher = "^Bash$";
+      hooks = [
+        {
+          type = "command";
+          command = "/usr/local/bin/codex-pre-tool-use";
+          timeout = 30;
+          statusMessage = "Checking Bash command";
+        }
+      ];
+    }
+  ];
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.marketplaces"><a class="header" href="#opt-programs.codex.marketplaces">programs.codex.marketplaces</a></h2>
 <p>Custom marketplaces for Codex plugins.
@@ -19990,7 +20047,7 @@ attribute set of (package or absolute path)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.plugins"><a class="header" href="#opt-programs.codex.plugins">programs.codex.plugins</a></h2>
 <p>List of plugins to use when running Codex.
@@ -20022,7 +20079,7 @@ list of (package or absolute path)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.profiles"><a class="header" href="#opt-programs.codex.profiles">programs.codex.profiles</a></h2>
 <p>Named Codex configuration profiles written to
@@ -20050,7 +20107,7 @@ attribute set of (TOML value)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.rules"><a class="header" href="#opt-programs.codex.rules">programs.codex.rules</a></h2>
 <p>Codex rules files to manage under <code>CODEX_HOME/rules/</code>.</p>
@@ -20078,13 +20135,13 @@ attribute set of (strings concatenated with “\n” or absolute path)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.settings"><a class="header" href="#opt-programs.codex.settings">programs.codex.settings</a></h2>
 <p>Configuration written to <code>CODEX_HOME/config.toml</code> (0.2.0+)
 or <code>~/.codex/config.yaml</code> (&lt;0.2.0). Per default <code>CODEX_HOME</code>
 defaults to ~/.codex.
-See <a href="https://github.com/openai/codex/blob/main/codex-rs/config.md">https://github.com/openai/codex/blob/main/codex-rs/config.md</a> for supported values.</p>
+See <a href="https://developers.openai.com/codex/config-reference">https://developers.openai.com/codex/config-reference</a> for supported values.</p>
 <p><em>Type:</em>
 null or TOML value</p>
 <p><em>Default:</em></p>
@@ -20097,8 +20154,8 @@ null or TOML value</p>
   model_providers = {
     ollama = {
       name = "Ollama";
-      baseURL = "http://localhost:11434/v1";
-      envKey = "OLLAMA_API_KEY";
+      base_url = "http://localhost:11434/v1";
+      env_key = "OLLAMA_API_KEY";
     };
   };
   mcp_servers = {
@@ -20115,7 +20172,7 @@ null or TOML value</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.codex.skills"><a class="header" href="#opt-programs.codex.skills">programs.codex.skills</a></h2>
 <p>Custom skills for Codex.</p>
@@ -20172,7 +20229,7 @@ skills can coexist.</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex.nix">&lt;home-manager/modules/programs/codex.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="command-not-found"><a href="#command-not-found" class="header">command-not-found</a></h1>
