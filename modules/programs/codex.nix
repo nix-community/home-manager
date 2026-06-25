@@ -322,11 +322,10 @@ in
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
       skillsDir = "${configDir}/skills";
-      homeRelativeConfigDir = lib.removePrefix "/" configDir;
       pluginsMarketplaceName = "home-manager";
       pluginsDir = "${configDir}/plugins";
       pluginsCacheDir = "${pluginsDir}/cache";
-      homeRelativePluginsCacheDir = "${homeRelativeConfigDir}/plugins/cache";
+      homeRelativePluginsCacheDir = "${configDir}/plugins/cache";
       rawSettings = if cfg.settings == null then { } else cfg.settings;
 
       # TODO: Remove this workaround once Codex supports symlinked SKILL.md
@@ -395,9 +394,13 @@ in
         builtins.unsafeDiscardStringContext (
           if manifestVersion != null then manifestVersion else fallbackVersion
         );
+      sanitizePathComponent =
+        value: builtins.unsafeDiscardStringContext (lib.strings.sanitizeDerivationName value);
+      mkPluginPathName = plugin: sanitizePathComponent (mkPluginName plugin);
+      mkPluginPathVersion = plugin: sanitizePathComponent (mkPluginVersion plugin);
       mkPluginCachePath =
         plugin:
-        "${pluginsCacheDir}/${pluginsMarketplaceName}/${mkPluginName plugin}/${mkPluginVersion plugin}";
+        "${pluginsCacheDir}/${pluginsMarketplaceName}/${mkPluginPathName plugin}/${mkPluginPathVersion plugin}";
       mkPluginFileEntry =
         plugin:
         lib.nameValuePair (mkPluginCachePath plugin) {
@@ -417,7 +420,7 @@ in
         name = mkPluginName plugin;
         source = {
           source = "local";
-          path = "./${homeRelativePluginsCacheDir}/${pluginsMarketplaceName}/${mkPluginName plugin}/${mkPluginVersion plugin}";
+          path = "./${homeRelativePluginsCacheDir}/${pluginsMarketplaceName}/${mkPluginPathName plugin}/${mkPluginPathVersion plugin}";
         };
         policy = {
           installation = "AVAILABLE";
@@ -539,11 +542,12 @@ in
             lib.concatMapStringsSep "\n" (
               plugin:
               let
-                path = "$HOME/${mkPluginCachePath plugin}";
+                cachePath = lib.escapeShellArg (mkPluginCachePath plugin);
               in
               ''
-                if [ -d "${path}" ] && [ ! -L "${path}" ]; then
-                  rm -rf "${path}"
+                path="$HOME"/${cachePath}
+                if [ -d "$path" ] && [ ! -L "$path" ]; then
+                  rm -rf "$path"
                 fi
               ''
             ) cfg.plugins
