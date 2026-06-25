@@ -1,5 +1,7 @@
 { config, ... }:
 {
+  home.enableNixpkgsReleaseCheck = false;
+
   services.sequoia-keystore = {
     enable = true;
     package = config.lib.test.mkStubPackage {
