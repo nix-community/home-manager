@@ -14,6 +14,36 @@ chars = "\u001d"
 key = "RBracket"
 mods = "Alt"
 
+[[keyboard.bindings]]
+chars = "\u001b[3~"
+key = "Back"
+mods = "Shift"
+
+[[keyboard.bindings]]
+chars = "\u001b[3~"
+key = "Delete"
+mods = "Shift"
+
+[[keyboard.bindings]]
+chars = "\u0000"
+key = "A"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001b\u001b"
+key = "Up"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "OK\u001b"
+key = "Down"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001b\u001b"
+key = "Left"
+mods = "Control"
+
 [window.dimensions]
 columns = 200
 lines = 3
