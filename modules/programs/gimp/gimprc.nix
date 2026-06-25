@@ -1,51 +1,63 @@
 { lib }:
 
 let
-  isColor = v: builtins.isAttrs v && v ? r && v ? g && v ? b;
+  spaces = n: lib.fixedWidthString n " ";
 
-  # Each component is a 7-char right-aligned field.
-  fmtComponent = f: lib.fixedWidthString 7 " " (toString (builtins.floor (f * 65535.0 + 0.5)));
+  # The 'r', 'g', 'b', and 'a' attributes are retained as-is because they
+  # map directly to the literal target property names within the GIMP schema.
+  isColor = value: builtins.isAttrs value && value ? r && value ? g && value ? b;
+
+  # Each color component is normalized to a 16-bit integer string, right-aligned to 7 spaces.
+  formatColorComponent =
+    component: spaces " " (toString (builtins.floor (component * 65535.0 + 0.5)));
 
   renderColor =
-    c:
+    color:
     let
-      vals = fmtComponent c.r + fmtComponent c.g + fmtComponent c.b + fmtComponent (c.a or 1.0);
+      alpha = color.a or 1.0;
+      componentValues =
+        formatColorComponent color.r
+        + formatColorComponent color.g
+        + formatColorComponent color.b
+        + formatColorComponent alpha;
     in
-    "(color \"R'G'B'A float\" 16 \"${vals}\" 0)";
+    "(color \"R'G'B'A float\" 16 \"${componentValues}\" 0)";
 
   renderScalar =
-    v:
-    if builtins.isBool v then
-      if v then "yes" else "no"
-    else if builtins.isInt v || builtins.isFloat v then
-      toString v
+    value:
+    if builtins.isBool value then
+      if value then "yes" else "no"
+    else if builtins.isInt value || builtins.isFloat value then
+      toString value
     else if
-      builtins.match "[a-zA-Z][a-zA-Z0-9._-]*" v != null || builtins.match "[0-9]+[bBkKmMgG]?" v != null
+      builtins.match "[a-zA-Z][a-zA-Z0-9._-]*" value != null
+      || builtins.match "[0-9]+[bBkKmMgG]?" value != null
     then
-      v
+      value
     else
-      "\"${lib.escape [ "\"" "\\" ] v}\"";
-
-  renderLeaf = v: if isColor v then renderColor v else renderScalar v;
-
-  renderCompound =
-    v: "\n" + lib.concatMapStringsSep "\n" (k: "    (${k} ${renderLeaf v.${k}})") (lib.attrNames v);
+      "\"${lib.escape [ "\"" "\\" ] value}\"";
 
   renderValue =
-    v:
-    if isColor v then
-      "\n    ${renderColor v}"
-    else if builtins.isAttrs v then
-      renderCompound v
+    indentation: value:
+    if isColor value then
+      renderColor value
+    else if builtins.isAttrs value then
+      let
+        nextIndentation = indentation + spaces 4;
+        renderPair =
+          key: childValue: "${nextIndentation}(${key} ${renderValue nextIndentation childValue})";
+        lines = lib.mapAttrsToList renderPair value;
+      in
+      "\n" + lib.concatStringsSep "\n" lines
     else
-      renderScalar v;
-
+      renderScalar value;
 in
 {
-  toGimprc =
+  toGimpConfiguration =
     settings:
-    lib.concatMapStringsSep "\n" (name: "(${name} ${renderValue settings.${name}})") (
-      lib.attrNames settings
-    )
-    + "\n";
+    let
+      renderTopLevel = key: value: "(${key} ${renderValue "" value})";
+      lines = lib.mapAttrsToList renderTopLevel settings;
+    in
+    lib.concatStringsSep "\n" lines + "\n";
 }

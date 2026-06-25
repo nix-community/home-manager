@@ -32,33 +32,54 @@ in
         else
           "3.0";
       defaultText = literalExpression "lib.versions.majorMinor config.programs.gimp.package.version";
-      example = "2.10";
+      example = "3.2";
       description = ''
         Config directory version suffix.
         Determines {file}`$XDG_CONFIG_HOME/GIMP/<configVersion>/`.
         Automatically derived from the package version when
-        {option}`programs.gimp.package` is set (`"2.10"` for GIMP 2.x,
-        `"3.0"` for GIMP 3.x).
+        {option}`programs.gimp.package` is set (e.g. `"3.0"` for GIMP 3.0.x,
+        `"3.2"` for GIMP 3.2.x).
       '';
     };
 
     settings = mkOption {
       type =
         let
-          scalar = types.oneOf [
+          scalarType = types.oneOf [
             types.bool
             types.int
             types.float
             types.str
           ];
-          # leafAttrs covers both {r,g,b,a} colour attrsets and flat compound sub-values.
-          leafAttrs = types.attrsOf scalar;
-          leaf = types.either scalar leafAttrs;
 
-          # compound covers settings whose sub-values may be scalars or colours.
-          compound = types.attrsOf leaf;
+          nestedSettingsType = lib.mkOptionType {
+            name = "nestedSettings";
+            description = "a scalar value or an arbitrarily deeply nested attribute set of settings";
+
+            # The check function recursively validates scalars or maps itself across attribute sets
+            check =
+              value:
+              scalarType.check value
+              || (builtins.isAttrs value && lib.all nestedSettingsType.check (builtins.attrValues value));
+
+            # The clever part: we defer the creation of 'types.attrsOf' until merge-time,
+            # which completely bypasses the infinite loop during initial type evaluation.
+            merge =
+              location: definitions:
+              let
+                isAttributeSet = definition: builtins.isAttrs definition.value;
+                attributeSetDefinitions = builtins.filter isAttributeSet definitions;
+                scalarDefinitions = builtins.filter (definition: !isAttributeSet definition) definitions;
+              in
+              if scalarDefinitions != [ ] && attributeSetDefinitions != [ ] then
+                throw "Conflict at ${lib.showFiles location}: cannot merge a scalar value with a nested attribute set."
+              else if attributeSetDefinitions != [ ] then
+                (types.attrsOf nestedSettingsType).merge location attributeSetDefinitions
+              else
+                scalarType.merge location scalarDefinitions;
+          };
         in
-        types.attrsOf (types.either leaf compound);
+        types.attrsOf nestedSettingsType;
       default = { };
       example = literalExpression ''
         {
@@ -163,7 +184,7 @@ in
       description = ''
         Brush files installed to {file}`$XDG_CONFIG_HOME/GIMP/<version>/brushes/`.
         Supported formats: `.gbr` (raster), `.gih` (image hose), `.vbr` (parametric),
-        `.myb` (MyPaint, GIMP 2.10+).
+        `.myb` (MyPaint).
       '';
     };
 
@@ -248,12 +269,12 @@ in
       type = types.attrsOf types.path;
       default = { };
       example = literalExpression ''
-        { "my-plugin/my-plugin" = "''${pkgs.my-gimp-plugin}/lib/gimp/2.0/plug-ins/my-plugin"; }
+        { "my-plugin/my-plugin" = "''${pkgs.my-gimp-plugin}/lib/gimp/3.0/plug-ins/my-plugin"; }
       '';
       description = ''
         Plug-in files installed to {file}`$XDG_CONFIG_HOME/GIMP/<version>/plug-ins/`.
         Values must be paths to executables; inline text is not supported.
-        Group multi-file plug-ins under a subdirectory
+        Each plug-in must live in a subdirectory with the same name as the executable
         (e.g. `"my-plugin/my-plugin"`).
       '';
     };
@@ -292,7 +313,6 @@ in
       description = ''
         MyPaint brush files (`.myb`) installed to
         {file}`$XDG_CONFIG_HOME/GIMP/<version>/mypaint-brushes/`.
-        Available in GIMP 2.10+ and 3.x.
       '';
     };
 
