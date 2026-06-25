@@ -31,6 +31,11 @@ in
           id = 4;
           userChrome = pkgs.writeText "userChrome.css" (builtins.readFile ./chrome/userChrome.css);
         };
+        legacyUserPrCuSt-Disabled = {
+          id = 5;
+          userChrome = pkgs.writeText "userChrome.css" (builtins.readFile ./chrome/userChrome.css);
+          settings."toolkit.legacyUserProfileCustomizations.stylesheets" = false;
+        };
       };
     }
     // {
@@ -62,6 +67,14 @@ in
           assertFileContent \
             "home-files/${cfg.profilesPath}/derivation-file/chrome/userChrome.css" \
             ${./chrome/userChrome.css}
+
+          assertFileContains \
+            "home-files/${cfg.profilesPath}/lines/user.js" \
+            'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
+
+          assertFileContains \
+              "home-files/${cfg.profilesPath}/legacyUserPrCuSt-Disabled/user.js" \
+              'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", false);'
         '';
     }
   );
