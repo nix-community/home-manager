@@ -1,6 +1,22 @@
 { config, pkgs, ... }:
 
 {
+  programs.carapace = {
+    enable = true;
+
+    package = config.lib.test.mkStubPackage {
+      name = "carapace";
+      buildScript = ''
+        mkdir -p $out/bin
+        cat > $out/bin/carapace << 'EOF'
+        #!/bin/sh
+        echo "Stub carapace"
+        EOF
+        chmod +x $out/bin/carapace
+      '';
+    };
+  };
+
   programs.fzf = {
     enable = true;
     enableNushellIntegration = true;
@@ -31,7 +47,11 @@
     in
     ''
       assertFileExists "${nushellConfigFile}"
-      assertFileRegex "${nushellConfigFile}" \
-        'source.*nushell-fzf-integration'
+      assertFileContent "$(normalizeStorePaths "${nushellConfigFile}")" ${builtins.toFile "nushell-fzf-integration-expected.nu" ''
+        source /nix/store/00000000000000000000000000000000-carapace-nushell-config.nu
+
+        source /nix/store/00000000000000000000000000000000-nushell-fzf-integration.nu
+
+      ''}
     '';
 }
