@@ -23,6 +23,7 @@ in
 {
   meta.maintainers = with lib.maintainers; [
     delafthi
+    khaneliman
   ];
 
   imports = [
