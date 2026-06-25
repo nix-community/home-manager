@@ -43,6 +43,9 @@ module argument from within the module graph itself. For values that originate
 outside the module graph, such as flake inputs, prefer
 `home-manager.extraSpecialArgs`.
 
+Use `home-manager.sharedModules` for Home Manager modules or settings that
+should be imported by every user declared in `home-manager.users`.
+
 The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate
 command for the system, such as

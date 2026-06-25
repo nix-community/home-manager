@@ -1,6 +1,7 @@
 {
   zsh-abbr = ./zsh-abbr.nix;
   zsh-aliases = ./aliases.nix;
+  zsh-conflicting-highlighters = ./conflicting-highlighters.nix;
   zsh-dotdir-absolute = import ./dotdir.nix "absolute";
   zsh-dotdir-default = import ./dotdir.nix "default";
   zsh-dotdir-path-normalization-abs-no-slash = import ./dotdir.nix "abs-no-slash";
@@ -12,6 +13,8 @@
   zsh-dotdir-path-normalization-abs-space = import ./dotdir.nix "abs-space";
   zsh-dotdir-relative = import ./dotdir.nix "relative";
   zsh-dotdir-shell-variable = import ./dotdir.nix "shell-variable";
+  zsh-fast-syntax-highlighting = ./fast-syntax-highlighting.nix;
+  zsh-fast-syntax-highlighting-options = ./fast-syntax-highlighting-options.nix;
   zsh-history-ignore-pattern = ./history-ignore-pattern.nix;
   zsh-history-path-absolute = import ./history-path.nix "absolute";
   zsh-history-path-default = import ./history-path.nix "default";

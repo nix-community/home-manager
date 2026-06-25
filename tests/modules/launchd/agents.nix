@@ -22,6 +22,16 @@
       serviceFile=LaunchAgents/org.nix-community.home.test-service.plist
       assertFileExists $serviceFile
       assertFileContent $serviceFile ${./expected-agent.plist}
+
+      domainFile=LaunchAgentDomains/org.nix-community.home.test-service.domain
+      assertFileExists $domainFile
+      assertFileContent $domainFile ${builtins.toFile "expected-domain" "gui\n"}
+
+      assertFileExists activate
+      assertFileContains activate 'readAgentDomain'
+      assertFileContains activate 'resolveDomain'
+      assertFileContains activate "printf 'gui/%s"
+      assertFileContains activate "printf 'user/%s"
     '';
   };
 }

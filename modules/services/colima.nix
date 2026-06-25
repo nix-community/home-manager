@@ -265,6 +265,7 @@ in
         name: profile:
         lib.nameValuePair "colima-${name}" {
           enable = true;
+          domain = lib.mkDefault "user";
           config = {
             ProgramArguments = [
               "${lib.getExe cfg.package}"

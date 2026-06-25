@@ -82,6 +82,7 @@ in
 
     launchd.agents.yubikey-agent = {
       enable = true;
+      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           "${cfg.package}/bin/yubikey-agent"

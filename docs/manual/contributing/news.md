@@ -34,11 +34,12 @@ but you should follow some basic guidelines:
     This will create a new file inside the `modules/misc/news` directory
     with some placeholder information that you can edit.
 
--   The entry condition should be as specific as possible. For example,
-    if you are changing or deprecating a specific option then you could
-    restrict the news to those users who actually use this option.
-    Prefer a targeted condition over skipping useful news only to avoid
-    notifying unaffected users.
+-   The entry condition should be as specific as possible for changes
+    affecting existing functionality. For example, if you are changing
+    or deprecating a specific option then you could restrict the news to
+    those users who actually use this option. Prefer a targeted
+    condition over skipping useful news only to avoid notifying
+    unaffected users.
 
 -   Wrap the news message so that it will fit in the typical terminal,
     that is, at most 80 characters wide. Ideally a bit less.
@@ -64,9 +65,9 @@ but you should follow some basic guidelines:
 
         A new module is available: 'services.foo'.
 
-    Since this news is specific to the module, its condition should use
-    the module enable option to avoid spamming non-users of the module,
-    for example `condition = config.services.foo.enable;`.
+    Since this news announces newly available functionality, its
+    condition should not require `config.services.foo.enable`; otherwise
+    users who may want the new module will not see the news.
 
     If the module is platform specific, e.g., a service module using
     systemd, then a condition like
@@ -75,7 +76,6 @@ but you should follow some basic guidelines:
     condition = hostPlatform.isLinux;
     ```
 
-    should be added, either by itself for platform-scoped news or in
-    combination with the module enable option. Use the `create-news-entry`
-    generator described above to scaffold this entry as part of your
-    contribution.
+    should be added to avoid showing the news on unsupported platforms.
+    Use the `create-news-entry` generator described above to scaffold
+    this entry as part of your contribution.

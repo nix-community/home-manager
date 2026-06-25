@@ -24,8 +24,8 @@ Also make sure to read the guidelines found at
 - [ ] Code formatted with `nix fmt` or
       `nix-shell -A dev --run treefmt`.
 
-- [ ] Code tested through `nix run .#tests -- test-all` or
-      `nix-shell --pure tests -A run.all`.
+- [ ] Code tested through `nix build .#test-all`
+      or a targeted `nix run .#tests -- <pattern>`.
 
 - [ ] Test cases updated/added. See [example](https://github.com/nix-community/home-manager/commit/f3fbb50b68df20da47f9b0def5607857fcc0d021#diff-b61a6d542f9036550ba9c401c80f00ef).
 

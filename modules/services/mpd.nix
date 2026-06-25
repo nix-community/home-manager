@@ -254,6 +254,7 @@ in
 
       launchd.agents.mpd = {
         enable = true;
+        domain = lib.mkDefault "user";
         config = {
           ProgramArguments = [
             (lib.getExe cfg.package)

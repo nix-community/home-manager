@@ -43,6 +43,7 @@ let
     "cudatext"
     "darcs"
     "delta"
+    "devenv"
     "difftastic"
     "dircolors"
     "direnv"
@@ -110,6 +111,8 @@ let
     "less"
     "lesspipe"
     "lf"
+    "librewolf"
+    "librewolf-unwrapped"
     "lieer"
     "lsd"
     "ludusavi"
@@ -148,6 +151,7 @@ let
     "openssh"
     "openstackclient"
     "papis"
+    "parallel-full"
     "patdiff"
     "pay-respects"
     "pet"
@@ -214,6 +218,7 @@ let
     "zoxide"
     "zplug"
     "zsh"
+    "zsh-fast-syntax-highlighting"
     "zsh-history-substring-search"
     # keep-sorted end
   ];

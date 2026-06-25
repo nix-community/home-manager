@@ -78,13 +78,16 @@ in
 
     xdg.configFile."glance/glance.yml" = {
       source = settingsFile;
-      onChange = mkIf pkgs.stdenv.hostPlatform.isDarwin ''
-        /bin/launchctl kickstart -k "gui/$(id -u)/org.nix-community.home.glance" 2>/dev/null || true
+      onChange = mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.package != null) ''
+        domain="${config.launchd.agents.glance.domain}/$(id -u)"
+        /bin/launchctl kickstart -k "$domain/org.nix-community.home.glance" \
+          2>/dev/null || true
       '';
     };
 
     launchd.agents.glance = mkIf (cfg.package != null) {
       enable = true;
+      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           (getExe cfg.package)

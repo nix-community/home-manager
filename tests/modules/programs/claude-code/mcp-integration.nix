@@ -79,7 +79,10 @@
     pluginDir=$(grep -o -- '--plugin-dir /nix/store/[^ ]*' "$wrapperPath")
     pluginDir="''${pluginDir#--plugin-dir }"
     assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
-    assertFileContent "$pluginDir/.mcp.json" ${./expected-mcp-plugin.json}
+    assertFileContent "$pluginDir/.mcp.json" ${./expected-mcp-integration-plugin.json}
     assertPathNotExists "$pluginDir/.lsp.json"
+
+    settingsPath="$TESTED/home-files/.claude/settings.json"
+    assertFileContent "$settingsPath" ${./expected-mcp-settings.json}
   '';
 }

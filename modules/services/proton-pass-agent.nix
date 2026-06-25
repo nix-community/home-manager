@@ -104,6 +104,7 @@ in
 
       launchd.agents.proton-pass-agent = {
         enable = true;
+        domain = lib.mkDefault "user";
         config = {
           ProgramArguments = [
             (lib.getExe pkgs.bash)

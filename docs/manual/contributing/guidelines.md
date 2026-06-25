@@ -116,7 +116,7 @@ the man page version of the module options looks good:
 
 ``` shell
 $ nix-build -A docs.manPages
-$ man ./result/share/man/man5/home-configuration.nix.5.gz
+$ man ./result/share/man/man5/home-configuration.nix.5
 ```
 
 ## Module Auto-importing {#sec-module-auto-importing}
@@ -200,9 +200,13 @@ of the supported platforms. The most common example of platform specific
 modules are those that define systemd user services, which only works on
 Linux systems.
 
-If you add a module that is platform specific then make sure to include
-a condition in the `loadModule` function call. This will make the module
-accessible only on systems where the condition evaluates to `true`.
+If you add a module that is platform specific then make sure the module
+guards platform-specific configuration with an appropriate condition, for
+example `pkgs.stdenv.hostPlatform.isLinux` or
+`pkgs.stdenv.hostPlatform.isDarwin`. Modules in `modules/programs/` and
+`modules/services/` are auto-imported, so the platform condition should live
+in the module behavior and in any platform-specific tests rather than in a
+separate module discovery call.
 
 Similarly, if you are adding a news entry then it should be shown only
 to users that may find it relevant, see [News](#sec-news) for a

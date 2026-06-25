@@ -87,6 +87,7 @@ in
 
     launchd.agents.borgmatic = {
       enable = true;
+      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           (lib.getExe programConfig.package)

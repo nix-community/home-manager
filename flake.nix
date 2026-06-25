@@ -64,6 +64,15 @@
           "x86_64-linux"
         ];
 
+        releaseInfo = nixpkgs.lib.importJSON ./release.json;
+
+        docsFor =
+          pkgs:
+          import ./docs {
+            inherit pkgs;
+            inherit (releaseInfo) release isReleaseBranch;
+          };
+
         testChunks =
           system:
           let
@@ -172,6 +181,7 @@
         buildbot = forCI (
           system:
           let
+            docs = docsFor nixpkgs.legacyPackages.${system};
             allIntegrationTests = integrationTests system;
             workingIntegrationTests = nixpkgs.lib.filterAttrs (
               name: _:
@@ -181,17 +191,20 @@
               ]
             ) allIntegrationTests;
           in
-          (testChunks system) // workingIntegrationTests
+          (testChunks system)
+          // workingIntegrationTests
+          // {
+            docs-html = docs.manual.html;
+            docs-json = docs.options.json;
+            docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
+            docs-manpages = docs.manPages;
+          }
         );
 
         packages = forAllPkgs (
           pkgs:
           let
-            releaseInfo = nixpkgs.lib.importJSON ./release.json;
-            docs = import ./docs {
-              inherit pkgs;
-              inherit (releaseInfo) release isReleaseBranch;
-            };
+            docs = docsFor pkgs;
             hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
           in
           {

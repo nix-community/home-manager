@@ -85,11 +85,20 @@ httpie.
 
 :::{.note}
 If `nixos-rebuild switch` does not result in the environment you expect,
-you can take a look at the output of the Home Manager activation script
-output using
+then the service to inspect depends on the activation mode.
+
+By default, Home Manager activates each configured user during boot and
+system rebuilds through a NixOS system service:
 
 ``` shell
 $ systemctl status "home-manager-$USER.service"
+```
+
+If `home-manager.startAsUserService = true` is set, Home Manager instead
+activates through the user's systemd service:
+
+``` shell
+$ systemctl --user status home-manager.service
 ```
 :::
 
@@ -144,12 +153,22 @@ Nixpkgs.
 :::
 
 :::{.note}
-Home Manager will pass `osConfig` as a module argument to any modules
-you create. This contains the system's NixOS configuration.
+Home Manager passes extra module arguments to each
+`home-manager.users.<name>` module:
 
 ``` nix
-{ lib, pkgs, osConfig, ... }:
+{ lib, pkgs, osConfig, nixosConfig, osClass, modulesPath, ... }:
 ```
+
+Here `osConfig` contains the system's NixOS configuration and `nixosConfig`
+is a NixOS-specific alias for the same value. The `lib` argument is Home
+Manager's extended library. You can pass additional module arguments with
+`home-manager.extraSpecialArgs`.
+:::
+
+:::{.note}
+Use `home-manager.sharedModules` to add Home Manager modules to every user
+declared under `home-manager.users`.
 :::
 
 Once installed you can see [Using Home Manager](#ch-usage) for a more detailed

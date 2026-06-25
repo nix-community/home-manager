@@ -67,31 +67,7 @@ stdenv.mkDerivation {
     mkdir -p out
     cp -r book/* out/
 
-    makeRedirect() {
-      local target=$1
-      local destination=$2
-      printf '%s\n' \
-        '<!doctype html>' \
-        '<html lang="en">' \
-        '  <head>' \
-        '    <meta charset="utf-8">' \
-        "    <meta http-equiv=\"refresh\" content=\"0; url=$destination\">" \
-        "    <link rel=\"canonical\" href=\"$destination\">" \
-        '    <title>Redirecting...</title>' \
-        '  </head>' \
-        '  <body>' \
-        "    <p>Redirecting to <a href=\"$destination\">$destination</a>.</p>" \
-        '  </body>' \
-        '</html>' \
-        > "out/$target"
-    }
-
-    makeRedirect index.xhtml index.html
-    makeRedirect options.html options/home-manager/index.html
-    makeRedirect options.xhtml options/home-manager/index.html
-    makeRedirect nixos-options.xhtml options/nixos/index.html
-    makeRedirect nix-darwin-options.xhtml options/nix-darwin/index.html
-    makeRedirect release-notes.xhtml release-notes/release-notes.html
+    python3 ${./mdbook/legacy-redirects.py} source out
 
     runHook postBuild
   '';
