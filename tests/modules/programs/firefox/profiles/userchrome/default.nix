@@ -62,6 +62,10 @@ in
           assertFileContent \
             "home-files/${cfg.profilesPath}/derivation-file/chrome/userChrome.css" \
             ${./chrome/userChrome.css}
+
+          assertFileContains \
+            "home-files/${cfg.profilesPath}/lines/user.js" \
+            'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);'
         '';
     }
   );
