@@ -8,6 +8,7 @@ let
   inherit (lib)
     getExe
     literalExpression
+    mkAfter
     mkIf
     mkOption
     mkOrder
@@ -230,8 +231,11 @@ in
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
 
+    # Initialize after other completion integrations, such as carapace.
+    # fzf preserves the previous external completer and falls back to it
+    # when its own completer does not apply.
     programs.nushell = lib.mkIf cfg.enableNushellIntegration {
-      extraConfig = ''
+      extraConfig = mkAfter ''
         source ${
           pkgs.runCommand "nushell-fzf-integration.nu" { } ''
             ${lib.getExe cfg.package} --nushell > $out
