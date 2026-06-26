@@ -180,6 +180,7 @@ let
               override = cfg.overrideFolders;
               conf = folders;
               baseAddress = curlAddressArgs "/rest/config/folders";
+              ignoreAddress = curlAddressArgs "/rest/db/ignores";
             };
           }
           [
@@ -205,7 +206,8 @@ let
                   let
                     jsonPreSecretsFile = pkgs.writeTextFile {
                       name = "${conf_type}-${new_cfg.id}-conf-pre-secrets.json";
-                      text = builtins.toJSON new_cfg;
+                      # Remove the ignorePatterns attribute, it is handled separately
+                      text = builtins.toJSON (removeAttrs new_cfg [ "ignorePatterns" ]);
                     };
                     injectSecretsJqCmd =
                       {
@@ -271,6 +273,15 @@ let
                   in
                   ''
                     ${injectSecretsJqCmd} ${jsonPreSecretsFile} | curl --json @- -X POST ${s.baseAddress}
+                  ''
+                  /*
+                    Check if we are configuring a folder which has ignore patterns.
+                    If it does, write the ignore patterns to the rest API.
+                  */
+                  + lib.optionalString ((conf_type == "dirs") && (new_cfg.ignorePatterns != null)) ''
+                    curl -d ${
+                      lib.escapeShellArg (builtins.toJSON { ignore = new_cfg.ignorePatterns; })
+                    } -X POST ${s.ignoreAddress}?folder=${lib.strings.escapeURL new_cfg.id}
                   ''
                 ))
                 (lib.concatStringsSep "\n")
@@ -749,6 +760,26 @@ in
                           granting it additional capabilities (e.g. CAP_CHOWN on
                           Linux).
                         '';
+                      };
+
+                      ignorePatterns = mkOption {
+                        type = types.nullOr (types.listOf types.str);
+                        default = null;
+                        description = ''
+                          Syncthing can be configured to ignore certain files in a folder using ignore patterns.
+                          Enter them as a list of strings, one string per line.
+                          See the Syncthing documentation for syntax: <https://docs.syncthing.net/users/ignoring.html>
+                          Patterns set using the WebUI will be overridden if you define this option.
+                          If you want to override the ignore patterns to be empty, use `ignorePatterns = []`.
+                          Deleting the `ignorePatterns` option will not remove the patterns from Syncthing automatically
+                          because patterns are only handled by the module if this option is defined. Either use
+                          `ignorePatterns = []` before deleting the option or remove the patterns afterwards using the WebUI.
+                        '';
+                        example = [
+                          "// This is a comment"
+                          "*.part // Firefox downloads and other things"
+                          "*.crdownload // Chrom(ium|e) downloads"
+                        ];
                       };
                     };
                   }
