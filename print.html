@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6283a9eb.js";
+            window.path_to_searchindex_js = "searchindex-6ee2b64a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5e32c50d.js"></script>
@@ -56940,13 +56940,14 @@ all. A bare string is accepted as a single-element list.</p>
 </ul>
 <h2 id="opt-programs.uv.python.prune"><a class="header" href="#opt-programs.uv.python.prune">programs.uv.python.prune</a></h2>
 <p>Whether to make the set of managed Python versions fully declarative.</p>
-<p>When enabled, <code>uv python uninstall --all</code> is run before
-installing <code>programs.uv.python.versions</code>, so versions that are
-no longer listed are removed.</p>
-<p><strong>Warning:</strong> uv has no declarative install command, so this uninstalls and
-reinstalls all listed versions on every activation, which is slow.
-Versions installed manually with <code>uv python install</code> are also
-removed.</p>
+<p>When enabled, managed Python versions that no longer match any entry in
+<code>programs.uv.python.versions</code> are uninstalled before the listed
+versions are installed, so the set is fully declarative. uv resolves
+each requested version to the install target it would produce, so only
+the difference is removed; versions that are already correct are left
+untouched rather than reinstalled.</p>
+<p><strong>Warning:</strong> Versions installed manually with <code>uv python install</code> are also
+removed, since they are not listed here.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>
@@ -57034,12 +57035,13 @@ list of string</p>
 </ul>
 <h2 id="opt-programs.uv.tool.prune"><a class="header" href="#opt-programs.uv.tool.prune">programs.uv.tool.prune</a></h2>
 <p>Whether to make the set of installed tools fully declarative.</p>
-<p>When enabled, <code>uv tool uninstall --all</code> is run before
-installing <code>programs.uv.tool.packages</code>, so tools that are no
-longer listed are removed.</p>
-<p><strong>Warning:</strong> uv has no declarative install command, so this uninstalls and
-reinstalls all listed tools on every activation, which is slow. Tools
-installed manually with <code>uv tool install</code> are also removed.</p>
+<p>When enabled, installed tools whose package name is no longer listed in
+<code>programs.uv.tool.packages</code> are uninstalled before the listed
+tools are installed, so the set is fully declarative. Only the
+difference is removed; tools that are already installed are left for the
+upgrade step rather than reinstalled.</p>
+<p><strong>Warning:</strong> Tools installed manually with <code>uv tool install</code> are also
+removed, since they are not listed here.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>
