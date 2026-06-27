@@ -1,0 +1,90 @@
+onboarding = false
+
+[advanced]
+scrollback_limit_bytes = 10485760
+
+[experimental]
+allow_nested = false
+cjk_ime_agents = []
+cjk_ime_cursor_shape = "steady_block"
+kitty_graphics = false
+pane_history = true
+reveal_hidden_cursor_for_cjk_ime = false
+
+[keys]
+focus_pane_left = "prefix+h"
+goto = "prefix+g"
+new_tab = "prefix+c"
+next_tab = ["prefix+n", "ctrl+alt+]"]
+prefix = "ctrl+b"
+split_horizontal = "prefix+minus"
+
+[[keys.command]]
+command = "lazygit"
+description = "run lazygit"
+key = "prefix+alt+g"
+type = "pane"
+
+[[keys.command]]
+command = "example.layout.apply"
+description = "apply layout"
+key = "prefix+l"
+type = "plugin_action"
+
+[remote]
+manage_ssh_config = true
+
+[session]
+resume_agents_on_restore = true
+
+[terminal]
+default_shell = "nu"
+new_cwd = "follow"
+shell_mode = "auto"
+
+[theme]
+auto_switch = true
+dark_name = "catppuccin"
+light_name = "catppuccin-latte"
+name = "catppuccin"
+
+[theme.custom]
+accent = "#a6e3a1"
+green = "#a6e3a1"
+
+[ui]
+accent = "cyan"
+agent_panel_sort = "priority"
+confirm_close = true
+mobile_width_threshold = 64
+mouse_capture = true
+sidebar_max_width = 36
+sidebar_min_width = 18
+sidebar_width = 32
+
+[ui.sound]
+enabled = true
+path = "sounds/notification.mp3"
+
+[ui.sound.agents]
+claude = "on"
+droid = "off"
+
+[ui.toast]
+delay_seconds = 1
+delivery = "herdr"
+
+[ui.toast.clipboard]
+enabled = true
+position = "bottom-center"
+
+[ui.toast.herdr]
+position = "bottom-right"
+
+[update]
+channel = "stable"
+manifest_check = true
+version_check = true
+
+[worktrees]
+directory = "~/.herdr/worktrees"

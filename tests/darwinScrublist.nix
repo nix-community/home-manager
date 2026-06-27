@@ -82,6 +82,7 @@ let
     "halloy"
     "helix"
     "hello"
+    "herdr"
     "himalaya"
     "hjson-go"
     "htop"
