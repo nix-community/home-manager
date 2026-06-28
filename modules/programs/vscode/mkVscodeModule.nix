@@ -38,15 +38,15 @@ let
       "${config.xdg.configHome}/${nameShort}/User";
 
   argvPath = "${dataFolderName}/argv.json";
-  configFilePath =
-    name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}settings.json";
-  tasksFilePath =
-    name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}tasks.json";
-  mcpFilePath = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}mcp.json";
-  keybindingsFilePath =
-    name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}keybindings.json";
 
-  snippetDir = name: "${userDir}/${optionalString (name != "default") "profiles/${name}/"}snippets";
+  profileDir = name: "${userDir}${optionalString (name != "default") "/profiles/${name}"}";
+
+  configFilePath = name: "${profileDir name}/settings.json";
+  tasksFilePath = name: "${profileDir name}/tasks.json";
+  mcpFilePath = name: "${profileDir name}/mcp.json";
+  keybindingsFilePath = name: "${profileDir name}/keybindings.json";
+
+  snippetDir = name: "${profileDir name}/snippets";
 
   extensionPath = "${dataFolderName}/extensions";
 
@@ -450,7 +450,7 @@ in
       (mkIf (allProfilesExceptDefault != { }) (
         lib.mapAttrs' (
           n: v:
-          lib.nameValuePair "${userDir}/profiles/${n}/extensions.json" {
+          lib.nameValuePair "${profileDir n}/extensions.json" {
             source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
           }
         ) allProfilesExceptDefault
