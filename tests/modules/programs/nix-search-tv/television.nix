@@ -1,6 +1,9 @@
 { lib, pkgs, ... }:
 {
-  programs.television.enable = true;
+  programs.television = {
+    enable = true;
+    extraPackages = [ ];
+  };
 
   programs.nix-search-tv.enable = true;
 
