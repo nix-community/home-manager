@@ -267,6 +267,10 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    Zocker1999NET # primarily use VSCode / VSCodium, do not necessarily support other forks
+  ];
+
   options = lib.setAttrByPath modulePath {
     enable = lib.mkEnableOption name;
 
