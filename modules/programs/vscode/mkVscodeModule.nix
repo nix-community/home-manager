@@ -267,6 +267,9 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
+
+  # meta.maintainers (also) declared per fork
+
   options = lib.setAttrByPath modulePath {
     enable = lib.mkEnableOption name;
 
