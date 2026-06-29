@@ -136,15 +136,7 @@ let
       userMcp = mkOption {
         type = types.either types.path jsonFormat.type;
         default = { };
-        example = literalExpression ''
-          {
-            "servers": {
-              "Github": {
-                "url": "https://api.githubcopilot.com/mcp/"
-              }
-            }
-          }
-        '';
+        example.servers.Github.url = "https://api.githubcopilot.com/mcp/";
         description = ''
           Configuration written to ${name}'s
           {file}`mcp.json`.
