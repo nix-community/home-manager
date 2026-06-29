@@ -36,7 +36,7 @@ let
       cfg.package;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ semi710 ];
+  meta.maintainers = with lib.maintainers; [ semi710 ];
 
   options.programs.pi-coding-agent = {
     enable = mkEnableOption "pi-coding-agent";

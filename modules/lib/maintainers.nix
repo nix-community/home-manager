@@ -13,12 +13,6 @@
     github = "3ulalia";
     githubId = 179992797;
   };
-  "74k1" = {
-    name = "Tim";
-    email = "git.t@betsumei.com";
-    github = "74k1";
-    githubId = 49000471;
-  };
   "9p4" = {
     name = "9p4";
     email = "vcs@ersei.net";
@@ -546,12 +540,6 @@
     email = "radoslawszamszur@gmail.com";
     github = "rszamszur";
     githubId = 10353018;
-  };
-  semi710 = {
-    name = "Nikhil Singh";
-    email = "nik.singh710@gmail.com";
-    github = "semi710";
-    githubId = 60490474;
   };
   silmarp = {
     name = "Silmar Pereira da Silva Junior";
