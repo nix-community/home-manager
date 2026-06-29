@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-5472ca8d.js";
+            window.path_to_searchindex_js = "../../../searchindex-3cf9a5e1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-5e32c50d.js"></script>
@@ -470,13 +470,12 @@ absolute path or JSON value</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  "servers": {
-    "Github": {
-      "url": "https://api.githubcopilot.com/mcp/"
-    }
-  }
+  servers = {
+    Github = {
+      url = "https://api.githubcopilot.com/mcp/";
+    };
+  };
 }
-
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
