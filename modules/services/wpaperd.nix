@@ -11,7 +11,7 @@ let
   inherit (lib) mkRenamedOptionModule mkIf;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers."3ulalia" ];
+  meta.maintainers = [ lib.hm.maintainers._3ulalia ];
 
   imports = [
     (
