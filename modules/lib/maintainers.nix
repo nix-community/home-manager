@@ -7,23 +7,17 @@
 # [1] https://github.com/NixOS/nixpkgs/blob/737449404589e4a80b3fa99ecbc6d4d803c1f6dc/maintainers/maintainer-list.nix#LC1
 {
   # keep-sorted start case=no numeric=no block=yes
-  "3ulalia" = {
+  _3ulalia = {
     name = "Eulalia del Sol";
     email = "3ulalia@proton.me";
     github = "3ulalia";
     githubId = 179992797;
   };
-  "9p4" = {
+  _9p4 = {
     name = "9p4";
     email = "vcs@ersei.net";
     github = "9p4";
     githubId = 17993169;
-  };
-  "will-lol" = {
-    name = "William Bradshaw";
-    email = "will.bradshaw50@gmail.com";
-    github = "will-lol";
-    githubId = 65345408;
   };
   aabccd021 = {
     name = "Muhamad Abdurahman";
@@ -563,6 +557,12 @@
     email = "saymon.nicho@pucp.edu.pe";
     github = "superflash41";
     githubId = 102434258;
+  };
+  will-lol = {
+    name = "William Bradshaw";
+    email = "will.bradshaw50@gmail.com";
+    github = "will-lol";
+    githubId = 65345408;
   };
   yarn = {
     name = "yarncat";
