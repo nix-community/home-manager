@@ -185,9 +185,9 @@ in
   options = {
     home.username = mkOption {
       type = types.nonEmptyStr;
-      defaultText = literalExpression ''
-        "$USER"   for state version < 20.09,
-        undefined for state version ≥ 20.09
+      defaultText = lib.literalMD ''
+        `$USER`,   for state version < 20.09,
+        undefined, otherwise.
       '';
       example = "jane.doe";
       description = "The user's username.";
@@ -202,9 +202,9 @@ in
 
     home.homeDirectory = mkOption {
       type = types.path;
-      defaultText = literalExpression ''
-        "$HOME"   for state version < 20.09,
-        undefined for state version ≥ 20.09
+      defaultText = lib.literalMD ''
+        `$HOME`,   for state version < 20.09
+        undefined, otherwise.
       '';
       apply = toString;
       example = "/home/jane.doe";
@@ -220,7 +220,7 @@ in
           "${config.xdg.stateHome}/nix/profile"
         else
           cfg.homeDirectory + "/.nix-profile";
-      defaultText = ''
+      defaultText = lib.literalMD ''
         - `/etc/profiles/per-user/''${home.username}`, if Home Manager is installed as
           a submodule and `home-manager.useUserPackages` is enabled, else
         - `''${xdg.stateHome}/nix/profile`, if `nix.useXdg` is enabled, else
