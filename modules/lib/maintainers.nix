@@ -440,6 +440,12 @@
     github = "natecox";
     githubId = 2782695;
   };
+  nikhilmaddirala = {
+    name = "Nikhil Maddirala";
+    email = "nikhil.maddirala@gmail.com";
+    github = "nikhilmaddirala";
+    githubId = 4138581;
+  };
   nikp123 = {
     name = "nikp123";
     email = "nikp123@users.noreply.github.com";
