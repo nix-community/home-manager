@@ -12,5 +12,6 @@
     ./spectrwm.nix
     ./wayfire.nix
     ./xmonad.nix
+    ./niri
   ];
 }
