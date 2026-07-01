@@ -1,0 +1,12 @@
+[Service]
+ExecStart=@imapgoose@/bin/imapgoose -c /home/hm-user/.config/imapgoose/config.scfg
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+LogRateLimitIntervalSec=0
+Nice=19
+Restart=no
+Type=oneshot
+
+[Unit]
+Description=imapgoose mail synchronization

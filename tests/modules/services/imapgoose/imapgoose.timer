@@ -1,0 +1,11 @@
+[Install]
+WantedBy=timers.target
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+RandomizedDelaySec=1m
+Unit=imapgoose.service
+
+[Unit]
+Description=imapgoose mail synchronization
