@@ -230,7 +230,18 @@ in
 
               verboseEcho "Stopping agent '$domain/$agentName'..."
               local bootout_output
-              if bootout_output=$(run /bin/launchctl bootout --wait "$domain/$agentName" 2>&1); then
+              if bootout_output=$(run /bin/launchctl bootout "$domain/$agentName" 2>&1); then
+                # `bootout` can return before launchd has finished unloading
+                # the service, and its `--wait` flag is not supported on all
+                # macOS versions. Poll until the service is gone so that a
+                # following `bootstrap` does not race the unload.
+                if [[ ! -v DRY_RUN ]]; then
+                  local i
+                  for ((i = 0; i < 60; i++)); do
+                    agentIsLoaded "$domain" "$agentName" || break
+                    sleep 0.5
+                  done
+                fi
                 return 0
               else
                 # Only show warning if it's not the common "No such process" error
