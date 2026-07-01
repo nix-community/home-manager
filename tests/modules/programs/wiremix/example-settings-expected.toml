@@ -1,0 +1,9 @@
+fps = 75.0
+mouse = false
+tabs = ["playback", "output", "input", "configuration"]
+
+[char_sets.extracompat]
+dropdown_selector = ">>"
+
+[theme.default.selector]
+fg = "LightCyan"
