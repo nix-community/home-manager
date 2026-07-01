@@ -15,6 +15,8 @@
         enable_audio_bell = false;
         update_check_interval = 0;
         background_opacity = 0.5;
+        # Test string with leading/trailing spaces
+        tab_separator = " | ";
       };
 
       font.name = "DejaVu Sans";
