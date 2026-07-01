@@ -10,7 +10,7 @@ in
     home.packages = [ darwinTestApp ];
 
     nmt.script = ''
-      assertFileExists 'home-files/Applications/Home Manager Apps/example-app'
+      assertFileExists 'home-files/Applications/Nix Apps/example-app'
     '';
   };
 }
