@@ -4,7 +4,7 @@ a 1
 argsAndProps 1 2 a=3
 b "string"
 bigFlatItems 23847590283751 1.239000 "multiline \" \" \"\nstring\n" null
-c "multiline string\nwith special characters:\n	 \\" \" \\n"
+c "multiline string\nwith special characters:\n	 \\\" \" \\\n"
 duplicateChildren {
 	child 2
 	child 1
@@ -45,4 +45,4 @@ nested {
 	- 
 	- null
 }
-unsafeString " \" \n 	 \"
+unsafeString " \" \n 	 \\"
