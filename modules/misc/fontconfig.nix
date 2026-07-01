@@ -196,6 +196,19 @@ in
         '';
       };
 
+      packages = lib.mkOption {
+        type = with lib.types; listOf path;
+        default = [ ];
+        example = lib.literalExpression "[ pkgs.nerd-fonts.open-dyslexic ]";
+        description = ''
+          List of font packages to add directly to Fontconfig's search paths.
+
+          These packages are not added to {option}`home.packages`. Use this
+          option for font packages that should be discovered through direct
+          immutable store paths rather than through the Home Manager profile.
+        '';
+      };
+
       defaultFonts = {
         monospace = lib.mkOption {
           type = with lib.types; listOf str;
@@ -366,7 +379,7 @@ in
               "${config.home.path}/etc/fonts/conf.d"
               "${config.home.path}/etc/fonts/fonts.conf"
             ];
-            dir = [
+            dir = map (fontPackage: "${fontPackage}") cfg.packages ++ [
               "${config.home.path}/lib/X11/fonts"
               "${config.home.path}/share/fonts"
               "${config.home.profileDirectory}/lib/X11/fonts"
@@ -433,9 +446,12 @@ in
     };
 
     xdg.configFile = lib.mapAttrs' (
-      _name: config:
+      name: config:
       lib.nameValuePair "fontconfig/conf.d/${config.target}" {
         inherit (config) enable source;
+        onChange = lib.optionalString (name == "fonts") ''
+          run ${lib.getExe' pkgs.fontconfig "fc-cache"} -f $VERBOSE_ARG
+        '';
       }
     ) cfg.configFile;
   };
