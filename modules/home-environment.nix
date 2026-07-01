@@ -190,14 +190,24 @@ in
         undefined, otherwise.
       '';
       example = "jane.doe";
-      description = "The user's username.";
+      description = ''
+        The user's username.
+
+        If Home Manager is installed as a NixOS or nix-darwin submodule, it is
+        set to `osConfig.users.users.<name>.name`.
+      '';
     };
 
     home.uid = mkOption {
       type = types.nullOr types.ints.unsigned;
       default = null;
       example = 1000;
-      description = "The user's uid.";
+      description = ''
+        The user's uid.
+
+        If Home Manager is installed as a NixOS or nix-darwin submodule, it is
+        set to `osConfig.users.users.<name>.uid`.
+      '';
     };
 
     home.homeDirectory = mkOption {
@@ -208,7 +218,12 @@ in
       '';
       apply = toString;
       example = "/home/jane.doe";
-      description = "The user's home directory. Must be an absolute path.";
+      description = ''
+        The user's home directory. Must be an absolute path.
+
+        If Home Manager is installed as a NixOS or nix-darwin submodule, it is
+        set to `osConfig.users.users.<name>.home`.
+      '';
     };
 
     home.profileDirectory = mkOption {
