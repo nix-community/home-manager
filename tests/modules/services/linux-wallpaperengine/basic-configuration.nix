@@ -2,26 +2,24 @@
   services.linux-wallpaperengine = {
     enable = true;
     assetsPath = "/some/path/to/assets";
-    clamping = "border";
+    fps = 6;
+    audio = {
+      silent = true;
+      automute = false;
+      processing = false;
+    };
     wallpapers = [
       {
         monitor = "HDMI-1";
-        wallpaperId = "12345678";
+        wallpaper = "12345678";
         scaling = "fit";
-        fps = 6;
       }
       {
         monitor = "DP-1";
-        wallpaperId = "87654321";
+        playlist = "config.json";
         extraOptions = [
           "--scaling fill"
-          "--fps 12"
         ];
-        audio = {
-          silent = true;
-          automute = false;
-          processing = false;
-        };
       }
     ];
   };
