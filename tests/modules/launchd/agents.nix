@@ -30,8 +30,19 @@
       assertFileExists activate
       assertFileContains activate 'readAgentDomain'
       assertFileContains activate 'resolveDomain'
+      assertFileContains activate 'agentIsLoaded'
+      assertFileContains activate 'if agentIsLoaded "$newDomain" "$agentName"; then'
+      assertFileContains activate 'is up-to-date but not loaded'
       assertFileContains activate "printf 'gui/%s"
       assertFileContains activate "printf 'user/%s"
+      assertFileContains activate 'restoreAgent "$oldSrcPath" "$dstPath" "$oldDomain" "$agentName"'
+      assertFileContains activate 'bootoutAgent "$newDomain" "$agentName"'
+      assertFileContains activate 'processAgent "$srcPath" "$dstDir" "$oldDir" "$oldDomainsDir" "$newDomainsDir" \'
+      assertFileContains activate '|| launchdStatus=1'
+      assertFileContains activate 'done < <(find -L "$newDir" -maxdepth 1 -name'
+      assertFileContains activate 'done < <(find -L "$oldDir" -maxdepth 1 -name'
+      assertFileContains activate 'if [[ "$launchdStatus" -ne 0 ]]; then'
+      assertFileContains activate 'exit "$launchdStatus"'
     '';
   };
 }

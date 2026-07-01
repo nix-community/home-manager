@@ -23,6 +23,8 @@
       	</dict>
       	<key>Label</key>
       	<string>org.nix-community.home.yubikey-agent</string>
+      ${"\t"}<key>LimitLoadToSessionType</key>
+      ${"\t"}<string>Background</string>
       	<key>ProcessType</key>
       	<string>Background</string>
       	<key>ProgramArguments</key>

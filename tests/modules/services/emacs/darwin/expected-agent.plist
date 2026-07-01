@@ -11,6 +11,8 @@
 	</dict>
 	<key>Label</key>
 	<string>org.nix-community.home.emacs</string>
+	<key>LimitLoadToSessionType</key>
+	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/bin/sh</string>

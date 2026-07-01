@@ -18,6 +18,8 @@
       serviceFile=$(normalizeStorePaths $serviceFile)
       assertFileExists "$serviceFile"
       assertFileContent "$serviceFile" ${./glance.plist}
+      assertFileContains "$serviceFile" '<key>LimitLoadToSessionType</key>'
+      assertFileContains "$serviceFile" '<string>Background</string>'
 
       domainFile=LaunchAgentDomains/org.nix-community.home.glance.domain
       assertFileContent "$domainFile" ${builtins.toFile "expected-domain" "user\n"}
