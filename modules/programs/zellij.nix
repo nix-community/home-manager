@@ -288,6 +288,9 @@ in
       pluginRuntimeDeps = lib.concatLists (
         lib.map ({ plugin, ... }: plugin.runtimeDeps or [ ]) pluginsWithNames
       );
+      toKDL = lib.hm.generators.toKDL {
+        escapeBackslashes = lib.versionAtLeast config.home.stateVersion "26.11";
+      };
     in
     mkIf cfg.enable {
       home.packages = [ cfg.finalPackage ];
@@ -317,7 +320,7 @@ in
               )
               {
                 text =
-                  (lib.hm.generators.toKDL { } cfg.settings)
+                  (toKDL cfg.settings)
                   + lib.optionalString (cfg.extraConfig != "") (
                     ''
 
@@ -336,9 +339,7 @@ in
               if builtins.isPath value || lib.isStorePath value then
                 value
               else
-                pkgs.writeText "zellij-layout-${name}" (
-                  if lib.isString value then value else lib.hm.generators.toKDL { } value
-                );
+                pkgs.writeText "zellij-layout-${name}" (if lib.isString value then value else toKDL value);
           }
         ) cfg.layouts)
 
@@ -349,9 +350,7 @@ in
               if builtins.isPath value || lib.isStorePath value then
                 value
               else
-                pkgs.writeText "zellij-theme-${name}" (
-                  if lib.isString value then value else lib.hm.generators.toKDL { } value
-                );
+                pkgs.writeText "zellij-theme-${name}" (if lib.isString value then value else toKDL value);
           }
         ) cfg.themes)
 
