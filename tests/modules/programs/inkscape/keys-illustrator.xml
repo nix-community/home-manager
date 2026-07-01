@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<keys name="default">
+<xi:include
+href="/nix/store/00000000000000000000000000000000-inkscape/share/inkscape/keys/illustrator.xml"
+xmlns:xi="http://www.w3.org/2001/XInclude"/>
+</keys>
