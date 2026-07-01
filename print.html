@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-afbc8f60.js";
+            window.path_to_searchindex_js = "searchindex-c223e602.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-504d7b3f.js"></script>
@@ -91020,6 +91020,18 @@ sessions without requiring an active graphical login session.</p>
 <p>The state version in this release includes the changes below. These
 changes are only active if the <code>home.stateVersion</code> option is set to
 “26.11” or later.</p>
+<ul>
+<li>The KDL options under <code>programs.zellij</code> will now correctly escape backslashes
+in string values. For example, the Nix string <code>"\\"</code> will now correctly
+generate the KDL string <code>"\\"</code>. Previously, this would have generated <code>"\"</code>,
+which is invalid KDL. The following options are affected:
+<ul>
+<li><code>programs.zellij.settings</code></li>
+<li><code>programs.zellij.themes</code></li>
+<li><code>programs.zellij.layouts</code></li>
+</ul>
+</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <p><a id="sec-release-26.05"></a></p>
 <h1 id="release-2605"><a class="header" href="#release-2605">Release 26.05</a></h1>
