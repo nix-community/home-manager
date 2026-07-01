@@ -11,6 +11,8 @@
 	</dict>
 	<key>Label</key>
 	<string>org.nix-community.home.syncthing</string>
+	<key>LimitLoadToSessionType</key>
+	<string>Background</string>
 	<key>ProcessType</key>
 	<string>Background</string>
 	<key>ProgramArguments</key>

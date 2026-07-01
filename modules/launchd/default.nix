@@ -14,7 +14,7 @@ let
   dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
 
   launchdConfig =
-    { name, ... }:
+    { name, config, ... }:
     {
       options = {
         enable = lib.mkEnableOption name;
@@ -55,9 +55,14 @@ let
         };
       };
 
-      config = {
-        config.Label = lib.mkDefault "${labelPrefix}${name}";
-      };
+      config = lib.mkMerge [
+        {
+          config.Label = lib.mkDefault "${labelPrefix}${name}";
+        }
+        (lib.mkIf (config.domain == "user") {
+          config.LimitLoadToSessionType = lib.mkDefault "Background";
+        })
+      ];
     };
 
   # mutateConfig calls /bin/sh with /bin/wait4path to wait for /nix/store before
@@ -211,6 +216,13 @@ in
               esac
             }
 
+            agentIsLoaded() {
+              local domain="$1"
+              local agentName="$2"
+
+              run /bin/launchctl print "$domain/$agentName" >/dev/null 2>&1
+            }
+
             # Stop an agent if it's running
             bootoutAgent() {
               local domain="$1"
@@ -218,21 +230,24 @@ in
 
               verboseEcho "Stopping agent '$domain/$agentName'..."
               local bootout_output
-              bootout_output=$(run /bin/launchctl bootout --wait "$domain/$agentName" 2>&1) || {
+              if bootout_output=$(run /bin/launchctl bootout --wait "$domain/$agentName" 2>&1); then
+                return 0
+              else
                 # Only show warning if it's not the common "No such process" error
                 if [[ "$bootout_output" != *"No such process"* ]]; then
                   warnEcho "Failed to stop agent '$domain/$agentName': $bootout_output"
+                  return 1
                 else
                   verboseEcho "Agent '$domain/$agentName' was not running"
+                  return 2
                 fi
-              }
+              fi
             }
 
-            installAndBootstrapAgent() {
+            installAgentFile() {
               local srcPath="$1"
               local dstPath="$2"
-              local domain="$3"
-              local agentName="$4"
+              local agentName="$3"
 
               verboseEcho "Installing agent file to $dstPath"
               if ! run install -Dm444 -T "$srcPath" "$dstPath"; then
@@ -240,11 +255,17 @@ in
                 return 1
               fi
 
+              return 0
+            }
+
+            bootstrapAgent() {
+              local domain="$1"
+              local dstPath="$2"
+              local agentName="$3"
+
               verboseEcho "Starting agent '$domain/$agentName'"
               local bootstrap_output
               bootstrap_output=$(run /bin/launchctl bootstrap "$domain" "$dstPath" 2>&1) || {
-                local error_code=$?
-
                 if [[ "$bootstrap_output" == *"Bootstrap failed: 5: Input/output error"* ]]; then
                   errorEcho "Failed to start agent '$domain/$agentName' with I/O error (code 5)"
                   errorEcho "This typically happens when the agent wasn't unloaded before attempting to bootstrap the new agent."
@@ -259,29 +280,55 @@ in
               return 0
             }
 
+            restoreAgent() {
+              local oldSrcPath="$1"
+              local dstPath="$2"
+              local oldDomain="$3"
+              local agentName="$4"
+
+              if [[ ! -f "$oldSrcPath" ]]; then
+                warnEcho "Cannot restore previous agent '$oldDomain/$agentName', old file '$oldSrcPath' is missing"
+                return 1
+              fi
+
+              warnEcho "Restoring previous agent '$oldDomain/$agentName'"
+              installAgentFile "$oldSrcPath" "$dstPath" "$agentName" \
+                && bootstrapAgent "$oldDomain" "$dstPath" "$agentName"
+            }
+
             processAgent() {
               local srcPath="$1"
               local dstDir="$2"
-              local oldDomainsDir="$3"
-              local newDomainsDir="$4"
+              local oldDir="$3"
+              local oldDomainsDir="$4"
+              local newDomainsDir="$5"
 
               local agentFile="''${srcPath##*/}"
               local agentName="''${agentFile%.plist}"
               local dstPath="$dstDir/$agentFile"
+              local oldSrcPath=""
               local oldDomainName
               local newDomainName
               local oldDomain
               local newDomain
+              local oldAgentBootedOut=0
 
               oldDomainName="$(readAgentDomain "$oldDomainsDir" "$agentName")"
               newDomainName="$(readAgentDomain "$newDomainsDir" "$agentName")"
               oldDomain="$(resolveDomain "$oldDomainName")"
               newDomain="$(resolveDomain "$newDomainName")"
+              if [[ -n "$oldDir" ]]; then
+                oldSrcPath="$oldDir/$agentFile"
+              fi
 
               # Skip if unchanged
               if cmp -s "$srcPath" "$dstPath" && [[ "$oldDomainName" == "$newDomainName" ]]; then
-                verboseEcho "Agent '$newDomain/$agentName' is already up-to-date"
-                return 0
+                if agentIsLoaded "$newDomain" "$agentName"; then
+                  verboseEcho "Agent '$newDomain/$agentName' is already up-to-date"
+                  return 0
+                else
+                  verboseEcho "Agent '$newDomain/$agentName' is up-to-date but not loaded"
+                fi
               fi
 
               verboseEcho "Processing agent '$newDomain/$agentName'"
@@ -289,11 +336,48 @@ in
               # Stop/Unload agent if it's already running
               if [[ -f "$dstPath" ]]; then
                 bootoutAgent "$oldDomain" "$agentName"
+                case "$?" in
+                  0)
+                    oldAgentBootedOut=1
+                    ;;
+                  2)
+                    ;;
+                  *)
+                    return 1
+                    ;;
+                esac
               fi
 
-              installAndBootstrapAgent "$srcPath" "$dstPath" "$newDomain" "$agentName"
-              # Note: We continue processing even if this agent fails
-              return 0
+              if [[ "$oldDomainName" != "$newDomainName" ]]; then
+                bootoutAgent "$newDomain" "$agentName"
+                case "$?" in
+                  0|2)
+                    ;;
+                  *)
+                    if [[ "$oldAgentBootedOut" -eq 1 ]]; then
+                      restoreAgent "$oldSrcPath" "$dstPath" "$oldDomain" "$agentName"
+                    fi
+                    return 1
+                    ;;
+                esac
+              fi
+
+              if ! installAgentFile "$srcPath" "$dstPath" "$agentName"; then
+                if [[ "$oldAgentBootedOut" -eq 1 ]]; then
+                  restoreAgent "$oldSrcPath" "$dstPath" "$oldDomain" "$agentName"
+                fi
+                return 1
+              fi
+
+              if bootstrapAgent "$newDomain" "$dstPath" "$agentName"; then
+                return 0
+              fi
+
+              if [[ "$oldAgentBootedOut" -eq 1 ]]; then
+                restoreAgent "$oldSrcPath" "$dstPath" "$oldDomain" "$agentName"
+              fi
+
+              return 1
             }
 
             removeAgent() {
@@ -328,23 +412,32 @@ in
 
               # Stop and remove the agent
               bootoutAgent "$domain" "$agentName"
+              case "$?" in
+                0|2)
+                  ;;
+                *)
+                  return 1
+                  ;;
+              esac
 
               verboseEcho "Removing agent file '$dstPath'"
               if run rm -f $VERBOSE_ARG "$dstPath"; then
                 verboseEcho "Successfully removed agent file for '$agentName'"
               else
                 warnEcho "Failed to remove agent file '$dstPath'"
+                return 1
               fi
 
               return 0
             }
 
             setupLaunchAgents() {
-              local oldDir newDir oldDomainsDir newDomainsDir dstDir
+              local oldDir newDir oldDomainsDir newDomainsDir dstDir launchdStatus
 
               newDir="$(readlink -m "$newGenPath/LaunchAgents")"
               newDomainsDir="$(readlink -m "$newGenPath/LaunchAgentDomains")"
               dstDir=${lib.escapeShellArg dstDir}
+              launchdStatus=0
 
               if [[ -n "''${oldGenPath:-}" ]]; then
                 oldDir="$(readlink -m "$oldGenPath/LaunchAgents")"
@@ -363,29 +456,49 @@ in
               fi
 
               verboseEcho "Setting up LaunchAgents in $dstDir"
-              [[ -d "$dstDir" ]] || run mkdir -p "$dstDir"
+              if [[ ! -d "$dstDir" ]] && ! run mkdir -p "$dstDir"; then
+                errorEcho "Failed to create LaunchAgents directory '$dstDir'"
+                return 1
+              fi
 
               verboseEcho "Processing new/updated LaunchAgents..."
-              find -L "$newDir" -maxdepth 1 -name '*.plist' -type f | while read -r srcPath; do
-                processAgent "$srcPath" "$dstDir" "$oldDomainsDir" "$newDomainsDir"
-              done
+              while IFS= read -r srcPath; do
+                processAgent "$srcPath" "$dstDir" "$oldDir" "$oldDomainsDir" "$newDomainsDir" \
+                  || launchdStatus=1
+              done < <(find -L "$newDir" -maxdepth 1 -name '*.plist' -type f)
 
               # Skip cleanup if there's no previous generation
               if [[ -z "$oldDir" || ! -d "$oldDir" ]]; then
+                if [[ "$launchdStatus" -ne 0 ]]; then
+                  errorEcho "Failed to activate one or more LaunchAgents"
+                fi
+
                 verboseEcho "LaunchAgents setup complete"
-                return
+                return "$launchdStatus"
               fi
 
               verboseEcho "Cleaning up removed LaunchAgents..."
-              find -L "$oldDir" -maxdepth 1 -name '*.plist' -type f | while read -r srcPath; do
-                removeAgent "$srcPath" "$dstDir" "$newDir" "$oldDomainsDir"
-              done
+              while IFS= read -r srcPath; do
+                removeAgent "$srcPath" "$dstDir" "$newDir" "$oldDomainsDir" \
+                  || launchdStatus=1
+              done < <(find -L "$oldDir" -maxdepth 1 -name '*.plist' -type f)
+
+              if [[ "$launchdStatus" -ne 0 ]]; then
+                errorEcho "Failed to activate one or more LaunchAgents"
+              fi
+
+              return "$launchdStatus"
             }
 
-            setupLaunchAgents
+            launchdStatus=0
+            setupLaunchAgents || launchdStatus=$?
 
             # Restore errexit
             set -e
+
+            if [[ "$launchdStatus" -ne 0 ]]; then
+              exit "$launchdStatus"
+            fi
           '';
     })
   ];
