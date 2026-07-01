@@ -107,6 +107,10 @@ function setHomeManagerNixPath() {
     local path="@HOME_MANAGER_PATH@"
 
     if [[ -n "$path" ]] ; then
+        if [[ -e "$path/flake.nix" ]] ; then
+            # Set FLAKE_ARG if not set by --flake already
+            : "${FLAKE_ARG:=$path}"
+        fi
         if [[ -e "$path" || "$path" =~ ^https?:// ]] ; then
             EXTRA_NIX_PATH+=("home-manager=$path")
             return
