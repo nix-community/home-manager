@@ -273,6 +273,8 @@ in
     # fzf preserves the previous external completer and falls back to it
     # when its own completer does not apply.
     programs.nushell = lib.mkIf cfg.enableNushellIntegration {
+      environmentVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
+
       extraConfig = mkAfter ''
         source ${
           pkgs.runCommand "nushell-fzf-integration.nu" { } ''
