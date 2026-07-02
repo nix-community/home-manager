@@ -14,10 +14,13 @@
       command = "fd --type d";
       options = [ "--preview 'tree -C {} | head -200'" ];
     };
-    historyWidget.options = [
-      "--sort"
-      "--exact"
-    ];
+    historyWidget = {
+      command = "";
+      options = [
+        "--sort"
+        "--exact"
+      ];
+    };
     colors = {
       bg = "#1e1e1e";
     };
@@ -47,6 +50,8 @@
       'FZF_ALT_C_OPTS="--preview'
 
     # Test history widget
+    assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
+      'FZF_CTRL_R_COMMAND=""'
     assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
       'FZF_CTRL_R_OPTS="--sort --exact"'
 

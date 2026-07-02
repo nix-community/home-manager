@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -39,6 +40,7 @@ let
   fzfEnvVars = lib.filterAttrs (_n: v: v != [ ] && v != null) {
     FZF_ALT_C_COMMAND = cfg.changeDirWidget.command;
     FZF_ALT_C_OPTS = cfg.changeDirWidget.options;
+    FZF_CTRL_R_COMMAND = cfg.historyWidget.command;
     FZF_CTRL_R_OPTS = cfg.historyWidget.options;
     FZF_CTRL_T_COMMAND = cfg.fileWidget.command;
     FZF_CTRL_T_OPTS = cfg.fileWidget.options;
@@ -85,11 +87,10 @@ in
         "historyWidget"
         "options"
       ])
-      (lib.mkRemovedOptionModule [
-        "programs"
-        "fzf"
-        "historyWidgetCommand"
-      ] "This option is no longer supported by fzf.")
+      (mkRenamedFzfOption "historyWidgetCommand" [
+        "historyWidget"
+        "command"
+      ])
     ];
 
   options.programs.fzf =
@@ -170,6 +171,16 @@ in
       };
 
       historyWidget = mkWidgetOption {
+        commandExample = "";
+        commandDescription = ''
+          The command that gets executed as the source for fzf for the
+          CTRL-R keybinding.
+
+          An empty string disables the CTRL-R binding, which is the supported
+          way to yield CTRL-R to a history manager such as Atuin or McFly.
+          Non-empty custom commands require fzf 0.66.0 or later but are not
+          supported by fzf yet and currently print a shell startup warning.
+        '';
         optionsExample = [
           "--sort"
           "--exact"
@@ -224,6 +235,15 @@ in
     };
 
   config = mkIf cfg.enable {
+    warnings =
+      lib.optional (cfg.historyWidget.command != null && lib.versionOlder cfg.package.version "0.66.0")
+        ''
+          `programs.fzf.historyWidget.command` defined in ${lib.showFiles options.programs.fzf.historyWidget.command.files} requires fzf 0.66.0 or greater.
+
+          The configured FZF_CTRL_R_COMMAND value will be ignored by older fzf
+          versions.
+        '';
+
     assertions = [
       {
         assertion =
