@@ -20,47 +20,21 @@ let
   renderedColors =
     colors: lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}:${value}") colors);
 
-  hasShellIntegrationEmbedded = lib.versionAtLeast cfg.package.version "0.48.0";
+  bashIntegration = ''
+    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+      eval "$(${getExe cfg.package} --bash)"
+    fi
+  '';
 
-  bashIntegration =
-    if hasShellIntegrationEmbedded then
-      ''
-        if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-          eval "$(${getExe cfg.package} --bash)"
-        fi
-      ''
-    else
-      ''
-        if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-          . ${cfg.package}/share/fzf/completion.bash
-          . ${cfg.package}/share/fzf/key-bindings.bash
-        fi
-      '';
+  zshIntegration = ''
+    if [[ $options[zle] = on ]]; then
+      source <(${getExe cfg.package} --zsh)
+    fi
+  '';
 
-  zshIntegration =
-    if hasShellIntegrationEmbedded then
-      ''
-        if [[ $options[zle] = on ]]; then
-          source <(${getExe cfg.package} --zsh)
-        fi
-      ''
-    else
-      ''
-        if [[ $options[zle] = on ]]; then
-          . ${cfg.package}/share/fzf/completion.zsh
-          . ${cfg.package}/share/fzf/key-bindings.zsh
-        fi
-      '';
-
-  fishIntegration =
-    if hasShellIntegrationEmbedded then
-      ''
-        ${getExe cfg.package} --fish | source
-      ''
-    else
-      ''
-        source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
-      '';
+  fishIntegration = ''
+    ${getExe cfg.package} --fish | source
+  '';
 in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
@@ -195,6 +169,12 @@ in
 
   config = mkIf cfg.enable {
     assertions = [
+      {
+        assertion =
+          (cfg.enableBashIntegration || cfg.enableFishIntegration || cfg.enableZshIntegration)
+          -> lib.versionAtLeast cfg.package.version "0.48.0";
+        message = "fzf package version must be 0.48.0 or greater for bash, fish, or zsh integration";
+      }
       {
         assertion = cfg.enableNushellIntegration -> lib.versionAtLeast cfg.package.version "0.73.0";
         message = "fzf package version must be 0.73.0 or greater for nushell integration";
