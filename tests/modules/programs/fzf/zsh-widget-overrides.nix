@@ -1,32 +1,34 @@
 { config, ... }:
 
 {
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
+  programs = {
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
 
-    historyWidget = {
-      command = "global-history";
-      zsh.command = "";
+      historyWidget = {
+        command = "global-history";
+        zsh.command = "";
+      };
+
+      fileWidget.zsh.command = "$HOME/bin/files";
+
+      package = config.lib.test.mkStubPackage {
+        name = "fzf";
+        version = "0.73.0";
+        buildScript = ''
+          mkdir -p $out/bin
+          cat > $out/bin/fzf <<'EOF'
+          #!/bin/sh
+          echo "Stub fzf"
+          EOF
+          chmod +x $out/bin/fzf
+        '';
+      };
     };
 
-    fileWidget.zsh.command = "$HOME/bin/files";
-
-    package = config.lib.test.mkStubPackage {
-      name = "fzf";
-      version = "0.73.0";
-      buildScript = ''
-        mkdir -p $out/bin
-        cat > $out/bin/fzf <<'EOF'
-        #!/bin/sh
-        echo "Stub fzf"
-        EOF
-        chmod +x $out/bin/fzf
-      '';
-    };
+    zsh.enable = true;
   };
-
-  programs.zsh.enable = true;
 
   nmt.script = ''
     assertFileRegex home-files/.zshrc \

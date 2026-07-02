@@ -387,87 +387,91 @@ in
         }
       ];
 
-      home.packages = [ cfg.package ];
-      home.sessionVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
+      home = {
+        packages = [ cfg.package ];
+        sessionVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
+      };
 
-      # Load early so history managers can reclaim Ctrl-R.
-      programs.bash.initExtra =
-        let
-          vars = shellFzfEnvVars "bash";
-        in
-        mkIf cfg.enableBashIntegration (
-          mkOrder 200 (
-            ''
-              if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-            ''
-            + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
-            + ''
-                eval "$(${getExe cfg.package} --bash)"
-              fi
-            ''
-          )
-        );
-
-      # Still needs to be initialized after oh-my-zsh (order 800), otherwise
-      # omz will take precedence.
-      programs.zsh.initContent =
-        let
-          vars = shellFzfEnvVars "zsh";
-        in
-        mkIf cfg.enableZshIntegration (
-          mkOrder 910 (
-            ''
-              if [[ $options[zle] = on ]]; then
-            ''
-            + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
-            + ''
-                source <(${getExe cfg.package} --zsh)
-              fi
-            ''
-          )
-        );
-
-      programs.fish.interactiveShellInit =
-        let
-          vars = shellFzfEnvVars "fish";
-          exports = lib.concatStringsSep "\n" (
-            lib.mapAttrsToList (name: value: "set -gx ${name} ${lib.escapeShellArg (toString value)}") vars
-          );
-        in
-        mkIf cfg.enableFishIntegration (
-          mkOrder 200 (
-            lib.optionalString (vars != { }) "${exports}\n"
-            + ''
-              ${getExe cfg.package} --fish | source
-            ''
-          )
-        );
-
-      # Initialize after other completion integrations, such as carapace.
-      # fzf preserves the previous external completer and falls back to it
-      # when its own completer does not apply.
-      programs.nushell = lib.mkIf cfg.enableNushellIntegration {
-        environmentVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
-
-        extraConfig =
+      programs = {
+        # Load early so history managers can reclaim Ctrl-R.
+        bash.initExtra =
           let
-            vars = shellFzfEnvVars "nushell";
-            assignments = lib.concatStringsSep "\n" (
-              lib.mapAttrsToList (
-                name: value: "$env.${name} = ${lib.hm.nushell.toNushell { } (toString value)}"
-              ) vars
+            vars = shellFzfEnvVars "bash";
+          in
+          mkIf cfg.enableBashIntegration (
+            mkOrder 200 (
+              ''
+                if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+              ''
+              + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
+              + ''
+                  eval "$(${getExe cfg.package} --bash)"
+                fi
+              ''
+            )
+          );
+
+        # Still needs to be initialized after oh-my-zsh (order 800), otherwise
+        # omz will take precedence.
+        zsh.initContent =
+          let
+            vars = shellFzfEnvVars "zsh";
+          in
+          mkIf cfg.enableZshIntegration (
+            mkOrder 910 (
+              ''
+                if [[ $options[zle] = on ]]; then
+              ''
+              + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
+              + ''
+                  source <(${getExe cfg.package} --zsh)
+                fi
+              ''
+            )
+          );
+
+        fish.interactiveShellInit =
+          let
+            vars = shellFzfEnvVars "fish";
+            exports = lib.concatStringsSep "\n" (
+              lib.mapAttrsToList (name: value: "set -gx ${name} ${lib.escapeShellArg (toString value)}") vars
             );
           in
-          mkAfter (
-            lib.optionalString (vars != { }) "${assignments}\n"
-            + ''
-              source ${
-                pkgs.runCommand "nushell-fzf-integration.nu" { } ''
-                  ${getExe cfg.package} --nushell > $out
-                ''
-              }
-            ''
+          mkIf cfg.enableFishIntegration (
+            mkOrder 200 (
+              lib.optionalString (vars != { }) "${exports}\n"
+              + ''
+                ${getExe cfg.package} --fish | source
+              ''
+            )
           );
+
+        # Initialize after other completion integrations, such as carapace.
+        # fzf preserves the previous external completer and falls back to it
+        # when its own completer does not apply.
+        nushell = lib.mkIf cfg.enableNushellIntegration {
+          environmentVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
+
+          extraConfig =
+            let
+              vars = shellFzfEnvVars "nushell";
+              assignments = lib.concatStringsSep "\n" (
+                lib.mapAttrsToList (
+                  name: value: "$env.${name} = ${lib.hm.nushell.toNushell { } (toString value)}"
+                ) vars
+              );
+            in
+            mkAfter (
+              lib.optionalString (vars != { }) "${assignments}\n"
+              + ''
+                source ${
+                  pkgs.runCommand "nushell-fzf-integration.nu" { } ''
+                    ${getExe cfg.package} --nushell > $out
+                  ''
+                }
+              ''
+            );
+        };
       };
 
     };

@@ -1,27 +1,29 @@
 { config, pkgs, ... }:
 
 {
-  programs.fzf = {
-    enable = true;
-    enableNushellIntegration = true;
+  programs = {
+    fzf = {
+      enable = true;
+      enableNushellIntegration = true;
 
-    historyWidget.command = "";
+      historyWidget.command = "";
 
-    package = config.lib.test.mkStubPackage {
-      name = "fzf";
-      version = "0.73.0";
-      buildScript = ''
-        mkdir -p $out/bin
-        cat > $out/bin/fzf <<'EOF'
-        #!/bin/sh
-        echo "Stub fzf"
-        EOF
-        chmod +x $out/bin/fzf
-      '';
+      package = config.lib.test.mkStubPackage {
+        name = "fzf";
+        version = "0.73.0";
+        buildScript = ''
+          mkdir -p $out/bin
+          cat > $out/bin/fzf <<'EOF'
+          #!/bin/sh
+          echo "Stub fzf"
+          EOF
+          chmod +x $out/bin/fzf
+        '';
+      };
     };
-  };
 
-  programs.nushell.enable = true;
+    nushell.enable = true;
+  };
 
   nmt.script =
     let
