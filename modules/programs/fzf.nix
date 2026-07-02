@@ -18,38 +18,13 @@ let
 
   cfg = config.programs.fzf;
 
-  renderedColors =
-    colors: lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}:${value}") colors);
+  shells = [
+    "bash"
+    "fish"
+    "nushell"
+    "zsh"
+  ];
 
-  bashIntegration = ''
-    if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-      eval "$(${getExe cfg.package} --bash)"
-    fi
-  '';
-
-  zshIntegration = ''
-    if [[ $options[zle] = on ]]; then
-      source <(${getExe cfg.package} --zsh)
-    fi
-  '';
-
-  fishIntegration = ''
-    ${getExe cfg.package} --fish | source
-  '';
-
-  fzfEnvVars = lib.filterAttrs (_n: v: v != [ ] && v != null) {
-    FZF_ALT_C_COMMAND = cfg.changeDirWidget.command;
-    FZF_ALT_C_OPTS = cfg.changeDirWidget.options;
-    FZF_CTRL_R_COMMAND = cfg.historyWidget.command;
-    FZF_CTRL_R_OPTS = cfg.historyWidget.options;
-    FZF_CTRL_T_COMMAND = cfg.fileWidget.command;
-    FZF_CTRL_T_OPTS = cfg.fileWidget.options;
-    FZF_DEFAULT_COMMAND = cfg.defaultCommand;
-    FZF_DEFAULT_OPTS =
-      cfg.defaultOptions ++ lib.optionals (cfg.colors != { }) [ "--color ${renderedColors cfg.colors}" ];
-    FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
-    FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
-  };
 in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
@@ -95,8 +70,44 @@ in
 
   options.programs.fzf =
     let
-      mkWidgetOption =
+      mkWidgetShellOverrides =
         {
+          commandExample ? null,
+          commandDescription ? null,
+          optionsExample,
+          ...
+        }:
+        lib.genAttrs shells (
+          _shell:
+          lib.optionalAttrs (commandDescription != null) {
+            command = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              example = commandExample;
+              description = ''
+                Shell-specific override for this widget command.
+
+                If this is `null`, the global command is used.
+              '';
+            };
+          }
+          // {
+            options = mkOption {
+              type = types.nullOr (types.listOf types.str);
+              default = null;
+              example = optionsExample;
+              description = ''
+                Shell-specific override for this widget's command line
+                options.
+
+                If this is `null`, the global options are used.
+              '';
+            };
+          }
+        );
+
+      mkWidgetOption =
+        args@{
           commandExample ? null,
           commandDescription ? null,
           optionsExample,
@@ -117,7 +128,8 @@ in
             example = optionsExample;
             description = optionsDescription;
           };
-        };
+        }
+        // mkWidgetShellOverrides args;
     in
     {
       enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
@@ -234,55 +246,144 @@ in
       enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
     };
 
-  config = mkIf cfg.enable {
-    warnings =
-      lib.optional (cfg.historyWidget.command != null && lib.versionOlder cfg.package.version "0.66.0")
-        ''
-          `programs.fzf.historyWidget.command` defined in ${lib.showFiles options.programs.fzf.historyWidget.command.files} requires fzf 0.66.0 or greater.
+  config =
+    let
+      shellFzfEnvVars =
+        shell:
+        lib.filterAttrs (_n: v: v != null) {
+          FZF_ALT_C_COMMAND = cfg.changeDirWidget.${shell}.command;
+          FZF_ALT_C_OPTS = cfg.changeDirWidget.${shell}.options;
+          FZF_CTRL_R_COMMAND = cfg.historyWidget.${shell}.command;
+          FZF_CTRL_R_OPTS = cfg.historyWidget.${shell}.options;
+          FZF_CTRL_T_COMMAND = cfg.fileWidget.${shell}.command;
+          FZF_CTRL_T_OPTS = cfg.fileWidget.${shell}.options;
+        };
 
-          The configured FZF_CTRL_R_COMMAND value will be ignored by older fzf
-          versions.
-        '';
+      fzfEnvVars = lib.filterAttrs (_n: v: v != [ ] && v != null) {
+        FZF_ALT_C_COMMAND = cfg.changeDirWidget.command;
+        FZF_ALT_C_OPTS = cfg.changeDirWidget.options;
+        FZF_CTRL_R_COMMAND = cfg.historyWidget.command;
+        FZF_CTRL_R_OPTS = cfg.historyWidget.options;
+        FZF_CTRL_T_COMMAND = cfg.fileWidget.command;
+        FZF_CTRL_T_OPTS = cfg.fileWidget.options;
+        FZF_DEFAULT_COMMAND = cfg.defaultCommand;
+        FZF_DEFAULT_OPTS =
+          cfg.defaultOptions
+          ++ lib.optionals (cfg.colors != { }) [
+            "--color ${
+              lib.concatStringsSep "," (lib.mapAttrsToList (name: value: "${name}:${value}") cfg.colors)
+            }"
+          ];
+        FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
+        FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
+      };
 
-    assertions = [
-      {
-        assertion =
-          (cfg.enableBashIntegration || cfg.enableFishIntegration || cfg.enableZshIntegration)
-          -> lib.versionAtLeast cfg.package.version "0.48.0";
-        message = "fzf package version must be 0.48.0 or greater for bash, fish, or zsh integration";
-      }
-      {
-        assertion = cfg.enableNushellIntegration -> lib.versionAtLeast cfg.package.version "0.73.0";
-        message = "fzf package version must be 0.73.0 or greater for nushell integration";
-      }
-    ];
-
-    home.packages = [ cfg.package ];
-    home.sessionVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
-
-    # Load early so history managers can reclaim Ctrl-R.
-    programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 bashIntegration);
-
-    # Still needs to be initialized after oh-my-zsh (order 800), otherwise
-    # omz will take precedence.
-    programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 910 zshIntegration);
-
-    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration (mkOrder 200 fishIntegration);
-
-    # Initialize after other completion integrations, such as carapace.
-    # fzf preserves the previous external completer and falls back to it
-    # when its own completer does not apply.
-    programs.nushell = lib.mkIf cfg.enableNushellIntegration {
-      environmentVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
-
-      extraConfig = mkAfter ''
-        source ${
-          pkgs.runCommand "nushell-fzf-integration.nu" { } ''
-            ${getExe cfg.package} --nushell > $out
+    in
+    mkIf cfg.enable {
+      warnings =
+        lib.optional (cfg.historyWidget.command != null && lib.versionOlder cfg.package.version "0.66.0")
           ''
-        }
-      '';
-    };
+            `programs.fzf.historyWidget.command` defined in ${lib.showFiles options.programs.fzf.historyWidget.command.files} requires fzf 0.66.0 or greater.
 
-  };
+            The configured FZF_CTRL_R_COMMAND value will be ignored by older fzf
+            versions.
+          '';
+
+      assertions = [
+        {
+          assertion =
+            (cfg.enableBashIntegration || cfg.enableFishIntegration || cfg.enableZshIntegration)
+            -> lib.versionAtLeast cfg.package.version "0.48.0";
+          message = "fzf package version must be 0.48.0 or greater for bash, fish, or zsh integration";
+        }
+        {
+          assertion = cfg.enableNushellIntegration -> lib.versionAtLeast cfg.package.version "0.73.0";
+          message = "fzf package version must be 0.73.0 or greater for nushell integration";
+        }
+      ];
+
+      home.packages = [ cfg.package ];
+      home.sessionVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
+
+      # Load early so history managers can reclaim Ctrl-R.
+      programs.bash.initExtra =
+        let
+          vars = shellFzfEnvVars "bash";
+        in
+        mkIf cfg.enableBashIntegration (
+          mkOrder 200 (
+            ''
+              if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
+            ''
+            + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
+            + ''
+                eval "$(${getExe cfg.package} --bash)"
+              fi
+            ''
+          )
+        );
+
+      # Still needs to be initialized after oh-my-zsh (order 800), otherwise
+      # omz will take precedence.
+      programs.zsh.initContent =
+        let
+          vars = shellFzfEnvVars "zsh";
+        in
+        mkIf cfg.enableZshIntegration (
+          mkOrder 910 (
+            ''
+              if [[ $options[zle] = on ]]; then
+            ''
+            + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
+            + ''
+                source <(${getExe cfg.package} --zsh)
+              fi
+            ''
+          )
+        );
+
+      programs.fish.interactiveShellInit =
+        let
+          vars = shellFzfEnvVars "fish";
+          exports = lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (name: value: "set -gx ${name} ${lib.escapeShellArg (toString value)}") vars
+          );
+        in
+        mkIf cfg.enableFishIntegration (
+          mkOrder 200 (
+            lib.optionalString (vars != { }) "${exports}\n"
+            + ''
+              ${getExe cfg.package} --fish | source
+            ''
+          )
+        );
+
+      # Initialize after other completion integrations, such as carapace.
+      # fzf preserves the previous external completer and falls back to it
+      # when its own completer does not apply.
+      programs.nushell = lib.mkIf cfg.enableNushellIntegration {
+        environmentVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
+
+        extraConfig =
+          let
+            vars = shellFzfEnvVars "nushell";
+            assignments = lib.concatStringsSep "\n" (
+              lib.mapAttrsToList (
+                name: value: "$env.${name} = ${lib.hm.nushell.toNushell { } (toString value)}"
+              ) vars
+            );
+          in
+          mkAfter (
+            lib.optionalString (vars != { }) "${assignments}\n"
+            + ''
+              source ${
+                pkgs.runCommand "nushell-fzf-integration.nu" { } ''
+                  ${getExe cfg.package} --nushell > $out
+                ''
+              }
+            ''
+          );
+      };
+
+    };
 }
