@@ -5,4 +5,5 @@
   fzf-zsh-integration = ./zsh-integration.nix;
   fzf-fish-integration = ./fish-integration.nix;
   fzf-nushell-integration = ./nushell-integration.nix;
+  fzf-renamed-options = ./renamed-options.nix;
 }

@@ -35,137 +35,193 @@ let
   fishIntegration = ''
     ${getExe cfg.package} --fish | source
   '';
+
+  fzfEnvVars = lib.filterAttrs (_n: v: v != [ ] && v != null) {
+    FZF_ALT_C_COMMAND = cfg.changeDirWidget.command;
+    FZF_ALT_C_OPTS = cfg.changeDirWidget.options;
+    FZF_CTRL_R_OPTS = cfg.historyWidget.options;
+    FZF_CTRL_T_COMMAND = cfg.fileWidget.command;
+    FZF_CTRL_T_OPTS = cfg.fileWidget.options;
+    FZF_DEFAULT_COMMAND = cfg.defaultCommand;
+    FZF_DEFAULT_OPTS =
+      cfg.defaultOptions ++ lib.optionals (cfg.colors != { }) [ "--color ${renderedColors cfg.colors}" ];
+    FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
+    FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
+  };
 in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
-  imports = [
-    (lib.mkRemovedOptionModule [
-      "programs"
-      "fzf"
-      "historyWidgetCommand"
-    ] "This option is no longer supported by fzf.")
-  ];
-  options.programs.fzf = {
-    enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
+  imports =
+    let
+      mkRenamedFzfOption =
+        oldName: newPath:
+        lib.mkRenamedOptionModule [ "programs" "fzf" oldName ] (
+          [
+            "programs"
+            "fzf"
+          ]
+          ++ newPath
+        );
+    in
+    [
+      (mkRenamedFzfOption "fileWidgetCommand" [
+        "fileWidget"
+        "command"
+      ])
+      (mkRenamedFzfOption "fileWidgetOptions" [
+        "fileWidget"
+        "options"
+      ])
+      (mkRenamedFzfOption "changeDirWidgetCommand" [
+        "changeDirWidget"
+        "command"
+      ])
+      (mkRenamedFzfOption "changeDirWidgetOptions" [
+        "changeDirWidget"
+        "options"
+      ])
+      (mkRenamedFzfOption "historyWidgetOptions" [
+        "historyWidget"
+        "options"
+      ])
+      (lib.mkRemovedOptionModule [
+        "programs"
+        "fzf"
+        "historyWidgetCommand"
+      ] "This option is no longer supported by fzf.")
+    ];
 
-    package = lib.mkPackageOption pkgs "fzf" { };
-
-    defaultCommand = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "fd --type f";
-      description = ''
-        The command that gets executed as the default source for fzf
-        when running.
-      '';
-    };
-
-    defaultOptions = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      example = [
-        "--height 40%"
-        "--border"
-      ];
-      description = ''
-        Extra command line options given to fzf by default.
-      '';
-    };
-
-    fileWidgetCommand = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "fd --type f";
-      description = ''
-        The command that gets executed as the source for fzf for the
-        CTRL-T keybinding.
-      '';
-    };
-
-    fileWidgetOptions = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      example = [ "--preview 'head {}'" ];
-      description = ''
-        Command line options for the CTRL-T keybinding.
-      '';
-    };
-
-    changeDirWidgetCommand = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "fd --type d";
-      description = ''
-        The command that gets executed as the source for fzf for the
-        ALT-C keybinding.
-      '';
-    };
-
-    changeDirWidgetOptions = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      example = [ "--preview 'tree -C {} | head -200'" ];
-      description = ''
-        Command line options for the ALT-C keybinding.
-      '';
-    };
-
-    historyWidgetOptions = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      example = [
-        "--sort"
-        "--exact"
-      ];
-      description = ''
-        Command line options for the CTRL-R keybinding.
-      '';
-    };
-
-    colors = mkOption {
-      type = types.attrsOf types.str;
-      default = { };
-      example = literalExpression ''
+  options.programs.fzf =
+    let
+      mkWidgetOption =
         {
-          bg = "#1e1e1e";
-          "bg+" = "#1e1e1e";
-          fg = "#d4d4d4";
-          "fg+" = "#d4d4d4";
+          commandExample ? null,
+          commandDescription ? null,
+          optionsExample,
+          optionsDescription,
+        }:
+        lib.optionalAttrs (commandDescription != null) {
+          command = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            example = commandExample;
+            description = commandDescription;
+          };
         }
-      '';
-      description = ''
-        Color scheme options added to `FZF_DEFAULT_OPTS`. See
-        <https://github.com/junegunn/fzf/wiki/Color-schemes>
-        for documentation.
-      '';
-    };
+        // {
+          options = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            example = optionsExample;
+            description = optionsDescription;
+          };
+        };
+    in
+    {
+      enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
 
-    tmux = {
-      enableShellIntegration = lib.mkEnableOption ''
-        setting `FZF_TMUX=1` which causes shell integration to use fzf-tmux
-      '';
+      package = lib.mkPackageOption pkgs "fzf" { };
 
-      shellIntegrationOptions = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [ "-d 40%" ];
+      defaultCommand = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "fd --type f";
         description = ''
-          If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
-          shell integration will use these options for fzf-tmux.
-          See {command}`fzf-tmux --help` for available options.
+          The command that gets executed as the default source for fzf
+          when running.
         '';
       };
+
+      defaultOptions = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [
+          "--height 40%"
+          "--border"
+        ];
+        description = ''
+          Extra command line options given to fzf by default.
+        '';
+      };
+
+      fileWidget = mkWidgetOption {
+        commandExample = "fd --type f";
+        commandDescription = ''
+          The command that gets executed as the source for fzf for the
+          CTRL-T keybinding.
+        '';
+        optionsExample = [ "--preview 'head {}'" ];
+        optionsDescription = ''
+          Command line options for the CTRL-T keybinding.
+        '';
+      };
+
+      changeDirWidget = mkWidgetOption {
+        commandExample = "fd --type d";
+        commandDescription = ''
+          The command that gets executed as the source for fzf for the
+          ALT-C keybinding.
+        '';
+        optionsExample = [ "--preview 'tree -C {} | head -200'" ];
+        optionsDescription = ''
+          Command line options for the ALT-C keybinding.
+        '';
+      };
+
+      historyWidget = mkWidgetOption {
+        optionsExample = [
+          "--sort"
+          "--exact"
+        ];
+        optionsDescription = ''
+          Command line options for the CTRL-R keybinding.
+        '';
+      };
+
+      colors = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        example = literalExpression ''
+          {
+            bg = "#1e1e1e";
+            "bg+" = "#1e1e1e";
+            fg = "#d4d4d4";
+            "fg+" = "#d4d4d4";
+          }
+        '';
+        description = ''
+          Color scheme options added to `FZF_DEFAULT_OPTS`. See
+          <https://github.com/junegunn/fzf/wiki/Color-schemes>
+          for documentation.
+        '';
+      };
+
+      tmux = {
+        enableShellIntegration = lib.mkEnableOption ''
+          setting `FZF_TMUX=1` which causes shell integration to use fzf-tmux
+        '';
+
+        shellIntegrationOptions = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          example = [ "-d 40%" ];
+          description = ''
+            If {option}`programs.fzf.tmux.enableShellIntegration` is set to `true`,
+            shell integration will use these options for fzf-tmux.
+            See {command}`fzf-tmux --help` for available options.
+          '';
+        };
+      };
+
+      enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+
+      enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+      enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
     };
-
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
-
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
-  };
 
   config = mkIf cfg.enable {
     assertions = [
@@ -182,29 +238,11 @@ in
     ];
 
     home.packages = [ cfg.package ];
-    home.sessionVariables = lib.mapAttrs (_n: toString) (
-      lib.filterAttrs (_n: v: v != [ ] && v != null) {
-        FZF_ALT_C_COMMAND = cfg.changeDirWidgetCommand;
-        FZF_ALT_C_OPTS = cfg.changeDirWidgetOptions;
-        FZF_CTRL_R_OPTS = cfg.historyWidgetOptions;
-        FZF_CTRL_T_COMMAND = cfg.fileWidgetCommand;
-        FZF_CTRL_T_OPTS = cfg.fileWidgetOptions;
-        FZF_DEFAULT_COMMAND = cfg.defaultCommand;
-        FZF_DEFAULT_OPTS =
-          cfg.defaultOptions ++ lib.optionals (cfg.colors != { }) [ "--color ${renderedColors cfg.colors}" ];
-        FZF_TMUX = if cfg.tmux.enableShellIntegration then "1" else null;
-        FZF_TMUX_OPTS = cfg.tmux.shellIntegrationOptions;
-      }
-    );
+    home.sessionVariables = lib.mapAttrs (_n: toString) fzfEnvVars;
 
-    # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
-    # initialization show up a bit earlier. This is to make initialization of
-    # other history managers, like mcfly or atuin, take precedence.
+    # Load early so history managers can reclaim Ctrl-R.
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 bashIntegration);
 
-    # Note, since fzf unconditionally binds C-r we use `mkOrder` to make the
-    # initialization show up a bit earlier. This is to make initialization of
-    # other history managers, like mcfly or atuin, take precedence.
     # Still needs to be initialized after oh-my-zsh (order 800), otherwise
     # omz will take precedence.
     programs.zsh.initContent = mkIf cfg.enableZshIntegration (mkOrder 910 zshIntegration);
@@ -218,7 +256,7 @@ in
       extraConfig = mkAfter ''
         source ${
           pkgs.runCommand "nushell-fzf-integration.nu" { } ''
-            ${lib.getExe cfg.package} --nushell > $out
+            ${getExe cfg.package} --nushell > $out
           ''
         }
       '';

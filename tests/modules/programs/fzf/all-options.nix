@@ -6,11 +6,15 @@
       "--height 40%"
       "--border"
     ];
-    fileWidgetCommand = "fd --type f";
-    fileWidgetOptions = [ "--preview 'head {}'" ];
-    changeDirWidgetCommand = "fd --type d";
-    changeDirWidgetOptions = [ "--preview 'tree -C {} | head -200'" ];
-    historyWidgetOptions = [
+    fileWidget = {
+      command = "fd --type f";
+      options = [ "--preview 'head {}'" ];
+    };
+    changeDirWidget = {
+      command = "fd --type d";
+      options = [ "--preview 'tree -C {} | head -200'" ];
+    };
+    historyWidget.options = [
       "--sort"
       "--exact"
     ];
