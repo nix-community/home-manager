@@ -281,13 +281,98 @@ in
     in
     mkIf cfg.enable {
       warnings =
-        lib.optional (cfg.historyWidget.command != null && lib.versionOlder cfg.package.version "0.66.0")
-          ''
-            `programs.fzf.historyWidget.command` defined in ${lib.showFiles options.programs.fzf.historyWidget.command.files} requires fzf 0.66.0 or greater.
+        let
+          shellIntegrationOptions = {
+            bash = "enableBashIntegration";
+            fish = "enableFishIntegration";
+            nushell = "enableNushellIntegration";
+            zsh = "enableZshIntegration";
+          };
 
-            The configured FZF_CTRL_R_COMMAND value will be ignored by older fzf
-            versions.
-          '';
+          integrationCtrlRActive =
+            shell: programConfig:
+            config.programs.${shell}.enable
+            && programConfig.enable
+            && programConfig.${shellIntegrationOptions.${shell}};
+
+          fzfCtrlRActive =
+            shell:
+            let
+              shellCommand = cfg.historyWidget.${shell}.command;
+              effectiveCommand = if shellCommand != null then shellCommand else cfg.historyWidget.command;
+            in
+            integrationCtrlRActive shell cfg && effectiveCommand != "";
+
+          atuinCtrlRActive =
+            shell:
+            integrationCtrlRActive shell config.programs.atuin
+            && !(builtins.elem "--disable-ctrl-r" config.programs.atuin.flags);
+
+          mcflyCtrlRActive = shell: shell != "nushell" && integrationCtrlRActive shell config.programs.mcfly;
+
+          ctrlRConflictShells = builtins.filter (
+            shell: fzfCtrlRActive shell && (atuinCtrlRActive shell || mcflyCtrlRActive shell)
+          ) shells;
+
+          showOptionFiles = option: lib.showFiles option.files;
+
+          fzfCtrlRDefinition =
+            shell:
+            if cfg.historyWidget.${shell}.command != null then
+              "`programs.fzf.historyWidget.${shell}.command` defined in ${
+                showOptionFiles options.programs.fzf.historyWidget.${shell}.command
+              }"
+            else if cfg.historyWidget.command != null then
+              "`programs.fzf.historyWidget.command` defined in ${showOptionFiles options.programs.fzf.historyWidget.command}"
+            else
+              "`programs.fzf.enable` defined in ${showOptionFiles options.programs.fzf.enable}";
+
+          atuinCtrlRDefinition =
+            if config.programs.atuin.flags != [ ] then
+              "`programs.atuin.flags` defined in ${showOptionFiles options.programs.atuin.flags}"
+            else
+              "`programs.atuin.enable` defined in ${showOptionFiles options.programs.atuin.enable}";
+
+          mcflyCtrlRDefinition = "`programs.mcfly.enable` defined in ${showOptionFiles options.programs.mcfly.enable}";
+
+          ctrlRConflictDefinitions = lib.concatStringsSep "\n" (
+            lib.concatMap (
+              shell:
+              [
+                "  ${shell}:"
+                "    ${fzfCtrlRDefinition shell}"
+              ]
+              ++ lib.optionals (atuinCtrlRActive shell) [ "    ${atuinCtrlRDefinition}" ]
+              ++ lib.optionals (mcflyCtrlRActive shell) [ "    ${mcflyCtrlRDefinition}" ]
+            ) ctrlRConflictShells
+          );
+        in
+
+        lib.optional (cfg.historyWidget.command != null && lib.versionOlder cfg.package.version "0.66.0") ''
+          `programs.fzf.historyWidget.command` defined in ${lib.showFiles options.programs.fzf.historyWidget.command.files} requires fzf 0.66.0 or greater.
+
+          The configured FZF_CTRL_R_COMMAND value will be ignored by older fzf
+          versions.
+        ''
+        ++ lib.optional (ctrlRConflictShells != [ ]) ''
+          programs.fzf and a history manager both configure Ctrl-R for ${lib.concatStringsSep ", " ctrlRConflictShells}.
+
+          Definitions:
+          ${ctrlRConflictDefinitions}
+
+          The history manager integration is sourced after fzf and owns Ctrl-R.
+          Choose which integration should own Ctrl-R.
+          To keep the history manager on Ctrl-R, disable fzf's binding:
+            programs.fzf.historyWidget.command = "";
+          or disable it for one shell:
+            programs.fzf.historyWidget.${builtins.head ctrlRConflictShells}.command = "";
+          To keep fzf on Ctrl-R with Atuin, disable Atuin's Ctrl-R binding:
+            programs.atuin.flags = [ "--disable-ctrl-r" ];
+          McFly has no Ctrl-R-only option in Home Manager. Disable McFly's
+          shell integration for that shell if fzf should own Ctrl-R.
+          To use another key, disable one default Ctrl-R binding and add a
+          shell-specific key binding in your shell configuration.
+        '';
 
       assertions = [
         {

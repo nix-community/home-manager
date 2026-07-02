@@ -22,6 +22,7 @@
     fzf = {
       enable = true;
       enableNushellIntegration = true;
+      historyWidget.nushell.command = "";
 
       package = config.lib.test.mkStubPackage {
         name = "fzf";
@@ -51,6 +52,7 @@
     ''
       assertFileExists "${nushellConfigFile}"
       assertFileContent "$(normalizeStorePaths "${nushellConfigFile}")" ${builtins.toFile "nushell-fzf-atuin-order-expected.nu" ''
+        $env.FZF_CTRL_R_COMMAND = ""
         source /nix/store/00000000000000000000000000000000-nushell-fzf-integration.nu
 
         source /nix/store/00000000000000000000000000000000-atuin-nushell-config.nu

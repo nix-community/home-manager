@@ -1,5 +1,9 @@
 {
   fzf-bash-widget-overrides = ./bash-widget-overrides.nix;
+  fzf-ctrl-r-conflict-atuin-disabled = ./ctrl-r-conflict-atuin-disabled.nix;
+  fzf-ctrl-r-conflict-fzf-disabled = ./ctrl-r-conflict-fzf-disabled.nix;
+  fzf-ctrl-r-conflict-per-shell-disabled = ./ctrl-r-conflict-per-shell-disabled.nix;
+  fzf-ctrl-r-conflict-warning = ./ctrl-r-conflict-warning.nix;
   fzf-disabled = ./disabled.nix;
   fzf-options = ./all-options.nix;
   fzf-bash-integration = ./bash-integration.nix;
