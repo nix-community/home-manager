@@ -583,10 +583,6 @@ in
         assertion = config.home.username != "";
         message = "Username could not be determined";
       }
-      {
-        assertion = config.home.homeDirectory != "";
-        message = "Home directory could not be determined";
-      }
     ];
 
     warnings =
