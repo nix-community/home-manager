@@ -20,7 +20,11 @@ let
     else
       [ "daemon" ];
 
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    types
+    ;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -224,7 +228,8 @@ in
           '';
 
           programs.nushell = mkIf cfg.enableNushellIntegration {
-            extraConfig = ''
+            # Load after fzf so Atuin keeps Ctrl-R in Nushell.
+            extraConfig = lib.mkOrder 2000 ''
               source ${
                 pkgs.runCommand "atuin-nushell-config.nu"
                   {
