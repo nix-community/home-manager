@@ -1,0 +1,9 @@
+{
+  "allowDuplicates": true,
+  "imageDisplay": {
+    "scaleX": 9,
+    "scaleY": 9,
+    "type": "kitty"
+  },
+  "maxHistory": 1001
+}
