@@ -363,7 +363,7 @@ in
             PartOf = cfg.systemdTarget;
             Requires = cfg.systemdTarget;
             After = cfg.systemdTarget;
-            X-Reload-Triggers = lib.mkIf (cfg.settings != { }) [
+            X-Reload-Triggers = lib.mkIf (cfg.settings != [ ]) [
               "${config.xdg.configFile.${configPath}.source}"
             ];
           };
