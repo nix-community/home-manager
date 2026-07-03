@@ -457,13 +457,13 @@ in
               };
 
               storeId = mkOption {
-                type = types.nullOr types.str;
+                type = types.nullOr (types.strMatching "[0-9a-f]{8}");
                 default = null;
                 description = ''
                   Store ID. Either null, or the first segment of a UUID string.
 
-                  If this value is set ; then profile.ini is created
-                  with predictable StoreID's.
+                  If this value is set, then profile.ini is created
+                  with predictable StoreIDs.
 
                   This is useful to keep the StoreID static,
                   which helps to bridge the firefox profiles and the new
@@ -927,12 +927,6 @@ in
                     '${lib.showOption profilePath}.extensions.force' or the corresponding
                     '${lib.showOption profilePath}.extensions.settings.<extensionId>.force'
                     to acknowledge this.
-                  '';
-                }
-                {
-                  assertion = (config.storeId == null) || ((builtins.match "[0-9a-f]{8}" config.storeId) != null);
-                  message = ''
-                    ${moduleName}.profiles.${name}.storeId must be null or 8 lowercase hex characters.
                   '';
                 }
                 {

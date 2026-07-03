@@ -23,6 +23,7 @@ in
         basic.isDefault = true;
         test = {
           id = 1;
+          storeId = "1a2b3c4d";
           settings = {
             "browser.bookmarks.file" = ./bookmarks.html;
             "general.smoothScroll" = false;
@@ -59,6 +60,10 @@ in
           assertFileContent \
             "$settingsUserJs" \
             ${expectedUserJs}
+
+          assertFileRegex \
+            "home-files/${cfg.configPath}/profiles.ini" \
+            "StoreID=1a2b3c4d"
         '';
     }
   );
