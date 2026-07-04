@@ -75,6 +75,15 @@ in
               ${bin} _carapace nushell | sed 's|"/homeless-shelter|$"($env.HOME)|g' >> "$out"
             ''
           }
+          let original_completer = $env.config.completions.external.completer
+          let external_completer = {|spans|
+            if ($spans | length) == 1 {
+              null
+            } else {
+              do $original_completer $spans
+            }
+          }
+          $env.config = ($env.config | upsert completions.external.completer {|| $external_completer})
         '';
       };
     };
