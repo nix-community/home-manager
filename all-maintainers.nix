@@ -590,6 +590,13 @@
     name = "Alin";
     source = "nixpkgs";
   };
+  amadejkastelic = {
+    email = "amadejkastelic7@gmail.com";
+    github = "amadejkastelic";
+    githubId = 26391003;
+    name = "Amadej Kastelic";
+    source = "nixpkgs";
+  };
   ambroisie = {
     email = "bruno.nixpkgs@belanyi.fr";
     github = "ambroisie";
@@ -2478,11 +2485,11 @@
     source = "nixpkgs";
   };
   yaaaarn = {
-    email = "30006414+yaaaarn@users.noreply.github.com";
+    email = "nix@yarncat.moe";
     github = "yaaaarn";
     githubId = 30006414;
     name = "yarncat";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   yethal = {
     github = "yethal";
