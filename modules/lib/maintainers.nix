@@ -540,12 +540,6 @@
     github = "SunOfLife1";
     githubId = 30405063;
   };
-  yarn = {
-    name = "yarncat";
-    email = "30006414+yaaaarn@users.noreply.github.com";
-    github = "yaaaarn";
-    githubId = 30006414;
-  };
   zorrobert = {
     name = "zorrobert";
     email = "118135271+zorrobert@users.noreply.github.com";
