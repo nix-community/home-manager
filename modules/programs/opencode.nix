@@ -468,7 +468,7 @@ in
         ) (lib.attrNames cfg.settings);
 
         packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-        hasTuiConfig = lib.versionAtLeast packageVersion "1.2.15";
+        hasTuiConfig = packageVersion == null || lib.versionAtLeast packageVersion "1.2.15";
       in
       lib.optionals (hasTuiConfig && deprecatedConfigKeys != [ ]) [
         ''
