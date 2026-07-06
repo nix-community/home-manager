@@ -60,6 +60,8 @@
         to_string = lib.hm.nushell.mkNushellInline "{|v| $v | str join (char esep) }";
       };
     };
+
+    completions = [ "nix" ];
   };
 
   nmt.script =
