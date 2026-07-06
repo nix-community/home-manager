@@ -354,6 +354,63 @@ in
             # contain the recursion root, not the visited files.
             declare -A seenTargets
 
+            function setExecutableBit() {
+              local target="$1"
+              local executable="$2"
+
+              if [[ $executable == inherit ]]; then
+                # Don't change file mode if it should match the source.
+                :
+              elif [[ $executable ]]; then
+                chmod +x "$target"
+              else
+                chmod -x "$target"
+              fi
+            }
+
+            function insertFileEntry() {
+              local source="$1"
+              local target="$2"
+              local executable="$3"
+              local isExecutable
+
+              [[ -x $source ]] && isExecutable=1 || isExecutable=""
+
+              # Link the file into the home file directory if possible,
+              # i.e., if the executable bit of the source is the same we
+              # expect for the target. Otherwise, we copy the file and
+              # set the executable bit to the expected value.
+              if [[ $executable == inherit || $isExecutable == $executable ]]; then
+                ln -s "$source" "$target"
+              else
+                cp "$source" "$target"
+                setExecutableBit "$target" "$executable"
+              fi
+            }
+
+            function setLinkedFileExecutableBit() {
+              local target="$1"
+              local executable="$2"
+              local isExecutable
+
+              if [[ -d $target || ! -e $target ]]; then
+                return
+              fi
+
+              [[ -x $target ]] && isExecutable=1 || isExecutable=""
+
+              if [[ $executable == inherit || $isExecutable == $executable ]]; then
+                return
+              fi
+
+              local tmp
+              tmp="$(mktemp "$target.XXXXXX")"
+
+              cp "$target" "$tmp"
+              setExecutableBit "$tmp" "$executable"
+              mv -f "$tmp" "$target"
+            }
+
             function insertFile() {
               local source="$1"
               local relTarget="$2"
@@ -409,30 +466,19 @@ in
                   else
                     lndir -silent "$source" "$target"
                   fi
+
+                  if [[ $executable != inherit ]]; then
+                    local linkedFile
+
+                    while IFS= read -r -d "" linkedFile; do
+                      setLinkedFileExecutableBit "$linkedFile" "$executable"
+                    done < <(find "$target" \( -type f -or -type l \) -print0)
+                  fi
                 else
                   ln -s "$source" "$target"
                 fi
               else
-                [[ -x $source ]] && isExecutable=1 || isExecutable=""
-
-                # Link the file into the home file directory if possible,
-                # i.e., if the executable bit of the source is the same we
-                # expect for the target. Otherwise, we copy the file and
-                # set the executable bit to the expected value.
-                if [[ $executable == inherit || $isExecutable == $executable ]]; then
-                  ln -s "$source" "$target"
-                else
-                  cp "$source" "$target"
-
-                  if [[ $executable == inherit ]]; then
-                    # Don't change file mode if it should match the source.
-                    :
-                  elif [[ $executable ]]; then
-                    chmod +x "$target"
-                  else
-                    chmod -x "$target"
-                  fi
-                fi
+                insertFileEntry "$source" "$target" "$executable"
               fi
             }
           ''
