@@ -42,6 +42,7 @@ in
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
       skillsDir = "${configDir}/skills";
+      hookScriptDirs = [ "${configDir}/hooks" ] ++ lib.optional useXdgDirectories ".codex/hooks";
       pluginsMarketplaceName = "home-manager";
       pluginsDir = "${configDir}/plugins";
       pluginsCacheDir = "${pluginsDir}/cache";
@@ -126,6 +127,9 @@ in
       mergedSettings =
         mergedSettingsWithoutMcp
         // lib.optionalAttrs (mergedMcpServers != { }) { mcp_servers = mergedMcpServers; };
+      hooksArePath = lib.hm.strings.isPathLike cfg.hooks;
+      hooksAreDir = hooksArePath && lib.pathIsDirectory cfg.hooks;
+      hooksJsonSource = if hooksAreDir then cfg.hooks + "/hooks.json" else cfg.hooks;
     in
     mkIf cfg.enable {
       warnings = lib.optional hasLegacyProfileSettings ''
@@ -166,6 +170,10 @@ in
           );
           message = "`programs.codex.rules` attribute values must be files when set to paths";
         }
+        {
+          assertion = !(hooksAreDir && !builtins.pathExists hooksJsonSource);
+          message = "`programs.codex.hooks` directory must contain a hooks.json file";
+        }
       ];
 
       home = {
@@ -202,9 +210,19 @@ in
             };
           };
           "${configDir}/hooks.json" = lib.mkIf (cfg.hooks != { }) {
-            source = jsonFormat.generate "codex-hooks" { inherit (cfg) hooks; };
+            source =
+              if hooksArePath then
+                hooksJsonSource
+              else
+                jsonFormat.generate "codex-hooks" { inherit (cfg) hooks; };
           };
         }
+        // lib.optionalAttrs hooksAreDir (
+          lib.genAttrs hookScriptDirs (_: {
+            source = cfg.hooks;
+            recursive = true;
+          })
+        )
         // lib.listToAttrs [ (mkTextOrPathEntry "${configDir}/AGENTS.md" cfg.context) ]
         // lib.optionalAttrs (cfg.contextOverride != null) (
           lib.listToAttrs [ (mkTextOrPathEntry "${configDir}/AGENTS.override.md" cfg.contextOverride) ]

@@ -4,6 +4,9 @@
   codex-settings-yaml = ./settings-yaml.nix;
   codex-empty-settings = ./empty-settings.nix;
   codex-legacy-custom-instructions = ./legacy-custom-instructions.nix;
+  codex-hooks-dir = ./hooks-dir.nix;
+  codex-hooks-dir-xdg = ./hooks-dir-xdg.nix;
+  codex-hooks-file = ./hooks-file.nix;
   codex-mcp-integration = ./mcp-integration.nix;
   codex-mcp-integration-with-override = ./mcp-integration-with-override.nix;
   codex-plugins = ./plugins.nix;
