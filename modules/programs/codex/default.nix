@@ -42,7 +42,6 @@ in
       configDir = if useXdgDirectories then "${xdgConfigHome}/codex" else ".codex";
       configFileName = if isTomlConfig then "config.toml" else "config.yaml";
       skillsDir = "${configDir}/skills";
-      hookScriptDirs = [ "${configDir}/hooks" ] ++ lib.optional useXdgDirectories ".codex/hooks";
       pluginsMarketplaceName = "home-manager";
       pluginsDir = "${configDir}/plugins";
       pluginsCacheDir = "${pluginsDir}/cache";
@@ -218,7 +217,7 @@ in
           };
         }
         // lib.optionalAttrs hooksAreDir (
-          lib.genAttrs hookScriptDirs (_: {
+          lib.genAttrs [ "${configDir}/hooks" ] (_: {
             source = cfg.hooks;
             recursive = true;
           })
