@@ -103,7 +103,17 @@ in
       programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
       programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
       programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
-      programs.zsh.envExtra = lib.mkOrder 900 zshIntegration;
+      programs.zsh = {
+        # Mimic how `home.sessionVariablesPackage` is sourced in the Zsh module
+        # to ensure that session variables which SSH_AUTH_SOCK might rely on are
+        # set.
+        envExtra = lib.mkOrder 900 ''
+          if [[ ! -o login ]]; then
+          ${indentNonEmptyLines zshIntegration}
+          fi
+        '';
+        profileExtra = lib.mkOrder 900 zshIntegration;
+      };
 
       # Replace this service by an environment generator as soon as they are
       # available per-user. See https://github.com/systemd/systemd/issues/32423

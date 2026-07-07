@@ -19,6 +19,9 @@
     assertFileNotRegex \
       home-files/.zshenv \
       'SSH_AUTH_SOCK'
+    assertFileNotRegex \
+      home-files/.zprofile \
+      'SSH_AUTH_SOCK'
 
     assertPathNotExists home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service
   '';

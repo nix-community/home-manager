@@ -18,5 +18,8 @@
     assertFileContains \
       home-files/.zshenv \
       'export SSH_AUTH_SOCK="$(@system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent"'
+    assertFileContains \
+      home-files/.zprofile \
+      'export SSH_AUTH_SOCK="$(@system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent"'
   '';
 }
