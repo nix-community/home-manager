@@ -124,6 +124,11 @@ in
         raw sibling values treated as unordered entries. This is useful for
         OpenCode permission rules, where the last matching rule wins.
 
+        The `plugin` key accepts a list of plugin references: local paths to
+        plugin directories or files, derivations (e.g. `fetchFromGitHub`),
+        string paths into derivations, or names of external plugins fetched and
+        built by OpenCode.
+
         Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
       '';
     };
