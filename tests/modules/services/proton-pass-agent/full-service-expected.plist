@@ -6,8 +6,6 @@
 	<true/>
 	<key>Label</key>
 	<string>org.nix-community.home.proton-pass-agent</string>
-	<key>LimitLoadToSessionType</key>
-	<string>Background</string>
 	<key>ProcessType</key>
 	<string>Background</string>
 	<key>ProgramArguments</key>
