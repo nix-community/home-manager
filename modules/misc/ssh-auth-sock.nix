@@ -67,18 +67,25 @@ in
 
   config =
     let
+      indentNonEmptyLines = lib.flip lib.pipe [
+        (lib.splitString "\n")
+        (map (line: if line == "" then "" else "  ${line}"))
+        lib.concatLines
+        (lib.removeSuffix "\n")
+      ];
+
       # Preserve $SSH_AUTH_SOCK if it stems from a forwarded agent which is the
       # case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
       mkShIntegration = code: ''
         if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-          ${code}
+        ${indentNonEmptyLines code}
         fi
       '';
       bashIntegration = mkShIntegration cfg.initialization.bash;
       zshIntegration = mkShIntegration cfg.initialization.zsh;
       fishIntegration = ''
         if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
-          ${cfg.initialization.fish}
+        ${indentNonEmptyLines cfg.initialization.fish}
         end
       '';
       nushellIntegration =
@@ -87,7 +94,7 @@ in
         in
         ''
           if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
-            ${cfg.initialization.nushell}
+          ${indentNonEmptyLines cfg.initialization.nushell}
           }
         '';
     in
