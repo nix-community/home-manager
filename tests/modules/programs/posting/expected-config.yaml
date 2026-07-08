@@ -1,0 +1,7 @@
+animation: basic
+heading:
+  show_host: false
+layout: horizontal
+response:
+  prettify_json: false
+theme: custom

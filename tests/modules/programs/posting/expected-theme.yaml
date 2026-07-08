@@ -1,0 +1,9 @@
+accent: '#e74c3c'
+background: '#0e1726'
+error: '#e74c3c'
+name: custom
+primary: '#4e78c4'
+secondary: '#f39c12'
+success: '#2ecc71'
+surface: '#17202a'
+warning: '#f1c40f'
