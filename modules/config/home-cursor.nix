@@ -1,5 +1,6 @@
 {
   config,
+  options,
   lib,
   pkgs,
   ...
@@ -16,9 +17,12 @@ let
     literalExpression
     escapeShellArg
     hm
+    any
+    optional
     ;
 
   cfg = config.home.pointerCursor;
+  opts = options.home.pointerCursor;
 
   pointerCursorModule = types.submodule {
     options = {
@@ -158,78 +162,98 @@ in
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        (hm.assertions.assertPlatform "home.pointerCursor" pkgs lib.platforms.linux)
-      ];
+  config =
+    let
+      # Check if enable option was explicitly defined by the user
+      enableDefined = any (x: x ? enable) opts.definitions;
+      pointerCursorDefined = opts.highestPrio != (lib.mkOptionDefault { }).priority;
 
-      home.packages = [
-        cfg.package
-        defaultIndexThemePackage
-      ];
+      # Determine if cursor configuration should be enabled
+      enable = if enableDefined then cfg.enable else pointerCursorDefined;
+    in
+    mkMerge [
+      (mkIf enable (mkMerge [
+        {
+          assertions = [
+            (hm.assertions.assertPlatform "home.pointerCursor" pkgs lib.platforms.linux)
+          ];
 
-      home.sessionVariables = {
-        XCURSOR_SIZE = mkDefault cfg.x11.size;
-        XCURSOR_THEME = mkDefault cfg.name;
-      };
+          home.packages = [
+            cfg.package
+            defaultIndexThemePackage
+          ];
 
-      # Set directory to look for cursors in, needed for some applications
-      # that are unable to find cursors otherwise. See:
-      # https://github.com/nix-community/home-manager/issues/2812
-      # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
-      home.sessionSearchVariables.XCURSOR_PATH = [ "${config.home.profileDirectory}/share/icons" ];
+          home.sessionVariables = {
+            XCURSOR_SIZE = mkDefault cfg.x11.size;
+            XCURSOR_THEME = mkDefault cfg.name;
+          };
 
-      # Add cursor icon link to $XDG_DATA_HOME/icons as well for redundancy.
-      xdg.dataFile."icons/default/index.theme".source =
-        "${defaultIndexThemePackage}/share/icons/default/index.theme";
-      xdg.dataFile."icons/${cfg.name}".source = "${cfg.package}/share/icons/${cfg.name}";
-    }
+          # Set directory to look for cursors in, needed for some applications
+          # that are unable to find cursors otherwise. See:
+          # https://github.com/nix-community/home-manager/issues/2812
+          # https://wiki.archlinux.org/title/Cursor_themes#Environment_variable
+          home.sessionSearchVariables.XCURSOR_PATH = [ "${config.home.profileDirectory}/share/icons" ];
 
-    (mkIf cfg.dotIcons.enable {
-      # Add symlink of cursor icon directory to $HOME/.icons, needed for
-      # backwards compatibility with some applications. See:
-      # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
-      home.file.".icons/default/index.theme".source =
-        "${defaultIndexThemePackage}/share/icons/default/index.theme";
-      home.file.".icons/${cfg.name}".source = "${cfg.package}/share/icons/${cfg.name}";
-    })
+          # Add cursor icon link to $XDG_DATA_HOME/icons as well for redundancy.
+          xdg.dataFile."icons/default/index.theme".source =
+            "${defaultIndexThemePackage}/share/icons/default/index.theme";
+          xdg.dataFile."icons/${cfg.name}".source = "${cfg.package}/share/icons/${cfg.name}";
+        }
 
-    (mkIf cfg.x11.enable {
-      xsession.profileExtra = ''
-        ${lib.getExe pkgs.xsetroot} -xcf ${cursorPath} ${toString cfg.x11.size}
-      '';
+        (mkIf cfg.dotIcons.enable {
+          # Add symlink of cursor icon directory to $HOME/.icons, needed for
+          # backwards compatibility with some applications. See:
+          # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
+          home.file.".icons/default/index.theme".source =
+            "${defaultIndexThemePackage}/share/icons/default/index.theme";
+          home.file.".icons/${cfg.name}".source = "${cfg.package}/share/icons/${cfg.name}";
+        })
 
-      xresources.properties = {
-        "Xcursor.theme" = cfg.name;
-        "Xcursor.size" = cfg.x11.size;
-      };
-    })
+        (mkIf cfg.x11.enable {
+          xsession.profileExtra = ''
+            ${lib.getExe pkgs.xsetroot} -xcf ${cursorPath} ${toString cfg.x11.size}
+          '';
 
-    (mkIf cfg.gtk.enable {
-      gtk.cursorTheme = mkDefault {
-        inherit (cfg) package name;
-        inherit (cfg.gtk) size;
-      };
-    })
+          xresources.properties = {
+            "Xcursor.theme" = cfg.name;
+            "Xcursor.size" = cfg.x11.size;
+          };
+        })
 
-    (mkIf cfg.hyprcursor.enable {
-      home.sessionVariables = {
-        HYPRCURSOR_THEME = cfg.name;
-        HYPRCURSOR_SIZE = cfg.hyprcursor.size;
-      };
-    })
+        (mkIf cfg.gtk.enable {
+          gtk.cursorTheme = mkDefault {
+            inherit (cfg) package name;
+            inherit (cfg.gtk) size;
+          };
+        })
 
-    (mkIf cfg.sway.enable {
-      wayland.windowManager.sway = {
-        config = {
-          seat = {
-            "*" = {
-              xcursor_theme = "${cfg.name} ${toString cfg.sway.size}";
+        (mkIf cfg.hyprcursor.enable {
+          home.sessionVariables = {
+            HYPRCURSOR_THEME = cfg.name;
+            HYPRCURSOR_SIZE = cfg.hyprcursor.size;
+          };
+        })
+
+        (mkIf cfg.sway.enable {
+          wayland.windowManager.sway = {
+            config = {
+              seat = {
+                "*" = {
+                  xcursor_theme = "${cfg.name} ${toString cfg.sway.size}";
+                };
+              };
             };
           };
-        };
-      };
-    })
-  ]);
+        })
+      ]))
+
+      {
+        warnings = optional (pointerCursorDefined && !enableDefined) ''
+          Relying on `home.pointerCursor` to enable cursor config generation is deprecated.
+          Please update your configuration to explicitly set:
+
+            home.pointerCursor.enable = ${lib.boolToString enable};
+        '';
+      }
+    ];
 }

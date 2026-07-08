@@ -7,6 +7,52 @@ let
   };
 in
 {
+  home-cursor-no-config = {
+    nmt.script = ''
+      assertPathNotExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
+
+      hmEnvFile=home-path/etc/profile.d/hm-session-vars.sh
+      assertFileExists $hmEnvFile
+      assertFileNotRegex $hmEnvFile 'XCURSOR_THEME="catppuccin-macchiato-blue-standard"'
+      assertFileNotRegex $hmEnvFile 'XCURSOR_SIZE="64"'
+    '';
+  };
+
+  # Ensure backwards compatibility with existing configs
+  home-cursor-legacy =
+    { config, ... }:
+    {
+      config = {
+        home.pointerCursor = {
+          name = "catppuccin-macchiato-blue-standard";
+          package = config.lib.test.mkStubPackage package;
+          size = 64;
+          gtk.enable = true;
+          x11.enable = true;
+        };
+
+        home.stateVersion = "24.11";
+
+        test.asserts.warnings.expected = [
+          ''
+            Relying on `home.pointerCursor` to enable cursor config generation is deprecated.
+            Please update your configuration to explicitly set:
+
+              home.pointerCursor.enable = true;
+          ''
+        ];
+
+        nmt.script = ''
+          assertFileExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
+
+          hmEnvFile=home-path/etc/profile.d/hm-session-vars.sh
+          assertFileExists $hmEnvFile
+          assertFileRegex $hmEnvFile 'XCURSOR_THEME="catppuccin-macchiato-blue-standard"'
+          assertFileRegex $hmEnvFile 'XCURSOR_SIZE="64"'
+        '';
+      };
+    };
+
   home-cursor-legacy-disabled-with-enable =
     { config, ... }:
     {
