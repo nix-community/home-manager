@@ -312,11 +312,11 @@ in
               to generate x11 specific cursor configurations. You can refer to the documentation for more details.
             ''
           )
-          ++ (optional (opts.highestPrio != (lib.mkOptionDefault { }).priority && cfg == null) ''
+          ++ (optional (opts.highestPrio != (lib.mkOptionDefault { }).priority && !enableDefined) ''
             Setting home.pointerCursor to null is deprecated.
             Please update your configuration to explicitly set:
 
-              home.pointerCursor.enable = false;
+              home.pointerCursor.enable = ${lib.boolToString enable};
           '');
       }
     ];

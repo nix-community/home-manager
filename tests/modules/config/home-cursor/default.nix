@@ -23,6 +23,15 @@ in
 
         home.stateVersion = "24.11";
 
+        test.asserts.warnings.expected = [
+          ''
+            Setting home.pointerCursor to null is deprecated.
+            Please update your configuration to explicitly set:
+
+              home.pointerCursor.enable = true;
+          ''
+        ];
+
         nmt.script = ''
           assertFileExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
 
