@@ -9,6 +9,7 @@
       longitude = "128.8";
       temperature.day = 6000;
       temperature.night = 3500;
+      duration = 1800;
       gamma = "0.6";
       systemdTarget = "test.target";
     };
