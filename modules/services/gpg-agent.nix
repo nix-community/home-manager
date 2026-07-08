@@ -454,7 +454,6 @@ in
 
     launchd.agents.gpg-agent = {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           "${gpgPkg}/bin/gpg-agent"
