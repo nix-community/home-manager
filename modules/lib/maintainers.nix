@@ -517,6 +517,12 @@
       }
     ];
   };
+  reesilva = {
+    name = "Renato da Silva";
+    email = "reesilva@proton.me";
+    github = "ReeSilva";
+    githubId = 3605032;
+  };
   rosuavio = {
     name = "Rosario Pulella";
     email = "RosarioPulella@gmail.com";
