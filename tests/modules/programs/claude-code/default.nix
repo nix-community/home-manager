@@ -7,6 +7,7 @@
   claude-code-mcp-lsp = ./mcp-lsp.nix;
   claude-code-mcp-integration = ./mcp-integration.nix;
   claude-code-assertion = ./assertion.nix;
+  claude-code-collision-assertions = ./collision-assertions.nix;
   claude-code-context-inline = ./memory-management.nix;
   claude-code-context-path = ./memory-from-source.nix;
   claude-code-rules-dir = ./rules-dir.nix;
