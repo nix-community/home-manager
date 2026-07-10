@@ -5,11 +5,7 @@
   ...
 }:
 let
-  inherit (lib)
-    mkChangedOptionModule
-    nameValuePair
-    optionalAttrs
-    ;
+  inherit (lib) mkChangedOptionModule;
 
   cfg = config.programs.claude-code;
 
@@ -134,12 +130,10 @@ in
       hasManagedPlugins = legacyPluginPaths != [ ];
       useLegacyPluginWrapper = hasManagedPlugins && !supportsPersonalPlugins;
 
-      legacyWrapperArgs = lib.flatten (
-        map (plugin: [
-          "--plugin-dir"
-          "${plugin}"
-        ]) legacyPluginPaths
-      );
+      legacyWrapperArgs = lib.concatMap (plugin: [
+        "--plugin-dir"
+        "${plugin}"
+      ]) legacyPluginPaths;
 
       legacyFinalPackage = pkgs.symlinkJoin {
         name = "claude-code";
@@ -157,19 +151,21 @@ in
 
       pluginNames = map (plugin: plugin.name) pluginEntries;
 
-      skillNames =
-        if builtins.isAttrs cfg.skills then
-          lib.attrNames cfg.skills
-        else if lib.hm.strings.isPathLike cfg.skills && lib.pathIsDirectory cfg.skills then
-          lib.attrNames (builtins.readDir cfg.skills)
+      skillsAreAttrs = builtins.isAttrs cfg.skills;
+      skillsArePath = lib.hm.strings.isPathLike cfg.skills;
+      skillsAreDirectory = skillsArePath && lib.pathIsDirectory cfg.skills;
+      skillNames = lib.attrNames (
+        if skillsAreAttrs then
+          cfg.skills
         else
-          [ ];
+          lib.optionalAttrs skillsAreDirectory (builtins.readDir cfg.skills)
+      );
 
       pluginFileEntries = lib.optionalAttrs supportsPersonalPlugins (
         lib.listToAttrs (
           map (
             plugin:
-            nameValuePair "${cfg.configDir}/skills/${plugin.name}" {
+            lib.nameValuePair "${cfg.configDir}/skills/${plugin.name}" {
               inherit (plugin) source;
               recursive = true;
             }
@@ -209,7 +205,7 @@ in
             message = "Managed Claude Code MCP, LSP, and plugins require `programs.claude-code.package` version 2.1.76 or later";
           }
           {
-            assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
+            assertion = !skillsArePath || skillsAreDirectory;
             message = "`programs.claude-code.skills` must be a directory when set to a path";
           }
           {
@@ -242,10 +238,10 @@ in
               // {
                 "$schema" = "https://json.schemastore.org/claude-code-settings.json";
               }
-              // optionalAttrs (cfg.marketplaces != { }) {
+              // lib.optionalAttrs (cfg.marketplaces != { }) {
                 extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
               }
-              // optionalAttrs (disabledMcpServerNames != [ ]) {
+              // lib.optionalAttrs (disabledMcpServerNames != [ ]) {
                 disabledMcpjsonServers = lib.unique (
                   (cfg.settings.disabledMcpjsonServers or [ ]) ++ disabledMcpServerNames
                 );
@@ -275,7 +271,7 @@ in
           (mkRecursiveDirAttrs "commands" cfg.commandsDir)
           (mkRecursiveDirAttrs "hooks" cfg.hooksDir)
           (mkRecursiveDirAttrs "rules" cfg.rulesDir)
-          (lib.mkIf (lib.hm.strings.isPathLike cfg.skills) {
+          (lib.mkIf skillsArePath {
             "${cfg.configDir}/skills" = {
               source = cfg.skills;
               recursive = true;
@@ -283,7 +279,7 @@ in
           })
           pluginFileEntries
           (mkHookEntries cfg.hooks)
-          (lib.optionalAttrs (builtins.isAttrs cfg.skills) (lib.mapAttrs' mkSkillEntry cfg.skills))
+          (lib.optionalAttrs skillsAreAttrs (lib.mapAttrs' mkSkillEntry cfg.skills))
           (mkMarkdownEntries "output-styles" cfg.outputStyles)
         ];
       };

@@ -5,23 +5,17 @@
   ...
 }:
 let
-  inherit (lib) literalExpression mkOption optionalAttrs;
+  inherit (lib) literalExpression mkOption;
 
   jsonFormat = pkgs.formats.json { };
 
   mkContentOption =
-    {
-      description,
-      example ? null,
-    }:
-    mkOption (
-      {
-        type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
-        default = { };
-        inherit description;
-      }
-      // optionalAttrs (example != null) { inherit example; }
-    );
+    { description, example }:
+    mkOption {
+      type = lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path);
+      default = { };
+      inherit description example;
+    };
 
   mkDirOption =
     { description, example }:
@@ -171,7 +165,7 @@ in
       example = literalExpression ''
         [
           ./my-local-plugin
-          fetchFromGithub {
+          fetchFromGitHub {
             owner = "some-github-org";
             repo = "claude-plugin";
             rev = "779a68ebc2a75e4a184d2c87e5a43a758e6458a1";
@@ -193,7 +187,7 @@ in
       example = literalExpression ''
         {
           local-marketplace = ./my-local-marketplace;
-          gh-marketplace = fetchFromGithub {
+          gh-marketplace = fetchFromGitHub {
             owner = "some-github-org";
             repo = "claude-marketplace";
             rev = "8a873a220b8427b25b03ce1a821593a24e098c34";
@@ -384,13 +378,7 @@ in
     };
 
     skills = mkOption {
-      type = lib.types.either (lib.types.attrsOf (
-        lib.types.oneOf [
-          lib.types.lines
-          lib.types.path
-          lib.types.str
-        ]
-      )) lib.types.path;
+      type = with lib.types; either (attrsOf (either lines path)) path;
       default = { };
       description = ''
         Custom skills for Claude Code.
