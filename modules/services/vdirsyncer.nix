@@ -64,6 +64,7 @@ in
     systemd.user.services.vdirsyncer = {
       Unit = {
         Description = "vdirsyncer calendar&contacts synchronization";
+        X-SwitchMethod = "keep-old";
       };
 
       Service = {
