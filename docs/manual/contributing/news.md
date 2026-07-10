@@ -12,7 +12,7 @@ communication about noteworthy changes, such as a new module, a new
 feature, or a specific deprecation. Release notes are read from the
 website documentation and should summarize what users need to know before
 or during a stable-release upgrade. See
-[Release Notes](#sec-contributing-release-notes) for guidance on changes
+[Release Notes](release-notes.md#sec-contributing-release-notes) for guidance on changes
 that affect stable-release upgrades.
 
 If you do have a change worthy of a news entry then please add one in

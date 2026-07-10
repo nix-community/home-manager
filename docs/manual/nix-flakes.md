@@ -12,18 +12,18 @@ flake in three ways:
     NixOS and Darwin, this is the only available choice. It is also
     recommended for people on NixOS or Darwin that want to manage their
     home directory independently of the system as a whole. See
-    [Standalone setup](#sec-flakes-standalone) for instructions on how
+    [Standalone setup](nix-flakes/standalone.md#sec-flakes-standalone) for instructions on how
     to perform this installation.
 
 2.  As a module within a NixOS system configuration. This allows the
     user profiles to be built together with the system when running
-    `nixos-rebuild`. See [NixOS module](#sec-flakes-nixos-module) for a
+    `nixos-rebuild`. See [NixOS module](nix-flakes/nixos.md#sec-flakes-nixos-module) for a
     description of this setup.
 
 3.  As a module within a [nix-darwin](https://github.com/nix-darwin/nix-darwin/)
     system configuration. This allows the user profiles to be built
     together with the system when running `darwin-rebuild`. See
-    [nix-darwin module](#sec-flakes-nix-darwin-module) for a
+    [nix-darwin module](nix-flakes/nix-darwin.md#sec-flakes-nix-darwin-module) for a
     description of this setup.
 
 Advanced users may want Home Manager's `nixpkgs` input to follow the

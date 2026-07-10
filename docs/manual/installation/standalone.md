@@ -71,5 +71,5 @@ checkout of the repository then you can use the
 [home-manager.path](#opt-programs.home-manager.path) option to specify the absolute
 path to the repository.
 
-Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
+Once installed you can see [Using Home Manager](../usage.md#ch-usage) for a more detailed
 description of Home Manager and how to use it.

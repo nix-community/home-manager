@@ -124,5 +124,5 @@ Use `home-manager.sharedModules` to add Home Manager modules to every user
 declared under `home-manager.users`.
 :::
 
-Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
+Once installed you can see [Using Home Manager](../usage.md#ch-usage) for a more detailed
 description of Home Manager and how to use it.

@@ -3,8 +3,8 @@
 Contributions to Home Manager are very welcome. To make the process as
 smooth as possible for both you and the Home Manager maintainers we
 provide some guidelines that we ask you to follow. See [Getting
-started](#sec-contrib-getting-started) for information on how to set up
-a suitable development environment and [Guidelines](#sec-guidelines) for
+started](contributing/getting-started.md#sec-contrib-getting-started) for information on how to set up
+a suitable development environment and [Guidelines](contributing/guidelines.md#sec-guidelines) for
 the actual guidelines.
 
 This text is mainly directed at those who would like to make code

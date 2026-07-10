@@ -43,7 +43,7 @@ option will state the expected type, for
 [programs.emacs.enable](#opt-programs.emacs.enable) you will see "Type: boolean". You
 there also find information about the default value and a description of
 the option. You can find the complete option documentation in
-[Home Manager Configuration Options](#ch-options) or directly in the terminal by running
+[Home Manager Configuration Options](options.md#ch-options) or directly in the terminal by running
 
 ``` shell
 man home-configuration.nix

@@ -8,7 +8,7 @@ without changing release branches.
 If you want to move from one release branch to another, such as
 `release-25.05` to `release-25.11`, or between a release branch and
 `master`, see
-[Upgrading to a new Home Manager release](#sec-upgrade-release).
+[Upgrading to a new Home Manager release](upgrading.md#sec-upgrade-release).
 
 ## Flake-Based Configurations {#sec-updating-flakes}
 

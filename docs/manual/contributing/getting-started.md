@@ -8,7 +8,7 @@ how to do this.
 Once you have a fork of Home Manager you should create a branch starting
 at the most recent `master` branch. Give your branch a reasonably
 descriptive name. Commit your changes to this branch and when you are
-happy with the result and it fulfills [Guidelines](#sec-guidelines) then
+happy with the result and it fulfills [Guidelines](guidelines.md#sec-guidelines) then
 push the branch to GitHub and [create a pull
 request](https://help.github.com/articles/creating-a-pull-request/).
 
@@ -21,7 +21,7 @@ the `home-manager` command use it by either
     $ home-manager -I home-manager=$HOME/devel/home-manager
     ```
 
-    or, if using [flakes](#sec-flakes-standalone):
+    or, if using [flakes](../nix-flakes/standalone.md#sec-flakes-standalone):
 
     ``` shell
     $ home-manager --override-input home-manager ~/devel/home-manager
