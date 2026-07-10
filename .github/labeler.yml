@@ -7,7 +7,7 @@
           - modules/programs/aiac.nix
           - modules/programs/aichat.nix
           - modules/programs/aider-chat.nix
-          - modules/programs/claude-code.nix
+          - modules/programs/claude-code/**/*
           - modules/programs/codex.nix
           - modules/programs/fabric-ai.nix
           - modules/programs/antigravity-cli.nix
