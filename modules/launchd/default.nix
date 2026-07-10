@@ -250,8 +250,8 @@ in
               # At this point we know exit code is not 0 because otherwise we
               # would have returned by now
 
-              # Only show warning if it's not the common "No such process" error
-              if [[ "$bootout_output" != *"No such process"* ]]; then
+              # Only show warning if it's not a common harmless error
+              if [[ "$bootout_output" != *"No such process"* && "$bootout_output" != *"Domain does not support specified action"* ]]; then
                 warnEcho "Failed to stop agent '$domain/$agentName': $bootout_output"
                 return 1
               else

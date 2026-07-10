@@ -37,6 +37,7 @@
       assertFileContains activate "printf 'user/%s"
       assertFileContains activate 'restoreAgent "$oldSrcPath" "$dstPath" "$oldDomain" "$agentName"'
       assertFileContains activate 'bootoutAgent "$newDomain" "$agentName"'
+      assertFileContains activate 'Domain does not support specified action'
       assertFileContains activate 'processAgent "$srcPath" "$dstDir" "$oldDir" "$oldDomainsDir" "$newDomainsDir" \'
       assertFileContains activate '|| launchdStatus=1'
       assertFileContains activate 'done < <(find -L "$newDir" -maxdepth 1 -name'
