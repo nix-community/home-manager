@@ -26,5 +26,6 @@
   claude-code-output-styles = ./output-styles.nix;
   claude-code-output-styles-not-set = ./output-styles-not-set.nix;
   claude-code-plugins = ./plugins.nix;
+  claude-code-versionless-package = ./versionless-package.nix;
   claude-code-marketplacess = ./marketplaces.nix;
 }

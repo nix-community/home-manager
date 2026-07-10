@@ -1,7 +1,17 @@
+{ config, ... }:
+
 {
   programs.claude-code = {
     enable = true;
-    package = null;
+    package = config.lib.test.mkStubPackage {
+      name = "claude-code";
+      version = "2.1.75";
+      buildScript = ''
+        mkdir -p $out/bin
+        touch $out/bin/claude
+        chmod 755 $out/bin/claude
+      '';
+    };
 
     mcpServers = {
       filesystem = {
@@ -36,7 +46,7 @@
   };
 
   test.asserts.assertions.expected = [
-    "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured"
+    "Managed Claude Code MCP, LSP, and plugins require `programs.claude-code.package` version 2.1.76 or later"
     "Cannot specify both `programs.claude-code.agents` and `programs.claude-code.agentsDir`"
     "Cannot specify both `programs.claude-code.commands` and `programs.claude-code.commandsDir`"
     "Cannot specify both `programs.claude-code.hooks` and `programs.claude-code.hooksDir`"

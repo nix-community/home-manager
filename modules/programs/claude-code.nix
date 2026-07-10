@@ -17,6 +17,17 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  packageVersion = if cfg.package == null then null else lib.getVersion cfg.package;
+  hasPackageVersion = packageVersion != null && packageVersion != "";
+
+  # A null package has no detectable version, so assume the latest Claude Code
+  # and enable version-gated behavior by default. Preserve the legacy wrapper
+  # for non-null packages without version metadata.
+  atLeast =
+    version: cfg.package == null || (hasPackageVersion && lib.versionAtLeast packageVersion version);
+  supportsPluginDir = !hasPackageVersion || atLeast "2.1.76";
+  supportsPersonalPlugins = atLeast "2.1.157";
+
   upstreamConfigDir = "${config.home.homeDirectory}/.claude";
 
   isMcpServerEnabled =
@@ -222,7 +233,12 @@ in
         Each entry is either:
         - A path to the plugin directory
         - The plugin package, whether a nix package or the output of a fetcher
-        Plugins are enabled via a `--plugin-dir` argument in the wrapper script.
+        With Claude Code 2.1.157 or later, plugins are linked into
+        {option}`programs.claude-code.configDir` and loaded as personal plugins.
+        Versions 2.1.76 through 2.1.156 fall back to a legacy `--plugin-dir`
+        wrapper, as do packages without detectable version metadata.
+        Strict-parser subcommands such as {command}`claude rc` may reject
+        arguments from that compatibility path.
       '';
       example = literalExpression ''
         [
@@ -623,8 +639,124 @@ in
           lastUpdated = "1970-01-01T00:00:00Z";
         };
 
+      mergedMcpServers =
+        transformedMcpServers
+        // lib.mapAttrs (_: server: removeAttrs (lib.hm.mcp.addType server) [ "enabled" ]) cfg.mcpServers;
+
+      generatedPluginFiles =
+        lib.optional (mergedMcpServers != { }) {
+          name = ".mcp.json";
+          path = jsonFormat.generate "claude-code-mcp.json" { mcpServers = mergedMcpServers; };
+        }
+        ++ lib.optional (cfg.lspServers != { }) {
+          name = ".lsp.json";
+          path = jsonFormat.generate "claude-code-lsp.json" cfg.lspServers;
+        };
+
+      generatedPlugin = pkgs.runCommand "claude-code-hm-plugin" { } (
+        ''
+          install -Dm644 ${
+            jsonFormat.generate "claude-code-plugin.json" {
+              name = "claude-code-home-manager";
+            }
+          } $out/.claude-plugin/plugin.json
+        ''
+        + lib.concatLines (
+          map (pluginFile: "install -Dm644 ${pluginFile.path} $out/${pluginFile.name}") generatedPluginFiles
+        )
+      );
+
+      mkPluginEntry =
+        plugin:
+        let
+          name = builtins.unsafeDiscardStringContext (
+            lib.strings.sanitizeDerivationName (baseNameOf (toString plugin))
+          );
+        in
+        {
+          inherit name;
+          source = pkgs.symlinkJoin {
+            name = "claude-code-${name}";
+            paths = [ plugin ];
+            postBuild = ''
+              if [[ ! -e $out/.claude-plugin/plugin.json ]]; then
+                install -Dm644 ${
+                  jsonFormat.generate "claude-code-${name}.json" {
+                    inherit name;
+                  }
+                } $out/.claude-plugin/plugin.json
+              fi
+            '';
+          };
+        };
+
+      pluginEntries =
+        lib.optional (generatedPluginFiles != [ ]) {
+          name = "claude-code-home-manager";
+          source = generatedPlugin;
+        }
+        ++ map mkPluginEntry cfg.plugins;
+
+      legacyPluginPaths = lib.optional (generatedPluginFiles != [ ]) generatedPlugin ++ cfg.plugins;
+
+      hasManagedPlugins = legacyPluginPaths != [ ];
+      useLegacyPluginWrapper = hasManagedPlugins && !supportsPersonalPlugins;
+
+      legacyWrapperArgs = lib.flatten (
+        map (plugin: [
+          "--plugin-dir"
+          "${plugin}"
+        ]) legacyPluginPaths
+      );
+
+      legacyFinalPackage = pkgs.symlinkJoin {
+        name = "claude-code";
+        paths = [ cfg.package ];
+        postBuild = ''
+          mv $out/bin/claude $out/bin/.claude-wrapped
+          cat > $out/bin/claude <<EOF
+          #! ${pkgs.bash}/bin/bash -e
+          exec -a "\$0" "$out/bin/.claude-wrapped" ${lib.escapeShellArgs legacyWrapperArgs} "\$@"
+          EOF
+          chmod +x $out/bin/claude
+        '';
+        inherit (cfg.package) meta;
+      };
+
+      pluginNames = map (plugin: plugin.name) pluginEntries;
+
+      skillNames =
+        if builtins.isAttrs cfg.skills then
+          lib.attrNames cfg.skills
+        else if lib.hm.strings.isPathLike cfg.skills && lib.pathIsDirectory cfg.skills then
+          lib.attrNames (builtins.readDir cfg.skills)
+        else
+          [ ];
+
+      pluginFileEntries = lib.optionalAttrs supportsPersonalPlugins (
+        lib.listToAttrs (
+          map (
+            plugin:
+            nameValuePair "${cfg.configDir}/skills/${plugin.name}" {
+              inherit (plugin) source;
+              recursive = true;
+            }
+          ) pluginEntries
+        )
+      );
+
     in
     lib.mkIf cfg.enable {
+      warnings = lib.optional (useLegacyPluginWrapper && supportsPluginDir) ''
+        `programs.claude-code.package` ${
+          if hasPackageVersion then "version ${packageVersion}" else "has no detectable version and"
+        }
+        uses the legacy `--plugin-dir` wrapper. Strict-parser subcommands such
+        as `claude rc` may reject managed MCP, LSP, or plugin arguments. Upgrade
+        Claude Code to version 2.1.157 or later to use persistent personal
+        plugins instead.
+      '';
+
       assertions =
         let
           exclusiveInlineDirNames = [
@@ -641,68 +773,28 @@ in
         in
         [
           {
-            assertion =
-              (cfg.mcpServers == { } && cfg.lspServers == { } && !cfg.enableMcpIntegration && cfg.plugins == [ ])
-              || cfg.package != null;
-            message = "`programs.claude-code.package` cannot be null when `mcpServers`, `lspServers`, `enableMcpIntegration`, or `plugins` is configured";
+            assertion = !hasManagedPlugins || supportsPluginDir;
+            message = "Managed Claude Code MCP, LSP, and plugins require `programs.claude-code.package` version 2.1.76 or later";
           }
           {
             assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
             message = "`programs.claude-code.skills` must be a directory when set to a path";
           }
+          {
+            assertion =
+              !supportsPersonalPlugins || lib.length pluginNames == lib.length (lib.unique pluginNames);
+            message = "`programs.claude-code.plugins` entries must resolve to unique personal-plugin directory names";
+          }
+          {
+            assertion = !supportsPersonalPlugins || lib.intersectLists skillNames pluginNames == [ ];
+            message = "`programs.claude-code.skills` and managed plugins must have unique directory names";
+          }
         ]
         ++ map mkExclusiveAssertion exclusiveInlineDirNames;
 
-      programs.claude-code.finalPackage =
-        let
-          mergedMcpServers =
-            transformedMcpServers
-            // lib.mapAttrs (_: server: removeAttrs (lib.hm.mcp.addType server) [ "enabled" ]) cfg.mcpServers;
-          pluginFiles =
-            lib.optional (mergedMcpServers != { }) {
-              name = ".mcp.json";
-              path = jsonFormat.generate "claude-code-mcp.json" { mcpServers = mergedMcpServers; };
-            }
-            ++ lib.optional (cfg.lspServers != { }) {
-              name = ".lsp.json";
-              path = jsonFormat.generate "claude-code-lsp.json" cfg.lspServers;
-            };
-          pluginDir = pkgs.runCommand "claude-code-hm-plugin" { } (
-            ''
-              install -Dm644 ${
-                jsonFormat.generate "claude-code-plugin.json" {
-                  name = "claude-code-home-manager";
-                }
-              } $out/.claude-plugin/plugin.json
-            ''
-            + lib.concatLines (
-              map (pluginFile: "install -Dm644 ${pluginFile.path} $out/${pluginFile.name}") pluginFiles
-            )
-          );
-          allPluginPaths = (if pluginFiles != [ ] then [ pluginDir ] else [ ]) ++ cfg.plugins;
-          wrapperArgs = lib.flatten (
-            map (p: [
-              "--plugin-dir"
-              "${p}"
-            ]) allPluginPaths
-          );
-        in
-        if allPluginPaths != [ ] then
-          pkgs.symlinkJoin {
-            name = "claude-code";
-            paths = [ cfg.package ];
-            postBuild = ''
-              mv $out/bin/claude $out/bin/.claude-wrapped
-              cat > $out/bin/claude <<EOF
-              #! ${pkgs.bash}/bin/bash -e
-              exec -a "\$0" "$out/bin/.claude-wrapped" ${lib.escapeShellArgs wrapperArgs} "\$@"
-              EOF
-              chmod +x $out/bin/claude
-            '';
-            inherit (cfg.package) meta;
-          }
-        else
-          cfg.package;
+      programs.claude-code.finalPackage = lib.mkIf (cfg.package != null) (
+        if useLegacyPluginWrapper then legacyFinalPackage else cfg.package
+      );
 
       home = {
         packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
@@ -757,6 +849,7 @@ in
               recursive = true;
             };
           })
+          pluginFileEntries
           (mkHookEntries cfg.hooks)
           (lib.optionalAttrs (builtins.isAttrs cfg.skills) (lib.mapAttrs' mkSkillEntry cfg.skills))
           (mkMarkdownEntries "output-styles" cfg.outputStyles)
