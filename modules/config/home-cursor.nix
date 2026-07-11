@@ -203,7 +203,7 @@ in
         (mkIf cfg.dotIcons.enable {
           # Add symlink of cursor icon directory to $HOME/.icons, needed for
           # backwards compatibility with some applications. See:
-          # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
+          # https://specifications.freedesktop.org/icon-theme/latest/#directory_layout
           home.file.".icons/default/index.theme".source =
             "${defaultIndexThemePackage}/share/icons/default/index.theme";
           home.file.".icons/${cfg.name}".source = "${cfg.package}/share/icons/${cfg.name}";
