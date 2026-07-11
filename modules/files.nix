@@ -196,8 +196,8 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
-                verboseEcho "Running $HOME_MANAGER_BACKUP_COMMAND $targetPath."
-                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running `$HOME_MANAGER_BACKUP_COMMAND` on '$targetPath' failed."
+                verboseEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath'."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."
               elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 # The target exists, back it up
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"

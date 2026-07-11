@@ -32,7 +32,7 @@ for sourcePath in "$@" ; do
       warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
     elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
       # Next, try to run the custom backup command. Assume this always succeeds.
-      verboseEcho "Existing file '$targetPath' exists and differs from '$sourcePath'. `$HOME_MANAGER_BACKUP_COMMAND` will be used to backup the file."
+      verboseEcho "Existing file '$targetPath' exists and differs from '$sourcePath'. '$HOME_MANAGER_BACKUP_COMMAND' will be used to backup the file."
     elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
       # Next, try to move the file to a backup location if configured and possible
       backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
