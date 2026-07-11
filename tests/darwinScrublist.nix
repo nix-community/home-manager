@@ -163,6 +163,7 @@ let
     "pimsync"
     "pistol"
     "pls"
+    "podman"
     "poetry"
     "powerline-go"
     "proton-pass-cli"
