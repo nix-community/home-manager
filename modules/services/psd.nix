@@ -93,7 +93,7 @@ in
               gnused
               coreutils
               findutils
-              nettools
+              net-tools
               util-linux
               cfg.package
             ]
