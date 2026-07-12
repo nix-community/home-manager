@@ -66,7 +66,7 @@ let
         preferLocalBuild = true;
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
-          wrapProgram $out/bin/opencode \
+          wrapProgram $out/bin/${cfg.package.meta.mainProgram} \
             --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
         '';
       }
