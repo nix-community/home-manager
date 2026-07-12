@@ -19,7 +19,7 @@ let
   tomlType = tomlFormat.type;
 in
 {
-  meta.maintainers = with lib.maintainers; [ diniamo ];
+  meta.maintainers = [ ];
 
   options.programs.spotify-player = {
     enable = mkEnableOption "spotify-player";

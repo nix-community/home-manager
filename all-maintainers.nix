@@ -990,13 +990,6 @@
     name = "Robin Stumm";
     source = "nixpkgs";
   };
-  diniamo = {
-    email = "diniamo53@gmail.com";
-    github = "diniamo";
-    githubId = 55629891;
-    name = "diniamo";
-    source = "nixpkgs";
-  };
   donovanglover = {
     github = "donovanglover";
     githubId = 2374245;
