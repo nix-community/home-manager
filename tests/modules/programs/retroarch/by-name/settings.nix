@@ -1,6 +1,4 @@
-{
-  imports = [ ./stubs.nix ];
-
+_: {
   programs.retroarch = {
     enable = true;
     settings = {
@@ -13,11 +11,9 @@
   };
 
   nmt.script = ''
-    assertFileExists home-path/bin/retroarch
-    assertFileRegex home-path/bin/retroarch 'appendconfig.*declarative-retroarch\.cfg'
-
-    configFile=$(grep -aoP '/nix/store/[a-z0-9]+-declarative-retroarch\.cfg' $TESTED/home-path/bin/retroarch | head -1)
+    configFile="home-files/.config/retroarch/retroarch.cfg"
     assertFileExists "$configFile"
+    assertFileContains "$configFile" 'config_save_on_exit = "false"'
     assertFileContains "$configFile" 'input_max_users = "4"'
     assertFileContains "$configFile" 'menu_scale_factor = "0.950000"'
     assertFileContains "$configFile" 'netplay_nickname = "username"'

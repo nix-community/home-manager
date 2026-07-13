@@ -1,20 +1,11 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
   mkRetroarchPackage =
-    {
-      cores,
-      settings,
-    }:
-    let
-      settingsFile = pkgs.writeText "declarative-retroarch.cfg" (
-        lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: ''${name} = "${value}"'') settings)
-      );
-    in
+    { cores }:
     config.lib.test.mkStubPackage {
       name = "retroarch";
       buildScript = ''
@@ -22,7 +13,7 @@ let
         cat > $out/bin/retroarch <<'EOF'
         #!/bin/sh
         # -L $out/lib/retroarch/cores
-        exec retroarch --appendconfig ${settingsFile} "$@"
+        exec retroarch "$@"
         EOF
         chmod 755 $out/bin/retroarch
         ${lib.concatMapStringsSep "\n" (core: ''
