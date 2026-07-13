@@ -8,6 +8,16 @@ let
   cfg = config.programs.retroarch;
 
   enabledCores = lib.filterAttrs (_: core: core.enable) cfg.cores;
+
+  toKeyValue = lib.generators.toKeyValue {
+    mkKeyValue = lib.generators.mkKeyValueDefault { mkValueString = v: "\"${v}\""; } " = ";
+  };
+
+  configDir =
+    if (pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable) then
+      "Library/Application Support/RetroArch"
+    else
+      "${lib.removePrefix "${config.home.homeDirectory}/" config.xdg.configHome}/retroarch";
 in
 {
   meta.maintainers = [
@@ -71,7 +81,11 @@ in
         video_fullscreen = "true";
       };
       description = ''
-        RetroArch configuration settings.
+        RetroArch configuration settings written to `retroarch.cfg`.
+
+        Because the configuration file is managed declaratively, RetroArch is
+        configured to not overwrite it on exit. Any changes made through the
+        RetroArch UI will therefore not be persisted.
 
         See <https://github.com/libretro/RetroArch/blob/master/retroarch.cfg>
         for available configuration options.
@@ -80,12 +94,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.retroarch.finalPackage = (
-      cfg.package.wrapper {
-        inherit (cfg) settings;
-        cores = lib.mapAttrsToList (_: core: core.package) enabledCores;
-      }
-    );
+    programs.retroarch.settings.config_save_on_exit = lib.mkDefault "false";
+
+    programs.retroarch.finalPackage = cfg.package.wrapper {
+      cores = lib.mapAttrsToList (_: core: core.package) enabledCores;
+    };
+
     home.packages = [ cfg.finalPackage ];
+
+    home.file."${configDir}/retroarch.cfg".text = toKeyValue cfg.settings;
   };
 }
