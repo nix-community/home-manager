@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  options,
   ...
 }:
 let
@@ -32,6 +33,17 @@ in
           The fcitx5 package to use.
         '';
       };
+
+      systemd.enable = lib.mkEnableOption "" // {
+        default = true;
+        description = ''
+          Whether to enable the systemd user service.
+
+          This service is not required if the desktop environment supports
+          [XDG Autostart](https://fcitx-im.org/wiki/Setup_Fcitx_5#XDG_Autostart).
+        '';
+      };
+
       addons = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ ];
@@ -47,6 +59,24 @@ in
         description = ''
           Use the Wayland input method frontend.
           See [Using Fcitx 5 on Wayland](https://fcitx-im.org/wiki/Using_Fcitx_5_on_Wayland).
+        '';
+      };
+
+      sessionVariables = lib.mkOption {
+        inherit (options.home.sessionVariables) type;
+        default = {
+          GLFW_IM_MODULE = "ibus"; # IME support in kitty
+          SDL_IM_MODULE = "fcitx";
+          XMODIFIERS = "@im=fcitx";
+        };
+        description = ''
+          The environment variables used to configure Fcitx5.
+
+          The default values should be suitable for most desktop environments and should
+          not normally need to be changed.
+
+          If you need to override them, see the
+          [Fcitx5 user guide](https://fcitx-im.org/wiki/Fcitx_5#For_Users).
         '';
       };
 
@@ -201,18 +231,16 @@ in
     };
 
     home = {
-      sessionVariables = {
-        GLFW_IM_MODULE = "ibus"; # IME support in kitty
-        SDL_IM_MODULE = "fcitx";
-        XMODIFIERS = "@im=fcitx";
-      }
-      // lib.optionalAttrs (!cfg.waylandFrontend) {
-        GTK_IM_MODULE = "fcitx";
-        QT_IM_MODULE = "fcitx";
-      }
-      // lib.optionalAttrs cfg.ignoreUserConfig {
-        SKIP_FCITX_USER_PATH = "1";
-      };
+      sessionVariables = lib.mkMerge [
+        cfg.sessionVariables
+
+        (lib.optionalAttrs (!cfg.waylandFrontend) {
+          GTK_IM_MODULE = "fcitx";
+          QT_IM_MODULE = "fcitx";
+        })
+
+        (lib.optionalAttrs cfg.ignoreUserConfig { SKIP_FCITX_USER_PATH = "1"; })
+      ];
 
       sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
@@ -267,7 +295,7 @@ in
       ) cfg.themes;
     };
 
-    systemd.user.services.fcitx5-daemon = {
+    systemd.user.services.fcitx5-daemon = lib.mkIf cfg.systemd.enable {
       Unit = {
         Description = "Fcitx5 input method editor";
         PartOf = [ "graphical-session.target" ];
