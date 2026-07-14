@@ -576,19 +576,16 @@ in
               cli = cfg.cli.enable;
             };
           in
-          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            OBSIDIAN_CONFIG="${obsidianConfigDir}/obsidian.json"
-            if [ -f "$OBSIDIAN_CONFIG" ]; then
-              verboseEcho "Merging existing Obsidian config with generated template"
-              tmp="$(mktemp)"
-              run ${lib.getExe pkgs.jq} -s '(.[0] // {}) * (.[1] // {})' "$OBSIDIAN_CONFIG" "${template}" > "$tmp"
-              run install -m644 "$tmp" "$OBSIDIAN_CONFIG"
-              rm -f "$tmp"
-            else
-              verboseEcho "Installing fresh Obsidian config"
-              run install -D -m644 "${template}" "$OBSIDIAN_CONFIG"
-            fi
-          '';
+          lib.hm.dag.entryAfter [ "writeBoundary" ] (
+            lib.hm.generators.mkImpureConfigMerger {
+              inherit pkgs;
+              format = "json";
+              empty = "{}";
+              jqOperation = "$dynamic * $static";
+              path = obsidianConfigDir + "/obsidian.json";
+              staticSettings = template;
+            }
+          );
       };
 
       assertions = [

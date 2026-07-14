@@ -916,6 +916,114 @@ in
       ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
     '';
 
+  /**
+    Create a bash script snippet that merges a Nix-generated config file with
+    an existing user config file at activation time. This preserves any changes
+    the user has made interactively while applying the Nix-declared settings on
+    top.
+
+    The merge uses `jaq` internally, which supports JSON, YAML, TOML, and CBOR
+    natively via its `--from`/`--to` flags — no extra tools needed.
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to find `jaq`.
+
+      `format` (string)
+      : Config file format. One of `"json"`, `"yaml"`, `"toml"`, `"cbor"`.
+
+      `empty` (string)
+      : JSON value to use when the file does not exist yet. Typically `"{}"`
+        for objects or `"[]"` for arrays.
+
+      `jqOperation` (string)
+      : jq-compatible expression that merges `$dynamic` (existing config) with
+        `$static` (Nix-generated config). For example `"$dynamic * $static"`
+        for a recursive object merge.
+
+      `path` (string)
+      : Absolute path to the config file on disk.
+
+      `staticSettings` (path or derivation)
+      : Path to the Nix-generated static config file, typically produced by
+        `format.generate`.
+
+      `reader` (string or null; optional)
+      : Shell command that reads the existing file from stdin and writes JSON
+        to stdout. When `null` (the default), the reader is auto-detected
+        from `format`: `jaq -c '.'` for JSON, `jaq --from <format> -c '.'`
+        for others. Set this to something like `"${json5Bin} --as-json"` when
+        the existing file uses a superset of JSON (e.g. JSON5 with comments).
+
+    # Type
+
+    ```
+    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; reader ? NullOr String; } -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `lib.hm.generators.mkImpureConfigMerger` usage example
+
+    ```nix
+    let
+      jsonFormat = pkgs.formats.json { };
+    in
+    lib.hm.generators.mkImpureConfigMerger {
+      inherit pkgs;
+      format = "json";
+      empty = "{}";
+      jqOperation = "$dynamic * $static";
+      path = "${config.xdg.configHome}/myapp/settings.json";
+      staticSettings = jsonFormat.generate "myapp-settings" cfg.settings;
+    }
+    ```
+
+    :::
+  */
+  mkImpureConfigMerger =
+    {
+      pkgs,
+      format,
+      empty,
+      jqOperation,
+      path,
+      staticSettings,
+      reader ? null,
+    }:
+    let
+      jaqBin = lib.getExe pkgs.jaq;
+      isJson = format == "json";
+      readerCmd =
+        if reader != null then
+          reader
+        else if isJson then
+          "${jaqBin} -c '.'"
+        else
+          "${jaqBin} --from ${format} -c '.'";
+      writerCmd =
+        if isJson then
+          "printf '%s\\n' \"$config\" > ${lib.escapeShellArg path}"
+        else
+          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} -c '.' > ${lib.escapeShellArg path}";
+    in
+    ''
+      mkdir -p $(dirname ${lib.escapeShellArg path})
+      if [ ! -e ${lib.escapeShellArg path} ]; then
+        : > ${lib.escapeShellArg path}
+      fi
+      dynamic="$(${readerCmd} ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
+      static="$(cat ${lib.escapeShellArg staticSettings})"
+      config="$(${jaqBin} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
+      ${writerCmd}
+      unset config
+    '';
+
   toSCFG =
     _:
     let

@@ -51,6 +51,7 @@ let
         inherit (pkgs)
           coreutils
           crudini
+          jaq
           jq
           desktop-file-utils
           diffutils
