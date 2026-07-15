@@ -64,6 +64,7 @@ in
 
     xdg.configFile."herdr/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "herdr-config.toml" cfg.settings;
+      onChange = lib.mkIf (cfg.package != null) "${lib.getExe cfg.package} server reload-config || true";
     };
   };
 }
