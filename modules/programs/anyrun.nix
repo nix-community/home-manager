@@ -15,6 +15,7 @@ let
   inherit (lib.lists) optional;
   inherit (lib.attrsets) mapAttrs' nameValuePair;
   inherit (lib.strings)
+    concatMapStringsSep
     toLower
     toUpper
     replaceStrings
@@ -195,6 +196,59 @@ in
           description = "Limit amount of entries shown in total.";
         };
 
+        keybinds = mkOption {
+          type = nullOr (
+            listOf (submodule {
+              options = {
+                ctrl = mkOption {
+                  type = bool;
+                  default = false;
+                  example = true;
+                  description = "Require CTRL to trigger the bind.";
+                };
+                alt = mkOption {
+                  type = bool;
+                  default = false;
+                  example = true;
+                  description = "Require ALT to trigger the bind.";
+                };
+                shift = mkOption {
+                  type = bool;
+                  default = false;
+                  example = true;
+                  description = "Require SHIFT to trigger the bind.";
+                };
+                key = mkOption {
+                  type = str;
+                  example = "Escape";
+                  description = ''
+                    Name of the GDK keysym.
+
+                    A list of possible values can be found at [https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h]
+                  '';
+                };
+                action = mkOption {
+                  type = enum [
+                    "close"
+                    "select"
+                    "up"
+                    "down"
+                  ];
+                  example = "close";
+                  description = "Action to trigger on keybind.";
+                };
+              };
+            })
+          );
+          default = null;
+          description = ''
+            Navigation keybinds.
+
+            Setting this option to something else than `null` will remove the
+            default keybinds.
+          '';
+        };
+
         extraLines = mkOption {
           type = nullOr lines;
           default = null;
@@ -249,6 +303,25 @@ in
             else
               entry
           ) cfg.config.plugins;
+
+      keybinds =
+        if cfg.config.keybinds == null then
+          ""
+        else
+          ''
+            keybinds: [
+              ${
+                concatMapStringsSep "\n" (x: ''
+                  Keybind(
+                    ${optionalString x.ctrl "ctrl: true,"}
+                    ${optionalString x.alt "alt: true,"}
+                    ${optionalString x.shift "shift: true,"}
+                    key: "${x.key}",
+                    action: ${capitalize x.action},
+                  ),
+                '') cfg.config.keybinds
+              }],
+          '';
     in
     {
       assertions =
@@ -316,6 +389,7 @@ in
                 if cfg.config.maxEntries == null then "None" else "Some(${toString cfg.config.maxEntries})"
               },
               plugins: ${toJSON parsedPlugins},
+              ${keybinds}
               ${optionalString (cfg.config.extraLines != null) cfg.config.extraLines}
             )
           '';
