@@ -41,6 +41,16 @@ in
   options.programs.anyrun = {
     enable = mkEnableOption "anyrun";
 
+    daemon.enable = mkOption {
+      type = bool;
+      default = true;
+      description = ''
+        Enable running Anyrun as a daemon, allowing for faster startup speed.
+
+        This is required for the clipboard functionality
+      '';
+    };
+
     package = lib.mkPackageOption pkgs "anyrun" { nullable = true; };
 
     config =
@@ -252,6 +262,25 @@ in
         You haven't enabled any plugins. Anyrun will not show any results, unless you specify plugins with the --override-plugins flag.
         Add plugins to programs.anyrun.config.plugins, or set it to [] to silence the warning.
       '';
+
+      systemd.user.services.anyrun = mkIf (cfg.daemon.enable && cfg.package != null) {
+        Unit = {
+          Description = "Anyrun daemon";
+          PartOf = "graphical-session.target";
+          After = "graphical-session.target";
+        };
+
+        Service = {
+          Type = "simple";
+          ExecStart = "${lib.getExe cfg.package} daemon";
+          Restart = "on-failure";
+          KillMode = "process";
+        };
+
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
 
       home.packages = optional (cfg.package != null) cfg.package;
 
