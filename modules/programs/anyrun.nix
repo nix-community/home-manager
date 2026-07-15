@@ -44,6 +44,12 @@ in
     khaneliman
   ];
 
+  imports = [
+    (lib.mkRemovedOptionModule [ "programs" "anyrun" "config" "margin" ] ''
+      Anyrun removed the margin setting. Remove programs.anyrun.config.margin.
+    '')
+  ];
+
   options.programs.anyrun = {
     enable = mkEnableOption "anyrun";
 
@@ -105,6 +111,8 @@ in
           '';
         };
 
+        provider = lib.mkPackageOption pkgs "anyrun-provider" { nullable = true; };
+
         x = mkNumericOption {
           default.fraction = 0.5;
           description = ''
@@ -133,19 +141,11 @@ in
         };
 
         height = mkNumericOption {
-          default.absolute = 0;
+          default.absolute = 1;
           description = ''
             The minimum height of the runner, the runner will expand to fit all the entries.
 
             ${numericInfo}
-          '';
-        };
-
-        margin = mkOption {
-          type = int;
-          default = 0;
-          description = ''
-            Add a margin around the window to allow for CSS shadow styling.
           '';
         };
 
@@ -170,6 +170,15 @@ in
           ];
           default = "overlay";
           description = "Layer shell layer (background, bottom, top or overlay).";
+        };
+
+        keyboardMode = mkOption {
+          type = enum [
+            "exclusive"
+            "on-demand"
+          ];
+          default = "exclusive";
+          description = "Layer shell keyboard mode";
         };
 
         hidePluginInfo = mkOption {
@@ -322,6 +331,12 @@ in
                 '') cfg.config.keybinds
               }],
           '';
+      keyboardMode =
+        {
+          "exclusive" = "Exclusive";
+          "on-demand" = "OnDemand";
+        }
+        .${cfg.config.keyboardMode};
     in
     {
       assertions =
@@ -340,6 +355,17 @@ in
           (assertNumeric cfg.config.height)
           (assertNumeric cfg.config.x)
           (assertNumeric cfg.config.y)
+
+          {
+            assertion = cfg.package == null || cfg.package ? anyrun-provider || cfg.config.provider != null;
+            message = ''
+              Anyrun expects 'anyrun-provider' to be exposed under 'passthru.anyrun-provider'.
+              You may consider:
+
+              1. Ensure that your Anyrun package correctly provides 'anyrun-provider' under the passthru attr
+              2. Provide a provider in 'config.programs.anyrun.config.provider'
+            '';
+          }
         ];
 
       warnings = optional (cfg.config.plugins == null) ''
@@ -378,10 +404,10 @@ in
               y: ${stringifyNumeric cfg.config.y},
               width: ${stringifyNumeric cfg.config.width},
               height: ${stringifyNumeric cfg.config.height},
-              margin: ${toString cfg.config.margin},
               hide_icons: ${boolToString cfg.config.hideIcons},
               ignore_exclusive_zones: ${boolToString cfg.config.ignoreExclusiveZones},
               layer: ${capitalize cfg.config.layer},
+              keyboard_mode: ${keyboardMode},
               hide_plugin_info: ${boolToString cfg.config.hidePluginInfo},
               close_on_click: ${boolToString cfg.config.closeOnClick},
               show_results_immediately: ${boolToString cfg.config.showResultsImmediately},
@@ -389,6 +415,7 @@ in
                 if cfg.config.maxEntries == null then "None" else "Some(${toString cfg.config.maxEntries})"
               },
               plugins: ${toJSON parsedPlugins},
+              ${optionalString (cfg.config.provider != null) "provider: \"${lib.getExe cfg.config.provider}\","}
               ${keybinds}
               ${optionalString (cfg.config.extraLines != null) cfg.config.extraLines}
             )

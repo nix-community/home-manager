@@ -7,7 +7,11 @@
     `programs.anyrun.package` is non-null. Set
     `programs.anyrun.daemon.enable = false` to disable the daemon.
 
-    The module now supports configuring navigation keybinds,
-    and extra lines in the main configuration file.
+    The `programs.anyrun.config.margin` option has been removed because
+    Anyrun no longer supports it. Remove this option from your configuration.
+
+    The module now supports configuring the provider, keyboard mode,
+    navigation keybinds, and extra lines in the main configuration file.
+    The default minimum height is now 1 instead of 0, matching Anyrun.
   '';
 }
