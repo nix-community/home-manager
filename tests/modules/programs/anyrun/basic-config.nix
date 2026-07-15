@@ -17,6 +17,19 @@
       closeOnClick = false;
       showResultsImmediately = false;
       maxEntries = 10;
+      keybinds = [
+        {
+          key = "j";
+          action = "down";
+        }
+        {
+          ctrl = true;
+          alt = false;
+          shift = true;
+          key = "k";
+          action = "up";
+        }
+      ];
       extraConfig = ''
         margin: 0,
       '';
@@ -84,6 +97,24 @@
         show_results_immediately: false,
         max_entries: Some(10),
         plugins: ["@applications@/lib/libapplications.so"],
+        keybinds: [
+        Keybind(
+        
+        
+        
+        key: "j",
+        action: Down,
+      ),
+
+      Keybind(
+        ctrl: true,
+        
+        shift: true,
+        key: "k",
+        action: Up,
+      ),
+      ],
+
         margin: 0,
 
       )
