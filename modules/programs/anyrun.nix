@@ -44,6 +44,12 @@ in
     khaneliman
   ];
 
+  imports = [
+    (lib.mkRemovedOptionModule [ "programs" "anyrun" "config" "margin" ] ''
+      Anyrun removed the margin setting. Remove programs.anyrun.config.margin.
+    '')
+  ];
+
   options.programs.anyrun = {
     enable = mkEnableOption "anyrun";
 
@@ -133,19 +139,11 @@ in
         };
 
         height = mkNumericOption {
-          default.absolute = 0;
+          default.absolute = 1;
           description = ''
             The minimum height of the runner, the runner will expand to fit all the entries.
 
             ${numericInfo}
-          '';
-        };
-
-        margin = mkOption {
-          type = int;
-          default = 0;
-          description = ''
-            Add a margin around the window to allow for CSS shadow styling.
           '';
         };
 
@@ -170,6 +168,15 @@ in
           ];
           default = "overlay";
           description = "Layer shell layer (background, bottom, top or overlay).";
+        };
+
+        keyboardMode = mkOption {
+          type = enum [
+            "Exclusive"
+            "OnDemand"
+          ];
+          default = "Exclusive";
+          description = "Layer shell keyboard mode";
         };
 
         hidePluginInfo = mkOption {
@@ -340,6 +347,13 @@ in
           (assertNumeric cfg.config.height)
           (assertNumeric cfg.config.x)
           (assertNumeric cfg.config.y)
+
+          {
+            assertion = cfg.package == null || cfg.package ? anyrun-provider;
+            message = ''
+              Anyrun expects 'anyrun-provider' to be exposed under 'passthru.anyrun-provider'.
+            '';
+          }
         ];
 
       warnings = optional (cfg.config.plugins == null) ''
@@ -378,10 +392,10 @@ in
               y: ${stringifyNumeric cfg.config.y},
               width: ${stringifyNumeric cfg.config.width},
               height: ${stringifyNumeric cfg.config.height},
-              margin: ${toString cfg.config.margin},
               hide_icons: ${boolToString cfg.config.hideIcons},
               ignore_exclusive_zones: ${boolToString cfg.config.ignoreExclusiveZones},
               layer: ${capitalize cfg.config.layer},
+              keyboard_mode: ${cfg.config.keyboardMode},
               hide_plugin_info: ${boolToString cfg.config.hidePluginInfo},
               close_on_click: ${boolToString cfg.config.closeOnClick},
               show_results_immediately: ${boolToString cfg.config.showResultsImmediately},
