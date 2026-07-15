@@ -17,6 +17,9 @@
       closeOnClick = false;
       showResultsImmediately = false;
       maxEntries = 10;
+      extraLines = ''
+        margin: 0,
+      '';
     };
 
     extraConfigFiles = {
@@ -81,6 +84,8 @@
         show_results_immediately: false,
         max_entries: Some(10),
         plugins: ["@applications@/lib/libapplications.so"],
+        margin: 0,
+
       )
     ''}
   '';

@@ -14,7 +14,12 @@ let
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.lists) optional;
   inherit (lib.attrsets) mapAttrs' nameValuePair;
-  inherit (lib.strings) toLower toUpper replaceStrings;
+  inherit (lib.strings)
+    toLower
+    toUpper
+    replaceStrings
+    optionalString
+    ;
   inherit (lib.trivial) boolToString;
   inherit (lib.types)
     nullOr
@@ -189,6 +194,12 @@ in
           default = null;
           description = "Limit amount of entries shown in total.";
         };
+
+        extraLines = mkOption {
+          type = nullOr lines;
+          default = null;
+          description = "Extra lines to add inside the `Config()` object";
+        };
       };
 
     extraCss = mkOption {
@@ -305,6 +316,7 @@ in
                 if cfg.config.maxEntries == null then "None" else "Some(${toString cfg.config.maxEntries})"
               },
               plugins: ${toJSON parsedPlugins},
+              ${optionalString (cfg.config.extraLines != null) cfg.config.extraLines}
             )
           '';
         }
