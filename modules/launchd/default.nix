@@ -34,6 +34,24 @@ let
             services that do not require a graphical login session.
           '';
         };
+        waitForNixStore = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Whether to start the agent through a `/bin/sh` wrapper that waits
+            for the Nix store to be mounted before running the agent's
+            command. This guards against launchd starting the agent before
+            the Nix store volume is available, for example early during login
+            when the store volume is encrypted.
+
+            When disabled, the agent's command is run through a launcher
+            script named after the agent instead. This makes the agent appear
+            under its own name, rather than as "sh", in System Settings >
+            Login Items & Extensions, but the agent will fail to start if
+            launchd runs it before the Nix store is mounted.
+          '';
+        };
         config = lib.mkOption {
           type = lib.types.submodule (import ./launchd.nix);
           default = { };
@@ -65,35 +83,51 @@ let
       ];
     };
 
-  # mutateConfig calls /bin/sh with /bin/wait4path to wait for /nix/store before
-  # running the original Program and ProgramArguments. This is intentional to
-  # fix the issue where launchd starts the agent before /nix/store is ready
-  # (before the Nix store is mounted.)
+  # mutateConfig replaces the original Program and ProgramArguments. By
+  # default it calls /bin/sh with /bin/wait4path to wait for /nix/store
+  # before running the original command. This is intentional to fix the
+  # issue where launchd starts the agent before /nix/store is ready (before
+  # the Nix store is mounted.) When waitForNixStore is disabled, the command
+  # is run through a launcher script named after the agent instead, so that
+  # the agent is displayed under its own name (rather than "sh") in System
+  # Settings > Login Items & Extensions.
   mutateConfig =
-    cnf:
+    name: waitForNixStore: cnf:
     let
       args =
         lib.optional (cnf.Program != null) cnf.Program
         ++ lib.optionals (cnf.ProgramArguments != null) cnf.ProgramArguments;
+      launcherName = lib.strings.sanitizeDerivationName name;
+      launcher = pkgs.writeScriptBin launcherName ''
+        #!/bin/sh
+        exec ${lib.escapeShellArgs args}
+      '';
     in
     (removeAttrs cnf [
       "Program"
       "ProgramArguments"
     ])
     // {
-      ProgramArguments = [
-        "/bin/sh"
-        "-c"
-        "/bin/wait4path /nix/store && exec ${lib.escapeShellArgs args}"
-      ];
+      ProgramArguments =
+        if waitForNixStore then
+          [
+            "/bin/sh"
+            "-c"
+            "/bin/wait4path /nix/store && exec ${lib.escapeShellArgs args}"
+          ]
+        else
+          [ "${launcher}/bin/${launcherName}" ];
     };
 
   toAgent =
-    config: pkgs.writeText "${config.Label}.plist" (toPlist { escape = true; } (mutateConfig config));
+    name: v:
+    pkgs.writeText "${v.config.Label}.plist" (
+      toPlist { escape = true; } (mutateConfig name v.waitForNixStore v.config)
+    );
 
-  agentPlists = lib.mapAttrs' (
-    _n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent v.config)
-  ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
+  agentPlists = lib.mapAttrs' (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent n v)) (
+    lib.filterAttrs (_n: v: v.enable) cfg.agents
+  );
 
   agentDomains = lib.mapAttrs' (
     _n: v:
