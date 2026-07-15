@@ -6,8 +6,6 @@
 	<true/>
 	<key>Label</key>
 	<string>org.nix-community.home.glance</string>
-	<key>LimitLoadToSessionType</key>
-	<string>Background</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/bin/sh</string>

@@ -65,7 +65,6 @@ let
       name = "imapnotify-${name}";
       value = {
         enable = true;
-        domain = lib.mkDefault "user";
         config = {
           # Use the nix store path for config to ensure service restarts when it changes
           ProgramArguments = [

@@ -609,7 +609,6 @@ in
           {
             "git-maintenance-hourly" = {
               enable = true;
-              domain = lib.mkDefault "user";
               config = {
                 ProgramArguments = baseArguments ++ [ "--schedule=hourly" ];
                 StartCalendarInterval = map (hour: {
@@ -620,7 +619,6 @@ in
             };
             "git-maintenance-daily" = {
               enable = true;
-              domain = lib.mkDefault "user";
               config = {
                 ProgramArguments = baseArguments ++ [ "--schedule=daily" ];
                 StartCalendarInterval = map (weekday: {
@@ -632,7 +630,6 @@ in
             };
             "git-maintenance-weekly" = {
               enable = true;
-              domain = lib.mkDefault "user";
               config = {
                 ProgramArguments = baseArguments ++ [ "--schedule=weekly" ];
                 StartCalendarInterval = [

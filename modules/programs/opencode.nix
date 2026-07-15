@@ -631,7 +631,6 @@ in
     launchd.agents = mkIf webCfg.enable {
       opencode-web = {
         enable = true;
-        domain = lib.mkDefault "user";
         config = {
           ProgramArguments =
             let

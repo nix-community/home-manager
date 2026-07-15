@@ -60,7 +60,6 @@ in
 
     launchd.agents.exo = {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [ (lib.getExe cfg.package) ] ++ cfg.extraArgs;
         EnvironmentVariables = cfg.environmentVariables;

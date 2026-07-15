@@ -57,7 +57,6 @@ in
 
     launchd.agents.pueued = lib.mkIf (cfg.package != null) {
       enable = true;
-      domain = lib.mkDefault "user";
 
       config = {
         ProgramArguments = [

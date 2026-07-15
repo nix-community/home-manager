@@ -151,7 +151,6 @@ in
 
     launchd.agents.nh-clean = lib.mkIf cfg.clean.enable {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           "${lib.getExe cfg.package}"

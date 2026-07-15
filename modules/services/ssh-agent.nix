@@ -105,7 +105,6 @@ in
 
     launchd.agents.ssh-agent = {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           (lib.getExe pkgs.bash)

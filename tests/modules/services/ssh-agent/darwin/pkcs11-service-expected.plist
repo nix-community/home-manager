@@ -11,8 +11,6 @@
 	</dict>
 	<key>Label</key>
 	<string>org.nix-community.home.ssh-agent</string>
-	<key>LimitLoadToSessionType</key>
-	<string>Background</string>
 	<key>ProcessType</key>
 	<string>Background</string>
 	<key>ProgramArguments</key>

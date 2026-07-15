@@ -943,7 +943,6 @@ in
       launchd.agents = {
         syncthing = {
           enable = true;
-          domain = lib.mkDefault "user";
           config = {
             ProgramArguments = [
               "${pkgs.writers.writeBash "syncthing-wrapper" ''

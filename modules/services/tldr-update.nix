@@ -62,7 +62,6 @@ in
 
     launchd.agents.tldr-update = {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           (lib.getExe cfg.package)

@@ -6,10 +6,8 @@
   message = ''
 
     Home Manager launchd agents now support the
-    `launchd.agents.<name>.domain` option. Background services provided by Home
-    Manager use the user launchd domain by default, so they can be managed from
-    SSH and other non-graphical sessions. Set
-    `launchd.agents.<name>.domain = "gui"` for agents that need the graphical
-    session.
+    `launchd.agents.<name>.domain` option. Agents use the GUI launchd domain by
+    default. Set `launchd.agents.<name>.domain = "user"` for agents that should
+    run without an active graphical login session.
   '';
 }

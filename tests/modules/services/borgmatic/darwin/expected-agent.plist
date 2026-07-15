@@ -4,8 +4,6 @@
 <dict>
 	<key>Label</key>
 	<string>org.nix-community.home.borgmatic</string>
-	<key>LimitLoadToSessionType</key>
-	<string>Background</string>
 	<key>ProcessType</key>
 	<string>Background</string>
 	<key>ProgramArguments</key>

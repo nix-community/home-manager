@@ -107,7 +107,6 @@ in
 
     launchd.agents.ollama = {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [
           "${lib.getExe ollamaPackage}"

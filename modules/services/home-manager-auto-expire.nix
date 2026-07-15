@@ -105,7 +105,6 @@ in
 
     launchd.agents.home-manager-auto-expire = {
       enable = true;
-      domain = lib.mkDefault "user";
       config = {
         ProgramArguments = [ (toString script) ];
         ProcessType = "Background";
