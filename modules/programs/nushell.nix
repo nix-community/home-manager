@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -8,6 +9,72 @@ let
   inherit (lib) types;
   inherit (lib.hm.nushell) isNushellInline toNushell;
   cfg = config.programs.nushell;
+
+  systemEnvironmentFile = osConfig.system.build.setEnvironment or null;
+  hasSystemEnvironment = systemEnvironmentFile != null;
+  homeSessionVariablesFile = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+
+  # Translate the POSIX session scripts at shell startup so references to
+  # runtime values such as HOME and USER are expanded in the user environment.
+  sessionVariablesLoader =
+    let
+      sourceSystemEnvironment = lib.optionalString hasSystemEnvironment ''
+        if [ -z "''${__NIXOS_SET_ENVIRONMENT_DONE-}" ] \
+          && [ -z "''${__NIX_DARWIN_SET_ENVIRONMENT_DONE-}" ]; then
+          . ${lib.escapeShellArg systemEnvironmentFile} >/dev/null
+        fi
+      '';
+      # A script avoids Bash's SSH-specific bashrc loading for `bash -c`.
+      captureEnvironment = pkgs.writeShellScript "hm-session-vars-capture" ''
+        ${lib.getExe' pkgs.coreutils "env"} -0
+        printf '\0'
+        ${sourceSystemEnvironment}
+        . ${lib.escapeShellArg homeSessionVariablesFile} >/dev/null
+        ${lib.getExe' pkgs.coreutils "env"} -0
+      '';
+      shouldLoadSystemEnvironment = lib.optionalString hasSystemEnvironment ''
+        or (
+          ($env.__NIXOS_SET_ENVIRONMENT_DONE? | is-empty)
+          and ($env.__NIX_DARWIN_SET_ENVIRONMENT_DONE? | is-empty)
+        )
+      '';
+    in
+    pkgs.writeText "hm-session-vars.nu" ''
+      if (
+        ($env.__HM_SESS_VARS_SOURCED? | is-empty)
+        ${shouldLoadSystemEnvironment}
+      ) {
+        let sections = (
+          ^${captureEnvironment}
+          | split row $"(char nul)(char nul)"
+          | each {
+            split row (char nul)
+            | parse --regex '(?s)^(?<name>[^=]+)=(?<value>.*)$'
+            | transpose --header-row --as-record
+          }
+        )
+        let before = $sections.0
+        let after = $sections.1
+        let ignored = ["_" "_AST_FEATURES" "SHLVL"]
+        let changed = ($after | items { |name, value|
+          if $name not-in $ignored and (
+            $name not-in $before or ($before | get $name) != $value
+          ) {
+            [$name $value]
+          }
+        } | compact | into record)
+
+        load-env $changed
+        if "PATH" in $changed {
+          $env.PATH = $changed.PATH | split row (char esep)
+        }
+        for name in ($before | columns) {
+          if $name not-in $after and $name not-in $ignored {
+            hide-env --ignore-errors $name
+          }
+        }
+      }
+    '';
 
   linesOrSource =
     name:
@@ -191,6 +258,36 @@ in
       '';
     };
 
+    loadSessionVariables = lib.mkOption {
+      type = types.bool;
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.11";
+          optionPath = [
+            "programs"
+            "nushell"
+            "loadSessionVariables"
+          ];
+          legacy.value = false;
+          current.value = true;
+        })
+        default
+        defaultText
+        ;
+      description = ''
+        Whether to load the Home Manager session environment, such as
+        {option}`home.sessionVariables` and {option}`home.sessionPath`, in
+        {file}`env.nu` when Nushell starts without it, for example as a login
+        shell. When Home Manager is used as a NixOS or nix-darwin module, the
+        system environment is loaded too.
+
+        Enabling this makes Home Manager manage {file}`env.nu`. Put other
+        environment configuration in {option}`programs.nushell.envFile` or
+        {option}`programs.nushell.extraEnv`.
+      '';
+    };
+
     environmentVariables = lib.mkOption {
       type = types.attrsOf lib.hm.types.nushellValue;
       default = { };
@@ -279,8 +376,9 @@ in
         }
       )
 
-      (lib.mkIf (cfg.envFile != null || cfg.extraEnv != "") {
+      (lib.mkIf (cfg.loadSessionVariables || cfg.envFile != null || cfg.extraEnv != "") {
         "${cfg.configDir}/env.nu".text = lib.mkMerge [
+          (lib.mkIf cfg.loadSessionVariables "source ${sessionVariablesLoader}")
           (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
         ];
