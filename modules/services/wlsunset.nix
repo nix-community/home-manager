@@ -6,10 +6,7 @@
 }:
 
 let
-  inherit (lib)
-    mkOption
-    types
-    ;
+  inherit (lib) mkOption types;
 
   cfg = config.services.wlsunset;
 in
@@ -96,6 +93,16 @@ in
       '';
     };
 
+    duration = mkOption {
+      type = with types; nullOr ints.positive;
+      default = null;
+      example = 1800;
+      description = ''
+        The duration for the easing (in seconds).
+        Cannot be used when latitude and longitude are set.
+      '';
+    };
+
     systemdTarget = mkOption {
       type = with types; str;
       default = config.wayland.systemd.target;
@@ -122,6 +129,10 @@ in
         assertion = (cfg.latitude != null) == (cfg.longitude != null);
         message = "Both `latitude and `longitude` together must be set for wlsunset";
       }
+      {
+        assertion = ((cfg.latitude != null) || (cfg.longitude != null)) == (cfg.duration == null);
+        message = "Cannot set duration if `latitude` or `longitude` are set";
+      }
     ];
 
     home.packages = [ cfg.package ];
@@ -145,6 +156,7 @@ in
               L = cfg.longitude;
               S = cfg.sunrise;
               s = cfg.sunset;
+              d = cfg.duration;
               o = cfg.output;
             };
           in
