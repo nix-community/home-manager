@@ -54,11 +54,12 @@ let
     path:
     if
       isUnixGui
-    # if cfg.guiAddress is a unix socket, tell curl explicitly about it
-    # note that the dot in front of `${path}` is the hostname, which is
-    # required.
+    # if cfg.guiAddress is a unix socket, tell curl explicitly about it.
+    # `localhost` is a placeholder authority routed to the socket by
+    # --unix-socket; a bare-dot host (`http://.`) is rejected as an invalid
+    # hostname by curl >= 8.21.
     then
-      "--unix-socket ${cfg.guiAddress} http://.${path}"
+      "--unix-socket ${cfg.guiAddress} http://localhost${path}"
     # no adjustments are needed if cfg.guiAddress is a network address
     else
       "${cfg.guiAddress}${path}";
