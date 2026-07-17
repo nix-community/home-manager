@@ -94,10 +94,7 @@ in
       })
       (lib.mkIf pkgs.stdenv.isLinux (
         let
-          extraEnvList = lib.foldlAttrs (
-            acc: k: v:
-            [ "${k}=${v}" ] ++ acc
-          ) [ ] cfg.extraEnvVariables;
+          extraEnvList = lib.mapAttrsToList (k: v: "${k}=${v}") cfg.extraEnvVariables;
         in
         {
           systemd.user = {
@@ -124,7 +121,7 @@ in
                 ];
                 CacheDirectory = [ "lorri" ];
                 Restart = "on-failure";
-                Environment = [ "PATH=${path}" ];
+                Environment = [ "PATH=${path}" ] ++ extraEnvList;
               };
             };
 
@@ -193,7 +190,7 @@ in
                       ]
                     );
                   in
-                  "PATH=${path}" ++ extraEnvList;
+                  [ "PATH=${path}" ];
               };
 
               Install = {
