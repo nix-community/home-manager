@@ -584,6 +584,7 @@ in
               jqOperation = "$dynamic * $static";
               path = obsidianConfigDir + "/obsidian.json";
               staticSettings = template;
+              verboseMsg = "Merging existing Obsidian config with generated template";
             }
           );
       };

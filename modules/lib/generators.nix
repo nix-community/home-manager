@@ -960,10 +960,14 @@ in
         for others. Set this to something like `"${json5Bin} --as-json"` when
         the existing file uses a superset of JSON (e.g. JSON5 with comments).
 
+      `verboseMsg` (string or null; optional)
+      : Custom message to log via `verboseEcho` when the merge runs. When
+        `null` (the default), a generic message is used.
+
     # Type
 
     ```
-    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; reader ? NullOr String; } -> String
+    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
     ```
 
     # Examples
@@ -995,6 +999,7 @@ in
       path,
       staticSettings,
       reader ? null,
+      verboseMsg ? null,
     }:
     let
       jaqBin = lib.getExe pkgs.jaq;
@@ -1011,14 +1016,23 @@ in
           "printf '%s\\n' \"$config\" > ${lib.escapeShellArg path}"
         else
           "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} -c '.' > ${lib.escapeShellArg path}";
+      defaultVerboseMsg = "Merging Nix-generated config into ${path}";
+      verboseMsg' = if verboseMsg != null then verboseMsg else defaultVerboseMsg;
     in
     ''
+      if [[ -v VERBOSE ]]; then
+        echo ${lib.escapeShellArg verboseMsg'}
+      fi
+      if [[ -v DRY_RUN ]]; then
+        echo "jaq -n ${lib.escapeShellArg jqOperation} --argjson dynamic ... --argjson static ..."
+        return 0
+      fi
       mkdir -p $(dirname ${lib.escapeShellArg path})
       if [ ! -e ${lib.escapeShellArg path} ]; then
         : > ${lib.escapeShellArg path}
       fi
       dynamic="$(${readerCmd} ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
-      static="$(cat ${lib.escapeShellArg staticSettings})"
+      static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
       config="$(${jaqBin} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
       ${writerCmd}
       unset config
