@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
   qt = {
     enable = true;
@@ -7,6 +9,15 @@
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
+    fcitx5.fcitx5-with-addons =
+      let
+        package = config.lib.test.mkStubPackage {
+          name = "fcitx5-with-addons";
+          outPath = "/@fcitx5-with-addons@";
+          extraAttrs.override = _: package;
+        };
+      in
+      package;
   };
 
   test.asserts.warnings.expected = [
