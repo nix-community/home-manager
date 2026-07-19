@@ -191,7 +191,91 @@ in
 
           newGenFiles="$1"
           shift
+
+          # Classify every target using bash builtins only: even one forked
+          # process per file costs several milliseconds on some platforms
+          # (notably darwin), which dominates activation time when a profile
+          # carries hundreds of links. Targets occupied by a regular file or
+          # directory keep the original per-file handling (backup and
+          # identical-content skip) on the slow path below.
+          declare -a symlinkTargets=() symlinkSources=()
+          declare -a linkSources=() linkDirs=()
+          declare -a slowSources=()
           for sourcePath in "$@" ; do
+            relativePath="''${sourcePath#$newGenFiles/}"
+            targetPath="$HOME/$relativePath"
+            if [[ -L "''${targetPath%/*}" ]] ; then
+              # The parent directory is itself a symlink (e.g. a stale
+              # whole-directory link from an older layout). The batched
+              # `ln -n -t` below would refuse it ("Not a directory"), while
+              # the original per-file `ln -T` traverses it; keep upstream
+              # behavior on the slow path.
+              slowSources+=("$sourcePath")
+            elif [[ -L "$targetPath" ]] ; then
+              symlinkTargets+=("$targetPath")
+              symlinkSources+=("$sourcePath")
+            elif [[ -e "$targetPath" ]] ; then
+              slowSources+=("$sourcePath")
+            else
+              linkSources+=("$sourcePath")
+              linkDirs+=("''${targetPath%/*}")
+            fi
+          done
+
+          # Resolve all existing symlinks with a single readlink call and
+          # relink only those not already pointing at the new generation.
+          if [[ ''${#symlinkTargets[@]} -gt 0 ]] ; then
+            i=0
+            while IFS= read -r -d "" currentSource ; do
+              if [[ "$currentSource" != "''${symlinkSources[i]}" ]] ; then
+                linkSources+=("''${symlinkSources[i]}")
+                linkDirs+=("''${symlinkTargets[i]%/*}")
+              fi
+              i=$(( i + 1 ))
+            done < <(readlink -z -- "''${symlinkTargets[@]}")
+
+            # readlink prints no record for an operand that vanished since
+            # the classification loop above, and its exit status is lost
+            # through the process substitution. A missing record shifts
+            # every later result onto the wrong source, so the links after
+            # it would be compared against someone else's target and left
+            # stale. The record count is the only signal that happened.
+            if [[ $i -ne ''${#symlinkTargets[@]} ]] ; then
+              errorEcho "A link target changed while resolving symlinks; retry activation."
+              exit 1
+            fi
+          fi
+
+          # Create all missing parent directories in one mkdir call.
+          declare -A missingDirs=()
+          for targetDir in "''${linkDirs[@]}" ; do
+            [[ -d "$targetDir" ]] || missingDirs[$targetDir]=1
+          done
+          if [[ ''${#missingDirs[@]} -gt 0 ]] ; then
+            run mkdir -p $VERBOSE_ARG -- "''${!missingDirs[@]}" || exit 1
+          fi
+
+          # Group the pending links by parent directory, one ln call per
+          # directory. The link name always equals the source basename, and
+          # -f -n together replace a stale symlink even when it points at a
+          # directory (the case -T guarded against in the per-file version;
+          # a regular directory in the way takes the slow path instead and
+          # fails there just like it always did).
+          declare -A dirBatches=()
+          for i in "''${!linkSources[@]}" ; do
+            dirBatches[''${linkDirs[i]}]+="$i "
+          done
+          for targetDir in "''${!dirBatches[@]}" ; do
+            batch=()
+            for i in ''${dirBatches[$targetDir]} ; do
+              batch+=("''${linkSources[i]}")
+            done
+            run ln -sfn $VERBOSE_ARG -t "$targetDir" -- "''${batch[@]}" || exit 1
+          done
+
+          # Slow path: the target exists and is not a symlink. This is the
+          # original per-file logic, kept verbatim for the rare collisions.
+          for sourcePath in "''${slowSources[@]}" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
@@ -209,7 +293,7 @@ in
             fi
 
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
-              # The target exists but is identical – don't do anything.
+              # The target exists but is identical - don't do anything.
               verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
               # Place that symlink, --force
