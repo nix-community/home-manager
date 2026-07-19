@@ -8,8 +8,9 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-05-27 11:11+0000\n"
-"Last-Translator: qb114514 <GNUqb114514@outlook.com>\n"
+"PO-Revision-Date: 2026-07-19 08:01+0000\n"
+"Last-Translator: reducedradius "
+"<137701630+flytothehighest@users.noreply.github.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/home-manager/cli/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
@@ -193,9 +194,8 @@ msgid "Cannot run build in read-only directory"
 msgstr "无法在只读目录中运行构建"
 
 #: home-manager/home-manager:822
-#, fuzzy
 msgid "The configuration does not contain the specialisation \"%s\""
-msgstr "配置不包含 specialisation “%s”"
+msgstr "配置不包含专门化的 “%s”"
 
 #: home-manager/home-manager:876
 msgid "No generation with ID %s"
