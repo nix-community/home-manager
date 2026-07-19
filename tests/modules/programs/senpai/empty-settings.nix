@@ -1,5 +1,11 @@
-{ config, ... }:
-
+{ config, pkgs, ... }:
+let
+  targetPath =
+    if pkgs.stdenv.isDarwin then
+      "home-files/Library/Application Support/senpai/senpai.scfg"
+    else
+      "home-files/.config/senpai/senpai.scfg";
+in
 {
   config = {
     programs.senpai = {
@@ -13,7 +19,7 @@
 
     nmt.script = ''
       assertFileContent \
-        home-files/.config/senpai/senpai.scfg \
+        "${targetPath}" \
         ${./empty-settings-expected.conf}
     '';
   };
