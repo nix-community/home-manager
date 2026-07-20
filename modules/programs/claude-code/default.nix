@@ -233,20 +233,28 @@ in
 
         file = lib.mkMerge [
           (lib.mkIf (cfg.settings != { } || cfg.marketplaces != { } || disabledMcpServerNames != [ ]) {
-            "${cfg.configDir}/settings.json".source = jsonFormat.generate "claude-code-settings.json" (
-              cfg.settings
-              // {
-                "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-              }
-              // lib.optionalAttrs (cfg.marketplaces != { }) {
-                extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
-              }
-              // lib.optionalAttrs (disabledMcpServerNames != [ ]) {
-                disabledMcpjsonServers = lib.unique (
-                  (cfg.settings.disabledMcpjsonServers or [ ]) ++ disabledMcpServerNames
+            "${cfg.configDir}/settings.json".source =
+              let
+                settingsFile = jsonFormat.generate "claude-code-settings.json" (
+                  cfg.settings
+                  // {
+                    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+                  }
+                  // lib.optionalAttrs (cfg.marketplaces != { }) {
+                    extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
+                  }
+                  // lib.optionalAttrs (disabledMcpServerNames != [ ]) {
+                    disabledMcpjsonServers = lib.unique (
+                      (cfg.settings.disabledMcpjsonServers or [ ]) ++ disabledMcpServerNames
+                    );
+                  }
                 );
-              }
-            );
+
+                settingsDirectory = pkgs.runCommand "claude-code-settings-directory" { } ''
+                  install -Dm444 ${settingsFile} "$out/settings.json"
+                '';
+              in
+              "${settingsDirectory}/settings.json";
           })
           (
             if lib.isPath cfg.context then
