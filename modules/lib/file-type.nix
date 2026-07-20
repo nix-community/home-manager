@@ -15,6 +15,8 @@ let
     removePrefix
     types
     ;
+  isAbsolutePath = hasPrefix "/";
+  removeHomePrefix = removePrefix (homeDirectory + "/");
 in
 {
   # Constructs a type suitable for a `home.file` like option. The
@@ -46,9 +48,9 @@ in
               apply =
                 p:
                 let
-                  absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
+                  absPath = if isAbsolutePath p then p else "${basePath}/${p}";
                 in
-                removePrefix (homeDirectory + "/") absPath;
+                removeHomePrefix absPath;
               defaultText = literalExpression "name";
               description = ''
                 Path to target file relative to ${basePathDesc}.
