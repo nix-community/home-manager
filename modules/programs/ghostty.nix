@@ -158,8 +158,10 @@ in
           let
             validate =
               file:
-              lib.mkIf (cfg.package != null)
-                "${lib.getExe cfg.package} +validate-config --config-file=${config.xdg.configHome}/ghostty/${file}";
+              let
+                binPath = if cfg.package == null then "ghostty" else "${lib.getExe cfg.package}";
+              in
+              "${binPath} +validate-config --config-file=${config.xdg.configHome}/ghostty/${file}";
           in
           lib.mkMerge [
             {
