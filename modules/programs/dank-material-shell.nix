@@ -20,10 +20,10 @@ let
   jsonFormat = pkgs.formats.json { };
 
   hasPluginSettings = lib.any (plugin: plugin.settings != { }) (
-    lib.attrValues (lib.filterAttrs (n: v: v.enable) cfg.plugins)
+    lib.attrValues (lib.filterAttrs (_n: v: v.enable) cfg.plugins)
   );
-  pluginSettings = lib.mapAttrs (name: plugin: { enabled = plugin.enable; } // plugin.settings) (
-    lib.filterAttrs (n: v: v.enable) cfg.plugins
+  pluginSettings = lib.mapAttrs (_name: plugin: { enabled = plugin.enable; } // plugin.settings) (
+    lib.filterAttrs (_n: v: v.enable) cfg.plugins
   );
 
   common = {
@@ -39,9 +39,9 @@ let
     ++ lib.optional cfg.enableAudioWavelength pkgs.cava
     ++ lib.optional cfg.enableCalendarEvents pkgs.khal;
 
-    plugins = lib.mapAttrs (name: plugin: {
+    plugins = lib.mapAttrs (_name: plugin: {
       source = plugin.src;
-    }) (lib.filterAttrs (n: v: v.enable) cfg.plugins);
+    }) (lib.filterAttrs (_n: v: v.enable) cfg.plugins);
   };
 
   path = [
@@ -169,7 +169,7 @@ in
               description = "Source of the plugin package or path";
             };
             settings = lib.mkOption {
-              type = jsonFormat.type;
+              inherit (jsonFormat) type;
               default = { };
               description = "Plugin settings as an attribute set";
             };
