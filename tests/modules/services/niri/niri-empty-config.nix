@@ -1,5 +1,3 @@
-{ lib, ... }:
-
 {
   wayland.windowManager.niri = {
     enable = true;
@@ -10,7 +8,7 @@
     # Disabling systemd and portal should not link the files
     portalPackage = null;
     systemd.enable = false;
-    xwaylandSatellite = null;
+    xwaylandSatellitePackage = null;
 
     # Empty Config should not generate `$XDG_CONFIG_HOME/niri/config.kdl`
     extraConfigEarly = "";
