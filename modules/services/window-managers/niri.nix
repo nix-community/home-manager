@@ -8,7 +8,10 @@ let
   cfg = config.wayland.windowManager.niri;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ lukasngl ];
+  meta.maintainers = with lib.maintainers; [
+    lukasngl
+    glmlm
+  ];
 
   options.wayland.windowManager.niri = {
     enable = lib.mkEnableOption "niri";

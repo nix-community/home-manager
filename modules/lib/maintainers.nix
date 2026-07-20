@@ -228,6 +228,11 @@
     github = "gauthsvenkat";
     githubId = 26820345;
   };
+  glmlm = {
+    email = "91877885+glmlm@users.noreply.github.com";
+    github = "glmlm";
+    githubId = 91877885;
+  };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
