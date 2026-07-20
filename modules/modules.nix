@@ -16,6 +16,7 @@
 }:
 
 let
+  hasNixSuffix = lib.hasSuffix ".nix";
 
   modules = builtins.concatLists [
     [
@@ -86,9 +87,7 @@ let
           (
             dir:
             lib.pipe (builtins.readDir dir) [
-              (lib.filterAttrs (
-                _path: kind: kind == "directory" || (kind == "regular" && lib.hasSuffix ".nix" _path)
-              ))
+              (lib.filterAttrs (path: kind: kind == "directory" || (kind == "regular" && hasNixSuffix path)))
               (lib.mapAttrsToList (path: _kind: lib.path.append dir path))
             ]
           )
