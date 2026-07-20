@@ -20,16 +20,14 @@ let
   jsonFormat = pkgs.formats.json { };
 
   hasPluginSettings = lib.any (plugin: plugin.settings != { }) (
-    lib.attrValues (lib.filterAttrs (n: v: v.enable) cfg.plugins)
+    lib.attrValues (lib.filterAttrs (_n: v: v.enable) cfg.plugins)
   );
-  pluginSettings = lib.mapAttrs (name: plugin: { enabled = plugin.enable; } // plugin.settings) (
-    lib.filterAttrs (n: v: v.enable) cfg.plugins
+  pluginSettings = lib.mapAttrs (_name: plugin: { enabled = plugin.enable; } // plugin.settings) (
+    lib.filterAttrs (_n: v: v.enable) cfg.plugins
   );
 
   common = {
-    packages = [
-      cfg.package
-    ]
+    packages = lib.optional (cfg.package != null) cfg.package
     ++ lib.optional cfg.enableSystemMonitoring cfg.dgop.package
     ++ lib.optionals cfg.enableVPN [
       pkgs.glib
@@ -39,9 +37,9 @@ let
     ++ lib.optional cfg.enableAudioWavelength pkgs.cava
     ++ lib.optional cfg.enableCalendarEvents pkgs.khal;
 
-    plugins = lib.mapAttrs (name: plugin: {
+    plugins = lib.mapAttrs (_name: plugin: {
       source = plugin.src;
-    }) (lib.filterAttrs (n: v: v.enable) cfg.plugins);
+    }) (lib.filterAttrs (_n: v: v.enable) cfg.plugins);
   };
 
   path = [
@@ -169,7 +167,7 @@ in
               description = "Source of the plugin package or path";
             };
             settings = lib.mkOption {
-              type = jsonFormat.type;
+              inherit (jsonFormat) type;
               default = { };
               description = "Plugin settings as an attribute set";
             };
@@ -214,7 +212,7 @@ in
 
     managePluginSettings = mkOption {
       type = lib.types.bool;
-      default = hasPluginSettings;
+      default = lib.any (plugin: plugin.enable) (lib.attrValues cfg.plugins);
       defaultText = lib.literalExpression ''
         true if any enabled plugin has non-empty `settings`, otherwise false
       '';
@@ -234,12 +232,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [{
+      assertion = cfg.systemd.enable -> cfg.package != null;
+      message = "programs.dank-material-shell.systemd.enable requires a non-null package.";
+    }];
     programs.quickshell = {
       enable = true;
       inherit (cfg.quickshell) package;
     };
 
-    systemd.user.services.dms = mkIf cfg.systemd.enable {
+    systemd.user.services.dms = mkIf (cfg.systemd.enable && cfg.package != null) {
       Unit = {
         Description = "DankMaterialShell";
         PartOf = [ cfg.systemd.target ];
