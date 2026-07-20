@@ -115,7 +115,7 @@ let
       scale = mkOption {
         type = types.nullOr types.float;
         default = null;
-        example = 2;
+        example = 2.0;
         description = ''
           Scales the output by the specified scale factor.
         '';
@@ -278,7 +278,7 @@ in
         [
           { include = "path/to/included/files"; }
           { output.criteria = "eDP-1";
-            output.scale = 2;
+            output.scale = 2.0;
           }
           { profile.name = "undocked";
             profile.outputs = [
