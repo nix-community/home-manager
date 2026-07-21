@@ -22,68 +22,7 @@ let
     else
       "${before}-${after}";
 
-  # Translate a NixOS-style systemd unit attrset (wantedBy, serviceConfig,
-  # unitConfig, environment, ...) into the section-based INI shape that
-  # Home Manager's `systemd.user.<unitType>` expects (Unit/Service/Install).
-  # Only the common keys are mapped; uncommon options can still be set
-  # explicitly via `unitConfig` / `serviceConfig` / `socketConfig`.
-  unitAttrKeys = [
-    "description"
-    "documentation"
-    "requires"
-    "wants"
-    "upholds"
-    "after"
-    "before"
-    "bindsTo"
-    "partOf"
-    "conflicts"
-    "requisite"
-    "onFailure"
-    "onSuccess"
-  ];
-  pickSection =
-    keys: src:
-    lib.listToAttrs (
-      lib.concatMap (
-        k:
-        lib.optional (src ? ${k} && src.${k} != null && src.${k} != [ ]) {
-          name = lib.toSentenceCase k;
-          value = normalizeTargets src.${k};
-        }
-      ) keys
-    );
-  envToList =
-    env: lib.mapAttrsToList (k: v: "${k}=${toString v}") (lib.filterAttrs (_: v: v != null) env);
-  normalizeTarget = t: if t == "multi-user.target" then "default.target" else t;
-  normalizeTargets = v: if lib.isList v then map normalizeTarget v else v;
-  installSection =
-    u:
-    lib.filterAttrs (_: v: v != [ ]) {
-      WantedBy = map normalizeTarget (u.wantedBy or [ ]);
-      RequiredBy = map normalizeTarget (u.requiredBy or [ ]);
-    };
-  toHmIni = unit: {
-    Unit = pickSection unitAttrKeys unit // (unit.unitConfig or { });
-    Service =
-      (unit.serviceConfig or { })
-      // lib.optionalAttrs (unit ? environment && unit.environment != { }) {
-        Environment = envToList unit.environment;
-      };
-    Install = installSection unit;
-  };
-  toHmIniSocket = sock: {
-    Unit = pickSection unitAttrKeys sock // (sock.unitConfig or { });
-    Socket =
-      (sock.socketConfig or { })
-      // lib.optionalAttrs (sock ? listenStreams && sock.listenStreams != [ ]) {
-        ListenStream = sock.listenStreams;
-      }
-      // lib.optionalAttrs (sock ? listenDatagrams && sock.listenDatagrams != [ ]) {
-        ListenDatagram = sock.listenDatagrams;
-      };
-    Install = installSection sock;
-  };
+  inherit (lib.hm.systemd) toHmIni toHmIniSocket;
 
   # Evaluate a deferredModule into attrs, then translate.
   evalDeferred =
