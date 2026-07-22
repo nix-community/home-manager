@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ab112b68.js";
+            window.path_to_searchindex_js = "searchindex-cb39fd6d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a22c24be.js"></script>
@@ -49626,7 +49626,9 @@ a key-value pair like this:
 <p>On macOS, FUSE mounts additionally require macFUSE
 (<a href="https://osxfuse.github.io/">https://osxfuse.github.io/</a>) to be installed and its system extension
 approved. Home Manager does not install macFUSE; rclone will surface
-a runtime error if it is missing.</p>
+a runtime error if it is missing. Alternatively, set
+<code>mountType</code> to <code>"nfsmount"</code> to mount via the system NFS
+client instead, which requires no additional software.</p>
 <p><em>Type:</em>
 attribute set of (submodule)</p>
 <p><em>Default:</em></p>
@@ -49702,6 +49704,34 @@ string</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"/home/alice/my-remote"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix">&lt;home-manager/modules/programs/rclone.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.rclone.remotes._name_.mounts._name_.mountType"><a class="header" href="#opt-programs.rclone.remotes._name_.mounts._name_.mountType">programs.rclone.remotes.&lt;name&gt;.mounts.&lt;name&gt;.mountType</a></h2>
+<p>Which rclone command performs the mount.</p>
+<p><code>mount</code> uses FUSE, which on macOS requires macFUSE and its
+kernel extension. <code>nfsmount</code> instead runs an in-process NFS
+server and mounts it via the system NFS client — no FUSE
+driver, kernel extension, or Recovery-mode security downgrade
+needed, making it the recommended type on macOS. See
+<a href="https://rclone.org/commands/rclone_nfsmount/">https://rclone.org/commands/rclone_nfsmount/</a> for details
+and caveats.</p>
+<p>For <code>nfsmount</code>, <code>nfs-cache-type = "disk"</code> is added to
+<code>options</code> by default (overridable) so that NFS file
+handles survive rclone restarts; the in-memory default would
+leave the kernel client with stale handles whenever the
+service is restarted.</p>
+<p>On Linux, mounting NFS normally requires root, so <code>nfsmount</code>
+is primarily useful on Darwin.</p>
+<p><em>Type:</em>
+one of “mount”, “nfsmount”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"mount"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"nfsmount"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
