@@ -42,7 +42,7 @@ in
           example = "set -x SSH_AUTH_SOCK $HOME/.ssh/agent.sock";
         };
         nushell = mkShellInitOption "nushell" // {
-          example = "$env.SSH_AUTH_SOCK = $HOME/.ssh/agent.sock";
+          example = "$env.SSH_AUTH_SOCK = ($nu.home-dir | path join .ssh agent.sock)";
         };
         zsh = mkShellInitOption "zsh" // {
           example = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
