@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cb39fd6d.js";
+            window.path_to_searchindex_js = "searchindex-40fa25af.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a22c24be.js"></script>
@@ -82340,7 +82340,7 @@ string</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">"$env.SSH_AUTH_SOCK = $HOME/.ssh/agent.sock"
+<pre><code class="language-nix">"$env.SSH_AUTH_SOCK = ($nu.home-dir | path join .ssh agent.sock)"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
