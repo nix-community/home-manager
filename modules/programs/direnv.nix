@@ -147,9 +147,19 @@ in
               $env.config.hooks.pre_prompt?
               | default []
               | append {||
-                  ${getExe cfg.package} export json
-                  | from json --strict
-                  | default {}
+                  let direnv = (
+                      ${getExe cfg.package} export json
+                      | from json --strict
+                      | default {}
+                  )
+
+                  for key in ($direnv | columns) {
+                      if ($direnv | get $key) == null {
+                          hide-env --ignore-errors $key
+                      }
+                  }
+
+                  $direnv
                   | items {|key, value|
                       let value = do (
                           {
@@ -164,6 +174,7 @@ in
                       ) $value
                       return [ $key $value ]
                   }
+                  | where {|pair| $pair.1 != null }
                   | into record
                   | load-env
               }

@@ -99,6 +99,10 @@ in
         'direnv export json'
       assertFileRegex "${nushellConfigFile}" \
         'load-env'
+      # Variables direnv marks for removal (null values) must be unset via
+      # hide-env; load-env alone cannot remove them and leaves empty ghosts.
+      assertFileRegex "${nushellConfigFile}" \
+        'hide-env'
 
       # Test mise integration creates library file
       assertFileExists home-files/.config/direnv/lib/hm-mise.sh
