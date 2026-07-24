@@ -73,10 +73,11 @@ in
       export TERM="$TERM"
     '';
 
-    # We need to source both nix.sh and hm-session-vars.sh as noted in
+    # hm-session-vars.sh sources nix.sh from its guarded extra section when
+    # needed. Source only the Home Manager file here so nix.sh does not run
+    # twice in login shells that read both .profile and .bashrc. See
     # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
     programs.bash.initExtra = ''
-      . "${nixPkg}/etc/profile.d/nix.sh"
       . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
     '';
 
