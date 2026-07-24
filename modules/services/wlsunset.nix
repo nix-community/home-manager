@@ -130,8 +130,8 @@ in
         message = "Both `latitude and `longitude` together must be set for wlsunset";
       }
       {
-        assertion = ((cfg.latitude != null) || (cfg.longitude != null)) == (cfg.duration == null);
-        message = "Cannot set duration if `latitude` or `longitude` are set";
+        assertion = cfg.duration == null || (cfg.latitude == null && cfg.longitude == null);
+        message = "Cannot set `duration` if `latitude` or `longitude` are set";
       }
     ];
 
