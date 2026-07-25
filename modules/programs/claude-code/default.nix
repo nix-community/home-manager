@@ -82,6 +82,7 @@ in
     let
       helpers = claudeCodeLib.mkHelpers { inherit (cfg) configDir; };
       inherit (helpers)
+        derivePluginName
         mkHookEntries
         mkInstalledMarketplaceEntry
         mkMarkdownEntries
@@ -118,14 +119,26 @@ in
         )
       );
 
+      # The list form predates named plugins and is kept working, with a
+      # warning, so existing configurations keep evaluating.
+      pluginsAreList = builtins.isList cfg.plugins;
+
+      pluginSources = if pluginsAreList then cfg.plugins else lib.attrValues cfg.plugins;
+
+      managedPluginEntries =
+        if pluginsAreList then
+          map (plugin: mkPluginEntry (derivePluginName plugin) plugin) cfg.plugins
+        else
+          lib.mapAttrsToList mkPluginEntry cfg.plugins;
+
       pluginEntries =
         lib.optional (generatedPluginFiles != [ ]) {
           name = "claude-code-home-manager";
           source = generatedPlugin;
         }
-        ++ map mkPluginEntry cfg.plugins;
+        ++ managedPluginEntries;
 
-      legacyPluginPaths = lib.optional (generatedPluginFiles != [ ]) generatedPlugin ++ cfg.plugins;
+      legacyPluginPaths = lib.optional (generatedPluginFiles != [ ]) generatedPlugin ++ pluginSources;
 
       hasManagedPlugins = legacyPluginPaths != [ ];
       useLegacyPluginWrapper = hasManagedPlugins && !supportsPersonalPlugins;
@@ -161,13 +174,18 @@ in
           lib.optionalAttrs skillsAreDirectory (builtins.readDir cfg.skills)
       );
 
+      # Each plugin is linked as a single directory symlink rather than
+      # recursively. Claude Code discovers a plugin's `agents/` and `commands/`
+      # entries with a `readdir` that only accepts regular files, so recursive
+      # linking - which materializes a real directory holding one symlink per
+      # file - silently drops every agent and command the plugin provides.
+      # Symlinked directories are followed, so a whole-plugin link keeps them.
       pluginFileEntries = lib.optionalAttrs supportsPersonalPlugins (
         lib.listToAttrs (
           map (
             plugin:
             lib.nameValuePair "${cfg.configDir}/skills/${plugin.name}" {
               inherit (plugin) source;
-              recursive = true;
             }
           ) pluginEntries
         )
@@ -175,15 +193,24 @@ in
 
     in
     lib.mkIf cfg.enable {
-      warnings = lib.optional (useLegacyPluginWrapper && supportsPluginDir) ''
-        `programs.claude-code.package` ${
-          if hasPackageVersion then "version ${packageVersion}" else "has no detectable version and"
-        }
-        uses the legacy `--plugin-dir` wrapper. Strict-parser subcommands such
-        as `claude rc` may reject managed MCP, LSP, or plugin arguments. Upgrade
-        Claude Code to version 2.1.157 or later to use persistent personal
-        plugins instead.
-      '';
+      warnings =
+        lib.optional (pluginsAreList && cfg.plugins != [ ]) ''
+          `programs.claude-code.plugins` is set to a list. Names are then derived
+          from each entry's base name, which for store paths yields unstable
+          directory names such as `bxa1s0m3h4sh-source`. Use an attribute set
+          instead so plugin directory names stay stable and readable:
+
+            plugins.my-plugin = ./my-plugin;
+        ''
+        ++ lib.optional (useLegacyPluginWrapper && supportsPluginDir) ''
+          `programs.claude-code.package` ${
+            if hasPackageVersion then "version ${packageVersion}" else "has no detectable version and"
+          }
+          uses the legacy `--plugin-dir` wrapper. Strict-parser subcommands such
+          as `claude rc` may reject managed MCP, LSP, or plugin arguments. Upgrade
+          Claude Code to version 2.1.157 or later to use persistent personal
+          plugins instead.
+        '';
 
       assertions =
         let

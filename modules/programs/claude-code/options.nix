@@ -148,30 +148,45 @@ in
     };
 
     plugins = lib.mkOption {
-      type = with lib.types; listOf (either package path);
-      default = [ ];
+      type = with lib.types; either (attrsOf (either package path)) (listOf (either package path));
+      default = { };
       description = ''
-        List of plugins to use when running Claude Code.
-        Each entry is either:
+        Plugins to use when running Claude Code.
+        The attribute name becomes the plugin directory name, and the value is
+        either:
         - A path to the plugin directory
         - The plugin package, whether a nix package or the output of a fetcher
-        With Claude Code 2.1.157 or later, plugins are linked into
-        {option}`programs.claude-code.configDir` and loaded as personal plugins.
+        With Claude Code 2.1.157 or later, each plugin is symlinked into the
+        {file}`skills/` subdirectory of
+        {option}`programs.claude-code.configDir` and loaded as a personal
+        plugin, exposing its skills, agents, commands, hooks, and MCP servers.
         Versions 2.1.76 through 2.1.156 fall back to a legacy `--plugin-dir`
         wrapper, as do packages without detectable version metadata.
         Strict-parser subcommands such as {command}`claude rc` may reject
         arguments from that compatibility path.
+
+        A plugin that lives in a subdirectory of a larger repository can be
+        referenced through a store path, in which case only that subdirectory
+        is linked and the surrounding repository is left out.
+
+        A plain list of plugins is still accepted but deprecated, since the
+        directory name is then derived from each entry's base name and store
+        paths produce unstable names such as `bxa1s0m3h4sh-source`.
       '';
       example = literalExpression ''
-        [
-          ./my-local-plugin
-          fetchFromGitHub {
+        {
+          my-local-plugin = ./my-local-plugin;
+          claude-plugin = fetchFromGitHub {
             owner = "some-github-org";
             repo = "claude-plugin";
             rev = "779a68ebc2a75e4a184d2c87e5a43a758e6458a1";
             sha256 = "228fdd7e5908ea1d2f65218ecd9c71e1eefa0834d200d55fbb8bf8b5563acec0";
-          }
-        ]
+          };
+
+          # A plugin can also be a subdirectory within a package source
+          # (store path).
+          nested-plugin = "''${pkgs.some-package.src}/claude-plugin";
+        }
       '';
     };
 

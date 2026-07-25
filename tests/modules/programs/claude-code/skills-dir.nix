@@ -2,7 +2,7 @@
   programs.claude-code = {
     enable = true;
     skills = ./skills;
-    plugins = [ ./test-plugin ];
+    plugins.test-plugin = ./test-plugin;
   };
 
   nmt.script = ''
@@ -12,7 +12,7 @@
       home-files/.claude/skills/test-skill/SKILL.md \
       ${./skills/test-skill/SKILL.md}
     assertFileContent \
-      home-files/.claude/skills/${baseNameOf (toString ./test-plugin)}/.claude-plugin/plugin.json \
+      home-files/.claude/skills/test-plugin/.claude-plugin/plugin.json \
       ${./test-plugin/.claude-plugin/plugin.json}
   '';
 }

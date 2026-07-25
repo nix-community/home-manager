@@ -8,6 +8,7 @@
   claude-code-mcp-integration = ./mcp-integration.nix;
   claude-code-assertion = ./assertion.nix;
   claude-code-collision-assertions = ./collision-assertions.nix;
+  claude-code-collision-assertions-legacy-list = ./collision-assertions-legacy-list.nix;
   claude-code-context-inline = ./memory-management.nix;
   claude-code-context-path = ./memory-from-source.nix;
   claude-code-rules-dir = ./rules-dir.nix;
@@ -27,6 +28,8 @@
   claude-code-output-styles = ./output-styles.nix;
   claude-code-output-styles-not-set = ./output-styles-not-set.nix;
   claude-code-plugins = ./plugins.nix;
+  claude-code-plugins-legacy-list = ./plugins-legacy-list.nix;
+  claude-code-plugins-subdir = ./plugins-subdir.nix;
   claude-code-versionless-package = ./versionless-package.nix;
   claude-code-marketplacess = ./marketplaces.nix;
 }
