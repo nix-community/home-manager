@@ -8,10 +8,18 @@
 # drop in unchanged. Then overrides the primary unit's `wantedBy` default
 # to `default.target`, since user units typically attach to that instead
 # of `multi-user.target`.
-{ lib, nixpkgsPath, ... }:
+args@{
+  lib,
+  nixpkgsPath,
+  ...
+}:
+let
+  systemdServiceModule = import (nixpkgsPath + "/nixos/modules/system/service/systemd/service.nix");
+  systemdServiceModuleArgs = builtins.intersectAttrs (builtins.functionArgs systemdServiceModule) args;
+in
 {
   imports = [
-    (nixpkgsPath + "/nixos/modules/system/service/systemd/service.nix")
+    (systemdServiceModule systemdServiceModuleArgs)
   ];
 
   # The empty key `""` is the modular service's *primary* unit (see
