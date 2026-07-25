@@ -66,7 +66,7 @@
       };
     };
 
-    plugins = [ ./test-plugin ];
+    plugins.test-plugin = ./test-plugin;
   };
 
   test.asserts.warnings.expected = [

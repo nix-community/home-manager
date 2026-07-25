@@ -1,8 +1,4 @@
 { config, ... }:
-let
-  plugin = ./test-plugin;
-  pluginDirName = baseNameOf (toString plugin);
-in
 {
   programs.claude-code = {
     enable = true;
@@ -15,15 +11,18 @@ in
         chmod 755 $out/bin/claude
       '';
     };
-    plugins = [
-      plugin
-      plugin
-    ];
-    skills.${pluginDirName} = "test skill";
+
+    # An attribute set cannot hold duplicate names, so uniqueness can only be
+    # violated by colliding with the generated Home Manager plugin, which is
+    # present because `mcpServers` is set.
+    mcpServers.github = {
+      type = "http";
+      url = "https://api.githubcopilot.com/mcp/";
+    };
+    plugins.claude-code-home-manager = ./test-plugin;
   };
 
   test.asserts.assertions.expected = [
     "`programs.claude-code.plugins` entries must resolve to unique personal-plugin directory names"
-    "`programs.claude-code.skills` and managed plugins must have unique directory names"
   ];
 }
