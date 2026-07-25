@@ -28,7 +28,7 @@ jobs:
           echo "Found $COUNT changed module files."
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/labeler@v6
+      - uses: actions/labeler@v7
         if: steps.count.outputs.count <= 10
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
