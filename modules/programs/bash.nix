@@ -220,6 +220,27 @@ in
 
       sessionVarsStr = config.lib.shell.exportAll cfg.sessionVariables;
 
+      generatedSessionVariableNames = lib.unique (
+        lib.attrNames (lib.filterAttrs (_name: value: value != null) config.home.sessionVariables)
+        ++ lib.attrNames config.home.sessionSearchVariables
+        ++ lib.attrNames config.home.sessionSearchVariablesAppend
+      );
+      bashSessionVars = import ../lib/bash-session-variables.nix { inherit lib; } {
+        genericNames = generatedSessionVariableNames;
+        bashOwnedNames = lib.filter (
+          name: (cfg.sessionVariables.${name} or null) != null
+        ) generatedSessionVariableNames;
+        hasProfileExtra = cfg.profileExtra != "";
+        sessionVariablesPackage = config.home.sessionVariablesPackage;
+      };
+      profileExtraStr = lib.concatStringsSep "\n" (
+        lib.filter (value: value != "") [
+          bashSessionVars.beforeProfileExtra
+          cfg.profileExtra
+          bashSessionVars.afterProfileExtra
+        ]
+      );
+
       historyControlStr = (
         lib.concatStringsSep "\n" (
           lib.mapAttrsToList (n: v: "${n}=${v}") (
@@ -270,10 +291,16 @@ in
 
         ${sessionVarsStr}
 
-        ${cfg.profileExtra}
+        ${profileExtraStr}
       '';
 
       home.file.".bashrc".source = writeBashScript "bashrc" ''
+        # Refresh interactive child shells before user bashrc code. Skip login
+        # shells, which already ran .profile, and non-interactive SSH commands.
+        if [[ $- == *i* ]] && ! shopt -q login_shell; then
+          ${bashSessionVars.refresh}
+        fi
+
         ${cfg.bashrcExtra}
 
         # Commands that should be applied only for interactive shells.

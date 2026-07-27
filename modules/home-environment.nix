@@ -12,6 +12,20 @@ let
 
   cfg = config.home;
 
+  guardSessionVariable =
+    name: code:
+    let
+      indentedCode = lib.replaceStrings [ "\n" ] [ "\n    " ] code;
+    in
+    ''
+      case " ''${__HM_SESS_VARS_SKIP-} " in
+        *" ${name} "*) ;;
+        *)
+          ${indentedCode}
+          ;;
+      esac
+    '';
+
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
@@ -703,16 +717,20 @@ in
         # Plain variables refresh on every source. Search variables add only
         # missing entries. The extra section remains once per session.
 
-        ${config.lib.shell.exportAll cfg.sessionVariables}
+        ${lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (env: value: guardSessionVariable env (config.lib.shell.export env value)) (
+            lib.filterAttrs (_env: value: value != null) cfg.sessionVariables
+          )
+        )}
       ''
       + lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
-          env: values: config.lib.shell.idempotentPrepend ":" env values
+          env: values: guardSessionVariable env (config.lib.shell.idempotentPrepend ":" env values)
         ) cfg.sessionSearchVariables
       )
       + lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
-          env: values: config.lib.shell.idempotentAppend ":" env values
+          env: values: guardSessionVariable env (config.lib.shell.idempotentAppend ":" env values)
         ) cfg.sessionSearchVariablesAppend
       )
       + ''
