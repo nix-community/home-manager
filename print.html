@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cdc8049e.js";
+            window.path_to_searchindex_js = "searchindex-d53f95b6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a22c24be.js"></script>
@@ -19640,33 +19640,46 @@ attribute set of (strings concatenated with “\n” or absolute path)</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/claude-code/options.nix">&lt;home-manager/modules/programs/claude-code/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.claude-code.plugins"><a class="header" href="#opt-programs.claude-code.plugins">programs.claude-code.plugins</a></h2>
-<p>List of plugins to use when running Claude Code.
-Each entry is either:</p>
+<p>Plugins to use when running Claude Code.
+The attribute name becomes the plugin directory name, and the value is
+either:</p>
 <ul>
 <li>A path to the plugin directory</li>
 <li>The plugin package, whether a nix package or the output of a fetcher
-With Claude Code 2.1.157 or later, plugins are linked into
-<code>programs.claude-code.configDir</code> and loaded as personal plugins.
+With Claude Code 2.1.157 or later, each plugin is symlinked into the
+<code>skills/</code> subdirectory of
+<code>programs.claude-code.configDir</code> and loaded as a personal
+plugin, exposing its skills, agents, commands, hooks, and MCP servers.
 Versions 2.1.76 through 2.1.156 fall back to a legacy <code>--plugin-dir</code>
 wrapper, as do packages without detectable version metadata.
 Strict-parser subcommands such as <code>claude rc</code> may reject
 arguments from that compatibility path.</li>
 </ul>
+<p>A plugin that lives in a subdirectory of a larger repository can be
+referenced through a store path, in which case only that subdirectory
+is linked and the surrounding repository is left out.</p>
+<p>A plain list of plugins is still accepted but deprecated, since the
+directory name is then derived from each entry’s base name and store
+paths produce unstable names such as <code>bxa1s0m3h4sh-source</code>.</p>
 <p><em>Type:</em>
-list of (package or absolute path)</p>
+(attribute set of (package or absolute path)) or list of (package or absolute path)</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
+<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  ./my-local-plugin
-  fetchFromGitHub {
+<pre><code class="language-nix">{
+  my-local-plugin = ./my-local-plugin;
+  claude-plugin = fetchFromGitHub {
     owner = "some-github-org";
     repo = "claude-plugin";
     rev = "779a68ebc2a75e4a184d2c87e5a43a758e6458a1";
     sha256 = "228fdd7e5908ea1d2f65218ecd9c71e1eefa0834d200d55fbb8bf8b5563acec0";
-  }
-]
+  };
+
+  # A plugin can also be a subdirectory within a package source
+  # (store path).
+  nested-plugin = "${pkgs.some-package.src}/claude-plugin";
+}
 
 </code></pre>
 <p><em>Declared by:</em></p>
