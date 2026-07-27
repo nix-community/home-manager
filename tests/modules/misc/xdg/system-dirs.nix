@@ -33,9 +33,34 @@
       sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
       assertFileExists $sessionVarsFile
       assertFileContains $sessionVarsFile \
-        'export XDG_CONFIG_DIRS="/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}"'
+        '__hm_entry="/etc/xdg"'
       assertFileContains $sessionVarsFile \
-        'export XDG_DATA_DIRS="/usr/local/share:/usr/share:/baz/quux''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"'
+        '__hm_entry="/foo/bar"'
+      assertFileContains $sessionVarsFile \
+        '__hm_cur="''${XDG_CONFIG_DIRS-}"'
+      assertFileContains $sessionVarsFile \
+        '  __hm_cur="$__hm_add''${__hm_cur:+:}$__hm_cur"'
+      assertFileContains $sessionVarsFile \
+        'export XDG_CONFIG_DIRS="$__hm_cur"'
+      assertFileContains $sessionVarsFile \
+        '__hm_entry="/usr/local/share"'
+      assertFileContains $sessionVarsFile \
+        '__hm_entry="/usr/share"'
+      assertFileContains $sessionVarsFile \
+        '__hm_entry="/baz/quux"'
+      assertFileContains $sessionVarsFile \
+        '__hm_cur="''${XDG_DATA_DIRS-}"'
+      assertFileContains $sessionVarsFile \
+        'export XDG_DATA_DIRS="$__hm_cur"'
+      # Each value must be prepended, not appended. Checked inside that
+      # variable's own merge block: on Darwin the terminfo fallback adds a
+      # genuine append block elsewhere in the same file.
+      grep -B 3 -F 'export XDG_CONFIG_DIRS="$__hm_cur"' "$TESTED/$sessionVarsFile" \
+        | grep -qF '__hm_cur="$__hm_add' \
+        || fail 'XDG_CONFIG_DIRS must be prepended, not appended'
+      grep -B 3 -F 'export XDG_DATA_DIRS="$__hm_cur"' "$TESTED/$sessionVarsFile" \
+        | grep -qF '__hm_cur="$__hm_add' \
+        || fail 'XDG_DATA_DIRS must be prepended, not appended'
     '';
   };
 }

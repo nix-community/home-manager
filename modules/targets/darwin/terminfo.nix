@@ -15,9 +15,13 @@ in
     # Not using `home.sessionSearchVariables` because it only prepends, whereas
     # we need `/usr/share/terminfo` appended as an explicit fallback: once
     # TERMINFO_DIRS is set, ncurses stops searching the default system path.
-    home.sessionVariables = {
-      TERMINFO_DIRS = lib.mkDefault "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}/usr/share/terminfo";
-    };
+    #
+    # The value must not reference TERMINFO_DIRS itself: plain session
+    # variables are re-exported every time `hm-session-vars.sh` is sourced, so
+    # a self-referential value would grow in nested shells. A TERMINFO_DIRS
+    # already set outside Home Manager is therefore replaced rather than
+    # extended; set this option explicitly to keep such a value.
+    home.sessionVariables.TERMINFO_DIRS = lib.mkDefault "${profileDirectory}/share/terminfo:/usr/share/terminfo";
 
     home.sessionVariablesExtra = ''
       # reset TERM with new TERMINFO available (if any)

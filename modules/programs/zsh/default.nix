@@ -425,9 +425,12 @@ in
         # Environment variables
         . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
-        # Only source this once
+        # Only source this once per shell. The guard is deliberately not
+        # exported: hm-session-vars.sh is re-sourced by every shell, so a
+        # nested shell that skipped this block would come up with Home
+        # Manager's values overriding `programs.zsh.sessionVariables`.
         if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
-          export __HM_ZSH_SESS_VARS_SOURCED=1
+          __HM_ZSH_SESS_VARS_SOURCED=1
           ${envVarsStr}
         fi
       '';
