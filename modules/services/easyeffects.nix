@@ -15,6 +15,54 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  settingType = types.nullOr (
+    types.oneOf [
+      types.bool
+      types.int
+      types.float
+      types.str
+      types.path
+    ]
+  );
+
+  settingsFile = "${config.xdg.configHome}/easyeffects/db/easyeffectsrc";
+
+  nonEmpty = settings: settings != { };
+
+  hasSettings = lib.any nonEmpty (lib.attrValues cfg.settings);
+
+  settingsOption = "`services.easyeffects.settings`";
+
+  settingsCommands = lib.concatStringsSep "\n" (
+    lib.flatten (
+      lib.mapAttrsToList (
+        group: settings:
+        lib.mapAttrsToList (
+          key: value:
+          let
+            formattedValue =
+              if value == null then
+                "--delete"
+              else if builtins.isBool value then
+                "--type bool -- ${builtins.toJSON value}"
+              else
+                "-- ${lib.escapeShellArg (toString value)}";
+          in
+          "${pkgs.kdePackages.kconfig}/bin/kwriteconfig6"
+          + " --file ${lib.escapeShellArg settingsFile}"
+          + " --group ${lib.escapeShellArg group}"
+          + " --key ${lib.escapeShellArg key}"
+          + " ${formattedValue}"
+        ) settings
+      ) cfg.settings
+    )
+  );
+
+  settingsScript = pkgs.writeShellScript "easyeffects-settings" ''
+    ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg (dirOf settingsFile)}
+    ${settingsCommands}
+  '';
+
   presetType =
     let
       baseType = types.attrsOf jsonFormat.type;
@@ -92,11 +140,34 @@ in
     };
 
     extraPresets = presetOptionType;
+
+    settings = mkOption {
+      type = types.attrsOf (types.attrsOf settingType);
+      default = { };
+      example = literalExpression ''
+        {
+          StreamInputs = {
+            inputDevice = "alsa_input.usb-example";
+            listenToMic = false;
+          };
+          StreamOutputs.useDefaultOutputDevice = true;
+        }
+      '';
+      description = ''
+        Global EasyEffects settings written to its mutable KConfig database.
+        Settings are grouped by KConfig section. A value of `null` deletes the
+        corresponding key. This option requires EasyEffects 8.0.0 or later.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.easyeffects" pkgs lib.platforms.linux)
+      {
+        assertion = !hasSettings || !olderThan8;
+        message = "${settingsOption} requires EasyEffects 8.0.0 or later.";
+      }
     ];
 
     home.packages = with pkgs; lib.optional olderThan8 at-spi2-core ++ [ cfg.package ]; # Only include if easyeffects version is below 8.0.0
@@ -119,6 +190,7 @@ in
         Description = "Easyeffects daemon";
         After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
+        X-Restart-Triggers = [ (builtins.hashString "sha256" (builtins.toJSON cfg.settings)) ];
       };
 
       Install.WantedBy = [ "graphical-session.target" ];
@@ -134,6 +206,9 @@ in
         Restart = "on-failure";
         RestartSec = 5;
         TimeoutStopSec = 10;
+      }
+      // lib.optionalAttrs hasSettings {
+        ExecStartPre = settingsScript;
       }
       // (
         if olderThan8 then
