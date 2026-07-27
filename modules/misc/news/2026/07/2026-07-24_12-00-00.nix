@@ -22,6 +22,11 @@
     to the front, so environments that deliberately reorder `PATH` (such as
     `nix develop` or direnv) are left untouched.
 
+    The new [](#opt-home.sessionSearchVariablesAppend) option is the
+    counterpart to [](#opt-home.sessionSearchVariables): it adds entries
+    behind those inherited from the environment, for trailing fallbacks such
+    as a system-wide terminfo directory.
+
     `nix.nixPath` (when `nix.keepOldNixPath` is enabled), `xdg.systemDirs.config`
     and `xdg.systemDirs.data` now use `home.sessionSearchVariables`. The
     generated file therefore contains a prepend loop for `NIX_PATH`,
@@ -58,7 +63,7 @@
     Since plain `home.sessionVariables` are re-exported every time the file is
     sourced, a value must no longer reference the variable it defines (for
     example `MANPATH = "$HOME/man:$MANPATH"`) as it would grow with every
-    nested shell. Use `home.sessionPath` or `home.sessionSearchVariables` for
-    such search paths instead.
+    nested shell. Use `home.sessionPath`, `home.sessionSearchVariables` or
+    `home.sessionSearchVariablesAppend` for such search paths instead.
   '';
 }

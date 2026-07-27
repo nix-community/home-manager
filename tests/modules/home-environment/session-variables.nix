@@ -7,11 +7,11 @@ let
   header = ''
     # This file is safe to source multiple times: session variables are
     # plain assignments and search variables (PATH and friends) only
-    # prepend non-empty entries that are not already present, so
-    # re-sourcing introduces no new duplicates and never reorders
-    # entries added by other tools. Only the extra section at the
-    # end, which may contain non-idempotent commands, runs once per
-    # session.
+    # add non-empty entries that are not already present, prepending or
+    # appending them, so re-sourcing introduces no new duplicates and
+    # never reorders entries added by other tools. Only the extra
+    # section at the end, which may contain non-idempotent commands,
+    # runs once per session.
   '';
 
   linuxExpected = header + ''
