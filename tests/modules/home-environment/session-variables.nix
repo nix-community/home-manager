@@ -39,7 +39,6 @@ let
     export IS_EMPTY=""
     export IS_FALSE="false"
     export IS_TRUE="true"
-    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:/usr/share/terminfo"
     export V1="v1"
     export V2="v2-v1"
     export XDG_BIN_HOME="/home/hm-user/.local/bin"
@@ -47,6 +46,38 @@ let
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
+    __hm_cur="''${TERMINFO_DIRS-}"
+    __hm_add=""
+    __hm_entry="/home/hm-user/.nix-profile/share/terminfo"
+    if [ -n "$__hm_entry" ]; then
+      case ":$__hm_cur:$__hm_add:" in
+        *":$__hm_entry:"*) ;;
+        *) __hm_add="$__hm_add''${__hm_add:+:}$__hm_entry" ;;
+      esac
+    fi
+    # Always export, even when nothing was added: the variable may be
+    # set but not exported in the sourcing shell.
+    if [ -n "$__hm_add" ]; then
+      __hm_cur="$__hm_add''${__hm_cur:+:}$__hm_cur"
+    fi
+    export TERMINFO_DIRS="$__hm_cur"
+    unset __hm_cur __hm_add __hm_entry
+    __hm_cur="''${TERMINFO_DIRS-}"
+    __hm_add=""
+    __hm_entry="/usr/share/terminfo"
+    if [ -n "$__hm_entry" ]; then
+      case ":$__hm_cur:$__hm_add:" in
+        *":$__hm_entry:"*) ;;
+        *) __hm_add="$__hm_add''${__hm_add:+:}$__hm_entry" ;;
+      esac
+    fi
+    # Always export, even when nothing was added: the variable may be
+    # set but not exported in the sourcing shell.
+    if [ -n "$__hm_add" ]; then
+      __hm_cur="$__hm_cur''${__hm_cur:+:}$__hm_add"
+    fi
+    export TERMINFO_DIRS="$__hm_cur"
+    unset __hm_cur __hm_add __hm_entry
 
     if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
     export __HM_SESS_VARS_SOURCED=1

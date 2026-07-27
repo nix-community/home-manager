@@ -56,9 +56,16 @@
     that inherits `__HM_SESS_VARS_SOURCED` but has lost the Nix entries from
     `PATH` consequently no longer restores them; start a new session instead.
 
-    On Darwin the default `TERMINFO_DIRS` no longer merges a value set outside
-    Home Manager, since plain session variables must not reference themselves.
-    Set `home.sessionVariables.TERMINFO_DIRS` explicitly to keep such a value.
+    On Darwin, `TERMINFO_DIRS` handling moved to the new
+    {option}`targets.darwin.terminfo.enable` option, enabled by default. It
+    keeps Home Manager's directory prepended and `/usr/share/terminfo`
+    appended around anything inherited from the environment, matching the
+    previous value. Two edge cases improve: the old value tripped `set -u`
+    when `TERMINFO_DIRS` was unset, and appended a second
+    `/usr/share/terminfo` when it was already present. Setting
+    `home.sessionVariables.TERMINFO_DIRS` no longer replaces this handling; it
+    now sets the base value that Home Manager extends. Set
+    `targets.darwin.terminfo.enable = false` to manage the variable yourself.
 
     Since plain `home.sessionVariables` are re-exported every time the file is
     sourced, a value must no longer reference the variable it defines (for
