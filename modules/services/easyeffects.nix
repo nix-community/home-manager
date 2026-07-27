@@ -69,11 +69,14 @@ let
     in
     types.addCheck baseType (
       v:
-      baseType.check v
-      && lib.elem (lib.head (lib.attrNames v)) [
-        "input"
-        "output"
-      ]
+      v != { }
+      && lib.all (
+        pipeline:
+        lib.elem pipeline [
+          "input"
+          "output"
+        ]
+      ) (lib.attrNames v)
     );
 
   presetOptionType = mkOption {
@@ -81,8 +84,8 @@ let
     default = { };
     description = ''
       List of presets to import to easyeffects.
-      Presets are written to input and output folder in `$XDG_DATA_HOME/easyeffects`.
-      Top level block (input/output) determines the folder the file is written to.
+      Presets are written to input and output folders in `$XDG_DATA_HOME/easyeffects`.
+      Each top-level block (`input` or `output`) is written to its corresponding folder.
 
       See community presets at:
       https://github.com/wwmm/easyeffects/wiki/Community-Presets
@@ -106,6 +109,14 @@ let
               release = 20.0;
               "vad-thres" = 50.0;
               wet = 0.0;
+            };
+          };
+          output = {
+            blocklist = [ ];
+            "plugins_order" = [ "limiter#0" ];
+            "limiter#0" = {
+              bypass = false;
+              threshold = -1.0;
             };
           };
         };
@@ -173,15 +184,16 @@ in
     home.packages = with pkgs; lib.optional olderThan8 at-spi2-core ++ [ cfg.package ]; # Only include if easyeffects version is below 8.0.0
 
     xdg.dataFile = lib.mkIf (cfg.extraPresets != null && cfg.extraPresets != { }) (
-      lib.mapAttrs' (
-        k: v:
-        # Assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
-        let
-          folder = builtins.head (builtins.attrNames v);
-        in
-        lib.nameValuePair "easyeffects/${folder}/${k}.json" {
-          source = jsonFormat.generate "${folder}-${k}.json" v;
-        }
+      lib.concatMapAttrs (
+        name: preset:
+        lib.mapAttrs' (
+          pipeline: settings:
+          lib.nameValuePair "easyeffects/${pipeline}/${name}.json" {
+            source = jsonFormat.generate "${pipeline}-${name}.json" {
+              "${pipeline}" = settings;
+            };
+          }
+        ) preset
       ) cfg.extraPresets
     );
 
