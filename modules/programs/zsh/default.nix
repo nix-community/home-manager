@@ -308,6 +308,13 @@ in
           description = ''
             Environment variables that will be set for zsh session.
 
+            These variables are re-applied for every new Zsh process, so a
+            value must not reference the variable it defines. Use
+            [](#opt-home.sessionPath),
+            [](#opt-home.sessionSearchVariables) or
+            [](#opt-home.sessionSearchVariablesAppend) for search paths that
+            need to include their inherited value.
+
             Setting a value to `null` will skip setting the variable at all, which
             may be useful when overriding.
           '';
@@ -425,10 +432,7 @@ in
         # Environment variables
         . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
-        # Only source this once per shell. The guard is deliberately not
-        # exported: hm-session-vars.sh is re-sourced by every shell, so a
-        # nested shell that skipped this block would come up with Home
-        # Manager's values overriding `programs.zsh.sessionVariables`.
+        # Reapply Zsh-specific values once per shell after generic values.
         if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
           __HM_ZSH_SESS_VARS_SOURCED=1
           ${envVarsStr}
