@@ -7,11 +7,14 @@
 
     Plain `home.sessionVariables` are no longer guarded by
     `__HM_SESS_VARS_SOURCED`, so newly started shells pick up changed values
-    after `home-manager switch` without logging out. Zsh sources the file from
-    `.zshenv` and Fish from `config.fish`, so those shells receive the current
-    values also under a terminal multiplexer such as tmux. Bash sources it
-    from `.profile`, so Bash picks up changed values in newly started login
-    shells.
+    after `home-manager switch` without logging out, and shells running under
+    terminal multiplexers such as tmux receive the current values. Bash now
+    also sources the file from `.bashrc`, before `programs.bash.bashrcExtra`,
+    so interactive non-login shells are refreshed too. Login shells are
+    skipped there because `.profile` already applied
+    `programs.bash.sessionVariables` and `programs.bash.profileExtra` on top,
+    and non-interactive shells are skipped so that `ssh host cmd`, scp and
+    rsync are unaffected.
 
     Non-empty entries from `home.sessionPath` and
     `home.sessionSearchVariables` are now only prepended when they are not

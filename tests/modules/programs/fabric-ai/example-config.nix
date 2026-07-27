@@ -10,7 +10,9 @@
     assertFileExists home-files/.bashrc
     assertFileExists home-files/.zshrc
 
-    assertFileContent home-files/.bashrc ${./bashrc}
+    assertFileContent \
+      "$(normalizeStorePaths home-files/.bashrc)" \
+      ${./bashrc}
     assertFileContent home-files/.zshrc ${./zshrc}
   '';
 }

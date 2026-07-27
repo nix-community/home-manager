@@ -83,7 +83,7 @@ in
       bashBin="$BASH"
       testBashrc=$TMPDIR/test-bashrc
       sed \
-        "s|${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh|$TESTED/$sessionVarsFile|" \
+        "s|${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh|$TESTED/$sessionVarsFile|" \
         "$TESTED/home-files/.bashrc" > "$testBashrc"
       HOME="$TESTED/home-files" \
         TEST_BASHRC="$testBashrc" \

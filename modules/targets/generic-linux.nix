@@ -73,14 +73,6 @@ in
       export TERM="$TERM"
     '';
 
-    # hm-session-vars.sh sources nix.sh from its guarded extra section when
-    # needed. Source only the Home Manager file here so nix.sh does not run
-    # twice in login shells that read both .profile and .bashrc. See
-    # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
-    programs.bash.initExtra = ''
-      . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
-    '';
-
     programs.zsh.envExtra = ''
       # Make system functions available to zsh
       () {
