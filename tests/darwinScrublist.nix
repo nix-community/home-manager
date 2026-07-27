@@ -79,6 +79,7 @@ let
     "google-chrome-beta"
     "google-chrome-dev"
     "gradle"
+    "gram"
     "granted"
     "guntar"
     "gurk-rs"
