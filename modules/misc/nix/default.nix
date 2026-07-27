@@ -391,7 +391,7 @@ in
       })
 
       (mkIf (cfg.nixPath != [ ] && cfg.keepOldNixPath) {
-        home.sessionVariables.NIX_PATH = "${nixPath}\${NIX_PATH:+:$NIX_PATH}";
+        home.sessionSearchVariables.NIX_PATH = cfg.nixPath;
       })
 
       (lib.mkIf (cfg.channels != { }) {

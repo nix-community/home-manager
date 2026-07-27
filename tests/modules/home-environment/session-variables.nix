@@ -4,10 +4,17 @@ let
 
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
-  linuxExpected = ''
-    # Only source this once.
-    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-    export __HM_SESS_VARS_SOURCED=1
+  header = ''
+    # This file is safe to source multiple times: session variables are
+    # plain assignments and search variables (PATH and friends) only
+    # prepend non-empty entries that are not already present, so
+    # re-sourcing introduces no new duplicates and never reorders
+    # entries added by other tools. Only the extra section at the
+    # end, which may contain non-idempotent commands, runs once per
+    # session.
+  '';
+
+  linuxExpected = header + ''
 
     export IS_EMPTY=""
     export IS_FALSE="false"
@@ -21,17 +28,18 @@ let
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
 
+    if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
+    export __HM_SESS_VARS_SOURCED=1
+
+    fi
   '';
 
-  darwinExpected = ''
-    # Only source this once.
-    if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-    export __HM_SESS_VARS_SOURCED=1
+  darwinExpected = header + ''
 
     export IS_EMPTY=""
     export IS_FALSE="false"
     export IS_TRUE="true"
-    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/usr/share/terminfo"
+    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:/usr/share/terminfo"
     export V1="v1"
     export V2="v2-v1"
     export XDG_BIN_HOME="/home/hm-user/.local/bin"
@@ -40,8 +48,12 @@ let
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
 
+    if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
+    export __HM_SESS_VARS_SOURCED=1
     # reset TERM with new TERMINFO available (if any)
     export TERM="$TERM"
+
+    fi
   '';
 
   expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
