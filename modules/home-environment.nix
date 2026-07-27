@@ -322,8 +322,9 @@ in
         home.sessionVariables.MANPATH = "$HOME/man:$MANPATH";
         ```
         would grow the variable with every nested shell. Use
-        [](#opt-home.sessionPath) or
-        [](#opt-home.sessionSearchVariables) for such search paths
+        [](#opt-home.sessionPath),
+        [](#opt-home.sessionSearchVariables) or
+        [](#opt-home.sessionSearchVariablesAppend) for such search paths
         instead.
 
         Note, these variables may be set in any order so no session
@@ -420,6 +421,45 @@ in
         Home Manager's own relative order among them is not guaranteed: if an
         earlier entry is already in the variable it keeps its old position
         while a later one is prepended in front of it.
+
+        These directories are added to the environment variable in a
+        double-quoted context, so expressions like `$HOME` are
+        expanded by the shell. However, since expressions like `~` or
+        `*` are escaped, they will end up in the environment
+        verbatim.
+      '';
+    };
+
+    home.sessionSearchVariablesAppend = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        TERMINFO_DIRS = [ "/usr/share/terminfo" ];
+      };
+      description = ''
+        Extra directories to append to arbitrary PATH-like environment
+        variables, the counterpart to
+        [](#opt-home.sessionSearchVariables), which prepends. The values will
+        be concatenated by `:`.
+
+        Use this for trailing fallbacks that must stay *behind* directories
+        inherited from the environment, such as a system-wide
+        {file}`/usr/share/terminfo`. Prefer
+        [](#opt-home.sessionSearchVariables) whenever Home Manager's
+        directories should take precedence.
+
+        Non-empty entries are only appended when they are not already present
+        in the variable, so re-sourcing the session variables does not add
+        another copy. An entry that is already present keeps its current
+        position; it is not moved to the end. Existing duplicates are not
+        removed.
+
+        Entries removed from this option are not removed from an existing
+        variable; they remain until the parent environment is reset.
+
+        Shell sessions are the only consumer: there is no
+        {file}`environment.d` counterpart, so appended values do not reach
+        systemd user services.
 
         These directories are added to the environment variable in a
         double-quoted context, so expressions like `$HOME` are
@@ -703,11 +743,11 @@ in
       text = ''
         # This file is safe to source multiple times: session variables are
         # plain assignments and search variables (PATH and friends) only
-        # prepend non-empty entries that are not already present, so
-        # re-sourcing introduces no new duplicates and never reorders
-        # entries added by other tools. Only the extra section at the
-        # end, which may contain non-idempotent commands, runs once per
-        # session.
+        # add non-empty entries that are not already present, prepending or
+        # appending them, so re-sourcing introduces no new duplicates and
+        # never reorders entries added by other tools. Only the extra
+        # section at the end, which may contain non-idempotent commands,
+        # runs once per session.
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
       ''
@@ -715,6 +755,11 @@ in
         lib.mapAttrsToList (
           env: values: config.lib.shell.idempotentPrepend ":" env values
         ) cfg.sessionSearchVariables
+      )
+      + lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          env: values: config.lib.shell.idempotentAppend ":" env values
+        ) cfg.sessionSearchVariablesAppend
       )
       + ''
 
