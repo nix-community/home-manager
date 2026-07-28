@@ -186,6 +186,7 @@ in
       let
         toKDL = lib.hm.generators.toKDL {
           escapeBackslashes = true;
+          escapeTabs = true;
         };
         settings = lib.trim (toKDL cfg.settings);
         configLines = lib.concatStringsSep "\n" (
