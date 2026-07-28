@@ -10,7 +10,7 @@ let
   cfg = config.services.linux-wallpaperengine;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.ckgxrg ];
+  meta.maintainers = [ lib.maintainers.ckgxrg ];
 
   options.services.linux-wallpaperengine = {
     enable = lib.mkEnableOption "linux-wallpaperengine, an implementation of Wallpaper Engine functionality";
