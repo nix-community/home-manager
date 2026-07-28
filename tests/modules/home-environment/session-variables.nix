@@ -5,13 +5,8 @@ let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
   header = ''
-    # This file is safe to source multiple times: session variables are
-    # plain assignments and search variables (PATH and friends) only
-    # add non-empty entries that are not already present, prepending or
-    # appending them, so re-sourcing introduces no new duplicates and
-    # never reorders entries added by other tools. Only the extra
-    # section at the end, which may contain non-idempotent commands,
-    # runs once per session.
+    # Plain variables refresh on every source. Search variables add only
+    # missing entries. The extra section remains once per session.
   '';
 
   linuxExpected = header + ''
@@ -29,8 +24,7 @@ let
     export XDG_STATE_HOME="/home/hm-user/.local/state"
 
     if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
-    export __HM_SESS_VARS_SOURCED=1
-
+      export __HM_SESS_VARS_SOURCED=1
     fi
   '';
 
@@ -46,44 +40,47 @@ let
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
-    __hm_cur="''${TERMINFO_DIRS-}"
-    __hm_add=""
-    __hm_entry="/home/hm-user/.nix-profile/share/terminfo"
-    if [ -n "$__hm_entry" ]; then
-      case ":$__hm_cur:$__hm_add:" in
-        *":$__hm_entry:"*) ;;
-        *) __hm_add="$__hm_add''${__hm_add:+:}$__hm_entry" ;;
-      esac
-    fi
-    # Always export, even when nothing was added: the variable may be
-    # set but not exported in the sourcing shell.
-    if [ -n "$__hm_add" ]; then
-      __hm_cur="$__hm_add''${__hm_cur:+:}$__hm_cur"
-    fi
-    export TERMINFO_DIRS="$__hm_cur"
-    unset __hm_cur __hm_add __hm_entry
-    __hm_cur="''${TERMINFO_DIRS-}"
-    __hm_add=""
-    __hm_entry="/usr/share/terminfo"
-    if [ -n "$__hm_entry" ]; then
-      case ":$__hm_cur:$__hm_add:" in
-        *":$__hm_entry:"*) ;;
-        *) __hm_add="$__hm_add''${__hm_add:+:}$__hm_entry" ;;
-      esac
-    fi
-    # Always export, even when nothing was added: the variable may be
-    # set but not exported in the sourcing shell.
-    if [ -n "$__hm_add" ]; then
-      __hm_cur="$__hm_cur''${__hm_cur:+:}$__hm_add"
-    fi
-    export TERMINFO_DIRS="$__hm_cur"
-    unset __hm_cur __hm_add __hm_entry
+    TERMINFO_DIRS=$(
+      __hm_cur="''${TERMINFO_DIRS-}"
+      __hm_add=""
+      __hm_entry=""
+      __hm_entry="/home/hm-user/.nix-profile/share/terminfo"
+      if [ -n "$__hm_entry" ]; then
+        case ":$__hm_cur:$__hm_add:" in
+          *":$__hm_entry:"*) ;;
+          *) __hm_add="$__hm_add''${__hm_add:+:}$__hm_entry" ;;
+        esac
+      fi
+      if [ -n "$__hm_add" ]; then
+        __hm_cur="$__hm_add''${__hm_cur:+:}$__hm_cur"
+      fi
+      printf '%s.' "$__hm_cur"
+    )
+    TERMINFO_DIRS="''${TERMINFO_DIRS%?}"
+    export TERMINFO_DIRS
+    TERMINFO_DIRS=$(
+      __hm_cur="''${TERMINFO_DIRS-}"
+      __hm_add=""
+      __hm_entry=""
+      __hm_entry="/usr/share/terminfo"
+      if [ -n "$__hm_entry" ]; then
+        case ":$__hm_cur:$__hm_add:" in
+          *":$__hm_entry:"*) ;;
+          *) __hm_add="$__hm_add''${__hm_add:+:}$__hm_entry" ;;
+        esac
+      fi
+      if [ -n "$__hm_add" ]; then
+        __hm_cur="$__hm_cur''${__hm_cur:+:}$__hm_add"
+      fi
+      printf '%s.' "$__hm_cur"
+    )
+    TERMINFO_DIRS="''${TERMINFO_DIRS%?}"
+    export TERMINFO_DIRS
 
     if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
-    export __HM_SESS_VARS_SOURCED=1
-    # reset TERM with new TERMINFO available (if any)
-    export TERM="$TERM"
-
+      export __HM_SESS_VARS_SOURCED=1
+      # reset TERM with new TERMINFO available (if any)
+      export TERM="$TERM"
     fi
   '';
 
