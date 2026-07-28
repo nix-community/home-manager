@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d53f95b6.js";
+            window.path_to_searchindex_js = "searchindex-6f428da6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a22c24be.js"></script>
@@ -85287,6 +85287,180 @@ boolean</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/labwc">&lt;home-manager/modules/services/window-managers/labwc&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.enable"><a class="header" href="#opt-wayland.windowManager.niri.enable">wayland.windowManager.niri.enable</a></h2>
+<p>Whether to enable niri.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.package"><a class="header" href="#opt-wayland.windowManager.niri.package">wayland.windowManager.niri.package</a></h2>
+<p>The niri package to use. Set to <code>null</code> to not add any niri package to your path.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.niri
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.checkConfig"><a class="header" href="#opt-wayland.windowManager.niri.checkConfig">wayland.windowManager.niri.checkConfig</a></h2>
+<p>If enabled and package is not null, validates the generated config file.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">wayland.windowManager.niri.package != null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.extraConfig"><a class="header" href="#opt-wayland.windowManager.niri.extraConfig">wayland.windowManager.niri.extraConfig</a></h2>
+<p>Extra configuration lines added to <code>$XDG_CONFIG_HOME/niri/config.kdl</code> after the config generated from the options.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.extraConfigEarly"><a class="header" href="#opt-wayland.windowManager.niri.extraConfigEarly">wayland.windowManager.niri.extraConfigEarly</a></h2>
+<p>Extra configuration lines added to <code>$XDG_CONFIG_HOME/niri/config.kdl</code> before config generated from the options.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.portalPackage"><a class="header" href="#opt-wayland.windowManager.niri.portalPackage">wayland.windowManager.niri.portalPackage</a></h2>
+<p>The xdg-desktop-portal-gnome package to use. The portal implementation to use with niri. Niri ships a portal
+configuration that prefers <code>gnome</code> and <code>gtk</code> portals.
+Set to <code>null</code> to not install any portal package.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.xdg-desktop-portal-gnome
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.settings"><a class="header" href="#opt-wayland.windowManager.niri.settings">wayland.windowManager.niri.settings</a></h2>
+<p>Configuration added to <code>$XDG_CONFIG_HOME/niri/config.kdl</code>.
+See <a href="https://yalter.github.io/niri/Configuration%3A-Introduction.html">https://yalter.github.io/niri/Configuration%3A-Introduction.html</a> for the full list of options.</p>
+<p><em>Type:</em>
+attribute set of (KDL value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  # str/num/bool → single argument
+  screenshot-path = "~/Screenshots/%Y-%m-%d %H-%M-%S.png";
+  layout.gaps = 8;
+  layout.shadow.draw-behind-window = true;
+
+  # {} → leaf node
+  prefer-no-csd = {};
+  input.touchpad.tap = {};
+
+  # _props → named properties: offset x=0 y=5
+  layout.shadow.offset._props = { x = 0; y = 5; };
+
+  # _children → ordered/repeated children
+  layout.preset-column-widths._children = [
+    { proportion = 0.33333; }
+    { proportion = 0.5; }
+  ];
+
+  # _props + list args in binds
+  binds = {
+    "Mod+H".focus-column-left = {};
+    "Mod+Return" = {
+      _props.hotkey-overlay-title = "Open a Terminal";
+      spawn = ["ghostty"];
+    };
+    "XF86AudioRaiseVolume" = {
+      _props.allow-when-locked = true;
+      spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
+    };
+  };
+
+  # _args for repeated/parameterized top-level nodes
+  _children = [
+    { workspace._args = ["chat"]; }
+    { workspace._args = ["dev"]; }
+    # _args + children
+    { output = { _args = ["eDP-1"]; scale = 2.0; }; }
+    # nested _children + _props
+    {
+      window-rule._children = [
+        { match._props = { app-id = "firefox"; at-startup = true; }; }
+        { open-on-workspace = "dev"; }
+      ];
+    }
+  ];
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.systemd.enable"><a class="header" href="#opt-wayland.windowManager.niri.systemd.enable">wayland.windowManager.niri.systemd.enable</a></h2>
+<p>Whether to install niri’s systemd units from the <code>package</code>,
+that are used by <code>niri-session</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.systemd.variables"><a class="header" href="#opt-wayland.windowManager.niri.systemd.variables">wayland.windowManager.niri.systemd.variables</a></h2>
+<p>Environment variables to be imported in the systemd &amp; D-Bus user
+environment. Not used by niri, as <code>niri-session</code> already
+imports all environment variables.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-wayland.windowManager.niri.xwaylandSatellitePackage"><a class="header" href="#opt-wayland.windowManager.niri.xwaylandSatellitePackage">wayland.windowManager.niri.xwaylandSatellitePackage</a></h2>
+<p>The xwayland-satellite package to use. With <code>xwayland-satellite</code> in the <code>$PATH</code>, niri can automatically
+start XWayland when needed. Set to <code>null</code> if you want to disable xwayland.
+See <a href="https://yalter.github.io/niri/Xwayland.html">https://yalter.github.io/niri/Xwayland.html</a>.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.xwayland-satellite
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
 </ul>
 <h2 id="opt-wayland.windowManager.river.enable"><a class="header" href="#opt-wayland.windowManager.river.enable">wayland.windowManager.river.enable</a></h2>
 <p>Whether to enable the river window manager.</p>
