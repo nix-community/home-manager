@@ -315,9 +315,9 @@ in
           default = "";
           type = types.lines;
           example = lib.literalExpression ''
-            lib.mkOrder 1200 ''''
+            lib.mkOrder 1200 '''
               echo "Hello zsh initContent!"
-            '''';
+            ''';
           '';
           description = ''
             Content to be added to {file}`.zshrc`.
