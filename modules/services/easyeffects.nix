@@ -101,7 +101,7 @@ in
 
     home.packages = with pkgs; lib.optional olderThan8 at-spi2-core ++ [ cfg.package ]; # Only include if easyeffects version is below 8.0.0
 
-    xdg.dataFile = lib.mkIf (cfg.extraPresets != { }) (
+    xdg.dataFile = lib.mkIf (cfg.extraPresets != null && cfg.extraPresets != { }) (
       lib.mapAttrs' (
         k: v:
         # Assuming only one of either input or output block is defined, having both in same file not seem to be supported by the application since it separates it by folder
