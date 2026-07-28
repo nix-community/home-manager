@@ -87,6 +87,13 @@ in
   home.file."tokdl-result-escape-backslashes.txt".text = lib.hm.generators.toKDL {
     escapeBackslashes = true;
   } testData;
+  home.file."tokdl-result-escape-tabs.txt".text = lib.hm.generators.toKDL {
+    escapeTabs = true;
+  } testData;
+  home.file."tokdl-result-escape-backslashes-tabs.txt".text = lib.hm.generators.toKDL {
+    escapeBackslashes = true;
+    escapeTabs = true;
+  } testData;
 
   nmt.script = ''
     assertFileContent \
@@ -96,5 +103,13 @@ in
     assertFileContent \
       home-files/tokdl-result-escape-backslashes.txt \
       ${./tokdl-result-escape-backslashes.txt}
+
+    assertFileContent \
+      home-files/tokdl-result-escape-tabs.txt \
+      ${./tokdl-result-escape-tabs.txt}
+
+    assertFileContent \
+      home-files/tokdl-result-escape-backslashes-tabs.txt \
+      ${./tokdl-result-escape-backslashes-tabs.txt}
   '';
 }

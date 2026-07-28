@@ -290,6 +290,7 @@ in
       );
       toKDL = lib.hm.generators.toKDL {
         escapeBackslashes = lib.versionAtLeast config.home.stateVersion "26.11";
+        escapeTabs = lib.versionAtLeast config.home.stateVersion "26.11";
       };
     in
     mkIf cfg.enable {
