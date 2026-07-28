@@ -184,7 +184,10 @@ in
 
     xdg.configFile."niri/config.kdl" =
       let
-        settings = lib.trim (lib.hm.generators.toKDL { } cfg.settings);
+        toKDL = lib.hm.generators.toKDL {
+          escapeBackslashes = true;
+        };
+        settings = lib.trim (toKDL cfg.settings);
         configLines = lib.concatStringsSep "\n" (
           lib.filter (line: line != "") [
             cfg.extraConfigEarly
