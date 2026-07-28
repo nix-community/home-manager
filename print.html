@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6f428da6.js";
+            window.path_to_searchindex_js = "searchindex-cd17230e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a22c24be.js"></script>
@@ -11034,6 +11034,29 @@ one of “gui”, “user”</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"user"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.waitForNixStore"><a class="header" href="#opt-launchd.agents._name_.waitForNixStore">launchd.agents.&lt;name&gt;.waitForNixStore</a></h2>
+<p>Whether to start the agent through a <code>/bin/sh</code> wrapper that waits
+for the Nix store to be mounted before running the agent’s
+command. This guards against launchd starting the agent before
+the Nix store volume is available, for example early during login
+when the store volume is encrypted.</p>
+<p>When disabled, the agent’s command is run through a launcher
+script named after the agent instead. This makes the agent appear
+under its own name, rather than as “sh”, in System Settings &gt;
+Login Items &amp; Extensions, but the agent will fail to start if
+launchd runs it before the Nix store is mounted.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
