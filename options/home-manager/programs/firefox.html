@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-cd2b47c9.js";
+            window.path_to_searchindex_js = "../../../searchindex-04984770.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-a22c24be.js"></script>
@@ -1309,17 +1309,19 @@ attribute set of (Firefox preference (int, bool, string, and also attrs, list, f
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox">&lt;home-manager/modules/programs/firefox&gt;</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.storeId"><a class="header" href="#opt-programs.firefox.profiles._name_.storeId">programs.firefox.profiles.&lt;name&gt;.storeId</a></h2>
-<p>Store ID. Either null, or the first segment of a UUID string.</p>
-<p>If this value is set, then profile.ini is created
-with predictable StoreIDs.</p>
-<p>This is useful to keep the StoreID static,
-which helps to bridge the firefox profiles and the new
-firefox switchable profile implementations.</p>
-<p>This should be set to a string of 8 lowercase hex characters.</p>
+<p>Store ID. Either null, or the first segment of a UUID string (8 lowercase hex characters).</p>
+<p>If this value is set, then profiles.ini is created with predictable StoreIDs.
+‘toolkit.profiles.storeID’ is also set accordingly.</p>
+<p>A predictable StoreID helps bridge the old and new firefox profile implementations.
+The StoreID is the name of the sqlite database in “Profile Groups” holding the new
+profiles’ metadata.</p>
 <p><em>Type:</em>
 null or string matching the pattern [0-9a-f]{8}</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"e41de5fe"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
