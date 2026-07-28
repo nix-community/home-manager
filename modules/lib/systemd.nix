@@ -37,8 +37,16 @@ let
   normalizeTargets = v: if lib.isList v then map normalizeTarget v else v;
 
   /*
+    Capitalize the first letter of a string while preserving the rest of its casing.
+
+    Type: upperFirstChar :: String -> String
+  */
+  upperFirstChar =
+    string: lib.toUpper (builtins.substring 0 1 string) + builtins.substring 1 (-1) string;
+
+  /*
     Filter and convert camelCase NixOS unit option keys into PascalCase INI
-    section keys using `lib.toSentenceCase`.
+    section keys using `upperFirstChar`.
 
     Type: pickSection :: List String -> AttrSet -> AttrSet
   */
@@ -48,7 +56,7 @@ let
       lib.concatMap (
         k:
         lib.optional (src ? ${k} && src.${k} != null && src.${k} != [ ]) {
-          name = lib.toSentenceCase k;
+          name = upperFirstChar k;
           value = normalizeTargets src.${k};
         }
       ) keys
