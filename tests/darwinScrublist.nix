@@ -167,6 +167,7 @@ let
     "pls"
     "podman"
     "poetry"
+    "pomo"
     "powerline-go"
     "proton-pass-cli"
     "pubs"

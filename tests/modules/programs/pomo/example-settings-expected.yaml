@@ -1,0 +1,27 @@
+%YAML 1.1
+---
+asciiArt:
+  color: '#5A56E0'
+  enabled: true
+  font: mono12
+break:
+  duration: 5m
+  notification:
+    enabled: true
+    message: back to work!
+    title: break over 😴
+    urgent: false
+  title: break session
+longBreak:
+  after: 4
+  duration: 20m
+  enabled: true
+onSessionEnd: ask
+work:
+  duration: 25m
+  notification:
+    enabled: true
+    message: time to take a break
+    title: work finished 🎉
+    urgent: false
+  title: work session
