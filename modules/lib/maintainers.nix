@@ -103,12 +103,6 @@
     github = "CarlosLoboxyz";
     githubId = 86011416;
   };
-  ckgxrg = {
-    name = "ckgxrg";
-    email = "ckgxrg@ckgxrg.io";
-    github = "ckgxrg-salt";
-    githubId = 165614491;
-  };
   csanthiago = {
     name = "csanthiago";
     email = "git@csanthiago.dev";
