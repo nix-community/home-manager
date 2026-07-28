@@ -881,7 +881,7 @@
     github = "ckgxrg-salt";
     githubId = 165614491;
     name = "ckgxrg";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   cmacrae = {
     email = "hi@cmacr.ae";
@@ -1210,6 +1210,12 @@
     githubId = 33185;
     name = "Gleb Peregud";
     source = "nixpkgs";
+  };
+  glmlm = {
+    email = "91877885+glmlm@users.noreply.github.com";
+    github = "glmlm";
+    githubId = 91877885;
+    source = "home-manager";
   };
   gvolpe = {
     email = "volpegabriel@gmail.com";
@@ -2163,7 +2169,7 @@
     github = "rsahwe";
     githubId = 201613730;
     name = "rsahwe";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   rszamszur = {
     email = "radoslawszamszur@gmail.com";
