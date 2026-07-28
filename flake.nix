@@ -49,13 +49,12 @@
           "aarch64-darwin"
           "aarch64-linux"
           "i686-linux"
-          "x86_64-darwin"
           "x86_64-linux"
         ];
 
         forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
-        forAllPkgs = forSystems nixpkgs.lib.systems.flakeExposed;
+        forAllPkgs = forSystems (nixpkgs.lib.remove "x86_64-darwin" nixpkgs.lib.systems.flakeExposed);
 
         forSupportedPkgs = forSystems supportedSystems;
 
