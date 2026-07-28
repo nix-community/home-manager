@@ -58,37 +58,38 @@ let
       } items;
     in
     foldResult.finishedLines ++ lib.optional (foldResult.currentLine != "") foldResult.currentLine;
-  # Escapes a value for interpolation into a double-quoted shell string.
-  # `$` is deliberately left alone: values are documented to have parameters
-  # such as `$HOME` expanded by the shell.
-  escapeDoubleQuoted = lib.replaceStrings [ "\\" "\"" "`" ] [ "\\\\" "\\\"" "\\`" ];
+  # Prepare a value for interpolation inside a double-quoted shell word.
+  # `$` stays expandable and existing backslash escapes keep the meaning
+  # double quotes give them, so `\$HOME` remains a literal `$HOME` while a
+  # lone backslash before any other character stays a literal backslash.
+  escapeDoubleQuoted =
+    let
+      escapeLiteral = lib.replaceStrings [ "\\" "\"" "`" ] [ "\\\\" "\\\"" "\\`" ];
+      handlePart =
+        part:
+        if lib.isString part then
+          escapeLiteral part
+        else
+          let
+            c = lib.head part;
+          in
+          # These four sequences already escape within double quotes. A
+          # backslash before anything else — including a newline, whose
+          # line-continuation semantics we deliberately do not preserve —
+          # is literal and must itself be escaped.
+          if c == "$" || c == "\\" || c == "\"" || c == "`" then "\\${c}" else escapeLiteral "\\${c}";
+    in
+    value: lib.concatMapStrings handlePart (builtins.split ''\\(.)'' value);
 
-  # Produces Bourne shell statements that merge new values into a
-  # possibly existing variable in an idempotent way: only non-empty
-  # values not already present in the variable or earlier in the input
-  # are added. Sourcing the output multiple times introduces no new
-  # duplicates and never reorders entries that other tools (dev shells,
-  # direnv, system startup files) deliberately placed there.
-  #
-  # `combine` receives the separator and returns the shell expression
-  # joining the collected additions with the existing value, which is
-  # what distinguishes prepending from appending.
-  #
-  # The generated code must stay within the POSIX subset that
-  # babelfish can translate, since the fish module translates
-  # hm-session-vars.sh with it. In particular this must not be factored
-  # into a shell function taking the value as a positional parameter:
-  # babelfish drops the quoting around `$1`/`$2` and mistranslates them
-  # inside `case` patterns, which silently stops anything being added.
+  # Add missing non-empty entries without moving existing ones. Keep this
+  # inline and POSIX-compatible because Babelfish mistranslates quoted
+  # positional parameters in case patterns.
   idempotentMerge =
     combine: sep: n: v:
     let
-      # One block per value, rather than joining the values and splitting
-      # them again at runtime. Splitting would corrupt any value that
-      # legitimately contains the separator, such as a `NIX_PATH` entry
-      # holding a URL. The value is only ever read back through a quoted
-      # expansion, so neither it nor the separator needs to be free of glob
-      # metacharacters.
+      values = lib.unique (lib.filter (value: value != "") v);
+      # Keep values separate; splitting a joined string would corrupt entries
+      # that contain the separator.
       addValue = value: ''
         __hm_entry="${escapeDoubleQuoted value}"
         if [ -n "$__hm_entry" ]; then
@@ -97,18 +98,26 @@ let
             *) __hm_add="$__hm_add''${__hm_add:+${sep}}$__hm_entry" ;;
           esac
         fi'';
+      addValues = lib.concatMapStringsSep "\n" addValue values;
+      indentedAddValues = lib.optionalString (values != [ ]) (
+        lib.replaceStrings [ "\n" ] [ "\n  " ] addValues
+      );
+      # Command substitution strips trailing newlines, so keep a sentinel until
+      # the value returns to the parent shell.
     in
     ''
-      __hm_cur="''${${n}-}"
-      __hm_add=""
-      ${lib.concatMapStringsSep "\n" addValue v}
-      # Always export, even when nothing was added: the variable may be
-      # set but not exported in the sourcing shell.
-      if [ -n "$__hm_add" ]; then
-        __hm_cur="${combine sep}"
-      fi
-      export ${n}="$__hm_cur"
-      unset __hm_cur __hm_add __hm_entry
+      ${n}=$(
+        __hm_cur="''${${n}-}"
+        __hm_add=""
+        __hm_entry=""
+        ${indentedAddValues}
+        if [ -n "$__hm_add" ]; then
+          __hm_cur="${combine sep}"
+        fi
+        printf '%s.' "$__hm_cur"
+      )
+      ${n}="''${${n}%?}"
+      export ${n}
     '';
 in
 {
@@ -123,14 +132,26 @@ in
     sep: n: v:
     "${lib.concatStringsSep sep v}\${${n}:+${sep}}\$${n}";
 
-  # Prepend new values, keeping any already-present entry at its current
-  # position. Use for search paths where Home Manager's directories should win
-  # over inherited ones, e.g. PATH.
+  /**
+    Generate POSIX shell code that prepends missing entries to a variable.
+
+    # Type
+
+    ```
+    idempotentPrepend :: String -> String -> [ String ] -> String
+    ```
+  */
   idempotentPrepend = idempotentMerge (sep: "$__hm_add\${__hm_cur:+${sep}}$__hm_cur");
 
-  # Append new values, keeping any already-present entry at its current
-  # position. Use for trailing fallbacks that must stay behind inherited
-  # entries, e.g. a system-wide terminfo directory.
+  /**
+    Generate POSIX shell code that appends missing entries to a variable.
+
+    # Type
+
+    ```
+    idempotentAppend :: String -> String -> [ String ] -> String
+    ```
+  */
   idempotentAppend = idempotentMerge (sep: "$__hm_cur\${__hm_cur:+${sep}}$__hm_add");
 
   # Given an attribute set containing shell variable names and their

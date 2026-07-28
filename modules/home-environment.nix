@@ -315,17 +315,13 @@ in
         value `bar` can be given as per
         `''${parameter:+bar}`.
 
-        These variables are re-exported every time the session variables
-        file is sourced, so a value must not reference the variable it
-        defines. Code like
-        ```nix
-        home.sessionVariables.MANPATH = "$HOME/man:$MANPATH";
-        ```
-        would grow the variable with every nested shell. Use
-        [](#opt-home.sessionPath),
-        [](#opt-home.sessionSearchVariables) or
-        [](#opt-home.sessionSearchVariablesAppend) for such search paths
-        instead.
+        These variables are re-exported whenever the session variables file is
+        sourced. Values must not reference themselves; use
+        [](#opt-home.sessionPath), [](#opt-home.sessionSearchVariables), or
+        [](#opt-home.sessionSearchVariablesAppend) for search paths.
+
+        Removing a variable does not unset an inherited value. Start a new
+        login session to discard it.
 
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
@@ -372,25 +368,13 @@ in
       description = ''
         Extra directories to prepend to {env}`PATH`.
 
-        Non-empty entries are only prepended when they are not already present
-        in {env}`PATH`, so re-sourcing the session variables does not add
-        another copy. An entry that is already present keeps its current
-        position; it is not moved to the front. Existing duplicates are not
-        removed.
+        Missing non-empty entries are prepended once. Existing entries keep
+        their position; existing duplicates and removed configuration entries
+        remain until the environment is reset.
 
-        Entries removed from this option are not removed from an existing
-        {env}`PATH`; they remain until the parent environment is reset.
-
-        Note that only entries that are *not* already present are added, so
-        Home Manager's own relative order among them is not guaranteed: if an
-        earlier entry is already in the variable it keeps its old position
-        while a later one is prepended in front of it.
-
-        These directories are added to the {env}`PATH` variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the {env}`PATH`
-        verbatim.
+        Values use a double-quoted shell context: variable, command, and
+        arithmetic expansions are evaluated, while `~` and `*` remain literal.
+        `\$` escapes a literal `$` and `\\` is a literal backslash.
       '';
     };
 
@@ -408,25 +392,13 @@ in
         environment variables (e.g.: {env}`MANPATH`). The values
         will be concatenated by `:`.
 
-        Non-empty entries are only prepended when they are not already present
-        in the variable, so re-sourcing the session variables does not add
-        another copy. An entry that is already present keeps its current
-        position; it is not moved to the front. Existing duplicates are not
-        removed.
+        Missing non-empty entries are prepended once. Existing entries keep
+        their position; existing duplicates and removed configuration entries
+        remain until the environment is reset.
 
-        Entries removed from this option are not removed from an existing
-        variable; they remain until the parent environment is reset.
-
-        Note that only entries that are *not* already present are added, so
-        Home Manager's own relative order among them is not guaranteed: if an
-        earlier entry is already in the variable it keeps its old position
-        while a later one is prepended in front of it.
-
-        These directories are added to the environment variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the environment
-        verbatim.
+        Values use a double-quoted shell context: variable, command, and
+        arithmetic expansions are evaluated, while `~` and `*` remain literal.
+        `\$` escapes a literal `$` and `\\` is a literal backslash.
       '';
     };
 
@@ -437,35 +409,22 @@ in
         TERMINFO_DIRS = [ "/usr/share/terminfo" ];
       };
       description = ''
-        Extra directories to append to arbitrary PATH-like environment
-        variables, the counterpart to
-        [](#opt-home.sessionSearchVariables), which prepends. The values will
-        be concatenated by `:`.
+        Extra directories to append to PATH-like environment variables. Use
+        this for trailing fallbacks; use
+        [](#opt-home.sessionSearchVariables) for entries that should take
+        precedence.
 
-        Use this for trailing fallbacks that must stay *behind* directories
-        inherited from the environment, such as a system-wide
-        {file}`/usr/share/terminfo`. Prefer
-        [](#opt-home.sessionSearchVariables) whenever Home Manager's
-        directories should take precedence.
-
-        Non-empty entries are only appended when they are not already present
-        in the variable, so re-sourcing the session variables does not add
-        another copy. An entry that is already present keeps its current
-        position; it is not moved to the end. Existing duplicates are not
-        removed.
-
-        Entries removed from this option are not removed from an existing
-        variable; they remain until the parent environment is reset.
+        Missing non-empty entries are appended once. Existing entries keep
+        their position; existing duplicates and removed configuration entries
+        remain until the environment is reset.
 
         Shell sessions are the only consumer: there is no
         {file}`environment.d` counterpart, so appended values do not reach
         systemd user services.
 
-        These directories are added to the environment variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the environment
-        verbatim.
+        Values use a double-quoted shell context: variable, command, and
+        arithmetic expansions are evaluated, while `~` and `*` remain literal.
+        `\$` escapes a literal `$` and `\\` is a literal backslash.
       '';
     };
 
@@ -741,13 +700,8 @@ in
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
       text = ''
-        # This file is safe to source multiple times: session variables are
-        # plain assignments and search variables (PATH and friends) only
-        # add non-empty entries that are not already present, prepending or
-        # appending them, so re-sourcing introduces no new duplicates and
-        # never reorders entries added by other tools. Only the extra
-        # section at the end, which may contain non-idempotent commands,
-        # runs once per session.
+        # Plain variables refresh on every source. Search variables add only
+        # missing entries. The extra section remains once per session.
 
         ${config.lib.shell.exportAll cfg.sessionVariables}
       ''
@@ -764,8 +718,15 @@ in
       + ''
 
         if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
-        export __HM_SESS_VARS_SOURCED=1
-        ${cfg.sessionVariablesExtra}
+          export __HM_SESS_VARS_SOURCED=1
+      ''
+      + cfg.sessionVariablesExtra
+      # `lines' does not guarantee a trailing newline; without one the
+      # closing `fi' would glue onto the last extra line.
+      + lib.optionalString (
+        cfg.sessionVariablesExtra != "" && !lib.hasSuffix "\n" cfg.sessionVariablesExtra
+      ) "\n"
+      + ''
         fi
       '';
     };

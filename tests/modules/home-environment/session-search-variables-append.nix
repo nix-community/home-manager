@@ -20,28 +20,6 @@
   nmt.script = ''
     hmSessVars=home-path/etc/profile.d/hm-session-vars.sh
     assertFileExists $hmSessVars
-    assertFileContains $hmSessVars \
-      '__hm_entry="tail"'
-    assertFileContains $hmSessVars \
-      '__hm_entry=""'
-    assertFileContains $hmSessVars \
-      '__hm_entry="$EMPTY_ENTRY"'
-    assertFileContains $hmSessVars \
-      '__hm_entry="tail2"'
-    assertFileContains $hmSessVars \
-      '  __hm_cur="$__hm_cur''${__hm_cur:+:}$__hm_add"'
-    assertFileContains $hmSessVars \
-      'export TEST2="$__hm_cur"'
-
-    # The prepend section must be emitted before the append section so that a
-    # variable receiving both ends up with Home Manager's prepended entries in
-    # front and its appended fallbacks last.
-    prependLine=$(grep -n '__hm_cur="$__hm_add''${__hm_cur:+:}$__hm_cur"' \
-      "$TESTED/$hmSessVars" | head -1 | cut -d: -f1)
-    appendLine=$(grep -n '__hm_cur="$__hm_cur''${__hm_cur:+:}$__hm_add"' \
-      "$TESTED/$hmSessVars" | head -1 | cut -d: -f1)
-    [ -n "$prependLine" ] && [ -n "$appendLine" ] && [ "$prependLine" -lt "$appendLine" ] \
-      || fail "prepend section must precede append section ($prependLine vs $appendLine)"
 
     for shell in \
       "$BASH" \
