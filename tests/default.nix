@@ -180,6 +180,7 @@ import nmtSrc {
           ./lib/deprecations
           ./lib/generators
           ./lib/mcp
+          ./lib/systemd
           ./lib/types
           ./modules/files
           ./modules/home-environment
