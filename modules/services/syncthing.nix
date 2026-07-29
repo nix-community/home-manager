@@ -310,16 +310,17 @@ let
     +
       /*
         Now we update the other settings defined in cleanedConfig which are not
-        "folders" or "devices".
+        "folders", "devices", or "defaults".
       */
       (lib.pipe cleanedConfig [
         builtins.attrNames
         (lib.subtractLists [
           "folders"
           "devices"
+          "defaults"
         ])
         (map (subOption: ''
-          curl -X PUT -d ${
+          curl -X PATCH -d ${
             lib.escapeShellArg (builtins.toJSON cleanedConfig.${subOption})
           } ${curlAddressArgs "/rest/config/${subOption}"}
         ''))
@@ -794,6 +795,11 @@ in
         description = ''
           Extra configuration options for Syncthing.
           See <https://docs.syncthing.net/users/config.html>.
+          GUI, LDAP, and options are updated partially.
+          Values omitted from those objects, including values removed from a
+          previous Home Manager configuration, remain unchanged in Syncthing.
+          Set the desired default explicitly to reset such a value. Folders and
+          devices retain replacement semantics.
           Note that this attribute set does not exactly match the documented
           XML format. Instead, this is the format of the JSON REST API. There
           are slight differences. For example, this XML:
