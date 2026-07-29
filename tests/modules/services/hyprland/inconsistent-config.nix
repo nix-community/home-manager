@@ -6,6 +6,7 @@
       "/path/to/plugin1"
       (config.lib.test.mkStubPackage { name = "foo"; })
     ];
+    checkConfig = false;
   };
 
   test.asserts.warnings.expected = [
