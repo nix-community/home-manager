@@ -64,6 +64,7 @@ let
 
   configDir =
     if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+  socketPath = "$XDG_RUNTIME_DIR/rbw/ssh-agent-socket";
 in
 {
   meta.maintainers = with lib.maintainers; [ ambroisie ];
@@ -93,6 +94,11 @@ in
         managed by Home Manager.
       '';
     };
+    sshAgent = lib.mkOption {
+      type = lib.types.bool;
+      description = "rbw as an SSH Agent";
+      default = false;
+    };
 
     systemd = {
       enable = lib.mkOption {
@@ -109,6 +115,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      (lib.hm.assertions.assertPlatform "programs.rbw.sshAgent" pkgs lib.platforms.linux)
+    ];
+
     home.packages = [ cfg.package ];
 
     home.file."${configDir}/rbw/config.json" = lib.mkIf (cfg.settings != null) {
@@ -127,6 +137,19 @@ in
         After = [ "network.target" ];
         Description = "rbw Agent";
         Documentation = "man:rbw-agent(1)";
+      };
+    };
+
+    sshAuthSock = lib.mkIf cfg.sshAgent {
+      enable = true;
+      systemd = {
+        socketProviderUnit = lib.mkIf cfg.systemd.enable "rbw-agent.service";
+      };
+      initialization = {
+        bash = "export SSH_AUTH_SOCK=${socketPath}";
+        fish = "set -x SSH_AUTH_SOCK ${socketPath}";
+        zsh = "export SSH_AUTH_SOCK=${socketPath}";
+        nushell = "$env.SSH_AUTH_SOCK = ${socketPath}";
       };
     };
   };
