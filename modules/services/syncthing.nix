@@ -310,13 +310,14 @@ let
     +
       /*
         Now we update the other settings defined in cleanedConfig which are not
-        "folders" or "devices".
+        "folders", "devices", or "defaults".
       */
       (lib.pipe cleanedConfig [
         builtins.attrNames
         (lib.subtractLists [
           "folders"
           "devices"
+          "defaults"
         ])
         (map (subOption: ''
           curl -X PATCH -d ${
@@ -325,6 +326,27 @@ let
         ''))
         (lib.concatStringsSep "\n")
       ])
+    +
+      # Handle the "defaults" option separately, as it has multiple sub-endpoints.
+      (lib.optionalString (cleanedConfig ? defaults) (
+        lib.pipe cleanedConfig.defaults [
+          builtins.attrNames
+          (map (
+            subOption:
+            let
+              # See https://docs.syncthing.net/rest/config.html. The ignores
+              # endpoint only supports PUT; folder and device support PATCH.
+              method = if subOption == "ignores" then "PUT" else "PATCH";
+            in
+            ''
+              curl -X ${method} -d ${
+                lib.escapeShellArg (builtins.toJSON cleanedConfig.defaults.${subOption})
+              } ${curlAddressArgs "/rest/config/defaults/${subOption}"}
+            ''
+          ))
+          (lib.concatStringsSep "\n")
+        ]
+      ))
     + lib.optionalString hasCustomGuiAddress ''
       curl -X PATCH -d '{"address": "'${cfg.guiAddress}'"}' ${curlAddressArgs "/rest/config/gui"}
     ''
