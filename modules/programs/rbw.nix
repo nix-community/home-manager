@@ -93,6 +93,19 @@ in
         managed by Home Manager.
       '';
     };
+
+    systemd = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        description = "run the rbw agent in systemd";
+        default = true;
+      };
+      targets = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = "targets for the rbw systemd service";
+        default = [ "default.target" ];
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -100,6 +113,21 @@ in
 
     home.file."${configDir}/rbw/config.json" = lib.mkIf (cfg.settings != null) {
       source = jsonFormat.generate "rbw-config.json" (lib.filterAttrs (_: v: v != null) cfg.settings);
+    };
+
+    systemd.user.services.rbw-agent = lib.mkIf cfg.systemd.enable {
+      Service = {
+        ExecStart = "${cfg.package}/bin/rbw-agent --no-daemonize";
+        PIDFile = "rbw/pidfile";
+      };
+      Install = {
+        WantedBy = cfg.systemd.targets;
+      };
+      Unit = {
+        After = [ "network.target" ];
+        Description = "rbw Agent";
+        Documentation = "man:rbw-agent(1)";
+      };
     };
   };
 }
