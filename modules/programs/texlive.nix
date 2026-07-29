@@ -9,9 +9,6 @@ let
 
   cfg = config.programs.texlive;
 
-  texlive = cfg.packageSet;
-  texlivePkgs = cfg.extraPackages texlive;
-
 in
 {
   meta.maintainers = [ lib.maintainers.rycee ];
@@ -46,13 +43,15 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = texlivePkgs != { };
+        assertion = cfg.extraPackages cfg.packageSet != { };
         message = "Must provide at least one extra package in" + " 'programs.texlive.extraPackages'.";
       }
     ];
 
     home.packages = [ cfg.package ];
 
-    programs.texlive.package = texlive.combine texlivePkgs;
+    programs.texlive.package = cfg.packageSet.withPackages (
+      tpkgs: lib.attrValues (cfg.extraPackages tpkgs)
+    );
   };
 }
