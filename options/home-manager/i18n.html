@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-04984770.js";
+            window.path_to_searchindex_js = "../../searchindex-dbca9339.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-a22c24be.js"></script>
@@ -302,6 +302,25 @@ attribute set of absolute path</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix">&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;</a></li>
 </ul>
+<h2 id="opt-i18n.inputMethod.fcitx5.sessionVariables"><a class="header" href="#opt-i18n.inputMethod.fcitx5.sessionVariables">i18n.inputMethod.fcitx5.sessionVariables</a></h2>
+<p>The environment variables used to configure Fcitx5.</p>
+<p>The default values should be suitable for most desktop environments and should
+not normally need to be changed.</p>
+<p>If you need to override them, see the
+<a href="https://fcitx-im.org/wiki/Fcitx_5#For_Users">Fcitx5 user guide</a>.</p>
+<p><em>Type:</em>
+lazy attribute set of (null or string or absolute path or signed integer or floating point number or boolean)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{
+  GLFW_IM_MODULE = "ibus";
+  SDL_IM_MODULE = "fcitx";
+  XMODIFIERS = "@im=fcitx";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix">&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;</a></li>
+</ul>
 <h2 id="opt-i18n.inputMethod.fcitx5.settings.addons"><a class="header" href="#opt-i18n.inputMethod.fcitx5.settings.addons">i18n.inputMethod.fcitx5.settings.addons</a></h2>
 <p>The addon configures in <code>conf</code> folder in ini format with global sections.
 Each item is written to the corresponding file.</p>
@@ -397,6 +416,22 @@ open submodule of attribute set of section of an INI file (attrs of INI atom (nu
     Name = "pinyin";
   };
 }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/fcitx5.nix">&lt;home-manager/modules/i18n/input-method/fcitx5.nix&gt;</a></li>
+</ul>
+<h2 id="opt-i18n.inputMethod.fcitx5.systemd.enable"><a class="header" href="#opt-i18n.inputMethod.fcitx5.systemd.enable">i18n.inputMethod.fcitx5.systemd.enable</a></h2>
+<p>Whether to enable the systemd user service.</p>
+<p>This service is not required if the desktop environment supports
+<a href="https://fcitx-im.org/wiki/Setup_Fcitx_5#XDG_Autostart">XDG Autostart</a>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
