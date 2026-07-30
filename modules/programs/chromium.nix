@@ -15,6 +15,7 @@ let
     google-chrome-beta = "Google Chrome Beta";
     google-chrome-dev = "Google Chrome Dev";
     brave = "Brave Browser";
+    brave-origin = "Brave Origin";
     vivaldi = "Vivaldi Browser";
     microsoft-edge = "Microsoft Edge";
   };
@@ -234,11 +235,13 @@ let
         google-chrome-beta = "Google/Chrome Beta";
         google-chrome-dev = "Google/Chrome Dev";
         brave = "BraveSoftware/Brave-Browser";
+        brave-origin = "BraveSoftware/Brave-Origin";
         microsoft-edge = "Microsoft Edge";
       };
 
       linuxDirs = {
         brave = "BraveSoftware/Brave-Browser";
+        brave-origin = "BraveSoftware/Brave-Origin";
       };
 
       configDir =
