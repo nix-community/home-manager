@@ -9,11 +9,61 @@ let
 
   cfg = config.services.easyeffects;
 
-  presetOpts = lib.optionalString (cfg.preset != "") "--load-preset ${cfg.preset}";
+  isSplitPreset = builtins.isAttrs cfg.preset;
+
+  selectedPresets =
+    if isSplitPreset then lib.filterAttrs (_: preset: preset != "") cfg.preset else { };
+
+  presetOpts = lib.optionalString (
+    !isSplitPreset && cfg.preset != ""
+  ) "--load-preset ${lib.escapeShellArg cfg.preset}";
 
   olderThan8 = lib.versionOlder cfg.package.version "8.0.0"; # This version introduces breaking changes and this check is used to stay backwards compatible
 
+  olderThan8_0_9 = lib.versionOlder cfg.package.version "8.0.9";
+
   jsonFormat = pkgs.formats.json { };
+
+  splitPresetType = types.submodule {
+    options = {
+      input = mkOption {
+        type = types.str;
+        default = "";
+        description = "Input preset to load when starting EasyEffects.";
+      };
+
+      output = mkOption {
+        type = types.str;
+        default = "";
+        description = "Output preset to load when starting EasyEffects.";
+      };
+    };
+  };
+
+  splitPresetCommands = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (
+      pipeline: preset: "printf '%s\\n' ${lib.escapeShellArg "load_preset:${pipeline}:${preset}"}"
+    ) selectedPresets
+  );
+
+  loadSplitPresets = pkgs.writeShellScript "easyeffects-load-presets" ''
+    preset_socket=$1
+
+    for _ in {1..100}; do
+      if [[ -S "$preset_socket" ]]; then
+        if {
+          :
+          ${splitPresetCommands}
+        } | ${pkgs.socat}/bin/socat -u -T 1 - UNIX-CONNECT:"$preset_socket"; then
+          exit 0
+        fi
+      fi
+
+      ${pkgs.coreutils}/bin/sleep 0.1
+    done
+
+    exit 1
+  '';
 
   settingType = types.nullOr (
     types.oneOf [
@@ -142,11 +192,23 @@ in
     package = lib.mkPackageOption pkgs "easyeffects" { };
 
     preset = mkOption {
-      type = types.str;
+      type = types.either types.str splitPresetType;
       default = "";
+      example = literalExpression ''
+        {
+          input = "voice";
+          output = "music";
+        }
+      '';
       description = ''
-        Which preset to use when starting easyeffects.
-        Will likely need to launch easyeffects to initially create preset.
+        Preset to load when starting EasyEffects.
+
+        A string loads every input or output preset having that name. An
+        attribute set selects input and output presets independently and
+        requires EasyEffects 8.0.9 or later. An empty string leaves that
+        pipeline unchanged.
+
+        You will likely need to launch EasyEffects to initially create presets.
       '';
     };
 
@@ -178,6 +240,14 @@ in
       {
         assertion = !hasSettings || !olderThan8;
         message = "${settingsOption} requires EasyEffects 8.0.0 or later.";
+      }
+      {
+        assertion = !isSplitPreset || !olderThan8_0_9;
+        message = "Structured `services.easyeffects.preset` requires EasyEffects 8.0.9 or later.";
+      }
+      {
+        assertion = !isSplitPreset || selectedPresets != { };
+        message = "Structured `services.easyeffects.preset` must select at least one input or output preset.";
       }
     ];
 
@@ -221,6 +291,9 @@ in
       }
       // lib.optionalAttrs hasSettings {
         ExecStartPre = settingsScript;
+      }
+      // lib.optionalAttrs isSplitPreset {
+        ExecStartPost = "-${loadSplitPresets} %t/EasyEffectsServer";
       }
       // (
         if olderThan8 then
