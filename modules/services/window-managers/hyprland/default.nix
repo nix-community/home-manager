@@ -592,6 +592,7 @@ in
           ++ lib.optional cfg.systemd.enableXdgAutostart "xdg-desktop-autostart.target";
           After = [ "graphical-session-pre.target" ];
           Before = lib.mkIf cfg.systemd.enableXdgAutostart [ "xdg-desktop-autostart.target" ];
+          PropagatesStopTo = [ "graphical-session.target" ];
         };
       };
     };
