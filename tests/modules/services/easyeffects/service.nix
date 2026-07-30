@@ -11,6 +11,7 @@ in
 {
   services.easyeffects = {
     enable = true;
+    preset = "music";
     inherit settings;
   };
 
@@ -20,7 +21,8 @@ in
     serviceFile=home-files/.config/systemd/user/easyeffects.service
 
     assertFileExists $serviceFile
-    assertFileRegex $serviceFile 'ExecStart=.*/bin/easyeffects'
+    assertFileRegex $serviceFile \
+      'ExecStart=.*/bin/easyeffects .*--load-preset music'
     assertFileContains $serviceFile \
       'X-Restart-Triggers=${builtins.hashString "sha256" (builtins.toJSON settings)}'
 
