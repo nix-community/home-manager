@@ -63,6 +63,8 @@
           "x86_64-linux"
         ];
 
+        warn = builtins.warn or nixpkgs.lib.warn;
+
         releaseInfo = nixpkgs.lib.importJSON ./release.json;
 
         docsFor =
@@ -176,8 +178,8 @@
       {
         formatter = forSupportedPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
 
-        # TODO: increase buildbot testing scope
-        buildbot = forCI (
+        # TODO: increase nixbot testing scope
+        nixbot = forCI (
           system:
           let
             docs = docsFor nixpkgs.legacyPackages.${system};
@@ -198,6 +200,13 @@
             docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
             docs-manpages = docs.manPages;
           }
+        );
+
+        # Alias for nixbot, added 2026-07-30
+        buildbot = forCI (
+          system:
+          warn "Home Manager: `buildbot.${system}` has been renamed to `nixbot.${system}`."
+            self.nixbot.${system}
         );
 
         packages = forAllPkgs (
