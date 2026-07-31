@@ -7,12 +7,41 @@
 
 let
   cfg = config.programs.carapace;
-  bin = lib.getExe cfg.package;
+  finalPackage =
+    if cfg.environment == { } then
+      cfg.package
+    else
+      let
+        wrapperArgs = lib.flatten (
+          lib.mapAttrsToList (name: value: [
+            "--set"
+            "CARAPACE_${lib.toUpper name}"
+            value
+          ]) cfg.environment
+        );
+      in
+      pkgs.symlinkJoin {
+        name = "carapace-wrapped";
+        paths = [ cfg.package ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/carapace ${lib.escapeShellArgs wrapperArgs}
+        '';
+        inherit (cfg.package) meta;
+      };
+  bin = lib.getExe finalPackage;
 in
 {
   meta.maintainers = with lib.maintainers; [
     weathercold
     bobvanderlinden
+  ];
+
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "carapace" "ignoreCase" ]
+      [ "programs" "carapace" "environment" "match" ]
+    )
   ];
 
   options.programs.carapace = {
@@ -28,32 +57,36 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    ignoreCase = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+    environment = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+        ]);
+      apply = lib.mapAttrs (
+        _name: value: if lib.isBool value then (if value then "1" else "0") else toString value
+      );
+      default = { };
+      example = {
+        bridges = "zsh,fish,bash";
+        match = true;
+      };
       description = ''
-        Whether to enable case-insensitive matching for carapace completions.
-        When enabled, the carapace binary is wrapped with {env}`CARAPACE_MATCH`
-        set to `1`.
+        Environment variables for Carapace. The package is wrapped with each
+        attribute name uppercased and prefixed by `CARAPACE_`. For example,
+        `match = true` sets
+        {env}`CARAPACE_MATCH` to `1`.
+
+        See <https://carapace-sh.github.io/carapace-bin/setup/environment.html>
+        for the available environment variables.
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    programs.carapace.package = lib.mkIf cfg.ignoreCase (
-      pkgs.symlinkJoin {
-        name = "carapace-wrapped";
-        paths = [ pkgs.carapace ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/carapace \
-            --set CARAPACE_MATCH 1
-        '';
-        meta.mainProgram = "carapace";
-      }
-    );
-
-    home.packages = [ cfg.package ];
+    home.packages = [ finalPackage ];
 
     programs = {
       bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
@@ -105,7 +138,7 @@ in
             carapaceListFile =
               pkgs.runCommandLocal "carapace-list"
                 {
-                  buildInputs = [ cfg.package ];
+                  buildInputs = [ finalPackage ];
                 }
                 ''
                   ${bin} --list > $out
