@@ -14,11 +14,17 @@
     enableZshIntegration = false;
     package =
       pkgs.writeShellScriptBin "carapace" ''
+        command -v inshellisense >/dev/null
+        command -v fish >/dev/null
         printf '%s\n' "$CARAPACE_BRIDGES" "$CARAPACE_DESCRIPTION_LENGTH" "$CARAPACE_HIDDEN" "$CARAPACE_LENIENT" "$CARAPACE_MATCH"
       ''
       // {
         meta.mainProgram = "carapace";
       };
+    extraPackages = lib.map (name: pkgs.writeShellScriptBin name "") [
+      "inshellisense"
+      "fish"
+    ];
     environment = {
       CARAPACE_BRIDGES = "inshellisense,fish";
       CARAPACE_DESCRIPTION_LENGTH = 100;

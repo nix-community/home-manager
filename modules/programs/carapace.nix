@@ -13,6 +13,12 @@ let
       name
       (if lib.isBool value then (if value then "1" else "0") else toString value)
     ]) cfg.environment
+    ++ lib.optional (cfg.extraPackages != [ ]) [
+      "--suffix"
+      "PATH"
+      ":"
+      (lib.makeBinPath cfg.extraPackages)
+    ]
   );
   bin = lib.getExe cfg.finalPackage;
 in
@@ -34,6 +40,23 @@ in
 
     package = lib.mkPackageOption pkgs "carapace" { };
 
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      example = lib.literalExpression ''
+        with pkgs; [
+          inshellisense
+          fish
+        ]
+      '';
+      description = ''
+        Extra packages available to Carapace. This can be used to make
+        completers listed in
+        {option}`programs.carapace.environment.CARAPACE_BRIDGES`
+        available.
+      '';
+    };
+
     finalPackage = lib.mkOption {
       type = lib.types.package;
       readOnly = true;
@@ -51,7 +74,7 @@ in
             '';
             inherit (cfg.package) meta;
           };
-      description = "The Carapace package with the configured environment.";
+      description = "The Carapace package with the configured environment and extra packages.";
     };
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
