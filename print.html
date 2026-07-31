@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0e330235.js";
+            window.path_to_searchindex_js = "searchindex-433b05de.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a22c24be.js"></script>
@@ -40644,6 +40644,36 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix">&lt;home-manager/modules/programs/mise.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.mise.enableMutableConfig"><a class="header" href="#opt-programs.mise.enableMutableConfig">programs.mise.enableMutableConfig</a></h2>
+<p>Whether to leave <code>$XDG_CONFIG_HOME/mise/config.toml</code> mutable
+so it can be updated by commands such as <code>mise use --global</code>.</p>
+<p>When enabled, <code>programs.mise.globalConfig</code> is written to
+<code>$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml</code> instead,
+leaving the main configuration file unmanaged. The numeric prefix
+gives user-managed fragments predictable ordering around the Home
+Manager fragment. An empty mutable configuration file is created
+because global Mise commands otherwise try to update an existing
+global fragment, including the read-only Home Manager fragment.</p>
+<p>Keep settings in the mutable file and
+<code>programs.mise.globalConfig</code> disjoint. Mise may resolve
+conflicts between the global file and <code>conf.d</code> differently
+depending on the current directory.</p>
+<p>Before disabling this option while
+<code>programs.mise.globalConfig</code> is non-empty, remove or back up
+the mutable configuration file. Home Manager otherwise treats it as a
+file collision.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix">&lt;home-manager/modules/programs/mise.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.mise.enableNushellIntegration"><a class="header" href="#opt-programs.mise.enableNushellIntegration">programs.mise.enableNushellIntegration</a></h2>
 <p>Whether to enable Nushell integration.</p>
 <p><em>Type:</em>
@@ -40682,7 +40712,10 @@ null or package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix">&lt;home-manager/modules/programs/mise.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.mise.globalConfig"><a class="header" href="#opt-programs.mise.globalConfig">programs.mise.globalConfig</a></h2>
-<p>Config written to <code>$XDG_CONFIG_HOME/mise/config.toml</code>.</p>
+<p>Global configuration written to
+<code>$XDG_CONFIG_HOME/mise/config.toml</code>, or
+<code>$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml</code> when
+<code>programs.mise.enableMutableConfig</code> is enabled.</p>
 <p>See <a href="https://mise.jdx.dev/configuration.html">https://mise.jdx.dev/configuration.html</a> and
 <a href="https://mise.jdx.dev/configuration/settings.html">https://mise.jdx.dev/configuration/settings.html</a>
 for details on supported values.</p>
