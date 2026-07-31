@@ -10,7 +10,7 @@
     systemd.enable = false;
     xwaylandSatellitePackage = null;
 
-    # Empty Config should not generate `$XDG_CONFIG_HOME/niri/config.kdl`
+    # Providing empty config is expected to populate default values at `$XDG_CONFIG_HOME/niri/config.kdl`
     extraConfigEarly = "";
     extraConfig = "";
     settings = {
@@ -52,7 +52,7 @@
   };
 
   nmt.script = ''
-    assertPathNotExists home-files/.config/niri/config.kdl
+    assertFileExists home-files/.config/niri/config.kdl
     assertPathNotExists home-path/bin/niri
     assertPathNotExists home-path/bin/niri-session
     assertPathNotExists home-path/bin/xwayland-satellite

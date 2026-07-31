@@ -33,15 +33,6 @@
           _props.hotkey-overlay-title = "Open a Terminal";
           spawn = [ "ghostty" ];
         };
-        "XF86AudioRaiseVolume" = {
-          _props.allow-when-locked = true;
-          spawn = [
-            "wpctl"
-            "set-volume"
-            "@DEFAULT_AUDIO_SINK@"
-            "5%+"
-          ];
-        };
       };
 
       # _args for repeated/parameterized top-level nodes
