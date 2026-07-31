@@ -7,7 +7,14 @@
 
 let
   cfg = config.programs.carapace;
-  bin = lib.getExe cfg.package;
+  wrapperArgs = lib.flatten (
+    lib.mapAttrsToList (name: value: [
+      "--set"
+      name
+      (if lib.isBool value then (if value then "1" else "0") else toString value)
+    ]) cfg.environment
+  );
+  bin = lib.getExe cfg.finalPackage;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -15,10 +22,37 @@ in
     bobvanderlinden
   ];
 
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "programs" "carapace" "ignoreCase" ]
+      [ "programs" "carapace" "environment" "CARAPACE_MATCH" ]
+    )
+  ];
+
   options.programs.carapace = {
     enable = lib.mkEnableOption "carapace, a multi-shell multi-command argument completer";
 
     package = lib.mkPackageOption pkgs "carapace" { };
+
+    finalPackage = lib.mkOption {
+      type = lib.types.package;
+      readOnly = true;
+      visible = false;
+      default =
+        if wrapperArgs == [ ] then
+          cfg.package
+        else
+          pkgs.symlinkJoin {
+            name = "carapace-wrapped";
+            paths = [ cfg.package ];
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/carapace ${lib.escapeShellArgs wrapperArgs}
+            '';
+            inherit (cfg.package) meta;
+          };
+      description = "The Carapace package with the configured environment.";
+    };
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
@@ -28,32 +62,31 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    ignoreCase = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+    environment = lib.mkOption {
+      type =
+        with lib.types;
+        attrsOf (oneOf [
+          bool
+          int
+          str
+        ]);
+      default = { };
+      example = {
+        CARAPACE_BRIDGES = "zsh,fish,bash";
+        CARAPACE_MATCH = true;
+      };
       description = ''
-        Whether to enable case-insensitive matching for carapace completions.
-        When enabled, the carapace binary is wrapped with {env}`CARAPACE_MATCH`
-        set to `1`.
+        Environment variables for Carapace. Boolean values are converted to
+        `1` or `0` when the package is wrapped.
+
+        See <https://carapace-sh.github.io/carapace-bin/setup/environment.html>
+        for the available environment variables.
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    programs.carapace.package = lib.mkIf cfg.ignoreCase (
-      pkgs.symlinkJoin {
-        name = "carapace-wrapped";
-        paths = [ pkgs.carapace ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/carapace \
-            --set CARAPACE_MATCH 1
-        '';
-        meta.mainProgram = "carapace";
-      }
-    );
-
-    home.packages = [ cfg.package ];
+    home.packages = [ cfg.finalPackage ];
 
     programs = {
       bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
@@ -105,7 +138,7 @@ in
             carapaceListFile =
               pkgs.runCommandLocal "carapace-list"
                 {
-                  buildInputs = [ cfg.package ];
+                  buildInputs = [ cfg.finalPackage ];
                 }
                 ''
                   ${bin} --list > $out
