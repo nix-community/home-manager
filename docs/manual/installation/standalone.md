@@ -6,7 +6,7 @@
     `nix-instantiate '<nixpkgs>' -A hello` without having to switch to
     the root user. For a multi-user install of Nix this means that your
     user must be covered by the
-    [`allowed-users`](https://nixos.org/nix/manual/#conf-allowed-users)
+    [`allowed-users`](https://nix.dev/manual/nix/stable/command-ref/conf-file.html?highlight=allowed-user#conf-allowed-users)
     Nix option. On NixOS you can control this option using the
     [`nix.settings.allowed-users`](https://nixos.org/manual/nixos/stable/options.html#opt-nix.settings.allowed-users)
     system option.
