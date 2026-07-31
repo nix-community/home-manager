@@ -115,10 +115,6 @@ in
               _props.hotkey-overlay-title = "Open a Terminal";
               spawn = ["ghostty"];
             };
-            "XF86AudioRaiseVolume" = {
-              _props.allow-when-locked = true;
-              spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
-            };
           };
 
           # _args for repeated/parameterized top-level nodes
@@ -176,19 +172,9 @@ in
 
     systemd.user.packages = lib.optional cfg.systemd.enable cfg.package;
 
-    xdg.portal = lib.mkIf (cfg.portalPackage != null) {
-      enable = true;
-      extraPortals = [ cfg.portalPackage ];
-      configPackages = lib.optional (cfg.package != null) cfg.package;
-    };
-
-    xdg.configFile."niri/config.kdl" =
-      let
-        toKDL = lib.hm.generators.toKDL {
-          escapeBackslashes = true;
-          escapeTabs = true;
-        };
-        defaultSettings = {
+    wayland.windowManager.niri.settings =
+      lib.mapAttrsRecursiveCond (as: !lib.isDerivation as) (_: value: lib.mkOptionDefault value)
+        {
           binds = {
             "Mod+Shift+Slash" = {
               show-hotkey-overlay = { };
@@ -593,7 +579,20 @@ in
             };
           };
         };
-        settings = lib.trim (toKDL (lib.recursiveUpdate defaultSettings cfg.settings));
+
+    xdg.portal = lib.mkIf (cfg.portalPackage != null) {
+      enable = true;
+      extraPortals = [ cfg.portalPackage ];
+      configPackages = lib.optional (cfg.package != null) cfg.package;
+    };
+
+    xdg.configFile."niri/config.kdl" =
+      let
+        toKDL = lib.hm.generators.toKDL {
+          escapeBackslashes = true;
+          escapeTabs = true;
+        };
+        settings = lib.trim (toKDL cfg.settings);
         configLines = lib.concatStringsSep "\n" (
           lib.filter (line: line != "") [
             cfg.extraConfigEarly

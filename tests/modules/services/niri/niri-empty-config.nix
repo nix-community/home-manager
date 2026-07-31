@@ -1,3 +1,5 @@
+{ lib, ... }:
+
 {
   wayland.windowManager.niri = {
     enable = true;
@@ -10,12 +12,10 @@
     systemd.enable = false;
     xwaylandSatellitePackage = null;
 
-    # Providing empty config is expected to populate default values at `$XDG_CONFIG_HOME/niri/config.kdl`
+    # Empty Config should not generate `$XDG_CONFIG_HOME/niri/config.kdl`
     extraConfigEarly = "";
     extraConfig = "";
-    settings = {
-      _children = [ ];
-    };
+    settings = lib.mkForce { };
   };
 
   # Stubs with `outPath = null` produce real derivations so that the negative
@@ -52,7 +52,7 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/niri/config.kdl
+    assertPathNotExists home-files/.config/niri/config.kdl
     assertPathNotExists home-path/bin/niri
     assertPathNotExists home-path/bin/niri-session
     assertPathNotExists home-path/bin/xwayland-satellite
