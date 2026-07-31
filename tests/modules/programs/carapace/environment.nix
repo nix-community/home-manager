@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   programs.carapace = {
@@ -9,11 +9,17 @@
     enableZshIntegration = false;
     package =
       pkgs.writeShellScriptBin "carapace" ''
+        command -v inshellisense >/dev/null
+        command -v fish >/dev/null
         printf '%s\n' "$CARAPACE_BRIDGES" "$CARAPACE_HIDDEN" "$CARAPACE_LENIENT" "$CARAPACE_MATCH"
       ''
       // {
         meta.mainProgram = "carapace";
       };
+    extraPackages = lib.map (name: pkgs.writeShellScriptBin name "") [
+      "inshellisense"
+      "fish"
+    ];
     environment = {
       bridges = "inshellisense,fish";
       hidden = 2;

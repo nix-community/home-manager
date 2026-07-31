@@ -8,7 +8,7 @@
 let
   cfg = config.programs.carapace;
   finalPackage =
-    if cfg.environment == { } then
+    if cfg.environment == { } && cfg.extraPackages == [ ] then
       cfg.package
     else
       let
@@ -18,6 +18,12 @@ let
             "CARAPACE_${lib.toUpper name}"
             value
           ]) cfg.environment
+          ++ lib.optional (cfg.extraPackages != [ ]) [
+            "--suffix"
+            "PATH"
+            ":"
+            (lib.makeBinPath cfg.extraPackages)
+          ]
         );
       in
       pkgs.symlinkJoin {
@@ -48,6 +54,22 @@ in
     enable = lib.mkEnableOption "carapace, a multi-shell multi-command argument completer";
 
     package = lib.mkPackageOption pkgs "carapace" { };
+
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      example = lib.literalExpression ''
+        with pkgs; [
+          inshellisense
+          fish
+        ]
+      '';
+      description = ''
+        Extra packages available to Carapace. This can be used to make
+        completers listed in {option}`programs.carapace.environment.bridges`
+        available.
+      '';
+    };
 
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
