@@ -1,1 +1,2 @@
 attribute = "buildbot"
+build_branches = ["release-*"]
