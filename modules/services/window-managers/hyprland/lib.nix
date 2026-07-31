@@ -108,6 +108,7 @@ in
       text =
         optionalString config.systemd.enable ''
           exec-once = ${systemdActivationCommand}
+          exec-shutdown = systemctl --user stop hyprland-session.target
         ''
         + optionalString (config.plugins != [ ]) (pluginsToHyprconf config.plugins)
         + optionalString (config.settings != { }) (
