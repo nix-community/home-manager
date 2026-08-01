@@ -163,6 +163,7 @@ let
     "pimsync"
     "pistol"
     "pls"
+    "pnpm"
     "podman"
     "poetry"
     "powerline-go"
