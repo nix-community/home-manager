@@ -6,88 +6,153 @@
 }:
 
 let
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
-
   inherit (lib)
+    all
+    concatLists
+    concatMap
+    concatMapAttrs
     escapeShellArg
+    getExe
+    getName
+    hm
     listToAttrs
     literalExpression
+    maintainers
+    mapAttrsToList
+    mkEnableOption
     mkIf
     mkOption
+    mkPackageOption
+    mkRenamedOptionModule
+    optional
+    optionalAttrs
+    pathExists
+    pathIsDirectory
     types
     ;
+  inherit (pkgs)
+    buildEnv
+    crudini
+    formats
+    stdenv
+    writeShellScript
+    ;
+
+  concatMapAttrsToList = f: attrs: concatLists (mapAttrsToList f attrs);
+
+  iniFormat = formats.ini { };
+  jsonFormat = formats.json { };
 
   cfg = config.programs.prismlauncher;
 
-  iniFormat = pkgs.formats.ini { };
-  jsonFormat = pkgs.formats.json { };
-  isStorePathString = value: builtins.isString value && lib.hasPrefix "${builtins.storeDir}/" value;
-  isPathLike = value: lib.isPath value || isStorePathString value || lib.isDerivation value;
+  dataDir =
+    (if stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.dataHome)
+    + "/PrismLauncher";
+
+  themePaths = [
+    "/share/PrismLauncher/themes"
+    "/share/PrismLauncher/iconthemes"
+    "/share/PrismLauncher/catpacks"
+  ];
 in
 
 {
-  meta.maintainers = with lib.maintainers; [
+  meta.maintainers = with maintainers; [
     ErinaYip
     mikaeladev
   ];
 
+  imports = [
+    (mkRenamedOptionModule
+      [ "programs" "prismlauncher" "extraPackages" ]
+      [ "programs" "prismlauncher" "themePackages" ]
+    )
+  ];
+
   options.programs.prismlauncher = {
-    enable = lib.mkEnableOption "Prism Launcher";
+    enable = mkEnableOption "Prism Launcher";
 
-    package = lib.mkPackageOption pkgs "prismlauncher" { nullable = true; };
+    package = mkPackageOption pkgs "prismlauncher" { nullable = true; };
 
-    extraPackages = mkOption {
-      type = types.listOf types.package;
-      default = [ ];
+    settings = mkOption {
+      type = types.attrsOf iniFormat.lib.types.atom;
+      default = { };
+      example = {
+        ShowConsole = true;
+        ConsoleMaxLines = 100000;
+      };
       description = ''
-        Additional theme packages to install to the user environment.
-
-        Themes can be sourced from <https://github.com/PrismLauncher/Themes> and should
-        install to `$out/share/PrismLauncher/{themes,iconthemes,catpacks}`.
+        Set of settings to write to {file}`prismlauncher.cfg`.
       '';
     };
 
     icons = mkOption {
-      type = types.listOf types.path;
+      type = with types; listOf path;
       default = [ ];
-      example = literalExpression "[ ./java.png ]";
+      example = literalExpression "[ ./fabulously-optimised.png ]";
       description = ''
         List of paths to instance icons.
+      '';
+    };
 
-        These will be linked in {file}`$XDG_DATA_HOME/PrismLauncher/icons` on Linux and
-        {file}`~/Library/Application Support/PrismLauncher/icons` on macOS.
+    themePackages = mkOption {
+      type = with types; listOf package;
+      default = [ ];
+      description = ''
+        List of theme packages to install.
+
+        Themes may be sourced from Prism Launcher's [theme repository] and must
+        install to either `themes`, `iconthemes`, or `catpacks` within
+        `$out/share/PrismLauncher/`.
+
+        [theme repository]: https://github.com/PrismLauncher/Themes
       '';
     };
 
     themes = mkOption {
-      type = types.attrsOf (
-        types.either types.path (
-          types.submodule {
+      type =
+        let
+          themeSubmodule = types.submodule {
             options = {
               theme = mkOption {
-                inherit (jsonFormat) type;
-                default = { };
+                type = with types; either (attrsOf jsonFormat.type) lines;
+                example = {
+                  name = "Custom";
+                  colors = {
+                    background = "#1a1b26";
+                    foreground = "#c0caf5";
+                  };
+                };
                 description = ''
-                  Contents of the theme's {file}`theme.json`.
+                  Set of [theme attributes] to write to {file}`themes/‹name›/theme.json`.
+
+                  [theme attributes]: https://github.com/PrismLauncher/Themes/blob/main/themes/Catppuccin-Frappe/theme.json
                 '';
               };
 
               style = mkOption {
-                type = types.nullOr (types.either types.lines types.path);
+                type = with types; nullOr (coercedTo path builtins.readFile lines);
                 default = null;
+                example = ''
+                  QWidget {
+                    font-family: "Inter";
+                  }
+                '';
                 description = ''
-                  Contents of, or path to, the theme's {file}`themeStyle.css`.
+                  Lines of [theme styles] to write to {file}`themes/‹name›/themeStyle.css`.
+
+                  [theme styles]: https://github.com/PrismLauncher/Themes/blob/main/themes/Catppuccin-Frappe/themeStyle.css
                 '';
               };
             };
-          }
-        )
-      );
+          };
+        in
+        with types;
+        attrsOf (either path themeSubmodule);
       default = { };
       example = literalExpression ''
         {
-          Tokyo-Night = ./Tokyo-Night;
-
+          # generates a theme at `themes/custom`
           custom = {
             theme = {
               name = "Custom";
@@ -102,107 +167,114 @@ in
               }
             ''';
           };
+          # links `Tokyo-Night` at `themes/tokyo-night`
+          tokyo-night = ./Tokyo-Night;
         }
       '';
       description = ''
-        Prism Launcher widget themes.
+        Set of application themes.
 
-        Attribute names are used as theme directory names. A theme can either be
-        a path to a complete theme directory, or an attribute set used to
-        generate {file}`theme.json` and optionally {file}`themeStyle.css`.
+        Attribute names translate to theme directories, and attribute values
+        describe their contents. Values may either be a path to a complete
+        theme directory, or an attribute set used to generate one.
 
-        These will be linked in {file}`$XDG_DATA_HOME/PrismLauncher/themes` on
-        Linux and {file}`~/Library/Application Support/PrismLauncher/themes` on
-        macOS.
-      '';
-    };
-
-    settings = mkOption {
-      type = types.attrsOf iniFormat.lib.types.atom;
-      default = { };
-      example = {
-        ShowConsole = true;
-        ConsoleMaxLines = 100000;
-      };
-      description = ''
-        Configuration written to {file}`prismlauncher.cfg`.
+        See also:
+        - <https://github.com/PrismLauncher/Themes>
+        - <https://prismlauncher.org/wiki/getting-started/change-themes/#submitting-themes>
       '';
     };
   };
 
-  config =
-    let
-      dataDir =
-        if (isDarwin && !config.xdg.enable) then
-          "Library/Application Support/PrismLauncher"
-        else
-          "${config.xdg.dataHome}/PrismLauncher";
-
-      impureConfigMerger = filePath: staticSettingsFile: emptySettingsFile: ''
-        mkdir -p "$(dirname ${escapeShellArg filePath})"
-
-        if [ ! -e ${escapeShellArg filePath} ]; then
-          cat ${escapeShellArg emptySettingsFile} > ${escapeShellArg filePath}
-        fi
-
-        ${lib.getExe pkgs.crudini} --merge --ini-options=nospace \
-          ${escapeShellArg filePath} < ${escapeShellArg staticSettingsFile}
-      '';
-
-      themeFiles = lib.concatMapAttrs (
-        name: theme:
-        if isPathLike theme then
-          {
-            "${dataDir}/themes/${name}" = {
-              source = theme;
-              recursive = true;
-            };
-          }
-        else
-          {
-            "${dataDir}/themes/${name}/theme.json" = {
-              source = jsonFormat.generate "prismlauncher-${name}-theme.json" theme.theme;
-            };
-          }
-          // lib.optionalAttrs (theme.style != null) {
-            "${dataDir}/themes/${name}/themeStyle.css" =
-              if isPathLike theme.style then { source = theme.style; } else { text = theme.style; };
-          }
-      ) cfg.themes;
-    in
-    mkIf cfg.enable {
-      assertions =
-        lib.mapAttrsToList (name: theme: {
-          assertion = !isPathLike theme || lib.pathIsDirectory theme;
+  config = mkIf cfg.enable {
+    assertions =
+      (concatMapAttrsToList (name: value: [
+        {
+          assertion = !hm.strings.isPathLike value || pathIsDirectory value;
           message = "`programs.prismlauncher.themes.${name}` must be a directory when set to a path.";
-        }) cfg.themes
-        ++ lib.mapAttrsToList (name: theme: {
-          assertion = isPathLike theme || theme.theme != { };
+        }
+        {
+          assertion = hm.strings.isPathLike value || value.theme != { };
           message = "`programs.prismlauncher.themes.${name}.theme` must not be empty.";
-        }) cfg.themes;
+        }
+      ]) cfg.themes)
+      ++ [
+        {
+          assertion = stdenv.hostPlatform.isDarwin -> cfg.settings == { };
+          message = "`programs.prismlauncher.settings` is unsupported on Darwin.";
+        }
+      ];
 
-      home = {
-        packages = lib.mkMerge ([ (mkIf (cfg.package != null) [ cfg.package ]) ] ++ cfg.extraPackages);
+    warnings = concatMap (
+      value:
+      optional (all (x: !x) (map (v: pathExists (value + v)) themePaths)) ''
+        The "${getName value}" package in `programs.prismlauncher.themePackages`
+        does not provide any Prism Launcher theme(s) and will be ignored.
+      ''
+    ) cfg.themePackages;
 
-        activation = lib.mkIf (cfg.settings != { }) {
-          prismlauncherConfigActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-            impureConfigMerger "${dataDir}/prismlauncher.cfg" (iniFormat.generate "prismlauncher-static.cfg" {
-              General = cfg.settings;
-            }) (iniFormat.generate "prismlauncher-empty.cfg" { General = { }; })
-          );
-        };
+    home.packages =
+      (optional (cfg.package != null) cfg.package)
+      ++ optional (cfg.themePackages != [ ]) (buildEnv {
+        name = "prismlauncher-themes";
+        paths = cfg.themePackages;
+        pathsToLink = themePaths;
+      });
 
-        file = lib.mkMerge [
-          (mkIf (cfg.icons != [ ]) (
-            listToAttrs (
-              map (source: {
-                name = "${dataDir}/icons/${baseNameOf source}";
-                value = { inherit source; };
-              }) cfg.icons
-            )
-          ))
-          themeFiles
-        ];
-      };
-    };
+    home.file =
+      (listToAttrs (
+        map (value: {
+          name = "${dataDir}/icons/${baseNameOf value}";
+          value.source = value;
+        }) cfg.icons
+      ))
+      // (concatMapAttrs (
+        name: value:
+        if hm.strings.isPathLike value then
+          { "${dataDir}/themes/${name}".source = value; }
+        else
+          {
+            "${dataDir}/themes/${name}/theme.json".source =
+              jsonFormat.generate "${name}-theme.json" value.theme;
+          }
+          // (optionalAttrs (value.style != null) {
+            "${dataDir}/themes/${name}/themeStyle.css".text = value.style;
+          })
+      ) cfg.themes);
+
+    home.activation.configurePrismLauncher = mkIf (cfg.settings != { }) (
+      let
+        settingsPath = dataDir + "/prismlauncher.cfg";
+        settingsFile = iniFormat.generate "prismlauncher.cfg" { General = cfg.settings; };
+
+        impureMergeScript = writeShellScript "configure-prismlauncher" ''
+          set -euo pipefail
+
+          settingsPath="$1"
+          settingsFile="$2"
+
+          if [ ! -e "$settingsPath" ]; then
+            if [[ -v DRY_RUN ]]; then
+              echo "mkdir -p $(dirname "$settingsPath")"
+              echo "cat $settingsFile > $settingsPath"
+            else
+              mkdir -p "$(dirname "$settingsPath")"
+              cat "$settingsFile" > "$settingsPath"
+            fi
+          else
+            if [[ -v DRY_RUN ]]; then
+              echo "crudini --merge --ini-options=nospace $settingsPath < $settingsFile"
+            else
+              ${getExe crudini} --merge --ini-options=nospace \
+                "$settingsPath" < "$settingsFile"
+            fi
+          fi
+        '';
+      in
+      hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${impureMergeScript} \
+          ${escapeShellArg settingsPath} \
+          ${escapeShellArg settingsFile}
+      ''
+    );
+  };
 }
