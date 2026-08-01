@@ -1,5 +1,3 @@
-{ lib, ... }:
-
 {
   wayland.windowManager.niri = {
     enable = true;
@@ -15,7 +13,9 @@
     # Empty Config should not generate `$XDG_CONFIG_HOME/niri/config.kdl`
     extraConfigEarly = "";
     extraConfig = "";
-    settings = lib.mkForce { };
+    settings = {
+      _children = [ ];
+    };
   };
 
   # Stubs with `outPath = null` produce real derivations so that the negative
