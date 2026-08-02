@@ -143,11 +143,7 @@ in
       '';
     };
 
-    includeDefaultConfig = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Whether to include niri's default config from the {option}`package`. ";
-    };
+    enableDefaultConfig = lib.mkEnableOption "including niri's default config from the {option}`package`";
 
     extraConfigEarly = lib.mkOption {
       type = lib.types.lines;
@@ -195,7 +191,7 @@ in
           escapeTabs = true;
         };
         settings = lib.trim (toKDL cfg.settings);
-        defaultConfig = lib.optionalString (cfg.includeDefaultConfig) ''include "${cfg.package.src}/resources/default-config.kdl"'';
+        defaultConfig = lib.optionalString (cfg.enableDefaultConfig) ''include "${cfg.package.src}/resources/default-config.kdl"'';
         configLines = lib.concatStringsSep "\n" (
           lib.filter (line: line != "") [
             cfg.extraConfigEarly
