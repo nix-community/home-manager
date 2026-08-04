@@ -2448,6 +2448,13 @@
     name = "Vincent Haupert";
     source = "nixpkgs";
   };
+  vidhanio = {
+    email = "me@vidhan.io";
+    github = "vidhanio";
+    githubId = 41439633;
+    name = "Vidhan Bhatt";
+    source = "home-manager";
+  };
   vonixxx = {
     email = "vonixxx@tuta.io";
     github = "vonixxx";
