@@ -1,0 +1,27 @@
+[keys."Alt + 1"]
+switch_to_workspace = 1
+
+[keys."Alt + H"]
+move_focus = "left"
+
+[keys."Alt + Shift + Left"]
+join_window = "left"
+
+[keys."comb1 + S"]
+switch_to_workspace = 2
+
+[modifier_combinations]
+comb1 = "Alt + Shift"
+
+[settings]
+animate = true
+hot_reload = true
+
+[settings.layout]
+mode = "bsp"
+
+[settings.layout.gaps.outer]
+bottom = 0.5
+left = 0.5
+right = 0.5
+top = 0.5
