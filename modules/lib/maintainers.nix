@@ -562,6 +562,12 @@
     github = "superflash41";
     githubId = 102434258;
   };
+  vidhanio = {
+    name = "Vidhan Bhatt";
+    email = "me@vidhan.io";
+    github = "vidhanio";
+    githubId = 41439633;
+  };
   will-lol = {
     name = "William Bradshaw";
     email = "will.bradshaw50@gmail.com";
