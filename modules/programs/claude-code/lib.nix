@@ -93,14 +93,32 @@ in
 
       mkSkillEntry =
         name: content:
-        if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
+        if lib.isPath content && lib.pathIsDirectory content then
           lib.nameValuePair "${configDir}/skills/${name}" {
             source = content;
             recursive = true;
           }
+        else if lib.isPath content then
+          lib.nameValuePair "${configDir}/skills/${name}/SKILL.md" { source = content; }
+        else if lib.hm.strings.isPathLike content then
+          lib.nameValuePair "${configDir}/skills/${name}" {
+            source = pkgs.runCommandLocal "claude-code-skill-${lib.strings.sanitizeDerivationName name}" { } ''
+              source=${lib.escapeShellArg "${content}"}
+              if [[ -d "$source" ]]; then
+                ln -s "$source" "$out"
+              elif [[ -f "$source" ]]; then
+                mkdir -p "$out"
+                ln -s "$source" "$out/SKILL.md"
+              else
+                echo "Claude Code skill source '$source' is neither a file nor a directory" >&2
+                exit 1
+              fi
+            '';
+            recursive = true;
+          }
         else
-          lib.nameValuePair "${configDir}/skills/${name}/SKILL.md" (
-            if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
-          );
+          lib.nameValuePair "${configDir}/skills/${name}/SKILL.md" {
+            text = content;
+          };
     };
 }
