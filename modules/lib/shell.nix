@@ -154,6 +154,37 @@ in
   */
   idempotentAppend = idempotentMerge (sep: "$__hm_cur\${__hm_cur:+${sep}}$__hm_add");
 
+  /**
+    Best-effort check whether a session variable value references the
+    variable it defines, such as `PATH = "$HOME/bin:$PATH"`. Such values
+    accumulate duplicate entries now that session variables are re-exported
+    on every source.
+
+    Detects the direct forms `$NAME`, `''${NAME}`, and `''${NAME:-...}`.
+    Backslash escapes are honored, so `\$NAME` is ignored while `\\$NAME`
+    still counts, and `$$NAME` is the shell PID followed by literal text.
+    Indirect forms, for example through `eval` or another variable, are not
+    detected.
+
+    # Type
+
+    ```
+    isSelfReferential :: String -> Any -> Bool
+    ```
+  */
+  isSelfReferential =
+    name: value:
+    lib.isString value
+    && (
+      let
+        # `\x` never expands and `$$` is the shell PID, so neither can start
+        # a reference; strip them before looking for `$NAME`.
+        plainParts = lib.filter lib.isString (builtins.split ''(\\.|[$][$])'' value);
+        refers = part: builtins.match ".*[$][{]?${lib.escapeRegex name}([^A-Za-z0-9_].*)?" part != null;
+      in
+      lib.any refers plainParts
+    );
+
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export
   # statement for each set entry.

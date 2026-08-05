@@ -489,20 +489,49 @@ in
           ];
 
           warnings =
-            lib.optionals
-              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
-              [
-                ''
-                  Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
-                  Current dotDir: ${cfg.dotDir}
-                  Consider using absolute paths or home-manager config options instead.
-                  You can replace relative paths or environment variables with options like:
-                  - config.home.homeDirectory (user's home directory)
-                  - config.xdg.configHome (XDG config directory)
-                  - config.xdg.dataHome (XDG data directory)
-                  - config.xdg.cacheHome (XDG cache directory)
-                ''
-              ]
+            (
+              let
+                selfReferentialSessionVariables = lib.attrNames (
+                  lib.filterAttrs config.lib.shell.isSelfReferential cfg.sessionVariables
+                );
+                # Point at the modules that defined each offending variable.
+                describeSelfReference =
+                  name:
+                  let
+                    files = lib.hm.options.attrDefinitionFiles options.programs.zsh.sessionVariables name;
+                  in
+                  name + lib.optionalString (files != [ ]) ", defined in ${lib.options.showFiles files}";
+              in
+              lib.optional (selfReferentialSessionVariables != [ ]) ''
+                The following programs.zsh.sessionVariables reference themselves:
+
+                  ${lib.concatStringsSep "\n  " (map describeSelfReference selfReferentialSessionVariables)}
+
+                Zsh session variables are re-applied for every new Zsh process,
+                so a self-referential value grows with each nested shell. Use
+                home.sessionPath, home.sessionSearchVariables, or
+                home.sessionSearchVariablesAppend to extend search-path style
+                variables instead.
+
+                This check is best-effort: only direct references like $NAME,
+                ''${NAME}, and ''${NAME:-...} are detected.
+              ''
+            )
+            ++
+              lib.optionals
+                (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
+                [
+                  ''
+                    Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
+                    Current dotDir: ${cfg.dotDir}
+                    Consider using absolute paths or home-manager config options instead.
+                    You can replace relative paths or environment variables with options like:
+                    - config.home.homeDirectory (user's home directory)
+                    - config.xdg.configHome (XDG config directory)
+                    - config.xdg.dataHome (XDG data directory)
+                    - config.xdg.cacheHome (XDG cache directory)
+                  ''
+                ]
             ++
               lib.optionals
                 (
