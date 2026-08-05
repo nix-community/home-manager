@@ -21,6 +21,7 @@
   claude-code-skills-subdir = ./skills-subdir.nix;
   claude-code-agents-path = ./agents-path.nix;
   claude-code-commands-path = ./commands-path.nix;
+  claude-code-hooks-path = ./hooks-path.nix;
   claude-code-skills-path = ./skills-path.nix;
   claude-code-legacy-memory-text = ./legacy-memory-text.nix;
   claude-code-legacy-memory-source-and-skills-dir = ./legacy-memory-source-and-skills-dir.nix;

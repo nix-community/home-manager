@@ -6,7 +6,8 @@ in
   mkHelpers =
     { configDir }:
     let
-      mkSourceEntry = content: if lib.isPath content then { source = content; } else { text = content; };
+      mkSourceEntry =
+        content: if lib.hm.strings.isPathLike content then { source = content; } else { text = content; };
 
       mkMarketplaceEntry = _name: content: {
         source = {
@@ -22,10 +23,7 @@ in
         attrs:
         lib.mapAttrs' (
           name: content:
-          lib.nameValuePair "${configDir}/hooks/${name}" {
-            text = content;
-            executable = true;
-          }
+          lib.nameValuePair "${configDir}/hooks/${name}" ((mkSourceEntry content) // { executable = true; })
         ) attrs;
 
       mkInstalledMarketplaceEntry =
