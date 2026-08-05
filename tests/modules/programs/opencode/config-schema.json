@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "autoshare": {
+      "type": "boolean"
+    },
+    "autoupdate": {
+      "type": "boolean"
+    },
+    "model": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": []
+}

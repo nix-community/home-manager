@@ -1,12 +1,23 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  realPkgs,
+  ...
+}:
 
 let
-  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat { inherit pkgs; };
-  # YAML and TOML use the same DAG-ordered JSON renderer, then convert with
-  # remarshal. Keep them disabled in NMT for now because remarshal in
-  # nativeBuildInputs pulls a real Python closure through the scrubbed pkgs set.
-  # orderedYamlFormat = lib.hm.generators.mkDAGOrderedYamlFormat { inherit pkgs; };
-  # orderedTomlFormat = lib.hm.generators.mkDAGOrderedTomlFormat { inherit pkgs; };
+  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+    inherit pkgs;
+    schema = ./dag-ordered-format.schema.json;
+  };
+  orderedYamlFormat = lib.hm.generators.mkDAGOrderedYamlFormat {
+    inherit pkgs;
+    schema = ./dag-ordered-format.schema.json;
+  };
+  orderedTomlFormat = lib.hm.generators.mkDAGOrderedTomlFormat {
+    inherit pkgs;
+    schema = ./dag-ordered-format.schema.json;
+  };
   orderedIniFormat = lib.hm.generators.mkDAGOrderedIniFormat { inherit pkgs; };
   orderedKeyValueFormat = lib.hm.generators.mkDAGOrderedKeyValueFormat { inherit pkgs; };
 
@@ -32,6 +43,16 @@ let
   };
 in
 {
+  nixpkgs.overlays = [
+    (_: super: {
+      buildPackages = super.buildPackages.extend (
+        _: _: {
+          inherit (realPkgs) check-jsonschema remarshal;
+        }
+      );
+    })
+  ];
+
   home.file = {
     "dag-ordered-attrs.txt".text =
       lib.concatMapStringsSep "\n" (entry: "${entry.name}=${entry.value}") (
@@ -45,11 +66,11 @@ in
     "dag-ordered-format.json".source =
       orderedJsonFormat.generate "dag-ordered-format.json" orderedFormatData;
 
-    # "dag-ordered-format.yaml".source =
-    #   orderedYamlFormat.generate "dag-ordered-format.yaml" orderedFormatData;
-    #
-    # "dag-ordered-format.toml".source =
-    #   orderedTomlFormat.generate "dag-ordered-format.toml" orderedFormatData;
+    "dag-ordered-format.yaml".source =
+      orderedYamlFormat.generate "dag-ordered-format.yaml" orderedFormatData;
+
+    "dag-ordered-format.toml".source =
+      orderedTomlFormat.generate "dag-ordered-format.toml" orderedFormatData;
 
     "dag-ordered-format.ini".source = orderedIniFormat.generate "dag-ordered-format.ini" {
       aa = lib.hm.dag.entryAfter [ "zz" ] {
@@ -77,13 +98,13 @@ in
       home-files/dag-ordered-format.json \
       ${./dag-ordered-format.json}
 
-    # assertFileContent \
-    #   home-files/dag-ordered-format.yaml \
-    #   ${./dag-ordered-format.yaml}
-    #
-    # assertFileContent \
-    #   home-files/dag-ordered-format.toml \
-    #   ${./dag-ordered-format.toml}
+    assertFileContent \
+      home-files/dag-ordered-format.yaml \
+      ${./dag-ordered-format.yaml}
+
+    assertFileContent \
+      home-files/dag-ordered-format.toml \
+      ${./dag-ordered-format.toml}
 
     assertFileContent \
       home-files/dag-ordered-format.ini \

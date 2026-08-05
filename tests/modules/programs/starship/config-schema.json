@@ -1,0 +1,380 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://starship.rs/config-schema.json",
+  "title": "Starship Config Schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "add_newline": {
+      "type": "boolean"
+    },
+    "command_timeout": {
+      "type": "number"
+    },
+    "custom": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/v0"
+      }
+    },
+    "palette": {
+      "type": "string"
+    },
+    "palettes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "scan_timeout": {
+      "type": "number"
+    },
+    "insert_bell": {
+      "type": "boolean"
+    },
+    "format": {
+      "type": "string"
+    },
+    "prompt_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "aws": {
+      "$ref": "#/$defs/aws"
+    },
+    "battery": {
+      "$ref": "#/$defs/battery"
+    },
+    "character": {
+      "$ref": "#/$defs/character"
+    },
+    "memory_usage": {
+      "$ref": "#/$defs/memory_usage"
+    },
+    "package": {
+      "$ref": "#/$defs/package"
+    },
+    "directory": {
+      "$ref": "#/$defs/directory"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "v0": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "boolean",
+          "string",
+          "array",
+          "object"
+        ]
+      }
+    },
+    "aws": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "default": "$symbol[$profile(\\($profile))]($style)"
+        },
+        "symbol": {
+          "type": "string",
+          "default": "☁️ "
+        },
+        "style": {
+          "type": "string",
+          "default": "bold yellow"
+        },
+        "region": {
+          "type": "string"
+        },
+        "expiration_symbol": {
+          "type": "string",
+          "default": "X"
+        },
+        "disable_credential_report": {
+          "type": "boolean",
+          "default": false
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "force_display": {
+          "type": "boolean",
+          "default": false
+        },
+        "aws_access_key_id": {
+          "type": "string"
+        },
+        "aws_secret_access_key": {
+          "type": "string"
+        },
+        "aws_session_token": {
+          "type": "string"
+        },
+        "aws_security_token": {
+          "type": "string"
+        },
+        "aws_region": {
+          "type": "string"
+        },
+        "aws_config": {
+          "type": "string"
+        },
+        "aws_profile": {
+          "type": "string"
+        },
+        "aws_expiration": {
+          "type": "string"
+        },
+        "aws_credential_expiration": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "battery": {
+      "type": "object",
+      "properties": {
+        "full_text": {
+          "type": "boolean"
+        },
+        "symbols": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "format": {
+          "type": "string",
+          "default": "[$symbol$percentage%]($style)"
+        },
+        "charging_symbol": {
+          "type": "string",
+          "default": "🔋"
+        },
+        "discharging_symbol": {
+          "type": "string",
+          "default": "🔋"
+        },
+        "unknown_symbol": {
+          "type": "string",
+          "default": "❓"
+        },
+        "empty_symbol": {
+          "type": "string",
+          "default": "❗"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "display": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "threshold": {
+                "type": "number"
+              },
+              "style": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "style": {
+          "type": "string",
+          "default": "red bold"
+        }
+      },
+      "additionalProperties": false
+    },
+    "character": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "default": "$symbol "
+        },
+        "success_symbol": {
+          "type": "string",
+          "default": "[❯](bold green)"
+        },
+        "error_symbol": {
+          "type": "string",
+          "default": "[❯](bold red)"
+        },
+        "vimcmd_symbol": {
+          "type": "string",
+          "default": "[❮](bold green)"
+        },
+        "vimcmd_replace_one_symbol": {
+          "type": "string"
+        },
+        "vimcmd_replace_symbol": {
+          "type": "string"
+        },
+        "vimcmd_visual_symbol": {
+          "type": "string"
+        },
+        "undetectable_state": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "memory_usage": {
+      "type": "object",
+      "properties": {
+        "threshold": {
+          "type": "number",
+          "default": -1
+        },
+        "style": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "format": {
+          "type": "string",
+          "default": "via $symbol[$ram(/${ram_total})]($style) "
+        },
+        "symbol": {
+          "type": "string",
+          "default": "🐏"
+        }
+      },
+      "additionalProperties": false
+    },
+    "package": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "default": "📦 "
+        },
+        "version": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "default": "[$symbol$version]($style) "
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "style": {
+          "type": "string",
+          "default": "bold 208"
+        },
+        "package_manager": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "all": {
+          "type": "boolean",
+          "default": false
+        },
+        "allowlist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "denylist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "directory": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "default": "[$path]($style)[$read_only]($read_only_style) "
+        },
+        "truncation_length": {
+          "type": "integer",
+          "default": 3
+        },
+        "truncation_symbol": {
+          "type": "string",
+          "default": "…/"
+        },
+        "home_symbol": {
+          "type": "string",
+          "default": "~"
+        },
+        "directory_length": {
+          "type": "integer",
+          "default": 1
+        },
+        "repo_root_format": {
+          "type": "string",
+          "default": "[$before_root_path]($style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+        },
+        "use_os_path_sep": {
+          "type": "boolean",
+          "default": true
+        },
+        "style": {
+          "type": "string",
+          "default": "cyan bold"
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "read_only": {
+          "type": "string",
+          "default": "🔒"
+        },
+        "read_only_style": {
+          "type": "string",
+          "default": "red"
+        },
+        "repo_root_style": {
+          "type": "string",
+          "default": "bold cyan"
+        },
+        "truncate_to_repo": {
+          "type": "boolean",
+          "default": true
+        },
+        "use_logical_path": {
+          "type": "boolean",
+          "default": true
+        },
+        "here_symbol": {
+          "type": "string",
+          "default": "."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
