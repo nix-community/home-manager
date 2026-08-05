@@ -278,25 +278,24 @@ in
       '';
     };
 
-    hooks = mkOption {
-      type = lib.types.attrsOf lib.types.lines;
-      default = { };
+    hooks = mkContentOption {
       description = ''
         Custom hooks for Claude Code.
-        The attribute name becomes the hook filename, and the value is the hook script content.
+        The attribute name becomes the hook filename, and the value is either:
+        - Inline content as a string
+        - A path to a file containing the hook script content
         Hooks are stored in the {file}`hooks/` subdirectory of
-        {option}`programs.claude-code.configDir`.
+        {option}`programs.claude-code.configDir` and made executable.
       '';
-      example = {
-        pre-edit = ''
-          #!/usr/bin/env bash
-          echo "About to edit file: $1"
-        '';
-        post-commit = ''
-          #!/usr/bin/env bash
-          echo "Committed with message: $1"
-        '';
-      };
+      example = literalExpression ''
+        {
+          pre-edit = '''
+            #!/usr/bin/env bash
+            echo "About to edit file: $1"
+          ''';
+          post-commit = ./hooks/post-commit.sh;
+        }
+      '';
     };
 
     rules = mkContentOption {
