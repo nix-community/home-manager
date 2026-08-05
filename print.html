@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-51bc7141.js";
+            window.path_to_searchindex_js = "searchindex-b52b993c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-a8bd1d24.js"></script>
@@ -67825,8 +67825,8 @@ package</p>
 </ul>
 <h2 id="opt-services.easyeffects.extraPresets"><a class="header" href="#opt-services.easyeffects.extraPresets">services.easyeffects.extraPresets</a></h2>
 <p>List of presets to import to easyeffects.
-Presets are written to input and output folder in <code>$XDG_DATA_HOME/easyeffects</code>.
-Top level block (input/output) determines the folder the file is written to.</p>
+Presets are written to input and output folders in <code>$XDG_DATA_HOME/easyeffects</code>.
+Each top-level block (<code>input</code> or <code>output</code>) is written to its corresponding folder.</p>
 <p>See community presets at:
 https://github.com/wwmm/easyeffects/wiki/Community-Presets</p>
 <p><em>Type:</em>
@@ -67855,6 +67855,14 @@ null or (attribute set of attribute set of (JSON value))</p>
         wet = 0.0;
       };
     };
+    output = {
+      blocklist = [ ];
+      "plugins_order" = [ "limiter#0" ];
+      "limiter#0" = {
+        bypass = false;
+        threshold = -1.0;
+      };
+    };
   };
 };
 
@@ -67864,12 +67872,60 @@ null or (attribute set of attribute set of (JSON value))</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/easyeffects.nix">&lt;home-manager/modules/services/easyeffects.nix&gt;</a></li>
 </ul>
 <h2 id="opt-services.easyeffects.preset"><a class="header" href="#opt-services.easyeffects.preset">services.easyeffects.preset</a></h2>
-<p>Which preset to use when starting easyeffects.
-Will likely need to launch easyeffects to initially create preset.</p>
+<p>Preset to load when starting EasyEffects.</p>
+<p>A string loads every input or output preset having that name. An
+attribute set selects input and output presets independently and
+requires EasyEffects 8.0.9 or later. An empty string leaves that
+pipeline unchanged.</p>
+<p>You will likely need to launch EasyEffects to initially create presets.</p>
+<p><em>Type:</em>
+string or (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  input = "voice";
+  output = "music";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/easyeffects.nix">&lt;home-manager/modules/services/easyeffects.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.easyeffects.preset.input"><a class="header" href="#opt-services.easyeffects.preset.input">services.easyeffects.preset.input</a></h2>
+<p>Input preset to load when starting EasyEffects.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">""
+</code></pre>
+<h2 id="opt-services.easyeffects.preset.output"><a class="header" href="#opt-services.easyeffects.preset.output">services.easyeffects.preset.output</a></h2>
+<p>Output preset to load when starting EasyEffects.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<h2 id="opt-services.easyeffects.settings"><a class="header" href="#opt-services.easyeffects.settings">services.easyeffects.settings</a></h2>
+<p>Global EasyEffects settings written to its mutable KConfig database.
+Settings are grouped by KConfig section. A value of <code>null</code> deletes the
+corresponding key. This option requires EasyEffects 8.0.0 or later.</p>
+<p><em>Type:</em>
+attribute set of attribute set of (null or boolean or signed integer or floating point number or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  StreamInputs = {
+    inputDevice = "alsa_input.usb-example";
+    listenToMic = false;
+  };
+  StreamOutputs.useDefaultOutputDevice = true;
+}
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
