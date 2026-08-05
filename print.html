@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f32e87f8.js";
+            window.path_to_searchindex_js = "searchindex-1ed57bab.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-97fc2448.js"></script>
@@ -19537,25 +19537,27 @@ strings concatenated with “\n” or absolute path</p>
 </ul>
 <h2 id="opt-programs.claude-code.hooks"><a class="header" href="#opt-programs.claude-code.hooks">programs.claude-code.hooks</a></h2>
 <p>Custom hooks for Claude Code.
-The attribute name becomes the hook filename, and the value is the hook script content.
+The attribute name becomes the hook filename, and the value is either:</p>
+<ul>
+<li>Inline content as a string</li>
+<li>A path to a file containing the hook script content
 Hooks are stored in the <code>hooks/</code> subdirectory of
-<code>programs.claude-code.configDir</code>.</p>
+<code>programs.claude-code.configDir</code> and made executable.</li>
+</ul>
 <p><em>Type:</em>
-attribute set of strings concatenated with “\n”</p>
+attribute set of (strings concatenated with “\n” or absolute path)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  post-commit = ''
-    #!/usr/bin/env bash
-    echo "Committed with message: $1"
-  '';
   pre-edit = ''
     #!/usr/bin/env bash
     echo "About to edit file: $1"
   '';
+  post-commit = ./hooks/post-commit.sh;
 }
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
