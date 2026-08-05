@@ -5,16 +5,35 @@ let
   # directory today: https://github.com/openai/codex/issues/10470
   mkSkillDir =
     content:
-    pkgs.writeTextDir "SKILL.md" (
-      if lib.hm.strings.isPathLike content then builtins.readFile content else content
-    );
+    if lib.isPath content then
+      pkgs.writeTextDir "SKILL.md" (builtins.readFile content)
+    else if lib.hm.strings.isPathLike content then
+      pkgs.runCommandLocal "codex-skill" { } ''
+        source=${lib.escapeShellArg "${content}"}
+        if [[ -d "$source" ]]; then
+          ln -s "$source" "$out"
+        elif [[ -f "$source" ]]; then
+          mkdir -p "$out"
+          cp "$source" "$out/SKILL.md"
+        else
+          echo "Codex skill source '$source' is neither a file nor a directory" >&2
+          exit 1
+        fi
+      ''
+    else
+      pkgs.writeTextDir "SKILL.md" content;
+
+  canInspect =
+    value:
+    !lib.isDerivation value
+    && lib.all (context: context.path or false) (lib.attrValues (builtins.getContext (toString value)));
 
   mkPluginName =
     plugin:
     let
       manifestPath = plugin + "/.codex-plugin/plugin.json";
       manifestName =
-        if !lib.isDerivation plugin && builtins.pathExists manifestPath then
+        if canInspect plugin && builtins.pathExists manifestPath then
           (builtins.fromJSON (builtins.readFile manifestPath)).name
         else
           null;
@@ -31,7 +50,7 @@ let
     let
       manifestPath = plugin + "/.codex-plugin/plugin.json";
       manifestVersion =
-        if !lib.isDerivation plugin && builtins.pathExists manifestPath then
+        if canInspect plugin && builtins.pathExists manifestPath then
           (builtins.fromJSON (builtins.readFile manifestPath)).version or null
         else
           null;
@@ -48,11 +67,13 @@ let
   mkPluginPathVersion = plugin: sanitizePathComponent (mkPluginVersion plugin);
 in
 {
+  needsBuildTimePluginIdentity = plugin: !lib.isDerivation plugin && !canInspect plugin;
+
   mkSkillSources =
     skills:
-    if builtins.isAttrs skills then
+    if !lib.hm.strings.isPathLike skills && builtins.isAttrs skills then
       skills
-    else if lib.hm.strings.isPathLike skills && lib.pathIsDirectory skills then
+    else if lib.isPath skills && lib.pathIsDirectory skills then
       lib.mapAttrs (name: _type: skills + "/${name}") (builtins.readDir skills)
     else
       { };
@@ -67,6 +88,34 @@ in
       tomlFormat,
     }:
     let
+      mkCheckedDirectory =
+        name: source:
+        if lib.isPath source then
+          source
+        else
+          pkgs.runCommandLocal "codex-${lib.strings.sanitizeDerivationName name}" { } ''
+            source=${lib.escapeShellArg "${source}"}
+            if [[ ! -d "$source" ]]; then
+              echo "Codex ${name} source '$source' is not a directory" >&2
+              exit 1
+            fi
+            ln -s "$source" "$out"
+          '';
+
+      mkCheckedFile =
+        name: source:
+        if lib.isPath source then
+          source
+        else
+          pkgs.runCommandLocal "codex-${lib.strings.sanitizeDerivationName name}" { } ''
+            source=${lib.escapeShellArg "${source}"}
+            if [[ ! -f "$source" ]]; then
+              echo "Codex ${name} source '$source' is not a file" >&2
+              exit 1
+            fi
+            ln -s "$source" "$out"
+          '';
+
       mkPluginCachePath =
         plugin:
         "${pluginsCacheDir}/${pluginsMarketplaceName}/${mkPluginPathName plugin}/${mkPluginPathVersion plugin}";
@@ -74,9 +123,9 @@ in
     {
       inherit mkPluginCachePath;
 
-      mkMarketplaceConfigEntry = _name: content: {
+      mkMarketplaceConfigEntry = name: content: {
         source_type = "local";
-        source = "${content}";
+        source = "${mkCheckedDirectory "marketplace-${name}" content}";
       };
 
       mkPersonalMarketplacePluginEntry = plugin: {
@@ -101,7 +150,7 @@ in
       mkPluginFileEntry =
         plugin:
         lib.nameValuePair (mkPluginCachePath plugin) {
-          source = plugin;
+          source = mkCheckedDirectory "plugin-${mkPluginPathName plugin}" plugin;
           force = true;
         };
 
@@ -114,19 +163,17 @@ in
       mkRuleEntry =
         name: content:
         lib.nameValuePair "${configDir}/rules/${name}.rules" (
-          if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
+          if lib.hm.strings.isPathLike content then
+            { source = mkCheckedFile "rule-${name}" content; }
+          else
+            { text = content; }
         );
 
       mkSkillEntry =
         name: content:
-        if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
-          lib.nameValuePair "${skillsDir}/${name}" {
-            source = content;
-          }
-        else
-          lib.nameValuePair "${skillsDir}/${name}" {
-            source = mkSkillDir content;
-          };
+        lib.nameValuePair "${skillsDir}/${name}" {
+          source = if lib.isPath content && lib.pathIsDirectory content then content else mkSkillDir content;
+        };
 
       mkTextOrPathEntry =
         path: content:

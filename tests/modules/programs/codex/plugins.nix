@@ -4,6 +4,10 @@ let
     name = "codex";
     version = "0.94.0";
   };
+  contextualPlugin = builtins.path {
+    name = "codex-contextual-plugin";
+    path = ./contextual-plugin;
+  };
 in
 {
   programs.codex = {
@@ -12,6 +16,7 @@ in
     plugins = [
       ./sample-plugin
       ./unsafe-plugin
+      contextualPlugin
     ];
     marketplaces.team = ./sample-marketplace;
   };
@@ -24,6 +29,7 @@ in
     assertFileContains home-files/.codex/config.toml 'source_type = "local"'
     assertFileContains home-files/.codex/config.toml 'source = "${./sample-marketplace}"'
     assertFileContains home-files/.codex/config.toml '[plugins."sample-plugin@home-manager"]'
+    assertFileContains home-files/.codex/config.toml '[plugins."contextual-plugin@home-manager"]'
     assertFileContains home-files/.codex/config.toml '[plugins."../../../outside@home-manager"]'
     assertFileContains home-files/.codex/config.toml 'enabled = true'
 
@@ -40,6 +46,7 @@ in
       home-files/.codex/plugins/cache/home-manager/sample-plugin/1.0.0/.codex-plugin/plugin.json \
       ${./sample-plugin/.codex-plugin/plugin.json}
     assertFileExists home-files/.codex/plugins/cache/home-manager/sample-plugin/1.0.0/skills/sample/SKILL.md
+    assertFileExists home-files/.codex/plugins/cache/home-manager/contextual-plugin/2.0.0/.codex-plugin/plugin.json
     assertLinkExists home-files/.codex/plugins/cache/home-manager/-..-..-outside/1.0.0-touch-pwned-
     assertFileExists home-files/.codex/plugins/cache/home-manager/-..-..-outside/1.0.0-touch-pwned-/.codex-plugin/plugin.json
     assertPathNotExists home-files/.codex/plugins/outside

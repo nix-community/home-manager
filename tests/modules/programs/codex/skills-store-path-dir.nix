@@ -1,13 +1,9 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 
 let
-  src = pkgs.writeTextDir "skills/external-skill/SKILL.md" ''
-    ---
-    name: external-skill
-    description: Store path skill directory fixture.
-    ---
-
-    # External Skill
+  src = realPkgs.runCommand "codex-ifd-skills-directory" { } ''
+    mkdir -p "$out/skills/external-skill"
+    echo '# External Skill' > "$out/skills/external-skill/SKILL.md"
   '';
 in
 {

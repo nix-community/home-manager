@@ -7,6 +7,8 @@
   codex-hooks-dir = ./hooks-dir.nix;
   codex-hooks-dir-xdg = ./hooks-dir-xdg.nix;
   codex-hooks-file = ./hooks-file.nix;
+  codex-hooks-store-path-file = ./hooks-store-path-file.nix;
+  codex-derived-store-paths = ./derived-store-paths.nix;
   codex-mcp-integration = ./mcp-integration.nix;
   codex-mcp-integration-with-override = ./mcp-integration-with-override.nix;
   codex-plugins = ./plugins.nix;
