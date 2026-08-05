@@ -954,15 +954,16 @@ in
         `format.generate`.
 
       `reader` (string or null; optional)
-      : Shell command that reads the existing file from stdin and writes JSON
-        to stdout. When `null` (the default), the reader is auto-detected
-        from `format`: `jaq -c '.'` for JSON, `jaq --from <format> -c '.'`
-        for others. Set this to something like `"${json5Bin} --as-json"` when
-        the existing file uses a superset of JSON (e.g. JSON5 with comments).
+      : Shell command that reads the existing file given as its last argument
+        and writes JSON to stdout. When `null` (the default), the reader is
+        auto-detected from `format`: `jaq -c '.'` for JSON, `jaq --from
+        <format> -c '.'` for others. Set this to something like
+        `"${json5Bin} --as-json"` when the existing file uses a superset of
+        JSON (e.g. JSON5 with comments).
 
       `verboseMsg` (string or null; optional)
-      : Custom message to log via `verboseEcho` when the merge runs. When
-        `null` (the default), a generic message is used.
+      : Message to log when `$VERBOSE` is set. When `null` (the default), a
+        generic message is used.
 
     # Type
 
@@ -1011,11 +1012,14 @@ in
           "${jaqBin} -c '.'"
         else
           "${jaqBin} --from ${format} -c '.'";
-      writerCmd =
+      # Write the merge result to a temporary file and move it into place only
+      # after the merge has succeeded, so a failing merge never clobbers the
+      # existing config.
+      writeCmd =
         if isJson then
-          "printf '%s\\n' \"$config\" > ${lib.escapeShellArg path}"
+          "printf '%s\\n' \"$config\" > \"$tmp\""
         else
-          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} -c '.' > ${lib.escapeShellArg path}";
+          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} -c '.' > \"$tmp\"";
       defaultVerboseMsg = "Merging Nix-generated config into ${path}";
       verboseMsg' = if verboseMsg != null then verboseMsg else defaultVerboseMsg;
     in
@@ -1024,18 +1028,22 @@ in
         echo ${lib.escapeShellArg verboseMsg'}
       fi
       if [[ -v DRY_RUN ]]; then
-        echo "jaq -n ${lib.escapeShellArg jqOperation} --argjson dynamic ... --argjson static ..."
-        return 0
+        echo "Would merge Nix-generated config into ${path}"
+      else
+        mkdir -p "$(dirname ${lib.escapeShellArg path})"
+        if [ ! -e ${lib.escapeShellArg path} ]; then
+          echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
+        fi
+        dynamic="$(${readerCmd} ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
+        [ -n "$dynamic" ] || dynamic=${lib.escapeShellArg empty}
+        static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
+        config="$(${jaqBin} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
+        tmp="$(mktemp)"
+        ${writeCmd}
+        install -m644 "$tmp" ${lib.escapeShellArg path}
+        rm -f "$tmp"
+        unset config
       fi
-      mkdir -p $(dirname ${lib.escapeShellArg path})
-      if [ ! -e ${lib.escapeShellArg path} ]; then
-        : > ${lib.escapeShellArg path}
-      fi
-      dynamic="$(${readerCmd} ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
-      static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
-      config="$(${jaqBin} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
-      ${writerCmd}
-      unset config
     '';
 
   toSCFG =
