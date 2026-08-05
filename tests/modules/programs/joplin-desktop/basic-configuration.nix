@@ -51,7 +51,7 @@
       assertFileContains activate \
         "if [[ -v DRY_RUN ]]; then"
 
-      generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"
+      generated="$(grep -o '/nix/store/[^ ]*-joplin-settings.json' $TESTED/activate)"
       diff -u "$generated" ${./basic-configuration.json}
 
       assertPathNotExists home-files/.config/joplin-desktop/settings.json
@@ -68,6 +68,4 @@
       ${pkgs.jq}/bin/jq -e --slurpfile generated "$generated" \
         '. == ({"unmanaged":"keep","editor":"existing","omitted":23} + $generated[0])' profile/settings.json
     '';
-
-
 }

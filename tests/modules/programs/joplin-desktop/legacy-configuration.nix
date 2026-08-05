@@ -49,7 +49,7 @@
     ];
 
   nmt.script = ''
-    generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"
+    generated="$(grep -o '/nix/store/[^ ]*-joplin-settings.json' $TESTED/activate)"
     diff -u "$generated" ${./legacy-configuration.json}
   '';
 }
