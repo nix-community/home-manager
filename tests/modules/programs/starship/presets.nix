@@ -10,6 +10,8 @@ let
   '';
 in
 {
+  imports = [ ./starship-stubs.nix ];
+
   programs.starship = {
     enable = true;
     package = starshipPackage;
@@ -18,6 +20,7 @@ in
       add_newline = false;
       scan_timeout = 10;
     };
+    validateFiles.config = true;
   };
 
   nmt.script = ''
