@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b52b993c.js";
+            window.path_to_searchindex_js = "searchindex-756b83e0.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a8bd1d24.js"></script>
+        <script src="toc-a190b98a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11907,6 +11907,7 @@ string</p>
 <li><a href="#discord">discord</a></li>
 <li><a href="#distrobox">distrobox</a></li>
 <li><a href="#docker-cli">docker-cli</a></li>
+<li><a href="#dprint">dprint</a></li>
 <li><a href="#earthly">earthly</a></li>
 <li><a href="#ec">ec</a></li>
 <li><a href="#eclipse">eclipse</a></li>
@@ -22208,6 +22209,65 @@ JSON value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/docker-cli.nix">&lt;home-manager/modules/programs/docker-cli.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dprint"><a href="#dprint" class="header">dprint</a></h1>
+<h2 id="opt-programs.dprint.enable"><a class="header" href="#opt-programs.dprint.enable">programs.dprint.enable</a></h2>
+<p>Whether to enable dprint: a code formatter for common filetypes like markdown, toml, yaml,
+and many more. See https://dprint.dev/
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/dprint.nix">&lt;home-manager/modules/programs/dprint.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.dprint.package"><a class="header" href="#opt-programs.dprint.package">programs.dprint.package</a></h2>
+<p>The dprint package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.dprint
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/dprint.nix">&lt;home-manager/modules/programs/dprint.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.dprint.settings"><a class="header" href="#opt-programs.dprint.settings">programs.dprint.settings</a></h2>
+<p>Settings to add to <code>$XDG_CONFIG_HOME/dprint/dprint.json</code>.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  excludes = [
+    "**/node_modules"
+    "**/*-lock.json"
+  ];
+  plugins = [
+    "https://plugins.dprint.dev/typescript-0.96.1.wasm"
+    "${pkgs.dprint-plugins.g-plane-pretty_yaml}/plugin.wasm"
+  ];
+  json = { };
+  malva = { };
+  markdown = { };
+  toml = { };
+  typescript = { };
+  yaml = { };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/dprint.nix">&lt;home-manager/modules/programs/dprint.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="earthly"><a href="#earthly" class="header">earthly</a></h1>
