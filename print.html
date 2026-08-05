@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8759301f.js";
+            window.path_to_searchindex_js = "searchindex-51bc7141.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-19723085.js"></script>
+        <script src="toc-a8bd1d24.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11923,6 +11923,7 @@ string</p>
 <li><a href="#firefox">firefox</a></li>
 <li><a href="#firefoxpwa">firefoxpwa</a></li>
 <li><a href="#fish">fish</a></li>
+<li><a href="#flake-edit">flake-edit</a></li>
 <li><a href="#flashspace">flashspace</a></li>
 <li><a href="#floorp">floorp</a></li>
 <li><a href="#foliate">foliate</a></li>
@@ -25295,6 +25296,63 @@ strings concatenated with “\n”</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fish.nix">&lt;home-manager/modules/programs/fish.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="flake-edit"><a href="#flake-edit" class="header">flake-edit</a></h1>
+<h2 id="opt-programs.flake-edit.enable"><a class="header" href="#opt-programs.flake-edit.enable">programs.flake-edit.enable</a></h2>
+<p>Whether to enable flake-edit.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/flake-edit.nix">&lt;home-manager/modules/programs/flake-edit.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.flake-edit.package"><a class="header" href="#opt-programs.flake-edit.package">programs.flake-edit.package</a></h2>
+<p>The flake-edit package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.flake-edit
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/flake-edit.nix">&lt;home-manager/modules/programs/flake-edit.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.flake-edit.settings"><a class="header" href="#opt-programs.flake-edit.settings">programs.flake-edit.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/flake-edit/config.toml</code> on Linux or
+<code>$HOME/Library/Application Support/flake-edit/config.toml</code> on Darwin.
+See <a href="https://github.com/a-kenji/flake-edit#configuration">https://github.com/a-kenji/flake-edit#configuration</a> for documentation.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  follow = {
+    aliases = {
+      nixpkgs = [
+        "nixpkgs-lib"
+      ];
+    };
+    ignore = [
+      "systems"
+      "crane.flake-utils"
+    ];
+    max_depth = 1;
+    transitive_min = 2;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/flake-edit.nix">&lt;home-manager/modules/programs/flake-edit.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="flashspace"><a href="#flashspace" class="header">flashspace</a></h1>
