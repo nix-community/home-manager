@@ -9,6 +9,8 @@ let
   cfg = config.programs.${name};
   tomlFormat = pkgs.formats.toml { };
   configFile = "config.toml";
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
   configPath = "${name}/${configFile}";
 in
 {
@@ -36,7 +38,8 @@ in
         };
       };
       description = ''
-        Configuration written to {file}`$XDG_CONFIG_HOME/${configPath}`.
+        Configuration written to {file}`$XDG_CONFIG_HOME/${configPath}` on Linux or
+        {file}`$HOME/Library/Application Support/${configPath}` on Darwin.
         See <https://github.com/a-kenji/${name}#configuration> for documentation.
       '';
     };
@@ -45,7 +48,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile.${configPath} = lib.mkIf (cfg.settings != { }) {
+    home.file."${configDir}/${configPath}" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate configFile cfg.settings;
     };
   };

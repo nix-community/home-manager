@@ -1,8 +1,13 @@
 {
   flake-edit-basic-settings =
-    { pkgs, ... }:
+    {
+      lib,
+      pkgs,
+      ...
+    }:
     let
-      configFile = "home-files/.config/flake-edit/config.toml";
+      configDir = if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".config";
+      configFile = "home-files/${configDir}/flake-edit/config.toml";
     in
     {
       programs.flake-edit = {
@@ -23,8 +28,8 @@
       };
 
       nmt.script = ''
-        assertFileExists ${configFile}
-        assertFileContent ${configFile} \
+        assertFileExists ${lib.escapeShellArg configFile}
+        assertFileContent ${lib.escapeShellArg configFile} \
           ${pkgs.writeText "flake-edit-expected.toml" ''
             [follow]
             ignore = ["systems", "crane.flake-utils"]
