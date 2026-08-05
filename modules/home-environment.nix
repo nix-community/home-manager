@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -648,37 +649,66 @@ in
   config = {
     warnings =
       let
-        hmRelease = config.home.version.release;
-        libRelease = lib.trivial.release;
-        pkgsRelease = pkgs.lib.trivial.release;
-        releaseMismatch = hmRelease != libRelease || hmRelease != pkgsRelease;
-
-        versionsSummary =
-          if libRelease == pkgsRelease then
-            ''
-              Home Manager version ${hmRelease} and
-              Nixpkgs version ${libRelease}.''
-          else
-            ''
-              Home Manager version: ${hmRelease}
-              Nixpkgs version used to evaluate Home Manager: ${libRelease}
-              Nixpkgs version used for packages (`pkgs`): ${pkgsRelease}'';
+        selfReferentialSessionVariables = lib.attrNames (
+          lib.filterAttrs config.lib.shell.isSelfReferential cfg.sessionVariables
+        );
+        # Point at the modules that defined each offending variable.
+        describeSelfReference =
+          name:
+          let
+            files = lib.hm.options.attrDefinitionFiles options.home.sessionVariables name;
+          in
+          name + lib.optionalString (files != [ ]) ", defined in ${lib.options.showFiles files}";
       in
-      lib.optional (config.home.enableNixpkgsReleaseCheck && releaseMismatch) ''
-        You are using
+      lib.optional (selfReferentialSessionVariables != [ ]) ''
+        The following home.sessionVariables reference themselves:
 
-          ${lib.replaceString "\n" "\n  " versionsSummary}
+          ${lib.concatStringsSep "\n  " (map describeSelfReference selfReferentialSessionVariables)}
 
-        Using mismatched versions is likely to cause errors and unexpected
-        behavior. It is therefore highly recommended to use a release of Home
-        Manager that corresponds with your chosen release of Nixpkgs.
+        Session variables are re-exported every time the session variables
+        file is sourced, so a self-referential value grows with each new
+        shell. As documented in the option description, use
+        home.sessionPath, home.sessionSearchVariables, or
+        home.sessionSearchVariablesAppend to extend search-path style
+        variables instead.
 
-        If you insist then you can disable this warning by adding
+        This check is best-effort: only direct references like $NAME,
+        ''${NAME}, and ''${NAME:-...} are detected.
+      ''
+      ++ (
+        let
+          hmRelease = config.home.version.release;
+          libRelease = lib.trivial.release;
+          pkgsRelease = pkgs.lib.trivial.release;
+          releaseMismatch = hmRelease != libRelease || hmRelease != pkgsRelease;
 
-          home.enableNixpkgsReleaseCheck = false;
+          versionsSummary =
+            if libRelease == pkgsRelease then
+              ''
+                Home Manager version ${hmRelease} and
+                Nixpkgs version ${libRelease}.''
+            else
+              ''
+                Home Manager version: ${hmRelease}
+                Nixpkgs version used to evaluate Home Manager: ${libRelease}
+                Nixpkgs version used for packages (`pkgs`): ${pkgsRelease}'';
+        in
+        lib.optional (config.home.enableNixpkgsReleaseCheck && releaseMismatch) ''
+          You are using
 
-        to your configuration.
-      '';
+            ${lib.replaceString "\n" "\n  " versionsSummary}
+
+          Using mismatched versions is likely to cause errors and unexpected
+          behavior. It is therefore highly recommended to use a release of Home
+          Manager that corresponds with your chosen release of Nixpkgs.
+
+          If you insist then you can disable this warning by adding
+
+            home.enableNixpkgsReleaseCheck = false;
+
+          to your configuration.
+        ''
+      );
 
     home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "USER")
