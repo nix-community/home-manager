@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-756b83e0.js";
+            window.path_to_searchindex_js = "searchindex-f32e87f8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a190b98a.js"></script>
+        <script src="toc-97fc2448.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11891,6 +11891,7 @@ string</p>
 <li><a href="#codex">codex</a></li>
 <li><a href="#command-not-found">command-not-found</a></li>
 <li><a href="#comodoro">comodoro</a></li>
+<li><a href="#crush">crush</a></li>
 <li><a href="#cudatext">cudatext</a></li>
 <li><a href="#cursor">cursor</a></li>
 <li><a href="#darcs">darcs</a></li>
@@ -20477,6 +20478,137 @@ open submodule of (TOML value)</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/comodoro.nix">&lt;home-manager/modules/programs/comodoro.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="crush"><a href="#crush" class="header">crush</a></h1>
+<h2 id="opt-programs.crush.enable"><a class="header" href="#opt-programs.crush.enable">programs.crush.enable</a></h2>
+<p>Whether to enable Crush, Charm’s coding agent for the terminal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/crush.nix">&lt;home-manager/modules/programs/crush.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.crush.enableMcpIntegration"><a class="header" href="#opt-programs.crush.enableMcpIntegration">programs.crush.enableMcpIntegration</a></h2>
+<p>Whether to integrate the MCP servers config from
+<code>programs.mcp.servers</code> into
+<code>programs.crush.settings.mcp</code>.</p>
+<p>Note: Settings defined in <code>programs.mcp.servers</code> are merged
+with <code>programs.crush.settings.mcp</code>, with Crush settings taking
+precedence.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/crush.nix">&lt;home-manager/modules/programs/crush.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.crush.package"><a class="header" href="#opt-programs.crush.package">programs.crush.package</a></h2>
+<p>The crush package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.crush
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/crush.nix">&lt;home-manager/modules/programs/crush.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.crush.settings"><a class="header" href="#opt-programs.crush.settings">programs.crush.settings</a></h2>
+<p>Configuration written to
+<code>$XDG_CONFIG_HOME/crush/crush.json</code>.
+See <a href="https://github.com/charmbracelet/crush">https://github.com/charmbracelet/crush</a> for the documentation.</p>
+<p>Crush expands <code>$VAR</code> and <code>$(command)</code> in configuration values, so
+secrets can be read at startup instead of being written to the Nix
+store.</p>
+<p>Note, <code>"$schema": "https://charm.land/crush.json"</code> is automatically
+added to the configuration.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  models.large = {
+    model = "claude-sonnet-4-20250514";
+    provider = "anthropic";
+  };
+  providers.deepseek = {
+    type = "openai-compat";
+    base_url = "https://api.deepseek.com/v1";
+    api_key = "$(cat /run/secrets/deepseek-api-key)";
+    models = [
+      {
+        id = "deepseek-chat";
+        name = "Deepseek V3";
+      }
+    ];
+  };
+  lsp.nix.command = "nil";
+  options.disabled_tools = [ "sourcegraph" ];
+  permissions.allowed_tools = [ "view" ];
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/crush.nix">&lt;home-manager/modules/programs/crush.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.crush.skills"><a class="header" href="#opt-programs.crush.skills">programs.crush.skills</a></h2>
+<p>Agent Skills for Crush.</p>
+<p>This option can be either:</p>
+<ul>
+<li>An attribute set defining skills</li>
+<li>A path to a directory containing skill folders</li>
+</ul>
+<p>If an attribute set is used, the attribute name becomes the skill
+directory name, and the value is either:</p>
+<ul>
+<li>Inline content as a string (creates <code>crush/skills/&lt;name&gt;/SKILL.md</code>)</li>
+<li>A path to a file (creates <code>crush/skills/&lt;name&gt;/SKILL.md</code>)</li>
+<li>A path to a directory (creates <code>crush/skills/&lt;name&gt;/</code> with all files)</li>
+</ul>
+<p>This also accepts Nix store paths, for example a skill directory from
+a package.</p>
+<p>If a path is used, it is expected to contain one folder per skill name,
+each containing a <code>SKILL.md</code>. The directory is symlinked to
+<code>$XDG_CONFIG_HOME/crush/skills/</code>.</p>
+<p><em>Type:</em>
+(attribute set of (strings concatenated with “\n” or absolute path or string)) or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  git-release = ''
+    ---
+    name: git-release
+    description: Create consistent releases and changelogs
+    ---
+
+    ## What I do
+
+    - Draft release notes from merged PRs
+    - Propose a version bump
+  '';
+
+  # A skill can also be a directory containing SKILL.md and other files.
+  data-analysis = ./skills/data-analysis;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/crush.nix">&lt;home-manager/modules/programs/crush.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cudatext"><a href="#cudatext" class="header">cudatext</a></h1>
