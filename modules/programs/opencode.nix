@@ -73,6 +73,34 @@ let
     else
       cfg.package;
 
+  normalizeDirectory =
+    name: source:
+    if lib.isPath source then
+      source
+    else
+      pkgs.runCommandLocal name { } ''
+        if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
+          echo ${lib.escapeShellArg "programs.opencode.skills must be a directory"} >&2
+          exit 1
+        fi
+        ln -s ${lib.escapeShellArg (toString source)} "$out"
+      '';
+
+  normalizeSkill =
+    source:
+    pkgs.runCommandLocal "opencode-skill" { } ''
+      source=${lib.escapeShellArg (toString source)}
+      if [[ -d "$source" ]]; then
+        ln -s "$source" "$out"
+      elif [[ -f "$source" ]]; then
+        mkdir "$out"
+        ln -s "$source" "$out/SKILL.md"
+      else
+        echo "OpenCode skill source must be a file or directory: $source" >&2
+        exit 1
+      fi
+    '';
+
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
@@ -452,7 +480,7 @@ in
         message = "`programs.opencode.tools` must be a directory when set to a path";
       }
       {
-        assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
+        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.opencode.skills` must be a directory when set to a path";
       }
       {
@@ -540,7 +568,7 @@ in
       };
 
       "opencode/skills" = mkIf (lib.hm.strings.isPathLike cfg.skills) {
-        source = cfg.skills;
+        source = normalizeDirectory "opencode-skills" cfg.skills;
         recursive = true;
       };
 
@@ -575,9 +603,14 @@ in
     )
     // lib.mapAttrs' (
       name: content:
-      if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
+      if lib.isPath content && lib.pathIsDirectory content then
         lib.nameValuePair "opencode/skills/${name}" {
           source = content;
+          recursive = true;
+        }
+      else if lib.hm.strings.isPathLike content && !lib.isPath content then
+        lib.nameValuePair "opencode/skills/${name}" {
+          source = normalizeSkill content;
           recursive = true;
         }
       else

@@ -1,24 +1,24 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 
 let
-  src = pkgs.writeTextDir "skills/external-skill/SKILL.md" ''
-    # Mock Skill
-    This content simulates a skill living inside a package source.
+  src = realPkgs.runCommand "opencode-ifd-skill-source" { } ''
+    mkdir -p "$out/skills/external-skill"
+    echo '# External Skill' > "$out/skills/external-skill/SKILL.md"
   '';
 in
 {
   programs.opencode = {
     enable = true;
     skills = {
-      # We reference the specific subfolder inside the store path
-      internal-skill = "${src}/skills/external-skill";
+      directory = "${src}/skills/external-skill";
+      file = "${src}/skills/external-skill/SKILL.md";
     };
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/opencode/skills/internal-skill/SKILL.md
-
-    assertFileContent home-files/.config/opencode/skills/internal-skill/SKILL.md \
+    assertFileContent home-files/.config/opencode/skills/directory/SKILL.md \
+      "${src}/skills/external-skill/SKILL.md"
+    assertFileContent home-files/.config/opencode/skills/file/SKILL.md \
       "${src}/skills/external-skill/SKILL.md"
   '';
 }
