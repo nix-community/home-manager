@@ -24,6 +24,7 @@ let
     ;
   inherit (lib.hm.strings) isPathLike;
 
+  appName = name; # for clearer variable name below
   moduleName = lib.concatStringsSep "." modulePath;
 
   cfg = lib.getAttrFromPath modulePath config;
@@ -93,7 +94,7 @@ let
           "[nix]"."editor.tabSize" = 2;
         };
         description = ''
-          Configuration written to ${name}'s
+          Configuration written to ${appName}'s
           {file}`settings.json`.
           This can be a JSON object or a path to a custom JSON file.
         '';
@@ -113,7 +114,7 @@ let
           ];
         };
         description = ''
-          Configuration written to ${name}'s
+          Configuration written to ${appName}'s
           {file}`tasks.json`.
           This can be a JSON object or a path to a custom JSON file.
         '';
@@ -128,7 +129,7 @@ let
           {option}`${moduleName}.profiles.<name>.userMcp`.
 
           Note: Settings defined in {option}`programs.mcp.servers` are merged
-          with {option}`${moduleName}.profiles.<name>.userMcp`, with ${name}
+          with {option}`${moduleName}.profiles.<name>.userMcp`, with ${appName}
           settings taking precedence.
         '';
       };
@@ -138,7 +139,7 @@ let
         default = { };
         example.servers.Github.url = "https://api.githubcopilot.com/mcp/";
         description = ''
-          Configuration written to ${name}'s
+          Configuration written to ${appName}'s
           {file}`mcp.json`.
           This can be a JSON object or a path to a custom JSON file.
         '';
@@ -191,7 +192,7 @@ let
           }
         ];
         description = ''
-          Keybindings written to ${name}'s
+          Keybindings written to ${appName}'s
           {file}`keybindings.json`.
           This can be a JSON object or a path to a custom JSON file.
         '';
@@ -202,7 +203,7 @@ let
         default = [ ];
         example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
         description = ''
-          The extensions ${name} should be started with.
+          The extensions ${appName} should be started with.
         '';
       };
 
@@ -260,11 +261,11 @@ let
 in
 {
   options = lib.setAttrByPath modulePath {
-    enable = lib.mkEnableOption name;
+    enable = lib.mkEnableOption appName;
 
     package = lib.mkPackageOption pkgs packageName {
       nullable = true;
-      extraDescription = "Version of ${name} to install.";
+      extraDescription = "Version of ${appName} to install.";
     };
 
     mutableExtensionsDir = mkOption {
@@ -274,7 +275,7 @@ in
       example = false;
       description = ''
         Whether extensions can be installed or updated manually
-        or by ${name}. Mutually exclusive to
+        or by ${appName}. Mutually exclusive to
         ${moduleName}.profiles.
       '';
     };
@@ -286,7 +287,7 @@ in
         enable-crash-reporter = false;
       };
       description = ''
-        Configuration written to ${name}'s
+        Configuration written to ${appName}'s
         {file}`argv.json`.
         This can be a JSON object or a path to a custom JSON file.
       '';
@@ -296,7 +297,7 @@ in
       type = types.attrsOf profileType;
       default = { };
       description = ''
-        A list of all ${name} profiles. Mutually exclusive
+        A list of all ${appName} profiles. Mutually exclusive
         to ${moduleName}.mutableExtensionsDir
       '';
     };
