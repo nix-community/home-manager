@@ -3,5 +3,6 @@
   # https://github.com/nix-community/home-manager/issues/1341#issuecomment-687286866
   #targets-darwin = ./darwin.nix;
   terminfo = ./terminfo.nix;
-  user-defaults = ./user-defaults.nix;
+  user-defaults = ./user-defaults;
+  user-defaults-dock = ./user-defaults/dock.nix;
 }
