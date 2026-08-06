@@ -55,6 +55,7 @@
             "astroid"
             "getmail"
             "himalaya"
+            "neverest"
             "imapnotify"
             "lieer"
             "mbsync"
