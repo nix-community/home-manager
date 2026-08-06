@@ -51,7 +51,7 @@ in
 
       Service = {
         ExecStart = lib.escapeShellArgs ([ (lib.getExe cfg.package) ] ++ cfg.extraArgs);
-        Environment = lib.mapAttrsToList (name: value: "${name}=${value}") cfg.environmentVariables;
+        Environment = lib.hm.systemd.envToList cfg.environmentVariables;
         Restart = "on-failure";
       };
 

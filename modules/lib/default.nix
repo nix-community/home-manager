@@ -17,6 +17,7 @@ rec {
   types = import ./types.nix { inherit gvariant lib; };
 
   shell = import ./shell.nix { inherit lib; };
+  systemd = import ./systemd.nix { inherit lib; };
   zsh = import ./zsh.nix { inherit lib; };
   nushell = import ./nushell.nix { inherit lib; };
 }
