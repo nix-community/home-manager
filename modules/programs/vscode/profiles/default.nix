@@ -11,6 +11,7 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
+  _class = "homeManager.vscodeProfile";
   options = {
 
     userSettings = mkOption {

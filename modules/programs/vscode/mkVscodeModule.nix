@@ -84,6 +84,7 @@ let
   };
 
   profileType = types.submoduleWith {
+    class = "homeManager.vscodeProfile";
     modules = [
       ./profiles/default.nix
       ({ name, ... }: {
