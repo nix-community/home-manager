@@ -2100,8 +2100,10 @@
     source = "home-manager";
   };
   rachitvrma = {
+    email = "155641117+rachitvrma@users.noreply.github.com";
     github = "rachitvrma";
     githubId = 155641117;
+    matrix = "@rachitvrma:matrix.org";
     name = "Rachit Kumar Verma";
     source = "home-manager";
   };
