@@ -14,6 +14,8 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-inconsistent-config = ./inconsistent-config.nix;
   hyprland-submaps-config = ./submaps-config.nix;
   hyprland-submaps-on-dispatch = ./submaps-on-dispatch.nix;
+  hyprland-xdph-no-settings = ./xdph-no-settings.nix;
+  hyprland-xdph-settings = ./xdph-settings.nix;
   hyprland-lua-config = ./lua-config.nix;
   hyprland-lua-files-assertions = ./lua-files-assertions.nix;
   hyprland-lua-files-config = ./lua-files-config.nix;
