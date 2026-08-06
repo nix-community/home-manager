@@ -1,4 +1,7 @@
 {
+  starship-activation-config-invalid = ./activation-config-invalid.nix;
+  starship-activation-config-valid = ./activation-config-valid.nix;
+  starship-activation-not-set = ./activation-not-set.nix;
   starship-settings = ./settings.nix;
   starship-no-settings = ./no-settings.nix;
   starship-presets = ./presets.nix;
