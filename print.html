@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1ed57bab.js";
+            window.path_to_searchindex_js = "searchindex-e9adce0a.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-97fc2448.js"></script>
+        <script src="toc-bf611879.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12209,6 +12209,7 @@ string</p>
 <li><a href="#wayprompt">wayprompt</a></li>
 <li><a href="#wezterm">wezterm</a></li>
 <li><a href="#windsurf">windsurf</a></li>
+<li><a href="#wiremix">wiremix</a></li>
 <li><a href="#wleave">wleave</a></li>
 <li><a href="#wlogout">wlogout</a></li>
 <li><a href="#wofi">wofi</a></li>
@@ -61147,6 +61148,56 @@ absolute path or JSON value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/windsurf.nix">&lt;home-manager/modules/programs/windsurf.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="wiremix"><a href="#wiremix" class="header">wiremix</a></h1>
+<h2 id="opt-programs.wiremix.enable"><a class="header" href="#opt-programs.wiremix.enable">programs.wiremix.enable</a></h2>
+<p>Whether to enable wiremix.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wiremix.nix">&lt;home-manager/modules/programs/wiremix.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.wiremix.package"><a class="header" href="#opt-programs.wiremix.package">programs.wiremix.package</a></h2>
+<p>The wiremix package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.wiremix
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wiremix.nix">&lt;home-manager/modules/programs/wiremix.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.wiremix.settings"><a class="header" href="#opt-programs.wiremix.settings">programs.wiremix.settings</a></h2>
+<p>Configuration written to
+<code>$XDG_CONFIG_HOME/wiremix/wiremix.toml</code></p>
+<p>See <a href="https://github.com/tsowell/wiremix#configuration">https://github.com/tsowell/wiremix#configuration</a> for more
+information.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  mouse = false;
+  peaks = "auto";
+  theme = "default";
+  max_volume_percent = 100.0;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wiremix.nix">&lt;home-manager/modules/programs/wiremix.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wleave"><a href="#wleave" class="header">wleave</a></h1>
