@@ -32,10 +32,13 @@
 
       sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
       assertFileExists $sessionVarsFile
-      assertFileContains $sessionVarsFile \
-        'export XDG_CONFIG_DIRS="/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}"'
-      assertFileContains $sessionVarsFile \
-        'export XDG_DATA_DIRS="/usr/local/share:/usr/share:/baz/quux''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"'
+      (
+        export XDG_CONFIG_DIRS=/inherited-config
+        export XDG_DATA_DIRS=/inherited-data
+        . "$TESTED/$sessionVarsFile"
+        [ "$XDG_CONFIG_DIRS" = "/etc/xdg:/foo/bar:/inherited-config" ]
+        [ "$XDG_DATA_DIRS" = "/usr/local/share:/usr/share:/baz/quux:/inherited-data" ]
+      ) || fail "XDG system directories were not prepended"
     '';
   };
 }

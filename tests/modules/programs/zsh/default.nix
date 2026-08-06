@@ -29,6 +29,7 @@
   zsh-plugins = ./plugins.nix;
   zsh-prezto = ./prezto.nix;
   zsh-session-variables = ./session-variables.nix;
+  zsh-session-variables-self-reference = ./session-variables-self-reference.nix;
   zsh-smart-formatting = ./smart-formatting.nix;
   zsh-syntax-highlighting = ./syntax-highlighting.nix;
   zsh-syntax-highlighting-override = ./syntax-highlighting-override.nix;

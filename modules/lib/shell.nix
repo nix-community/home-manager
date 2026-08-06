@@ -58,6 +58,67 @@ let
       } items;
     in
     foldResult.finishedLines ++ lib.optional (foldResult.currentLine != "") foldResult.currentLine;
+  # Prepare a value for interpolation inside a double-quoted shell word.
+  # `$` stays expandable and existing backslash escapes keep the meaning
+  # double quotes give them, so `\$HOME` remains a literal `$HOME` while a
+  # lone backslash before any other character stays a literal backslash.
+  escapeDoubleQuoted =
+    let
+      escapeLiteral = lib.replaceStrings [ "\\" "\"" "`" ] [ "\\\\" "\\\"" "\\`" ];
+      handlePart =
+        part:
+        if lib.isString part then
+          escapeLiteral part
+        else
+          let
+            c = lib.head part;
+          in
+          # These four sequences already escape within double quotes. A
+          # backslash before anything else — including a newline, whose
+          # line-continuation semantics we deliberately do not preserve —
+          # is literal and must itself be escaped.
+          if c == "$" || c == "\\" || c == "\"" || c == "`" then "\\${c}" else escapeLiteral "\\${c}";
+    in
+    value: lib.concatMapStrings handlePart (builtins.split ''\\(.)'' value);
+
+  # Add missing non-empty entries without moving existing ones. Keep this
+  # inline and POSIX-compatible because Babelfish mistranslates quoted
+  # positional parameters in case patterns.
+  idempotentMerge =
+    combine: sep: n: v:
+    let
+      values = lib.unique (lib.filter (value: value != "") v);
+      # Keep values separate; splitting a joined string would corrupt entries
+      # that contain the separator.
+      addValue = value: ''
+        __hm_entry="${escapeDoubleQuoted value}"
+        if [ -n "$__hm_entry" ]; then
+          case "${sep}$__hm_cur${sep}$__hm_add${sep}" in
+            *"${sep}$__hm_entry${sep}"*) ;;
+            *) __hm_add="$__hm_add''${__hm_add:+${sep}}$__hm_entry" ;;
+          esac
+        fi'';
+      addValues = lib.concatMapStringsSep "\n" addValue values;
+      indentedAddValues = lib.optionalString (values != [ ]) (
+        lib.replaceStrings [ "\n" ] [ "\n  " ] addValues
+      );
+      # Command substitution strips trailing newlines, so keep a sentinel until
+      # the value returns to the parent shell.
+    in
+    ''
+      ${n}=$(
+        __hm_cur="''${${n}-}"
+        __hm_add=""
+        __hm_entry=""
+        ${indentedAddValues}
+        if [ -n "$__hm_add" ]; then
+          __hm_cur="${combine sep}"
+        fi
+        printf '%s.' "$__hm_cur"
+      )
+      ${n}="''${${n}%?}"
+      export ${n}
+    '';
 in
 {
   inherit export wrapLines;
@@ -70,6 +131,59 @@ in
   prependToVar =
     sep: n: v:
     "${lib.concatStringsSep sep v}\${${n}:+${sep}}\$${n}";
+
+  /**
+    Generate POSIX shell code that prepends missing entries to a variable.
+
+    # Type
+
+    ```
+    idempotentPrepend :: String -> String -> [ String ] -> String
+    ```
+  */
+  idempotentPrepend = idempotentMerge (sep: "$__hm_add\${__hm_cur:+${sep}}$__hm_cur");
+
+  /**
+    Generate POSIX shell code that appends missing entries to a variable.
+
+    # Type
+
+    ```
+    idempotentAppend :: String -> String -> [ String ] -> String
+    ```
+  */
+  idempotentAppend = idempotentMerge (sep: "$__hm_cur\${__hm_cur:+${sep}}$__hm_add");
+
+  /**
+    Best-effort check whether a session variable value references the
+    variable it defines, such as `PATH = "$HOME/bin:$PATH"`. Such values
+    accumulate duplicate entries now that session variables are re-exported
+    on every source.
+
+    Detects the direct forms `$NAME`, `''${NAME}`, and `''${NAME:-...}`.
+    Backslash escapes are honored, so `\$NAME` is ignored while `\\$NAME`
+    still counts, and `$$NAME` is the shell PID followed by literal text.
+    Indirect forms, for example through `eval` or another variable, are not
+    detected.
+
+    # Type
+
+    ```
+    isSelfReferential :: String -> Any -> Bool
+    ```
+  */
+  isSelfReferential =
+    name: value:
+    lib.isString value
+    && (
+      let
+        # `\x` never expands and `$$` is the shell PID, so neither can start
+        # a reference; strip them before looking for `$NAME`.
+        plainParts = lib.filter lib.isString (builtins.split ''(\\.|[$][$])'' value);
+        refers = part: builtins.match ".*[$][{]?${lib.escapeRegex name}([^A-Za-z0-9_].*)?" part != null;
+      in
+      lib.any refers plainParts
+    );
 
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export

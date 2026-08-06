@@ -4,7 +4,10 @@
 
   nmt.script = ''
     assertFileExists home-path/etc/profile.d/hm-session-vars.sh
-    assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
-      'export PATH="/home/hm-user/.local/bin''${PATH:+:}$PATH"'
+    (
+      export PATH=/inherited
+      . "$TESTED/home-path/etc/profile.d/hm-session-vars.sh"
+      [ "$PATH" = "/home/hm-user/.local/bin:/inherited" ]
+    ) || fail "local bin directory was not prepended"
   '';
 }
