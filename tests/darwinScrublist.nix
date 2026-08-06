@@ -42,6 +42,7 @@ let
     "colima"
     "comodoro"
     "cudatext"
+    "cursor-cli"
     "darcs"
     "delta"
     "devenv"
