@@ -1,8 +1,11 @@
 { pkgs, realPkgs, ... }:
 let
   inherit (realPkgs.pinnacle) src version cargoHash;
+  buildRustConfig = realPkgs.pinnacle.buildRustConfig.override {
+    libdisplay-info = realPkgs.libdisplay-info_0_3;
+  };
 
-  pinnacle-config = realPkgs.pinnacle.buildRustConfig {
+  pinnacle-config = buildRustConfig {
     pname = "pinnacle-config";
     inherit version src cargoHash;
 
