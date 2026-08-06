@@ -124,7 +124,7 @@ in
     };
 
     argvSettings = mkOption {
-      type = types.either types.path jsonFormat.type;
+      type = with types; either path json;
       default = { };
       example = {
         enable-crash-reporter = false;

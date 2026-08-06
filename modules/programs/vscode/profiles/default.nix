@@ -2,20 +2,18 @@
   appName,
   lib,
   moduleName,
-  pkgs,
   ...
 }:
 let
   inherit (lib) types;
   inherit (lib.options) literalExpression mkOption;
-  jsonFormat = pkgs.formats.json { };
 in
 {
   _class = "homeManager.vscodeProfile";
   options = {
 
     userSettings = mkOption {
-      type = types.either types.path jsonFormat.type;
+      type = with types; either path json;
       default = { };
       example = {
         "files.autoSave" = "off";
@@ -29,7 +27,7 @@ in
     };
 
     userTasks = mkOption {
-      type = types.either types.path jsonFormat.type;
+      type = with types; either path json;
       default = { };
       example = {
         version = "2.0.0";
@@ -63,7 +61,7 @@ in
     };
 
     userMcp = mkOption {
-      type = types.either types.path jsonFormat.type;
+      type = with types; either path json;
       default = { };
       example.servers.Github.url = "https://api.githubcopilot.com/mcp/";
       description = ''
@@ -77,7 +75,7 @@ in
       type = types.either types.path (
         types.listOf (
           types.submodule {
-            freeformType = jsonFormat.type;
+            freeformType = types.json;
             options = {
               key = mkOption {
                 type = types.str;
@@ -100,7 +98,7 @@ in
 
               # https://code.visualstudio.com/docs/getstarted/keybindings#_command-arguments
               args = mkOption {
-                type = types.nullOr (jsonFormat.type);
+                type = with types; nullOr json;
                 default = null;
                 example = {
                   direction = "up";
@@ -127,7 +125,7 @@ in
     };
 
     extensions = mkOption {
-      type = types.listOf types.package;
+      type = with types; listOf package;
       default = [ ];
       example = literalExpression "[ pkgs.vscode-extensions.bbenoist.nix ]";
       description = ''
@@ -136,7 +134,7 @@ in
     };
 
     languageSnippets = mkOption {
-      inherit (jsonFormat) type;
+      type = types.json;
       default = { };
       example = {
         haskell = {
@@ -151,7 +149,7 @@ in
     };
 
     globalSnippets = mkOption {
-      inherit (jsonFormat) type;
+      type = types.json;
       default = { };
       example = {
         fixme = {
@@ -164,7 +162,7 @@ in
     };
 
     enableUpdateCheck = mkOption {
-      type = types.nullOr types.bool;
+      type = with types; nullOr bool;
       default = null;
       description = ''
         Whether to enable update checks/notifications.
@@ -174,7 +172,7 @@ in
     };
 
     enableExtensionUpdateCheck = mkOption {
-      type = types.nullOr types.bool;
+      type = with types; nullOr bool;
       default = null;
       description = ''
         Whether to enable update notifications for extensions.
