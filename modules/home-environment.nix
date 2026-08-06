@@ -754,7 +754,7 @@ in
     lib.bash.initHomeManagerLib =
       let
         domainDir =
-          pkgs.runCommand "hm-modules-messages"
+          pkgs.runCommandLocal "hm-modules-messages"
             {
               nativeBuildInputs = [ pkgs.buildPackages.gettext ];
             }
@@ -883,7 +883,7 @@ in
           ''}
         '';
       in
-      pkgs.runCommand "home-manager-generation"
+      pkgs.runCommandLocal "home-manager-generation"
         {
           preferLocalBuild = true;
           passAsFile = [ "extraDependencies" ];
