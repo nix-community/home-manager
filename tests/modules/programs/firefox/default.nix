@@ -11,3 +11,4 @@
 // (import ./firefox.nix { inherit lib; })
 // (import ./floorp.nix { inherit lib; })
 // (import ./librewolf.nix { inherit lib; })
+// (import ./waterfox.nix { inherit lib; })
