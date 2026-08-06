@@ -19,9 +19,7 @@
       }
     '';
 
-    envFile.text = ''
-      $env.FOO = 'BAR'
-    '';
+    envFile.text = "$env.FOO = 'BAR'";
 
     loginFile.text = ''
       # Prints "Hello, World" upon logging into tty1
@@ -75,7 +73,7 @@
         "${configDir}/config.nu" \
         ${./config-expected.nu}
       assertFileContent \
-        "${configDir}/env.nu" \
+        "$(normalizeStorePaths "${configDir}/env.nu")" \
         ${./env-expected.nu}
       assertFileContent \
         "${configDir}/login.nu" \
