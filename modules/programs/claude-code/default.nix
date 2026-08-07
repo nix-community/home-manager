@@ -92,6 +92,14 @@ in
         mkSkillEntry
         ;
 
+      # Manifest name of the synthesized plugin that carries generated MCP and
+      # LSP config. Claude Code derives the MCP tool namespace from this name
+      # (`mcp__plugin_<name>_<server>__<tool>`), so it is kept short to reduce
+      # token overhead. The personal-plugin directory entry keeps the longer,
+      # stable `claude-code-home-manager` name to avoid colliding with user
+      # plugins or skills. See issue #9446.
+      generatedPluginName = "hm";
+
       mergedMcpServers =
         transformedMcpServers
         // lib.mapAttrs (_: server: removeAttrs (lib.hm.mcp.addType server) [ "enabled" ]) cfg.mcpServers;
@@ -110,7 +118,7 @@ in
         ''
           install -Dm644 ${
             jsonFormat.generate "claude-code-plugin.json" {
-              name = "claude-code-home-manager";
+              name = generatedPluginName;
             }
           } $out/.claude-plugin/plugin.json
         ''
@@ -133,6 +141,12 @@ in
 
       pluginEntries =
         lib.optional (generatedPluginFiles != [ ]) {
+          # Keep the directory name as the long, stable `claude-code-home-manager`
+          # rather than the short `generatedPluginName`: this entry becomes a
+          # personal-plugin directory under `skills/`, and a short name like `hm`
+          # would collide with valid `programs.claude-code.plugins.hm` or
+          # `skills.hm`, failing the uniqueness assertions. The MCP tool prefix
+          # already uses the short manifest name above.
           name = "claude-code-home-manager";
           source = generatedPlugin;
         }
