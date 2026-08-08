@@ -1,0 +1,68 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.worktrunk;
+  tomlFormat = pkgs.formats.toml { };
+in
+{
+  meta.maintainers = [ lib.maintainers.eveeifyeve ];
+
+  options.programs.worktrunk = {
+    enable = lib.mkEnableOption "worktrunk";
+
+    package = lib.mkPackageOption pkgs "worktrunk" { };
+
+    settings = lib.mkOption {
+      type = tomlFormat.type;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          skip-shell-integration-prompt = true;
+          post-start = {
+            copy = "wt step copy-ignored";
+          };
+        };
+      '';
+      description = ''
+        Configuration written to `$XDG_CONFIG_HOME/worktrunk/config.toml`.
+      '';
+    };
+
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+
+    xdg.configFile."worktrunk/config.toml" = lib.mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "config.toml" cfg.settings;
+    };
+
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
+      eval $(${lib.getExe cfg.package} config shell init zsh)
+    '';
+
+    programs.bash.initExtra = lib.mkIf cfg.enableBashIntegration ''
+      eval $(${lib.getExe cfg.package} config shell init bash)
+    '';
+
+    programs.fish.shellInit = lib.mkIf cfg.enableFishIntegration ''
+      eval $(${lib.getExe cfg.package} config shell init fish)
+    '';
+
+    programs.nushell.extraConfig = lib.mkIf cfg.enableNushellIntegration ''
+      source ${
+        pkgs.runCommand "worktrunk-nushell-config.nu" { } ''
+          ${lib.getExe cfg.package} config shell init nu > $out
+        ''
+      }
+    '';
+  };
+}
