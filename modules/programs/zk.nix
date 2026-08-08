@@ -44,10 +44,25 @@ in
         available options and documentation.
       '';
     };
+
+    defaultNotebookDir = lib.mkOption {
+      type = with lib.types; nullOr str;
+      default = null;
+      example = "/home/user/Notes";
+      description = ''
+        Default notebook directory for zk.
+
+        When set, exports the 'ZK_NOTEBOOK_DIR' environment variable.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+    home.sessionVariables = lib.mkIf (cfg.defaultNotebookDir != null) {
+      ZK_NOTEBOOK_DIR = cfg.defaultNotebookDir;
+    };
 
     xdg.configFile."zk/config.toml" = lib.mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "config.toml" cfg.settings;
