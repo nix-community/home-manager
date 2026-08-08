@@ -8,6 +8,19 @@
 let
   cfg = config.programs.carapace;
   bin = lib.getExe cfg.package;
+
+  # `ignoreCase` is a deprecated shorthand for CARAPACE_MATCH = "1"; using it
+  # together with `environmentVariables.CARAPACE_MATCH` is rejected by the
+  # assertion below.
+  envVars = cfg.environmentVariables // lib.optionalAttrs cfg.ignoreCase { CARAPACE_MATCH = "1"; };
+
+  setArgs = lib.concatLists (
+    lib.mapAttrsToList (k: v: [
+      "--set"
+      k
+      v
+    ]) envVars
+  );
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -33,21 +46,76 @@ in
       default = false;
       description = ''
         Whether to enable case-insensitive matching for carapace completions.
-        When enabled, the carapace binary is wrapped with {env}`CARAPACE_MATCH`
-        set to `1`.
+        Equivalent to setting
+        {option}`programs.carapace.environmentVariables.CARAPACE_MATCH` to
+        `1`.
+
+        ::: {.warning}
+        This option is deprecated and will be removed in a future release.
+        Use {option}`programs.carapace.environmentVariables.CARAPACE_MATCH`
+        instead.
+        :::
+      '';
+    };
+
+    environmentVariables = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      example = {
+        CARAPACE_MATCH = "1";
+        CARAPACE_EXCLUDES = "wt";
+      };
+      description = ''
+        Environment variables to bake into the {command}`carapace` binary
+        (e.g. {env}`CARAPACE_MATCH`, {env}`CARAPACE_EXCLUDES`). Keys are full
+        variable names — no prefix is added — mirroring
+        {option}`home.sessionVariables`.
+
+        The variables are applied by wrapping the binary with
+        {command}`makeWrapper`, so they take effect both at completion time and
+        during the build-time {command}`carapace --list` used to disable fish's
+        built-in completions for fish < 4.0. This is preferable to setting the
+        same variables via {option}`home.sessionVariables`, which would neither
+        influence that build-time {command}`--list` nor scope the variables to
+        the carapace process.
+
+        Note that {env}`CARAPACE_BRIDGES` and {env}`CARAPACE_EXCLUDES` change
+        which completers carapace registers: {env}`CARAPACE_BRIDGES` may
+        require running {command}`carapace --clear-cache` after a change and
+        notably expands the build-time completion list (and thus the number of
+        completion files generated for fish < 4.0), while the remaining
+        variables only affect runtime behaviour (matching, styling, …) and do
+        not touch the cache.
       '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    programs.carapace.package = lib.mkIf cfg.ignoreCase (
+    warnings = lib.optional cfg.ignoreCase ''
+      `programs.carapace.ignoreCase' is deprecated and will be removed in a
+      future release. Please use `programs.carapace.environmentVariables.CARAPACE_MATCH'
+      (set to "1") instead.
+    '';
+
+    assertions = [
+      {
+        assertion = !(cfg.ignoreCase && cfg.environmentVariables ? CARAPACE_MATCH);
+        message = ''
+          `programs.carapace.ignoreCase' must not be used together with
+          `programs.carapace.environmentVariables.CARAPACE_MATCH' because
+          `ignoreCase' is a deprecated shorthand for
+          `environmentVariables.CARAPACE_MATCH = "1"'. Please set only one.
+        '';
+      }
+    ];
+
+    programs.carapace.package = lib.mkIf (envVars != { }) (
       pkgs.symlinkJoin {
-        name = "carapace-wrapped";
+        name = "carapace";
         paths = [ pkgs.carapace ];
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
-          wrapProgram $out/bin/carapace \
-            --set CARAPACE_MATCH 1
+          wrapProgram $out/bin/carapace ${lib.escapeShellArgs setArgs}
         '';
         meta.mainProgram = "carapace";
       }
