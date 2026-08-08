@@ -1,21 +1,13 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 let
-  src = pkgs.writeTextDir "agents/code-reviewer.agent.md" ''
-    ---
-    description: Review changes from a store-path directory fixture.
-    tools: ["*"]
-    ---
-
-    Focus on correctness and missing coverage.
+  src = realPkgs.runCommand "github-copilot-cli-ifd-agents-directory" { } ''
+    mkdir -p "$out/agents"
+    echo '# Code Reviewer' > "$out/agents/code-reviewer.agent.md"
   '';
 
-  skillsSrc = pkgs.writeTextDir "skills/external-skill/SKILL.md" ''
-    ---
-    name: external-skill
-    description: Store-path directory fixture.
-    ---
-
-    Exercise top-level store-path directory handling.
+  skillsSrc = realPkgs.runCommand "github-copilot-cli-ifd-skills-directory" { } ''
+    mkdir -p "$out/skills/external-skill"
+    echo '# External Skill' > "$out/skills/external-skill/SKILL.md"
   '';
 in
 {

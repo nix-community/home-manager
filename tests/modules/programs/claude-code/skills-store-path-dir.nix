@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 
 let
-  src = pkgs.writeTextDir "skills/external-skill/SKILL.md" ''
-    # External Skill
+  src = realPkgs.runCommand "claude-code-ifd-skills-directory" { } ''
+    mkdir -p "$out/skills/external-skill"
+    echo '# External Skill' > "$out/skills/external-skill/SKILL.md"
   '';
 in
 {

@@ -3,6 +3,7 @@
   antigravity-cli-context = ./context.nix;
   antigravity-cli-skills = ./skills.nix;
   antigravity-cli-skills-dir = ./skills-dir.nix;
+  antigravity-cli-skills-store-path = ./skills-store-path.nix;
   antigravity-cli-skills-store-path-dir = ./skills-store-path-dir.nix;
   antigravity-cli-skills-path-not-directory = ./skills-path-not-directory.nix;
   antigravity-cli-mcp-servers = ./mcp.nix;

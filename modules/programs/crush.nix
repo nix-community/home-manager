@@ -41,6 +41,34 @@ let
   settings = cfg.settings // lib.optionalAttrs (mcpServers != { }) { mcp = mcpServers; };
 
   skills = if lib.isAttrs cfg.skills then cfg.skills else { };
+
+  normalizeSkillsDirectory =
+    source:
+    if lib.isPath source then
+      source
+    else
+      pkgs.runCommandLocal "crush-skills" { } ''
+        if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
+          echo ${lib.escapeShellArg "programs.crush.skills must be a directory"} >&2
+          exit 1
+        fi
+        ln -s ${lib.escapeShellArg (toString source)} "$out"
+      '';
+
+  normalizeSkill =
+    source:
+    pkgs.runCommandLocal "crush-skill" { } ''
+      source=${lib.escapeShellArg (toString source)}
+      if [[ -d "$source" ]]; then
+        ln -s "$source" "$out"
+      elif [[ -f "$source" ]]; then
+        mkdir "$out"
+        ln -s "$source" "$out/SKILL.md"
+      else
+        echo "Crush skill source must be a file or directory: $source" >&2
+        exit 1
+      fi
+    '';
 in
 {
   meta.maintainers = [ lib.maintainers.vidhanio ];
@@ -156,7 +184,7 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
+        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.crush.skills` must be a directory when set to a path";
       }
     ];
@@ -174,15 +202,20 @@ in
       };
 
       "crush/skills" = mkIf (lib.hm.strings.isPathLike cfg.skills) {
-        source = cfg.skills;
+        source = normalizeSkillsDirectory cfg.skills;
         recursive = true;
       };
     }
     // lib.mapAttrs' (
       name: content:
-      if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
+      if lib.isPath content && lib.pathIsDirectory content then
         lib.nameValuePair "crush/skills/${name}" {
           source = content;
+          recursive = true;
+        }
+      else if lib.hm.strings.isPathLike content && !lib.isPath content then
+        lib.nameValuePair "crush/skills/${name}" {
+          source = normalizeSkill content;
           recursive = true;
         }
       else
