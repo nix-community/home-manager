@@ -214,6 +214,7 @@ let
     "wallust"
     "watson"
     "wezterm"
+    "worktrunk"
     "yazi"
     "yq-go"
     "yt-dlp"
