@@ -67,6 +67,17 @@ in
       '';
     };
 
+    localReadOnly = mkOption {
+      type = types.nullOr types.bool;
+      default = null;
+      description = ''
+        Whether vdirsyncer should treat the local storage as read-only.
+
+        Changes that cannot be written to the local storage are handled
+        according to the value of the `partialSync` option.
+      '';
+    };
+
     metadata = mkOption {
       type = types.listOf types.str;
       default = [ ];

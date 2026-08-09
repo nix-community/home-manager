@@ -36,6 +36,7 @@ let
       (getAttrs [ "type" "fileExt" "encoding" ] a.local)
       // {
         inherit (a.local) path;
+        readOnly = a.vdirsyncer.localReadOnly;
         postHook =
           if a.vdirsyncer.postHook != null then
             (pkgs.writeShellScriptBin "post-hook" a.vdirsyncer.postHook + "/bin/post-hook")
@@ -89,6 +90,8 @@ let
       ''fileext = "${v}"''
     else if (n == "encoding") then
       ''encoding = "${v}"''
+    else if (n == "readOnly") then
+      "read_only = ${lib.boolToString v}"
     else if (n == "postHook") then
       ''post_hook = "${v}"''
     else if (n == "url") then
@@ -275,9 +278,13 @@ in
               "fileExt"
               "encoding"
               "postHook"
+              "readOnly"
             ]
           else if (t == "singlefile") then
-            [ "encoding" ]
+            [
+              "encoding"
+              "readOnly"
+            ]
           else if (t == "google_calendar") then
             [
               "timeRange"
