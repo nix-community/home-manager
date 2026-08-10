@@ -57,6 +57,7 @@
             "himalaya"
             "imapnotify"
             "lieer"
+            "mblaze"
             "mbsync"
             "meli"
             "msmtp"
