@@ -279,6 +279,12 @@ in
         default = { };
         description = ''
           Config files that will be installed to {file}`~/.config/fontconfig/conf.d/`.
+
+          Except for the `fonts` entry, these files are also loaded when the
+          caches for the fonts installed through {option}`home.packages` are
+          generated. As a consequence, they must not refer to
+          {option}`home.path`, otherwise the evaluation ends in an infinite
+          recursion.
         '';
         example = {
           tamzen-disable-antialiasing = {
@@ -321,33 +327,62 @@ in
       (pkgs.runCommandLocal "dummy-fc-dir2" { } "mkdir -p $out/lib/fontconfig")
     ];
 
-    home.extraProfileCommands = ''
-      if [[ -d $out/lib/X11/fonts || -d $out/share/fonts ]]; then
-        export FONTCONFIG_FILE="$(pwd)/fonts.conf"
+    # The generated configuration is included when generating the caches
+    # because, since fontconfig 2.18.3, the alias configuration determines the
+    # generic family of the aliased fonts in the caches. Caches lacking this
+    # classification break generic-family matching for the aliased fonts.
+    #
+    # The `fonts` entry is excluded since it refers to the profile being built
+    # here, it only declares font and cache directories anyway, which are
+    # irrelevant when the caches are generated.
+    home.extraProfileCommands =
+      let
+        configFiles = lib.sortOn (file: file.target) (
+          lib.filter (file: file.enable) (lib.attrValues (removeAttrs cfg.configFile [ "fonts" ]))
+        );
+        includes = lib.concatMapStringsSep "\n  " (
+          file: ''<include ignore_missing="yes">${file.source}</include>''
+        ) configFiles;
+      in
+      ''
+        if [[ -d $out/lib/X11/fonts || -d $out/share/fonts ]]; then
+          export FONTCONFIG_FILE="$(pwd)/fonts.conf"
 
-        cat > $FONTCONFIG_FILE << EOF
-      <?xml version='1.0'?>
-      <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
-      <fontconfig>
-        <dir>$out/lib/X11/fonts</dir>
-        <dir>$out/share/fonts</dir>
-        <cachedir>$out/lib/fontconfig/cache</cachedir>
-      </fontconfig>
-      EOF
+          cat > $FONTCONFIG_FILE << EOF
+        <?xml version='1.0'?>
+        <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+        <fontconfig>
+          <dir>$out/lib/X11/fonts</dir>
+          <dir>$out/share/fonts</dir>
+          <cachedir>$out/lib/fontconfig/cache</cachedir>
+          ${includes}
+        </fontconfig>
+        EOF
 
-        ${lib.getBin pkgs.fontconfig}/bin/fc-cache -f
-        rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
-        rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig/cache
+          # Normalize the mtimes to their post-registration value. Otherwise,
+          # fc-cache considers the just generated caches outdated and
+          # regenerates them through a code path that does not apply the
+          # configuration's scan rules, i.e. the fonts' generic family
+          # classification is lost.
+          for fontDir in $out/lib/X11/fonts $out/share/fonts; do
+            if [[ -d $fontDir ]]; then
+              find "$fontDir" -exec touch --no-dereference --date=@1 {} +
+            fi
+          done
 
-        rm "$FONTCONFIG_FILE"
-        unset FONTCONFIG_FILE
-      fi
+          ${lib.getBin pkgs.fontconfig}/bin/fc-cache -f
+          rm -f $out/lib/fontconfig/cache/CACHEDIR.TAG
+          rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig/cache
 
-      # Remove the fontconfig directory if no files were available.
-      if [[ -d $out/lib/fontconfig ]] ; then
-        rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig
-      fi
-    '';
+          rm "$FONTCONFIG_FILE"
+          unset FONTCONFIG_FILE
+        fi
+
+        # Remove the fontconfig directory if no files were available.
+        if [[ -d $out/lib/fontconfig ]] ; then
+          rmdir --ignore-fail-on-non-empty -p $out/lib/fontconfig
+        fi
+      '';
 
     fonts.fontconfig.configFile = {
       fonts =
