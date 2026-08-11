@@ -19,6 +19,8 @@
     ];
   };
 
+  xdg.enable = false;
+
   nmt.script =
     let
       expected = builtins.toFile "config-expected" ''
