@@ -10,7 +10,10 @@ let
   cfg = config.programs.pistol;
 
   configDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Preferences" else config.xdg.configHome;
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 
   configFile = lib.concatStringsSep "\n" (
     map (
