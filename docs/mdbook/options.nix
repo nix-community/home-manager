@@ -15,7 +15,7 @@ pkgs.runCommand "home-manager-mdbook-options"
     passAsFile = [ "optionDocsJson" ];
   }
   ''
-    python3 ${./render-options.py} \
+    python3 ${./.}/render-options.py \
       "$optionDocsJsonPath" \
       ${manpageUrls} \
       ${revision} \

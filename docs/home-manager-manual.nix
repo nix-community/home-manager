@@ -48,8 +48,8 @@ stdenv.mkDerivation {
     runHook preBuild
 
     mkdir -p source
-    python3 ${./mdbook/convert-markup.py} "$src/manual" source
-    python3 ${./mdbook/convert-markup.py} \
+    python3 ${./mdbook}/convert-markup.py "$src/manual" source
+    python3 ${./mdbook}/convert-markup.py \
       --base-depth 1 \
       "$src/release-notes" \
       source/release-notes
