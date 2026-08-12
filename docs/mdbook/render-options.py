@@ -2,41 +2,17 @@
 from __future__ import annotations
 
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
 
-
-OPTION_LINK = re.compile(
-    r"\[(?P<label>[^\]]*)\]\(#(?P<anchor>(?:opt|nixos-opt|nix-darwin-opt)-[^)]+)\)"
+from option_links import (
+    OPTION_HREF,
+    OPTION_LINK,
+    option_label,
+    option_page_parts,
+    option_target,
 )
-OPTION_HREF = re.compile(r'href="#(?P<anchor>(?:opt|nixos-opt|nix-darwin-opt)-[^"]+)"')
-DEEP_SPLIT_NAMESPACES = {"programs", "services"}
-
-
-def option_label(anchor: str) -> str:
-    if anchor.startswith("nix-darwin-opt-"):
-        return anchor.removeprefix("nix-darwin-opt-")
-    if anchor.startswith("nixos-opt-"):
-        return anchor.removeprefix("nixos-opt-")
-    return anchor.removeprefix("opt-")
-
-
-def option_target(anchor: str, current_file: Path) -> str:
-    if anchor.startswith("nix-darwin-opt-"):
-        option = anchor.removeprefix("nix-darwin-opt-")
-        base = "options/nix-darwin"
-    elif anchor.startswith("nixos-opt-"):
-        option = anchor.removeprefix("nixos-opt-")
-        base = "options/nixos"
-    else:
-        option = anchor.removeprefix("opt-")
-        base = "options/home-manager"
-
-    page_parts = option_page_parts(option)
-    prefix = "../" * len(current_file.parent.parts)
-    return f"{prefix}{base}/{'/'.join(page_parts)}.md#{anchor}"
 
 
 def rewrite_option_links(text: str, current_file: Path) -> str:
@@ -55,14 +31,6 @@ def rewrite_option_links(text: str, current_file: Path) -> str:
 
 def namespace_for(option_name: str) -> str:
     return option_name.split(".", 1)[0]
-
-
-def option_page_parts(option_name: str) -> list[str]:
-    parts = option_name.split(".")
-    namespace = parts[0]
-    if namespace in DEEP_SPLIT_NAMESPACES and len(parts) > 1:
-        return parts[:2]
-    return [namespace]
 
 
 def option_group_for(option_name: str) -> str:

@@ -8,6 +8,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from option_links import OPTION_LINK, option_label, option_target
+
 
 SIMPLE_ROLES = (
     "command",
@@ -23,9 +25,6 @@ HEADING_ANCHOR = re.compile(r"^(#{1,6}\s+)(.*)\s+\{#([^}]+)\}\s*$")
 INLINE_ANCHOR = re.compile(r"\[\]\{#([^}]+)\}")
 OPTION_ROLE = re.compile(r"(?<![$`])\{option\}`([^`]*)`")
 SIMPLE_ROLE = re.compile(r"(?<![$`])\{(" + "|".join(SIMPLE_ROLES) + r")\}`([^`]*)`")
-OPTION_LINK = re.compile(
-    r"\[(?P<label>[^\]]*)\]\(#(?P<anchor>(?:opt|nixos-opt|nix-darwin-opt)-[^)]+)\)"
-)
 LEFTOVER_ROLE = re.compile(
     r"(?<![$`])\{(" + "|".join(("option", *SIMPLE_ROLES)) + r")\}`[^`]*`"
 )
@@ -33,45 +32,6 @@ FENCE = re.compile(r"^\s*(`{3,})(.*)$")
 FENCE_CLOSE = re.compile(r"^\s*`{3,}\s*$")
 ADMONITION_OPEN = re.compile(r"^\s*:::\s*\{\.(note|warning|example)\}\s*$")
 ADMONITION_CLOSE = re.compile(r"^\s*:::\s*$")
-DEEP_SPLIT_NAMESPACES = {"programs", "services"}
-
-
-def option_target(anchor: str, current_file: Path, base_depth: int) -> str:
-    if anchor.startswith("nix-darwin-opt-"):
-        option = anchor.removeprefix("nix-darwin-opt-")
-        option = option.replace("<", "_").replace(">", "_")
-        anchor = f"nix-darwin-opt-{option}"
-        base = "options/nix-darwin"
-    elif anchor.startswith("nixos-opt-"):
-        option = anchor.removeprefix("nixos-opt-")
-        option = option.replace("<", "_").replace(">", "_")
-        anchor = f"nixos-opt-{option}"
-        base = "options/nixos"
-    else:
-        option = anchor.removeprefix("opt-")
-        option = option.replace("<", "_").replace(">", "_")
-        anchor = f"opt-{option}"
-        base = "options/home-manager"
-
-    page_parts = option_page_parts(option)
-    prefix = "../" * (base_depth + len(current_file.parent.parts))
-    return f"{prefix}{base}/{'/'.join(page_parts)}.md#{anchor}"
-
-
-def option_page_parts(option_name: str) -> list[str]:
-    parts = option_name.split(".")
-    namespace = parts[0]
-    if namespace in DEEP_SPLIT_NAMESPACES and len(parts) > 1:
-        return parts[:2]
-    return [namespace]
-
-
-def option_label(anchor: str) -> str:
-    if anchor.startswith("nix-darwin-opt-"):
-        return anchor.removeprefix("nix-darwin-opt-")
-    if anchor.startswith("nixos-opt-"):
-        return anchor.removeprefix("nixos-opt-")
-    return anchor.removeprefix("opt-")
 
 
 def markdown_label(value: str) -> str:
