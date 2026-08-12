@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-d6f69226.js";
+            window.path_to_searchindex_js = "../../searchindex-7747500e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-ce54e8e2.js"></script>
@@ -288,6 +288,19 @@ This depends on particular features of the server, the results
 are not validated.</p>
 <p><em>Type:</em>
 null or (list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vdirsyncer/accounts.nix">&lt;home-manager/modules/programs/vdirsyncer/accounts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-vdirsyncer.localReadOnly"><a class="header" href="#opt-vdirsyncer.localReadOnly">vdirsyncer.localReadOnly</a></h2>
+<p>Whether vdirsyncer should treat the local storage as read-only.</p>
+<p>Changes that cannot be written to the local storage are handled
+according to the value of the <code>partialSync</code> option.</p>
+<p><em>Type:</em>
+null or boolean</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
