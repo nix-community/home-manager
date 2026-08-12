@@ -19,6 +19,8 @@
     ];
   };
 
+  xdg.enable = false;
+
   nmt.script =
     let
       expected = builtins.toFile "config-expected" ''
@@ -27,7 +29,7 @@
         fpath .*.md$ sh: bat --paging=never --color=always %pistol-filename% | head -8'';
       path =
         if pkgs.stdenv.hostPlatform.isDarwin then
-          "home-files/Library/Preferences/pistol/pistol.conf"
+          "home-files/Library/Application Support/pistol/pistol.conf"
         else
           "home-files/.config/pistol/pistol.conf";
     in
