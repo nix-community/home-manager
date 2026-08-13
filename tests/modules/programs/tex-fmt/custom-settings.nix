@@ -13,7 +13,8 @@
 
     nmt.script =
       let
-        expectedConfDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else ".config";
+        expectedConfDir =
+          if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".config";
         expectedConfigPath = "home-files/${expectedConfDir}/tex-fmt/tex-fmt.toml";
       in
       ''

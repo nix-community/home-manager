@@ -9,8 +9,8 @@
 
   nmt.script =
     let
-      keybinding_modifier = if pkgs.stdenv.isDarwin then "alt" else "ctrl";
-      opener = if pkgs.stdenv.isDarwin then "open" else "xdg-open";
+      keybinding_modifier = if pkgs.stdenv.hostPlatform.isDarwin then "alt" else "ctrl";
+      opener = if pkgs.stdenv.hostPlatform.isDarwin then "open" else "xdg-open";
     in
     ''
       assertFileExists home-files/.config/television/cable/nix-search-tv.toml

@@ -63,7 +63,7 @@ let
   intervalsString = lib.concatStringsSep ", " intervals;
 
   assertInterval = option: interval: pkgs: {
-    assertion = pkgs.stdenv.isDarwin -> lib.elem interval intervals;
+    assertion = pkgs.stdenv.hostPlatform.isDarwin -> lib.elem interval intervals;
     message = "On Darwin, ${option} must be one of: ${intervalsString}.";
   };
 

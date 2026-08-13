@@ -131,7 +131,7 @@ in
   config =
     let
       settingsPath =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "Library/Application Support/CudaText/settings"
         else
           "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/cudatext/settings";

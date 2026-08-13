@@ -550,7 +550,7 @@ in
     systemd = {
       enable = mkOption {
         type = types.bool;
-        default = pkgs.stdenv.isLinux;
+        default = pkgs.stdenv.hostPlatform.isLinux;
         example = false;
         description = ''
           Whether to enable {file}`sway-session.target` on

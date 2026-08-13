@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 let
   targetPath =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "home-files/Library/Application Support/senpai/senpai.scfg"
     else
       "home-files/.config/senpai/senpai.scfg";

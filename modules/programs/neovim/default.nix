@@ -213,8 +213,8 @@ in
 
       waylandSupport = mkOption {
         type = types.bool;
-        default = pkgs.stdenv.isLinux;
-        defaultText = literalExpression "pkgs.stdenv.isLinux";
+        default = pkgs.stdenv.hostPlatform.isLinux;
+        defaultText = literalExpression "pkgs.stdenv.hostPlatform.isLinux";
         description = ''
           Whether to enable Wayland clipboard support.
         '';

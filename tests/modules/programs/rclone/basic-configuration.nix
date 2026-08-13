@@ -8,13 +8,13 @@ lib.mkMerge [
     };
   }
 
-  (lib.mkIf pkgs.stdenv.isLinux {
+  (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/rclone-config.service
     '';
   })
 
-  (lib.mkIf pkgs.stdenv.isDarwin {
+  (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     nmt.script = ''
       assertFileExists LaunchAgents/org.nix-community.home.rclone-config.plist
     '';

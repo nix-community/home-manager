@@ -5,7 +5,7 @@
   ...
 }:
 
-lib.mkIf pkgs.stdenv.isLinux {
+lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
   services.gpg-agent.enable = true;
   services.gpg-agent.pinentry = {
     package = pkgs.pinentry-all;

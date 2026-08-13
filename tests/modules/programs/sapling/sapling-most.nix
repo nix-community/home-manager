@@ -20,7 +20,7 @@
   nmt.script =
     let
       configfile =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "Library/Preferences/sapling/sapling.conf"
         else
           ".config/sapling/sapling.conf";

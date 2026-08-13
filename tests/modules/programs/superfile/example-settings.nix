@@ -6,7 +6,7 @@
 }:
 
 {
-  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin false;
+  xdg.enable = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin false;
 
   programs.superfile = {
     enable = true;
@@ -65,11 +65,17 @@
   nmt.script =
     let
       configSubPath =
-        if !pkgs.stdenv.isDarwin then ".config/superfile" else "Library/Application Support/superfile";
+        if !pkgs.stdenv.hostPlatform.isDarwin then
+          ".config/superfile"
+        else
+          "Library/Application Support/superfile";
       configBasePath = "home-files/" + configSubPath;
 
       dataSubPath =
-        if !pkgs.stdenv.isDarwin then ".local/share/superfile" else "Library/Application Support/superfile";
+        if !pkgs.stdenv.hostPlatform.isDarwin then
+          ".local/share/superfile"
+        else
+          "Library/Application Support/superfile";
       dataBasePath = "home-files/" + dataSubPath;
     in
     ''

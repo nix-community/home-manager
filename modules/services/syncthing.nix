@@ -20,13 +20,13 @@ let
 
   # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
   syncthingDir =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "$HOME/Library/Application Support/Syncthing"
     else
       "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
 
   syncthingDirShell =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       ''
         syncthing_dir="${syncthingDir}"
       ''

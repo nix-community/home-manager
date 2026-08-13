@@ -15,7 +15,7 @@ lib.mkMerge [
     };
   }
 
-  (lib.mkIf pkgs.stdenv.isLinux {
+  (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     nmt.script = ''
       assertFileExists home-files/.config/systemd/user/syncthing.service
       assertPathNotExists home-files/.config/systemd/user/syncthing-init.service
@@ -25,7 +25,7 @@ lib.mkMerge [
     '';
   })
 
-  (lib.mkIf pkgs.stdenv.isDarwin {
+  (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     nmt.script = ''
       serviceFile=LaunchAgents/org.nix-community.home.syncthing.plist
       assertFileExists "$serviceFile"

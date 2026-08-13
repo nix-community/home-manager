@@ -52,7 +52,7 @@ let
   ) config.accounts.email.accounts;
 
   configDir =
-    if (pkgs.stdenv.isDarwin && !config.xdg.enable) then
+    if (pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable) then
       "Library/Preferences/aerc"
     else
       "${config.xdg.configHome}/aerc";
