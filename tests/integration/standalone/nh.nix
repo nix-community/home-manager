@@ -11,7 +11,7 @@ in
 
   nodes.machine = {
     imports = [ "${pkgs.path}/nixos/modules/installer/cd-dvd/channel.nix" ];
-    virtualisation.memorySize = 2048;
+    virtualisation.memorySize = 3072;
     environment.systemPackages = [ pkgs.nh ];
     nix = {
       registry.home-manager.to = {
