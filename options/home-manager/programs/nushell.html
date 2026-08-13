@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-59c3bfb9.js";
+            window.path_to_searchindex_js = "../../../searchindex-f1e44f99.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-ce54e8e2.js"></script>
@@ -207,7 +207,7 @@ null or package</p>
 <p><em>Type:</em>
 string or absolute path</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">if pkgs.stdenv.isDarwin &amp;&amp; !config.xdg.enable then
+<pre><code class="language-nix">if pkgs.stdenv.hostPlatform.isDarwin &amp;&amp; !config.xdg.enable then
   "Library/Application Support/nushell"
 else
   "${config.xdg.configHome}/nushell";
