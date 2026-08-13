@@ -19,7 +19,7 @@
   nmt.script =
     let
       configFile =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "home-files/Library/Application\\ Support/Mullvad\\ VPN/gui_settings.json"
         else
           "home-files/.config/Mullvad\\ VPN/gui_settings.json";

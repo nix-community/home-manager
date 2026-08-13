@@ -6,7 +6,7 @@
 }:
 
 {
-  xdg.enable = lib.mkIf pkgs.stdenv.isDarwin false;
+  xdg.enable = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin false;
 
   programs.k9s = {
     enable = true;
@@ -95,7 +95,8 @@
 
   nmt.script =
     let
-      configDir = if !pkgs.stdenv.isDarwin then ".config/k9s" else "Library/Application Support/k9s";
+      configDir =
+        if !pkgs.stdenv.hostPlatform.isDarwin then ".config/k9s" else "Library/Application Support/k9s";
     in
     ''
       assertFileExists "home-files/${configDir}/config.yaml"

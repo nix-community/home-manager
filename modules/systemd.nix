@@ -247,8 +247,8 @@ in
   options = {
     systemd.user = {
       enable = mkEnableOption "the user systemd service manager" // {
-        default = pkgs.stdenv.isLinux;
-        defaultText = literalExpression "pkgs.stdenv.isLinux";
+        default = pkgs.stdenv.hostPlatform.isLinux;
+        defaultText = literalExpression "pkgs.stdenv.hostPlatform.isLinux";
       };
 
       systemctlPath = mkOption {

@@ -71,8 +71,8 @@ in
     programs.television.channels.nix-search-tv = lib.mkIf cfg.enableTelevisionIntegration (
       let
         nix-search-tv-path = if cfg.package != null then lib.getExe cfg.package else "nix-search-tv";
-        keybinding_modifier = if pkgs.stdenv.isDarwin then "alt" else "ctrl";
-        opener = if pkgs.stdenv.isDarwin then "open" else "xdg-open";
+        keybinding_modifier = if pkgs.stdenv.hostPlatform.isDarwin then "alt" else "ctrl";
+        opener = if pkgs.stdenv.hostPlatform.isDarwin then "open" else "xdg-open";
       in
       {
         metadata = {

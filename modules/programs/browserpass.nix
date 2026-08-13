@@ -35,7 +35,9 @@ in
     home.file = lib.mergeAttrsList (
       lib.concatMap (
         x:
-        with pkgs.stdenv;
+        let
+          inherit (pkgs.stdenv.hostPlatform) isDarwin;
+        in
         if x == "brave" then
           let
             dir =

@@ -48,7 +48,7 @@ in
   nmt.script =
     let
       nushellConfigFile =
-        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+        if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
           "home-files/Library/Application Support/nushell/config.nu"
         else
           "home-files/.config/nushell/config.nu";

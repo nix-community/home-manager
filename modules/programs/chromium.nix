@@ -227,7 +227,7 @@ let
         if builtins.hasAttr packageName supportedBrowsers then packageName else browser;
 
       isProprietaryChrome = lib.hasPrefix "google-chrome" effectiveBrowser;
-      supportsUserExtensions = !isProprietaryChrome || pkgs.stdenv.isDarwin;
+      supportsUserExtensions = !isProprietaryChrome || pkgs.stdenv.hostPlatform.isDarwin;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -245,7 +245,7 @@ let
       };
 
       configDir =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "Library/Application Support/" + (darwinDirs."${effectiveBrowser}" or effectiveBrowser)
         else
           "${config.xdg.configHome}/" + (linuxDirs."${effectiveBrowser}" or effectiveBrowser);
@@ -274,7 +274,7 @@ let
       };
 
       plasmaSupportEnabled =
-        pkgs.stdenv.isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
+        pkgs.stdenv.hostPlatform.isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
 
       nativeMessagingHosts = lib.unique (
         cfg.nativeMessagingHosts ++ lib.optional plasmaSupportEnabled cfg.plasmaBrowserIntegrationPackage
@@ -294,14 +294,14 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
-          assertion = !(isProprietaryChrome && pkgs.stdenv.isLinux && cfg.extensions != [ ]);
+          assertion = !(isProprietaryChrome && pkgs.stdenv.hostPlatform.isLinux && cfg.extensions != [ ]);
           message = "Cannot set `extensions` for `${effectiveBrowser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
         }
         {
           assertion =
             !(
               isProprietaryChrome
-              && pkgs.stdenv.isDarwin
+              && pkgs.stdenv.hostPlatform.isDarwin
               && !builtins.all (
                 ext: ext.crxPath == null && ext.version == null && ext.updateUrl == chromeWebStoreUpdateUrl
               ) cfg.extensions

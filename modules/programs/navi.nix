@@ -12,7 +12,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
   configDir =
-    if pkgs.stdenv.isDarwin && !config.xdg.enable then
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
       "Library/Application Support"
     else
       config.xdg.configHome;

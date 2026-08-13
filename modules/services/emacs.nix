@@ -131,7 +131,9 @@ in
         VISUAL = editorBin;
       };
 
-    home.packages = optional (cfg.client.enable && pkgs.stdenv.isLinux) (lib.hiPrio clientDesktopItem);
+    home.packages = optional (cfg.client.enable && pkgs.stdenv.hostPlatform.isLinux) (
+      lib.hiPrio clientDesktopItem
+    );
 
     systemd.user.services.emacs = {
       Unit = {

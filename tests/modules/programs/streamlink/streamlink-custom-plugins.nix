@@ -20,10 +20,13 @@
   nmt.script =
     let
       configDir =
-        if pkgs.stdenv.isDarwin then "Library/Application Support/streamlink" else ".config/streamlink";
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          "Library/Application Support/streamlink"
+        else
+          ".config/streamlink";
 
       pluginDir =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "Library/Application Support/streamlink/plugins"
         else
           ".local/share/streamlink/plugins";
