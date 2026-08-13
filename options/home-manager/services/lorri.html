@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-f1e44f99.js";
+            window.path_to_searchindex_js = "../../../searchindex-31766ec5.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-ce54e8e2.js"></script>
@@ -192,7 +192,8 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/lorri.nix">&lt;home-manager/modules/services/lorri.nix&gt;</a></li>
 </ul>
 <h2 id="opt-services.lorri.enableNotifications"><a class="header" href="#opt-services.lorri.enableNotifications">services.lorri.enableNotifications</a></h2>
-<p>Whether to enable lorri build notifications.</p>
+<p>Whether to enable lorri build notifications.
+Note, this is unsupported on Darwin.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>
@@ -211,6 +212,17 @@ boolean</p>
 package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.lorri
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/lorri.nix">&lt;home-manager/modules/services/lorri.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.lorri.extraEnvVariables"><a class="header" href="#opt-services.lorri.extraEnvVariables">services.lorri.extraEnvVariables</a></h2>
+<p>Extra environment variables to pass to the daemon.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
