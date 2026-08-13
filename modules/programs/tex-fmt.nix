@@ -13,8 +13,7 @@ let
     mkOption
     ;
 
-  configDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+  configDir = if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 
   tomlFormat = pkgs.formats.toml { };
   cfg = config.programs.tex-fmt;
