@@ -143,7 +143,10 @@ in
       # `_pkgs`, see https://github.com/nix-community/home-manager/pull/993
       pkgs = lib.mkOverride lib.modules.defaultOverridePriority _pkgs;
       pkgs_i686 =
-        if _pkgs.stdenv.hostPlatform.isLinux && _pkgs.stdenv.hostPlatform.isx86 then _pkgs.pkgsi686Linux else { };
+        if _pkgs.stdenv.hostPlatform.isLinux && _pkgs.stdenv.hostPlatform.isx86 then
+          _pkgs.pkgsi686Linux
+        else
+          { };
     };
   };
 }
