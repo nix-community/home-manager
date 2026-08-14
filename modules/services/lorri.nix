@@ -61,7 +61,7 @@ in
         home.packages = [ cfg.package ];
       }
 
-      (lib.mkIf pkgs.stdenv.isLinux (
+      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
         let
           extraEnvList = lib.mapAttrsToList (k: v: "${k}=${v}") cfg.extraEnvVariables;
         in
@@ -170,7 +170,7 @@ in
         }
       ))
 
-      (lib.mkIf pkgs.stdenv.isDarwin {
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
         warnings =
           if cfg.enableNotifications then
             [
