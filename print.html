@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e797e91c.js";
+            window.path_to_searchindex_js = "searchindex-2c9c606a.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-ce54e8e2.js"></script>
+        <script src="toc-44f65ec0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -4614,6 +4614,7 @@ attribute set of (submodule)</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/msmtp">&lt;home-manager/modules/programs/msmtp&gt;</a></li>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/meli.nix">&lt;home-manager/modules/programs/meli.nix&gt;</a></li>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mbsync">&lt;home-manager/modules/programs/mbsync&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lieer.nix">&lt;home-manager/modules/programs/lieer.nix&gt;</a></li>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix">&lt;home-manager/modules/programs/himalaya.nix&gt;</a></li>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/getmail">&lt;home-manager/modules/programs/getmail&gt;</a></li>
@@ -5729,6 +5730,63 @@ string</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/email.nix">&lt;home-manager/modules/accounts/email.nix&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.email.accounts._name_.mblaze.enable"><a class="header" href="#opt-accounts.email.accounts._name_.mblaze.enable">accounts.email.accounts.&lt;name&gt;.mblaze.enable</a></h2>
+<p>Whether to enable mblaze for this email account.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.email.accounts._name_.mblaze.sendMailCommand"><a class="header" href="#opt-accounts.email.accounts._name_.mblaze.sendMailCommand">accounts.email.accounts.&lt;name&gt;.mblaze.sendMailCommand</a></h2>
+<p>Command to send a mail, written to the <code>Sendmail:</code> entry of the
+account profile. If msmtp is enabled for the account, then this
+is set to
+<code>msmtpq --read-envelope-from --read-recipients</code>.</p>
+<p><code>mcom(1)</code> appends the <code>Sendmail-Args:</code> entry to it,
+<code>-t</code> by default, which asks for the recipients to be collected
+from the message headers. Set that entry through
+<a href="#opt-accounts.email.accounts._name_.mblaze.settings"></a> for a
+command that takes its arguments differently.</p>
+<p>When left null the entry is omitted and mblaze falls back to
+<code>sendmail</code> from <code>PATH</code>.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"msmtpq --read-envelope-from --read-recipients"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.email.accounts._name_.mblaze.settings"><a class="header" href="#opt-accounts.email.accounts._name_.mblaze.settings">accounts.email.accounts.&lt;name&gt;.mblaze.settings</a></h2>
+<p>Entries added to this mblaze account profile, as documented in
+<code>mblaze-profile(5)</code>. An entry defined here overrides
+the generated one of the same name, as well as the one defined
+by <a href="#opt-programs.mblaze.settings"></a>.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Scan-Format = "%c%u%r %-3n %10d %17f %t %2i%s";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
 </ul>
 <h2 id="opt-accounts.email.accounts._name_.mbsync.enable"><a class="header" href="#opt-accounts.email.accounts._name_.mbsync.enable">accounts.email.accounts.&lt;name&gt;.mbsync.enable</a></h2>
 <p>Whether to enable synchronization using mbsync.</p>
@@ -12055,6 +12113,7 @@ string</p>
 <li><a href="#man">man</a></li>
 <li><a href="#mangohud">mangohud</a></li>
 <li><a href="#matplotlib">matplotlib</a></li>
+<li><a href="#mblaze">mblaze</a></li>
 <li><a href="#mbsync">mbsync</a></li>
 <li><a href="#mc">mc</a></li>
 <li><a href="#mcfly">mcfly</a></li>
@@ -40097,6 +40156,69 @@ strings concatenated with “\n”</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/matplotlib.nix">&lt;home-manager/modules/programs/matplotlib.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="mblaze"><a href="#mblaze" class="header">mblaze</a></h1>
+<h2 id="opt-programs.mblaze.enable"><a class="header" href="#opt-programs.mblaze.enable">programs.mblaze.enable</a></h2>
+<p>Whether to enable mblaze, unix utilities to deal with Maildir.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
+</ul>
+<h2 id="opt-programs.mblaze.package"><a class="header" href="#opt-programs.mblaze.package">programs.mblaze.package</a></h2>
+<p>The mblaze package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.mblaze
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
+</ul>
+<h2 id="opt-programs.mblaze.editor"><a class="header" href="#opt-programs.mblaze.editor">programs.mblaze.editor</a></h2>
+<p>Editor <code>mcom(1)</code> opens drafts with, written to the
+<code>Editor:</code> entry of every generated profile. When left null
+mblaze falls back to <code>MBLAZE_EDITOR</code>, then <code>VISUAL</code>,
+then <code>EDITOR</code>.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"nvim"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
+</ul>
+<h2 id="opt-programs.mblaze.settings"><a class="header" href="#opt-programs.mblaze.settings">programs.mblaze.settings</a></h2>
+<p>Entries added to every generated profile, as documented in
+<code>mblaze-profile(5)</code>. An entry defined here overrides
+the generated one of the same name, and is in turn overridden
+by <a href="#opt-accounts.email.accounts._name_.mblaze.settings"></a>.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Scan-Format = "%c%u%r %-3n %10d %17f %t %2i%s";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mblaze">&lt;home-manager/modules/programs/mblaze&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="mbsync"><a href="#mbsync" class="header">mbsync</a></h1>
