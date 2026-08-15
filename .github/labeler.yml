@@ -411,6 +411,7 @@
           - modules/programs/getmail/**/*
           - modules/programs/himalaya.nix
           - modules/programs/lieer.nix
+          - modules/programs/mblaze/*
           - modules/programs/mbsync/**/*
           - modules/programs/meli.nix
           - modules/programs/msmtp*
@@ -429,6 +430,7 @@
           - modules/services/protonmail-bridge.nix
           - tests/modules/programs/aerc/*
           - tests/modules/programs/alot/*
+          - tests/modules/programs/mblaze/*
           - tests/modules/programs/himalaya/*
           - tests/modules/programs/mbsync/*
           - tests/modules/programs/mujmap/*
