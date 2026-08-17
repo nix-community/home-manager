@@ -46,16 +46,27 @@ let
           ]
         else
           server;
+      isDisabled =
+        if server ? disabled && server.disabled != null then
+          server.disabled
+        else if server ? enabled && server.enabled != null then
+          !server.enabled
+        else
+          false;
       transformed =
         removeAttrs cleaned [
           "httpUrl"
           "url"
+          "enabled"
         ]
         // lib.optionalAttrs (server ? httpUrl) {
           serverUrl = server.httpUrl;
         }
         // lib.optionalAttrs (server ? url) {
           serverUrl = server.url;
+        }
+        // lib.optionalAttrs isDisabled {
+          disabled = true;
         };
     in
     lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) transformed;
