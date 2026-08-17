@@ -157,6 +157,7 @@ in
     mkEnvFilesWrapper
     wrapEnvFilesCommand
     addType
+    resolveEnabled
     ;
 
   /*
