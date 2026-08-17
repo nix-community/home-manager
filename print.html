@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2165d91d.js";
+            window.path_to_searchindex_js = "searchindex-ac26666e.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-75ef1375.js"></script>
+        <script src="toc-2520a9c6.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11975,6 +11975,7 @@ string</p>
 <li><a href="#codex">codex</a></li>
 <li><a href="#command-not-found">command-not-found</a></li>
 <li><a href="#comodoro">comodoro</a></li>
+<li><a href="#concord">concord</a></li>
 <li><a href="#crush">crush</a></li>
 <li><a href="#cudatext">cudatext</a></li>
 <li><a href="#cursor">cursor</a></li>
@@ -20569,6 +20570,69 @@ open submodule of (TOML value)</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/comodoro.nix">&lt;home-manager/modules/programs/comodoro.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="concord"><a href="#concord" class="header">concord</a></h1>
+<h2 id="opt-programs.concord.enable"><a class="header" href="#opt-programs.concord.enable">programs.concord.enable</a></h2>
+<p>Whether to enable Feature-rich TUI client for Discord.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/concord.nix">&lt;home-manager/modules/programs/concord.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.concord.package"><a class="header" href="#opt-programs.concord.package">programs.concord.package</a></h2>
+<p>The concord-tui package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.concord-tui
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/concord.nix">&lt;home-manager/modules/programs/concord.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.concord.keymapSettings"><a class="header" href="#opt-programs.concord.keymapSettings">programs.concord.keymapSettings</a></h2>
+<p>Concord keymap configuration.
+See <a href="https://github.com/chojs23/concord/blob/main/docs/keymap-options.md">https://github.com/chojs23/concord/blob/main/docs/keymap-options.md</a> for supported values.</p>
+<p><em>Type:</em>
+open submodule of (TOML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/concord.nix">&lt;home-manager/modules/programs/concord.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.concord.settings"><a class="header" href="#opt-programs.concord.settings">programs.concord.settings</a></h2>
+<p>Concord configuration.
+See <a href="https://github.com/chojs23/concord/blob/main/src/config/options.rs">https://github.com/chojs23/concord/blob/main/src/config/options.rs</a> for supported values.</p>
+<p><em>Type:</em>
+open submodule of (TOML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/concord.nix">&lt;home-manager/modules/programs/concord.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.concord.themeSettings"><a class="header" href="#opt-programs.concord.themeSettings">programs.concord.themeSettings</a></h2>
+<p>Concord theme configuration.
+See <a href="https://github.com/chojs23/concord/blob/main/docs/theme-options.md">https://github.com/chojs23/concord/blob/main/docs/theme-options.md</a> for supported values.</p>
+<p><em>Type:</em>
+open submodule of (TOML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/concord.nix">&lt;home-manager/modules/programs/concord.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="crush"><a href="#crush" class="header">crush</a></h1>
