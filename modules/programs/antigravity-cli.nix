@@ -46,13 +46,7 @@ let
           ]
         else
           server;
-      isDisabled =
-        if server ? disabled && server.disabled != null then
-          server.disabled
-        else if server ? enabled && server.enabled != null then
-          !server.enabled
-        else
-          false;
+      isDisabled = lib.hm.mcp.resolveEnabled server == false;
       transformed =
         removeAttrs cleaned [
           "httpUrl"
@@ -222,7 +216,8 @@ in
         {file}`~/.gemini/config/mcp_config.json`.
 
         Remote servers use `serverUrl`; `url` and `httpUrl` are accepted
-        for migration and converted automatically.
+        for migration and converted automatically. `enabled` is accepted
+        and converted to `disabled`.
       '';
     };
 
