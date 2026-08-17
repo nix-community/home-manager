@@ -82,9 +82,14 @@ in
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     nix-direnv = {
-      enable = mkEnableOption ''
-        [nix-direnv](https://github.com/nix-community/nix-direnv),
-        a fast, persistent use_nix implementation for direnv'';
+      enable =
+        mkEnableOption ''
+          [nix-direnv](https://github.com/nix-community/nix-direnv),
+          a fast, persistent use_nix implementation for direnv''
+        // {
+          default = true;
+          example = false;
+        };
 
       package = mkPackageOption pkgs "nix-direnv" { };
     };
