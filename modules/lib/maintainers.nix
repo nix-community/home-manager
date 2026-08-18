@@ -157,6 +157,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  ekhh = {
+    name = "EKHH";
+    email = "90589480+ekhh@users.noreply.github.com";
+    github = "ekhh";
+    githubId = 90589480;
+  };
   elanora96 = {
     name = "Elanora Manson";
     email = "git@elanora.lol";
