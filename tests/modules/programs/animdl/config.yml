@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 default_player: mpv
 default_provider: animixplay
 ffmpeg:
