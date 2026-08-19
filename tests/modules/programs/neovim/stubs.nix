@@ -28,7 +28,11 @@
             longDescription = stub;
             homepage = stub;
             mainProgram = stub;
-            license = [ stub ];
+            # Must be a real license. Nixpkgs treats an unknown license as unfree.
+            license = with lib.licenses; [
+              asl20
+              vim
+            ];
             maintainers = [ stub ];
             teams = [ stub ];
             platforms = lib.platforms.all;
