@@ -2,7 +2,6 @@
 WantedBy=default.target
 
 [Service]
-ExecReload=
 ExecStart="@mpd@/bin/mpd" "--no-daemon"
 Restart=always
 RestartSec=5
