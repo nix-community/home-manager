@@ -32,6 +32,7 @@ in
         // {
           installLocation = content;
           lastUpdated = "1970-01-01T00:00:00Z";
+          autoUpdate = false;
         };
 
       mkMarkdownEntries =
