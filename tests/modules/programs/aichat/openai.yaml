@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 agent_prelude: default
 model: openai:gpt-4o
 temperature: 0.5

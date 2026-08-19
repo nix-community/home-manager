@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 ALIGN: MIDDLE
 CALLBACK_CMD: notify-send "way-displays ${CALLBACK_LEVEL}" "${CALLBACK_MSG}"
 ORDER:

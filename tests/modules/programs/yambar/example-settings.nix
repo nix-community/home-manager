@@ -15,6 +15,8 @@
     assertFileContent \
       home-files/.config/yambar/config.yml \
       ${builtins.toFile "yambar-expected.yml" ''
+        %YAML 1.1
+        ---
         bar:
           background: '00000066'
           height: 26

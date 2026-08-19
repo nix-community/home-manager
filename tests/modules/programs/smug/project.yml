@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 root: ~/project
 session: project-${worktree}
 windows:

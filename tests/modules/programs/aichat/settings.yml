@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 clients:
 - api_base: http://localhost:11434/v1
   models:
