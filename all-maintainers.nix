@@ -2536,6 +2536,12 @@
     email = "nix@yarncat.moe";
     github = "yaaaarn";
     githubId = 30006414;
+    keys = [
+      {
+        fingerprint = "6611 1CEA 8D78 A13E C6D6 FD13 7900 447A E348 FF4D";
+      }
+    ];
+    matrix = "@y:mx.yarncat.moe";
     name = "yarncat";
     source = "nixpkgs";
   };
