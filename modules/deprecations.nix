@@ -1,6 +1,11 @@
 { lib, ... }:
 {
   imports = [
+    (lib.mkRemovedOptionModule [ "programs" "hexchat" ] ''
+      The hexchat module has been removed because nixpkgs removed the package.
+      HexChat was archived upstream and still depends on GTK 2.
+    '')
+
     (lib.mkRemovedOptionModule [ "programs" "niriswitcher" "enable" ] ''
       The niriswitcher module has been removed because the upstream project
       has been archived.
