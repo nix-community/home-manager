@@ -22,6 +22,14 @@
             "/tmp"
           ];
         };
+        explicit-disabled = {
+          command = "disabled-direct-cmd";
+          disabled = true;
+        };
+        explicit-enabled = {
+          command = "enabled-direct-cmd";
+          enabled = true;
+        };
       };
     };
     mcp = {
@@ -54,6 +62,10 @@
             "Authorization" = "Bearer token";
           };
         };
+        disabled-server = {
+          command = "disabled-cmd";
+          enabled = false;
+        };
       };
     };
   };
@@ -69,6 +81,12 @@
     assertFileRegex home-files/.gemini/config/mcp_config.json '"remote-server"'
     assertFileRegex home-files/.gemini/config/mcp_config.json '"serverUrl": "https://remote.example/mcp"'
     assertFileRegex home-files/.gemini/config/mcp_config.json '"type": "http"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"disabled-server"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"explicit-disabled"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"explicit-enabled"'
+    assertFileRegex home-files/.gemini/config/mcp_config.json '"disabled": true'
+    assertFileNotRegex home-files/.gemini/config/mcp_config.json '"enabled": false'
+    assertFileNotRegex home-files/.gemini/config/mcp_config.json '"enabled": true'
     assertFileNotRegex home-files/.gemini/config/mcp_config.json '"command": null'
     assertFileNotRegex home-files/.gemini/config/mcp_config.json '"env": {}'
   '';

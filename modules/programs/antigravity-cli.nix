@@ -46,16 +46,21 @@ let
           ]
         else
           server;
+      isDisabled = lib.hm.mcp.resolveEnabled server == false;
       transformed =
         removeAttrs cleaned [
           "httpUrl"
           "url"
+          "enabled"
         ]
         // lib.optionalAttrs (server ? httpUrl) {
           serverUrl = server.httpUrl;
         }
         // lib.optionalAttrs (server ? url) {
           serverUrl = server.url;
+        }
+        // lib.optionalAttrs isDisabled {
+          disabled = true;
         };
     in
     lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) transformed;
@@ -63,6 +68,62 @@ let
   transformMcpServers = lib.mapAttrs (_name: transformMcpServer);
 
   commandSkillName = lib.replaceStrings [ "/" ] [ ":" ];
+
+  normalizeSkillsDirectory =
+    source:
+    if lib.isPath source then
+      source
+    else
+      pkgs.runCommandLocal "antigravity-cli-skills" { } ''
+        if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
+          echo ${lib.escapeShellArg "programs.antigravity-cli.skills must be a directory"} >&2
+          exit 1
+        fi
+        ln -s ${lib.escapeShellArg (toString source)} "$out"
+      '';
+
+  normalizeSkill =
+    source:
+    pkgs.runCommandLocal "antigravity-cli-skill" { } ''
+      source=${lib.escapeShellArg (toString source)}
+      if [[ -d "$source" ]]; then
+        ln -s "$source" "$out"
+      elif [[ -f "$source" ]]; then
+        mkdir "$out"
+        ln -s "$source" "$out/SKILL.md"
+      else
+        echo "Antigravity CLI skill source must be a file or directory: $source" >&2
+        exit 1
+      fi
+    '';
+
+  skillFiles =
+    skillsDir:
+    if lib.hm.strings.isPathLike cfg.skills then
+      {
+        "${skillsDir}" = {
+          source = normalizeSkillsDirectory cfg.skills;
+          recursive = true;
+        };
+      }
+    else
+      lib.mapAttrs' (
+        name: source:
+        if lib.isPath source && lib.pathIsDirectory source then
+          lib.nameValuePair "${skillsDir}/${name}" {
+            inherit source;
+            recursive = true;
+          }
+        else if lib.hm.strings.isPathLike source && !lib.isPath source then
+          lib.nameValuePair "${skillsDir}/${name}" {
+            source = normalizeSkill source;
+            recursive = true;
+          }
+        else
+          lib.nameValuePair "${skillsDir}/${name}/SKILL.md" (
+            if lib.hm.strings.isPathLike source then { inherit source; } else { text = source; }
+          )
+      ) cfg.skills;
 
 in
 {
@@ -155,7 +216,8 @@ in
         {file}`~/.gemini/config/mcp_config.json`.
 
         Remote servers use `serverUrl`; `url` and `httpUrl` are accepted
-        for migration and converted automatically.
+        for migration and converted automatically. `enabled` is accepted
+        and converted to `disabled`.
       '';
     };
 
@@ -459,28 +521,7 @@ in
                   if lib.hm.strings.isPathLike v then v else tomlFormat.generate "gemini-cli-policy-${n}.toml" v;
               }
             ) cfg.policies
-            // (
-              if lib.hm.strings.isPathLike cfg.skills then
-                {
-                  "${geminiSkillsDir}" = {
-                    source = cfg.skills;
-                    recursive = true;
-                  };
-                }
-              else
-                lib.mapAttrs' (
-                  n: v:
-                  if lib.hm.strings.isPathLike v && lib.pathIsDirectory v then
-                    lib.nameValuePair "${geminiSkillsDir}/${n}" {
-                      source = v;
-                      recursive = true;
-                    }
-                  else
-                    lib.nameValuePair "${geminiSkillsDir}/${n}/SKILL.md" (
-                      if lib.hm.strings.isPathLike v then { source = v; } else { text = v; }
-                    )
-                ) cfg.skills
-            );
+            // skillFiles geminiSkillsDir;
         })
         (lib.mkIf (!useGeminiConfig) {
           programs.antigravity-cli.mcpServers =
@@ -538,33 +579,12 @@ in
                 '';
               }
             ) cfg.commands
-            // (
-              if lib.hm.strings.isPathLike cfg.skills then
-                {
-                  "${antigravitySkillsDir}" = {
-                    source = cfg.skills;
-                    recursive = true;
-                  };
-                }
-              else
-                lib.mapAttrs' (
-                  n: v:
-                  if lib.hm.strings.isPathLike v && lib.pathIsDirectory v then
-                    lib.nameValuePair "${antigravitySkillsDir}/${n}" {
-                      source = v;
-                      recursive = true;
-                    }
-                  else
-                    lib.nameValuePair "${antigravitySkillsDir}/${n}/SKILL.md" (
-                      if lib.hm.strings.isPathLike v then { source = v; } else { text = v; }
-                    )
-                ) cfg.skills
-            );
+            // skillFiles antigravitySkillsDir;
         })
         {
           assertions = [
             {
-              assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
+              assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
               message = "`programs.antigravity-cli.skills` must be a directory when set to a path";
             }
           ];
