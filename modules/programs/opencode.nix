@@ -463,6 +463,69 @@ in
         }
       '';
     };
+
+    validation = {
+      enable = mkEnableOption "validation of OpenCode configuration files";
+
+      validator = lib.mkOption {
+        type = lib.types.functionTo lib.types.str;
+        default =
+          {
+            schema,
+            instances,
+            extraArgs,
+          }:
+          ''
+            ${lib.getExe pkgs.check-jsonschema} \
+              --schemafile ${lib.escapeShellArg schema} \
+              ${lib.escapeShellArgs extraArgs} \
+              ${lib.escapeShellArgs instances} >&2
+          '';
+        defaultText = lib.literalExpression ''
+          { schema, instances, extraArgs }: \'\'
+            $${lib.getExe pkgs.check-jsonschema} \
+              --schemafile $${lib.escapeShellArg schema} \
+              $${lib.escapeShellArgs extraArgs} \
+              $${lib.escapeShellArgs instances} >&2
+          \'\'
+        '';
+        example = lib.literalExpression ''
+          { schema, instances, extraArgs }: \'\'
+            $${lib.getExe pkgs.jsonschema-cli} validate \
+              -i $${lib.escapeShellArgs instances} \
+              $${lib.escapeShellArgs extraArgs} \
+              $${lib.escapeShellArg schema} >&2
+          \'\'
+        '';
+        description = ''
+          A function that validates OpenCode configuration files against their JSON schemas.
+
+          The function receives an attribute set with:
+          - `schema`: The path to the JSON schema file
+          - `instances`: A list of paths to configuration files to validate
+          - `extraArgs`: Additional arguments for the validator, taken from
+            {option}`programs.opencode.validation.extraArgs`.
+
+          This is used during home activation to validate configuration files before
+          OpenCode reads them, ensuring they conform to the expected schema.
+        '';
+      };
+
+      extraArgs = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = lib.literalExpression ''
+          [
+            "--output-format"
+            "json"
+          ]
+        '';
+        description = ''
+          Extra arguments passed to the validator invoked by
+          {option}`programs.opencode.validation.validator`.
+        '';
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -486,6 +549,10 @@ in
       {
         assertion = !lib.isPath cfg.themes || lib.pathIsDirectory cfg.themes;
         message = "`programs.opencode.themes` must be a directory when set to a path";
+      }
+      {
+        assertion = cfg.validation.enable || !lib.hasAttr "validateOpenCodeConfigs" config.home.activation;
+        message = "`home.activation.validateOpenCodeConfigs` must not be set when `programs.opencode.validation.enable` is set to `false`";
       }
     ];
 
@@ -515,6 +582,53 @@ in
       ];
 
     home.packages = mkIf (packageWithExtraPackages != null) [ packageWithExtraPackages ];
+
+    home.activation.validateOpenCodeConfigs = mkIf cfg.validation.enable (
+      lib.hm.dag.entryBefore [ "writeBoundary" ] (
+        let
+          mkInstances =
+            paths:
+            if lib.isList paths then
+              lib.filter (value: value != null) (
+                lib.map (path: config.xdg.configFile.${path}.source or null) paths
+              )
+            else
+              lib.mapAttrsToList (name: _: paths + "/${name}") (
+                lib.filterAttrs (
+                  name: value: lib.hasSuffix ".json" name && (value == "regular" || value == "symlink")
+                ) (builtins.readDir paths)
+              );
+        in
+        lib.concatStringsSep "\n" (
+          lib.map
+            (
+              { schema, instances }:
+              cfg.validation.validator {
+                inherit schema instances;
+                extraArgs = cfg.validation.extraArgs;
+              }
+            )
+            (
+              lib.filter ({ schema, instances }: schema != null && instances != [ ]) (
+                lib.mapAttrsToList
+                  (name: value: {
+                    schema = cfg.package.passthru.jsonschema.${name} or null;
+                    instances = mkInstances value;
+                  })
+                  {
+                    config = [ "opencode/opencode.json" ];
+                    tui = [ "opencode/tui.json" ];
+                    theme =
+                      if lib.isAttrs cfg.themes then
+                        lib.mapAttrsToList (name: _: "opencode/themes/${name}.json") cfg.themes
+                      else
+                        cfg.themes;
+                  }
+              )
+            )
+        )
+      )
+    );
 
     xdg.configFile = {
       "opencode/opencode.json" = mkIf (cfg.settings != { } || transformedMcpServers != { }) {
