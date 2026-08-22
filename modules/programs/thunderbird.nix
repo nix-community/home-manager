@@ -323,6 +323,7 @@ let
         "ldap_2.servers.contact_${id}.carddav.username" = contact.remote.userName;
         "ldap_2.servers.contact_${id}.carddav.token" = contact.thunderbird.token;
       }
+      // contact.thunderbird.settings id
     );
 
   toThunderbirdFeed =
@@ -968,6 +969,30 @@ in
               example = "secret_token";
               description = ''
                 A token is generated when adding an address book manually to Thunderbird, this can be entered here.
+              '';
+            };
+
+            settings = mkOption {
+              type =
+                with types;
+                functionTo (
+                  attrsOf (oneOf [
+                    bool
+                    int
+                    str
+                  ])
+                );
+              default = _: { };
+              defaultText = literalExpression "_: { }";
+              example = literalExpression ''
+                id: {
+                  "ldap_2.servers.contact_''${id}.carddav.url" =
+                    "https://example.com/addressbook/";
+                };
+              '';
+              description = ''
+                Extra settings to add to this Thunderbird address book configuration.
+                The {var}`id` given as argument is an automatically generated account identifier.
               '';
             };
           };
