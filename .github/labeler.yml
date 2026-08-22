@@ -635,7 +635,6 @@
 "video":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/programs/animdl.nix
           - modules/programs/anime-downloader.nix
           - modules/programs/aperture.nix
           - modules/programs/asciinema.nix
