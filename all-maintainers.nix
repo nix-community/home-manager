@@ -1210,12 +1210,25 @@
     githubId = 29818440;
     keys = [
       {
+        fingerprint = "hEzYpII9pUMfbhhr1LbUaLoGKGKX7UJQ1i9QU5SIssQ";
+      }
+      {
+        fingerprint = "MnieeyZ1Y02OB4PMrkM5xrk3ZXq3XTahcSocDyqzmFg";
+      }
+      {
+        fingerprint = "YfsHXlTvwc3HmLzQPi4g9nn4bKCj/mV/xgg9dxxxdnU";
+      }
+      {
+        fingerprint = "2NGbD6uF4OYtqjaYvN4foZFooT7XTAHODUaNxGVuJdk";
+      }
+      {
         fingerprint = "RoAfvqa6w1l8Vdm3W60TDXurYwJ6h03VEGD+wDNGEwc";
       }
       {
         fingerprint = "MP2UpIRtJpbFFqyucP431H/FPCfn58UhEUTro4lXtRs";
       }
     ];
+    matrix = "@gepbird:matrix.org";
     name = "Gutyina Gergő";
     source = "nixpkgs";
   };
@@ -1915,11 +1928,11 @@
     source = "nixpkgs";
   };
   nikp123 = {
-    email = "nikp123@users.noreply.github.com";
+    email = "nikp123@e.email";
     github = "nikp123";
     githubId = 4696350;
     name = "nikp123";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   nilp0inter = {
     email = "robertomartinezp@gmail.com";
@@ -2100,12 +2113,12 @@
     source = "home-manager";
   };
   rachitvrma = {
-    email = "155641117+rachitvrma@users.noreply.github.com";
+    email = "rachitverma1122+nixpkgs@gmail.com";
     github = "rachitvrma";
     githubId = 155641117;
     matrix = "@rachitvrma:matrix.org";
     name = "Rachit Kumar Verma";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   rasmus-kirk = {
     email = "mail@rasmuskirk.com";
