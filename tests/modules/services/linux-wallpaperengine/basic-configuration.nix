@@ -16,7 +16,7 @@
       }
       {
         monitor = "DP-1";
-        playlist = "config.json";
+        playlist = "config with spaces.json";
         extraOptions = [
           "--scaling fill"
         ];
