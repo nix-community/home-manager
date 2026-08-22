@@ -168,6 +168,7 @@ let
     "podman"
     "poetry"
     "powerline-go"
+    "prismlauncher"
     "proton-pass-cli"
     "pubs"
     "pyenv"
