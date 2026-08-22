@@ -6,11 +6,9 @@
 }:
 let
   inherit (lib)
-    generators
     getBin
     getExe'
     last
-    mapAttrsToList
     mkDefault
     mkEnableOption
     mkIf
@@ -34,7 +32,7 @@ let
   radicleHome = config.home.homeDirectory + "/.radicle";
 
   gitPath = [ "PATH=${getBin pkgs.gitMinimal}/bin" ];
-  env = attrs: (mapAttrsToList (generators.mkKeyValueDefault { } "=") attrs) ++ gitPath;
+  env = attrs: (lib.hm.systemd.envToList attrs) ++ gitPath;
 in
 {
   meta.maintainers = with lib.maintainers; [
