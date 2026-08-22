@@ -6,6 +6,9 @@
   ...
 }:
 
+let
+  cfg = config.specialisation;
+in
 {
   imports = [ (lib.mkRenamedOptionModule [ "specialization" ] [ "specialisation" ]) ];
 
@@ -14,29 +17,37 @@
       lib.types.submodule {
         options = {
           configuration = lib.mkOption {
-            type =
-              let
-                extended = extendModules {
-                  modules = [
-                    {
-                      # Prevent infinite recursion
-                      specialisation = lib.mkOverride 0 { };
+            type = let
+              extended = extendModules {
+                modules = [
+                  {
+                    # Prevent infinite recursion
+                    specialisation = lib.mkOverride 0 { };
 
-                      # If used inside the NixOS/nix-darwin module, we get conflicting definitions
-                      # of `name` inside the specialisation: one is the user name coming from the
-                      # NixOS module definition and the other is `configuration`, the name of this
-                      # option. Thus we need to explicitly wire the former into the module arguments.
-                      # See discussion at https://github.com/nix-community/home-manager/issues/3716
-                      _module.args.name = lib.mkForce name;
-                    }
-                  ];
-                };
-              in
-              extended.type;
+                    # If used inside the NixOS/nix-darwin module, we get conflicting definitions
+                    # of `name` inside the specialisation: one is the user name coming from the
+                    # NixOS module definition and the other is `configuration`, the name of this
+                    # option. Thus we need to explicitly wire the former into the module arguments.
+                    # See discussion at https://github.com/nix-community/home-manager/issues/3716
+                    _module.args.name = lib.mkForce name;
+                  }
+                ];
+              };
+            in extended.type;
             default = { };
             visible = "shallow";
             description = ''
               Arbitrary Home Manager configuration settings.
+            '';
+          };
+          default = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Whether this specialisation is activated by default.
+              Note that setting this option will override the default activation
+              script, making it impossible to activate the default
+              configuration.
             '';
           };
         };
@@ -44,7 +55,7 @@
     );
     default = { };
     description = ''
-      A set of named specialized configurations. These can be used to extend
+      A set of named specialised configurations. These can be used to extend
       your base configuration with additional settings. For example, you can
       have specialisations named "light" and "dark"
       that apply light and dark color theme configurations.
@@ -79,24 +90,37 @@
     '';
   };
 
-  config = lib.mkIf (config.specialisation != { }) {
-    assertions = map (n: {
-      assertion = !lib.hasInfix "/" n;
-      message = "<name> in specialisation.<name> cannot contain a forward slash.";
-    }) (lib.attrNames config.specialisation);
+  config = lib.mkIf (cfg != { }) {
+    assertions =
+      [
+        {
+          assertion = count (s: s.default) (attrValues cfg) <= 1;
+          message = "There can only be one default specialisation";
+        }
+      ]
+      ++ map (n: {
+        assertion = !lib.hasInfix "/" n;
+        message = "<name> in specialisation.<name> cannot contain a forward slash.";
+      }) (lib.attrNames config.specialisation);
 
-    home.extraBuilderCommands =
-      let
-        link =
-          n: v:
-          let
-            pkg = v.configuration.home.activationPackage;
-          in
-          "ln -s ${pkg} $out/specialisation/${lib.escapeShellArg n}";
-      in
-      ''
-        mkdir $out/specialisation
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList link config.specialisation)}
+    home.extraBuilderCommands = let
+      link =
+        n: v:
+        let
+          pkg = v.configuration.home.activationPackage;
+        in
+        "ln -s ${pkg} $out/specialisation/${lib.escapeShellArg n}";
+    in ''
+      mkdir $out/specialisation
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList link cfg)}
+    '';
+
+    home.activation = let
+      defaultSpecialisation = findFirst (s: s.default) null (attrValues cfg);
+    in mkIf (defaultSpecialisation != null) (mkForce {
+      activateSpecialisation = ''
+        ${defaultSpecialisation.configuration.home.activationPackage}/activate
       '';
+    });
   };
 }
