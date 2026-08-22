@@ -8,7 +8,7 @@
 
   nmt.script = ''
     assertFileNotRegex \
-      home-files/.profile \
+      home-files/.bash_profile \
       'SSH_AUTH_SOCK'
     assertFileNotRegex \
       home-files/.config/fish/config.fish \
