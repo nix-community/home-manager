@@ -1324,6 +1324,13 @@
     name = "Ilham AM";
     source = "nixpkgs";
   };
+  iniw = {
+    email = "dev@vini.cat";
+    github = "iniw";
+    githubId = 30220881;
+    name = "Vinicius Deolindo";
+    source = "nixpkgs";
+  };
   iosmanthus = {
     email = "myosmanthustree@gmail.com";
     github = "iosmanthus";
