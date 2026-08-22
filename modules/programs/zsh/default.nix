@@ -127,7 +127,9 @@ in
       programs.zsh = {
         enable = mkEnableOption "Z shell (Zsh)";
 
-        package = lib.mkPackageOption pkgs "zsh" { };
+        package = lib.mkPackageOption pkgs "zsh" {
+          nullable = true;
+        };
 
         autocd = mkOption {
           default = null;
@@ -578,10 +580,9 @@ in
         {
           lib.zsh = zshLib;
 
-          home.packages = [
-            cfg.package
-          ]
-          ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions);
+          home.packages = lib.mkIf (cfg.package != null) (
+            [ cfg.package ] ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions)
+          );
 
           # NOTE: Always include "main" highlighter with normal priority.
           # Option default priority will cause `main` to get dropped by customization.
@@ -600,9 +601,8 @@ in
               for profile in ''${(z)NIX_PROFILES}; do
                 fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
               done
-
-              HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
             '')
+            (lib.mkIf (cfg.package != null) (mkOrder 520 "HELPDIR=${cfg.package}/share/zsh/$ZSH_VERSION/help"))
 
             (lib.mkIf (cfg.defaultKeymap != null) (
               mkOrder 530 ''
