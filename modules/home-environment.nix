@@ -638,6 +638,7 @@ in
     programs.zsh.shellAliases = cfg.shellAliases;
     programs.fish.shellAliases = cfg.shellAliases;
     programs.nushell.shellAliases = cfg.shellAliases;
+    programs.xonsh.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
       let
