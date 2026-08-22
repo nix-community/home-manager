@@ -1,0 +1,7 @@
+worktree-path = ".worktrees/{{ branch | sanitize }}"
+
+[commit]
+stage = "all"
+
+[commit.generation]
+command = "llm -m claude-haiku-4.5"
