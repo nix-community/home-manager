@@ -14,6 +14,7 @@ let
     windsurf = "programs.windsurf";
     kiro = "programs.kiro";
     antigravity = "programs.antigravity";
+    positron-bin = "programs.positron";
   };
 in
 {
