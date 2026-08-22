@@ -1,3 +1,9 @@
+# Refresh interactive child shells before user bashrc code. Skip login
+# shells, which already ran .profile, and non-interactive SSH commands.
+if [[ $- == *i* ]] && ! shopt -q login_shell; then
+  . "/nix/store/00000000000000000000000000000000-hm-session-vars.sh/etc/profile.d/hm-session-vars.sh"
+fi
+
 
 
 # Commands that should be applied only for interactive shells.

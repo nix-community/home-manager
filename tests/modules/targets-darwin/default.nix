@@ -3,5 +3,7 @@
   # https://github.com/nix-community/home-manager/issues/1341#issuecomment-687286866
   #targets-darwin = ./darwin.nix;
   terminfo = ./terminfo.nix;
+  terminfo-disabled = ./terminfo-disabled.nix;
+  terminfo-override = ./terminfo-override.nix;
   user-defaults = ./user-defaults.nix;
 }

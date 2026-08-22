@@ -1,9 +1,9 @@
 # Environment variables
 . "/nix/store/00000000000000000000000000000000-hm-session-vars.sh/etc/profile.d/hm-session-vars.sh"
 
-# Only source this once
+# Reapply Zsh-specific values once per shell after generic values.
 if [[ -z "${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
-  export __HM_ZSH_SESS_VARS_SOURCED=1
+  __HM_ZSH_SESS_VARS_SOURCED=1
   export IS_EMPTY=""
   export IS_FALSE=false
   export IS_TRUE=true
