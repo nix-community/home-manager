@@ -9,6 +9,8 @@ let
 
   cfg = config.services.copyq;
 
+  iniFormat = pkgs.formats.ini { };
+
 in
 {
   meta.maintainers = [ lib.maintainers.DamienCassou ];
@@ -37,31 +39,63 @@ in
       example = false;
       description = "Force the CopyQ to use the X backend on wayland";
     };
-  };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.copyq" pkgs lib.platforms.linux)
-    ];
-
-    home.packages = [ cfg.package ];
-
-    systemd.user.services.copyq = {
-      Unit = {
-        Description = "CopyQ clipboard management daemon";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        ExecStart = "${cfg.package}/bin/copyq";
-        Restart = "on-failure";
-        Environment = lib.optional cfg.forceXWayland "QT_QPA_PLATFORM=xcb";
-      };
-
-      Install = {
-        WantedBy = [ cfg.systemdTarget ];
-      };
+    settings = lib.mkOption {
+      type = iniFormat.type.nestedTypes.elemType;
+      default = { };
+      description = "Copyq confiuration. Run `copyq config` to list available options.";
+      example = lib.literalExpression ''
+        {
+          disable_tray = true;
+          hide_main_window = true;
+          hide_tabs = true;
+          hide_toolbar = true;
+          autostart = false;
+        }
+      '';
     };
   };
+
+  config =
+    let
+
+      executablePath = "${cfg.package}/bin/copyq";
+
+    in
+    lib.mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "services.copyq" pkgs lib.platforms.linux)
+      ];
+
+      home.packages = [ cfg.package ];
+
+      systemd.user.services.copyq = {
+        Unit = {
+          Description = "CopyQ clipboard management daemon";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+        };
+
+        Service = {
+          ExecStart = executablePath;
+          Restart = "on-failure";
+          Environment = lib.optional cfg.forceXWayland "QT_QPA_PLATFORM=xcb";
+        };
+
+        Install = {
+          WantedBy = [ cfg.systemdTarget ];
+        };
+      };
+
+      home.activation.copyqConfig = lib.mkIf (cfg.settings != { }) (
+        lib.hm.dag.entryAfter [ "writeBoundary" ] (
+          lib.concatLines (
+            lib.mapAttrsToList (
+              k: v:
+              "run --quiet ${executablePath} --start-server config ${k} ${toString v} 2> >(grep -v '^Warning: CopyQ server is already running' >&2)"
+            ) cfg.settings
+          )
+        )
+      );
+    };
 }
