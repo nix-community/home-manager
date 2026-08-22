@@ -445,6 +445,12 @@
     github = "NitroSniper";
     githubId = 44097331;
   };
+  o-az = {
+    name = "Omar Aziz";
+    email = "23618431+o-az@users.noreply.github.com";
+    github = "o-az";
+    githubId = 23618431;
+  };
   olmokramer = {
     name = "Olmo Kramer";
     email = "olmokramer@users.noreply.github.com";
