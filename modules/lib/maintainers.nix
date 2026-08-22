@@ -551,6 +551,11 @@
     github = "superflash41";
     githubId = 102434258;
   };
+  typeparameter = {
+    name = "Drew Davis";
+    github = "typeparameter";
+    githubId = 9686215;
+  };
   vidhanio = {
     name = "Vidhan Bhatt";
     email = "me@vidhan.io";
