@@ -9,6 +9,9 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.services.linux-wallpaperengine;
+
+  escapeSystemdExecArg =
+    arg: lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (lib.strings.toJSON (toString arg));
 in
 {
   meta.maintainers = [ lib.maintainers.ckgxrg ];
@@ -229,7 +232,7 @@ in
           lib.concatStringsSep " " (
             [
               "--screen-root"
-              each.monitor
+              (escapeSystemdExecArg each.monitor)
             ]
             ++ lib.optionals (each.scaling != null) [
               "--scaling"
@@ -242,11 +245,11 @@ in
             ++ each.extraOptions
             ++ lib.optionals (each.wallpaper != null) [
               "--bg"
-              each.wallpaper
+              (escapeSystemdExecArg each.wallpaper)
             ]
             ++ lib.optionals (each.playlist != null) [
               "--playlist"
-              each.playlist
+              (escapeSystemdExecArg each.playlist)
             ]
           )
         );
@@ -260,7 +263,7 @@ in
         Service = {
           ExecStart = lib.concatStringsSep " " (
             [ (lib.getExe cfg.package) ]
-            ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${cfg.assetsPath}"
+            ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${escapeSystemdExecArg cfg.assetsPath}"
             ++ lib.optional (cfg.fps != null) "--fps ${lib.toString cfg.fps}"
             ++ lib.optional (cfg.audio.silent) "--silent"
             ++ lib.optional (cfg.audio.volume != null) "--volume ${lib.toString cfg.audio.volume}"
