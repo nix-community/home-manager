@@ -10,7 +10,6 @@ let
     concatMapStringsSep
     generators
     literalExpression
-    mkEnableOption
     mkIf
     mkOption
     types
@@ -31,7 +30,12 @@ in
 
 {
   options.qt.kvantum = {
-    enable = mkEnableOption "Kvantum configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = (config.qt.style.name == "kvantum");
+      defaultText = ''config.qt.style.name == "kvantum"'';
+      description = "Kvantum configuration";
+    };
 
     settings = mkOption {
       type = types.submodule {
@@ -127,9 +131,17 @@ in
         };
       };
 
-      "Kvantum/kvantum.kvconfig" = mkIf (cfg.settings != { }) {
-        source = kvconfigFormat.generate "kvantum-config" cfg.settings;
-      };
+      "Kvantum/kvantum.kvconfig" =
+        mkIf
+          (
+            cfg.settings != {
+              Applications = { };
+              General.theme = null;
+            }
+          )
+          {
+            source = kvconfigFormat.generate "kvantum-config" cfg.settings;
+          };
     };
   };
 }
