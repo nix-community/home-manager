@@ -62,6 +62,22 @@ in
         };
 
         signing = {
+          allowedSigners = mkOption {
+            type = types.lines;
+            default = "";
+            example = ''
+              user@example.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...
+            '';
+            description = ''
+              SSH public keys trusted when verifying signed commits and tags.
+
+              Each line must follow the allowed signers format described in
+              {manpage}`ssh-keygen(1)`. When non-empty, the content is written
+              to {file}`$XDG_CONFIG_HOME/git/allowed_signers` and configured as
+              Git's `gpg.ssh.allowedSignersFile` setting.
+            '';
+          };
+
           key = mkOption {
             type = types.nullOr types.str;
             default = null;
@@ -482,6 +498,12 @@ in
             })
           ];
         };
+      })
+
+      (mkIf (cfg.signing.allowedSigners != "") {
+        xdg.configFile."git/allowed_signers".text = cfg.signing.allowedSigners;
+        programs.git.iniContent.gpg.ssh.allowedSignersFile =
+          mkDefault "${config.xdg.configHome}/git/allowed_signers";
       })
 
       (mkIf (cfg.hooks != { }) {
