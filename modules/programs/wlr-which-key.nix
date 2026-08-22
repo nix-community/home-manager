@@ -10,7 +10,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.rachitvrma ];
+  meta.maintainers = [ lib.maintainers.rachitvrma ];
 
   options.programs.wlr-which-key = {
     enable = lib.mkEnableOption "wlr-which-key, a keymap manager for wlroots-based compositors";

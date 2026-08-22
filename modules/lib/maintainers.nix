@@ -439,12 +439,6 @@
     github = "natecox";
     githubId = 2782695;
   };
-  nikp123 = {
-    name = "nikp123";
-    email = "nikp123@users.noreply.github.com";
-    github = "nikp123";
-    githubId = 4696350;
-  };
   NitroSniper = {
     name = "Nitro Sniper";
     email = "nitro@ortin.dev";
@@ -497,13 +491,6 @@
     email = "git@moonythm.dev";
     github = "prescientmoon";
     githubId = 39400800;
-  };
-  rachitvrma = {
-    name = "Rachit Kumar Verma";
-    email = "155641117+rachitvrma@users.noreply.github.com";
-    matrix = "@rachitvrma:matrix.org";
-    github = "rachitvrma";
-    githubId = 155641117;
   };
   rasmus-kirk = {
     name = "Rasmus Kirk";
