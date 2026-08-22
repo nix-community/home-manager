@@ -1,0 +1,1 @@
+{ secretspec = ./secretspec.nix; }
