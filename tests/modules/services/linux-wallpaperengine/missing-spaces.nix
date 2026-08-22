@@ -4,7 +4,7 @@
     wallpapers = [
       {
         monitor = "HDMI-A-1";
-        wallpaperId = "2902931482";
+        wallpaper = "2902931482";
       }
     ];
   };
