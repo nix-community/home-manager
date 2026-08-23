@@ -602,7 +602,11 @@ in
                 fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
               done
             '')
-            (lib.mkIf (cfg.package != null) (mkOrder 520 "HELPDIR=${cfg.package}/share/zsh/$ZSH_VERSION/help"))
+            (lib.mkIf (cfg.package != null) (
+              mkOrder 520 ''
+                HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
+              ''
+            ))
 
             (lib.mkIf (cfg.defaultKeymap != null) (
               mkOrder 530 ''
