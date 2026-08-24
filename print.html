@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3fcaa514.js";
+            window.path_to_searchindex_js = "searchindex-78960a6f.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-e16acae1.js"></script>
+        <script src="toc-dd1f83f8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11996,6 +11996,7 @@ string</p>
 <li><a href="#earthly">earthly</a></li>
 <li><a href="#ec">ec</a></li>
 <li><a href="#eclipse">eclipse</a></li>
+<li><a href="#eilmeldung">eilmeldung</a></li>
 <li><a href="#element-desktop">element-desktop</a></li>
 <li><a href="#emacs">emacs</a></li>
 <li><a href="#equibop">equibop</a></li>
@@ -22651,6 +22652,86 @@ list of package</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/eclipse.nix">&lt;home-manager/modules/programs/eclipse.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="eilmeldung"><a href="#eilmeldung" class="header">eilmeldung</a></h1>
+<h2 id="opt-programs.eilmeldung.enable"><a class="header" href="#opt-programs.eilmeldung.enable">programs.eilmeldung.enable</a></h2>
+<p>Whether to enable eilmeldung, a TUI news feed reader.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/eilmeldung.nix">&lt;home-manager/modules/programs/eilmeldung.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.eilmeldung.package"><a class="header" href="#opt-programs.eilmeldung.package">programs.eilmeldung.package</a></h2>
+<p>The eilmeldung package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.eilmeldung
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/eilmeldung.nix">&lt;home-manager/modules/programs/eilmeldung.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.eilmeldung.settings"><a class="header" href="#opt-programs.eilmeldung.settings">programs.eilmeldung.settings</a></h2>
+<p>Configuration written to
+<code>$XDG_CONFIG_HOME/eilmeldung/config.toml</code>.</p>
+<p>See
+<a href="https://github.com/christo-auer/eilmeldung/blob/main/docs/configuration.md">https://github.com/christo-auer/eilmeldung/blob/main/docs/configuration.md</a>
+for the full list of options.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  after_sync_commands = [
+    "query lastsync"
+    "tag rust title:\"rust\""
+    "read title:/^Advertisement/"
+    "refresh"
+  ];
+  audio_enclosure_command = "mpv --no-audio {url}";
+  feed_list = [
+    "query: \"Marked\" marked"
+    "query: \"Reviews\" #reviews"
+    "feeds"
+    "* categories"
+    "tags"
+  ];
+  input_config = {
+    mappings = {
+      "; i" = [
+        "cmd hintshare feh"
+      ];
+      y = [
+        "confirm in articles read all"
+        "nextunread"
+      ];
+    };
+  };
+  mouse_support = true;
+  share_targets = [
+    "clipboard"
+    "feh feh \"{url}\""
+  ];
+  startup_commands = [
+    "sync"
+  ];
+  video_enclosure_command = "mpv {url}";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/eilmeldung.nix">&lt;home-manager/modules/programs/eilmeldung.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="element-desktop"><a href="#element-desktop" class="header">element-desktop</a></h1>
