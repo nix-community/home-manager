@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-78960a6f.js";
+            window.path_to_searchindex_js = "searchindex-06165bce.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-dd1f83f8.js"></script>
+        <script src="toc-6155307d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12150,6 +12150,7 @@ string</p>
 <li><a href="#nix-search-tv">nix-search-tv</a></li>
 <li><a href="#nix-your-shell">nix-your-shell</a></li>
 <li><a href="#nnn">nnn</a></li>
+<li><a href="#noctalia">noctalia</a></li>
 <li><a href="#nom">nom</a></li>
 <li><a href="#noti">noti</a></li>
 <li><a href="#notmuch">notmuch</a></li>
@@ -43831,6 +43832,108 @@ boolean</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nnn.nix">&lt;home-manager/modules/programs/nnn.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="noctalia"><a href="#noctalia" class="header">noctalia</a></h1>
+<h2 id="opt-programs.noctalia.enable"><a class="header" href="#opt-programs.noctalia.enable">programs.noctalia.enable</a></h2>
+<p>Whether to enable noctalia, a lightweight Wayland shell and bar.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.noctalia.package"><a class="header" href="#opt-programs.noctalia.package">programs.noctalia.package</a></h2>
+<p>The noctalia package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.noctalia
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.noctalia.checkConfig"><a class="header" href="#opt-programs.noctalia.checkConfig">programs.noctalia.checkConfig</a></h2>
+<p>Validate the configuration file at build time.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.noctalia.customPalettes"><a class="header" href="#opt-programs.noctalia.customPalettes">programs.noctalia.customPalettes</a></h2>
+<p>Custom color palettes, keyed by name. Each value can be:</p>
+<ul>
+<li>A Nix attrset (converted to JSON)</li>
+<li>A raw JSON string</li>
+<li>A path to a <code>.json</code> file</li>
+</ul>
+<p>See <a href="https://docs.noctalia.dev/v5/theming/#custom_palette">https://docs.noctalia.dev/v5/theming/#custom_palette</a>.</p>
+<p><em>Type:</em>
+attribute set of (JSON value or string or absolute path)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.noctalia.settings"><a class="header" href="#opt-programs.noctalia.settings">programs.noctalia.settings</a></h2>
+<p>Default settings for noctalia, can be written as:</p>
+<ul>
+<li>A Nix attrset (converted to TOML via nixpkgs’ tomlFormat)</li>
+<li>A raw TOML string</li>
+<li>A path to a <code>.toml</code> file</li>
+</ul>
+<p>See <a href="https://docs.noctalia.dev/v5">https://docs.noctalia.dev/v5</a> for more information and examples.</p>
+<p>Note: these settings can still be overwritten at runtime via the settings menu.</p>
+<p><em>Type:</em>
+TOML value or string or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  shell = {
+    font = "JetBrainsMono Nerd Font";
+    settings_show_advanced = true;
+  };
+
+  theme = {
+    mode = "dark";
+    source = "builtin";
+    builtin = "Catppuccin";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.noctalia.systemd.enable"><a class="header" href="#opt-programs.noctalia.systemd.enable">programs.noctalia.systemd.enable</a></h2>
+<p>Whether to enable a systemd user service for noctalia.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nom"><a href="#nom" class="header">nom</a></h1>
