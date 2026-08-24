@@ -13,7 +13,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.DamienCassou ];
+  meta.maintainers = [ lib.maintainers.DPDmancul ];
 
   options.services.copyq = {
     enable = lib.mkEnableOption "CopyQ, a clipboard manager with advanced features";
