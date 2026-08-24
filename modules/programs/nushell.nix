@@ -296,6 +296,7 @@ in
         let
           msgPackz = pkgs.runCommand "nushellMsgPackz" { } ''
             mkdir -p "$out"
+            touch "$out/plugin.msgpackz"
             ${lib.getExe cfg.package} \
               --plugin-config "$out/plugin.msgpackz" \
               --commands '${
