@@ -867,6 +867,12 @@
     name = "Chris Martin";
     source = "nixpkgs";
   };
+  christo-auer = {
+    github = "christo-auer";
+    githubId = 15138131;
+    name = "Christopher Auer";
+    source = "nixpkgs";
+  };
   christoph-heiss = {
     email = "christoph@c8h4.io";
     github = "christoph-heiss";
