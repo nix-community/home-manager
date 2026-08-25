@@ -94,7 +94,7 @@ in
         [mise](https://mise.jdx.dev/direnv.html),
         integration of use_mise for direnv'';
 
-      package = mkPackageOption pkgs "mise" { };
+      package = mkPackageOption pkgs "mise" { nullable = true; };
     };
 
     silent = mkEnableOption "silent mode, that is, disabling direnv logging";
@@ -195,7 +195,7 @@ in
 
         "direnv/lib/hm-mise.sh" = mkIf cfg.mise.enable {
           text = ''
-            eval "$(${getExe cfg.mise.package} direnv activate)"
+            eval "$(${if cfg.mise.package != null then getExe cfg.mise.package else "mise"} direnv activate)"
           '';
         };
       };
