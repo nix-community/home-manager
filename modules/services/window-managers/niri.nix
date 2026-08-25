@@ -169,6 +169,10 @@ in
         assertion = cfg.checkConfig -> cfg.package != null;
         message = "wayland.windowManager.niri.checkConfig requires a non-null package";
       }
+      {
+        assertion = cfg.enableDefaultConfig -> cfg.package != null;
+        message = "wayland.windowManager.niri.enableDefaultConfig requires a non-null package";
+      }
     ];
 
     home.packages = lib.concatLists [
