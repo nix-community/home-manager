@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6f4f97af.js";
+            window.path_to_searchindex_js = "searchindex-e4092f77.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-56126880.js"></script>
@@ -63390,6 +63390,21 @@ boolean</p>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.zk
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zk.nix">&lt;home-manager/modules/programs/zk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.zk.exportNotebookDir"><a class="header" href="#opt-programs.zk.exportNotebookDir">programs.zk.exportNotebookDir</a></h2>
+<p>Whether to export <code>ZK_NOTEBOOK_DIR</code> from
+<code>programs.zk.settings.notebook.dir</code>.</p>
+<p>zk reads the default notebook from its configuration file, so this is
+only needed for programs that read the environment variable directly,
+such as editor plugins started outside a notebook directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
