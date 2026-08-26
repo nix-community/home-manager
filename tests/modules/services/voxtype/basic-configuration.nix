@@ -6,6 +6,7 @@
     wayland.display = "wayland-1";
     extraArgs = [ "--verbose" ];
     environment.VOXTYPE_TEST_ENV = "1";
+    loadModels = [ "base.en" ];
     settings = {
       output = {
         mode = "type";
@@ -21,14 +22,16 @@
   nmt.script = ''
     serviceFile=home-files/.config/systemd/user/voxtype.service
     configFile=home-files/.config/voxtype/config.toml
+    loaderFile=home-files/.config/systemd/user/voxtype-model-loader.service
 
     assertFileExists "$serviceFile"
     assertFileExists "$configFile"
+    assertFileExists "$loaderFile"
 
     serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
     assertFileContent "$serviceFileNormalized" ${builtins.toFile "expected.service" ''
       [Install]
-      WantedBy=default.target
+      WantedBy=graphical-session.target
 
       [Service]
       Environment=PATH=/nix/store/00000000000000000000000000000000-coreutils/bin:@which@/bin:@wl-clipboard@/bin:@wtype@/bin
@@ -41,9 +44,30 @@
       Type=exec
 
       [Unit]
+      After=graphical-session.target
       Description=Voxtype speech-to-text daemon
-      PartOf=default.target
+      PartOf=graphical-session.target
+      Wants=voxtype-model-loader.service
       X-Restart-Triggers=/nix/store/00000000000000000000000000000000-voxtype-config.toml
+    ''}
+
+    loaderFileNormalized="$(normalizeStorePaths "$loaderFile")"
+    assertFileContent "$loaderFileNormalized" ${builtins.toFile "expected-loader.service" ''
+      [Install]
+      WantedBy=default.target
+
+      [Service]
+      ExecStart=/nix/store/00000000000000000000000000000000-voxtype-model-loader
+      RemainAfterExit=true
+      Restart=on-failure
+      RestartSec=30s
+      Type=oneshot
+
+      [Unit]
+      After=network-online.target
+      Before=voxtype.service
+      Description=Download Voxtype models
+      Wants=network-online.target
     ''}
 
     assertFileContent "$configFile" ${./expected-config.toml}
