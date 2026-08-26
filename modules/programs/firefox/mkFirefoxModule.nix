@@ -32,6 +32,8 @@ let
     ;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
+  defaultConfigPath = with platforms; if isDarwin then darwin.configPath else linux.configPath;
+
   appName = name;
 
   moduleName = concatStringsSep "." modulePath;
@@ -197,12 +199,41 @@ let
 
       # The configuration expected by the Firefox wrapper builder.
       bcfg = setAttrByPath [ browserName ] fcfg;
+
+      configureAppDataDir = cfg.configPath != defaultConfigPath;
+
+      absoluteConfigPath =
+        if lib.hasPrefix "/" cfg.configPath then
+          cfg.configPath
+        else
+          "${config.home.homeDirectory}/${cfg.configPath}";
+
+      callWithAppDataDir =
+        wrapper: args:
+        let
+          wrapperArgs = lib.functionArgs wrapper;
+          supportsAppDataDir = wrapperArgs ? appDataDir;
+          # Gracefully handle wrappers that don't, yet, support appDataDir.
+          appDataDirArgs = lib.optionalAttrs (configureAppDataDir && supportsAppDataDir) {
+            appDataDir = absoluteConfigPath;
+          };
+          argsWithAppDataDir =
+            if lib.isFunction args then
+              # Modern wrapped packages pass an override function.
+              old: args old // appDataDirArgs
+            else
+              # Legacy wrapFirefox passes an attribute set.
+              args // appDataDirArgs;
+        in
+        lib.warnIf (configureAppDataDir && !supportsAppDataDir)
+          "${moduleName}: '${browserName}' does not support the 'appDataDir' wrapper argument; 'configPath' will not be applied to the package wrapper."
+          (wrapper argsWithAppDataDir);
     in
     if package == null then
       null
     else if isWrapped then
       if lib.functionArgs package.override ? cfg then
-        package.override (old: {
+        callWithAppDataDir package.override (old: {
           cfg = old.cfg or { } // fcfg;
           extraPolicies = (old.extraPolicies or { }) // cfg.policies;
           pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
@@ -210,13 +241,14 @@ let
       else
         let
           droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
-          droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
+          droppedOptions =
+            droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions || configureAppDataDir;
         in
         lib.warnIf droppedOptions
-          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
+          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', 'enableGnomeExtensions', and 'configPath' will not be applied."
           package
     else
-      (pkgs.wrapFirefox.override { config = bcfg; }) package { };
+      callWithAppDataDir ((pkgs.wrapFirefox.override { config = bcfg; }) package) { };
 
   bookmarkTypes = import ./profiles/bookmark-types.nix { inherit lib; };
 in
@@ -377,11 +409,19 @@ in
     };
 
     configPath = mkOption {
-      internal = true;
       type = types.str;
-      default = with platforms; if isDarwin then darwin.configPath else linux.configPath;
+      default = defaultConfigPath;
+      defaultText = literalExpression "platform specific default config path";
       example = ".mozilla/firefox";
-      description = "Directory containing the ${appName} configuration files.";
+      description = ''
+        Directory containing the ${appName} configuration files. A relative
+        path is interpreted relative to the user's home directory.
+
+        Setting this to a non-default path also configures the package wrapper
+        to use it as the application data directory. This can be useful on
+        macOS 27 and later, where wrapped applications may be denied access to
+        the traditional application data directory.
+      '';
     };
 
     nativeMessagingHosts = mkOption {
