@@ -391,7 +391,7 @@ in
             # Required to store state.vscdb file.
             # VSCode doesn't create this folder itself.
             for profile in "''${profiles[@]}"; do
-              mkdir -p "${userDir}/profiles/$profile/globalStorage"
+              run mkdir -p "${userDir}/profiles/$profile/globalStorage"
             done
           '';
         in
