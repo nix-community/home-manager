@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-18275a02.js";
+            window.path_to_searchindex_js = "searchindex-6f4f97af.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-6155307d.js"></script>
+        <script src="toc-56126880.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12243,6 +12243,7 @@ string</p>
 <li><a href="#ssh">ssh</a></li>
 <li><a href="#starship">starship</a></li>
 <li><a href="#streamlink">streamlink</a></li>
+<li><a href="#stylua">stylua</a></li>
 <li><a href="#superfile">superfile</a></li>
 <li><a href="#swappy">swappy</a></li>
 <li><a href="#sway-easyfocus">sway-easyfocus</a></li>
@@ -54210,6 +54211,56 @@ attribute set of (boolean or signed integer or floating point number or string o
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/streamlink.nix">&lt;home-manager/modules/programs/streamlink.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="stylua"><a href="#stylua" class="header">stylua</a></h1>
+<h2 id="opt-programs.stylua.enable"><a class="header" href="#opt-programs.stylua.enable">programs.stylua.enable</a></h2>
+<p>Whether to enable stylua, a formatter for lua.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/stylua.nix">&lt;home-manager/modules/programs/stylua.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.stylua.package"><a class="header" href="#opt-programs.stylua.package">programs.stylua.package</a></h2>
+<p>The stylua package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.stylua
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/stylua.nix">&lt;home-manager/modules/programs/stylua.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.stylua.settings"><a class="header" href="#opt-programs.stylua.settings">programs.stylua.settings</a></h2>
+<p>Configuration options that are written to <code>XDG_CONFIG_HOME/stylua/stylua.toml</code></p>
+<p>See <a href="https://github.com/JohnnyMorganz/StyLua#options">https://github.com/JohnnyMorganz/StyLua#options</a> for more options.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  call_parentheses = "Always";
+  collapse_simple_statement = "Always";
+  column_width = 85;
+  indent_type = "Spaces";
+  indent_width = 2;
+  line_endings = "Unix";
+  quote_style = "AutoPreferSingle";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/stylua.nix">&lt;home-manager/modules/programs/stylua.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="superfile"><a href="#superfile" class="header">superfile</a></h1>
