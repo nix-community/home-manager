@@ -1,4 +1,5 @@
 {
+  fish-session-search-variables = ./session-search-variables.nix;
   fish-abbrs = ./abbrs.nix;
   fish-format-scripts = ./format-scripts.nix;
   fish-functions = ./functions.nix;

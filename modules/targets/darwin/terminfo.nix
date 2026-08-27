@@ -16,7 +16,10 @@ in
     # we need `/usr/share/terminfo` appended as an explicit fallback: once
     # TERMINFO_DIRS is set, ncurses stops searching the default system path.
     home.sessionVariables = {
-      TERMINFO_DIRS = lib.mkDefault "${profileDirectory}/share/terminfo:$TERMINFO_DIRS\${TERMINFO_DIRS:+:}/usr/share/terminfo";
+      # `${TERMINFO_DIRS-}` rather than `$TERMINFO_DIRS`: the generated
+      # hm-session-vars.sh runs under `set -u` in some shells, where a bare
+      # reference to an unset variable aborts the whole file.
+      TERMINFO_DIRS = lib.mkDefault "${profileDirectory}/share/terminfo:\${TERMINFO_DIRS-}\${TERMINFO_DIRS:+:}/usr/share/terminfo";
     };
 
     home.sessionVariablesExtra = ''
