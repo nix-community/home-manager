@@ -32,13 +32,13 @@
     for shellBin in \
       "$BASH" \
       ${realPkgs.dash}/bin/dash \
-      ${realPkgs.zsh}/bin/zsh; do
+      "${realPkgs.zsh}/bin/zsh -f"; do
 
       env -u __HM_SESS_VARS_SOURCED -u __HM_SESS_VARS_MERGED \
         BOTH=/inherited \
         ONLY_APPEND=/inherited/append \
         SHARED=/inherited/shared \
-        "$shellBin" -uc '
+        $shellBin -uc '
           . "$1"
 
           # On the first merge, the inherited value remains between them.
@@ -58,7 +58,7 @@
         BOTH=/hm/back:/inherited \
         ONLY_APPEND=/fallback/two \
         SHARED=same:/inherited/shared \
-        "$shellBin" -uc '
+        $shellBin -uc '
           . "$1"
           [ "$BOTH" = "/hm/front:/hm/back:/inherited" ] \
             || { echo "BOTH: $BOTH"; exit 1; }
