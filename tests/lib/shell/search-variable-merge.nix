@@ -49,7 +49,7 @@ in
     for shellBin in \
       "$BASH" \
       ${realPkgs.dash}/bin/dash \
-      ${realPkgs.zsh}/bin/zsh; do
+      "${realPkgs.zsh}/bin/zsh -f"; do
 
       # On the first merge, configured precedence repositions inherited duplicates.
       env -u __HM_SESS_VARS_MERGED \
@@ -60,7 +60,7 @@ in
         BOTH="fallback:middle:front" \
         COMPLETE="qux" \
         TRAILING="/first:/last" \
-        "$shellBin" -uc '
+        $shellBin -uc '
           unset EXPANDED LITERAL GLOB SEPARATOR NOT_EXPANDED
           . "$1"
 
@@ -116,7 +116,7 @@ in
         BOTH="fallback:middle:front" \
         COMPLETE="qux" \
         TRAILING="/first:/last" \
-        "$shellBin" -uc '
+        $shellBin -uc '
           unset EXPANDED LITERAL GLOB SEPARATOR NOT_EXPANDED
           . "$1"
           [ "$SUBSTRING" = "/usr/share/ubuntu:/usr/share" ] \
