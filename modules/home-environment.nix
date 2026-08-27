@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -700,7 +701,15 @@ in
         Manager ignores. Write `.` to include the current directory. If the
         empty entry has tool-specific meaning, set the complete value through
         `home.sessionVariables` instead.
-      '';
+      ''
+      ++ config.lib.shell.selfReferenceWarnings {
+        option = options.home.sessionVariables;
+        optionPath = "home.sessionVariables";
+        rationale = ''
+          Home Manager applies the session variables file once per session
+          today. Applying it again in a new shell could change these values.
+        '';
+      };
 
     home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "USER")
