@@ -404,14 +404,10 @@ let
     } "env HOME=$(mktemp -d) fish_indent < $textPath > $out";
 
   sessionVarsFile = "etc/profile.d/hm-session-vars.fish";
-  sessionVarsPkg = pkgs.runCommandLocal "hm-session-vars.fish" { } ''
-    mkdir -p "$(dirname $out/${sessionVarsFile})"
-    (echo "function setup_hm_session_vars;"
-    ${pkgs.buildPackages.babelfish}/bin/babelfish \
-      <${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh
-    echo "end"
-    echo "setup_hm_session_vars") > $out/${sessionVarsFile}
-  '';
+  # Fish gets a generated file rather than babelfish over the POSIX one:
+  # babelfish cannot translate the search-variable merge, and fish needs list
+  # semantics for names ending in PATH. See modules/lib/fish-session-variables.nix.
+  sessionVarsPkg = import ../lib/fish-session-variables.nix { inherit config lib pkgs; };
   sourceHandlersStr =
     let
       handlerAttrs = [
