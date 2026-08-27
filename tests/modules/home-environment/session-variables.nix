@@ -20,7 +20,6 @@ let
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
-
   '';
 
   darwinExpected = ''
@@ -31,7 +30,7 @@ let
     export IS_EMPTY=""
     export IS_FALSE="false"
     export IS_TRUE="true"
-    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:$TERMINFO_DIRS''${TERMINFO_DIRS:+:}/usr/share/terminfo"
+    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:''${TERMINFO_DIRS-}''${TERMINFO_DIRS:+:}/usr/share/terminfo"
     export V1="v1"
     export V2="v2-v1"
     export XDG_BIN_HOME="/home/hm-user/.local/bin"

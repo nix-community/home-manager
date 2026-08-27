@@ -16,8 +16,13 @@ in
   };
 
   nmt.script = ''
-    assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
-      'export NIX_PATH="/home/hm-user/.nix-defexpr/50-home-manager''${NIX_PATH:+:}''${NIX_PATH-}"'
+    (
+      export NIX_PATH=/inherited
+      unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
+      . "$TESTED/home-path/etc/profile.d/hm-session-vars.sh"
+      [ "$NIX_PATH" = "/home/hm-user/.nix-defexpr/50-home-manager:/inherited" ] \
+        || { echo "NIX_PATH: $NIX_PATH"; exit 1; }
+    ) || fail "nix.nixPath was not prepended to NIX_PATH"
     assertFileContent \
       home-files/.nix-defexpr/50-home-manager/example/default.nix \
       ${exampleChannel}/default.nix

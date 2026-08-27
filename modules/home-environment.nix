@@ -12,6 +12,19 @@ let
 
   cfg = config.home;
 
+  hasEmptySearchVariableEntry = lib.any (lib.any (value: value == "")) (
+    lib.attrValues cfg.sessionSearchVariables
+  );
+
+  # Generated sections normally end in one newline. Remove it before joining
+  # so their boundaries do not depend on the preceding section.
+  mkSections =
+    sections:
+    lib.concatStringsSep "\n\n" (
+      map (section: lib.removeSuffix "\n" section) (lib.filter (section: section != "") sections)
+    )
+    + "\n";
+
   languageSubModule = types.submodule {
     options = {
       base = mkOption {
@@ -360,11 +373,16 @@ in
       description = ''
         Extra directories to prepend to {env}`PATH`.
 
-        These directories are added to the {env}`PATH` variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the {env}`PATH`
-        verbatim.
+        Entries already present in the inherited value are not duplicated.
+        Home Manager warns about entries that are statically empty. All entries
+        that expand to an empty string are ignored; write `.` if you mean the
+        current directory.
+
+        Values are expanded in a double-quoted shell context. Parameter and
+        command expansions are evaluated. Write `\"` for a literal `"`. Plain
+        glob and tilde characters remain literal while the surrounding
+        double-quoted context is intact. `\$` is a literal `$` and `\\` a
+        literal backslash.
       '';
     };
 
@@ -381,11 +399,19 @@ in
         Extra directories to prepend to arbitrary PATH-like
         environment variables (e.g.: {env}`MANPATH`). The values
         will be concatenated by `:`.
-        These directories are added to the environment variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the environment
-        verbatim.
+
+        Entries already present in the inherited value are not duplicated.
+        Home Manager warns about entries that are statically empty. All entries
+        that expand to an empty string are ignored; write `.` if you mean the
+        current directory. To keep a trailing separator, which some tools such
+        as `man` read as "splice in the system default here", set the variable
+        through [](#opt-home.sessionVariables) instead.
+
+        Values are expanded in a double-quoted shell context. Parameter and
+        command expansions are evaluated. Write `\"` for a literal `"`. Plain
+        glob and tilde characters remain literal while the surrounding
+        double-quoted context is intact. `\$` is a literal `$` and `\\` a
+        literal backslash.
       '';
     };
 
@@ -625,6 +651,12 @@ in
           home.enableNixpkgsReleaseCheck = false;
 
         to your configuration.
+      ''
+      ++ lib.optional hasEmptySearchVariableEntry ''
+        `home.sessionPath` or `home.sessionSearchVariables` contains an empty
+        entry, which Home Manager ignores. Write `.` to include the current
+        directory. If the empty entry has tool-specific meaning, set the
+        complete value through `home.sessionVariables` instead.
       '';
 
     home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
@@ -663,20 +695,21 @@ in
     home.sessionVariablesPackage = pkgs.writeTextFile {
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
-      text = ''
-        # Only source this once.
-        if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-        export __HM_SESS_VARS_SOURCED=1
-
-        ${config.lib.shell.exportAll cfg.sessionVariables}
-      ''
-      + lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (
-          env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
-        ) cfg.sessionSearchVariables
-      )
-      + "\n"
-      + cfg.sessionVariablesExtra;
+      text =
+        let
+          searchSection = config.lib.shell.mergeSearchVariables {
+            prepend = cfg.sessionSearchVariables;
+          };
+        in
+        mkSections [
+          ''
+            # Only source this once.
+            if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
+            export __HM_SESS_VARS_SOURCED=1''
+          (config.lib.shell.exportAll cfg.sessionVariables)
+          searchSection
+          cfg.sessionVariablesExtra
+        ];
     };
 
     home.sessionSearchVariables.PATH = lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;
