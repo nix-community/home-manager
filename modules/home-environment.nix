@@ -13,7 +13,7 @@ let
   cfg = config.home;
 
   hasEmptySearchVariableEntry = lib.any (lib.any (value: value == "")) (
-    lib.attrValues cfg.sessionSearchVariables
+    lib.attrValues cfg.sessionSearchVariables ++ lib.attrValues cfg.sessionSearchVariablesAppend
   );
 
   # Generated sections normally end in one newline. Remove it before joining
@@ -415,6 +415,48 @@ in
       '';
     };
 
+    home.sessionSearchVariablesAppend = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        TERMINFO_DIRS = [ "/usr/share/terminfo" ];
+      };
+      description = ''
+        Extra directories to append to arbitrary PATH-like environment
+        variables. Entries not already present are placed after the inherited
+        value. Use [](#opt-home.sessionSearchVariables) for entries that should
+        precede it.
+
+        This exists because ordering the configured list is not enough.
+        `lib.mkAfter` can place an entry after other configured entries, but
+        it cannot place one after the value inherited at runtime, which is
+        what a fallback needs.
+
+        Only shell sessions consume this. There is no {file}`environment.d`
+        counterpart for either this option or
+        [](#opt-home.sessionSearchVariables), so neither reaches systemd user
+        services; a module that needs that sets
+        {option}`systemd.user.sessionVariables` separately.
+
+        Entries already present in the inherited value are not duplicated. On
+        the first merge in a process tree, configured entries are repositioned
+        according to the prepend or append option. Later merges preserve their
+        existing positions. An entry listed in both options is therefore
+        appended on the first merge, while later merges preserve its inherited
+        position.
+
+        Home Manager warns about entries that are statically empty. All entries
+        that expand to an empty string are ignored; write `.` if you mean the
+        current directory.
+
+        Values are expanded in a double-quoted shell context. Parameter and
+        command expansions are evaluated. Write `\"` for a literal `"`. Plain
+        glob and tilde characters remain literal while the surrounding
+        double-quoted context is intact. `\$` is a literal `$` and `\\` a
+        literal backslash.
+      '';
+    };
+
     home.sessionVariablesExtra = mkOption {
       type = types.lines;
       default = "";
@@ -653,10 +695,11 @@ in
         to your configuration.
       ''
       ++ lib.optional hasEmptySearchVariableEntry ''
-        `home.sessionPath` or `home.sessionSearchVariables` contains an empty
-        entry, which Home Manager ignores. Write `.` to include the current
-        directory. If the empty entry has tool-specific meaning, set the
-        complete value through `home.sessionVariables` instead.
+        `home.sessionPath`, `home.sessionSearchVariables`, or
+        `home.sessionSearchVariablesAppend` contains an empty entry, which Home
+        Manager ignores. Write `.` to include the current directory. If the
+        empty entry has tool-specific meaning, set the complete value through
+        `home.sessionVariables` instead.
       '';
 
     home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
@@ -694,8 +737,11 @@ in
       destination = "/etc/profile.d/hm-session-vars.sh";
       text =
         let
+          # On the first merge, an entry in both options takes append position.
+          # Later merges preserve its inherited position.
           searchSection = config.lib.shell.mergeSearchVariables {
             prepend = cfg.sessionSearchVariables;
+            append = cfg.sessionSearchVariablesAppend;
           };
         in
         mkSections [
