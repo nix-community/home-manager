@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-e4092f77.js";
+            window.path_to_searchindex_js = "../searchindex-f3e243b2.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-56126880.js"></script>
@@ -199,6 +199,13 @@ fully declarative by removing versions and tools that are no longer listed.</p>
 background launchd domain. Agents use the GUI domain by default. Set the
 domain to <code>user</code> for agents that should run without an active graphical login
 session.</p>
+</li>
+<li>
+<p>The <a href="../options/home-manager/services/voxtype.html#opt-services.voxtype.enable">services.voxtype.enable</a> daemon now starts as part of
+<code>graphical-session.target</code> instead of <code>default.target</code>. Starting after the
+compositor owns its GPU render node lets Vulkan-accelerated whisper builds
+detect their device. Previously, a daemon that started before the render node
+existed fell back to CPU and never recovered until it was restarted manually.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
