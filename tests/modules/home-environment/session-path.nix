@@ -8,10 +8,11 @@
 
   test.asserts.warnings.expected = [
     ''
-      `home.sessionPath` or `home.sessionSearchVariables` contains an empty
-      entry, which Home Manager ignores. Write `.` to include the current
-      directory. If the empty entry has tool-specific meaning, set the
-      complete value through `home.sessionVariables` instead.
+      `home.sessionPath`, `home.sessionSearchVariables`, or
+      `home.sessionSearchVariablesAppend` contains an empty entry, which Home
+      Manager ignores. Write `.` to include the current directory. If the
+      empty entry has tool-specific meaning, set the complete value through
+      `home.sessionVariables` instead.
     ''
   ];
 

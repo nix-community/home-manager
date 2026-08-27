@@ -1,6 +1,7 @@
 {
   home-session-path = ./session-path.nix;
   home-session-search-variables = ./session-search-variables.nix;
+  home-session-search-variables-append = ./session-search-variables-append.nix;
   home-session-variables = ./session-variables.nix;
   home-nixpkgs-release-check-pkgs = ./nixpkgs-release-check-pkgs.nix;
   home-uid-from-nixos = ./uid-from-nixos.nix;
