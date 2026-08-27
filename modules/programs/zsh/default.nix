@@ -26,6 +26,15 @@ let
 
   zshLib = import ./lib.nix { inherit config lib; };
   inherit (zshLib) homeDir dotDirAbs dotDirRel;
+  renderSessionVariable =
+    value:
+    if lib.isString value then
+      let
+        rendered = config.lib.zsh.toZshValue value;
+      in
+      lib.removeSuffix ''"'' (lib.removePrefix ''"'' rendered)
+    else
+      value;
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -482,20 +491,30 @@ in
           ];
 
           warnings =
-            lib.optionals
-              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
-              [
-                ''
-                  Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
-                  Current dotDir: ${cfg.dotDir}
-                  Consider using absolute paths or home-manager config options instead.
-                  You can replace relative paths or environment variables with options like:
-                  - config.home.homeDirectory (user's home directory)
-                  - config.xdg.configHome (XDG config directory)
-                  - config.xdg.dataHome (XDG data directory)
-                  - config.xdg.cacheHome (XDG cache directory)
-                ''
-              ]
+            config.lib.shell.selfReferenceWarnings {
+              option = options.programs.zsh.sessionVariables;
+              optionPath = "programs.zsh.sessionVariables";
+              renderValue = renderSessionVariable;
+              rationale = ''
+                Home Manager applies these values once per session today.
+                Applying them in each new Zsh process could change them again.
+              '';
+            }
+            ++
+              lib.optionals
+                (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
+                [
+                  ''
+                    Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
+                    Current dotDir: ${cfg.dotDir}
+                    Consider using absolute paths or home-manager config options instead.
+                    You can replace relative paths or environment variables with options like:
+                    - config.home.homeDirectory (user's home directory)
+                    - config.xdg.configHome (XDG config directory)
+                    - config.xdg.dataHome (XDG data directory)
+                    - config.xdg.cacheHome (XDG cache directory)
+                  ''
+                ]
             ++
               lib.optionals
                 (
