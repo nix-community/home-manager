@@ -21,7 +21,12 @@ in
     assertFileExists $hmSessVars
     assertFileContains $hmSessVars \
       'export PNPM_HOME="${expectedPnpmHome}"'
-    assertFileContains $hmSessVars \
-      'export PATH="${expectedPnpmHome}/bin''${PATH:+:}''${PATH-}"'
+    (
+      export PATH=/inherited/bin
+      unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
+      . "$TESTED/$hmSessVars"
+      [ "$PATH" = "${expectedPnpmHome}/bin:/inherited/bin" ] \
+        || { echo "PATH: $PATH"; exit 1; }
+    ) || fail "pnpm bin directory was not prepended to PATH"
   '';
 }

@@ -17,12 +17,16 @@
         [ -L $TESTED/home-path/lib/debug/curl ] \
           || fail "Debug-symbols for pkgs.curl should exist in \`/home-path/lib/debug'!"
 
-        #source $TESTED/home-path/etc/profile.d/hm-session-vars.sh
-        #[[ "$NIX_DEBUG_INFO_DIRS" =~ /lib/debug$ ]] \
-          #|| fail "Invalid NIX_DEBUG_INFO_DIRS!"
         assertFileExists home-path/etc/profile.d/hm-session-vars.sh
-        assertFileRegex home-path/etc/profile.d/hm-session-vars.sh \
-            'NIX_DEBUG_INFO_DIRS=.*/lib/debug'
+        (
+          export NIX_DEBUG_INFO_DIRS=/inherited/debug
+          unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
+          . "$TESTED/home-path/etc/profile.d/hm-session-vars.sh"
+          case "$NIX_DEBUG_INFO_DIRS" in
+            */lib/debug:/inherited/debug) ;;
+            *) echo "NIX_DEBUG_INFO_DIRS: $NIX_DEBUG_INFO_DIRS"; exit 1 ;;
+          esac
+        ) || fail "Invalid NIX_DEBUG_INFO_DIRS!"
 
         # We need to override NIX_DEBUG_INFO_DIRS here as $HOME evaluates to the home
         # of the user who executes this testcase :/
