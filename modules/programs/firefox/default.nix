@@ -93,6 +93,17 @@ in
   config = lib.mkIf cfg.enable {
     warnings = lib.optional linuxConfigPathStateVersion.shouldWarn linuxConfigPathStateVersion.warning;
 
+    # On macOS 27+, Firefox builds not signed by Mozilla cannot access the
+    # traditional data directory. Use org.nixos.firefox directory instead.
+    # When package is null, we don't know if it's a signed version (e.g.
+    # firefox-bin-unwrapped or from Homebrew) or not, so we leave it up to the
+    # user to adjust as needed.
+    programs.firefox.configPath = lib.mkIf (
+      pkgs.stdenv.hostPlatform.isDarwin
+      && cfg.package != null
+      && lib.versionAtLeast config.home.stateVersion "26.11"
+    ) (lib.mkDefault "Library/Application Support/org.nixos.firefox");
+
     mozilla.firefoxNativeMessagingHosts =
       cfg.nativeMessagingHosts
       # package configured native messaging hosts (entire browser actually)
