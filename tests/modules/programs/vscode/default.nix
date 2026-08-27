@@ -14,6 +14,8 @@ let
     mcp-integration = import ./mcp-integration.nix;
     mcp-integration-with-override = import ./mcp-integration-with-override.nix;
     update-checks = import ./update-checks.nix;
+    mutable-settings = import ./mutable-settings.nix;
+    immutable-transition = import ./immutable-transition.nix;
     path-literal = import ./path-literal.nix;
     snippets = import ./snippets.nix;
     null-package = import ./null-package.nix;
