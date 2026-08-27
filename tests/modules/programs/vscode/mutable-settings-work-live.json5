@@ -1,0 +1,9 @@
+{
+  /* The declared path overrides one nested key. */
+  "editor.wordWrap": "off",
+  "nested": {
+    "declared": "live",
+    "liveOnly": true,
+  },
+  "workbench.colorTheme": "Interactive",
+}
