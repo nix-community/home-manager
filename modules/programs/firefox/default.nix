@@ -66,7 +66,16 @@ in
         configPath = linuxConfigPathStateVersion.effectiveDefault;
       };
       platforms.darwin = {
-        configPath = "Library/Application Support/Firefox";
+        # On macOS 27+, Firefox builds not signed by Mozilla cannot access the
+        # traditional data directory. Use org.nixos.firefox directory instead.
+        # When package is null, we don't know if it's signed version (e.g.
+        # firefox-bin-unwrapped or from Homebrew) or not, so we leave it up to
+        # the user to adjust as needed.
+        configPath =
+          if cfg.package != null && lib.versionAtLeast config.home.stateVersion "26.11" then
+            "Library/Application Support/org.nixos.firefox"
+          else
+            "Library/Application Support/Firefox";
         defaultsId = "org.mozilla.firefox.plist";
       };
     })
