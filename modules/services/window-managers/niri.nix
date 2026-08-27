@@ -170,8 +170,10 @@ in
         message = "wayland.windowManager.niri.checkConfig requires a non-null package";
       }
       {
-        assertion = cfg.enableDefaultConfig -> cfg.package != null;
-        message = "wayland.windowManager.niri.enableDefaultConfig requires a non-null package";
+        assertion =
+          cfg.enableDefaultConfig
+          -> (cfg.package != null && lib.hasAttr "src" cfg.package && cfg.package.src != null);
+        message = "wayland.windowManager.niri.enableDefaultConfig requires a non-null package with a valid `src` attribute";
       }
     ];
 
