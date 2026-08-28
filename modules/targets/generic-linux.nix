@@ -73,10 +73,12 @@ in
       export TERM="$TERM"
     '';
 
-    # We need to source both nix.sh and hm-session-vars.sh as noted in
+    # Interactive non-login Bash still has to pick the session variables up
+    # itself; see the pull request referenced below. `nix.sh` is deliberately
+    # not repeated here: it is not idempotent, and it already runs from the
+    # guarded `home.sessionVariablesExtra` section of that same file.
     # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
     programs.bash.initExtra = ''
-      . "${nixPkg}/etc/profile.d/nix.sh"
       . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
     '';
 
