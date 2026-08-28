@@ -73,11 +73,17 @@ in
       export TERM="$TERM"
     '';
 
-    # We need to source both nix.sh and hm-session-vars.sh as noted in
+    # Login initialization can reset PATH while preserving the session guard.
+    # Restore profile commands without repeating nix.sh or changing an existing
+    # profile entry's precedence.
     # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
     programs.bash.initExtra = ''
-      . "${nixPkg}/etc/profile.d/nix.sh"
       . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
+
+      case ":$PATH:" in
+        *":${profileDirectory}/bin:"*) ;;
+        *) export PATH="${profileDirectory}/bin''${PATH:+:}$PATH" ;;
+      esac
     '';
 
     programs.zsh.envExtra = ''

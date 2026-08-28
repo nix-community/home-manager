@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   expectedXdgDataDirs = lib.concatStringsSep ":" [
     "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default/share"
@@ -13,6 +18,13 @@ in
 {
   config = {
     targets.genericLinux.enable = true;
+
+    programs.bash = {
+      enable = true;
+      enableCompletion = false;
+    };
+
+    home.packages = [ (pkgs.writeShellScriptBin "hm-profile-command" "exit 0") ];
 
     xdg.systemDirs.data = [ "/foo" ];
 
@@ -34,6 +46,11 @@ in
       assertFileContains \
         home-path/etc/profile.d/hm-session-vars.sh \
         'export TERM="$TERM"'
+
+      ${(import ./generic-linux-runtime.nix) {
+        inherit pkgs;
+        profileDirectory = config.home.profileDirectory;
+      }}
     '';
   };
 }
