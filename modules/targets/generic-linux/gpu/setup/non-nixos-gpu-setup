@@ -2,6 +2,10 @@
 
 set -e
 
+if [ "$EUID" -ne 0 ]; then
+  exec sudo "$0" "$@"
+fi
+
 # Migrate from old systemd service setup
 old_unit=/etc/systemd/system/non-nixos-gpu.service
 if [[ -L "$old_unit" || -f "$old_unit" ]]; then
