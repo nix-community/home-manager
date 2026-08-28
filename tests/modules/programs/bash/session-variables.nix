@@ -16,6 +16,13 @@
   };
 
   nmt.script = ''
+    sessionVars=home-path/etc/profile.d/hm-session-vars.sh
+    env -u __HM_SESS_VARS_SOURCED "$BASH" --noprofile --norc -uc '
+      . "$1"
+      [ "$__HM_SESS_VARS_SOURCED" = 1 ]
+    ' shell "$TESTED/$sessionVars" \
+      || fail "an empty extra section did not set the sourced marker"
+
     assertFileExists home-files/.profile
     assertFileContent \
       "$(normalizeStorePaths home-files/.profile)" \
