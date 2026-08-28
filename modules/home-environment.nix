@@ -329,6 +329,9 @@ in
         value `bar` can be given as per
         `''${parameter:+bar}`.
 
+        Shell expansions, including command substitutions, run each time the
+        generated session variables file is applied.
+
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
         variable. In particular code like
@@ -360,6 +363,12 @@ in
       description = ''
         The package containing the
         {file}`hm-session-vars.sh` file.
+
+        Shells can apply the file more than once. Plain variables are
+        re-evaluated and re-exported, and search variables add only missing
+        entries. Shell expansions in plain variable values run each time.
+        [](#opt-home.sessionVariablesExtra) is guarded to run once per
+        session.
       '';
     };
 
@@ -706,8 +715,8 @@ in
         option = options.home.sessionVariables;
         optionPath = "home.sessionVariables";
         rationale = ''
-          Home Manager applies the session variables file once per session
-          today. Applying it again in a new shell could change these values.
+          Home Manager applies the session variables file in each new shell,
+          so these values can change repeatedly.
         '';
       };
 
@@ -757,12 +766,14 @@ in
           };
         in
         mkSections [
-          ''
-            # Only source this once.
-            if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-            export __HM_SESS_VARS_SOURCED=1''
           (config.lib.shell.exportAll cfg.sessionVariables)
           searchSection
+          # Keep arbitrary extra code at top level. A compound wrapper would
+          # change when aliases and parser options take effect.
+          ''
+            if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
+            export __HM_SESS_VARS_SOURCED=1
+          ''
           cfg.sessionVariablesExtra
         ];
     };
