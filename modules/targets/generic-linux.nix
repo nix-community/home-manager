@@ -73,11 +73,11 @@ in
       export TERM="$TERM"
     '';
 
-    # We need to source both nix.sh and hm-session-vars.sh as noted in
+    # Interactive Bash refreshes the session variables file itself; nix.sh
+    # is still needed here as noted in
     # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
     programs.bash.initExtra = ''
       . "${nixPkg}/etc/profile.d/nix.sh"
-      . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
     '';
 
     programs.zsh.envExtra = ''
