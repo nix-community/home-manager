@@ -73,15 +73,6 @@ in
       export TERM="$TERM"
     '';
 
-    # Interactive non-login Bash still has to pick the session variables up
-    # itself; see the pull request referenced below. `nix.sh` is deliberately
-    # not repeated here: it is not idempotent, and it already runs from the
-    # guarded `home.sessionVariablesExtra` section of that same file.
-    # https://github.com/nix-community/home-manager/pull/797#issuecomment-544783247
-    programs.bash.initExtra = ''
-      . "${profileDirectory}/etc/profile.d/hm-session-vars.sh"
-    '';
-
     programs.zsh.envExtra = ''
       # Make system functions available to zsh
       () {
