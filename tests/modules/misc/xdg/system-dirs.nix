@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -15,6 +16,9 @@
       "/usr/share"
       "/baz/quux"
     ];
+    home.sessionVariables.XDG_CONFIG_DIRS = "/plain-config";
+    home.sessionSearchVariables.XDG_CONFIG_DIRS = [ "/existing-config" ];
+    home.sessionSearchVariables.XDG_DATA_DIRS = lib.mkForce [ "/forced-data" ];
 
     nmt.script = ''
       envFile=home-files/.config/environment.d/10-home-manager.conf
@@ -33,9 +37,22 @@
       sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
       assertFileExists $sessionVarsFile
       assertFileContains $sessionVarsFile \
-        'export XDG_CONFIG_DIRS="/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}"'
+        'export XDG_CONFIG_DIRS="/plain-config"'
       assertFileContains $sessionVarsFile \
-        'export XDG_DATA_DIRS="/usr/local/share:/usr/share:/baz/quux''${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}"'
+        'export XDG_CONFIG_DIRS="/existing-config:/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:}''${XDG_CONFIG_DIRS-}"'
+      assertFileContains $sessionVarsFile \
+        'export XDG_DATA_DIRS="/forced-data''${XDG_DATA_DIRS:+:}''${XDG_DATA_DIRS-}"'
+
+      (
+        XDG_CONFIG_DIRS=/inherited-config
+        XDG_DATA_DIRS=/inherited-data
+        unset __HM_SESS_VARS_SOURCED
+        . "$TESTED/$sessionVarsFile"
+        [ "$XDG_CONFIG_DIRS" = "/existing-config:/etc/xdg:/foo/bar:/plain-config" ] \
+          || { echo "XDG_CONFIG_DIRS: $XDG_CONFIG_DIRS"; exit 1; }
+        [ "$XDG_DATA_DIRS" = "/forced-data:/inherited-data" ] \
+          || { echo "XDG_DATA_DIRS: $XDG_DATA_DIRS"; exit 1; }
+      ) || fail "XDG search variable precedence was not preserved"
     '';
   };
 }
