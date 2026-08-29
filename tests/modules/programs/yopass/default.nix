@@ -1,0 +1,3 @@
+{
+  yopass-settings = ./settings.nix;
+}
