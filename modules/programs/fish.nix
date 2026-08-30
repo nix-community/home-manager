@@ -427,6 +427,31 @@ let
     in
     builtins.concatStringsSep "\n" (lib.mapAttrsToList sourceFunction handlerFunctions);
 
+  confDFile = types.submodule (
+    { config, name, ... }:
+    {
+      options = {
+        text = mkOption {
+          type = types.nullOr types.lines;
+          default = null;
+          description = ''
+            Text of the fish file.
+            If this is null, {option}`source` must be set.
+          '';
+        };
+
+        source = mkOption {
+          type = types.path;
+          description = ''
+            Path of the fish file to use. If {option}`text` is set,
+            this defaults to a generated file containing that text.
+          '';
+        };
+      };
+
+      config.source = mkIf (config.text != null) (lib.mkDefault (fishIndent "${name}.fish" config.text));
+    }
+  );
 in
 {
   meta.maintainers = [ lib.maintainers.SunOfLife1 ];
@@ -544,6 +569,15 @@ in
         description = ''
           Shell script code called during interactive fish shell
           initialisation, this will be the last thing executed in fish startup.
+        '';
+      };
+
+      confD = mkOption {
+        type = types.attrsOf confDFile;
+        default = { };
+        description = ''
+          Fish files to be put in
+          {file}`$XDG_CONFIG_HOME/fish/conf.d/`.
         '';
       };
     };
@@ -871,6 +905,15 @@ in
             '';
           }) cfg.plugins
         );
+      })
+
+      (lib.mkIf (cfg.confD != { }) {
+        xdg.configFile = lib.mapAttrs' (
+          name: file:
+          lib.nameValuePair "fish/conf.d/${name}.fish" {
+            inherit (file) source;
+          }
+        ) cfg.confD;
       })
     ]
   );
