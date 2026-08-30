@@ -114,7 +114,7 @@ in
 
         programs.gnome-shell.extensions = [
           {
-            package = pkgs.gnomeExtensions.user-themes;
+            package = lib.lowPrio pkgs.gnomeExtensions.user-themes;
           }
         ];
 
