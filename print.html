@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1a9c07fc.js";
+            window.path_to_searchindex_js = "searchindex-283675b1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-56126880.js"></script>
@@ -18925,14 +18925,42 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/carapace.nix">&lt;home-manager/modules/programs/carapace.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.carapace.ignoreCase"><a class="header" href="#opt-programs.carapace.ignoreCase">programs.carapace.ignoreCase</a></h2>
-<p>Whether to enable case-insensitive matching for carapace completions.
-When enabled, the carapace binary is wrapped with <code>CARAPACE_MATCH</code>
-set to <code>1</code>.</p>
+<h2 id="opt-programs.carapace.environment"><a class="header" href="#opt-programs.carapace.environment">programs.carapace.environment</a></h2>
+<p>Environment variables for Carapace. Boolean values are converted to
+<code>1</code> or <code>0</code> when the package is wrapped.</p>
+<p>See <a href="https://carapace-sh.github.io/carapace-bin/setup/environment.html">https://carapace-sh.github.io/carapace-bin/setup/environment.html</a>
+for the available environment variables.</p>
 <p><em>Type:</em>
-boolean</p>
+attribute set of (boolean or signed integer or string)</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">false
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  CARAPACE_BRIDGES = "zsh,fish,bash";
+  CARAPACE_MATCH = true;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/carapace.nix">&lt;home-manager/modules/programs/carapace.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.carapace.extraPackages"><a class="header" href="#opt-programs.carapace.extraPackages">programs.carapace.extraPackages</a></h2>
+<p>Extra packages available to Carapace. This can be used to make
+completers listed in
+<code>programs.carapace.environment.CARAPACE_BRIDGES</code>
+available.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">with pkgs; [
+  inshellisense
+  fish
+]
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
