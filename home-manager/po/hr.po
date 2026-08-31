@@ -8,29 +8,31 @@ msgstr ""
 "Project-Id-Version: Home Manager\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-08-31 21:51+0000\n"
+"Last-Translator: Zenithium <thenigman666@gmail.com>\n"
+"Language-Team: Croatian <https://hosted.weblate.org/projects/home-manager/"
+"cli/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #. translators: For example: "home-manager: missing argument for --cores"
 #: home-manager/home-manager:16
 msgid "%s: missing argument for %s"
-msgstr ""
+msgstr "%s: nedostajući argument za %s"
 
 #. translators: For example: "home-manager: --rollback can only be used after switch"
 #: home-manager/home-manager:22
 msgid "%s: %s can only be used after %s"
-msgstr ""
+msgstr "%: %s se može pozvati samo nakon %s"
 
 #: home-manager/home-manager:71
 msgid "No configuration file found at %s"
-msgstr ""
+msgstr "Nije pronađen konfiguracijski naputak na %s"
 
 #. translators: The first '%s' specifier will be replaced by either
 #. 'home.nix' or 'flake.nix'.
@@ -40,14 +42,16 @@ msgid ""
 "Keeping your Home Manager %s in %s is deprecated,\n"
 "please move it to %s"
 msgstr ""
+"Pohrana Home Managerovog %s na %s je zastarjelo,\n"
+"molimo premjestite na %s"
 
 #: home-manager/home-manager:99
 msgid "No configuration file found. Please create one at %s"
-msgstr ""
+msgstr "Nije pronađen konfiguracijski naputak. Molimo napravite naputak na %s"
 
 #: home-manager/home-manager:114
 msgid "Home Manager not found at %s."
-msgstr ""
+msgstr "Home Manager nije pronađen na %s."
 
 #. translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
 #: home-manager/home-manager:122
