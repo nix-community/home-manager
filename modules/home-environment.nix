@@ -636,7 +636,10 @@ in
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
-    programs.fish.shellAliases = cfg.shellAliases;
+    programs.fish = {
+      shellAliases = lib.mkIf (!config.programs.fish.preferAbbrs) cfg.shellAliases;
+      shellAbbrs = lib.mkIf config.programs.fish.preferAbbrs cfg.shellAliases;
+    };
     programs.nushell.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
