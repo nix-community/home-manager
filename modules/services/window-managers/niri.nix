@@ -195,7 +195,9 @@ in
           escapeTabs = true;
         };
         settings = lib.removeSuffix "\n" (toKDL cfg.settings);
-        defaultConfig = lib.optionalString (cfg.enableDefaultConfig) ''include "${cfg.package.src}/resources/default-config.kdl"'';
+        defaultConfig = lib.optionalString (
+          cfg.enableDefaultConfig && cfg.package ? src && lib.isStringLike cfg.package.src
+        ) ''include "${cfg.package.src}/resources/default-config.kdl"'';
         configLines = lib.concatStringsSep "\n" (
           lib.filter (line: line != "") [
             cfg.extraConfigEarly
