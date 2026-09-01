@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-192539eb.js";
+            window.path_to_searchindex_js = "../../../searchindex-c45e4cfc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-56126880.js"></script>
@@ -211,6 +211,27 @@ boolean</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/copyq.nix">&lt;home-manager/modules/services/copyq.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.copyq.settings"><a class="header" href="#opt-services.copyq.settings">services.copyq.settings</a></h2>
+<p>Copyq configuration. Run <code>copyq config</code> to list available options.</p>
+<p><em>Type:</em>
+section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  disable_tray = true;
+  hide_main_window = true;
+  hide_tabs = true;
+  hide_toolbar = true;
+  autostart = false;
+}
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
