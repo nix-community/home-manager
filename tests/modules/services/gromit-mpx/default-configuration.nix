@@ -6,5 +6,5 @@
     package = config.lib.test.mkStubPackage { };
   };
 
-  nmt.script = import ./nmt-script.nix ./default-configuration.cfg;
+  nmt.script = import ./nmt-script.nix { goldenFile = ./default-configuration.cfg; };
 }
