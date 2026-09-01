@@ -17,6 +17,24 @@ let
 
   cfg = config.programs.mpv;
 
+  hasLineBreak = value: lib.isString value && (lib.hasInfix "\n" value || lib.hasInfix "\r" value);
+
+  namesHaveLineBreak =
+    value:
+    lib.isAttrs value
+    && (
+      lib.any hasLineBreak (lib.attrNames value) || lib.any namesHaveLineBreak (lib.attrValues value)
+    );
+
+  rawValuesHaveLineBreak =
+    value:
+    if lib.isList value then
+      lib.any rawValuesHaveLineBreak value
+    else if lib.isAttrs value then
+      lib.any rawValuesHaveLineBreak (lib.attrValues value)
+    else
+      hasLineBreak value;
+
   mpvOption = with types; either str (either int (either bool float));
   mpvOptionDup = with types; either mpvOption (listOf mpvOption);
   mpvOptions = with types; attrsOf mpvOptionDup;
@@ -79,6 +97,10 @@ in
     chuangzhu
   ];
 
+  imports = [
+    (lib.mkRenamedOptionModule [ "programs" "mpv" "config" ] [ "programs" "mpv" "settings" ])
+  ];
+
   options = {
     programs.mpv = {
       enable = lib.mkEnableOption "mpv";
@@ -139,7 +161,7 @@ in
         };
       };
 
-      config = mkOption {
+      settings = mkOption {
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/mpv/mpv.conf`. See
@@ -152,7 +174,7 @@ in
           profile = "gpu-hq";
           force-window = true;
           ytdl-format = "bestvideo+bestaudio";
-          cache-default = 4000000;
+          cache-secs = 4000000;
         };
       };
 
@@ -175,7 +197,7 @@ in
         description = ''
           Sub-configuration options for specific profiles written to
           {file}`$XDG_CONFIG_HOME/mpv/mpv.conf`. See
-          {option}`programs.mpv.config` for more information.
+          {option}`programs.mpv.settings` for more information.
         '';
         type = mpvProfiles;
         default = { };
@@ -195,7 +217,7 @@ in
       defaultProfiles = mkOption {
         description = ''
           Profiles to be applied by default. Options set by them are overridden
-          by options set in [](#opt-programs.mpv.config).
+          by options set in [](#opt-programs.mpv.settings).
         '';
         type = mpvDefaultProfiles;
         default = [ ];
@@ -242,6 +264,25 @@ in
             assertion = wrapperRequiresOverride -> (cfg.package == options.programs.mpv.package.default);
             message = ''The programs.mpv "package" option is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
           }
+          {
+            assertion =
+              !namesHaveLineBreak {
+                inherit (cfg)
+                  bindings
+                  profiles
+                  scriptOpts
+                  settings
+                  ;
+              };
+            message = "The programs.mpv configuration names must not contain literal line breaks.";
+          }
+          {
+            assertion =
+              !rawValuesHaveLineBreak {
+                inherit (cfg) bindings includes scriptOpts;
+              };
+            message = "The programs.mpv raw-line configuration values must not contain literal line breaks.";
+          }
         ];
       }
       {
@@ -255,10 +296,10 @@ in
         };
       })
 
-      (mkIf (cfg.config != { } || cfg.profiles != { }) {
+      (mkIf (cfg.settings != { } || cfg.profiles != { }) {
         xdg.configFile."mpv/mpv.conf".text = ''
           ${lib.optionalString (cfg.defaultProfiles != [ ]) (renderDefaultProfiles cfg.defaultProfiles)}
-          ${lib.optionalString (cfg.config != { }) (renderOptions cfg.config)}
+          ${lib.optionalString (cfg.settings != { }) (renderOptions cfg.settings)}
           ${lib.optionalString (cfg.profiles != { }) (renderProfiles cfg.profiles)}
         '';
       })

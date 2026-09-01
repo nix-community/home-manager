@@ -16,10 +16,10 @@
 
     includes = [ "manual.conf" ];
 
-    config = {
+    settings = {
       force-window = true;
       ytdl-format = "bestvideo+bestaudio";
-      cache-default = 4000000;
+      cache-secs = 4000000;
     };
 
     scriptOpts = {
