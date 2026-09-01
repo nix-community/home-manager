@@ -558,7 +558,7 @@ in
         activation.obsidian =
           let
             obsidianConfigDir =
-              if pkgs.stdenv.isDarwin then
+              if pkgs.stdenv.hostPlatform.isDarwin then
                 "${config.home.homeDirectory}/Library/Application Support/obsidian"
               else
                 "${config.xdg.configHome}/obsidian";

@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 before_start:
 - docker-compose -f my-microservices/docker-compose.yml up -d
 env:

@@ -2,7 +2,10 @@
 
 let
   configDir =
-    if pkgs.stdenv.isDarwin then "home-files/Library/Application Support" else "home-files/.config";
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      "home-files/Library/Application Support"
+    else
+      "home-files/.config";
 in
 {
   programs.nheko = {

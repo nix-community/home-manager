@@ -42,7 +42,7 @@ in
           example = "set -x SSH_AUTH_SOCK $HOME/.ssh/agent.sock";
         };
         nushell = mkShellInitOption "nushell" // {
-          example = "$env.SSH_AUTH_SOCK = $HOME/.ssh/agent.sock";
+          example = "$env.SSH_AUTH_SOCK = ($nu.home-dir | path join .ssh agent.sock)";
         };
         zsh = mkShellInitOption "zsh" // {
           example = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
@@ -67,18 +67,25 @@ in
 
   config =
     let
+      indentNonEmptyLines = lib.flip lib.pipe [
+        (lib.splitString "\n")
+        (map (line: if line == "" then "" else "  ${line}"))
+        lib.concatLines
+        (lib.removeSuffix "\n")
+      ];
+
       # Preserve $SSH_AUTH_SOCK if it stems from a forwarded agent which is the
       # case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
       mkShIntegration = code: ''
         if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-          ${code}
+        ${indentNonEmptyLines code}
         fi
       '';
       bashIntegration = mkShIntegration cfg.initialization.bash;
       zshIntegration = mkShIntegration cfg.initialization.zsh;
       fishIntegration = ''
         if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
-          ${cfg.initialization.fish}
+        ${indentNonEmptyLines cfg.initialization.fish}
         end
       '';
       nushellIntegration =
@@ -87,7 +94,7 @@ in
         in
         ''
           if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
-            ${cfg.initialization.nushell}
+          ${indentNonEmptyLines cfg.initialization.nushell}
           }
         '';
     in
@@ -96,7 +103,17 @@ in
       programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
       programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
       programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
-      programs.zsh.envExtra = lib.mkOrder 900 zshIntegration;
+      programs.zsh = {
+        # Mimic how `home.sessionVariablesPackage` is sourced in the Zsh module
+        # to ensure that session variables which SSH_AUTH_SOCK might rely on are
+        # set.
+        envExtra = lib.mkOrder 900 ''
+          if [[ ! -o login ]]; then
+          ${indentNonEmptyLines zshIntegration}
+          fi
+        '';
+        profileExtra = lib.mkOrder 900 zshIntegration;
+      };
 
       # Replace this service by an environment generator as soon as they are
       # available per-user. See https://github.com/systemd/systemd/issues/32423

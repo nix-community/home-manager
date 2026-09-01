@@ -7,6 +7,8 @@
   claude-code-mcp-lsp = ./mcp-lsp.nix;
   claude-code-mcp-integration = ./mcp-integration.nix;
   claude-code-assertion = ./assertion.nix;
+  claude-code-collision-assertions = ./collision-assertions.nix;
+  claude-code-collision-assertions-legacy-list = ./collision-assertions-legacy-list.nix;
   claude-code-context-inline = ./memory-management.nix;
   claude-code-context-path = ./memory-from-source.nix;
   claude-code-rules-dir = ./rules-dir.nix;
@@ -15,10 +17,13 @@
   claude-code-commands-dir = ./commands-dir.nix;
   claude-code-hooks-dir = ./hooks-dir.nix;
   claude-code-skills-dir = ./skills-dir.nix;
+  claude-code-skills-path-not-directory = ./skills-path-not-directory.nix;
+  claude-code-skills-store-path = ./skills-store-path.nix;
   claude-code-skills-store-path-dir = ./skills-store-path-dir.nix;
   claude-code-skills-subdir = ./skills-subdir.nix;
   claude-code-agents-path = ./agents-path.nix;
   claude-code-commands-path = ./commands-path.nix;
+  claude-code-hooks-path = ./hooks-path.nix;
   claude-code-skills-path = ./skills-path.nix;
   claude-code-legacy-memory-text = ./legacy-memory-text.nix;
   claude-code-legacy-memory-source-and-skills-dir = ./legacy-memory-source-and-skills-dir.nix;
@@ -26,5 +31,8 @@
   claude-code-output-styles = ./output-styles.nix;
   claude-code-output-styles-not-set = ./output-styles-not-set.nix;
   claude-code-plugins = ./plugins.nix;
+  claude-code-plugins-legacy-list = ./plugins-legacy-list.nix;
+  claude-code-plugins-subdir = ./plugins-subdir.nix;
+  claude-code-versionless-package = ./versionless-package.nix;
   claude-code-marketplacess = ./marketplaces.nix;
 }

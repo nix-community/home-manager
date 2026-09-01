@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 collect_anonymous_telemetry: false
 log:
   level: info

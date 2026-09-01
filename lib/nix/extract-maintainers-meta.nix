@@ -1,7 +1,14 @@
 # Extract maintainers from Home Manager modules using meta.maintainers
 # This script evaluates all Home Manager modules and extracts the merged maintainer information
 let
-  pkgs = import <nixpkgs> { };
+  flakeLock = builtins.fromJSON (builtins.readFile ../../flake.lock);
+  nixpkgsNodeName = flakeLock.nodes.root.inputs.nixpkgs;
+  nixpkgsLocked = flakeLock.nodes.${nixpkgsNodeName}.locked;
+
+  pkgs = import (fetchTarball {
+    url = "https://github.com/${nixpkgsLocked.owner}/${nixpkgsLocked.repo}/archive/${nixpkgsLocked.rev}.tar.gz";
+    sha256 = nixpkgsLocked.narHash;
+  }) { };
   lib = import ../../modules/lib/stdlib-extended.nix pkgs.lib;
   releaseInfo = pkgs.lib.importJSON ../../release.json;
 
@@ -25,18 +32,23 @@ let
         file:
         let
           fileContent = import file;
+          # Arguments expected by docs/home-manager-manual.nix.
           evaluated =
             if lib.isFunction fileContent then
               fileContent {
-                inherit (pkgs) stdenv lib;
-                documentation-highlighter = { };
+                inherit lib;
+                inherit (pkgs)
+                  callPackage
+                  mdbook
+                  python3
+                  stdenv
+                  ;
                 revision = "unknown";
                 home-manager-options = {
                   home-manager = { };
                   nixos = { };
                   nix-darwin = { };
                 };
-                nixos-render-docs = { };
               }
             else
               fileContent;
@@ -59,27 +71,30 @@ let
 
   allMaintainerObjects = extractMaintainerObjects maintainers ++ additionalMaintainerObjects;
 
-  allMaintainerNames = lib.filter (name: name != null) (
-    map (maintainer: maintainer.github or maintainer.name or null) allMaintainerObjects
-  );
+  getMaintainerName = maintainer: maintainer.github or maintainer.name or null;
+
+  allMaintainerNames = lib.filter (name: name != null) (map getMaintainerName allMaintainerObjects);
 
   hmMaintainers = import ../../modules/lib/maintainers.nix;
-  hmMaintainerNames = lib.attrNames hmMaintainers;
+  hmMaintainerNames = lib.filter (name: name != null) (
+    map getMaintainerName (lib.attrValues hmMaintainers)
+  );
 
   maintainerDetails = lib.pipe allMaintainerObjects [
     (lib.filter (obj: (obj.github or obj.name or null) != null))
-    (map (obj: {
-      name = obj.github or obj.name;
-      value = obj // {
-        source =
-          if categorizedMaintainers.home-manager ? ${obj.github} then
-            "home-manager"
-          else if categorizedMaintainers.nixpkgs ? ${obj.github} then
-            "nixpkgs"
-          else
-            throw "${obj.github} is neither a home-manager or nixpkgs maintainer";
-      };
-    }))
+    (map (
+      obj:
+      let
+        maintainerName = obj.github or obj.name;
+      in
+      {
+        name = maintainerName;
+        value = obj // {
+          source =
+            if categorizedMaintainers.home-manager ? ${maintainerName} then "home-manager" else "nixpkgs";
+        };
+      }
+    ))
     lib.listToAttrs
   ];
 

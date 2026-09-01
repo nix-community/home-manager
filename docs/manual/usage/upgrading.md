@@ -169,7 +169,7 @@ affected configuration.
 
 ### Common Issues {#sec-upgrade-release-state-troubleshooting-common-issues}
 
-Check the [Home Manager Release Notes](#ch-release-notes) for breaking changes.
+Check the [Home Manager Release Notes](../release-notes/release-notes.md#ch-release-notes) for breaking changes.
 
 1. **Version Mismatch Warning**: If you see warnings about version
    mismatches, ensure your Home Manager branch matches the Nixpkgs
@@ -199,4 +199,4 @@ the expected release branch.
 ## Additional Resources {#sec-upgrade-release-resources}
 
 - [NixOS Stable Release Notes](https://nixos.org/manual/nixos/stable/release-notes)
-- [Home Manager Release Notes](#ch-release-notes)
+- [Home Manager Release Notes](../release-notes/release-notes.md#ch-release-notes)

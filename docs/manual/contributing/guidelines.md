@@ -89,7 +89,7 @@ configuration location with an environment variable, for example
 
 If at all possible, make sure to add new tests and expand existing tests
 so that your change will keep working in the future. See
-[Tests](#sec-tests) for more information about the Home Manager test
+[Tests](tests.md#sec-tests) for more information about the Home Manager test
 suite.
 
 All contributed code *must* pass the test suite.
@@ -182,7 +182,7 @@ consistent commit message format as described in
 
 If your contribution includes a change that should be communicated to
 users of Home Manager then you can add a news entry. The entry must be
-formatted as described in [News](#sec-news).
+formatted as described in [News](news.md#sec-news).
 
 When new modules are added a news entry should be included.
 
@@ -190,7 +190,7 @@ News entries and release notes serve different purposes. Release notes
 should be updated separately when a change affects users migrating
 between stable releases, such as state version default changes, required
 migration steps, or broad behavior changes. See
-[Release Notes](#sec-contributing-release-notes) and [News](#sec-news)
+[Release Notes](release-notes.md#sec-contributing-release-notes) and [News](news.md#sec-news)
 for more details.
 
 ## Use conditional modules and news {#sec-guidelines-conditional-modules}
@@ -209,7 +209,7 @@ in the module behavior and in any platform-specific tests rather than in a
 separate module discovery call.
 
 Similarly, if you are adding a news entry then it should be shown only
-to users that may find it relevant, see [News](#sec-news) for a
+to users that may find it relevant, see [News](news.md#sec-news) for a
 description of conditional news.
 
 ## Mind the license {#sec-guidelines-licensing}

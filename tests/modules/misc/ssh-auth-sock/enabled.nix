@@ -29,6 +29,9 @@
     assertFileContains \
       home-files/.zshenv \
       'if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then'
+    assertFileContains \
+      home-files/.zprofile \
+      'if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then'
   ''
   + lib.optionalString config.systemd.user.enable ''
     assertFileExists home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service

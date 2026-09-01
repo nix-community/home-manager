@@ -82,7 +82,12 @@ let
     {
       Unit = {
         Description = "Rclone ${
-          if isMount then "FUSE daemon" else "protocol serving"
+          if !isMount then
+            "protocol serving"
+          else if cmdName == "nfsmount" then
+            "NFS mount daemon"
+          else
+            "FUSE daemon"
         } for ${remoteName}:${sidecarPath}";
         Requires = [ "rclone-config.service" ];
         After = [ "rclone-config.service" ];
@@ -196,9 +201,16 @@ let
           _sidecar:
           let
             sidecarPath = _sidecar.name;
-            sidecar = _sidecar.value;
             isMount = sidecarType == "mounts";
-            cmdName = if isMount then "mount" else "serve";
+            cmdName = if isMount then _sidecar.value.mountType else "serve";
+            # nfsmount keeps its NFS file-handle cache in memory by default,
+            # so a service restart would leave the kernel client with stale
+            # handles; persist it to disk unless the user says otherwise.
+            sidecar =
+              if cmdName == "nfsmount" then
+                _sidecar.value // { options = lib.mergeAttrs { nfs-cache-type = "disk"; } _sidecar.value.options; }
+              else
+                _sidecar.value;
           in
           lib.optional sidecar.enable (
             lib.nameValuePair "rclone-${cmdName}:${replaceIllegalChars sidecarPath}@${remoteName}" (mkValue {
@@ -360,6 +372,35 @@ in
                           '';
                           example = "/home/alice/my-remote";
                         };
+
+                        mountType = lib.mkOption {
+                          type = lib.types.enum [
+                            "mount"
+                            "nfsmount"
+                          ];
+                          default = "mount";
+                          example = "nfsmount";
+                          description = ''
+                            Which rclone command performs the mount.
+
+                            `mount` uses FUSE, which on macOS requires macFUSE and its
+                            kernel extension. `nfsmount` instead runs an in-process NFS
+                            server and mounts it via the system NFS client — no FUSE
+                            driver, kernel extension, or Recovery-mode security downgrade
+                            needed, making it the recommended type on macOS. See
+                            <https://rclone.org/commands/rclone_nfsmount/> for details
+                            and caveats.
+
+                            For `nfsmount`, `nfs-cache-type = "disk"` is added to
+                            {option}`options` by default (overridable) so that NFS file
+                            handles survive rclone restarts; the in-memory default would
+                            leave the kernel client with stale handles whenever the
+                            service is restarted.
+
+                            On Linux, mounting NFS normally requires root, so `nfsmount`
+                            is primarily useful on Darwin.
+                          '';
+                        };
                       }
                       // mountServeOptions;
                     }
@@ -378,7 +419,9 @@ in
                   On macOS, FUSE mounts additionally require macFUSE
                   (<https://osxfuse.github.io/>) to be installed and its system extension
                   approved. Home Manager does not install macFUSE; rclone will surface
-                  a runtime error if it is missing.
+                  a runtime error if it is missing. Alternatively, set
+                  {option}`mountType` to `"nfsmount"` to mount via the system NFS
+                  client instead, which requires no additional software.
                 '';
                 example = lib.literalExpression ''
                   {

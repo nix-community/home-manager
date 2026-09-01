@@ -247,7 +247,7 @@ in
         # Make order 101 to be placed exactly after bash completions, as Ghostty
         # documentation suggests sourcing the script as soon as possible
         programs.bash.initExtra = lib.mkOrder 101 ''
-          if [[ -n "''${GHOSTTY_RESOURCES_DIR}" ]]; then
+          if [[ -r "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash" ]]; then
             builtin source "''${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
           fi
         '';
@@ -255,7 +255,7 @@ in
 
       (lib.mkIf cfg.enableFishIntegration {
         programs.fish.interactiveShellInit = ''
-          if set -q GHOSTTY_RESOURCES_DIR
+          if test -r "$GHOSTTY_RESOURCES_DIR/shell-integration/fish/vendor_conf.d/ghostty-shell-integration.fish"
             source "$GHOSTTY_RESOURCES_DIR/shell-integration/fish/vendor_conf.d/ghostty-shell-integration.fish"
           end
         '';
@@ -263,7 +263,7 @@ in
 
       (lib.mkIf cfg.enableZshIntegration {
         programs.zsh.initContent = ''
-          if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+          if [[ -r "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration ]]; then
             source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
           fi
         '';

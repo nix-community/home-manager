@@ -36,6 +36,12 @@ let
           buildHost = value;
           hostTarget = value;
         };
+      }
+      // lib.optionalAttrs (value ? override && lib.isFunction value.override) {
+        override = args: scrubDerivation name (value.override args);
+      }
+      // lib.optionalAttrs (value ? overrideAttrs && lib.isFunction value.overrideAttrs) {
+        overrideAttrs = f: scrubDerivation name (value.overrideAttrs f);
       };
     in
     if lib.isAttrs value then
@@ -47,7 +53,7 @@ let
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
     let
-      inner = _self: _super: {
+      inner = _self: super: {
         inherit (pkgs)
           coreutils
           crudini
@@ -66,6 +72,10 @@ let
           fish
           lndir
           ;
+
+        python3Packages = super.python3Packages.overrideScope (
+          _self: _super: { inherit (pkgs.python3Packages) json5; }
+        );
       };
 
       outer =

@@ -6,4 +6,6 @@ ExecStart=@elephant@/bin/elephant
 Restart=on-failure
 
 [Unit]
+After=graphical-session.target
 Description=Elephant - Data provider for application launchers
+PartOf=graphical-session.target

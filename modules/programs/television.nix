@@ -18,6 +18,20 @@ in
     enable = lib.mkEnableOption "television";
     package = lib.mkPackageOption pkgs "television" { nullable = true; };
 
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = with pkgs; [
+        fd
+        bat
+        ripgrep
+      ];
+      defaultText = lib.literalExpression "with pkgs; [ fd bat ripgrep ]";
+      example = lib.literalExpression "with pkgs; [ eza ]";
+      description = ''
+        Extra packages available to television.
+      '';
+    };
+
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
@@ -132,7 +146,23 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) (
+      if cfg.extraPackages != [ ] then
+        [
+          (pkgs.symlinkJoin {
+            name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+            paths = [ cfg.package ];
+            preferLocalBuild = true;
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/tv \
+                --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+            '';
+          })
+        ]
+      else
+        [ cfg.package ]
+    );
 
     xdg.configFile = lib.mkMerge [
       {

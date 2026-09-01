@@ -18,6 +18,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
+  meta.maintainers = with lib.maintainers; [ ratakor ];
 
   options.services.walker = {
     enable = mkEnableOption "walker";
@@ -116,7 +117,10 @@ in
           Description = "Walker - Application Runner";
         }
         // lib.optionalAttrs cfg.enableElephantIntegration {
-          After = [ "elephant.service" ];
+          After = [
+            "graphical-session.target"
+            "elephant.service"
+          ];
           Requires = [ "elephant.service" ];
         };
         Install.WantedBy = [ "graphical-session.target" ];

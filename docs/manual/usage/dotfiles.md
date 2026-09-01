@@ -39,7 +39,7 @@ This error is about a file that Home Manager wants to manage as a
 symbolic link in your home directory. It is separate from package
 profile collisions, which usually mention `installPackages` or a
 `collision between .../bin/...` path. For package collisions, see
-[Why is there a collision error when switching generation?](#_why_is_there_a_collision_error_when_switching_generation).
+[Why is there a collision error when switching generation?](../faq/collision.md#_why_is_there_a_collision_error_when_switching_generation).
 
 ## Resolving file collisions {#sec-usage-dotfiles-collisions}
 

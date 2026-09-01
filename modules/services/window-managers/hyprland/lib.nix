@@ -108,6 +108,7 @@ in
       text =
         optionalString config.systemd.enable ''
           exec-once = ${systemdActivationCommand}
+          exec-shutdown = systemctl --user stop hyprland-session.target
         ''
         + optionalString (config.plugins != [ ]) (pluginsToHyprconf config.plugins)
         + optionalString (config.settings != { }) (
@@ -171,6 +172,14 @@ in
             ${concatMapStrings (command: "  hl.exec_cmd(${toLua command})\n") startupCommands}end)
           '';
 
+      renderShutdownHook = optionalString config.systemd.enable (
+        renderSection "shutdown" ''
+          hl.on("hyprland.shutdown", function()
+            os.execute("systemctl --user stop hyprland-session.target && sleep 0.1")
+          end)
+        ''
+      );
+
       renderLuaFiles =
         let
           autoloadFiles = filterAttrs (_: file: file.autoLoad) config.extraLuaFiles;
@@ -232,6 +241,7 @@ in
       + renderSettings
       + renderSubmaps
       + renderStartHook
+      + renderShutdownHook
       + renderSection "extraConfig" config.extraConfig;
 
       onChange = lib.mkIf (config.package != null) reloadConfig;

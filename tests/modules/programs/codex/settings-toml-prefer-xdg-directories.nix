@@ -24,8 +24,8 @@ in
       model_providers = {
         ollama = {
           name = "Ollama";
-          baseURL = "http://localhost:11434/v1";
-          envKey = "OLLAMA_API_KEY";
+          base_url = "http://localhost:11434/v1";
+          env_key = "OLLAMA_API_KEY";
         };
       };
     };

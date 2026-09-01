@@ -184,38 +184,62 @@ in
 
   options = {
     home.username = mkOption {
-      type = types.str;
-      defaultText = literalExpression ''
-        "$USER"   for state version < 20.09,
-        undefined for state version ≥ 20.09
+      type = types.nonEmptyStr;
+      defaultText = lib.literalMD ''
+        `$USER`,   for state version < 20.09,
+        undefined, otherwise.
       '';
       example = "jane.doe";
-      description = "The user's username.";
+      description = ''
+        The user's username.
+
+        If Home Manager is installed as a NixOS or nix-darwin submodule, it is
+        set to `osConfig.users.users.<name>.name`.
+      '';
     };
 
     home.uid = mkOption {
       type = types.nullOr types.ints.unsigned;
       default = null;
       example = 1000;
-      description = "The user's uid.";
+      description = ''
+        The user's uid.
+
+        If Home Manager is installed as a NixOS or nix-darwin submodule, it is
+        set to `osConfig.users.users.<name>.uid`.
+      '';
     };
 
     home.homeDirectory = mkOption {
       type = types.path;
-      defaultText = literalExpression ''
-        "$HOME"   for state version < 20.09,
-        undefined for state version ≥ 20.09
+      defaultText = lib.literalMD ''
+        `$HOME`,   for state version < 20.09
+        undefined, otherwise.
       '';
       apply = toString;
       example = "/home/jane.doe";
-      description = "The user's home directory. Must be an absolute path.";
+      description = ''
+        The user's home directory. Must be an absolute path.
+
+        If Home Manager is installed as a NixOS or nix-darwin submodule, it is
+        set to `osConfig.users.users.<name>.home`.
+      '';
     };
 
     home.profileDirectory = mkOption {
       type = types.path;
-      defaultText = literalExpression ''
-        "''${home.homeDirectory}/.nix-profile"  or
-        "/etc/profiles/per-user/''${home.username}"
+      default =
+        if config.submoduleSupport.enable && config.submoduleSupport.externalPackageInstall then
+          "/etc/profiles/per-user/${cfg.username}"
+        else if config.nix.useXdg then
+          "${config.xdg.stateHome}/nix/profile"
+        else
+          cfg.homeDirectory + "/.nix-profile";
+      defaultText = lib.literalMD ''
+        - `/etc/profiles/per-user/''${home.username}`, if Home Manager is installed as
+          a submodule and `home-manager.useUserPackages` is enabled, else
+        - `''${xdg.stateHome}/nix/profile`, if `nix.useXdg` is enabled, else
+        - `''${home.homeDirectory}/.nix-profile`.
       '';
       readOnly = true;
       description = ''
@@ -573,17 +597,6 @@ in
   };
 
   config = {
-    assertions = [
-      {
-        assertion = config.home.username != "";
-        message = "Username could not be determined";
-      }
-      {
-        assertion = config.home.homeDirectory != "";
-        message = "Home directory could not be determined";
-      }
-    ];
-
     warnings =
       let
         hmRelease = config.home.version.release;
@@ -624,14 +637,6 @@ in
     home.homeDirectory = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "HOME")
     );
-
-    home.profileDirectory =
-      if config.submoduleSupport.enable && config.submoduleSupport.externalPackageInstall then
-        "/etc/profiles/per-user/${cfg.username}"
-      else if config.nix.useXdg then
-        "${config.xdg.stateHome}/nix/profile"
-      else
-        cfg.homeDirectory + "/.nix-profile";
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;

@@ -170,12 +170,11 @@ let
   modularServiceConfiguration = portable-lib.configure {
     serviceManagerPkgs = pkgs;
     extraRootModules = [
-      ./service.nix
+      (lib.modules.importApply ./service.nix { inherit pkgs; })
       ./config-data-path.nix
     ];
     extraRootSpecialArgs = {
       systemdPackage = pkgs.systemd;
-      nixpkgsPath = pkgs.path;
       xdgConfigHome = config.xdg.configHome;
     };
   };

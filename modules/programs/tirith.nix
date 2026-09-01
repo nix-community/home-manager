@@ -75,7 +75,7 @@ in
       ${lib.getExe cfg.package} init --shell fish | source
     '';
 
-    programs.zsh.initExtra = lib.mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       eval "$(${lib.getExe cfg.package} init --shell zsh)"
     '';
   };

@@ -30,6 +30,10 @@ let
       description = "Hyprland configuration value";
     };
 
+  xdphSettings = lib.converge (lib.filterAttrsRecursive (
+    _: value: value != null && value != { }
+  )) cfg.xdph.settings;
+
   reloadConfig = ''
     (
       XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
@@ -103,6 +107,110 @@ in
                 `wayland.windowManager.hyprland.finalPackage` override'';
       description = ''
         The xdg-desktop-portal-hyprland package after overriding its hyprland input.
+      '';
+    };
+
+    xdph.settings = lib.mkOption {
+      type = lib.types.submodule {
+        freeformType = lib.types.attrsOf settingValueType;
+        options = {
+          general = lib.mkOption {
+            type = lib.types.submodule {
+              freeformType = lib.types.attrsOf settingValueType;
+              options.toplevel_dynamic_bind = lib.mkOption {
+                type = lib.types.nullOr lib.types.bool;
+                default = null;
+                description = ''
+                  Whether to bind the foreign toplevel manager dynamically
+                  when a screencasting session is created.
+                '';
+              };
+            };
+            default = { };
+            description = "General XDPH settings.";
+          };
+
+          screencopy = lib.mkOption {
+            type = lib.types.submodule {
+              freeformType = lib.types.attrsOf settingValueType;
+              options = {
+                max_fps = lib.mkOption {
+                  type = lib.types.nullOr lib.types.ints.unsigned;
+                  default = null;
+                  description = ''
+                    Maximum frames per second for screencasting. A value of
+                    zero disables the limit.
+                  '';
+                };
+
+                allow_token_by_default = lib.mkOption {
+                  type = lib.types.nullOr lib.types.bool;
+                  default = null;
+                  description = ''
+                    Whether to enable restore tokens by default in the share
+                    picker.
+                  '';
+                };
+
+                custom_picker_binary = lib.mkOption {
+                  type = lib.types.nullOr lib.types.str;
+                  default = null;
+                  description = ''
+                    Custom share picker command. The command must produce output
+                    compatible with {command}`hyprland-share-picker`.
+                  '';
+                };
+
+                force_shm = lib.mkOption {
+                  type = lib.types.nullOr lib.types.bool;
+                  default = null;
+                  description = ''
+                    Whether to always use shared memory instead of DMA-BUF for
+                    screencasting.
+                  '';
+                };
+
+                cursor_mode = lib.mkOption {
+                  type = lib.types.nullOr (
+                    lib.types.enum [
+                      0
+                      1
+                      2
+                    ]
+                  );
+                  default = null;
+                  description = ''
+                    Default cursor mode for clients that do not specify one.
+                    Zero uses the protocol default, one hides the cursor, and
+                    two embeds it in the stream.
+                  '';
+                };
+              };
+            };
+            default = { };
+            description = "XDPH screencasting settings.";
+          };
+        };
+      };
+      default = { };
+      example = {
+        general.toplevel_dynamic_bind = true;
+        screencopy = {
+          max_fps = 60;
+          allow_token_by_default = true;
+          custom_picker_binary = "hyprland-share-picker";
+          force_shm = false;
+          cursor_mode = 2;
+        };
+      };
+      description = ''
+        xdg-desktop-portal-hyprland configuration written to
+        {file}`$XDG_CONFIG_HOME/hypr/xdph.conf`.
+
+        These settings require a portal package compatible with XDPH's
+        configuration format. They are generated even when
+        {option}`wayland.windowManager.hyprland.portalPackage` is `null`, so
+        the portal package may be managed by NixOS.
       '';
     };
 
@@ -573,6 +681,9 @@ in
         hyprlangConfigFile
         luaConfigFile
         extraLuaFiles
+        (lib.optionalAttrs (xdphSettings != { }) {
+          "hypr/xdph.conf".text = lib.hm.generators.toHyprconf { attrs = xdphSettings; };
+        })
       ];
 
       xdg.portal = {
@@ -592,6 +703,7 @@ in
           ++ lib.optional cfg.systemd.enableXdgAutostart "xdg-desktop-autostart.target";
           After = [ "graphical-session-pre.target" ];
           Before = lib.mkIf cfg.systemd.enableXdgAutostart [ "xdg-desktop-autostart.target" ];
+          PropagatesStopTo = [ "graphical-session.target" ];
         };
       };
     };

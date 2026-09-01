@@ -18,6 +18,11 @@
       serviceFile=$(normalizeStorePaths $serviceFile)
       assertFileExists "$serviceFile"
       assertFileContent "$serviceFile" ${./glance.plist}
+
+      domainFile=LaunchAgentDomains/org.nix-community.home.glance.domain
+      assertFileContent "$domainFile" ${builtins.toFile "expected-domain" "gui\n"}
+      assertFileContains activate 'domain="gui/$(id -u)"'
+      assertFileContains activate 'launchctl kickstart -k "$domain/org.nix-community.home.glance"'
     '')
   ];
 }

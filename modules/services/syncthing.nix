@@ -20,13 +20,13 @@ let
 
   # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
   syncthingDir =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "$HOME/Library/Application Support/Syncthing"
     else
       "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
 
   syncthingDirShell =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       ''
         syncthing_dir="${syncthingDir}"
       ''
@@ -54,11 +54,12 @@ let
     path:
     if
       isUnixGui
-    # if cfg.guiAddress is a unix socket, tell curl explicitly about it
-    # note that the dot in front of `${path}` is the hostname, which is
-    # required.
+    # if cfg.guiAddress is a unix socket, tell curl explicitly about it.
+    # `localhost` is a placeholder authority routed to the socket by
+    # --unix-socket; a bare-dot host (`http://.`) is rejected as an invalid
+    # hostname by curl >= 8.21.
     then
-      "--unix-socket ${cfg.guiAddress} http://.${path}"
+      "--unix-socket ${cfg.guiAddress} http://localhost${path}"
     # no adjustments are needed if cfg.guiAddress is a network address
     else
       "${cfg.guiAddress}${path}";
@@ -180,6 +181,7 @@ let
               override = cfg.overrideFolders;
               conf = folders;
               baseAddress = curlAddressArgs "/rest/config/folders";
+              ignoreAddress = curlAddressArgs "/rest/db/ignores";
             };
           }
           [
@@ -205,7 +207,8 @@ let
                   let
                     jsonPreSecretsFile = pkgs.writeTextFile {
                       name = "${conf_type}-${new_cfg.id}-conf-pre-secrets.json";
-                      text = builtins.toJSON new_cfg;
+                      # Remove the ignorePatterns attribute, it is handled separately
+                      text = builtins.toJSON (removeAttrs new_cfg [ "ignorePatterns" ]);
                     };
                     injectSecretsJqCmd =
                       {
@@ -271,6 +274,15 @@ let
                   in
                   ''
                     ${injectSecretsJqCmd} ${jsonPreSecretsFile} | curl --json @- -X POST ${s.baseAddress}
+                  ''
+                  /*
+                    Check if we are configuring a folder which has ignore patterns.
+                    If it does, write the ignore patterns to the rest API.
+                  */
+                  + lib.optionalString ((conf_type == "dirs") && (new_cfg.ignorePatterns != null)) ''
+                    curl -d ${
+                      lib.escapeShellArg (builtins.toJSON { ignore = new_cfg.ignorePatterns; })
+                    } -X POST ${s.ignoreAddress}?folder=${lib.strings.escapeURL new_cfg.id}
                   ''
                 ))
                 (lib.concatStringsSep "\n")
@@ -749,6 +761,26 @@ in
                           granting it additional capabilities (e.g. CAP_CHOWN on
                           Linux).
                         '';
+                      };
+
+                      ignorePatterns = mkOption {
+                        type = types.nullOr (types.listOf types.str);
+                        default = null;
+                        description = ''
+                          Syncthing can be configured to ignore certain files in a folder using ignore patterns.
+                          Enter them as a list of strings, one string per line.
+                          See the Syncthing documentation for syntax: <https://docs.syncthing.net/users/ignoring.html>
+                          Patterns set using the WebUI will be overridden if you define this option.
+                          If you want to override the ignore patterns to be empty, use `ignorePatterns = []`.
+                          Deleting the `ignorePatterns` option will not remove the patterns from Syncthing automatically
+                          because patterns are only handled by the module if this option is defined. Either use
+                          `ignorePatterns = []` before deleting the option or remove the patterns afterwards using the WebUI.
+                        '';
+                        example = [
+                          "// This is a comment"
+                          "*.part // Firefox downloads and other things"
+                          "*.crdownload // Chrom(ium|e) downloads"
+                        ];
                       };
                     };
                   }

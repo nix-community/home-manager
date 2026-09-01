@@ -20,7 +20,11 @@ let
     else
       [ "daemon" ];
 
-  inherit (lib) mkIf mkOption types;
+  inherit (lib)
+    mkIf
+    mkOption
+    types
+    ;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -93,7 +97,7 @@ in
         Configuration written to
         {file}`$XDG_CONFIG_HOME/atuin/config.toml`.
 
-        See <https://docs.atuin.sh/configuration/config/> for the full list
+        See <https://docs.atuin.sh/latest/configuration/config/> for the full list
         of options.
       '';
     };
@@ -125,7 +129,7 @@ in
         {file}`$XDG_CONFIG_HOME/atuin/themes/theme-name.toml`
         where the name of each attribute is the theme-name
 
-        See <https://docs.atuin.sh/guide/theming/> for the full list
+        See <https://docs.atuin.sh/latest/guide/theming/> for the full list
         of options.
       '';
       default = { };
@@ -224,7 +228,8 @@ in
           '';
 
           programs.nushell = mkIf cfg.enableNushellIntegration {
-            extraConfig = ''
+            # Load after fzf so Atuin keeps Ctrl-R in Nushell.
+            extraConfig = lib.mkOrder 2000 ''
               source ${
                 pkgs.runCommand "atuin-nushell-config.nu"
                   {

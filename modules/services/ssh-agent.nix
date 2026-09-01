@@ -65,7 +65,7 @@ in
       initialization =
         let
           socketPath =
-            if pkgs.stdenv.isDarwin then
+            if pkgs.stdenv.hostPlatform.isDarwin then
               "$(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"
             else
               "$XDG_RUNTIME_DIR/${cfg.socket}";
@@ -74,7 +74,7 @@ in
           bash = ''export SSH_AUTH_SOCK="${socketPath}"'';
           fish = ''set -x SSH_AUTH_SOCK "${socketPath}"'';
           nushell = "$env.SSH_AUTH_SOCK = ${
-            if pkgs.stdenv.isDarwin then
+            if pkgs.stdenv.hostPlatform.isDarwin then
               ''$"(${lib.getExe pkgs.getconf} DARWIN_USER_TEMP_DIR)/${cfg.socket}"''
             else
               ''$"($env.XDG_RUNTIME_DIR)/${cfg.socket}"''

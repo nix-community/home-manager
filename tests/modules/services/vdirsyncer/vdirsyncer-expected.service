@@ -1,0 +1,8 @@
+[Service]
+ExecStart=@vdirsyncer@/bin/vdirsyncer  metasync
+ExecStart=@vdirsyncer@/bin/vdirsyncer  sync
+Type=oneshot
+
+[Unit]
+Description=vdirsyncer calendar&contacts synchronization
+X-SwitchMethod=keep-old

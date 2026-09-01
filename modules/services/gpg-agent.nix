@@ -60,7 +60,7 @@ let
       hash = lib.substring 0 24 (hexStringToBase32 (builtins.hashString "sha1" homedir));
       subdir = if homedir == options.programs.gpg.homedir.default then "${dir}" else "d.${hash}/${dir}";
     in
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "/private/var/run/org.nix-community.home.gpg-agent/${subdir}"
     else
       "%t/gnupg/${subdir}";

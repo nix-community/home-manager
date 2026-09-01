@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.codex/hooks/session-start.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

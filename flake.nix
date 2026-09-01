@@ -49,13 +49,12 @@
           "aarch64-darwin"
           "aarch64-linux"
           "i686-linux"
-          "x86_64-darwin"
           "x86_64-linux"
         ];
 
         forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
-        forAllPkgs = forSystems nixpkgs.lib.systems.flakeExposed;
+        forAllPkgs = forSystems (nixpkgs.lib.remove "x86_64-darwin" nixpkgs.lib.systems.flakeExposed);
 
         forSupportedPkgs = forSystems supportedSystems;
 
@@ -63,6 +62,8 @@
           "aarch64-darwin"
           "x86_64-linux"
         ];
+
+        warn = builtins.warn or nixpkgs.lib.warn;
 
         releaseInfo = nixpkgs.lib.importJSON ./release.json;
 
@@ -177,8 +178,8 @@
       {
         formatter = forSupportedPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
 
-        # TODO: increase buildbot testing scope
-        buildbot = forCI (
+        # TODO: increase nixbot testing scope
+        nixbot = forCI (
           system:
           let
             docs = docsFor nixpkgs.legacyPackages.${system};
@@ -199,6 +200,13 @@
             docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
             docs-manpages = docs.manPages;
           }
+        );
+
+        # Alias for nixbot, added 2026-07-30
+        buildbot = forCI (
+          system:
+          warn "Home Manager: `buildbot.${system}` has been renamed to `nixbot.${system}`."
+            self.nixbot.${system}
         );
 
         packages = forAllPkgs (

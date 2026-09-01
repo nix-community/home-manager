@@ -27,6 +27,8 @@ _: {
     configFileNormalized="$(normalizeStorePaths "$configFile")"
 
     assertFileContent "$configFileNormalized" ${builtins.toFile "expected.service" ''
+      %YAML 1.1
+      ---
       default_provider: test-provider
       providers:
       - alias: test-provider

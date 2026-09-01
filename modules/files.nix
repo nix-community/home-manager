@@ -191,13 +191,97 @@ in
 
           newGenFiles="$1"
           shift
+
+          # Classify every target using bash builtins only: even one forked
+          # process per file costs several milliseconds on some platforms
+          # (notably darwin), which dominates activation time when a profile
+          # carries hundreds of links. Targets occupied by a regular file or
+          # directory keep the original per-file handling (backup and
+          # identical-content skip) on the slow path below.
+          declare -a symlinkTargets=() symlinkSources=()
+          declare -a linkSources=() linkDirs=()
+          declare -a slowSources=()
           for sourcePath in "$@" ; do
+            relativePath="''${sourcePath#$newGenFiles/}"
+            targetPath="$HOME/$relativePath"
+            if [[ -L "''${targetPath%/*}" ]] ; then
+              # The parent directory is itself a symlink (e.g. a stale
+              # whole-directory link from an older layout). The batched
+              # `ln -n -t` below would refuse it ("Not a directory"), while
+              # the original per-file `ln -T` traverses it; keep upstream
+              # behavior on the slow path.
+              slowSources+=("$sourcePath")
+            elif [[ -L "$targetPath" ]] ; then
+              symlinkTargets+=("$targetPath")
+              symlinkSources+=("$sourcePath")
+            elif [[ -e "$targetPath" ]] ; then
+              slowSources+=("$sourcePath")
+            else
+              linkSources+=("$sourcePath")
+              linkDirs+=("''${targetPath%/*}")
+            fi
+          done
+
+          # Resolve all existing symlinks with a single readlink call and
+          # relink only those not already pointing at the new generation.
+          if [[ ''${#symlinkTargets[@]} -gt 0 ]] ; then
+            i=0
+            while IFS= read -r -d "" currentSource ; do
+              if [[ "$currentSource" != "''${symlinkSources[i]}" ]] ; then
+                linkSources+=("''${symlinkSources[i]}")
+                linkDirs+=("''${symlinkTargets[i]%/*}")
+              fi
+              i=$(( i + 1 ))
+            done < <(readlink -z -- "''${symlinkTargets[@]}")
+
+            # readlink prints no record for an operand that vanished since
+            # the classification loop above, and its exit status is lost
+            # through the process substitution. A missing record shifts
+            # every later result onto the wrong source, so the links after
+            # it would be compared against someone else's target and left
+            # stale. The record count is the only signal that happened.
+            if [[ $i -ne ''${#symlinkTargets[@]} ]] ; then
+              errorEcho "A link target changed while resolving symlinks; retry activation."
+              exit 1
+            fi
+          fi
+
+          # Create all missing parent directories in one mkdir call.
+          declare -A missingDirs=()
+          for targetDir in "''${linkDirs[@]}" ; do
+            [[ -d "$targetDir" ]] || missingDirs[$targetDir]=1
+          done
+          if [[ ''${#missingDirs[@]} -gt 0 ]] ; then
+            run mkdir -p $VERBOSE_ARG -- "''${!missingDirs[@]}" || exit 1
+          fi
+
+          # Group the pending links by parent directory, one ln call per
+          # directory. The link name always equals the source basename, and
+          # -f -n together replace a stale symlink even when it points at a
+          # directory (the case -T guarded against in the per-file version;
+          # a regular directory in the way takes the slow path instead and
+          # fails there just like it always did).
+          declare -A dirBatches=()
+          for i in "''${!linkSources[@]}" ; do
+            dirBatches[''${linkDirs[i]}]+="$i "
+          done
+          for targetDir in "''${!dirBatches[@]}" ; do
+            batch=()
+            for i in ''${dirBatches[$targetDir]} ; do
+              batch+=("''${linkSources[i]}")
+            done
+            run ln -sfn $VERBOSE_ARG -t "$targetDir" -- "''${batch[@]}" || exit 1
+          done
+
+          # Slow path: the target exists and is not a symlink. This is the
+          # original per-file logic, kept verbatim for the rare collisions.
+          for sourcePath in "''${slowSources[@]}" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
-                verboseEcho "Running $HOME_MANAGER_BACKUP_COMMAND $targetPath."
-                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running `$HOME_MANAGER_BACKUP_COMMAND` on '$targetPath' failed."
+                verboseEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath'."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."
               elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 # The target exists, back it up
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
@@ -209,7 +293,7 @@ in
             fi
 
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
-              # The target exists but is identical – don't do anything.
+              # The target exists but is identical - don't do anything.
               verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
               # Place that symlink, --force
@@ -354,6 +438,63 @@ in
             # contain the recursion root, not the visited files.
             declare -A seenTargets
 
+            function setExecutableBit() {
+              local target="$1"
+              local executable="$2"
+
+              if [[ $executable == inherit ]]; then
+                # Don't change file mode if it should match the source.
+                :
+              elif [[ $executable ]]; then
+                chmod +x "$target"
+              else
+                chmod -x "$target"
+              fi
+            }
+
+            function insertFileEntry() {
+              local source="$1"
+              local target="$2"
+              local executable="$3"
+              local isExecutable
+
+              [[ -x $source ]] && isExecutable=1 || isExecutable=""
+
+              # Link the file into the home file directory if possible,
+              # i.e., if the executable bit of the source is the same we
+              # expect for the target. Otherwise, we copy the file and
+              # set the executable bit to the expected value.
+              if [[ $executable == inherit || $isExecutable == $executable ]]; then
+                ln -s "$source" "$target"
+              else
+                cp "$source" "$target"
+                setExecutableBit "$target" "$executable"
+              fi
+            }
+
+            function setLinkedFileExecutableBit() {
+              local target="$1"
+              local executable="$2"
+              local isExecutable
+
+              if [[ -d $target || ! -e $target ]]; then
+                return
+              fi
+
+              [[ -x $target ]] && isExecutable=1 || isExecutable=""
+
+              if [[ $executable == inherit || $isExecutable == $executable ]]; then
+                return
+              fi
+
+              local tmp
+              tmp="$(mktemp "$target.XXXXXX")"
+
+              cp "$target" "$tmp"
+              setExecutableBit "$tmp" "$executable"
+              mv -f "$tmp" "$target"
+            }
+
             function insertFile() {
               local source="$1"
               local relTarget="$2"
@@ -409,30 +550,19 @@ in
                   else
                     lndir -silent "$source" "$target"
                   fi
+
+                  if [[ $executable != inherit ]]; then
+                    local linkedFile
+
+                    while IFS= read -r -d "" linkedFile; do
+                      setLinkedFileExecutableBit "$linkedFile" "$executable"
+                    done < <(find "$target" \( -type f -or -type l \) -print0)
+                  fi
                 else
                   ln -s "$source" "$target"
                 fi
               else
-                [[ -x $source ]] && isExecutable=1 || isExecutable=""
-
-                # Link the file into the home file directory if possible,
-                # i.e., if the executable bit of the source is the same we
-                # expect for the target. Otherwise, we copy the file and
-                # set the executable bit to the expected value.
-                if [[ $executable == inherit || $isExecutable == $executable ]]; then
-                  ln -s "$source" "$target"
-                else
-                  cp "$source" "$target"
-
-                  if [[ $executable == inherit ]]; then
-                    # Don't change file mode if it should match the source.
-                    :
-                  elif [[ $executable ]]; then
-                    chmod +x "$target"
-                  else
-                    chmod -x "$target"
-                  fi
-                fi
+                insertFileEntry "$source" "$target" "$executable"
               fi
             }
           ''

@@ -188,10 +188,14 @@ in
         programs.jujutsu.settings.ui.diff-formatter = [
           (lib.getExe cfg.package)
         ]
-        ++ (lib.cli.toCommandLineGNU { } cfg.options)
+        ++ (lib.cli.toCommandLineGNU { } (
+          cfg.options
+          // {
+            color = "always";
+            sort-paths = true;
+          }
+        ))
         ++ [
-          "--color=always"
-          "--sort-paths"
           "$left"
           "$right"
         ];

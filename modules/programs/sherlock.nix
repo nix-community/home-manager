@@ -19,9 +19,9 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [
-    lib.maintainers.khaneliman
-    lib.hm.maintainers."74k1"
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    _74k1
   ];
 
   options.programs.sherlock = {

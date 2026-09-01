@@ -33,7 +33,7 @@ in
       package = mkOption {
         type = with types; nullOr package;
         default =
-          if pkgs.stdenv.isDarwin && lib.versionAtLeast config.home.stateVersion "26.05" then
+          if pkgs.stdenv.hostPlatform.isDarwin && lib.versionAtLeast config.home.stateVersion "26.05" then
             null
           else if cfg.man-db.enable then
             pkgs.man
@@ -42,7 +42,7 @@ in
           else
             null;
         defaultText = lib.literalExpression ''
-          if pkgs.stdenv.isDarwin && lib.versionAtLeast config.home.stateVersion "26.05" then
+          if pkgs.stdenv.hostPlatform.isDarwin && lib.versionAtLeast config.home.stateVersion "26.05" then
             null
           else if cfg.man-db.enable then
             pkgs.man

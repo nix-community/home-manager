@@ -109,7 +109,7 @@ let
 
   importTrustBashFunctions =
     let
-      gpg = "${cfg.package}/bin/gpg";
+      gpg = if cfg.package != null then "${cfg.package}/bin/gpg" else "gpg";
     in
     ''
       function gpgKeyId() {
@@ -132,7 +132,7 @@ let
 
   keyringFiles =
     let
-      gpg = "${cfg.package}/bin/gpg";
+      gpg = if cfg.package != null then "${cfg.package}/bin/gpg" else "gpg";
 
       importKey =
         { source, trust, ... }:
@@ -163,6 +163,7 @@ in
     enable = lib.mkEnableOption "GnuPG";
 
     package = lib.mkPackageOption pkgs "gnupg" {
+      nullable = true;
       example = "pkgs.gnupg23";
       extraDescription = "Also used by the gpg-agent service.";
     };
@@ -303,7 +304,7 @@ in
       no-symkey-cache = mkDefault true;
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     home.sessionVariables = {
       GNUPGHOME = cfg.homedir;
     };
@@ -336,7 +337,7 @@ in
 
       importGpgKeys =
         let
-          gpg = "${cfg.package}/bin/gpg";
+          gpg = if cfg.package != null then "${cfg.package}/bin/gpg" else "gpg";
 
           importKey =
             { source, trust, ... }:

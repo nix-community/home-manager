@@ -6,7 +6,7 @@
     `nix-instantiate '<nixpkgs>' -A hello` without having to switch to
     the root user. For a multi-user install of Nix this means that your
     user must be covered by the
-    [`allowed-users`](https://nixos.org/nix/manual/#conf-allowed-users)
+    [`allowed-users`](https://nix.dev/manual/nix/stable/command-ref/conf-file.html?highlight=allowed-user#conf-allowed-users)
     Nix option. On NixOS you can control this option using the
     [`nix.settings.allowed-users`](https://nixos.org/manual/nixos/stable/options.html#opt-nix.settings.allowed-users)
     system option.
@@ -71,5 +71,5 @@ checkout of the repository then you can use the
 [home-manager.path](#opt-programs.home-manager.path) option to specify the absolute
 path to the repository.
 
-Once installed you can see [Using Home Manager](#ch-usage) for a more detailed
+Once installed you can see [Using Home Manager](../usage.md#ch-usage) for a more detailed
 description of Home Manager and how to use it.

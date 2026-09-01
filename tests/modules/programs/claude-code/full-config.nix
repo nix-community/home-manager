@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   programs.claude-code = {
     enable = true;
@@ -116,6 +117,19 @@
       '';
     };
   };
+
+  assertions = [
+    {
+      assertion =
+        let
+          settingsSource =
+            toString
+              config.home.file."${config.programs.claude-code.configDir}/settings.json".source;
+        in
+        dirOf settingsSource != builtins.storeDir && baseNameOf settingsSource == "settings.json";
+      message = "Claude Code settings source must be inside a dedicated store directory";
+    }
+  ];
 
   nmt.script = ''
     assertFileExists home-files/.claude/settings.json

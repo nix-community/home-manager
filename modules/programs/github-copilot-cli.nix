@@ -19,14 +19,15 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.copilot";
 
+  # Applied after transformMcpServer so that args = [] is not filtered out.
   forCopilotFormat =
     server:
     let
-      isLocal = server.type == "stdio";
+      isLocal = server.type == "stdio" || server.type == "local";
     in
     server
     // {
-      type = if server.type == "stdio" then "local" else server.type or "local";
+      type = if isLocal then "local" else server.type;
     }
     // lib.optionalAttrs isLocal {
       args = server.args or [ ];
@@ -43,14 +44,15 @@ let
     if cfg.enableMcpIntegration && config.programs.mcp.enable && enabledServers != { } then
       lib.mapAttrs (
         name: server:
-        lib.hm.mcp.transformMcpServer {
-          inherit server;
-          extraTransforms = [
-            lib.hm.mcp.addType
-            (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
-            forCopilotFormat
-          ];
-        }
+        forCopilotFormat (
+          lib.hm.mcp.transformMcpServer {
+            inherit server;
+            extraTransforms = [
+              lib.hm.mcp.addType
+              (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+            ];
+          }
+        )
       ) enabledServers
     else
       { };
@@ -59,17 +61,46 @@ let
     transformedMcpServers
     // lib.mapAttrs (
       name: server:
-      lib.hm.mcp.transformMcpServer {
-        inherit server;
-        extraTransforms = [
-          lib.hm.mcp.addType
-          (lib.hm.mcp.wrapEnvFilesCommand {
-            inherit pkgs name;
-          })
-          forCopilotFormat
-        ];
-      }
+      forCopilotFormat (
+        lib.hm.mcp.transformMcpServer {
+          inherit server;
+          extraTransforms = [
+            lib.hm.mcp.addType
+            (lib.hm.mcp.wrapEnvFilesCommand {
+              inherit pkgs name;
+            })
+          ];
+        }
+      )
     ) cfg.mcpServers;
+
+  normalizeDirectory =
+    name: option: source:
+    if lib.isPath source then
+      source
+    else
+      pkgs.runCommandLocal name { } ''
+        if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
+          echo ${lib.escapeShellArg "programs.github-copilot-cli.${option} must be a directory"} >&2
+          exit 1
+        fi
+        ln -s ${lib.escapeShellArg (toString source)} "$out"
+      '';
+
+  normalizeSkill =
+    source:
+    pkgs.runCommandLocal "github-copilot-cli-skill" { } ''
+      source=${lib.escapeShellArg (toString source)}
+      if [[ -d "$source" ]]; then
+        ln -s "$source" "$out"
+      elif [[ -f "$source" ]]; then
+        mkdir "$out"
+        ln -s "$source" "$out/SKILL.md"
+      else
+        echo "GitHub Copilot CLI skill source must be a file or directory: $source" >&2
+        exit 1
+      fi
+    '';
 in
 {
   meta.maintainers = [ lib.maintainers.ojsef39 ];
@@ -362,11 +393,11 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = !lib.hm.strings.isPathLike cfg.agents || lib.pathIsDirectory cfg.agents;
+        assertion = !lib.isPath cfg.agents || lib.pathIsDirectory cfg.agents;
         message = "`programs.github-copilot-cli.agents` must be a directory when set to a path";
       }
       {
-        assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
+        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.github-copilot-cli.skills` must be a directory when set to a path";
       }
     ];
@@ -405,12 +436,12 @@ in
           };
 
       "${cfg.configDir}/agents" = mkIf (lib.hm.strings.isPathLike cfg.agents) {
-        source = cfg.agents;
+        source = normalizeDirectory "github-copilot-cli-agents" "agents" cfg.agents;
         recursive = true;
       };
 
       "${cfg.configDir}/skills" = mkIf (lib.hm.strings.isPathLike cfg.skills) {
-        source = cfg.skills;
+        source = normalizeDirectory "github-copilot-cli-skills" "skills" cfg.skills;
         recursive = true;
       };
     }
@@ -425,9 +456,14 @@ in
     // lib.optionalAttrs (builtins.isAttrs cfg.skills) (
       lib.mapAttrs' (
         name: content:
-        if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
+        if lib.isPath content && lib.pathIsDirectory content then
           lib.nameValuePair "${cfg.configDir}/skills/${name}" {
             source = content;
+            recursive = true;
+          }
+        else if lib.hm.strings.isPathLike content && !lib.isPath content then
+          lib.nameValuePair "${cfg.configDir}/skills/${name}" {
+            source = normalizeSkill content;
             recursive = true;
           }
         else

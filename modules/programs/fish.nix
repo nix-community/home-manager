@@ -658,17 +658,21 @@ in
                 ++ lib.filter (p: p != null) (
                   map (outName: package.${outName} or null) config.home.extraOutputsToInstall
                 );
-                nativeBuildInputs = [ pkgs.python3 ];
-                buildInputs = [ cfg.package ];
+                nativeBuildInputs = [
+                  pkgs.python3
+                  cfg.package
+                ];
                 preferLocalBuild = true;
               }
               ''
+                # The generator script is embedded in the fish binary, so extract it.
+                generator=$PWD/create_manpage_completions.py
+                fish --no-config -c 'status get-file tools/create_manpage_completions.py' > "$generator"
+
                 mkdir -p $out
                 for src in $srcs; do
                   if [ -d $src/share/man ]; then
-                    find -L $src/share/man -type f \
-                      -exec python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out {} + \
-                      > /dev/null
+                    find -L $src/share/man -type f -exec python "$generator" --directory $out {} + > /dev/null
                   fi
                 done
               '';

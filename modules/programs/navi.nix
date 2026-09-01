@@ -12,7 +12,7 @@ let
   yamlFormat = pkgs.formats.yaml { };
 
   configDir =
-    if pkgs.stdenv.isDarwin && !config.xdg.enable then
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
       "Library/Application Support"
     else
       config.xdg.configHome;
@@ -41,7 +41,7 @@ in
         {file}`$XDG_CONFIG_HOME/navi/config.yaml` on Linux or
         {file}`$HOME/Library/Application Support/navi/config.yaml`
         on Darwin. See
-        <https://github.com/denisidoro/navi/blob/master/docs/config_file.md>
+        <https://github.com/denisidoro/navi/blob/master/docs/configuration/README.md>
         for more information.
       '';
     };

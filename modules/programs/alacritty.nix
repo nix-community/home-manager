@@ -96,27 +96,37 @@ in
       };
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
-      source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs (
-        _finalAttrs: prevAttrs: {
-          buildCommand = lib.concatStringsSep "\n" [
-            prevAttrs.buildCommand
-            # Nix cannot spell TOML escape sequences like "\u001d" directly:
-            # "\\u001d" is a literal backslash-u string, while fromJSON creates
-            # a control character and fails for "\u0000". Normalize both TOML
-            # generator outputs to the Alacritty escape form:
-            #   chars = "\\u001d" -> chars = "\u001d"
-            #   chars = '\u001d'  -> chars = "\u001d"
-            ''
-              sed \
-                -E \
-                -e "s/= \"\\\\\\\\u([0-9a-fA-F]{4})\"\$/= \"\\\\u\1\"/" \
-                -e "s/= '\\\\u([0-9a-fA-F]{4})'\$/= \"\\\\u\1\"/" \
-                "$out" > "$TMPDIR/alacritty.toml"
-              cp "$TMPDIR/alacritty.toml" "$out"
-            ''
-          ];
-        }
-      );
+      source =
+        let
+          # `pkgs.formats.toml` escapes backslashes and cannot emit raw
+          # control characters (NUL cannot even appear in a Nix string), so a
+          # `chars` escape like "\u001d" generates as literal "\\u001d",
+          # which Alacritty rejects. Stash each escape behind a placeholder that
+          # survives generation, then restore "\u" in the build command.
+          unicodeEscapePrefix = "__home_manager_alacritty_unicode_escape_";
+
+          normalizeAlacrittyEscapes =
+            value:
+            if builtins.isAttrs value then
+              lib.mapAttrs (_: normalizeAlacrittyEscapes) value
+            else if builtins.isList value then
+              map normalizeAlacrittyEscapes value
+            else if !builtins.isString value then
+              value
+            else
+              # Normalize the "\^[" caret form to "\u001b", then replace every
+              # "\uXXXX" with the placeholder.
+              lib.concatMapStrings (
+                chunk: if builtins.isList chunk then unicodeEscapePrefix + builtins.head chunk else chunk
+              ) (builtins.split "\\\\u([0-9a-fA-F]{4})" (builtins.replaceStrings [ "\\^[" ] [ "\\u001b" ] value));
+        in
+        (tomlFormat.generate "alacritty.toml" (normalizeAlacrittyEscapes cfg.settings)).overrideAttrs
+          (prevAttrs: {
+            buildCommand = lib.concatStringsSep "\n" [
+              prevAttrs.buildCommand
+              ''substituteInPlace $out --replace-quiet '${unicodeEscapePrefix}' '\u' ''
+            ];
+          });
     };
   };
 }

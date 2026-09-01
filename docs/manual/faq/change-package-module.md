@@ -31,7 +31,7 @@ this package. This can typically be done in two ways.
 
     should work OK. With flakes, pass the unstable package set as
     described in
-    [How do I install packages from Nixpkgs unstable?](#_how_do_i_install_packages_from_nixpkgs_unstable)
+    [How do I install packages from Nixpkgs unstable?](unstable.md#_how_do_i_install_packages_from_nixpkgs_unstable)
     and then use the extra module argument:
 
     ``` nix

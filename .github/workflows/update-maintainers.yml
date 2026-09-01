@@ -2,9 +2,9 @@ name: Update maintainers list
 on:
   push:
     branches:
-      - main
+      - master
     paths:
-      - lib/maintainers.nix
+      - modules/lib/maintainers.nix
   schedule:
     # Update every Monday at 9 AM UTC
     - cron: "0 9 * * 1"

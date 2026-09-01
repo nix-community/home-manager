@@ -1,15 +1,14 @@
 { lib, ... }:
-
-{
-  home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } {
+let
+  testData = {
     a = 1;
     b = "string";
     c = ''
       multiline string
       with special characters:
-      \t \n \" "
+      ''\t \" " \
     '';
-    unsafeString = " \" \n 	 ";
+    unsafeString = " \" \n 	 \\";
     flatItems = [
       1
       2
@@ -81,10 +80,36 @@
       list2 = [ { a = 8; } ];
     };
   };
+in
+
+{
+  home.file."tokdl-result.txt".text = lib.hm.generators.toKDL { } testData;
+  home.file."tokdl-result-escape-backslashes.txt".text = lib.hm.generators.toKDL {
+    escapeBackslashes = true;
+  } testData;
+  home.file."tokdl-result-escape-tabs.txt".text = lib.hm.generators.toKDL {
+    escapeTabs = true;
+  } testData;
+  home.file."tokdl-result-escape-backslashes-tabs.txt".text = lib.hm.generators.toKDL {
+    escapeBackslashes = true;
+    escapeTabs = true;
+  } testData;
 
   nmt.script = ''
     assertFileContent \
       home-files/tokdl-result.txt \
       ${./tokdl-result.txt}
+
+    assertFileContent \
+      home-files/tokdl-result-escape-backslashes.txt \
+      ${./tokdl-result-escape-backslashes.txt}
+
+    assertFileContent \
+      home-files/tokdl-result-escape-tabs.txt \
+      ${./tokdl-result-escape-tabs.txt}
+
+    assertFileContent \
+      home-files/tokdl-result-escape-backslashes-tabs.txt \
+      ${./tokdl-result-escape-backslashes-tabs.txt}
   '';
 }

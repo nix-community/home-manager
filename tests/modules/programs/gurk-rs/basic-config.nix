@@ -20,7 +20,7 @@
   nmt.script =
     let
       configFile =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "home-files/Library/Application\\ Support/gurk/gurk.toml"
         else
           "home-files/.config/gurk/gurk.toml";

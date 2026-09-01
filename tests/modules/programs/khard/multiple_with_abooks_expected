@@ -9,7 +9,7 @@ path = /home/hm-user/.contacts/test1/work
 path = /home/hm-user/.contacts/test1/family
 
 [[test2]]
-path = /home/hm-user/.contacts/test2
+path = /home/hm-user/.contacts/test2/
 
 
 [general]

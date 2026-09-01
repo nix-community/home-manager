@@ -2,6 +2,7 @@
 {
   programs.television = {
     enable = true;
+    extraPackages = [ ];
     settings = {
       tick_rate = 50;
       ui = {

@@ -33,5 +33,5 @@
 
     Unlike the channel-based setup, `home.nix` will be evaluated when
     the flake is built, so it must be present before bootstrap of Home
-    Manager from the flake. See [Configuration Example](#sec-usage-configuration) for
+    Manager from the flake. See [Configuration Example](../usage/configuration.md#sec-usage-configuration) for
     introduction about writing a Home Manager configuration.

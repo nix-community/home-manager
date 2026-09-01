@@ -18,6 +18,36 @@
           mods = "Alt";
           chars = "\\u001d";
         }
+        {
+          key = "Back";
+          mods = "Shift";
+          chars = "\\u001b[3~";
+        }
+        {
+          key = "Delete";
+          mods = "Shift";
+          chars = "\\^[[3~";
+        }
+        {
+          key = "A";
+          mods = "Control";
+          chars = "\\u0000";
+        }
+        {
+          key = "Up";
+          mods = "Control";
+          chars = "\\u001b\\u001b";
+        }
+        {
+          key = "Down";
+          mods = "Control";
+          chars = "OK\\u001b";
+        }
+        {
+          key = "Left";
+          mods = "Control";
+          chars = "\\^[\\^[";
+        }
       ];
 
       font = {

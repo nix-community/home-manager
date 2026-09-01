@@ -13,11 +13,12 @@
     assertFileNotRegex \
       home-files/.config/fish/config.fish \
       'SSH_AUTH_SOCK'
-    assertFileNotRegex \
-      home-files/.config/nushell/config.nu \
-      'SSH_AUTH_SOCK'
+    assertPathNotExists home-files/.config/nushell/config.nu
     assertFileNotRegex \
       home-files/.zshenv \
+      'SSH_AUTH_SOCK'
+    assertFileNotRegex \
+      home-files/.zprofile \
       'SSH_AUTH_SOCK'
 
     assertPathNotExists home-files/.config/systemd/user/set-SSH_AUTH_SOCK.service

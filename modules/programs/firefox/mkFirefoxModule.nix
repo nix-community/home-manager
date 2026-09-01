@@ -20,6 +20,7 @@ let
     length
     literalExpression
     mapAttrsToList
+    mkDefault
     mkIf
     mkMerge
     mkOption
@@ -54,12 +55,17 @@ let
   profiles =
     lib.flip lib.mapAttrs' cfg.profiles (
       _: profile:
-      lib.nameValuePair "Profile${toString profile.id}" {
-        Name = profile.name;
-        Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
-        IsRelative = 1;
-        Default = if profile.isDefault then 1 else 0;
-      }
+      lib.nameValuePair "Profile${toString profile.id}" (
+        {
+          Name = profile.name;
+          Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
+          IsRelative = 1;
+          Default = if profile.isDefault then 1 else 0;
+        }
+        // (lib.optionalAttrs (profile.storeId != null) {
+          StoreID = profile.storeId;
+        })
+      )
     )
     // {
       General = {
@@ -447,6 +453,22 @@ in
                 default = 0;
                 description = ''
                   Profile ID. This should be set to a unique number per profile.
+                '';
+              };
+
+              storeId = mkOption {
+                type = types.nullOr (types.strMatching "[0-9a-f]{8}");
+                default = null;
+                example = "e41de5fe";
+                description = ''
+                  Store ID. Either null, or the first segment of a UUID string (8 lowercase hex characters).
+
+                  If this value is set, then profiles.ini is created with predictable StoreIDs.
+                  'toolkit.profiles.storeID' is also set accordingly.
+
+                  A predictable StoreID helps bridge the old and new firefox profile implementations.
+                  The StoreID is the name of the sqlite database in "Profile Groups" holding the new
+                  profiles' metadata.
                 '';
               };
 
@@ -884,6 +906,16 @@ in
             };
 
             config = {
+              settings = mkMerge [
+                (mkIf (config.userChrome != "") {
+                  "toolkit.legacyUserProfileCustomizations.stylesheets" = mkDefault true;
+                })
+
+                (mkIf (config.storeId != null) {
+                  "toolkit.profiles.storeID" = mkDefault config.storeId;
+                })
+              ];
+
               assertions = [
                 (mkNoDuplicateAssertion config.containers "container")
                 {
@@ -894,6 +926,15 @@ in
                     '${lib.showOption profilePath}.extensions.force' or the corresponding
                     '${lib.showOption profilePath}.extensions.settings.<extensionId>.force'
                     to acknowledge this.
+                  '';
+                }
+                {
+                  assertion =
+                    (config.storeId == null)
+                    || ((config.settings."toolkit.profiles.storeID" or config.storeId) == config.storeId);
+                  message = ''
+                    ${moduleName}.profiles.${name}.storeId must match
+                    ${moduleName}.profiles.${name}.settings."toolkit.profiles.storeID"
                   '';
                 }
               ]
@@ -1085,6 +1126,30 @@ in
         }
 
         (mkNoDuplicateAssertion cfg.profiles "profile")
+
+        (
+          let
+            profilesWithStoreId = lib.filterAttrs (_: profile: profile.storeId != null) cfg.profiles;
+
+            duplicateStoreIds = lib.filterAttrs (_storeId: profileNames: length profileNames != 1) (
+              lib.zipAttrs (
+                mapAttrsToList (profileName: profile: {
+                  "${profile.storeId}" = profileName;
+                }) profilesWithStoreId
+              )
+            );
+
+            mkMsg =
+              storeId: profileNames: "  - StoreID ${storeId} is used by " + (concatStringsSep ", " profileNames);
+          in
+          {
+            assertion = cfg.profiles == { } || duplicateStoreIds == { };
+            message = ''
+              Must not have duplicate ${appName} profile StoreIDs:
+              ${concatStringsSep "\n" (mapAttrsToList mkMsg duplicateStoreIds)}
+            '';
+          }
+        )
       ]
       ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
 

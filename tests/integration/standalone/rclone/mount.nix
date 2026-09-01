@@ -87,6 +87,10 @@ in
     ];
   };
 
+  nodes.machine = {
+    programs.fuse.enable = true;
+  };
+
   script = ''
     remote.wait_for_unit("network.target")
     remote.wait_for_unit("multi-user.target")

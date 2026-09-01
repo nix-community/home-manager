@@ -82,12 +82,54 @@ in
           };
         };
       };
+
+      fastSyntaxHighlightingModule = types.submodule {
+        options = {
+          enable = mkEnableOption "zsh fast syntax highlighting";
+
+          package = lib.mkPackageOption pkgs "zsh-fast-syntax-highlighting" { };
+
+          theme = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            example = "clean";
+            description = ''
+              If non-null, Home Manager will run {command}`fast-theme -q`
+              with this value to select the theme. `fast-theme` persists the
+              selected theme in fast-syntax-highlighting's work directory, so
+              setting this option back to `null` stops Home Manager from
+              invoking {command}`fast-theme` but does not reset an already
+              persisted theme. Run {command}`fast-theme -r` manually to clear
+              upstream state.
+
+              See [upstream's documentation](https://github.com/zdharma-continuum/fast-syntax-highlighting/blob/master/THEME_GUIDE.md)
+            '';
+          };
+
+          settings = mkOption {
+            type = types.attrsOf types.str;
+            default = { };
+            example = {
+              use_brackets = "0";
+              "chroma-," = "→chroma/-precommand.ch";
+              "chroma-comma" = "→chroma/-precommand.ch";
+            };
+            description = ''
+              Custom values to add to `FAST_HIGHLIGHT`, like custom chroma
+              configuration (see [upstream's documentation](https://github.com/zdharma-continuum/fast-syntax-highlighting/blob/master/CHROMA_GUIDE.adoc)
+              and its [built-in chromas](https://github.com/zdharma-continuum/fast-syntax-highlighting/tree/master/%E2%86%92chroma)).
+            '';
+          };
+        };
+      };
     in
     {
       programs.zsh = {
         enable = mkEnableOption "Z shell (Zsh)";
 
-        package = lib.mkPackageOption pkgs "zsh" { };
+        package = lib.mkPackageOption pkgs "zsh" {
+          nullable = true;
+        };
 
         autocd = mkOption {
           default = null;
@@ -191,6 +233,12 @@ in
           description = "Options related to zsh-syntax-highlighting.";
         };
 
+        fastSyntaxHighlighting = mkOption {
+          type = fastSyntaxHighlightingModule;
+          default = { };
+          description = "Options related to zsh-fast-syntax-highlighting.";
+        };
+
         autosuggestion = {
           enable = mkOption {
             type = types.bool;
@@ -269,9 +317,9 @@ in
           default = "";
           type = types.lines;
           example = lib.literalExpression ''
-            lib.mkOrder 1200 ''''
+            lib.mkOrder 1200 '''
               echo "Hello zsh initContent!"
-            '''';
+            ''';
           '';
           description = ''
             Content to be added to {file}`.zshrc`.
@@ -421,6 +469,16 @@ in
                 - config.xdg.cacheHome (XDG cache directory)
               '';
             }
+            {
+              assertion =
+                lib.count (x: x) [
+                  cfg.syntaxHighlighting.enable
+                  cfg.fastSyntaxHighlighting.enable
+                ] <= 1;
+              message = ''
+                Only one Zsh syntax highlighter can be enabled at a time.
+              '';
+            }
           ];
 
           warnings =
@@ -522,10 +580,9 @@ in
         {
           lib.zsh = zshLib;
 
-          home.packages = [
-            cfg.package
-          ]
-          ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions);
+          home.packages = lib.mkIf (cfg.package != null) (
+            [ cfg.package ] ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions)
+          );
 
           # NOTE: Always include "main" highlighter with normal priority.
           # Option default priority will cause `main` to get dropped by customization.
@@ -544,9 +601,12 @@ in
               for profile in ''${(z)NIX_PROFILES}; do
                 fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
               done
-
-              HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
             '')
+            (lib.mkIf (cfg.package != null) (
+              mkOrder 520 ''
+                HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
+              ''
+            ))
 
             (lib.mkIf (cfg.defaultKeymap != null) (
               mkOrder 530 ''
@@ -627,6 +687,22 @@ in
                     lib.mapAttrsToList (
                       name: value: "ZSH_HIGHLIGHT_PATTERNS+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})"
                     ) cfg.syntaxHighlighting.patterns
+                  )}
+                ''
+            ))
+
+            (lib.mkIf cfg.fastSyntaxHighlighting.enable (
+              mkOrder 1200
+                # Load zsh-fast-syntax-highlighting after all custom widgets have been created
+                ''
+                  source ${cfg.fastSyntaxHighlighting.package}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+                  ${lib.optionalString (cfg.fastSyntaxHighlighting.theme != null) ''
+                    fast-theme -q ${cfg.fastSyntaxHighlighting.theme}
+                  ''}
+                  ${lib.concatStringsSep "\n" (
+                    lib.mapAttrsToList (
+                      name: value: "FAST_HIGHLIGHT+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})"
+                    ) cfg.fastSyntaxHighlighting.settings
                   )}
                 ''
             ))

@@ -66,12 +66,40 @@ let
         preferLocalBuild = true;
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
-          wrapProgram $out/bin/opencode \
+          wrapProgram $out/bin/${cfg.package.meta.mainProgram} \
             --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
         '';
       }
     else
       cfg.package;
+
+  normalizeDirectory =
+    name: source:
+    if lib.isPath source then
+      source
+    else
+      pkgs.runCommandLocal name { } ''
+        if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
+          echo ${lib.escapeShellArg "programs.opencode.skills must be a directory"} >&2
+          exit 1
+        fi
+        ln -s ${lib.escapeShellArg (toString source)} "$out"
+      '';
+
+  normalizeSkill =
+    source:
+    pkgs.runCommandLocal "opencode-skill" { } ''
+      source=${lib.escapeShellArg (toString source)}
+      if [[ -d "$source" ]]; then
+        ln -s "$source" "$out"
+      elif [[ -f "$source" ]]; then
+        mkdir "$out"
+        ln -s "$source" "$out/SKILL.md"
+      else
+        echo "OpenCode skill source must be a file or directory: $source" >&2
+        exit 1
+      fi
+    '';
 
 in
 {
@@ -123,6 +151,11 @@ in
         `lib.hm.dag.entryAfter` values are rendered in topological order, with
         raw sibling values treated as unordered entries. This is useful for
         OpenCode permission rules, where the last matching rule wins.
+
+        The `plugin` key accepts a list of plugin references: local paths to
+        plugin directories or files, derivations (e.g. `fetchFromGitHub`),
+        string paths into derivations, or names of external plugins fetched and
+        built by OpenCode.
 
         Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
       '';
@@ -447,7 +480,7 @@ in
         message = "`programs.opencode.tools` must be a directory when set to a path";
       }
       {
-        assertion = !lib.hm.strings.isPathLike cfg.skills || lib.pathIsDirectory cfg.skills;
+        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
         message = "`programs.opencode.skills` must be a directory when set to a path";
       }
       {
@@ -468,7 +501,7 @@ in
         ) (lib.attrNames cfg.settings);
 
         packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-        hasTuiConfig = lib.versionAtLeast packageVersion "1.2.15";
+        hasTuiConfig = packageVersion == null || lib.versionAtLeast packageVersion "1.2.15";
       in
       lib.optionals (hasTuiConfig && deprecatedConfigKeys != [ ]) [
         ''
@@ -535,7 +568,7 @@ in
       };
 
       "opencode/skills" = mkIf (lib.hm.strings.isPathLike cfg.skills) {
-        source = cfg.skills;
+        source = normalizeDirectory "opencode-skills" cfg.skills;
         recursive = true;
       };
 
@@ -570,9 +603,14 @@ in
     )
     // lib.mapAttrs' (
       name: content:
-      if lib.hm.strings.isPathLike content && lib.pathIsDirectory content then
+      if lib.isPath content && lib.pathIsDirectory content then
         lib.nameValuePair "opencode/skills/${name}" {
           source = content;
+          recursive = true;
+        }
+      else if lib.hm.strings.isPathLike content && !lib.isPath content then
+        lib.nameValuePair "opencode/skills/${name}" {
+          source = normalizeSkill content;
           recursive = true;
         }
       else

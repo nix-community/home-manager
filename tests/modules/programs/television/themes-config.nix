@@ -3,6 +3,7 @@
   programs.television = {
     enable = true;
     package = config.lib.test.mkStubPackage { name = "television"; };
+    extraPackages = [ ];
 
     settings = {
       ui.theme = "default";

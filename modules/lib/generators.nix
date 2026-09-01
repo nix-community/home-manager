@@ -744,7 +744,10 @@ in
     toHyprconf' initialIndent attrs;
 
   toKDL =
-    _:
+    {
+      escapeBackslashes ? false,
+      escapeTabs ? false,
+    }:
     let
       inherit (lib)
         concatStringsSep
@@ -766,7 +769,24 @@ in
         stringsWithNewlines: indentAll (unlines (lines stringsWithNewlines));
 
       # String -> String
-      sanitizeString = replaceStrings [ "\n" ''"'' ] [ "\\n" ''\"'' ];
+      sanitizeString =
+        replaceStrings
+          (
+            [
+              "\n"
+              ''"''
+            ]
+            ++ (lib.optional escapeBackslashes "\\")
+            ++ (lib.optional escapeTabs "\t")
+          )
+          (
+            [
+              "\\n"
+              ''\"''
+            ]
+            ++ (lib.optional escapeBackslashes "\\\\")
+            ++ (lib.optional escapeTabs "\\t")
+          );
 
       # OneOf [Int Float String Bool Null] -> String
       literalValueToString =

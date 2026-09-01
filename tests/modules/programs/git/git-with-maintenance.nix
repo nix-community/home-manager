@@ -8,7 +8,7 @@ lib.mkMerge [
     };
   }
 
-  (lib.mkIf pkgs.stdenv.isDarwin {
+  (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     nmt.script = ''
       serviceFile=LaunchAgents/org.nix-community.home.git-maintenance-hourly.plist
       assertFileExists "$serviceFile"

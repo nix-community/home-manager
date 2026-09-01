@@ -9,7 +9,7 @@ let
 in
 {
   meta.maintainers = [
-    lib.hm.maintainers.rsahwe
+    lib.maintainers.rsahwe
   ];
 
   options = {

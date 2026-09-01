@@ -10,7 +10,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ ];
+  meta.maintainers = with lib.maintainers; [ ratakor ];
 
   options.services.elephant = {
     enable = lib.mkEnableOption "elephant";
@@ -53,7 +53,11 @@ in
     };
 
     systemd.user.services.elephant = {
-      Unit.Description = "Elephant - Data provider for application launchers";
+      Unit = {
+        Description = "Elephant - Data provider for application launchers";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
       Install.WantedBy = [ "graphical-session.target" ];
       Service = {
         ExecStart = lib.getExe cfg.package;
