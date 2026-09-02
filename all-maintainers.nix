@@ -104,6 +104,14 @@
     name = "David Thievon";
     source = "nixpkgs";
   };
+  DPDmancul = {
+    email = "davide.peressoni@tuta.io";
+    github = "DPDmancul";
+    githubId = 3186857;
+    matrix = "@dpd-:matrix.org";
+    name = "Davide Peressoni";
+    source = "nixpkgs";
+  };
   DamienCassou = {
     email = "damien@cassou.me";
     github = "DamienCassou";
@@ -1081,6 +1089,13 @@
     githubId = 54070204;
     name = "0x5a4";
     source = "nixpkgs";
+  };
+  ekhh = {
+    email = "90589480+ekhh@users.noreply.github.com";
+    github = "ekhh";
+    githubId = 90589480;
+    name = "EKHH";
+    source = "home-manager";
   };
   elanora96 = {
     email = "git@elanora.lol";
