@@ -1,3 +1,4 @@
+{ lib, options, ... }:
 {
   programs.qcal = {
     enable = true;
@@ -16,6 +17,11 @@
       ];
     };
   };
+
+  test.asserts.warnings.expected = [
+    "The option `programs.qcal.defaultNumDays' defined in ${lib.showFiles options.programs.qcal.defaultNumDays.files} has been renamed to `programs.qcal.settings.DefaultNumDays'."
+    "The option `programs.qcal.timezone' defined in ${lib.showFiles options.programs.qcal.timezone.files} has been renamed to `programs.qcal.settings.Timezone'."
+  ];
 
   nmt.script = ''
     assertFileExists home-files/.config/qcal/config.json
