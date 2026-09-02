@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c45e4cfc.js";
+            window.path_to_searchindex_js = "searchindex-5492ca37.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-56126880.js"></script>
+        <script src="toc-a354e175.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12104,6 +12104,7 @@ string</p>
 <li><a href="#less">less</a></li>
 <li><a href="#lesspipe">lesspipe</a></li>
 <li><a href="#lf">lf</a></li>
+<li><a href="#libreoffice">libreoffice</a></li>
 <li><a href="#librewolf">librewolf</a></li>
 <li><a href="#lieer">lieer</a></li>
 <li><a href="#looking-glass-client">looking-glass-client</a></li>
@@ -37117,6 +37118,59 @@ attribute set of (string or signed integer or list of (string or signed integer)
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/lf.nix">&lt;home-manager/modules/programs/lf.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="libreoffice"><a href="#libreoffice" class="header">libreoffice</a></h1>
+<h2 id="opt-programs.libreoffice.enable"><a class="header" href="#opt-programs.libreoffice.enable">programs.libreoffice.enable</a></h2>
+<p>Whether to enable LibreOffice, a comprehensive office suite…</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/libreoffice.nix">&lt;home-manager/modules/programs/libreoffice.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.libreoffice.package"><a class="header" href="#opt-programs.libreoffice.package">programs.libreoffice.package</a></h2>
+<p>The libreoffice package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.libreoffice
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.libreoffice-qt
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/libreoffice.nix">&lt;home-manager/modules/programs/libreoffice.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.libreoffice.settings"><a class="header" href="#opt-programs.libreoffice.settings">programs.libreoffice.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/libreoffice/4/user/registrymodifications.xcu</code>.</p>
+<p>Available options are documented as tooltips in the <code>Expert Configuration</code> dialog.</p>
+<p>Warning: this will silently delete the existing configuration file,
+regardless of whether it is a file or a link; please back up your
+configuration entries before migrating.</p>
+<p><em>Type:</em>
+attribute set of attribute set of (boolean or floating point number or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "/org.openoffice.Office.Common/Filter/PDF/Export" = {
+    PDFUACompliance = true;
+    SelectPdfVersion = 4;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/libreoffice.nix">&lt;home-manager/modules/programs/libreoffice.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="librewolf"><a href="#librewolf" class="header">librewolf</a></h1>
