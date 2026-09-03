@@ -41,7 +41,10 @@ let
     ) (lib.attrsToList (lib.attrByPath path null cfg));
 in
 {
-  meta.maintainers = [ lib.maintainers.bricked ];
+  meta.maintainers = [
+    lib.maintainers.bricked
+    lib.maintainers.ilovelinux
+  ];
 
   options.programs.firefoxpwa = {
     enable = lib.mkEnableOption "Progressive Web Apps for Firefox";

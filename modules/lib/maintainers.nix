@@ -251,6 +251,12 @@
       }
     ];
   };
+  ilovelinux = {
+    name = "Antonio Spadaro";
+    email = "nix+home-manager@ilovelinux.dev";
+    github = "ilovelinux";
+    githubId = 9268789;
+  };
   isaacST08 = {
     name = "Isaac Shiells Thomas";
     email = "isaacst.nix@proton.me";
