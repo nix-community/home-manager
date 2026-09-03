@@ -7,6 +7,11 @@
       url = "https://developer.mozilla.org/";
       manifestUrl = "https://developer.mozilla.org/manifest.f42880861b394dd4dc9b.json";
     };
+    # Non-PWA website
+    profiles."ZYXWVTSRQPNMKJHGFEDCBA9876".sites."0123456789ABCDEFGHJKMNPQRS" = {
+      name = "Mozilla";
+      url = "https://www.mozilla.org/";
+    };
   };
 
   nmt.script = ''
