@@ -246,6 +246,10 @@ in
             assertion = wrapperRequiresOverride -> (cfg.package == options.programs.mpv.package.default);
             message = ''The programs.mpv "package" option is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
           }
+          {
+            assertion = wrapperRequiresOverride -> (cfg.package != null);
+            message = ''The programs.mpv "package" option set to null is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
+          }
         ];
       }
       {
