@@ -117,94 +117,105 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home = {
-      packages =
-        if cfg.extraPackages != [ ] then
-          [
-            (pkgs.symlinkJoin {
-              name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
-              paths = [ cfg.package ];
-              preferLocalBuild = true;
-              nativeBuildInputs = [ pkgs.makeWrapper ];
-              postBuild = ''
-                wrapProgram $out/bin/starship \
-                  --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
-              '';
-            })
-          ]
-        else
-          [ cfg.package ];
-
-      sessionVariables.STARSHIP_CONFIG = cfg.configPath;
-
-      file.${cfg.configPath} = mkIf hasGeneratedConfig (
-        let
-          settingsFile = tomlFormat.generate "starship-config" cfg.settings;
-        in
-        if cfg.presets == [ ] then
-          { source = settingsFile; }
-        else
+  config =
+    let
+      starshipFishConfig =
+        pkgs.runCommand "starship-fish-config.fish"
           {
-            source =
-              pkgs.runCommand "starship.toml"
-                {
-                  nativeBuildInputs = [ pkgs.yq ];
-                }
-                ''
-                  tomlq -s -t 'reduce .[] as $item ({}; . * $item)' \
-                    ${
-                      lib.concatStringsSep " " (map (f: "${cfg.package}/share/starship/presets/${f}.toml") cfg.presets)
-                    } \
-                    ${settingsFile} \
-                    > $out
+            nativeBuildInputs = [ pkgs.writableTmpDirAsHomeHook ];
+          }
+          ''
+            ${lib.getExe cfg.package} init fish --print-full-init > "$out"
+          '';
+    in
+    mkIf cfg.enable {
+      home = {
+        packages =
+          if cfg.extraPackages != [ ] then
+            [
+              (pkgs.symlinkJoin {
+                name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+                paths = [ cfg.package ];
+                preferLocalBuild = true;
+                nativeBuildInputs = [ pkgs.makeWrapper ];
+                postBuild = ''
+                  wrapProgram $out/bin/starship \
+                    --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
                 '';
-          }
-      );
+              })
+            ]
+          else
+            [ cfg.package ];
 
-    };
+        sessionVariables.STARSHIP_CONFIG = cfg.configPath;
 
-    programs = {
-      bash.initExtra = mkIf cfg.enableBashIntegration (
-        lib.mkOrder 1900 ''
+        file.${cfg.configPath} = mkIf hasGeneratedConfig (
+          let
+            settingsFile = tomlFormat.generate "starship-config" cfg.settings;
+          in
+          if cfg.presets == [ ] then
+            { source = settingsFile; }
+          else
+            {
+              source =
+                pkgs.runCommand "starship.toml"
+                  {
+                    nativeBuildInputs = [ pkgs.yq ];
+                  }
+                  ''
+                    tomlq -s -t 'reduce .[] as $item ({}; . * $item)' \
+                      ${
+                        lib.concatStringsSep " " (map (f: "${cfg.package}/share/starship/presets/${f}.toml") cfg.presets)
+                      } \
+                      ${settingsFile} \
+                      > $out
+                  '';
+            }
+        );
+
+      };
+
+      programs = {
+        bash.initExtra = mkIf cfg.enableBashIntegration (
+          lib.mkOrder 1900 ''
+            if [[ $TERM != "dumb" ]]; then
+              eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
+            fi
+          ''
+        );
+
+        zsh.initContent = mkIf cfg.enableZshIntegration ''
           if [[ $TERM != "dumb" ]]; then
-            eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
+            eval "$(${lib.getExe cfg.package} init zsh)"
           fi
-        ''
-      );
-
-      zsh.initContent = mkIf cfg.enableZshIntegration ''
-        if [[ $TERM != "dumb" ]]; then
-          eval "$(${lib.getExe cfg.package} init zsh)"
-        fi
-      '';
-
-      fish.${initFish} = mkIf cfg.enableFishIntegration ''
-        if test "$TERM" != "dumb"
-          ${lib.getExe cfg.package} init fish | source
-          ${lib.optionalString cfg.enableTransience "enable_transience"}
-        end
-      '';
-
-      ion.initExtra = mkIf cfg.enableIonIntegration ''
-        if test $TERM != "dumb"
-          eval $(${lib.getExe cfg.package} init ion)
-        end
-      '';
-
-      nushell = mkIf cfg.enableNushellIntegration {
-        # Unfortunately nushell doesn't allow conditionally sourcing nor
-        # conditionally setting (global) environment variables, which is why the
-        # check for terminal compatibility (as seen above for the other shells) is
-        # not done here.
-        extraConfig = ''
-          use ${
-            pkgs.runCommand "starship-nushell-config.nu" { } ''
-              ${lib.getExe cfg.package} init nu >> "$out"
-            ''
-          }
         '';
+
+        fish.${initFish} = mkIf cfg.enableFishIntegration ''
+          if test "$TERM" != "dumb"
+            source ${starshipFishConfig}
+            ${lib.optionalString cfg.enableTransience "enable_transience"}
+          end
+        '';
+
+        ion.initExtra = mkIf cfg.enableIonIntegration ''
+          if test $TERM != "dumb"
+            eval $(${lib.getExe cfg.package} init ion)
+          end
+        '';
+
+        nushell = mkIf cfg.enableNushellIntegration {
+          # Unfortunately nushell doesn't allow conditionally sourcing nor
+          # conditionally setting (global) environment variables, which is why the
+          # check for terminal compatibility (as seen above for the other shells) is
+          # not done here.
+          extraConfig = ''
+            use ${
+              pkgs.runCommand "starship-nushell-config.nu" { } ''
+                ${lib.getExe cfg.package} init nu >> "$out"
+              ''
+            }
+          '';
+        };
       };
     };
-  };
 }
