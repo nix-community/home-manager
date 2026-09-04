@@ -50,13 +50,15 @@ in
     };
 
     sceneCollections.Streaming = {
-      currentScene = "Main";
-      currentProgramScene = "Main";
+      name = "Streaming";
+      current_scene = "Main";
+      current_program_scene = "Main";
+      scene_order = [ { name = "Main"; } ];
       resolution = {
         x = 2100;
         y = 1428;
       };
-      quickTransitions = [
+      quick_transitions = [
         {
           name = "Cut";
           duration = 300;
@@ -65,45 +67,43 @@ in
           fade_to_black = false;
         }
       ];
-      raw.preview_locked = true;
-
-      sources.desktop = {
-        id = "pipewire-screen-capture-source";
-        uuid = "11111111-2222-3333-4444-555555555555";
-        settings.ShowCursor = true;
-        portal = {
-          restorePolicyAction = "skip";
-          restoreMatchRules = [
-            { pattern = "project-a"; }
+      preview_locked = true;
+      sources = [
+        {
+          name = "desktop";
+          id = "pipewire-screen-capture-source";
+          uuid = "11111111-2222-3333-4444-555555555555";
+          settings = {
+            ShowCursor = true;
+            RestorePolicyAction = 2;
+            RestoreMatchRules = "project-a\nany_app: shared-title";
+            rawSetting = true;
+          };
+        }
+        {
+          name = "Main";
+          id = "scene";
+          settings.items = [
             {
-              pattern = "shared-title";
-              scope = "any_app";
+              name = "desktop";
+              source_uuid = "11111111-2222-3333-4444-555555555555";
+              id = 7;
+              scale_ref = {
+                x = 3440.0;
+                y = 1440.0;
+              };
             }
           ];
-        };
-        raw = {
-          settings = {
-            rawSetting = true;
-            RestorePolicyAction = 2;
-          };
-        };
-      };
-
-      scenes.Main.items = [
-        {
-          source = "desktop";
-          id = 7;
-          scaleRef = {
-            x = 3440.0;
-            y = 1440.0;
-          };
         }
       ];
     };
 
-    extraConfigFiles."obs-websocket/config.json".text = ''
-      {"server_port":4455}
-    '';
+    extraConfigFiles = {
+      "obs-websocket/config.json".text = ''
+        {"server_port":4455}
+      '';
+      flat.text = "flat file\n";
+    };
   };
 
   home.homeDirectory = lib.mkForce "/@TMPDIR@/hm-user";
@@ -115,14 +115,49 @@ in
     ''
       export HOME=$TMPDIR/hm-user
 
-      sed "s|@TMPDIR@|$TMPDIR|g" ${activationScript} > $TMPDIR/activate
-      run() { "$@"; }
-      . $TMPDIR/activate
-
       configDir="$HOME/.config/obs-studio"
       sceneFile="$configDir/basic/scenes/Streaming.json"
       manifestFile="$HOME/.local/state/home-manager/obs-studio/manifest.json"
+      staleFile="$configDir/basic/scenes/Old.json"
+      unmanagedFile="$configDir/basic/scenes/Untitled.json"
+      oldParentFile="$configDir/plugin_config/obs-websocket"
+      oldChildFile="$configDir/plugin_config/flat/old.json"
 
+      mkdir -p \
+        "$(dirname "$staleFile")" \
+        "$(dirname "$manifestFile")" \
+        "$(dirname "$oldParentFile")" \
+        "$(dirname "$oldChildFile")"
+      printf old > "$staleFile"
+      printf unmanaged > "$unmanagedFile"
+      printf old-parent > "$oldParentFile"
+      printf old-child > "$oldChildFile"
+      ${pkgs.jq}/bin/jq -n \
+        --arg stale "$staleFile" \
+        --arg current "$configDir/global.ini" \
+        --arg oldParent "$oldParentFile" \
+        --arg oldChild "$oldChildFile" \
+        '{
+          version: 1,
+          module: "programs.obs-studio",
+          files: [
+            { path: "basic/scenes/Old.json", target: $stale },
+            { path: "global.ini", target: $current },
+            { path: "plugin_config/obs-websocket", target: $oldParent },
+            { path: "plugin_config/flat/old.json", target: $oldChild }
+          ]
+        }' > "$manifestFile"
+
+      sed "s|@TMPDIR@|$TMPDIR|g" ${activationScript} > $TMPDIR/activate
+      run() {
+        [[ "$1" == "--silence" ]] && shift
+        "$@"
+      }
+      . $TMPDIR/activate
+
+      assertPathNotExists "$staleFile"
+      assertFileContent "$unmanagedFile" ${builtins.toFile "obs-unmanaged" "unmanaged"}
+      assertFileContent "$configDir/plugin_config/flat" ${builtins.toFile "obs-flat" "flat file\n"}
       assertFileExists "$configDir/global.ini"
       assertFileContains "$configDir/global.ini" "MaxLogs=10"
       assertFileContains "$configDir/user.ini" "SceneCollection=Streaming"

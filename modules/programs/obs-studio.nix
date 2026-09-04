@@ -41,31 +41,6 @@ let
     }
   );
 
-  uuidFor =
-    seed:
-    let
-      hash = builtins.hashString "sha256" seed;
-    in
-    lib.concatStringsSep "-" [
-      (builtins.substring 0 8 hash)
-      (builtins.substring 8 4 hash)
-      (builtins.substring 12 4 hash)
-      (builtins.substring 16 4 hash)
-      (builtins.substring 20 12 hash)
-    ];
-
-  restoreActionValue = {
-    prompt = 0;
-    skip = 1;
-    error = 2;
-  };
-
-  renderRestoreRules =
-    rules:
-    lib.concatStringsSep "\n" (
-      map (rule: if rule.scope == "any_app" then "any_app: ${rule.pattern}" else rule.pattern) rules
-    );
-
   safePathComponent =
     value: value != "" && value != "." && value != ".." && !(lib.hasInfix "/" value);
   safeRelativePath =
@@ -88,155 +63,6 @@ let
       _: true
     )
   ) cfg.integrations;
-
-  mergeJson = a: b: lib.recursiveUpdate a b;
-
-  portalSettings =
-    source:
-    lib.optionalAttrs (source.portal.restorePolicyAction != null) {
-      RestorePolicyAction = restoreActionValue.${source.portal.restorePolicyAction};
-    }
-    // lib.optionalAttrs (source.portal.restoreMatchRules != [ ]) {
-      RestoreMatchRules = renderRestoreRules source.portal.restoreMatchRules;
-    }
-    // lib.optionalAttrs (source.portal.restoreToken != null) {
-      RestoreToken = source.portal.restoreToken;
-    };
-
-  renderSource =
-    _collectionName: _name: source:
-    mergeJson {
-      inherit (source) name;
-      inherit (source) uuid;
-      inherit (source) id;
-      versioned_id = source.versionedId;
-      settings = mergeJson source.settings (portalSettings source);
-      inherit (source) mixers;
-      inherit (source) sync;
-      inherit (source) flags;
-      inherit (source) volume;
-      inherit (source) balance;
-      inherit (source) enabled;
-      inherit (source) muted;
-      push-to-mute = source.pushToMute;
-      push-to-mute-delay = source.pushToMuteDelay;
-      push-to-talk = source.pushToTalk;
-      push-to-talk-delay = source.pushToTalkDelay;
-      inherit (source) hotkeys;
-      deinterlace_mode = source.deinterlaceMode;
-      deinterlace_field_order = source.deinterlaceFieldOrder;
-      monitoring_type = source.monitoringType;
-      private_settings = source.privateSettings;
-      inherit (source) filters;
-    } source.raw;
-
-  renderSceneItem =
-    collectionName: collection: _index: item:
-    let
-      resolvedSourceUuid =
-        if item.sourceUuid != null then
-          item.sourceUuid
-        else if builtins.hasAttr item.source collection.sources then
-          collection.sources.${item.source}.uuid
-        else if builtins.hasAttr item.source collection.scenes then
-          collection.scenes.${item.source}.uuid
-        else
-          uuidFor "${collectionName}:source:${item.source}";
-    in
-    mergeJson {
-      inherit (item) name;
-      source_uuid = resolvedSourceUuid;
-      inherit (item) visible;
-      inherit (item) locked;
-      inherit (item) rot;
-      scale_ref = item.scaleRef;
-      inherit (item) align;
-      bounds_type = item.boundsType;
-      bounds_align = item.boundsAlign;
-      bounds_crop = item.boundsCrop;
-      crop_left = item.cropLeft;
-      crop_top = item.cropTop;
-      crop_right = item.cropRight;
-      crop_bottom = item.cropBottom;
-      inherit (item) id;
-      group_item_backup = item.groupItemBackup;
-      inherit (item) pos;
-      pos_rel = item.posRel;
-      inherit (item) scale;
-      scale_rel = item.scaleRel;
-      inherit (item) bounds;
-      bounds_rel = item.boundsRel;
-      scale_filter = item.scaleFilter;
-      blend_method = item.blendMethod;
-      blend_type = item.blendType;
-      show_transition = item.showTransition;
-      hide_transition = item.hideTransition;
-      private_settings = item.privateSettings;
-    } item.raw;
-
-  renderSceneSource =
-    collectionName: collection: _sceneName: scene:
-    mergeJson {
-      inherit (scene) name;
-      inherit (scene) uuid;
-      id = "scene";
-      versioned_id = "scene";
-      settings = mergeJson {
-        id_counter = lib.length scene.items;
-        custom_size = scene.customSize;
-        items = lib.imap0 (renderSceneItem collectionName collection) scene.items;
-      } scene.settings;
-      inherit (scene) mixers;
-      sync = 0;
-      flags = 0;
-      volume = 1.0;
-      balance = 0.5;
-      enabled = true;
-      muted = false;
-      push-to-mute = false;
-      push-to-mute-delay = 0;
-      push-to-talk = false;
-      push-to-talk-delay = 0;
-      inherit (scene) hotkeys;
-      deinterlace_mode = 0;
-      deinterlace_field_order = 0;
-      monitoring_type = 0;
-      private_settings = scene.privateSettings;
-    } scene.raw;
-
-  renderSceneCollection =
-    name: collection:
-    let
-      sceneOrder =
-        if collection.sceneOrder == [ ] then lib.attrNames collection.scenes else collection.sceneOrder;
-    in
-    mergeJson {
-      inherit (collection) name;
-      DesktopAudioDevice1 = collection.desktopAudioDevice;
-      AuxAudioDevice1 = collection.auxAudioDevice;
-      sources =
-        (lib.mapAttrsToList (renderSource name) collection.sources)
-        ++ (lib.mapAttrsToList (renderSceneSource name collection) collection.scenes);
-      inherit (collection) groups;
-      scene_order = map (sceneName: { name = sceneName; }) sceneOrder;
-      current_scene = collection.currentScene;
-      current_program_scene = collection.currentProgramScene;
-      inherit (collection) canvases;
-      current_transition = collection.currentTransition;
-      transition_duration = collection.transitionDuration;
-      inherit (collection) transitions;
-      quick_transitions = collection.quickTransitions;
-      saved_projectors = collection.savedProjectors;
-      preview_locked = collection.previewLocked;
-      scaling_enabled = collection.scalingEnabled;
-      scaling_level = collection.scalingLevel;
-      scaling_off_x = collection.scalingOffX;
-      scaling_off_y = collection.scalingOffY;
-      virtual-camera = collection.virtualCamera;
-      inherit (collection) modules;
-      inherit (collection) resolution;
-      inherit (collection) version;
-    } collection.raw;
 
   mkGeneratedFile = origin: kind: source: {
     inherit kind origin source;
@@ -281,12 +107,10 @@ let
       name: collection:
       lib.nameValuePair "basic/scenes/${name}.json" (
         mkGeneratedFile "sceneCollections.${name}" "json" (
-          jsonFormat.generate "obs-studio-scene-collection-${name}.json" (
-            renderSceneCollection name collection
-          )
+          jsonFormat.generate "obs-studio-scene-collection-${name}.json" collection
         )
       )
-    ) cfg.sceneCollections
+    ) (lib.filterAttrs (_: collection: collection != { }) cfg.sceneCollections)
     // lib.mapAttrs' (
       path: file:
       lib.nameValuePair "plugin_config/${path}" (
@@ -304,6 +128,8 @@ let
     ) cfg.integrations;
 
   generatedFiles = lib.mapAttrs (_: file: file.source) generatedFileEntries;
+  configRoot = "${config.xdg.configHome}/obs-studio";
+  manifestTarget = "${config.xdg.stateHome}/home-manager/obs-studio/manifest.json";
 
   generatedManifest = jsonFormat.generate "obs-studio-generated-files-manifest.json" {
     version = 1;
@@ -311,41 +137,157 @@ let
     files = lib.mapAttrsToList (path: file: {
       inherit path;
       source = toString file.source;
-      target = "${config.xdg.configHome}/obs-studio/${path}";
+      target = "${configRoot}/${path}";
       sha256 = builtins.hashFile "sha256" file.source;
       inherit (file) kind origin;
     }) generatedFileEntries;
   };
 
-  installGeneratedFiles = lib.concatStringsSep "\n" (
-    lib.mapAttrsToList (
-      path: source:
-      let
-        target = "${config.xdg.configHome}/obs-studio/${path}";
-      in
-      ''
-        target=${lib.escapeShellArg target}
-        tmp="$target.tmp.$$"
-        run mkdir -p "$(dirname "$target")"
-        run install -m 0644 ${lib.escapeShellArg source} "$tmp"
-        run mv "$tmp" "$target"
-      ''
-    ) generatedFiles
-  );
+  prepareRemovedFiles = ''
+    configRoot=${lib.escapeShellArg configRoot}
+    manifest=${lib.escapeShellArg manifestTarget}
+    stalePaths=
 
-  installGeneratedManifest =
-    let
-      target = "${config.xdg.stateHome}/home-manager/obs-studio/manifest.json";
-    in
-    ''
-      target=${lib.escapeShellArg target}
-      tmp="$target.tmp.$$"
-      run mkdir -p "$(dirname "$target")"
-      run install -m 0644 ${lib.escapeShellArg generatedManifest} "$tmp"
-      run mv "$tmp" "$target"
-    '';
+    if [[ -e "$manifest" ]]; then
+      stalePaths="$(${pkgs.coreutils}/bin/mktemp)"
+      if ! ${lib.getExe pkgs.jq} -j --slurpfile current ${lib.escapeShellArg generatedManifest} '
+        if .version != 1 or .module != "programs.obs-studio" or (.files | type) != "array" then
+          error("invalid OBS Studio generated-files manifest")
+        elif (
+          all(.files[]; (.path | type) == "string" and (.path | contains("\u0000") | not))
+          | not
+        ) then
+          error("invalid OBS Studio generated-files manifest path")
+        else
+          [$current[0].files[].path] as $currentPaths
+          | .files[]
+          | select(.path as $path | ($currentPaths | index($path) | not))
+          | .path, "\u0000"
+        end
+      ' "$manifest" > "$stalePaths"; then
+        rm -f "$stalePaths"
+        echo "Cannot reconcile the previous OBS Studio generated-files manifest." >&2
+        exit 1
+      fi
+    fi
+  '';
 
-  managedFileCount = lib.length (lib.attrNames generatedFiles);
+  installGeneratedFiles = ''
+    prepareObsStudioParent() {
+      local target="$1"
+      local parent
+      parent="$(dirname "$target")"
+
+      if [[ -v DRY_RUN ]]; then
+        run mkdir -p "$parent"
+        return
+      fi
+
+      local canonicalConfigRoot
+      canonicalConfigRoot="$(${pkgs.coreutils}/bin/realpath -e -- "$configRoot")"
+      local existingParent="$parent"
+      while [[ ! -e "$existingParent" && ! -L "$existingParent" ]]; do
+        existingParent="$(dirname "$existingParent")"
+      done
+
+      local canonicalExistingParent
+      canonicalExistingParent="$(${pkgs.coreutils}/bin/realpath -e -- "$existingParent" 2>/dev/null || true)"
+      case "$canonicalExistingParent" in
+        "$canonicalConfigRoot" | "$canonicalConfigRoot"/*) ;;
+        *)
+          echo "Refusing to write OBS Studio configuration outside $configRoot" >&2
+          return 1
+          ;;
+      esac
+
+      run mkdir -p "$parent"
+      local canonicalParent
+      canonicalParent="$(${pkgs.coreutils}/bin/realpath -e -- "$parent")"
+      case "$canonicalParent" in
+        "$canonicalConfigRoot" | "$canonicalConfigRoot"/*) ;;
+        *)
+          echo "Refusing to write OBS Studio configuration outside $configRoot" >&2
+          return 1
+          ;;
+      esac
+    }
+
+    run mkdir -p "$configRoot"
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (
+        path: source:
+        let
+          target = "${configRoot}/${path}";
+        in
+        ''
+          target=${lib.escapeShellArg target}
+          tmp="$target.tmp.$$"
+          prepareObsStudioParent "$target" || exit 1
+          if [[ ! -v DRY_RUN && -d "$target" ]]; then
+            echo "Cannot replace OBS Studio directory with generated file: $target" >&2
+            exit 1
+          fi
+          run install -m 0644 ${lib.escapeShellArg source} "$tmp"
+          run mv "$tmp" "$target"
+        ''
+      ) generatedFiles
+    )}
+  '';
+
+  removeStaleGeneratedFiles = ''
+    if [[ -n "$stalePaths" ]]; then
+      canonicalConfigRoot="$(${pkgs.coreutils}/bin/realpath -e -- "$configRoot" 2>/dev/null || true)"
+      while IFS= read -r -d "" path; do
+        safe=true
+        case "$path" in
+          "" | /*) safe=false ;;
+        esac
+        case "/$path/" in
+          *"//"* | *"/./"* | *"/../"*) safe=false ;;
+        esac
+
+        if [[ "$safe" == false ]]; then
+          printf 'Ignoring unsafe path in the previous OBS Studio manifest: %q\n' "$path" >&2
+          continue
+        fi
+
+        target="$configRoot/$path"
+        parent="$(dirname "$target")"
+        canonicalParent="$(${pkgs.coreutils}/bin/realpath -e -- "$parent" 2>/dev/null || true)"
+        contained=false
+        if [[ -n "$canonicalConfigRoot" ]]; then
+          case "$canonicalParent" in
+            "$canonicalConfigRoot" | "$canonicalConfigRoot"/*)
+              run rm -f -- "$target"
+              contained=true
+              ;;
+            *) printf 'Ignoring path outside the OBS Studio config directory: %q\n' "$path" >&2 ;;
+          esac
+        fi
+
+        while [[ "$contained" == true && "$parent" != "$configRoot" ]]; do
+          canonicalParent="$(${pkgs.coreutils}/bin/realpath -e -- "$parent" 2>/dev/null || true)"
+          case "$canonicalParent" in
+            "$canonicalConfigRoot" | "$canonicalConfigRoot"/*) ;;
+            *) break ;;
+          esac
+          if ! run --silence ${pkgs.coreutils}/bin/rmdir -- "$parent"; then
+            break
+          fi
+          parent="$(dirname "$parent")"
+        done
+      done < "$stalePaths"
+      rm -f "$stalePaths"
+    fi
+  '';
+
+  installGeneratedManifest = ''
+    target=${lib.escapeShellArg manifestTarget}
+    tmp="$target.tmp.$$"
+    run mkdir -p "$(dirname "$target")"
+    run install -m 0644 ${lib.escapeShellArg generatedManifest} "$tmp"
+    run mv "$tmp" "$target"
+  '';
 
   enabledIntegrations = lib.filter (integration: integration.enable) (
     lib.attrValues cfg.integrations
@@ -354,658 +296,6 @@ let
   enabledIntegrationPackages = map (integration: integration.package) (
     lib.filter (integration: integration.package != null) enabledIntegrations
   );
-
-  sourceModule =
-    collectionName:
-    {
-      name,
-      config,
-      ...
-    }:
-    {
-      options = {
-        name = mkOption {
-          type = types.str;
-          default = name;
-          description = "OBS source display name.";
-        };
-
-        uuid = mkOption {
-          type = types.str;
-          default = uuidFor "${collectionName}:source:${name}";
-          description = "OBS source UUID.";
-        };
-
-        id = mkOption {
-          type = types.str;
-          description = "OBS source kind identifier.";
-          example = "pipewire-screen-capture-source";
-        };
-
-        versionedId = mkOption {
-          type = types.str;
-          default = config.id;
-          defaultText = literalExpression "id";
-          description = "OBS versioned source kind identifier.";
-        };
-
-        settings = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS source settings JSON.";
-        };
-
-        portal = mkOption {
-          type = types.submodule {
-            options = {
-              restorePolicyAction = mkOption {
-                type = types.nullOr (
-                  types.enum [
-                    "prompt"
-                    "skip"
-                    "error"
-                  ]
-                );
-                default = null;
-                example = "skip";
-                description = ''
-                  Patched PipeWire portal restore failure action. When set,
-                  writes OBS's `RestorePolicyAction` setting.
-                '';
-              };
-
-              restoreMatchRules = mkOption {
-                type = types.listOf (
-                  types.submodule {
-                    options = {
-                      pattern = mkOption {
-                        type = types.str;
-                        description = "Rust regex searched case-insensitively within window titles.";
-                      };
-
-                      scope = mkOption {
-                        type = types.enum [
-                          "same_app"
-                          "any_app"
-                        ];
-                        default = "same_app";
-                        description = "Whether the rule is limited to the original application id.";
-                      };
-                    };
-                  }
-                );
-                default = [ ];
-                example = literalExpression ''
-                  [
-                    { pattern = "project-a"; }
-                    { pattern = "shared-title"; scope = "any_app"; }
-                  ]
-                '';
-                description = ''
-                  Patched PipeWire portal restore title aliases. Renders to
-                  OBS's multiline `RestoreMatchRules` setting.
-                '';
-              };
-
-              restoreToken = mkOption {
-                type = types.nullOr types.str;
-                default = null;
-                description = ''
-                  Machine-local portal restore token. Defaults to null so
-                  portable configs do not persist portal tokens.
-                '';
-              };
-            };
-          };
-          default = { };
-          description = "Patched OBS PipeWire portal settings.";
-        };
-
-        mixers = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS audio mixer bitmask.";
-        };
-
-        sync = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS source audio sync offset.";
-        };
-
-        flags = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS source flags.";
-        };
-
-        volume = mkOption {
-          type = types.float;
-          default = 1.0;
-          description = "OBS source volume.";
-        };
-
-        balance = mkOption {
-          type = types.float;
-          default = 0.5;
-          description = "OBS source stereo balance.";
-        };
-
-        enabled = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Whether the source is enabled.";
-        };
-
-        muted = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether the source is muted.";
-        };
-
-        pushToMute = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether push-to-mute is enabled.";
-        };
-
-        pushToMuteDelay = mkOption {
-          type = types.int;
-          default = 0;
-          description = "Push-to-mute delay.";
-        };
-
-        pushToTalk = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether push-to-talk is enabled.";
-        };
-
-        pushToTalkDelay = mkOption {
-          type = types.int;
-          default = 0;
-          description = "Push-to-talk delay.";
-        };
-
-        hotkeys = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS source hotkeys.";
-        };
-
-        deinterlaceMode = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS deinterlace mode.";
-        };
-
-        deinterlaceFieldOrder = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS deinterlace field order.";
-        };
-
-        monitoringType = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS audio monitoring type.";
-        };
-
-        privateSettings = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS private source settings.";
-        };
-
-        filters = mkOption {
-          inherit (jsonFormat) type;
-          default = [ ];
-          description = "OBS source filters.";
-        };
-
-        raw = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "Raw OBS source JSON merged after typed fields.";
-        };
-      };
-    };
-
-  sceneModule =
-    collectionName:
-    {
-      name,
-      ...
-    }:
-    {
-      options = {
-        name = mkOption {
-          type = types.str;
-          default = name;
-          description = "OBS scene display name.";
-        };
-
-        uuid = mkOption {
-          type = types.str;
-          default = uuidFor "${collectionName}:scene:${name}";
-          description = "OBS scene source UUID.";
-        };
-
-        customSize = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether this scene uses a custom size.";
-        };
-
-        settings = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "Extra OBS scene settings merged into the generated settings object.";
-        };
-
-        items = mkOption {
-          type = types.listOf (
-            types.submodule (
-              { config, ... }:
-              {
-                options = {
-                  source = mkOption {
-                    type = types.str;
-                    description = "Referenced source name.";
-                  };
-
-                  name = mkOption {
-                    type = types.str;
-                    default = config.source;
-                    defaultText = literalExpression "source";
-                    description = "Scene item display name.";
-                  };
-
-                  sourceUuid = mkOption {
-                    type = types.nullOr types.str;
-                    default = null;
-                    description = "Explicit source UUID for imported OBS scene items.";
-                  };
-
-                  visible = mkOption {
-                    type = types.bool;
-                    default = true;
-                    description = "Whether the scene item is visible.";
-                  };
-
-                  locked = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Whether the scene item is locked.";
-                  };
-
-                  rot = mkOption {
-                    type = types.float;
-                    default = 0.0;
-                    description = "Scene item rotation.";
-                  };
-
-                  scaleRef = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 0.0;
-                      y = 0.0;
-                    };
-                    description = "OBS scale reference.";
-                  };
-
-                  align = mkOption {
-                    type = types.int;
-                    default = 5;
-                    description = "OBS scene item alignment.";
-                  };
-
-                  boundsType = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "OBS bounds type.";
-                  };
-
-                  boundsAlign = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "OBS bounds alignment.";
-                  };
-
-                  boundsCrop = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Whether bounds cropping is enabled.";
-                  };
-
-                  cropLeft = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "Left crop.";
-                  };
-
-                  cropTop = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "Top crop.";
-                  };
-
-                  cropRight = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "Right crop.";
-                  };
-
-                  cropBottom = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "Bottom crop.";
-                  };
-
-                  id = mkOption {
-                    type = types.int;
-                    default = 0;
-                    description = "OBS scene item id.";
-                  };
-
-                  groupItemBackup = mkOption {
-                    type = types.bool;
-                    default = false;
-                    description = "Whether this item is a group item backup.";
-                  };
-
-                  pos = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 0.0;
-                      y = 0.0;
-                    };
-                    description = "Scene item position.";
-                  };
-
-                  posRel = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 0.0;
-                      y = 0.0;
-                    };
-                    description = "Relative scene item position.";
-                  };
-
-                  scale = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 1.0;
-                      y = 1.0;
-                    };
-                    description = "Scene item scale.";
-                  };
-
-                  scaleRel = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 1.0;
-                      y = 1.0;
-                    };
-                    description = "Relative scene item scale.";
-                  };
-
-                  bounds = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 0.0;
-                      y = 0.0;
-                    };
-                    description = "Scene item bounds.";
-                  };
-
-                  boundsRel = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      x = 0.0;
-                      y = 0.0;
-                    };
-                    description = "Relative scene item bounds.";
-                  };
-
-                  scaleFilter = mkOption {
-                    type = types.str;
-                    default = "disable";
-                    description = "OBS scale filter.";
-                  };
-
-                  blendMethod = mkOption {
-                    type = types.str;
-                    default = "default";
-                    description = "OBS blend method.";
-                  };
-
-                  blendType = mkOption {
-                    type = types.str;
-                    default = "normal";
-                    description = "OBS blend type.";
-                  };
-
-                  showTransition = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      duration = 300;
-                    };
-                    description = "Scene item show transition.";
-                  };
-
-                  hideTransition = mkOption {
-                    inherit (jsonFormat) type;
-                    default = {
-                      duration = 300;
-                    };
-                    description = "Scene item hide transition.";
-                  };
-
-                  privateSettings = mkOption {
-                    inherit (jsonFormat) type;
-                    default = { };
-                    description = "Scene item private settings.";
-                  };
-
-                  raw = mkOption {
-                    inherit (jsonFormat) type;
-                    default = { };
-                    description = "Raw OBS scene item JSON merged after typed fields.";
-                  };
-                };
-              }
-            )
-          );
-          default = [ ];
-          description = "Scene items.";
-        };
-
-        mixers = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS scene mixer bitmask.";
-        };
-
-        hotkeys = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS scene hotkeys.";
-        };
-
-        privateSettings = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS scene private settings.";
-        };
-
-        raw = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "Raw OBS scene source JSON merged after typed fields.";
-        };
-      };
-    };
-
-  collectionModule =
-    { name, ... }:
-    {
-      options = {
-        name = mkOption {
-          type = types.str;
-          default = name;
-          description = "OBS scene collection name.";
-        };
-
-        resolution = mkOption {
-          inherit (jsonFormat) type;
-          default = {
-            x = 0;
-            y = 0;
-          };
-          description = "OBS scene collection UI resolution metadata.";
-        };
-
-        currentScene = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "Current OBS scene name.";
-        };
-
-        currentProgramScene = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "Current OBS program scene name.";
-        };
-
-        sceneOrder = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          defaultText = literalExpression "attribute names of scenes";
-          description = "Scene order by scene name.";
-        };
-
-        currentTransition = mkOption {
-          type = types.str;
-          default = "Fade";
-          description = "Current transition name.";
-        };
-
-        transitionDuration = mkOption {
-          type = types.int;
-          default = 300;
-          description = "Current transition duration in milliseconds.";
-        };
-
-        quickTransitions = mkOption {
-          inherit (jsonFormat) type;
-          default = [ ];
-          description = "OBS quick transitions JSON.";
-        };
-
-        transitions = mkOption {
-          inherit (jsonFormat) type;
-          default = [ ];
-          description = "OBS transitions JSON.";
-        };
-
-        groups = mkOption {
-          inherit (jsonFormat) type;
-          default = [ ];
-          description = "OBS groups JSON.";
-        };
-
-        canvases = mkOption {
-          inherit (jsonFormat) type;
-          default = [ ];
-          description = "OBS canvases JSON.";
-        };
-
-        savedProjectors = mkOption {
-          inherit (jsonFormat) type;
-          default = [ ];
-          description = "OBS saved projectors JSON.";
-        };
-
-        previewLocked = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether the preview is locked.";
-        };
-
-        scalingEnabled = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Whether preview scaling is enabled.";
-        };
-
-        scalingLevel = mkOption {
-          type = types.int;
-          default = 0;
-          description = "OBS preview scaling level.";
-        };
-
-        scalingOffX = mkOption {
-          type = types.float;
-          default = 0.0;
-          description = "OBS preview X scaling offset.";
-        };
-
-        scalingOffY = mkOption {
-          type = types.float;
-          default = 0.0;
-          description = "OBS preview Y scaling offset.";
-        };
-
-        virtualCamera = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS virtual camera JSON.";
-        };
-
-        modules = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS scene collection module JSON.";
-        };
-
-        desktopAudioDevice = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS DesktopAudioDevice1 JSON.";
-        };
-
-        auxAudioDevice = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "OBS AuxAudioDevice1 JSON.";
-        };
-
-        sources = mkOption {
-          type = types.attrsOf (types.submodule (sourceModule name));
-          default = { };
-          description = "OBS non-scene sources.";
-        };
-
-        scenes = mkOption {
-          type = types.attrsOf (types.submodule (sceneModule name));
-          default = { };
-          description = "OBS scenes.";
-        };
-
-        raw = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = "Raw OBS scene collection JSON merged after typed fields.";
-        };
-
-        version = mkOption {
-          type = types.int;
-          default = 2;
-          description = "OBS scene collection file version.";
-        };
-      };
-    };
 
   integrationModule =
     {
@@ -1033,16 +323,6 @@ let
           description = ''
             Additional writable files installed relative to
             {file}`$XDG_CONFIG_HOME/obs-studio/plugin_config/${name}`.
-          '';
-        };
-
-        settings = mkOption {
-          inherit (jsonFormat) type;
-          default = { };
-          description = ''
-            Reserved for verified typed settings for this plugin. Unsupported or
-            dynamic plugin state should use `extraConfigFiles` or scene/source raw
-            JSON until the plugin schema is verified.
           '';
         };
       };
@@ -1149,27 +429,22 @@ in
       };
 
       sceneCollections = mkOption {
-        type = types.attrsOf (types.submodule collectionModule);
+        type = types.attrsOf jsonFormat.type;
         default = { };
         example = literalExpression ''
           {
-            streaming = {
-              currentScene = "Main";
-              sources.desktop = {
-                id = "pipewire-screen-capture-source";
-                portal = {
-                  restorePolicyAction = "skip";
-                  restoreMatchRules = [
-                    { pattern = "project-a"; }
-                    { pattern = "shared-title"; scope = "any_app"; }
-                  ];
-                };
-              };
-              scenes.Main.items = [ { source = "desktop"; } ];
+            Streaming = {
+              current_scene = "Main";
+              current_program_scene = "Main";
+              scene_order = [ { name = "Main"; } ];
+              sources = [ ];
             };
           }
         '';
-        description = "Declarative OBS scene collections.";
+        description = ''
+          Scene collection JSON written to
+          {file}`$XDG_CONFIG_HOME/obs-studio/basic/scenes/<name>.json`.
+        '';
       };
 
       extraConfigFiles = mkOption {
@@ -1249,55 +524,18 @@ in
           listIntersection (lib.attrNames cfg.extraConfigFiles) (lib.attrNames integrationConfigPaths) == [ ];
         message = "programs.obs-studio.extraConfigFiles must not override generated integration config files.";
       }
-    ]
-    ++ lib.flatten (
-      lib.mapAttrsToList (
-        collectionName: collection:
-        let
-          sceneNames = lib.attrNames collection.scenes;
-          sourceNames = lib.attrNames collection.sources;
-          itemTargetNames = sourceNames ++ sceneNames;
-        in
-        [
-          {
-            assertion = collection.currentScene == null || builtins.elem collection.currentScene sceneNames;
-            message = "programs.obs-studio.sceneCollections.${collectionName}.currentScene must reference a declared scene.";
-          }
-          {
-            assertion =
-              collection.currentProgramScene == null || builtins.elem collection.currentProgramScene sceneNames;
-            message = "programs.obs-studio.sceneCollections.${collectionName}.currentProgramScene must reference a declared scene.";
-          }
-          {
-            assertion = lib.all (sceneName: builtins.elem sceneName sceneNames) collection.sceneOrder;
-            message = "programs.obs-studio.sceneCollections.${collectionName}.sceneOrder must only reference declared scenes.";
-          }
-          {
-            assertion = lib.all (scene: lib.all (item: builtins.elem item.source itemTargetNames) scene.items) (
-              lib.attrValues collection.scenes
-            );
-            message = "programs.obs-studio.sceneCollections.${collectionName}.scenes.*.items.*.source must reference a declared source.";
-          }
-          {
-            assertion = lib.all (
-              source: !(source.settings ? RestoreToken) || source.portal.restoreToken != null
-            ) (lib.attrValues collection.sources);
-            message = "programs.obs-studio.sceneCollections.${collectionName}.sources.*.settings must not contain RestoreToken unless portal.restoreToken is explicitly set.";
-          }
-        ]
-      ) cfg.sceneCollections
-    );
+    ];
 
     home.packages = [ cfg.finalPackage ];
     programs.obs-studio.finalPackage = pkgs.wrapOBS.override { obs-studio = cfg.package; } {
       plugins = lib.unique (cfg.plugins ++ enabledIntegrationPackages);
     };
 
-    home.activation.obsStudioConfig = mkIf (managedFileCount > 0) (
-      lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        ${installGeneratedFiles}
-        ${installGeneratedManifest}
-      ''
-    );
+    home.activation.obsStudioConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      ${prepareRemovedFiles}
+      ${removeStaleGeneratedFiles}
+      ${installGeneratedFiles}
+      ${installGeneratedManifest}
+    '';
   };
 }

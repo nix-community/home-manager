@@ -17,9 +17,6 @@ in
     "programs.obs-studio.integrations attribute names must be safe relative path components."
     "programs.obs-studio.integrations.*.extraConfigFiles attribute names must be safe relative paths."
     "programs.obs-studio.extraConfigFiles must not override generated integration config files."
-    "programs.obs-studio.sceneCollections.Bad.currentScene must reference a declared scene."
-    "programs.obs-studio.sceneCollections.Bad.scenes.*.items.*.source must reference a declared source."
-    "programs.obs-studio.sceneCollections.Bad.sources.*.settings must not contain RestoreToken unless portal.restoreToken is explicitly set."
   ];
 
   programs.obs-studio = {
@@ -39,17 +36,7 @@ in
       "bad//path.json".text = "{}";
       "safe-plugin/config.json".text = "{}";
     };
-    sceneCollections.Bad = {
-      currentScene = "Missing";
-      sources.desktop = {
-        id = "pipewire-screen-capture-source";
-        settings.RestoreToken = "machine-local-token";
-      };
-      scenes.Main.items = [
-        { source = "missing-source"; }
-      ];
-    };
-    sceneCollections."bad/name".raw = { };
+    sceneCollections."bad/name".name = "Bad";
     integrations = {
       missing-plugin.enable = true;
       "../plugin".extraConfigFiles."config.json".text = "{}";
