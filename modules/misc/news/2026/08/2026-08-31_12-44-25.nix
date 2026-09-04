@@ -6,8 +6,9 @@
     The `xdg.mimeApps` options `defaultApplications`, `associations.added`, and
     `associations.removed` now support glob keys.
 
-    A key ending in `*` expands against all MIME types known to
-    shared-mime-info, and exact keys take precedence over glob matches, e.g.:
+    Keys ending in `*` are treated as prefix globs. They are expanded against
+    all MIME types known to the shared-mime-info database before being written
+    to `mimeapps.list`. Exact keys take precedence over glob matches, e.g.:
 
     ```nix
     xdg.mimeApps.defaultApplications = {

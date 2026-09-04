@@ -47,10 +47,10 @@ in
         mimetypes, as if the .desktop file was listing this mimetype
         in the first place.
 
-        Keys ending in `*` are treated as prefix globs, expanding
-        against all MIME types known to the shared-mime-info database.
-        Exact keys take precedence over glob matches, e.g.,
-        `"text/html"` overrides `"text/*"`.
+        Keys ending in `*` are treated as prefix globs. They are expanded
+        against all MIME types known to the shared-mime-info database before
+        being written to `mimeapps.list`. Exact keys take precedence over glob
+        matches, e.g., `"text/html"` overrides `"text/*"`.
       '';
     };
 
@@ -66,8 +66,9 @@ in
         .desktop file was *not* listing this
         mimetype in the first place.
 
-        Keys ending in `*` are treated as prefix globs, expanding
-        against all MIME types known to the shared-mime-info database.
+        Keys ending in `*` are treated as prefix globs. They are expanded
+        against all MIME types known to the shared-mime-info database before
+        being written to `mimeapps.list`.
       '';
     };
 
@@ -89,10 +90,11 @@ in
         application is no longer installed, the next application in
         the list is attempted, and so on.
 
-        Keys ending in `*` are treated as prefix globs, expanding
-        against all MIME types known to the shared-mime-info database.
-        Exact keys take precedence over glob matches, e.g.,
-        `"text/html"` overrides `"text/*"`.
+        Keys ending in `*` are treated as prefix globs. They are
+        expanded against all MIME types known to the shared-mime-info
+        database before being written to `mimeapps.list`. Exact keys
+        take precedence over glob matches, e.g., `"text/html"`
+        overrides `"text/*"`.
       '';
     };
 
