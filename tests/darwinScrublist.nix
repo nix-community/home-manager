@@ -184,6 +184,7 @@ let
     "sapling"
     "sbt"
     "scmpuff"
+    "secretspec"
     "senpai"
     "sftpman"
     "sioyek"
