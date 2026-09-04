@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bc09b7cb.js";
+            window.path_to_searchindex_js = "searchindex-3c7b4534.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-13970ff8.js"></script>
@@ -28917,6 +28917,26 @@ ordering matter.</p>
     };
   }
 ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/git.nix">&lt;home-manager/modules/programs/git.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.git.signing.allowedSigners"><a class="header" href="#opt-programs.git.signing.allowedSigners">programs.git.signing.allowedSigners</a></h2>
+<p>SSH public keys trusted when verifying signed commits and tags.</p>
+<p>Each line must follow the allowed signers format described in
+<code>ssh-keygen(1)</code>. When non-empty, the content is written
+to <code>$XDG_CONFIG_HOME/git/allowed_signers</code> and configured as
+Git’s <code>gpg.ssh.allowedSignersFile</code> setting.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  user@example.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...
+''
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
