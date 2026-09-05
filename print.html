@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-56bdb092.js";
+            window.path_to_searchindex_js = "searchindex-145cfdd5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-88fa0f1c.js"></script>
+        <script src="toc-125db4c5.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12041,6 +12041,7 @@ string</p>
 <li><a href="#goto">goto</a></li>
 <li><a href="#gpg">gpg</a></li>
 <li><a href="#gradle">gradle</a></li>
+<li><a href="#gram">gram</a></li>
 <li><a href="#granted">granted</a></li>
 <li><a href="#grep">grep</a></li>
 <li><a href="#grype">grype</a></li>
@@ -30693,6 +30694,236 @@ open submodule of attribute set of (string, package, bool, int or float)</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix">&lt;home-manager/modules/programs/gradle.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="gram"><a href="#gram" class="header">gram</a></h1>
+<h2 id="opt-programs.gram.enable"><a class="header" href="#opt-programs.gram.enable">programs.gram.enable</a></h2>
+<p>Whether to enable Gram.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.package"><a class="header" href="#opt-programs.gram.package">programs.gram.package</a></h2>
+<p>The gram package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.gram
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.debugger"><a class="header" href="#opt-programs.gram.debugger">programs.gram.debugger</a></h2>
+<p>List of <a href="https://gram-editor.com/docs/debugger/">debug tasks</a> to write to <code>debug.jsonc</code>.</p>
+<p><em>Type:</em>
+(list of (JSON value)) or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    adapter = "Example adapter name";
+    cwd = "$GRAM_WORKTREE_ROOT";
+    label = "Example Start debugger config";
+    program = "path_to_program";
+    request = "launch";
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.extensionPackages"><a class="header" href="#opt-programs.gram.extensionPackages">programs.gram.extensionPackages</a></h2>
+<p>List of extension packages to install.</p>
+<p>See also:</p>
+<ul>
+<li><a href="https://codeberg.org/niklaskorz/nix-gram-extensions">https://codeberg.org/niklaskorz/nix-gram-extensions</a></li>
+<li><a href="https://github.com/DuskSystems/nix-zed-extensions">https://github.com/DuskSystems/nix-zed-extensions</a></li>
+</ul>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">with gram-extensions; [ catppuccin ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.extraPackages"><a class="header" href="#opt-programs.gram.extraPackages">programs.gram.extraPackages</a></h2>
+<p>List of extra packages available to Gram.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">with pkgs; [ nil ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.keymaps"><a class="header" href="#opt-programs.gram.keymaps">programs.gram.keymaps</a></h2>
+<p>List of <a href="https://gram-editor.com/docs/key-bindings/">key bindings</a> to write to <code>keymap.jsonc</code>.</p>
+<p><em>Type:</em>
+(list of (JSON value)) or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    bindings = {
+      ctrl-left = "editor::SelectSmallerSyntaxNode";
+      ctrl-right = "editor::SelectLargerSyntaxNode";
+    };
+  }
+  {
+    bindings = {
+      o = "project_panel::Open";
+    };
+    context = "ProjectPanel &amp;&amp; not_editing";
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.settings"><a class="header" href="#opt-programs.gram.settings">programs.gram.settings</a></h2>
+<p>Set of <a href="https://gram-editor.com/docs/configuring-gram/">settings</a> to write to <code>settings.jsonc</code>.</p>
+<p><em>Type:</em>
+(attribute set of (JSON value)) or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  buffer_font_family = "JetBrains Mono";
+  buffer_font_size = 14;
+  buffer_font_weight = 400;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.snippets"><a class="header" href="#opt-programs.gram.snippets">programs.gram.snippets</a></h2>
+<p>Set of <a href="https://gram-editor.com/docs/snippets/">snippets</a> to write to <code>snippets/‹name›.json</code>.</p>
+<p><em>Type:</em>
+attribute set of ((attribute set of (JSON value)) or strings concatenated with “\n”)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  html = {
+    "Define doctype" = {
+      body = [
+        "&lt;!DOCTYPE&gt;"
+        "$1"
+      ];
+      description = "Defines the document type";
+      prefix = "doctype";
+    };
+  };
+  javascript = {
+    "Log to console" = {
+      body = [
+        "console.info(\"Hello, \${1:World}!\")"
+        "$0"
+      ];
+      description = "Logs to console";
+      prefix = "log";
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.tasks"><a class="header" href="#opt-programs.gram.tasks">programs.gram.tasks</a></h2>
+<p>List of <a href="https://gram-editor.com/docs/tasks/">tasks</a> to write to <code>tasks.jsonc</code>.</p>
+<p><em>Type:</em>
+(list of (JSON value)) or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    allow_concurrent_runs = false;
+    command = "for i in {1..5}; do echo \"Hello $i/5\"; sleep 1; done";
+    env = {
+      foo = "bar";
+    };
+    hide = "never";
+    label = "Example task";
+    reveal = "always";
+    save = "none";
+    shell = "system";
+    show_command = true;
+    show_summary = true;
+    use_new_terminal = false;
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gram.themes"><a class="header" href="#opt-programs.gram.themes">programs.gram.themes</a></h2>
+<p>Set of <a href="https://gram-editor.com/docs/themes/">local themes</a> to write to <code>themes/‹name›.json</code>.</p>
+<p><em>Type:</em>
+attribute set of ((attribute set of (JSON value)) or strings concatenated with “\n”)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  my-cool-theme = {
+    name = "My Cool Theme";
+    author = "You!";
+    themes = [
+      {
+        name = "My Cool Dark Theme";
+        appearance = "dark";
+        style = {
+          "editor.background" = "#000";
+          # ...
+        };
+      }
+      {
+        name = "My Cool Light Theme";
+        appearance = "light";
+        style = {
+          "editor.background" = "#fff";
+          # ...
+        };
+      }
+    ];
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gram.nix">&lt;home-manager/modules/programs/gram.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="granted"><a href="#granted" class="header">granted</a></h1>
