@@ -97,7 +97,7 @@ in
 
       Service = {
         ExecStart = "${lib.getExe ollamaPackage} serve";
-        Environment = (lib.mapAttrsToList (n: v: "${n}=${v}") cfg.environmentVariables) ++ [
+        Environment = (lib.hm.systemd.envToList cfg.environmentVariables) ++ [
           "OLLAMA_HOST=${cfg.host}:${toString cfg.port}"
         ];
       };
