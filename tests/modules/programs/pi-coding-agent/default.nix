@@ -7,4 +7,5 @@
   pi-coding-agent-context-empty = ./context-empty.nix;
   pi-coding-agent-custom-config-dir = ./custom-config-dir.nix;
   pi-coding-agent-models = ./models.nix;
+  pi-coding-agent-skills = ./skills.nix;
 }
