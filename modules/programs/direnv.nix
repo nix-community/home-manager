@@ -91,7 +91,17 @@ in
           example = false;
         };
 
-      package = mkPackageOption pkgs "nix-direnv" { };
+      package = mkOption {
+        default = pkgs.nix-direnv.override {
+          nix =
+            if config.nix.package == null then pkgs.nix else config.nix.package;
+        };
+        defaultText = "pkgs.nix-direnv";
+        type = types.package;
+        description = ''
+          The nix-direnv package to use
+        '';
+      };
     };
 
     mise = {
