@@ -157,7 +157,7 @@ in
           "clean"
           "user"
         ]
-        ++ lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs;
+        ++ lib.filter (arg: arg != "") (lib.splitString " " cfg.clean.extraArgs);
         StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.clean.dates;
       };
     };
