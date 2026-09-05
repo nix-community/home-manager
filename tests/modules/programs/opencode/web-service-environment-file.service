@@ -3,7 +3,7 @@ WantedBy=default.target
 
 [Service]
 EnvironmentFile=/run/secrets/opencode
-ExecStart=@opencode@/bin/opencode serve 
+ExecStart=/nix/store/00000000000000000000000000000000-opencode-web-launcher/bin/opencode-web-launcher
 Restart=always
 RestartSec=5
 
