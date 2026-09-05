@@ -147,6 +147,7 @@ let
     "nix-your-shell"
     "notmuch"
     "npth"
+    "nu_scripts"
     "nushell"
     "nyxt"
     "oh-my-posh"
