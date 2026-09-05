@@ -30,7 +30,6 @@ let
     export IS_EMPTY=""
     export IS_FALSE="false"
     export IS_TRUE="true"
-    export TERMINFO_DIRS="/home/hm-user/.nix-profile/share/terminfo:''${TERMINFO_DIRS-}''${TERMINFO_DIRS:+:}/usr/share/terminfo"
     export V1="v1"
     export V2="v2-v1"
     export XDG_BIN_HOME="/home/hm-user/.local/bin"
@@ -38,15 +37,17 @@ let
     export XDG_CONFIG_HOME="/home/hm-user/.config"
     export XDG_DATA_HOME="/home/hm-user/.local/share"
     export XDG_STATE_HOME="/home/hm-user/.local/state"
-
-    # reset TERM with new TERMINFO available (if any)
-    export TERM="$TERM"
   '';
 
   expected = pkgs.writeText "expected" (if isDarwin then darwinExpected else linuxExpected);
 
 in
 {
+  # Keep this test to plain session variables. On Darwin the terminfo module
+  # would otherwise add its TERMINFO_DIRS merge and TERM re-export here; both
+  # are covered by tests/modules/targets-darwin/terminfo.nix.
+  targets.darwin.terminfo.enable = false;
+
   home.sessionVariables = {
     V1 = "v1";
     V2 = "v2-${config.home.sessionVariables.V1}";
