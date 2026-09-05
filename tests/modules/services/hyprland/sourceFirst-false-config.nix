@@ -1,6 +1,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    checkConfig = false;
     settings = {
       source = [ "sourced.conf" ];
 
