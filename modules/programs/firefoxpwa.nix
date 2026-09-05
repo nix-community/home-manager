@@ -41,7 +41,10 @@ let
     ) (lib.attrsToList (lib.attrByPath path null cfg));
 in
 {
-  meta.maintainers = [ lib.maintainers.bricked ];
+  meta.maintainers = [
+    lib.maintainers.bricked
+    lib.maintainers.ilovelinux
+  ];
 
   options.programs.firefoxpwa = {
     enable = lib.mkEnableOption "Progressive Web Apps for Firefox";
@@ -119,8 +122,9 @@ in
                           example = "https://developer.mozilla.org/";
                         };
                         manifestUrl = lib.mkOption {
-                          type = lib.types.str;
-                          description = "URL of the site's web app manifest.";
+                          type = with lib.types; nullOr str;
+                          default = null;
+                          description = "URL of the site's web app manifest. Empty if you're installing a non-PWA website.";
                           example = "https://developer.mozilla.org/manifest.f42880861b394dd4dc9b.json";
                         };
                         desktopEntry = {
@@ -165,11 +169,18 @@ in
                         settings = {
                           ulid = name;
                           profile = profile.name;
-                          config = {
-                            inherit (config) name;
-                            document_url = config.url;
-                            manifest_url = config.manifestUrl;
-                          };
+                          config =
+                            let
+                              # A data url with an empty base64-encoded JSON object.
+                              # This is usually used for non-PWA websites.
+                              # See: https://github.com/nix-community/home-manager/issues/9818
+                              empty_manifest_url = "data:application/manifest+json;base64,e30=";
+                            in
+                            {
+                              inherit (config) name;
+                              document_url = config.url;
+                              manifest_url = lib.defaultTo empty_manifest_url config.manifestUrl;
+                            };
                           manifest = {
                             inherit (config) name;
                             start_url = config.url;
