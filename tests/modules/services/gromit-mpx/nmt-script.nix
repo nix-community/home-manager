@@ -1,4 +1,8 @@
-golden_file:
+{
+  goldenFile,
+  opacity ? "0.750000",
+  showIntro ? "false",
+}:
 
 ''
   serviceFile=home-files/.config/systemd/user/gromit-mpx.service
@@ -9,6 +13,13 @@ golden_file:
   assertFileRegex $serviceFile 'ExecStart=.*/bin/gromit-mpx'
 
   assertFileExists home-files/.config/gromit-mpx.ini
+  assertFileContent home-files/.config/gromit-mpx.ini ${builtins.toFile "gromit-mpx.ini" ''
+    [Drawing]
+    Opacity=${opacity}
+
+    [General]
+    ShowIntroOnStartup=${showIntro}
+  ''}
   assertFileExists home-files/.config/gromit-mpx.cfg
-  assertFileContent home-files/.config/gromit-mpx.cfg ${golden_file}
+  assertFileContent home-files/.config/gromit-mpx.cfg ${goldenFile}
 ''

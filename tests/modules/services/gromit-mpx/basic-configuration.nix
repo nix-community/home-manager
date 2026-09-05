@@ -19,5 +19,5 @@
     ];
   };
 
-  nmt.script = import ./nmt-script.nix ./basic-configuration.cfg;
+  nmt.script = import ./nmt-script.nix { goldenFile = ./basic-configuration.cfg; };
 }

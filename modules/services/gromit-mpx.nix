@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -8,6 +9,8 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.services.gromit-mpx;
+  iniFormat = pkgs.formats.ini { };
+  opacityOption = options.services.gromit-mpx.opacity;
 
   # Select the appropriate hot key:
   hotkey =
@@ -32,15 +35,6 @@ let
     hotkey
     undokey
   ];
-
-  # Gromit reads and writes from this file to store it's run time
-  # state.  That will break our config so we set it manually which,
-  # thanks to the read-only Nix store, prevents Gromit from writing to
-  # it.
-  keyFile = lib.generators.toINI { } {
-    General.ShowIntroOnStartup = false;
-    Drawing.Opacity = cfg.opacity;
-  };
 
   # Allowed modifiers:
   modsAndButtons = [
@@ -170,7 +164,29 @@ in
       };
       default = 0.75;
       example = 1.0;
-      description = "Opacity of the drawing overlay.";
+      visible = false;
+      description = ''
+        Deprecated drawing overlay opacity. Use
+        {option}`services.gromit-mpx.iniSettings.Drawing.Opacity` instead.
+      '';
+    };
+
+    iniSettings = mkOption {
+      inherit (iniFormat) type;
+      default = { };
+      description = ''
+        Settings written to {file}`$XDG_CONFIG_HOME/gromit-mpx.ini`.
+      '';
+    };
+
+    cfgSettings = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Settings written to {file}`$XDG_CONFIG_HOME/gromit-mpx.cfg`.
+        These settings are appended to the generated settings from
+        {option}`services.gromit-mpx.tools`.
+      '';
     };
 
     tools = mkOption {
@@ -222,8 +238,24 @@ in
       (lib.hm.assertions.assertPlatform "services.gromit-mpx" pkgs lib.platforms.linux)
     ];
 
-    xdg.configFile."gromit-mpx.ini".text = keyFile;
-    xdg.configFile."gromit-mpx.cfg".text = lib.concatStringsSep "\n" (lib.imap1 toolToCfg cfg.tools);
+    services.gromit-mpx.iniSettings = {
+      General.ShowIntroOnStartup = lib.mkDefault false;
+      Drawing.Opacity = lib.mkOverride opacityOption.highestPrio cfg.opacity;
+    };
+
+    warnings =
+      lib.optional (opacityOption.highestPrio < (lib.mkOptionDefault { }).priority)
+        "The option `services.gromit-mpx.opacity' defined in ${lib.showFiles opacityOption.files} has been renamed to `services.gromit-mpx.iniSettings.Drawing.Opacity'.";
+
+    xdg.configFile = {
+      "gromit-mpx.ini".source = iniFormat.generate "gromitmpx.ini" cfg.iniSettings;
+      "gromit-mpx.cfg".text = lib.concatStringsSep "\n" (
+        lib.filter (settings: settings != "") [
+          (lib.concatStringsSep "\n" (lib.imap1 toolToCfg cfg.tools))
+          cfg.cfgSettings
+        ]
+      );
+    };
 
     home.packages = [ cfg.package ];
 
