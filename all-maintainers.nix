@@ -474,6 +474,14 @@
     name = "Mel Bourgeois";
     source = "nixpkgs";
   };
+  Steinhagen = {
+    email = "rapiteanu.catalin@gmail.com";
+    github = "Steinhagen";
+    githubId = 4029937;
+    matrix = "@catalin:one.ems.host";
+    name = "Viorel-Cătălin Răpițeanu";
+    source = "nixpkgs";
+  };
   SunOfLife1 = {
     github = "SunOfLife1";
     githubId = 30405063;
