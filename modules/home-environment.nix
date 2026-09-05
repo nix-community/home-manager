@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -11,6 +12,20 @@ let
   inherit (config.home) stateVersion;
 
   cfg = config.home;
+
+  guardSessionVariable =
+    name: code:
+    let
+      indentedCode = lib.replaceStrings [ "\n" ] [ "\n    " ] code;
+    in
+    ''
+      case " ''${__HM_SESS_VARS_SKIP-} " in
+        *" ${name} "*) ;;
+        *)
+          ${indentedCode}
+          ;;
+      esac
+    '';
 
   languageSubModule = types.submodule {
     options = {
@@ -304,7 +319,7 @@ in
         GS_OPTIONS = "-sPAPERSIZE=a4";
       };
       description = ''
-        Environment variables to always set at login.
+        Environment variables to always set.
 
         The values may refer to other environment variables using
         POSIX.2 style variable references. For example, a variable
@@ -314,6 +329,14 @@ in
         `''${parameter:-foo}` and, similarly, an alternate
         value `bar` can be given as per
         `''${parameter:+bar}`.
+
+        These variables are re-exported whenever the session variables file is
+        sourced. Values must not reference themselves; use
+        [](#opt-home.sessionPath), [](#opt-home.sessionSearchVariables), or
+        [](#opt-home.sessionSearchVariablesAppend) for search paths.
+
+        Removing a variable does not unset an inherited value. Start a new
+        login session to discard it.
 
         Note, these variables may be set in any order so no session
         variable may have a runtime dependency on another session
@@ -360,11 +383,13 @@ in
       description = ''
         Extra directories to prepend to {env}`PATH`.
 
-        These directories are added to the {env}`PATH` variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the {env}`PATH`
-        verbatim.
+        Missing non-empty entries are prepended once. Existing entries keep
+        their position; existing duplicates and removed configuration entries
+        remain until the environment is reset.
+
+        Values use a double-quoted shell context: variable, command, and
+        arithmetic expansions are evaluated, while `~` and `*` remain literal.
+        `\$` escapes a literal `$` and `\\` is a literal backslash.
       '';
     };
 
@@ -381,11 +406,40 @@ in
         Extra directories to prepend to arbitrary PATH-like
         environment variables (e.g.: {env}`MANPATH`). The values
         will be concatenated by `:`.
-        These directories are added to the environment variable in a
-        double-quoted context, so expressions like `$HOME` are
-        expanded by the shell. However, since expressions like `~` or
-        `*` are escaped, they will end up in the environment
-        verbatim.
+
+        Missing non-empty entries are prepended once. Existing entries keep
+        their position; existing duplicates and removed configuration entries
+        remain until the environment is reset.
+
+        Values use a double-quoted shell context: variable, command, and
+        arithmetic expansions are evaluated, while `~` and `*` remain literal.
+        `\$` escapes a literal `$` and `\\` is a literal backslash.
+      '';
+    };
+
+    home.sessionSearchVariablesAppend = mkOption {
+      default = { };
+      type = with types; attrsOf (listOf str);
+      example = {
+        TERMINFO_DIRS = [ "/usr/share/terminfo" ];
+      };
+      description = ''
+        Extra directories to append to PATH-like environment variables. Use
+        this for trailing fallbacks; use
+        [](#opt-home.sessionSearchVariables) for entries that should take
+        precedence.
+
+        Missing non-empty entries are appended once. Existing entries keep
+        their position; existing duplicates and removed configuration entries
+        remain until the environment is reset.
+
+        Shell sessions are the only consumer: there is no
+        {file}`environment.d` counterpart, so appended values do not reach
+        systemd user services.
+
+        Values use a double-quoted shell context: variable, command, and
+        arithmetic expansions are evaluated, while `~` and `*` remain literal.
+        `\$` escapes a literal `$` and `\\` is a literal backslash.
       '';
     };
 
@@ -595,37 +649,66 @@ in
   config = {
     warnings =
       let
-        hmRelease = config.home.version.release;
-        libRelease = lib.trivial.release;
-        pkgsRelease = pkgs.lib.trivial.release;
-        releaseMismatch = hmRelease != libRelease || hmRelease != pkgsRelease;
-
-        versionsSummary =
-          if libRelease == pkgsRelease then
-            ''
-              Home Manager version ${hmRelease} and
-              Nixpkgs version ${libRelease}.''
-          else
-            ''
-              Home Manager version: ${hmRelease}
-              Nixpkgs version used to evaluate Home Manager: ${libRelease}
-              Nixpkgs version used for packages (`pkgs`): ${pkgsRelease}'';
+        selfReferentialSessionVariables = lib.attrNames (
+          lib.filterAttrs config.lib.shell.isSelfReferential cfg.sessionVariables
+        );
+        # Point at the modules that defined each offending variable.
+        describeSelfReference =
+          name:
+          let
+            files = lib.hm.options.attrDefinitionFiles options.home.sessionVariables name;
+          in
+          name + lib.optionalString (files != [ ]) ", defined in ${lib.options.showFiles files}";
       in
-      lib.optional (config.home.enableNixpkgsReleaseCheck && releaseMismatch) ''
-        You are using
+      lib.optional (selfReferentialSessionVariables != [ ]) ''
+        The following home.sessionVariables reference themselves:
 
-          ${lib.replaceString "\n" "\n  " versionsSummary}
+          ${lib.concatStringsSep "\n  " (map describeSelfReference selfReferentialSessionVariables)}
 
-        Using mismatched versions is likely to cause errors and unexpected
-        behavior. It is therefore highly recommended to use a release of Home
-        Manager that corresponds with your chosen release of Nixpkgs.
+        Session variables are re-exported every time the session variables
+        file is sourced, so a self-referential value grows with each new
+        shell. As documented in the option description, use
+        home.sessionPath, home.sessionSearchVariables, or
+        home.sessionSearchVariablesAppend to extend search-path style
+        variables instead.
 
-        If you insist then you can disable this warning by adding
+        This check is best-effort: only direct references like $NAME,
+        ''${NAME}, and ''${NAME:-...} are detected.
+      ''
+      ++ (
+        let
+          hmRelease = config.home.version.release;
+          libRelease = lib.trivial.release;
+          pkgsRelease = pkgs.lib.trivial.release;
+          releaseMismatch = hmRelease != libRelease || hmRelease != pkgsRelease;
 
-          home.enableNixpkgsReleaseCheck = false;
+          versionsSummary =
+            if libRelease == pkgsRelease then
+              ''
+                Home Manager version ${hmRelease} and
+                Nixpkgs version ${libRelease}.''
+            else
+              ''
+                Home Manager version: ${hmRelease}
+                Nixpkgs version used to evaluate Home Manager: ${libRelease}
+                Nixpkgs version used for packages (`pkgs`): ${pkgsRelease}'';
+        in
+        lib.optional (config.home.enableNixpkgsReleaseCheck && releaseMismatch) ''
+          You are using
 
-        to your configuration.
-      '';
+            ${lib.replaceString "\n" "\n  " versionsSummary}
+
+          Using mismatched versions is likely to cause errors and unexpected
+          behavior. It is therefore highly recommended to use a release of Home
+          Manager that corresponds with your chosen release of Nixpkgs.
+
+          If you insist then you can disable this warning by adding
+
+            home.enableNixpkgsReleaseCheck = false;
+
+          to your configuration.
+        ''
+      );
 
     home.username = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "USER")
@@ -664,19 +747,39 @@ in
       name = "hm-session-vars.sh";
       destination = "/etc/profile.d/hm-session-vars.sh";
       text = ''
-        # Only source this once.
-        if [ -n "''${__HM_SESS_VARS_SOURCED-}" ]; then return; fi
-        export __HM_SESS_VARS_SOURCED=1
+        # Plain variables refresh on every source. Search variables add only
+        # missing entries. The extra section remains once per session.
 
-        ${config.lib.shell.exportAll cfg.sessionVariables}
+        ${lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (env: value: guardSessionVariable env (config.lib.shell.export env value)) (
+            lib.filterAttrs (_env: value: value != null) cfg.sessionVariables
+          )
+        )}
       ''
       + lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
-          env: values: config.lib.shell.export env (config.lib.shell.prependToVar ":" env values)
+          env: values: guardSessionVariable env (config.lib.shell.idempotentPrepend ":" env values)
         ) cfg.sessionSearchVariables
       )
-      + "\n"
-      + cfg.sessionVariablesExtra;
+      + lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (
+          env: values: guardSessionVariable env (config.lib.shell.idempotentAppend ":" env values)
+        ) cfg.sessionSearchVariablesAppend
+      )
+      + ''
+
+        if [ -z "''${__HM_SESS_VARS_SOURCED-}" ]; then
+          export __HM_SESS_VARS_SOURCED=1
+      ''
+      + cfg.sessionVariablesExtra
+      # `lines' does not guarantee a trailing newline; without one the
+      # closing `fi' would glue onto the last extra line.
+      + lib.optionalString (
+        cfg.sessionVariablesExtra != "" && !lib.hasSuffix "\n" cfg.sessionVariablesExtra
+      ) "\n"
+      + ''
+        fi
+      '';
     };
 
     home.sessionSearchVariables.PATH = lib.mkIf (cfg.sessionPath != [ ]) cfg.sessionPath;

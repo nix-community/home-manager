@@ -26,6 +26,11 @@ in
       description = ''
         Directory names to add to {env}`XDG_CONFIG_DIRS`
         in the user session.
+
+        Shell sessions add only missing entries and preserve their current
+        positions. Systemd user services receive an {file}`environment.d`
+        value using prepend expansion, which may preserve different ordering
+        or inherited duplicates.
       '';
     };
 
@@ -39,6 +44,11 @@ in
       description = ''
         Directory names to add to {env}`XDG_DATA_DIRS`
         in the user session.
+
+        Shell sessions add only missing entries and preserve their current
+        positions. Systemd user services receive an {file}`environment.d`
+        value using prepend expansion, which may preserve different ordering
+        or inherited duplicates.
       '';
     };
   };
@@ -51,13 +61,13 @@ in
     })
 
     (lib.mkIf (cfg.config != [ ]) {
-      home.sessionVariables.XDG_CONFIG_DIRS = "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
+      home.sessionSearchVariables.XDG_CONFIG_DIRS = cfg.config;
 
       systemd.user.sessionVariables.XDG_CONFIG_DIRS = "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
     })
 
     (lib.mkIf (cfg.data != [ ]) {
-      home.sessionVariables.XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
+      home.sessionSearchVariables.XDG_DATA_DIRS = cfg.data;
 
       systemd.user.sessionVariables.XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
     })

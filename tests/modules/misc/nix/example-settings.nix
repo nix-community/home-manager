@@ -40,7 +40,10 @@
       home-files/.config/nix/nix.conf \
       ${./example-settings-expected.conf}
 
-    assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
-      'export NIX_PATH="/a:/b/c''${NIX_PATH:+:$NIX_PATH}"'
+    (
+      export NIX_PATH=/inherited
+      . "$TESTED/home-path/etc/profile.d/hm-session-vars.sh"
+      [ "$NIX_PATH" = "/a:/b/c:/inherited" ]
+    ) || fail "configured NIX_PATH was not prepended"
   '';
 }
