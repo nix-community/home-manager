@@ -1,4 +1,5 @@
 {
+  bash-session-variables-refresh = ./session-variables-refresh.nix;
   bash-completion = ./completion.nix;
   bash-logout = ./logout.nix;
   bash-session-variables = ./session-variables.nix;

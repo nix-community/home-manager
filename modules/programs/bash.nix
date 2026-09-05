@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -150,6 +151,10 @@ in
         description = ''
           Environment variables that will be set for the Bash session.
 
+          These values are applied again when each interactive non-login shell
+          starts. Shell expansions run each time, so self-referential values
+          can change repeatedly.
+
           Setting a value to `null` will skip setting the variable at all, which
           may be useful when overriding.
         '';
@@ -246,6 +251,15 @@ in
     mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
+      warnings = config.lib.shell.selfReferenceWarnings {
+        option = options.programs.bash.sessionVariables;
+        optionPath = "programs.bash.sessionVariables";
+        rationale = ''
+          Home Manager applies these values in each interactive non-login Bash
+          shell, so self-referential values can change repeatedly.
+        '';
+      };
+
       home.file.".bash_profile".source = writeBashScript "bash_profile" ''
         # include .profile if it exists
         [[ -f ~/.profile ]] && . ~/.profile
@@ -274,6 +288,19 @@ in
       '';
 
       home.file.".bashrc".source = writeBashScript "bashrc" ''
+        # .profile handles login shells. Skip non-interactive shells because
+        # sshd can read .bashrc for remote commands, where startup output can
+        # corrupt protocols such as scp and rsync.
+        ${lib.concatStringsSep "\n" (
+          [
+            "if [[ $- == *i* ]] && ! shopt -q login_shell; then"
+            "  . \"${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh\""
+          ]
+          # Keep generated exports unindented because continuation lines are data.
+          ++ lib.optional (sessionVarsStr != "") sessionVarsStr
+          ++ [ "fi" ]
+        )}
+
         ${cfg.bashrcExtra}
 
         # Commands that should be applied only for interactive shells.
