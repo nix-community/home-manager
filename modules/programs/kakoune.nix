@@ -707,6 +707,16 @@ in
           `programs.kakoune.config.colorScheme = "theme"`.
         '';
       };
+
+      linkAutoload = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether to symlink the built-in autoload scripts to
+          {file}`$XDG_CONFIG_HOME/kak/autoload`. Linking is performed recursively
+          so you can add and edit your own local plugins alongside the built-in scripts.
+        '';
+      };
     };
   };
 
@@ -728,6 +738,13 @@ in
       { "kak/kakrc".source = configFile; }
       (mkIf (cfg.colorSchemePackage != null) {
         "kak/colors/${cfg.colorSchemePackage.name}".source = cfg.colorSchemePackage;
+      })
+      (mkIf cfg.linkAutoload {
+        "kak/autoload" = {
+          ignorelinks = true;
+          recursive = true;
+          source = "${config.programs.kakoune.finalPackage}/share/kak/autoload";
+        };
       })
     ];
   };
