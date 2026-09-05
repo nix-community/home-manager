@@ -68,7 +68,9 @@ let
   ];
 
   mpvPackage =
-    if wrapperRequiresOverride then
+    if cfg.package == null then
+      null
+    else if wrapperRequiresOverride then
       pkgs.mpv.override { inherit (cfg) scripts extraMakeWrapperArgs; }
     else
       cfg.package;
@@ -84,11 +86,13 @@ in
       enable = lib.mkEnableOption "mpv";
 
       package = lib.mkPackageOption pkgs "mpv" {
+        nullable = true;
+        extraDescription = "Set programs.mpv.package to null if package is already provided";
         example = "pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
       };
 
       finalPackage = mkOption {
-        type = types.package;
+        type = types.nullOr types.package;
         readOnly = true;
         visible = false;
         description = ''
@@ -242,10 +246,14 @@ in
             assertion = wrapperRequiresOverride -> (cfg.package == options.programs.mpv.package.default);
             message = ''The programs.mpv "package" option is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
           }
+          {
+            assertion = wrapperRequiresOverride -> (cfg.package != null);
+            message = ''The programs.mpv "package" option set to null is mutually exclusive with "scripts", "extraMakeWrapperArgs" options.'';
+          }
         ];
       }
       {
-        home.packages = [ config.programs.mpv.finalPackage ];
+        home.packages = lib.optionals (cfg.package != null) [ config.programs.mpv.finalPackage ];
         programs.mpv.finalPackage = mpvPackage;
       }
 
