@@ -127,6 +127,7 @@ let
     "micro"
     "mise"
     "mistral-vibe"
+    "moor"
     "mpv"
     "msmtp"
     "mu"
