@@ -84,6 +84,19 @@ in
           Command-line arguments to pass to {command}`emacsclient`.
         '';
       };
+      editorArguments = mkOption {
+        type = with types; listOf str;
+        default = [ "--create-frame" ];
+        example = [
+          "--create-frame"
+          "--no-wait"
+        ];
+        description = ''
+          Command-line arguments to pass to {command}`emacsclient` when it is
+          used as {env}`EDITOR`/{env}`VISUAL` and invoked with no arguments
+          of its own.
+        '';
+      };
     };
 
     # Attrset for forward-compatibility; there may be a need to customize the
@@ -123,7 +136,13 @@ in
     home.sessionVariables =
       let
         editorBin = lib.getBin (
-          pkgs.writeShellScript "editor" ''exec ${lib.getBin cfg.package}/bin/emacsclient "''${@:---create-frame}"''
+          pkgs.writeShellScript "editor" ''
+            if [ "$#" -eq 0 ]; then
+              exec emacsclient ${lib.escapeShellArgs cfg.client.editorArguments}
+            else
+              exec emacsclient "$@"
+            fi
+          ''
         );
       in
       mkIf cfg.defaultEditor {
@@ -131,9 +150,12 @@ in
         VISUAL = editorBin;
       };
 
-    home.packages = optional (cfg.client.enable && pkgs.stdenv.hostPlatform.isLinux) (
-      lib.hiPrio clientDesktopItem
-    );
+    home.packages =
+      optional (cfg.client.enable && pkgs.stdenv.hostPlatform.isLinux) (lib.hiPrio clientDesktopItem)
+      # emacsclient is invoked via $PATH lookup (not cfg.package directly) so
+      # EDITOR/VISUAL survive switch+GC; make sure it's actually on PATH here
+      # when programs.emacs isn't already installing it.
+      ++ optional (cfg.defaultEditor && !emacsCfg.enable) cfg.package;
 
     systemd.user.services.emacs = {
       Unit = {
