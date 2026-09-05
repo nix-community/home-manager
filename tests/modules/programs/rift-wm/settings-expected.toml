@@ -1,0 +1,32 @@
+[animate]
+value = true
+
+[hot_reload]
+value = true
+
+[layout.mode]
+value = "bsp"
+
+[layout.gaps.outer.top]
+value = 0.5
+
+[layout.gaps.outer.left]
+value = 0.5
+
+[layout.gaps.outer.right]
+value = 0.5
+
+[layout.gaps.outer.bottom]
+value = 0.5
+
+[keys."Alt + H".move_focus]
+value = "left"
+
+[keys."Alt + Shift + Left".join_window]
+value = "left"
+
+[keys."Alt + 1".switch_to_workspace]
+value = 1
+
+[keys."comb1 + S".switch_to_workspace]
+value = 2
