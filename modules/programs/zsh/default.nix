@@ -429,14 +429,14 @@ in
   config =
     let
       envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
+      sessionVarsToken = "${config.home.sessionVariablesPackage}:${builtins.hashString "sha256" envVarsStr}";
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
       sessionVarsStr = lib.removeSuffix "\n" ''
-        # Environment variables
-        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-
-        # Only source this once
-        if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
-          export __HM_ZSH_SESS_VARS_SOURCED=1
+        # Apply one generated version per process tree. The token changes when
+        # either the generic or Zsh-specific variables change.
+        if [[ "''${__HM_ZSH_SESS_VARS_SOURCED-}" != "${sessionVarsToken}" ]]; then
+          export __HM_ZSH_SESS_VARS_SOURCED="${sessionVarsToken}"
+          . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
           ${envVarsStr}
         fi
       '';
@@ -496,8 +496,8 @@ in
               optionPath = "programs.zsh.sessionVariables";
               renderValue = renderSessionVariable;
               rationale = ''
-                Home Manager applies these values once per session today.
-                Applying them in each new Zsh process could change them again.
+                Home Manager reapplies these values after the generated session
+                variables change, so self-referential values can change again.
               '';
             }
             ++
