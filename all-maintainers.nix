@@ -126,6 +126,13 @@
     name = "Daru";
     source = "nixpkgs";
   };
+  DavSanchez = {
+    email = "davidslt+nixpkgs@pm.me";
+    github = "DavSanchez";
+    githubId = 11422515;
+    name = "David Sánchez";
+    source = "nixpkgs";
+  };
   Dines97 = {
     email = "19364873+Dines97@users.noreply.github.com";
     github = "Dines97";
@@ -1357,6 +1364,13 @@
     githubId = 16514431;
     name = "Ilham AM";
     source = "nixpkgs";
+  };
+  ilovelinux = {
+    email = "nix+home-manager@ilovelinux.dev";
+    github = "ilovelinux";
+    githubId = 9268789;
+    name = "Antonio Spadaro";
+    source = "home-manager";
   };
   iosmanthus = {
     email = "myosmanthustree@gmail.com";
