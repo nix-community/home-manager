@@ -1,5 +1,14 @@
-{ config, podman-lib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  podman-lib,
+  ...
+}:
 
+let
+  awk = lib.getExe pkgs.gawk;
+in
 {
   cleanup = ''
     PATH=$PATH:${podman-lib.newuidmapPaths}
@@ -26,20 +35,32 @@
 
       loadManifest "$manifestFile"
 
-      formatString="{{.Name}}"
-      [[ $resourceType = "container" ]] && formatString="{{.Names}}"
-      [[ $resourceType = "image" ]] && formatString="{{.Repository}}"
+      # Print names and IDs of the resources, deliminated by comma
+      # The names are matched against the resource manifest, and the IDs are used for deletion
+      # Exception being the volumes, which use the names as their IDs
+      [[ $resourceType = "container" ]] && formatString="{{.Names}},{{.ID}}"
+      [[ $resourceType = "image" ]] && formatString="{{.Repository}},{{.ID}}"
+      [[ $resourceType = "network" ]] && formatString="{{.Name}},{{.ID}}"
+      [[ $resourceType = "volume" ]] && formatString="{{.Name}},{{.Name}}"
 
       local listOutput=$(${config.services.podman.package}/bin/podman $resourceType ls $extraListCommands --filter 'label=nix.home-manager.managed=true' --format "$formatString")
 
-      IFS=$'\n' read -r -d "" -a podmanResources <<< "$listOutput" || true
+      # If $listOutput is empty, the arrays now do not have one empty string
+      podmanResources=()
+      podmanResourceIds=()
+      if [ -n "$listOutput" ]; then
+        readarray -t podmanResources < <(${awk} -F "," '{print $1}' <<< "$listOutput")
+        readarray -t podmanResourceIds < <(${awk} -F "," '{print $2}' <<< "$listOutput")
+      fi
 
       if [ ''${#podmanResources[@]} -eq 0 ]; then
         VERBOSE_ENABLED && echo "No ''${resourceType}s available to process." || true
       else
-        for resource in "''${podmanResources[@]}"; do
+        for i in "''${!podmanResources[@]}"; do
+          resource="''${podmanResources[$i]}"
+          id="''${podmanResourceIds[$i]}"
           if ! isResourceInManifest "$resource"; then
-            removeResource "$resourceType" "$resource"
+            removeResource "$resourceType" "$resource" "$id"
           else
             VERBOSE_ENABLED && echo "Keeping managed $resourceType: $resource" || true
           fi
@@ -67,22 +88,23 @@
     removeResource() {
       local resourceType="$1"
       local resource="$2"
-      echo "Removing orphaned $resourceType: $resource"
+      local id="$3"
+      echo "Removing orphaned $resourceType: $resource with ID $id"
       commands=()
       case "$resourceType" in
         "container")
-          commands+=("${config.services.podman.package}/bin/podman $resourceType stop $resource")
-          commands+=("${config.services.podman.package}/bin/podman $resourceType rm -f $resource")
+          commands+=("${config.services.podman.package}/bin/podman $resourceType stop $id")
+          commands+=("${config.services.podman.package}/bin/podman $resourceType rm -f $id")
           ;;
         "image" | "network" | "volume")
-          commands+=("${config.services.podman.package}/bin/podman $resourceType rm $resource")
+          commands+=("${config.services.podman.package}/bin/podman $resourceType rm $id")
           ;;
       esac
       for command in "''${commands[@]}"; do
         command=$(echo $command | tr -d ';&|`')
         DRYRUN_ENABLED && echo "Would run: $command" && continue || true
         VERBOSE_ENABLED && echo "Running: $command" || true
-        if [[ "$(eval "$command")" != *"$resource" ]]; then
+        if ! eval "$command"; then
           echo -e "\tCommand failed: ''${command}"
           [ "$resourceType" == "image" ] && resourceType="ancestor"
           usedByContainers=$(${config.services.podman.package}/bin/podman container ls -a --filter "$resourceType=$resource" --format "{{.Names}}")
