@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d9b23ed5.js";
+            window.path_to_searchindex_js = "searchindex-0c0a8534.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-13970ff8.js"></script>
+        <script src="toc-9a7b9d48.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12230,6 +12230,7 @@ string</p>
 <li><a href="#scmpuff">scmpuff</a></li>
 <li><a href="#screen">screen</a></li>
 <li><a href="#script-directory">script-directory</a></li>
+<li><a href="#secretspec">secretspec</a></li>
 <li><a href="#senpai">senpai</a></li>
 <li><a href="#sesh">sesh</a></li>
 <li><a href="#sftpman">sftpman</a></li>
@@ -52192,6 +52193,57 @@ attribute set of string</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/script-directory.nix">&lt;home-manager/modules/programs/script-directory.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="secretspec"><a href="#secretspec" class="header">secretspec</a></h1>
+<h2 id="opt-programs.secretspec.enable"><a class="header" href="#opt-programs.secretspec.enable">programs.secretspec.enable</a></h2>
+<p>Whether to enable secretspec.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/secretspec.nix">&lt;home-manager/modules/programs/secretspec.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.secretspec.package"><a class="header" href="#opt-programs.secretspec.package">programs.secretspec.package</a></h2>
+<p>The secretspec package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.secretspec
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/secretspec.nix">&lt;home-manager/modules/programs/secretspec.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.secretspec.settings"><a class="header" href="#opt-programs.secretspec.settings">programs.secretspec.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/secretspec/config.toml</code>.</p>
+<p>See <a href="https://secretspec.dev/reference/cli/#config-global-show">https://secretspec.dev/reference/cli/#config-global-show</a> for
+available options and documentation.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  defaults = {
+    profile = "default";
+    provider = "keyring";
+    providers = {
+      dotenv = "dotenv://";
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/secretspec.nix">&lt;home-manager/modules/programs/secretspec.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="senpai"><a href="#senpai" class="header">senpai</a></h1>
