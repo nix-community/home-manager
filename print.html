@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0c0a8534.js";
+            window.path_to_searchindex_js = "searchindex-44770cd8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-9a7b9d48.js"></script>
+        <script src="toc-ad721268.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12188,6 +12188,7 @@ string</p>
 <li><a href="#piston-cli">piston-cli</a></li>
 <li><a href="#pls">pls</a></li>
 <li><a href="#poetry">poetry</a></li>
+<li><a href="#pomo">pomo</a></li>
 <li><a href="#posting">posting</a></li>
 <li><a href="#powerline-go">powerline-go</a></li>
 <li><a href="#pqiv">pqiv</a></li>
@@ -47929,6 +47930,68 @@ TOML value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/poetry.nix">&lt;home-manager/modules/programs/poetry.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pomo"><a href="#pomo" class="header">pomo</a></h1>
+<h2 id="opt-programs.pomo.enable"><a class="header" href="#opt-programs.pomo.enable">programs.pomo.enable</a></h2>
+<p>Whether to enable pomo, a TUI Pomodoro timer with ASCII Art, progress bar,
+desktop notifications, and productivity stats.
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pomo.nix">&lt;home-manager/modules/programs/pomo.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pomo.package"><a class="header" href="#opt-programs.pomo.package">programs.pomo.package</a></h2>
+<p>The pomo package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.pomo
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pomo.nix">&lt;home-manager/modules/programs/pomo.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pomo.settings"><a class="header" href="#opt-programs.pomo.settings">programs.pomo.settings</a></h2>
+<p>Configuration written to
+<code>$HOME/.config/pomo/pomo.yml</code>
+See <a href="https://github.com/Bahaaio/pomo/blob/main/pomo.yaml">https://github.com/Bahaaio/pomo/blob/main/pomo.yaml</a></p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  asciiArt = {
+    color = "#5A56E0";
+    enabled = true;
+    font = "mono12";
+  };
+  onSessionEnd = "ask";
+  work = {
+    duration = "25m";
+    notification = {
+      enabled = true;
+      message = "time to take a break";
+      title = "work finished 🎉";
+      urgent = false;
+    };
+    title = "work session";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pomo.nix">&lt;home-manager/modules/programs/pomo.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="posting"><a href="#posting" class="header">posting</a></h1>
