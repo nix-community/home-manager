@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-145cfdd5.js";
+            window.path_to_searchindex_js = "../../../searchindex-5ebf8e4d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-125db4c5.js"></script>
@@ -310,9 +310,12 @@ null or string or absolute path</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefoxpwa.nix">&lt;home-manager/modules/programs/firefoxpwa.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.firefoxpwa.profiles._name_.sites._name_.manifestUrl"><a class="header" href="#opt-programs.firefoxpwa.profiles._name_.sites._name_.manifestUrl">programs.firefoxpwa.profiles.&lt;name&gt;.sites.&lt;name&gt;.manifestUrl</a></h2>
-<p>URL of the site’s web app manifest.</p>
+<p>URL of the site’s web app manifest. Omit or set to <code>null</code> when installing a non-PWA website.</p>
 <p><em>Type:</em>
-string</p>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"https://developer.mozilla.org/manifest.f42880861b394dd4dc9b.json"
 </code></pre>
