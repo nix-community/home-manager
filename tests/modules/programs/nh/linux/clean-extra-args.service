@@ -1,0 +1,6 @@
+[Service]
+ExecStart=@nh@/bin/nh clean user --keep 5 --keep-since 3d
+Type=oneshot
+
+[Unit]
+Description=Nh clean (user)

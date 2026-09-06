@@ -83,11 +83,22 @@ in
       };
 
       extraArgs = lib.mkOption {
-        type = lib.types.singleLineStr;
+        type = with lib.types; either singleLineStr (listOf str);
         default = "";
-        example = "--keep 5 --keep-since 3d";
+        example = [
+          "--keep"
+          "5"
+          "--keep-since"
+          "3d"
+        ];
         description = ''
           Options given to nh clean when the service is run automatically.
+
+          A list is preferred, each element being one argument.
+
+          A string keeps its platform-specific meaning: on Linux it is command
+          line text that systemd splits into arguments, on Darwin it is passed
+          to nh as a single argument.
 
           See `nh clean all --help` for more information.
         '';
@@ -136,7 +147,15 @@ in
         Unit.Description = "Nh clean (user)";
         Service = {
           Type = "oneshot";
-          ExecStart = "${lib.getExe cfg.package} clean user ${cfg.clean.extraArgs}";
+          ExecStart =
+            let
+              extraArgs =
+                if builtins.isList cfg.clean.extraArgs then
+                  lib.escapeShellArgs cfg.clean.extraArgs
+                else
+                  cfg.clean.extraArgs;
+            in
+            "${lib.getExe cfg.package} clean user" + lib.optionalString (extraArgs != "") " ${extraArgs}";
         };
       };
       timers.nh-clean = {
@@ -157,7 +176,12 @@ in
           "clean"
           "user"
         ]
-        ++ lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs;
+        ++ (
+          if builtins.isList cfg.clean.extraArgs then
+            cfg.clean.extraArgs
+          else
+            lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs
+        );
         StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.clean.dates;
       };
     };
