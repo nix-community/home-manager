@@ -6,10 +6,8 @@
       enable = true;
       dates = "weekly";
       extraArgs = [
-        "--keep"
-        "5"
         "--keep-since"
-        "3d"
+        "1 day"
       ];
     };
   };
@@ -19,6 +17,6 @@
     serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
 
     assertFileExists $serviceFile
-    assertFileContent $serviceFileNormalized ${./clean-extra-args.plist}
+    assertFileContent $serviceFileNormalized ${./clean-extra-args-spaces.plist}
   '';
 }
