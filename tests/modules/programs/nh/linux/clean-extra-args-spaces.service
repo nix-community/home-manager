@@ -1,0 +1,6 @@
+[Service]
+ExecStart=@nh@/bin/nh clean user --keep-since '1 day'
+Type=oneshot
+
+[Unit]
+Description=Nh clean (user)
