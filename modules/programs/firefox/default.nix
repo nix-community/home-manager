@@ -50,6 +50,7 @@ let
 in
 {
   meta.maintainers = with lib.maintainers; [
+    booxter
     bricked
     rycee
     lib.hm.maintainers.HPsaucii
