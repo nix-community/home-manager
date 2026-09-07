@@ -390,9 +390,10 @@ let
 
 in
 {
-  meta.maintainers = [
+  meta.maintainers = with lib.maintainers; [
+    booxter
     lib.hm.maintainers.d-dervishi
-    lib.maintainers.jkarlson
+    jkarlson
   ];
 
   options = {
