@@ -1,17 +1,16 @@
-{ config, lib, ... }:
-
-let
-  hyprland = config.lib.test.mkStubPackage { name = "hyprland"; };
-in
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   wayland.windowManager.hyprland = {
     enable = true;
     configType = "lua";
-    package = hyprland // {
-      override = _: hyprland;
-    };
-    checkConfig = false;
+    package = pkgs.hyprland;
+    checkConfig = true;
     portalPackage = null;
 
     plugins = [
