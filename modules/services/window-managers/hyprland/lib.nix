@@ -54,7 +54,7 @@ let
   mkCheckPhase = package: ''
     export XDG_RUNTIME_DIR=$(mktemp -d)
     trap "rm -rf $XDG_RUNTIME_DIR" EXIT
-    ${lib.getExec package} --verify-config --config "$target"
+    ${lib.getExe package} --verify-config --config "$target"
   '';
 in
 {
