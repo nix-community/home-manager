@@ -1,6 +1,7 @@
 # -*- mode: sh; sh-shell: bash -*-
 
 @initHomeManagerLib@
+# shellcheck source=modules/files/mutable-files.sh
 source @mutableFileFunctions@
 
 # A symbolic link whose target path matches this pattern will be
@@ -20,7 +21,7 @@ function checkCollision() {
   local sourcePath="$1"
   local targetPath="$2"
 
-  if [[ ! -f "$newMutable/${sourcePath#$newGenFiles/}" ]] && cmp -s "$sourcePath" "$targetPath"; then
+  if [[ ! -f "$newMutable/${sourcePath#"$newGenFiles"/}" ]] && cmp -s "$sourcePath" "$targetPath"; then
     # First compare the files' content. If they're equal, we're fine.
     warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
   elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
@@ -47,7 +48,7 @@ function checkCollision() {
 # which dominates activation time when a profile carries hundreds of links.
 declare -a linkTargets=() linkSources=()
 for sourcePath in "$@" ; do
-  relativePath="${sourcePath#$newGenFiles/}"
+  relativePath="${sourcePath#"$newGenFiles"/}"
   targetPath="$HOME/$relativePath"
 
   if [[ -f "$newMutable/$relativePath" || -f "$oldMutable/$relativePath" ]]; then
