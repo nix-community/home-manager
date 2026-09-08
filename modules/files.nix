@@ -55,6 +55,18 @@ let
         name = sourceName;
       };
 
+  mutableFiles = pkgs.linkFarm "home-manager-mutable-files" (
+    map (file: {
+      name = file.target;
+      path = sourceStorePath file;
+    }) (lib.filter (file: file.mutable && safeMutableTarget file.target) cfg)
+  );
+
+  mutableFileFunctions = ./files/mutable-files.sh;
+  safeMutableTarget = target: lib.all (part: part != "" && part != "." && part != "..") (
+    lib.splitString "/" target
+  );
+
 in
 
 {
@@ -97,6 +109,14 @@ in
 
   config = {
     assertions = [
+      {
+        assertion = lib.all (file: !file.mutable || !file.recursive) cfg;
+        message = "home.file: mutable files cannot use recursive directory linking.";
+      }
+      {
+        assertion = lib.all (file: !file.mutable || safeMutableTarget file.target) cfg;
+        message = "home.file: mutable targets must be relative paths without empty, dot, or parent components.";
+      }
       (
         let
           dups = lib.attrNames (
@@ -120,6 +140,11 @@ in
         }
       )
     ];
+
+    # Generation-local ownership survives removal of the last declaration.
+    home.extraBuilderCommands = ''
+      ln -s ${mutableFiles} "$out/home-mutable-files"
+    '';
 
     #  Using this function it is possible to make `home.file` create a
     #  symlink to a path outside the Nix store. For example, a Home Manager
@@ -151,7 +176,7 @@ in
 
         check = pkgs.replaceVars ./files/check-link-targets.sh {
           inherit (config.lib.bash) initHomeManagerLib;
-          inherit forcedPaths storeDir;
+          inherit forcedPaths storeDir mutableFileFunctions;
         };
       in
       ''
@@ -159,10 +184,17 @@ in
           local newGenFiles
           newGenFiles="$(readlink -e "$newGenPath/home-files")"
           find "$newGenFiles" \( -type f -or -type l \) \
-              -exec bash ${check} "$newGenFiles" {} +
+              -exec bash ${check} "$newGenFiles" "$newGenPath/home-mutable-files" \
+                "''${oldGenPath:-/dev/null}/home-mutable-files" {} +
         }
 
         checkNewGenCollision || exit 1
+        source ${mutableFileFunctions}
+        if [[ -v oldGenPath && -e "$oldGenPath/home-mutable-files" ]]; then
+          while IFS= read -r -d "" relativePath; do
+            checkMutableParents "$relativePath" || exit 1
+          done < <(find "$(readlink -e "$oldGenPath/home-mutable-files")" -type l -printf '%P\0')
+        fi
       ''
     );
 
@@ -188,9 +220,12 @@ in
       let
         link = pkgs.writeShellScript "link" ''
           ${config.lib.bash.initHomeManagerLib}
+          source ${mutableFileFunctions}
 
           newGenFiles="$1"
-          shift
+          newMutable="$2"
+          oldMutable="$3"
+          shift 3
 
           # Classify every target using bash builtins only: even one forked
           # process per file costs several milliseconds on some platforms
@@ -204,7 +239,10 @@ in
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -L "''${targetPath%/*}" ]] ; then
+            if [[ -f "$newMutable/$relativePath" || -f "$oldMutable/$relativePath" ]] ; then
+              checkMutableParents "$relativePath" || exit 1
+              slowSources+=("$sourcePath")
+            elif [[ -L "''${targetPath%/*}" ]] ; then
               # The parent directory is itself a symlink (e.g. a stale
               # whole-directory link from an older layout). The batched
               # `ln -n -t` below would refuse it ("Not a directory"), while
@@ -278,21 +316,39 @@ in
           for sourcePath in "''${slowSources[@]}" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
+            if [[ -e "$targetPath" && ! -L "$targetPath" && ! -f "$oldMutable/$relativePath" ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
                 verboseEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath'."
-                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || { errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."; exit 1; }
               elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 # The target exists, back it up
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
                 if [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
                   run rm $VERBOSE_ARG "$backup"
                 fi
-                run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+                run mv $VERBOSE_ARG "$targetPath" "$backup" || { errorEcho "Moving '$targetPath' failed!"; exit 1; }
               fi
             fi
 
-            if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
+            if [[ -f "$newMutable/$relativePath" ]] ; then
+              checkMutableParents "$relativePath" || exit 1
+              if [[ -d "$targetPath" ]]; then
+                errorEcho "Cannot replace directory '$targetPath' with a mutable file."
+                exit 1
+              fi
+              run mkdir -p -- "''${targetPath%/*}" || exit 1
+              if [[ -v DRY_RUN ]]; then
+                verboseEcho "Would copy '$sourcePath' to '$targetPath'."
+              else
+                tmp="$(mktemp "$targetPath.XXXXXX")" || exit 1
+                mode=0644
+                [[ -x "$sourcePath" ]] && mode=0755
+                if ! install -m "$mode" -- "$sourcePath" "$tmp" || ! mv -T -- "$tmp" "$targetPath"; then
+                  rm -f -- "$tmp"
+                  exit 1
+                fi
+              fi
+            elif [[ ! -f "$oldMutable/$relativePath" && -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
               # The target exists but is identical - don't do anything.
               verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
@@ -306,17 +362,24 @@ in
 
         cleanup = pkgs.writeShellScript "cleanup" ''
           ${config.lib.bash.initHomeManagerLib}
+          source ${mutableFileFunctions}
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
           homeFilePattern="$(readlink -e ${lib.escapeShellArg builtins.storeDir})/*-home-manager-files/*"
 
           newGenFiles="$1"
-          shift 1
+          oldMutable="$2"
+          shift 2
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
+            if [[ -f "$oldMutable/$relativePath" ]]; then
+              checkMutableParents "$relativePath" || exit 1
+            fi
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
+            elif [[ -f "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ]]; then
+              run rm -- "$targetPath" || exit 1
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
@@ -348,7 +411,8 @@ in
           local newGenFiles
           newGenFiles="$(readlink -e "$newGenPath/home-files")"
           find "$newGenFiles" \( -type f -or -type l \) \
-            -exec bash ${link} "$newGenFiles" {} +
+              -exec bash ${link} "$newGenFiles" "$newGenPath/home-mutable-files" \
+                "''${oldGenPath:-/dev/null}/home-mutable-files" {} +
         }
 
         function cleanOldGen() {
@@ -366,11 +430,11 @@ in
           # generation. The find command below will print the
           # relative path of the entry.
           find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
-            | xargs -0 bash ${cleanup} "$newGenFiles"
+            | xargs -0 bash ${cleanup} "$newGenFiles" "$oldGenPath/home-mutable-files"
         }
 
-        cleanOldGen
-        linkNewGen
+        cleanOldGen || exit 1
+        linkNewGen || exit 1
       ''
     );
 
@@ -568,6 +632,12 @@ in
           ''
           + lib.concatStrings (
             map (v: ''
+              ${lib.optionalString v.mutable ''
+                if [[ ! -f ${lib.escapeShellArg (sourceStorePath v)} ]]; then
+                  echo ${lib.escapeShellArg "Mutable home.file source must be a regular file: ${v.target}"} >&2
+                  exit 1
+                fi
+              ''}
               insertFile ${
                 lib.escapeShellArgs [
                   (sourceStorePath v)
