@@ -63,7 +63,8 @@ for sourcePath in "$@" ; do
 
   forced=""
   for forcedPath in "${forcedPaths[@]}"; do
-    if [[ $targetPath == $forcedPath* ]]; then
+    if [[ "$targetPath" == "$forcedPath" ||
+          ( ! -f "$newMutable/$relativePath" && $targetPath == $forcedPath* ) ]]; then
       forced="yeah"
       break
     fi
