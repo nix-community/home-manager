@@ -10,8 +10,10 @@
     `programs.obs-studio.integrations`, and
     `programs.obs-studio.extraConfigFiles` options.
 
-    These files remain writable for OBS Studio, but Home Manager replaces
-    declared files during activation and removes files that are no longer
-    declared. Files created independently by OBS Studio remain untouched.
+    Files use Home Manager's mutable-copy support. Activation replaces OBS
+    edits, and removing declarations or disabling OBS deletes the managed
+    copies. Existing unmanaged files require a backup or an explicit force
+    setting before adoption. Stop OBS before switching generations, and do
+    not include secrets in these settings because sources enter the Nix store.
   '';
 }
