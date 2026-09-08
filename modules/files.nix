@@ -63,9 +63,8 @@ let
   );
 
   mutableFileFunctions = ./files/mutable-files.sh;
-  safeMutableTarget = target: lib.all (part: part != "" && part != "." && part != "..") (
-    lib.splitString "/" target
-  );
+  safeMutableTarget =
+    target: lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" target);
 
 in
 
@@ -378,13 +377,12 @@ in
             fi
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
-            elif [[ -f "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ]]; then
-              run rm -- "$targetPath" || exit 1
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern &&
+                    ! ( -f "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ) ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
               verboseEcho "Checking $targetPath: gone (deleting)"
-              run rm $VERBOSE_ARG "$targetPath"
+              run rm $VERBOSE_ARG "$targetPath" || exit 1
 
               # Recursively delete empty parent directories.
               targetDir="$(dirname "$relativePath")"

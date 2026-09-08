@@ -6,11 +6,13 @@
   ...
 }:
 let
-  generation = files:
+  generation =
+    files:
     let
-      evaluated = (extendModules {
-        modules = [ { home.file = lib.mkForce files; } ];
-      }).config;
+      evaluated =
+        (extendModules {
+          modules = [ { home.file = lib.mkForce files; } ];
+        }).config;
       package = pkgs.runCommand "mutable-test-generation" { } ''
         mkdir -p "$out"
         ln -s ${evaluated.home-files} "$out/home-files"
@@ -28,14 +30,34 @@ let
         ${evaluated.home.activation.checkLinkTargets.data}
         ${evaluated.home.activation.linkGeneration.data}
       '';
-    in { inherit package activate; };
+    in
+    {
+      inherit package activate;
+    };
   first = generation {
-    "app/config" = { text = "first"; mutable = true; };
-    "app/removed" = { text = "remove me"; mutable = true; };
+    "app/config" = {
+      text = "first";
+      mutable = true;
+    };
+    "app/removed" = {
+      text = "remove me";
+      mutable = true;
+    };
   };
-  second = generation { "app/config" = { text = "second"; mutable = true; }; };
+  second = generation {
+    "app/config" = {
+      text = "second";
+      mutable = true;
+    };
+  };
   linked = generation { "app/config".text = "linked"; };
-  disabled = generation { "app/config" = { text = "disabled"; mutable = true; enable = false; }; };
+  disabled = generation {
+    "app/config" = {
+      text = "disabled";
+      mutable = true;
+      enable = false;
+    };
+  };
   empty = generation { };
 in
 {
@@ -48,6 +70,10 @@ in
     printf first > "$HOME/app/config"
     if ${first.activate} ${empty.package}; then
       fail "Mutable copies silently adopted an unmanaged file"
+    fi
+    test "$(cat "$HOME/app/config")" = first
+    if HOME_MANAGER_BACKUP_COMMAND=false ${first.activate} ${empty.package}; then
+      fail "Mutable installation ignored a failed backup"
     fi
     test "$(cat "$HOME/app/config")" = first
     HOME_MANAGER_BACKUP_EXT=backup ${first.activate} ${empty.package}
