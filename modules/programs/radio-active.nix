@@ -87,32 +87,22 @@ in
     let
       player = attrByPath [ "settings" "AppConfig" "player" ] "ffplay" cfg;
 
-      patchPlayer =
+      wrapPlayer =
         package: playerName: playerPackage:
-        if package ? overrideAttrs then
-          package.overrideAttrs (
-            _finalAttrs: previousAttrs:
-            let
-              previousPostPatch = previousAttrs.postPatch or null;
-            in
-            {
-              postPatch = lib.optionalString (previousPostPatch != null) "${previousPostPatch}\n" + ''
-                substituteInPlace radioactive/${playerName}.py \
-                  --replace-fail 'self.exe_path = which(self.program_name)' \
-                  'self.exe_path = "${lib.getExe playerPackage}"'
-              '';
-            }
-          )
-        else
-          pkgs.symlinkJoin {
-            name = "${lib.getName package}-${playerName}";
-            paths = [ package ];
-            nativeBuildInputs = [ pkgs.makeWrapper ];
-            postBuild = ''
-              wrapProgram "$out/bin/${baseNameOf (lib.getExe package)}" \
-                --prefix PATH : ${lib.makeBinPath [ playerPackage ]}
-            '';
-          };
+        pkgs.symlinkJoin {
+          name = "${lib.getName package}-${playerName}";
+          paths = [ package ];
+          meta = package.meta or { };
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            for executable in "$out"/bin/*; do
+              if [ -f "$executable" ] && [ -x "$executable" ]; then
+                wrapProgram "$executable" \
+                  --prefix PATH : ${lib.makeBinPath [ playerPackage ]}
+              fi
+            done
+          '';
+        };
 
       knownPlayers = [
         "ffplay"
@@ -132,7 +122,7 @@ in
             "vlc"
           ]
         then
-          patchPlayer cfg.package player pkgs.${player}
+          wrapPlayer cfg.package player pkgs.${player}
         else
           cfg.package
       );
