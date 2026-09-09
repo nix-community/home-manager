@@ -77,6 +77,13 @@ in
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
+    enableGitIntegration = mkEnableOption "Git integration" // {
+      description = ''
+        Whether to configure Git to globally ignore {file}`.envrc`
+        and {file}`.direnv/`.
+      '';
+    };
+
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
@@ -120,6 +127,11 @@ in
             log_filter = "^$";
           };
         };
+
+        git.ignores = mkIf cfg.enableGitIntegration [
+          ".envrc"
+          ".direnv/"
+        ];
 
         bash.initExtra = mkIf cfg.enableBashIntegration (
           # Using `mkAfter` to make it more likely to appear after other
