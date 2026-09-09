@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-c6c8f3b0.js";
+            window.path_to_searchindex_js = "../../../searchindex-27b29168.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-125db4c5.js"></script>
@@ -228,14 +228,16 @@ attribute set of attribute set of (non-empty string or (nonnegative integer or f
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  filepath = "/home/{user}/recordings/radioactive/";
-  filetype = "mp3";
-  filter = "none";
-  limit = 41;
-  loglevel = "debug";
-  player = "ffplay";
-  sort = "votes";
-  volume = 68;
+  AppConfig = {
+    filepath = "/home/{user}/recordings/radioactive/";
+    filetype = "mp3";
+    filter = "none";
+    limit = 41;
+    loglevel = "debug";
+    player = "ffplay";
+    sort = "votes";
+    volume = 68;
+  };
 }
 </code></pre>
 <p><em>Declared by:</em></p>
