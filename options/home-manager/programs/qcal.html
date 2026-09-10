@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-ebb5773f.js";
+            window.path_to_searchindex_js = "../../../searchindex-80d153cc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-48d71312.js"></script>
@@ -202,26 +202,25 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qcal.nix">&lt;home-manager/modules/programs/qcal.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.qcal.defaultNumDays"><a class="header" href="#opt-programs.qcal.defaultNumDays">programs.qcal.defaultNumDays</a></h2>
-<p>Default number of days to show calendar entries for</p>
+<h2 id="opt-programs.qcal.settings"><a class="header" href="#opt-programs.qcal.settings">programs.qcal.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/qcal/config.json</code>.
+See <a href="https://git.sr.ht/~psic4t/qcal">https://git.sr.ht/~psic4t/qcal</a> for supported keys.</p>
+<p><code>Calendars</code> defaults to the enabled
+<code>accounts.calendar.accounts.&lt;name&gt;.qcal</code> accounts. Setting
+it here replaces that list.</p>
+<p>Values are written to the Nix store. Use <code>PasswordCmd</code> instead of
+<code>Password</code> for calendar credentials.</p>
 <p><em>Type:</em>
-positive integer, meaning &gt;0</p>
+JSON value</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">30
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qcal.nix">&lt;home-manager/modules/programs/qcal.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.qcal.timezone"><a class="header" href="#opt-programs.qcal.timezone">programs.qcal.timezone</a></h2>
-<p>Timezone to display calendar entries in</p>
-<p><em>Type:</em>
-(optionally newline-terminated) single-line string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"Local"
+<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">"Europe/Vienna"
+<pre><code class="language-nix">{
+  Timezone = "Europe/Vienna";
+  DefaultNumDays = 7;
+}
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

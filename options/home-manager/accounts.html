@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-ebb5773f.js";
+            window.path_to_searchindex_js = "../../searchindex-80d153cc.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-48d71312.js"></script>
@@ -441,6 +441,28 @@ boolean</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qcal.nix">&lt;home-manager/modules/programs/qcal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.calendar.accounts._name_.qcal.settings"><a class="header" href="#opt-accounts.calendar.accounts._name_.qcal.settings">accounts.calendar.accounts.&lt;name&gt;.qcal.settings</a></h2>
+<p>Calendar entry written to <code>Calendars</code> in
+<code>$XDG_CONFIG_HOME/qcal/config.json</code>. <code>Url</code>, <code>Username</code>,
+and <code>PasswordCmd</code> default to the account’s <code>remote</code> options.</p>
+<p>Values are written to the Nix store. Use <code>PasswordCmd</code> or
+<code>remote.passwordCommand</code> instead of <code>Password</code>.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  Url = "https://cal.example.com/work";
+  PasswordCmd = "pass show calendar/work";
+}
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
