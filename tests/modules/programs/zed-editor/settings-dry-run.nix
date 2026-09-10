@@ -33,6 +33,9 @@
       '';
 
       settingsPath = ".config/zed/settings.json";
+      corruptedSettings = builtins.toFile "corrupted.json" ''
+        { not valid json
+      '';
       activationScript = pkgs.writeScript "activation" config.home.activation.zedSettingsActivation.data;
       mkActivation = name: ''
         substitute ${activationScript} $TMPDIR/${name} --subst-var TMPDIR
@@ -70,5 +73,23 @@
       # Without verbose, no merge message is logged.
       $TMPDIR/activate > $TMPDIR/quiet-output
       test ! -s $TMPDIR/quiet-output
+
+      # A live run must preserve the permissions of an existing file.
+      chmod 600 $HOME/${settingsPath}
+      $TMPDIR/activate
+      currentMode="$(stat -c '%a' $HOME/${settingsPath})"
+      test "$currentMode" = 600 || {
+        echo "Expected mode 600, got $currentMode"
+        exit 1
+      }
+
+      # A corrupted existing file must fail activation loudly instead of
+      # silently overwriting it with the generated defaults.
+      echo '{ not valid json' > $HOME/${settingsPath}
+      if $TMPDIR/activate > /dev/null 2>&1; then
+        echo "Activation unexpectedly succeeded on a corrupted config file"
+        exit 1
+      fi
+      assertFileContent "$HOME/${settingsPath}" "${corruptedSettings}"
     '';
 }

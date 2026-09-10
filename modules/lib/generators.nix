@@ -925,6 +925,13 @@ in
     The merge uses `jaq` internally, which supports JSON, YAML, TOML, and CBOR
     natively via its `--from`/`--to` flags — no extra tools needed.
 
+    :::{.warning}
+    This function is **experimental**: its interface and generated script may
+    change without notice in future releases, as edge cases around the
+    activation contract are still being discovered. If you use it from an
+    external flake, pin the Home Manager input accordingly.
+    :::
+
     # Inputs
 
     `options`
@@ -1034,13 +1041,30 @@ in
         if [ ! -e ${lib.escapeShellArg path} ]; then
           echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
         fi
-        dynamic="$(${readerCmd} ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
-        [ -n "$dynamic" ] || dynamic=${lib.escapeShellArg empty}
+        # A missing or empty file is treated as `empty` (see the
+        # `-empty` tests), but an existing file with content that fails to
+        # parse must fail activation loudly instead of silently overwriting
+        # the user's settings with the generated defaults.
+        dynamic="$(${readerCmd} ${lib.escapeShellArg path} 2>/dev/null || true)"
+        if [ ! -s ${lib.escapeShellArg path} ]; then
+          # Missing or zero-byte file: treat as absent.
+          dynamic=${lib.escapeShellArg empty}
+        elif [ -z "$dynamic" ]; then
+          errorEcho "Could not parse ${lib.escapeShellArg path}; refusing to merge"
+          exit 1
+        fi
         static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
         config="$(${jaqBin} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
         tmp="$(mktemp)"
         ${writeCmd}
-        install -m644 "$tmp" ${lib.escapeShellArg path}
+        # Overwrite in place: an existing file keeps its permissions and
+        # symlink target (`install -m644` would reset the mode), while a new
+        # file is created with sane defaults.
+        if [ -e ${lib.escapeShellArg path} ]; then
+          cat "$tmp" > ${lib.escapeShellArg path}
+        else
+          install -m644 "$tmp" ${lib.escapeShellArg path}
+        fi
         rm -f "$tmp"
         unset config
       fi
