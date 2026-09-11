@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+clouds:
+  my-infra:
+    auth:
+      username: openstack
+    cloud: example-cloud
