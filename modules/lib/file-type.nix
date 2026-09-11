@@ -106,6 +106,8 @@ in
                 must not be symlinks.
                 File/directory layout transitions require a separate activation
                 removing the old file first.
+                Only supported with the default legacy file activator; the
+                experimental putter activator does not manage mutable copies.
 
                 Sources are stored in the Nix store and must not contain secrets.
               '';
