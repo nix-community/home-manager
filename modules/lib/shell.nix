@@ -2,6 +2,8 @@
 
 let
 
+  sessionSearchShell = import ./session-search-shell.nix { inherit lib; };
+
   mkShellIntegrationOption =
     name:
     {
@@ -58,26 +60,6 @@ let
       } items;
     in
     foldResult.finishedLines ++ lib.optional (foldResult.currentLine != "") foldResult.currentLine;
-  # Preserve parameter, command, and arithmetic expansion inside a double-quoted
-  # shell word. Existing escapes keep their shell meaning; other backslashes stay
-  # literal.
-  escapeDoubleQuoted =
-    let
-      escapeLiteral = lib.replaceStrings [ "\\" ] [ "\\\\" ];
-      handlePart =
-        part:
-        if lib.isString part then
-          escapeLiteral part
-        else
-          let
-            c = lib.head part;
-          in
-          # These four escapes already have double-quoted shell semantics. Escape
-          # every other backslash, including line continuations, as literal data.
-          if c == "$" || c == "\\" || c == "\"" || c == "`" then "\\${c}" else escapeLiteral "\\${c}";
-    in
-    value: lib.concatMapStrings handlePart (builtins.split ''\\(.)'' value);
-
   # POSIX sh does not define local variables, so remove every scratch name after
   # all calls.
   mergeScratchVariables = [
@@ -101,9 +83,9 @@ let
         "__hm_merge"
         mode
         name
-        ''"${escapeDoubleQuoted sep}"''
+        ''"${sessionSearchShell.escapeDoubleQuoted sep}"''
       ]
-      ++ map (value: ''"${escapeDoubleQuoted value}"'') values
+      ++ map (value: ''"${sessionSearchShell.escapeDoubleQuoted value}"'') values
     );
 
   mergeSearchVariables =
@@ -170,15 +152,6 @@ in
     ```
   */
   inherit mergeSearchVariables;
-
-  # Produces a Bourne shell-like statement that prepends new values to
-  # a possibly existing variable, using sep(arator).
-  # Example:
-  #   prependToVar ":" "PATH" [ "$HOME/bin" "$HOME/.local/bin" ]
-  #   => "$HOME/bin:$HOME/.local/bin:${PATH:+:}${PATH-}"
-  prependToVar =
-    sep: n: v:
-    "${lib.concatStringsSep sep v}\${${n}:+${sep}}\${${n}-}";
 
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export
