@@ -431,13 +431,60 @@ in
       envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       sessionVarsToken = "${config.home.sessionVariablesPackage}:${builtins.hashString "sha256" envVarsStr}";
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
+      nixEnvironmentRefresh = lib.optionalString config.targets.genericLinux.enable ''
+        . "${config.targets.genericLinux.nixEnvironmentPackage}/etc/profile.d/hm-nix-env.sh"
+      '';
+      nixScalarFallbacks =
+        let
+          configuredDeclaration =
+            name:
+            let
+              zshValue = cfg.sessionVariables.${name} or null;
+              homeValue = config.home.sessionVariables.${name} or null;
+            in
+            if zshValue != null then
+              {
+                exporter = config.lib.zsh.export;
+                value = zshValue;
+              }
+            else if homeValue != null then
+              {
+                exporter = config.lib.shell.export;
+                value = homeValue;
+              }
+            else
+              null;
+          mkFallback =
+            name:
+            let
+              declaration = configuredDeclaration name;
+            in
+            lib.optionalString (declaration != null) ''
+              if (( ! ''${+${name}} )); then
+                ${declaration.exporter name declaration.value}
+              fi
+            '';
+        in
+        lib.concatMapStrings mkFallback [
+          "NIX_PROFILES"
+          "NIX_SSL_CERT_FILE"
+        ];
       sessionVarsStr = lib.removeSuffix "\n" ''
         # Apply one generated version per process tree. The token changes when
         # either the generic or Zsh-specific variables change.
         if [[ "''${__HM_ZSH_SESS_VARS_SOURCED-}" != "${sessionVarsToken}" ]]; then
           export __HM_ZSH_SESS_VARS_SOURCED="${sessionVarsToken}"
           . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-          ${envVarsStr}
+          ${envVarsStr}${
+            lib.optionalString config.targets.genericLinux.enable (
+              "\n"
+              + ''
+                else
+                  ${nixScalarFallbacks}
+                  ${nixEnvironmentRefresh}
+              ''
+            )
+          }
         fi
       '';
       indentNonEmptyLines =

@@ -768,6 +768,9 @@ in
         mkSections [
           (config.lib.shell.exportAll cfg.sessionVariables)
           searchSection
+          (lib.optionalString config.targets.genericLinux.enable ''
+            . "${config.targets.genericLinux.nixEnvironmentPackage}/etc/profile.d/hm-nix-env.sh"
+          '')
           # Keep arbitrary extra code at top level. A compound wrapper would
           # change when aliases and parser options take effect.
           ''
