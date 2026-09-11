@@ -104,6 +104,14 @@
     name = "David Thievon";
     source = "nixpkgs";
   };
+  DPDmancul = {
+    email = "davide.peressoni@tuta.io";
+    github = "DPDmancul";
+    githubId = 3186857;
+    matrix = "@dpd-:matrix.org";
+    name = "Davide Peressoni";
+    source = "nixpkgs";
+  };
   DamienCassou = {
     email = "damien@cassou.me";
     github = "DamienCassou";
@@ -116,6 +124,13 @@
     github = "Daru-san";
     githubId = 135046711;
     name = "Daru";
+    source = "nixpkgs";
+  };
+  DavSanchez = {
+    email = "davidslt+nixpkgs@pm.me";
+    github = "DavSanchez";
+    githubId = 11422515;
+    name = "David Sánchez";
     source = "nixpkgs";
   };
   Dines97 = {
@@ -1082,6 +1097,13 @@
     name = "0x5a4";
     source = "nixpkgs";
   };
+  ekhh = {
+    email = "90589480+ekhh@users.noreply.github.com";
+    github = "ekhh";
+    githubId = 90589480;
+    name = "EKHH";
+    source = "home-manager";
+  };
   elanora96 = {
     email = "git@elanora.lol";
     github = "elanora96";
@@ -1342,6 +1364,13 @@
     githubId = 16514431;
     name = "Ilham AM";
     source = "nixpkgs";
+  };
+  ilovelinux = {
+    email = "nix+home-manager@ilovelinux.dev";
+    github = "ilovelinux";
+    githubId = 9268789;
+    name = "Antonio Spadaro";
+    source = "home-manager";
   };
   iosmanthus = {
     email = "myosmanthustree@gmail.com";

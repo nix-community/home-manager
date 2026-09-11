@@ -20,6 +20,18 @@ in
           Whether to enable the Autorandr systemd service.
           This module is complementary to {option}`programs.autorandr`
           which handles the configuration (profiles).
+
+          This user service will only trigger during `graphical-session.target`
+          (i.e. when the user logs into the graphical session). It won't
+          trigger when you plug or unplug monitors. If you want the user
+          service to trigger on plug events, add this udev rule to your system
+          configuration:
+          ```nix
+          services.udev.extraRules = '''
+            ACTION=="change", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", \
+              TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="autorandr.service"
+          ''';
+          ```
         '';
       };
 

@@ -1,4 +1,10 @@
-_:
+{ pkgs, ... }:
+let
+  nestedStorePath = pkgs.runCommandLocal "nested-store-path" { } ''
+    mkdir -p "$out"
+    ln -s ${./lua-file-from-path.lua} "$out/lua-file-in-store.lua"
+  '';
+in
 
 {
   wayland.windowManager.hyprland = {
@@ -33,6 +39,7 @@ _:
       };
 
       "from-path.lua" = ./lua-file-from-path.lua;
+      "from-nested-store-path.lua" = "${nestedStorePath}/lua-file-in-store.lua";
     };
   };
 
@@ -54,6 +61,8 @@ _:
       ${./lua-files-helpers.lua}
 
     assertFileContent home-files/.config/hypr/from-path.lua \
+      ${./lua-file-from-path.lua}
+    assertFileContent home-files/.config/hypr/from-nested-store-path.lua \
       ${./lua-file-from-path.lua}
   '';
 }

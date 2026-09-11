@@ -77,14 +77,26 @@ in
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
+    enableGitIntegration = mkEnableOption "Git integration" // {
+      description = ''
+        Whether to configure Git to globally ignore {file}`.envrc`
+        and {file}`.direnv/`.
+      '';
+    };
+
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     nix-direnv = {
-      enable = mkEnableOption ''
-        [nix-direnv](https://github.com/nix-community/nix-direnv),
-        a fast, persistent use_nix implementation for direnv'';
+      enable =
+        mkEnableOption ''
+          [nix-direnv](https://github.com/nix-community/nix-direnv),
+          a fast, persistent use_nix implementation for direnv''
+        // {
+          default = true;
+          example = false;
+        };
 
       package = mkPackageOption pkgs "nix-direnv" { };
     };
@@ -115,6 +127,11 @@ in
             log_filter = "^$";
           };
         };
+
+        git.ignores = mkIf cfg.enableGitIntegration [
+          ".envrc"
+          ".direnv/"
+        ];
 
         bash.initExtra = mkIf cfg.enableBashIntegration (
           # Using `mkAfter` to make it more likely to appear after other
