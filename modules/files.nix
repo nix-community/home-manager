@@ -149,7 +149,12 @@ in
       }
       {
         assertion = lib.all (file: !file.mutable || safeMutableTarget file.target) cfg;
-        message = "home.file: mutable targets must be relative paths without empty, dot, or parent components.";
+        message = "home.file: mutable targets must be safe relative paths without empty, dot, or parent components.";
+      }
+      {
+        assertion =
+          config.home.fileActivator != "putter" || !lib.any (file: file.mutable) cfg;
+        message = "home.file: mutable files require the legacy file activator.";
       }
       (
         let
