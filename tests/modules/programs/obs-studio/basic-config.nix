@@ -63,7 +63,7 @@ in
     assertFileContent "$configDir/basic/profiles/Portable/notes.txt" ${builtins.toFile "obs-note" "profile note\n"}
     assertFileContains "$configDir/plugin_config/obs-websocket/config.json" '"server_port":4455'
     ${pkgs.jq}/bin/jq -e --argjson expected ${pkgs.lib.escapeShellArg (builtins.toJSON collection)} \
-      '. == $expected' "$configDir/basic/scenes/Streaming.json"
+      '. == $expected' "$TESTED/$configDir/basic/scenes/Streaming.json"
     test ${if config.xdg.configFile."obs-studio/global.ini".mutable then "true" else "false"} = true
   '';
 }
