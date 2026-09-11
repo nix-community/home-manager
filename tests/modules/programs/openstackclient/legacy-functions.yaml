@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+clouds:
+  demo:
+    auth:
+      username: canonical
+    region_name: RegionOne
