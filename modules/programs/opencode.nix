@@ -101,6 +101,16 @@ let
       fi
     '';
 
+  webProgramArguments = [
+    (lib.getExe packageWithExtraPackages)
+    "serve"
+  ]
+  ++ webCfg.extraArgs;
+
+  opencodeWebLauncher = pkgs.writeShellScriptBin "opencode-web-launcher" ''
+    export PATH="${config.home.profileDirectory}/bin''${PATH:+:$PATH}"
+    exec ${lib.escapeShellArgs webProgramArguments}
+  '';
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
@@ -647,7 +657,7 @@ in
         };
 
         Service = {
-          ExecStart = "${lib.getExe packageWithExtraPackages} serve ${lib.escapeShellArgs webCfg.extraArgs}";
+          ExecStart = lib.getExe opencodeWebLauncher;
           Restart = "always";
           RestartSec = 5;
         }
@@ -667,18 +677,13 @@ in
         config = {
           ProgramArguments =
             let
-              programArguments = [
-                (lib.getExe packageWithExtraPackages)
-                "serve"
-              ]
-              ++ webCfg.extraArgs;
               opencodeLaunchdWrapper = pkgs.writeShellScriptBin "opencode-launchd-wrapper" ''
                 source ${webCfg.environmentFile}
-                ${lib.escapeShellArgs programArguments}
+                exec ${lib.getExe opencodeWebLauncher}
               '';
             in
             if webCfg.environmentFile == null then
-              programArguments
+              [ (lib.getExe opencodeWebLauncher) ]
             else
               [
                 (lib.getExe opencodeLaunchdWrapper)

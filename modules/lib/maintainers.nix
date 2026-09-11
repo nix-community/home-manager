@@ -157,6 +157,12 @@
     githubId = 32838899;
     name = "Daniel Wagenknecht";
   };
+  ekhh = {
+    name = "EKHH";
+    email = "90589480+ekhh@users.noreply.github.com";
+    github = "ekhh";
+    githubId = 90589480;
+  };
   elanora96 = {
     name = "Elanora Manson";
     email = "git@elanora.lol";
@@ -244,6 +250,12 @@
         fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
       }
     ];
+  };
+  ilovelinux = {
+    name = "Antonio Spadaro";
+    email = "nix+home-manager@ilovelinux.dev";
+    github = "ilovelinux";
+    githubId = 9268789;
   };
   isaacST08 = {
     name = "Isaac Shiells Thomas";

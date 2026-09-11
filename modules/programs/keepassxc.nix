@@ -120,6 +120,7 @@ in
         programs.chromium.nativeMessagingHosts = [ cfg.package ];
         programs.firefox.nativeMessagingHosts = [ cfg.package ];
         programs.floorp.nativeMessagingHosts = [ cfg.package ];
+        programs.librewolf.nativeMessagingHosts = [ cfg.package ];
         programs.vivaldi.nativeMessagingHosts = [ cfg.package ];
       })
 

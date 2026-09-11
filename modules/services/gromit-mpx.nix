@@ -173,6 +173,19 @@ in
       description = "Opacity of the drawing overlay.";
     };
 
+    extraConfig = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        Extra configuration lines appended to
+        {file}`$XDG_CONFIG_HOME/gromit-mpx.cfg` after the declarations
+        generated from {option}`services.gromit-mpx.tools`. Definition order
+        is preserved. `HOTKEY` and `UNDOKEY` declarations here are overridden
+        by the `hotKey` and `undoKey` command-line arguments. The file is
+        written to the Nix store and must not contain secrets.
+      '';
+    };
+
     tools = mkOption {
       type = types.listOf (types.submodule toolOptions);
       default = [
@@ -223,7 +236,12 @@ in
     ];
 
     xdg.configFile."gromit-mpx.ini".text = keyFile;
-    xdg.configFile."gromit-mpx.cfg".text = lib.concatStringsSep "\n" (lib.imap1 toolToCfg cfg.tools);
+    xdg.configFile."gromit-mpx.cfg".text = lib.concatStringsSep "\n" (
+      lib.filter (settings: settings != "") [
+        (lib.concatStringsSep "\n" (lib.imap1 toolToCfg cfg.tools))
+        cfg.extraConfig
+      ]
+    );
 
     home.packages = [ cfg.package ];
 

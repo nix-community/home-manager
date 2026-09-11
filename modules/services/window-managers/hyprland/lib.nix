@@ -51,8 +51,6 @@ let
   luaLocalName = name: value: value.name or name;
 
   hasNonStringValue = values: lib.any (value: !isString value) values;
-
-  isPathLike = value: lib.isPath value || lib.isStorePath value;
 in
 {
   inherit
@@ -250,7 +248,10 @@ in
   extraLuaFiles = lib.mapAttrs' (
     name: file:
     lib.nameValuePair "hypr/${luaFileName name}" (
-      if isPathLike file.content then { source = file.content; } else { text = file.content; }
+      if lib.hm.strings.isPathLike file.content then
+        { source = file.content; }
+      else
+        { text = file.content; }
     )
   ) config.extraLuaFiles;
 }

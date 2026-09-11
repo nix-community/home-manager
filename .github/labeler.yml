@@ -339,6 +339,7 @@
           - modules/programs/emacs.nix
           - modules/programs/formiko.nix
           - modules/programs/fresh-editor.nix
+          - modules/programs/gram.nix
           - modules/programs/helix.nix
           - modules/programs/kakoune.nix
           - modules/programs/lapce.nix

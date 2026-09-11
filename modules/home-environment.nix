@@ -636,7 +636,10 @@ in
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
-    programs.fish.shellAliases = cfg.shellAliases;
+    programs.fish = {
+      shellAliases = lib.mkIf (!config.programs.fish.preferAbbrs) cfg.shellAliases;
+      shellAbbrs = lib.mkIf config.programs.fish.preferAbbrs cfg.shellAliases;
+    };
     programs.nushell.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
@@ -917,6 +920,7 @@ in
             --subst-var-by GENERATION_DIR $out
 
           ln -s ${config.home-files} $out/home-files
+          ln -s ${config.home.internal.filePutterConfig} $out/putter.json
           ln -s ${cfg.path} $out/home-path
 
           cp "$extraDependenciesPath" "$out/extra-dependencies"
