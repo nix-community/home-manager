@@ -20,8 +20,6 @@ let
     mkNushellIntegrationOption
     ;
 
-  inherit (lib.hm.nushell) mkNushellInline;
-
   cfg = config.programs.vivid;
   yamlFormat = pkgs.formats.yaml { };
 in
@@ -89,7 +87,10 @@ in
       default = null;
       example = "molokai";
       description = ''
-        Active theme for vivid.
+        Active theme for vivid. With a managed package, colors are generated
+        at build time; changes to runtime configuration or VIVID_THEME do not
+        affect shell initialization. When null, generation runs at shell
+        startup using VIVID_THEME instead.
       '';
     };
 
@@ -132,9 +133,34 @@ in
 
   config =
     let
-      vividCommand = "vivid ${
-        lib.optionalString (cfg.colorMode != null) "-m ${cfg.colorMode}"
-      } generate ${lib.optionalString (cfg.activeTheme != null) cfg.activeTheme}";
+      generateAtBuildTime = cfg.package != null && cfg.activeTheme != null;
+      vividCommand =
+        theme:
+        lib.escapeShellArgs (
+          [ (if cfg.package != null then lib.getExe cfg.package else "vivid") ]
+          ++ lib.optionals (cfg.colorMode != null) [
+            "-m"
+            cfg.colorMode
+          ]
+          ++ [ "generate" ]
+          ++ lib.optional (theme != null) theme
+        );
+      colors =
+        pkgs.runCommandLocal "vivid-ls-colors"
+          (lib.optionalAttrs (cfg.filetypes != { }) {
+            VIVID_DATABASE = config.xdg.configFile."vivid/filetypes.yml".source;
+          })
+          ''
+            ${
+              vividCommand (
+                if builtins.hasAttr cfg.activeTheme cfg.themes then
+                  "${config.xdg.configFile."vivid/themes/${cfg.activeTheme}.yml".source}"
+                else
+                  cfg.activeTheme
+              )
+            } > "$out"
+          '';
+
     in
     mkIf cfg.enable {
       home.packages = mkIf (cfg.package != null) [ cfg.package ];
@@ -154,19 +180,26 @@ in
       ) cfg.themes);
 
       programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-        export LS_COLORS="$(${vividCommand})"
+        export LS_COLORS="$(${if generateAtBuildTime then "<${colors}" else vividCommand cfg.activeTheme})"
       '';
 
       programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-        export LS_COLORS="$(${vividCommand})"
+        export LS_COLORS="$(${if generateAtBuildTime then "<${colors}" else vividCommand cfg.activeTheme})"
       '';
 
       programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-        set -gx LS_COLORS "$(${vividCommand})"
+        set -gx LS_COLORS "$(${
+          if generateAtBuildTime then "string collect < ${colors}" else vividCommand cfg.activeTheme
+        })"
       '';
 
-      programs.nushell.environmentVariables = mkIf cfg.enableNushellIntegration {
-        LS_COLORS = mkNushellInline vividCommand;
-      };
+      programs.nushell.extraEnv = mkIf cfg.enableNushellIntegration ''
+        $env.LS_COLORS = (${
+          if generateAtBuildTime then
+            ''open --raw ${colors} | str trim --right --char "\n"''
+          else
+            vividCommand cfg.activeTheme
+        })
+      '';
     };
 }

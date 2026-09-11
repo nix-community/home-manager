@@ -181,6 +181,7 @@ let
     "vim-vint"
     "vimPlugins"
     "visidata"
+    "vivid"
     "vscode"
     "wallust"
     "watson"
