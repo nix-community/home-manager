@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-0a306b16.js";
+            window.path_to_searchindex_js = "../searchindex-bfdd6d7e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4b64f479.js"></script>
@@ -206,6 +206,23 @@ session.</p>
 compositor owns its GPU render node lets Vulkan-accelerated whisper builds
 detect their device. Previously, a daemon that started before the render node
 existed fell back to CPU and never recovered until it was restarted manually.</p>
+</li>
+<li>
+<p>XSuspender now uses <a href="../options/home-manager/services/xsuspender.html#opt-services.xsuspender.settings">services.xsuspender.settings</a> for freeform INI
+configuration. Move <code>services.xsuspender.defaults</code> to
+<code>services.xsuspender.settings.Default</code> and <code>services.xsuspender.rules</code> to
+<code>services.xsuspender.settings.&lt;name&gt;</code>. Use snake_case keys such as
+<code>suspend_delay</code> instead of <code>suspendDelay</code>.</p>
+<p>Deprecated aliases warn and preserve old defaults, including legacy function
+reads, in legacy sections and <code>Default</code>. These defaults have option-default
+priority, so ordinary assignments override them. Settings-only sections inherit
+from <code>Default</code> at runtime, then use native defaults. To preserve old behavior, set
+<code>suspend_delay</code> to 5 and <code>only_on_battery</code> to <code>false</code>, rather than 10 and <code>true</code>.</p>
+<p>Without legacy options, empty settings leave the configuration file unmanaged.
+If you configured both <code>services.xsuspender.defaults</code> and
+<code>services.xsuspender.rules.Default</code>, consolidate them under
+<code>services.xsuspender.settings.Default</code>. They now merge instead of the rule
+replacing the entire defaults section.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>

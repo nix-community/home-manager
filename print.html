@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0a306b16.js";
+            window.path_to_searchindex_js = "searchindex-bfdd6d7e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4b64f479.js"></script>
@@ -83396,340 +83396,29 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.xsuspender.defaults"><a class="header" href="#opt-services.xsuspender.defaults">services.xsuspender.defaults</a></h2>
-<p>XSuspender defaults.</p>
+<h2 id="opt-services.xsuspender.settings"><a class="header" href="#opt-services.xsuspender.settings">services.xsuspender.settings</a></h2>
+<p>Configuration settings for XSuspender. No configuration file is
+managed when this is empty. The old <code>defaults</code> and <code>rules</code> options
+are aliases that retain their historical defaults at option-default
+priority. Ordinary settings assignments override those defaults.
+Sections configured only through settings use native defaults for
+omitted or null keys.</p>
+<p>See <a href="https://kernc.github.io/xsuspender/">https://kernc.github.io/xsuspender/</a> for available settings.</p>
 <p><em>Type:</em>
-submodule</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.autoSuspendOnBattery"><a class="header" href="#opt-services.xsuspender.defaults.autoSuspendOnBattery">services.xsuspender.defaults.autoSuspendOnBattery</a></h2>
-<p>Whether to auto-apply rules when switching to battery
-power even if the window(s) didn’t just lose focus.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.downclockOnBattery"><a class="header" href="#opt-services.xsuspender.defaults.downclockOnBattery">services.xsuspender.defaults.downclockOnBattery</a></h2>
-<p>Limit CPU consumption for this factor when on battery power.
-Value 1 means 50% decrease, 2 means 66%, 3 means 75% etc.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.execResume"><a class="header" href="#opt-services.xsuspender.defaults.execResume">services.xsuspender.defaults.execResume</a></h2>
-<p>Before resuming, execute this shell script. Resume the
-process regardless script failure.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"echo resuming ..."
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.execSuspend"><a class="header" href="#opt-services.xsuspender.defaults.execSuspend">services.xsuspender.defaults.execSuspend</a></h2>
-<p>Before suspending, execute this shell script. If it fails,
-abort suspension.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"echo \"suspending window $XID of process $PID\""
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.matchWmClassContains"><a class="header" href="#opt-services.xsuspender.defaults.matchWmClassContains">services.xsuspender.defaults.matchWmClassContains</a></h2>
-<p>Match windows that wm class contains string.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.matchWmClassGroupContains"><a class="header" href="#opt-services.xsuspender.defaults.matchWmClassGroupContains">services.xsuspender.defaults.matchWmClassGroupContains</a></h2>
-<p>Match windows where wm class group contains string.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.matchWmNameContains"><a class="header" href="#opt-services.xsuspender.defaults.matchWmNameContains">services.xsuspender.defaults.matchWmNameContains</a></h2>
-<p>Match windows where wm name contains string.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.onlyOnBattery"><a class="header" href="#opt-services.xsuspender.defaults.onlyOnBattery">services.xsuspender.defaults.onlyOnBattery</a></h2>
-<p>Whether to enable process suspend only on battery.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.resumeEvery"><a class="header" href="#opt-services.xsuspender.defaults.resumeEvery">services.xsuspender.defaults.resumeEvery</a></h2>
-<p>Resume interval in seconds.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">50
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.resumeFor"><a class="header" href="#opt-services.xsuspender.defaults.resumeFor">services.xsuspender.defaults.resumeFor</a></h2>
-<p>Resume duration in seconds.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">5
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.sendSignals"><a class="header" href="#opt-services.xsuspender.defaults.sendSignals">services.xsuspender.defaults.sendSignals</a></h2>
-<p>Whether to send SIGSTOP / SIGCONT signals or not.
-If false just the exec scripts are run.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.suspendDelay"><a class="header" href="#opt-services.xsuspender.defaults.suspendDelay">services.xsuspender.defaults.suspendDelay</a></h2>
-<p>Initial suspend delay in seconds.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">5
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.defaults.suspendSubtreePattern"><a class="header" href="#opt-services.xsuspender.defaults.suspendSubtreePattern">services.xsuspender.defaults.suspendSubtreePattern</a></h2>
-<p>Also suspend descendant processes that match this regex.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules"><a class="header" href="#opt-services.xsuspender.rules">services.xsuspender.rules</a></h2>
-<p>Attribute set of XSuspender rules.</p>
-<p><em>Type:</em>
-attribute set of (submodule)</p>
+attribute set of (open submodule of lazy attribute set of (INI atom (null, bool, int, float or string)))</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
   Chromium = {
-    matchWmClassContains = "chromium-browser";
-    suspendDelay = 10;
-    suspendSubtreePattern = "chromium";
+    match_wm_class_contains = "chromium-browser";
+  };
+  Default = {
+    resume_every = 60;
+    suspend_delay = 10;
   };
 }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.autoSuspendOnBattery"><a class="header" href="#opt-services.xsuspender.rules._name_.autoSuspendOnBattery">services.xsuspender.rules.&lt;name&gt;.autoSuspendOnBattery</a></h2>
-<p>Whether to auto-apply rules when switching to battery
-power even if the window(s) didn’t just lose focus.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.downclockOnBattery"><a class="header" href="#opt-services.xsuspender.rules._name_.downclockOnBattery">services.xsuspender.rules.&lt;name&gt;.downclockOnBattery</a></h2>
-<p>Limit CPU consumption for this factor when on battery power.
-Value 1 means 50% decrease, 2 means 66%, 3 means 75% etc.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.execResume"><a class="header" href="#opt-services.xsuspender.rules._name_.execResume">services.xsuspender.rules.&lt;name&gt;.execResume</a></h2>
-<p>Before resuming, execute this shell script. Resume the
-process regardless script failure.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"echo resuming ..."
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.execSuspend"><a class="header" href="#opt-services.xsuspender.rules._name_.execSuspend">services.xsuspender.rules.&lt;name&gt;.execSuspend</a></h2>
-<p>Before suspending, execute this shell script. If it fails,
-abort suspension.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"echo \"suspending window $XID of process $PID\""
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.matchWmClassContains"><a class="header" href="#opt-services.xsuspender.rules._name_.matchWmClassContains">services.xsuspender.rules.&lt;name&gt;.matchWmClassContains</a></h2>
-<p>Match windows that wm class contains string.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.matchWmClassGroupContains"><a class="header" href="#opt-services.xsuspender.rules._name_.matchWmClassGroupContains">services.xsuspender.rules.&lt;name&gt;.matchWmClassGroupContains</a></h2>
-<p>Match windows where wm class group contains string.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.matchWmNameContains"><a class="header" href="#opt-services.xsuspender.rules._name_.matchWmNameContains">services.xsuspender.rules.&lt;name&gt;.matchWmNameContains</a></h2>
-<p>Match windows where wm name contains string.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.onlyOnBattery"><a class="header" href="#opt-services.xsuspender.rules._name_.onlyOnBattery">services.xsuspender.rules.&lt;name&gt;.onlyOnBattery</a></h2>
-<p>Whether to enable process suspend only on battery.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.resumeEvery"><a class="header" href="#opt-services.xsuspender.rules._name_.resumeEvery">services.xsuspender.rules.&lt;name&gt;.resumeEvery</a></h2>
-<p>Resume interval in seconds.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">50
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.resumeFor"><a class="header" href="#opt-services.xsuspender.rules._name_.resumeFor">services.xsuspender.rules.&lt;name&gt;.resumeFor</a></h2>
-<p>Resume duration in seconds.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">5
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.sendSignals"><a class="header" href="#opt-services.xsuspender.rules._name_.sendSignals">services.xsuspender.rules.&lt;name&gt;.sendSignals</a></h2>
-<p>Whether to send SIGSTOP / SIGCONT signals or not.
-If false just the exec scripts are run.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.suspendDelay"><a class="header" href="#opt-services.xsuspender.rules._name_.suspendDelay">services.xsuspender.rules.&lt;name&gt;.suspendDelay</a></h2>
-<p>Initial suspend delay in seconds.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">5
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/xsuspender.nix">&lt;home-manager/modules/services/xsuspender.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.xsuspender.rules._name_.suspendSubtreePattern"><a class="header" href="#opt-services.xsuspender.rules._name_.suspendSubtreePattern">services.xsuspender.rules.&lt;name&gt;.suspendSubtreePattern</a></h2>
-<p>Also suspend descendant processes that match this regex.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -93545,6 +93234,23 @@ session.</p>
 compositor owns its GPU render node lets Vulkan-accelerated whisper builds
 detect their device. Previously, a daemon that started before the render node
 existed fell back to CPU and never recovered until it was restarted manually.</p>
+</li>
+<li>
+<p>XSuspender now uses <a href="#opt-services.xsuspender.settings">services.xsuspender.settings</a> for freeform INI
+configuration. Move <code>services.xsuspender.defaults</code> to
+<code>services.xsuspender.settings.Default</code> and <code>services.xsuspender.rules</code> to
+<code>services.xsuspender.settings.&lt;name&gt;</code>. Use snake_case keys such as
+<code>suspend_delay</code> instead of <code>suspendDelay</code>.</p>
+<p>Deprecated aliases warn and preserve old defaults, including legacy function
+reads, in legacy sections and <code>Default</code>. These defaults have option-default
+priority, so ordinary assignments override them. Settings-only sections inherit
+from <code>Default</code> at runtime, then use native defaults. To preserve old behavior, set
+<code>suspend_delay</code> to 5 and <code>only_on_battery</code> to <code>false</code>, rather than 10 and <code>true</code>.</p>
+<p>Without legacy options, empty settings leave the configuration file unmanaged.
+If you configured both <code>services.xsuspender.defaults</code> and
+<code>services.xsuspender.rules.Default</code>, consolidate them under
+<code>services.xsuspender.settings.Default</code>. They now merge instead of the rule
+replacing the entire defaults section.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
