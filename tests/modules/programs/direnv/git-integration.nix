@@ -17,7 +17,6 @@
 
   nmt.script = ''
     assertFileExists home-files/.config/git/ignore
-    assertFileContains home-files/.config/git/ignore ".envrc"
     assertFileContains home-files/.config/git/ignore ".direnv/"
   '';
 }

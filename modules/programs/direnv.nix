@@ -79,8 +79,7 @@ in
 
     enableGitIntegration = mkEnableOption "Git integration" // {
       description = ''
-        Whether to configure Git to globally ignore {file}`.envrc`
-        and {file}`.direnv/`.
+        Whether to configure Git to globally ignore {file}`.direnv/`.
       '';
     };
 
@@ -129,7 +128,6 @@ in
         };
 
         git.ignores = mkIf cfg.enableGitIntegration [
-          ".envrc"
           ".direnv/"
         ];
 
