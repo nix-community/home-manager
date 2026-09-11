@@ -63,6 +63,19 @@ in
 {
   nmt.script = ''
     export HOME="$TMPDIR/mutable-home"
+
+    # The activation code under test shells out to `bash`, which is not on
+    # the test PATH (nmt only provides coreutils, diffutils, findutils,
+    # gnugrep, and gnused). Reuse the interpreter running this script,
+    # falling back to the sandbox /bin/sh (bash on Linux and Darwin).
+    mkdir -p "$TMPDIR/test-bin"
+    if ! command -v bash >/dev/null 2>&1; then
+      ln -s "''${BASH:-/bin/sh}" "$TMPDIR/test-bin/bash"
+      export PATH="$TMPDIR/test-bin:$PATH"
+    fi
+    test -x "$(command -v bash)"
+    export PATH="${pkgs.gettext}/bin:$PATH"
+
     mkdir -p "$HOME/app"
     printf unmanaged > "$HOME/app/unmanaged"
 
