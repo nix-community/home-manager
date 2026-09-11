@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   expectedXdgDataDirs = lib.concatStringsSep ":" [
     "\${NIX_STATE_DIR:-/nix/var/nix}/profiles/default/share"
@@ -13,6 +18,18 @@ in
 {
   config = {
     targets.genericLinux.enable = true;
+
+    nix.package = pkgs.runCommand "lix-99.0" {
+      pname = "lix";
+      version = "99.0";
+    } "mkdir -p $out";
+
+    programs.bash = {
+      enable = true;
+      enableCompletion = false;
+    };
+
+    home.packages = [ (pkgs.writeShellScriptBin "hm-profile-command" "exit 0") ];
 
     xdg.systemDirs.data = [ "/foo" ];
 
@@ -29,11 +46,19 @@ in
       sessionVarsFile=home-path/etc/profile.d/hm-session-vars.sh
       assertFileExists $sessionVarsFile
       assertFileContains $sessionVarsFile \
-        '. "${pkgs.nix}/etc/profile.d/nix.sh"'
+        '. "${config.targets.genericLinux.nixEnvironmentPackage}/etc/profile.d/hm-nix-env.sh"'
+      assertFileNotRegex $sessionVarsFile 'profile\.d/nix\.sh'
+      assertFileNotRegex \
+        ${config.targets.genericLinux.nixEnvironmentPackage}/etc/profile.d/hm-nix-env.sh \
+        'NIX_STATE_HOME'
 
       assertFileContains \
         home-path/etc/profile.d/hm-session-vars.sh \
         'export TERM="$TERM"'
+
+      ${(import ./generic-linux-runtime.nix) {
+        inherit pkgs expectedXdgDataDirs;
+      }}
     '';
   };
 }
