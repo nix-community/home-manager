@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-80d153cc.js";
+            window.path_to_searchindex_js = "../searchindex-0cad93f6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-48d71312.js"></script>
@@ -214,6 +214,16 @@ existed fell back to CPU and never recovered until it was restarted manually.</p
 changes are only active if the <code>home.stateVersion</code> option is set to
 “26.11” or later.</p>
 <ul>
+<li>
+<p>On Darwin, the default value of
+<a href="../options/home-manager/programs/firefox.html#opt-programs.firefox.configPath">programs.firefox.configPath</a> changes from
+<code>Library/Application Support/Firefox</code> to
+<code>Library/Application Support/org.nixos.firefox</code> when
+<code>programs.firefox.package</code> is not <code>null</code>. Explicit <code>configPath</code> values remain
+unchanged. Before updating <code>home.stateVersion</code>, quit Firefox and move your
+Firefox data from <code>~/Library/Application Support/Firefox</code> to
+<code>~/Library/Application Support/org.nixos.firefox</code>.</p>
+</li>
 <li>
 <p>The KDL options under <code>programs.zellij</code> will now correctly escape backslashes
 in string values. For example, the Nix string <code>"\\"</code> will now correctly
