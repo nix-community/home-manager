@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-8528e14c.js";
+            window.path_to_searchindex_js = "../searchindex-3f7b78d5.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4b64f479.js"></script>
@@ -237,8 +237,10 @@ changes are only active if the <code>home.stateVersion</code> option is set to
 <code>Library/Application Support/Firefox</code> to
 <code>Library/Application Support/org.nixos.firefox</code> when
 <code>programs.firefox.package</code> is not <code>null</code>. Explicit <code>configPath</code> values remain
-unchanged. Before updating <code>home.stateVersion</code>, quit Firefox and move your
-Firefox data from <code>~/Library/Application Support/Firefox</code> to
+unchanged. Users with a <code>home.stateVersion</code> earlier than <code>"26.11"</code> should set
+<code>programs.firefox.configPath = "Library/Application Support/org.nixos.firefox";</code>
+explicitly. Before changing <code>configPath</code>, quit Firefox and move your data from
+<code>~/Library/Application Support/Firefox</code> to
 <code>~/Library/Application Support/org.nixos.firefox</code>.</p>
 </li>
 <li>
