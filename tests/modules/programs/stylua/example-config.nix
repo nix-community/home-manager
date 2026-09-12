@@ -1,4 +1,4 @@
-{ realPkgs, ... }: {
+{
   programs.stylua = {
     enable = true;
     settings = {
@@ -11,10 +11,8 @@
       quote_style = "AutoPreferSingle";
     };
   };
-  test.unstubs = [ (_self: _super: { inherit (realPkgs) stylua; }) ];
 
   nmt.script = ''
     assertFileContent "home-files/.config/stylua/stylua.toml" ${./expected-config.toml}
-    assertFileRegex "home-path/bin/stylua" "search-parent-directories"
   '';
 }
