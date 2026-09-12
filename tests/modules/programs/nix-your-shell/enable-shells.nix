@@ -13,7 +13,6 @@
       enableFishIntegration = true;
       enableNushellIntegration = true;
       enableZshIntegration = true;
-      nix-output-monitor.enable = true;
     };
     fish.enable = true;
     nushell.enable = true;
@@ -34,7 +33,7 @@
       assertFileExists home-files/.config/fish/config.fish
       assertFileRegex \
         home-files/.config/fish/config.fish \
-        '/nix/store/[^/]*-nix-your-shell-[^/]*/bin/nix-your-shell --nom fish | source'
+        '/nix/store/[^/]*-nix-your-shell-[^/]*/bin/nix-your-shell fish | source'
 
       assertFileExists ${nushellConfigDir}/config.nu
       assertFileRegex \
@@ -44,6 +43,6 @@
       assertFileExists home-files/.zshrc
       assertFileRegex \
         home-files/.zshrc \
-        '/nix/store/[^/]*-nix-your-shell-[^/]*/bin/nix-your-shell --nom zsh | source /dev/stdin'
+        '/nix/store/[^/]*-nix-your-shell-[^/]*/bin/nix-your-shell zsh | source /dev/stdin'
     '';
 }
