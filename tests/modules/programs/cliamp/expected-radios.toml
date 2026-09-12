@@ -1,0 +1,7 @@
+[[station]]
+name = "Jazz FM"
+url = "https://jazz.example.com/stream"
+
+[[station]]
+name = "Ambient Radio"
+url = "https://ambient.example.com/stream.m3u"

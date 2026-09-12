@@ -36,6 +36,7 @@ let
     "cava"
     "chromium"
     "claude-code"
+    "cliamp"
     "clock-rs"
     "cmus"
     "codex"
