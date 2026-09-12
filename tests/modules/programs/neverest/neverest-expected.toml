@@ -1,0 +1,30 @@
+[accounts.example.left.backend]
+root-dir = "/Users/testuser/mail/example"
+type = "maildir"
+
+[accounts.example.right.backend]
+encryption = "tls"
+host = "imap.example.com"
+login = "user@example.com"
+port = 993
+type = "imap"
+
+[accounts.example.right.backend.passwd]
+command = "hiq -dF password 'proto=imaps' 'host=imap.example.com'"
+
+[accounts.work.left.backend]
+root-dir = "/Users/testuser/mail/work"
+type = "maildir"
+
+[accounts.work.right.backend]
+encryption = "tls"
+host = "imap.work.com"
+login = "work@work.com"
+port = 993
+type = "imap"
+
+[accounts.work.right.backend.passwd]
+command = "pass show email/work"
+
+[accounts.work.right.backend.watch]
+timeout = 1800
