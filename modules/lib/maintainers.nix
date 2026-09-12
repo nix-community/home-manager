@@ -349,11 +349,6 @@
     github = "lheckemann";
     githubId = 341954;
   };
-  libewa = {
-    email = "libewa-git@icloud.com";
-    github = "libewa";
-    githubId = 67926131;
-  };
   lilyinstarlight = {
     email = "lily@lily.flowers";
     matrix = "@lily:lily.flowers";
