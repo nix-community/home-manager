@@ -1,0 +1,43 @@
+[accounts.personal]
+auto-refresh = true
+client-id = "1234-abcd.apps.googleusercontent.com"
+default = true
+grant = "authorization-code"
+pkce = "s256"
+scopes = ["https://mail.google.com/"]
+
+[accounts.personal.client-secret]
+command = "pass show ortie/personal-client-secret"
+
+[accounts.personal.endpoints]
+authorization = "https://accounts.google.com/o/oauth2/v2/auth"
+token = "https://oauth2.googleapis.com/token"
+
+[accounts.personal.extras]
+access_type = "offline"
+
+[accounts.personal.hooks.on-refresh.success]
+command = "logger 'ortie refreshed a token'"
+
+[accounts.personal.storage.read]
+command = ["pass", "show", "ortie/personal"]
+
+[accounts.personal.storage.write]
+command = "pass insert -m -f ortie/personal"
+
+[accounts.work]
+client-id = "00000000-0000-0000-0000-000000000000"
+grant = "client-credentials"
+scopes = ["https://graph.microsoft.com/.default"]
+
+[accounts.work.client-secret]
+command = ["secret-tool", "lookup", "oauth", "work"]
+
+[accounts.work.endpoints]
+token = "https://login.microsoftonline.com/tenant/oauth2/v2.0/token"
+
+[accounts.work.storage.read]
+command = ["secret-tool", "lookup", "token", "work"]
+
+[accounts.work.storage.write]
+command = "secret-tool store --label ortie token work"
