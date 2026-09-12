@@ -69,10 +69,14 @@
     The transform parameter is a function that takes a string and returns a string.
     It is applied to each element of the old option path to generate the new option path.
     Defaults to lib.hm.strings.toSnakeCase.
+
+    Set preserveOrder when list definitions from the old and new paths must
+    retain their relative mkBefore and mkAfter ordering.
   */
   mkSettingsRenamedOptionModules =
     oldPrefix: newPrefix:
     {
+      preserveOrder ? false,
       transform ? lib.hm.strings.toSnakeCase,
     }:
     map (
@@ -86,8 +90,47 @@
               old = lib.toList spec;
               new = map transform finalSpec.old;
             };
+        from = oldPrefix ++ finalSpec.old;
+        to = newPrefix ++ finalSpec.new;
       in
-      lib.mkRenamedOptionModule (oldPrefix ++ finalSpec.old) (newPrefix ++ finalSpec.new)
+      if !preserveOrder then
+        lib.mkRenamedOptionModule from to
+      else
+        { options, ... }:
+        let
+          option = lib.getAttrFromPath from options;
+          forwardDefinition =
+            definition:
+            lib.modules.mkDefinition {
+              inherit (definition) file;
+              value = lib.mkOverride option.highestPrio (
+                lib.mkOrder (definition.priority or lib.modules.defaultOrderPriority) definition.value
+              );
+            };
+        in
+        {
+          imports = [
+            (lib.doRename {
+              inherit from to;
+              visible = false;
+              warn = false;
+              use = lib.id;
+              condition = false;
+            })
+          ];
+
+          config = lib.mkMerge [
+            (lib.optionalAttrs (options ? warnings) {
+              warnings = lib.optional option.isDefined (
+                "The option `${lib.showOption from}' defined in "
+                + "${lib.showFiles option.files} has been renamed to `${lib.showOption to}'."
+              );
+            })
+            (lib.setAttrByPath to (
+              lib.mkIf option.isDefined (lib.mkMerge (map forwardDefinition option.definitionsWithLocations))
+            ))
+          ];
+        }
     );
 
   /*
