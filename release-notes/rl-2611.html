@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-3f7b78d5.js";
+            window.path_to_searchindex_js = "../searchindex-64cdb04f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4b64f479.js"></script>
@@ -223,6 +223,14 @@ If you configured both <code>services.xsuspender.defaults</code> and
 <code>services.xsuspender.rules.Default</code>, consolidate them under
 <code>services.xsuspender.settings.Default</code>. They now merge instead of the rule
 replacing the entire defaults section.</p>
+</li>
+<li>
+<p>TWMN now uses <a href="../options/home-manager/services/twmn.html#opt-services.twmn.settings">services.twmn.settings</a> for freeform INI configuration.
+Legacy options emit migration warnings. Move native options
+and <code>extraConfig</code> values into <code>settings</code>, resolving duplicate definitions.
+Enabling the service without configuration no longer creates a config file.
+Settings-only configurations use TWMN’s native defaults; see the option
+documentation for compatibility limits and preserving previous defaults.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>

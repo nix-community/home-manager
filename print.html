@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3f7b78d5.js";
+            window.path_to_searchindex_js = "searchindex-64cdb04f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4b64f479.js"></script>
@@ -81245,138 +81245,48 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.twmn.duration"><a class="header" href="#opt-services.twmn.duration">services.twmn.duration</a></h2>
-<p>The time each notification remains visible, in milliseconds.</p>
-<p><em>Type:</em>
-unsigned integer, meaning &gt;=0</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">3000
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">5000
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.extraConfig"><a class="header" href="#opt-services.twmn.extraConfig">services.twmn.extraConfig</a></h2>
-<p>Extra configuration options to add to the twmnd config file. See
+<h2 id="opt-services.twmn.settings"><a class="header" href="#opt-services.twmn.settings">services.twmn.settings</a></h2>
+<p>Configuration for twmnd in INI format. See
 <a href="https://github.com/sboli/twmn/blob/master/README.md">https://github.com/sboli/twmn/blob/master/README.md</a>
-for details.</p>
+for available settings. Generated files include <code>main.port = 9797</code>
+unless configured explicitly, because TWMN requires it in a managed file.</p>
+<p>No configuration file is generated when settings are empty. Deprecated
+options retain the historical defaults that disable always-on-top and
+bouncing and set the outgoing animation curve to 38. Forcing the whole
+settings value suppresses these legacy GUI defaults; forcing a section
+does not suppress omitted defaults. Settings-only configurations use
+TWMN’s defaults for omitted keys. Use signed strings
+such as <code>"+20"</code> for offsets, <code>-1</code> for unlimited <code>gui.max_length</code>, and
+an empty string for an unset screen or icon.</p>
+<p>The deprecated <code>extraConfig</code> option remains a final override, including
+over forced settings. Move its values into settings and resolve any
+duplicate definitions when migrating.</p>
+<p>Aliases expose final settings values, not omitted native defaults.
+Reading legacy aliases to derive other settings can cause infinite
+recursion. Use shared local bindings for related values instead.</p>
 <p><em>Type:</em>
-attribute set</p>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">{ main.activation_command = "${pkgs.hello}/bin/hello"; }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.host"><a class="header" href="#opt-services.twmn.host">services.twmn.host</a></h2>
-<p>Host address to listen on for notifications.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"127.0.0.1"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"laptop.lan"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.icons.critical"><a class="header" href="#opt-services.twmn.icons.critical">services.twmn.icons.critical</a></h2>
-<p>Path to the critical notifications’ icon.</p>
-<p><em>Type:</em>
-null or absolute path</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.icons.info"><a class="header" href="#opt-services.twmn.icons.info">services.twmn.icons.info</a></h2>
-<p>Path to the informative notifications’ icon.</p>
-<p><em>Type:</em>
-null or absolute path</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.icons.warning"><a class="header" href="#opt-services.twmn.icons.warning">services.twmn.icons.warning</a></h2>
-<p>Path to the warning notifications’ icon.</p>
-<p><em>Type:</em>
-null or absolute path</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.port"><a class="header" href="#opt-services.twmn.port">services.twmn.port</a></h2>
-<p>UDP port to listen on for notifications.</p>
-<p><em>Type:</em>
-16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">9797
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.screen"><a class="header" href="#opt-services.twmn.screen">services.twmn.screen</a></h2>
-<p>Screen number to display notifications on when using a multi-head
-desktop.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">0
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.soundCommand"><a class="header" href="#opt-services.twmn.soundCommand">services.twmn.soundCommand</a></h2>
-<p>Command to execute to play a notification’s sound.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">""
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.text.color"><a class="header" href="#opt-services.twmn.text.color">services.twmn.text.color</a></h2>
-<p>Notification’s text color. RGB hex and keywords (e.g. <code>lightgray</code>)
-are supported.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"#999999"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"lightgray"
+<pre><code class="language-nix">{
+  gui = {
+    background_color = "#000000";
+    font_size = 16;
+    offset_x = "+20";
+  };
+  main = {
+    duration = 5000;
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
 </ul>
 <h2 id="opt-services.twmn.text.font.package"><a class="header" href="#opt-services.twmn.text.font.package">services.twmn.text.font.package</a></h2>
-<p>The font package to use. Package providing the font to use for the notification text.
-This package is only used if <code>font.package</code> is not null.</p>
+<p>The font package to use. Package providing the notification font.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
@@ -81384,290 +81294,6 @@ null or package</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">pkgs.dejavu_fonts
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.text.font.family"><a class="header" href="#opt-services.twmn.text.font.family">services.twmn.text.font.family</a></h2>
-<p>Notification text’s font family.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"Sans"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"Noto Sans"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.text.font.size"><a class="header" href="#opt-services.twmn.text.font.size">services.twmn.text.font.size</a></h2>
-<p>Notification text’s font size.</p>
-<p><em>Type:</em>
-unsigned integer, meaning &gt;=0</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">13
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">42
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.text.font.variant"><a class="header" href="#opt-services.twmn.text.font.variant">services.twmn.text.font.variant</a></h2>
-<p>Notification text’s font variant.</p>
-<p><em>Type:</em>
-one of “oblique”, “italic”, “ultra-light”, “light”, “medium”, “semi-bold”, “bold”, “ultra-bold”, “heavy”, “ultra-condensed”, “extra-condensed”, “condensed”, “semi-condensed”, “semi-expanded”, “expanded”, “extra-expanded”, “ultra-expanded”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"medium"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"heavy"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.text.maxLength"><a class="header" href="#opt-services.twmn.text.maxLength">services.twmn.text.maxLength</a></h2>
-<p>Maximum length of the text before it is cut and suffixed with “…”.
-Never cuts if <code>null</code>.</p>
-<p><em>Type:</em>
-null or (unsigned integer, meaning &gt;=0)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">80
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.alwaysOnTop"><a class="header" href="#opt-services.twmn.window.alwaysOnTop">services.twmn.window.alwaysOnTop</a></h2>
-<p>Whether to enable forcing the notification window to always be on top.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.bounce.enable"><a class="header" href="#opt-services.twmn.window.animation.bounce.enable">services.twmn.window.animation.bounce.enable</a></h2>
-<p>Whether to enable notification bounce when displaying next notification directly.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.bounce.duration"><a class="header" href="#opt-services.twmn.window.animation.bounce.duration">services.twmn.window.animation.bounce.duration</a></h2>
-<p>The bounce animation duration in milliseconds.</p>
-<p><em>Type:</em>
-unsigned integer, meaning &gt;=0</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">500
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">618
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.easeIn"><a class="header" href="#opt-services.twmn.window.animation.easeIn">services.twmn.window.animation.easeIn</a></h2>
-<p>Options for the notification appearance’s animation.</p>
-<p><em>Type:</em>
-submodule</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  curve = 19;
-  duration = 618;
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.easeIn.curve"><a class="header" href="#opt-services.twmn.window.animation.easeIn.curve">services.twmn.window.animation.easeIn.curve</a></h2>
-<p>The qt easing-curve animation to use for the animation. See
-<a href="https://doc.qt.io/qt-5/qeasingcurve.html#Type-enum">
-QEasingCurve documentation</a>.</p>
-<p><em>Type:</em>
-integer between 0 and 40 (both inclusive)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">38
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">19
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.easeIn.duration"><a class="header" href="#opt-services.twmn.window.animation.easeIn.duration">services.twmn.window.animation.easeIn.duration</a></h2>
-<p>The animation duration in milliseconds.</p>
-<p><em>Type:</em>
-unsigned integer, meaning &gt;=0</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">1000
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">618
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.easeOut"><a class="header" href="#opt-services.twmn.window.animation.easeOut">services.twmn.window.animation.easeOut</a></h2>
-<p>Options for the notification disappearance’s animation.</p>
-<p><em>Type:</em>
-submodule</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  curve = 19;
-  duration = 618;
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.easeOut.curve"><a class="header" href="#opt-services.twmn.window.animation.easeOut.curve">services.twmn.window.animation.easeOut.curve</a></h2>
-<p>The qt easing-curve animation to use for the animation. See
-<a href="https://doc.qt.io/qt-5/qeasingcurve.html#Type-enum">
-QEasingCurve documentation</a>.</p>
-<p><em>Type:</em>
-integer between 0 and 40 (both inclusive)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">38
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">19
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.animation.easeOut.duration"><a class="header" href="#opt-services.twmn.window.animation.easeOut.duration">services.twmn.window.animation.easeOut.duration</a></h2>
-<p>The animation duration in milliseconds.</p>
-<p><em>Type:</em>
-unsigned integer, meaning &gt;=0</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">1000
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">618
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.color"><a class="header" href="#opt-services.twmn.window.color">services.twmn.window.color</a></h2>
-<p>Notification’s background color. RGB hex and keywords (e.g.
-<code>lightgray</code>) are supported.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"#000000"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"lightgray"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.height"><a class="header" href="#opt-services.twmn.window.height">services.twmn.window.height</a></h2>
-<p>Height of the slide bar. Useful to match your tiling window
-manager’s bar.</p>
-<p><em>Type:</em>
-unsigned integer, meaning &gt;=0</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">18
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">42
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.offset.x"><a class="header" href="#opt-services.twmn.window.offset.x">services.twmn.window.offset.x</a></h2>
-<p>Offset of the notification’s slide starting point in pixels on the
-horizontal axis (positive is rightward).</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">50
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.offset.y"><a class="header" href="#opt-services.twmn.window.offset.y">services.twmn.window.offset.y</a></h2>
-<p>Offset of the notification’s slide starting point in pixels on the
-vertical axis (positive is upward).</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">-100
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.opacity"><a class="header" href="#opt-services.twmn.window.opacity">services.twmn.window.opacity</a></h2>
-<p>The notification window’s opacity.</p>
-<p><em>Type:</em>
-integer between 0 and 100 (both inclusive)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">100
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">80
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/twmn.nix">&lt;home-manager/modules/services/twmn.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.twmn.window.position"><a class="header" href="#opt-services.twmn.window.position">services.twmn.window.position</a></h2>
-<p>Position of the notification slide. The notification will slide
-in vertically from the border if placed in
-<code>top_center</code> or <code>bottom_center</code>,
-horizontally otherwise.</p>
-<p><em>Type:</em>
-one of “tr”, “top_right”, “tl”, “top_left”, “br”, “bottom_right”, “bl”, “bottom_left”, “tc”, “top_center”, “bc”, “bottom_center”, “c”, “center”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"top_right"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"bottom_left"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -93276,6 +92902,14 @@ If you configured both <code>services.xsuspender.defaults</code> and
 <code>services.xsuspender.rules.Default</code>, consolidate them under
 <code>services.xsuspender.settings.Default</code>. They now merge instead of the rule
 replacing the entire defaults section.</p>
+</li>
+<li>
+<p>TWMN now uses <a href="#opt-services.twmn.settings">services.twmn.settings</a> for freeform INI configuration.
+Legacy options emit migration warnings. Move native options
+and <code>extraConfig</code> values into <code>settings</code>, resolving duplicate definitions.
+Enabling the service without configuration no longer creates a config file.
+Settings-only configurations use TWMN’s native defaults; see the option
+documentation for compatibility limits and preserving previous defaults.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
