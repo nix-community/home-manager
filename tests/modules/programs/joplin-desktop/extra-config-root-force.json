@@ -1,0 +1,7 @@
+{
+  "conditional": "canonical",
+  "editor": "nano",
+  "newNoteFocus": "title",
+  "sync.interval": 600,
+  "sync.target": 0
+}
