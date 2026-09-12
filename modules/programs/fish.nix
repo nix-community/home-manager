@@ -271,10 +271,9 @@ let
                   (listOf str)
                 ]);
             in
-            origin
+            types.addCheck origin (x: if !config.erase && isNull x then false else origin.check x)
             // {
               description = "string or list of string (optional when erase is set to true)";
-              check = x: if !config.erase && isNull x then false else origin.check x;
             };
           default = null;
         };
