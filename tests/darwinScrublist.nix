@@ -108,6 +108,7 @@ let
     "kitty"
     "kubecolor"
     "kubeswitch"
+    "lakectl"
     "lapce"
     "lazydocker"
     "lazygit"
