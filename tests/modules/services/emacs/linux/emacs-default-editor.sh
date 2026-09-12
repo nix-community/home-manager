@@ -1,5 +1,6 @@
 set +u
 source $TESTED/home-path/etc/profile.d/hm-session-vars.sh
+export PATH="$TESTED/home-path/bin:$PATH"
 set -u
 
 check_arguments () {
