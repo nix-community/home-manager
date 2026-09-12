@@ -147,14 +147,6 @@
     name = "erina";
     source = "home-manager";
   };
-  Eveeifyeve = {
-    email = "eveeg1971@gmail.com";
-    github = "Eveeifyeve";
-    githubId = 88671402;
-    matrix = "@eveeifyeve:matrix.org";
-    name = "Eveeifyeve";
-    source = "nixpkgs";
-  };
   Fendse = {
     email = "46252070+Fendse@users.noreply.github.com";
     github = "Fendse";
@@ -224,13 +216,6 @@
     matrix = "@janik0:matrix.org";
     name = "Janik";
     source = "home-manager";
-  };
-  JasmineLowen = {
-    email = "robwalter96@gmail.com";
-    github = "JasmineLowen";
-    githubId = 26892280;
-    name = "Robert Walter";
-    source = "nixpkgs";
   };
   JoaquinTrinanes = {
     email = "hi@joaquint.io";
@@ -1162,6 +1147,14 @@
     name = "Evan Stoll";
     source = "nixpkgs";
   };
+  eveeifyeve = {
+    email = "open-source@eveeifyeve.dev";
+    github = "eveeifyeve";
+    githubId = 88671402;
+    matrix = "@eveeifyeve:matrix.org";
+    name = "Eveeifyeve";
+    source = "nixpkgs";
+  };
   exzombie = {
     email = "jure@varlec.si";
     github = "exzombie";
@@ -1371,6 +1364,13 @@
     githubId = 9268789;
     name = "Antonio Spadaro";
     source = "home-manager";
+  };
+  iniw = {
+    email = "dev@vini.cat";
+    github = "iniw";
+    githubId = 30220881;
+    name = "Vinicius Deolindo";
+    source = "nixpkgs";
   };
   iosmanthus = {
     email = "myosmanthustree@gmail.com";
@@ -2286,18 +2286,6 @@
     githubId = 125882337;
     name = "soracat";
     source = "home-manager";
-  };
-  sableseyler = {
-    email = "sable@seyleri.us";
-    github = "sableseyler";
-    githubId = 1145981;
-    keys = [
-      {
-        fingerprint = "7246 B6E1 ABB9 9A48 4395  FD11 DC26 B921 A9E9 DBDE";
-      }
-    ];
-    name = "Sable Seyler";
-    source = "nixpkgs";
   };
   sei40kr = {
     email = "sei40kr@gmail.com";
