@@ -1,0 +1,9 @@
+configuration {
+cycle: false;
+font: "forced-overlay";
+location: 4;
+modes: [ "native" ];
+terminal: "/canonical";
+xoffset: 0;
+yoffset: 0;
+}
