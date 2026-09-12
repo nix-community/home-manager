@@ -85,6 +85,41 @@ configuration location with an environment variable, for example
 `FOO_HOME`, expose a `configDir` option and use it to respect
 `home.preferXdgDirectories`.
 
+## Migrate settings with shared helpers {#sec-guidelines-settings-migrations}
+
+Use `lib.hm.deprecations.mkSettingsRenamedOptionModules` for unchanged values
+moving into settings. Specify native key paths explicitly when casing or
+literal dotted keys differ from the default snake-case transformation.
+Set `preserveOrder = true` when legacy and new list definitions must retain
+relative `mkBefore` and `mkAfter` ordering. Value conversions belong in
+`lib.mkChangedOptionModule`, not in a path-rename mapping.
+
+For a default-empty attribute-set option formerly applied as a final overlay,
+use `lib.hm.deprecations.mkSettingsOverlay`:
+
+``` nix
+let
+  overlay = lib.hm.deprecations.mkSettingsOverlay {
+    inherit options;
+    from = [ "programs" "example" "extraConfig" ];
+    to = [ "programs" "example" "settings" ];
+  };
+in
+{
+  imports = [ overlay.module ];
+}
+```
+
+The helper forwards raw definitions, applying root priorities only to supplied
+keys. Use `overlay.keys` to suppress modeled contributions for keys that the
+old overlay overwrote. Disabled conditional keys are absent; explicit null
+and empty values still count as supplied. Whole sources weaker than the old
+empty option default are ignored.
+
+Keep application defaults, conversions, and output filtering in the module.
+Test legacy overlay precedence and ordinary settings overrides separately.
+Do not replace module merging with a final attribute-set overlay on settings.
+
 ## Add relevant tests {#sec-guidelines-add-tests}
 
 If at all possible, make sure to add new tests and expand existing tests

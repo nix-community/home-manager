@@ -1,4 +1,29 @@
 { lib }:
+let
+  mkRenamedOptionModuleWith =
+    {
+      from,
+      to,
+      value,
+      condition,
+    }:
+    args@{ options, ... }:
+    lib.doRename
+      {
+        inherit from to condition;
+        visible = false;
+        warn = true;
+        use = lib.id;
+        # The forwarded definitions already carry their intended priorities.
+        withPriority = false;
+      }
+      (
+        args
+        // {
+          options = lib.recursiveUpdate options (lib.setAttrByPath from { definitions = [ value ]; });
+        }
+      );
+in
 {
   /*
     Builds a standard warning for an option value shape that is deprecated.
@@ -96,7 +121,7 @@
       if !preserveOrder then
         lib.mkRenamedOptionModule from to
       else
-        { options, ... }:
+        args@{ options, ... }:
         let
           option = lib.getAttrFromPath from options;
           forwardDefinition =
@@ -108,30 +133,66 @@
               );
             };
         in
-        {
-          imports = [
-            (lib.doRename {
-              inherit from to;
-              visible = false;
-              warn = false;
-              use = lib.id;
-              condition = false;
-            })
-          ];
-
-          config = lib.mkMerge [
-            (lib.optionalAttrs (options ? warnings) {
-              warnings = lib.optional option.isDefined (
-                "The option `${lib.showOption from}' defined in "
-                + "${lib.showFiles option.files} has been renamed to `${lib.showOption to}'."
-              );
-            })
-            (lib.setAttrByPath to (
-              lib.mkIf option.isDefined (lib.mkMerge (map forwardDefinition option.definitionsWithLocations))
-            ))
-          ];
-        }
+        mkRenamedOptionModuleWith {
+          inherit from to;
+          condition = option.isDefined;
+          value = lib.mkMerge (map forwardDefinition option.definitionsWithLocations);
+        } args
     );
+
+  /*
+    Migrates a default-empty attribute-set overlay to freeform settings.
+    Returns a module to import and the effective immediate keys, which callers
+    can use to suppress modeled values formerly overwritten by the overlay.
+
+    Root priorities apply only to supplied keys. Explicit key priorities and
+    nested definitions remain intact. Keys with only disabled conditions are
+    absent; null and empty values still count as supplied.
+
+    Example:
+      overlay = lib.hm.deprecations.mkSettingsOverlay {
+        inherit options;
+        from = [ "programs" "example" "extraConfig" ];
+        to = [ "programs" "example" "settings" ];
+      };
+
+      imports = [ overlay.module ];
+  */
+  mkSettingsOverlay =
+    {
+      options,
+      from,
+      to,
+    }:
+    let
+      old = lib.getAttrFromPath from options;
+      active = old.isDefined && old.highestPrio <= (lib.mkOptionDefault { }).priority;
+      definitions = lib.optionals active old.definitionsWithLocations;
+    in
+    {
+      keys = builtins.attrNames ((lib.types.attrsOf lib.types.raw).merge from definitions);
+
+      module = mkRenamedOptionModuleWith {
+        inherit from to;
+        condition = active;
+        value =
+          let
+            withRootPriority =
+              value:
+              if (value._type or null) == "override" then
+                value
+              else if (value._type or null) == "if" then
+                lib.mkIf value.condition (withRootPriority value.content)
+              else if (value._type or null) == "merge" then
+                lib.mkMerge (map withRootPriority value.contents)
+              else if (value._type or null) == "definition" then
+                value // { value = withRootPriority value.value; }
+              else
+                lib.mkOverride old.highestPrio value;
+          in
+          lib.mkMerge (map (definition: lib.mapAttrs (_: withRootPriority) definition.value) definitions);
+      };
+    };
 
   /*
     Recursively transforms attribute set keys, issuing a warning for each transformation.
