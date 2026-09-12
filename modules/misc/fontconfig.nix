@@ -436,6 +436,14 @@ in
       _name: config:
       lib.nameValuePair "fontconfig/conf.d/${config.target}" {
         inherit (config) enable source;
+        # This path is exclusively home-manager's own namespace (the
+        # `target` default embeds "-hm-" in the filename), so anything
+        # found occupying it is provably stale or foreign and safe to
+        # unconditionally overwrite. This also fixes the case where an
+        # external tool (e.g. KDE's fontinst) replaces the managed symlink
+        # with a plain-file copy of its target, which would otherwise make
+        # Home Manager's own collision check fail activation.
+        force = true;
       }
     ) cfg.configFile;
   };
