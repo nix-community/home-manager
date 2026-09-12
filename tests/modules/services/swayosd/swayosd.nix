@@ -26,7 +26,6 @@
 
         [Unit]
         After=graphical-session.target
-        ConditionEnvironment=WAYLAND_DISPLAY
         Description=Volume/backlight OSD indicator
         Documentation=man:swayosd(1)
         PartOf=graphical-session.target
