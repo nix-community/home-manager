@@ -95,6 +95,27 @@ in
         description = "Extra shell commands to run during initialization.";
       };
 
+      sessionVariables = mkOption {
+        default = { };
+        type =
+          with types;
+          lazyAttrsOf (oneOf [
+            str
+            path
+            int
+            float
+          ]);
+        example = {
+          EDITOR = "emacs";
+          GS_OPTIONS = "-sPAPERSIZE=a4";
+        };
+        description = ''
+          Environment variables to set in every X session in [](#opt-xsession.profilePath).
+
+          For more documentation see [](#opt-home.sessionVariables).
+        '';
+      };
+
       importedVariables = mkOption {
         type = types.listOf (types.strMatching "[a-zA-Z_][a-zA-Z0-9_]*");
         apply = lib.unique;
@@ -212,6 +233,8 @@ in
       if [ -e "$HOME/.profile" ]; then
         . "$HOME/.profile"
       fi
+
+      ${config.lib.shell.exportAll cfg.sessionVariables}
 
       # If there are any running services from a previous session.
       # Need to run this in xprofile because the NixOS xsession
