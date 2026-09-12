@@ -1,0 +1,61 @@
+[accounts.anon-account]
+default = false
+
+[accounts.anon-account.imap]
+server = "imaps://imap.example.com"
+starttls = false
+
+[accounts.anon-account.imap.sasl.anonymous]
+
+[accounts.anon-account.mailbox.alias]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"
+
+[accounts."hm@example.com"]
+default = true
+
+[accounts."hm@example.com".imap]
+server = "imaps://imap.example.com"
+starttls = false
+
+[accounts."hm@example.com".imap.sasl.xoauth2]
+username = "home.manager"
+
+[accounts."hm@example.com".imap.sasl.xoauth2.token]
+command = "password-command"
+
+[accounts."hm@example.com".mailbox.alias]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"
+
+[accounts."hm@example.com".smtp]
+server = "smtps://smtp.example.com"
+starttls = false
+
+[accounts."hm@example.com".smtp.sasl.login]
+username = "home.manager"
+
+[accounts."hm@example.com".smtp.sasl.login.password]
+command = "password-command"
+
+[accounts.jmap-account]
+default = false
+
+[accounts.jmap-account.jmap]
+server = "jmap.example.com"
+
+[accounts.jmap-account.jmap.auth.basic]
+username = "jmap"
+
+[accounts.jmap-account.jmap.auth.basic.password]
+command = "password-command"
+
+[accounts.jmap-account.mailbox.alias]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"

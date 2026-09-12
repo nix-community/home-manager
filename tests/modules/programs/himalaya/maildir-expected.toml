@@ -1,0 +1,40 @@
+[accounts.hm-account]
+default = false
+
+[accounts.hm-account.imap]
+server = "imaps://imap.example.org"
+starttls = false
+
+[accounts.hm-account.imap.sasl.plain]
+username = "home.manager.jr"
+
+[accounts.hm-account.imap.sasl.plain.password]
+command = "password-command 2"
+
+[accounts.hm-account.mailbox.alias]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"
+
+[accounts.hm-account.smtp]
+server = "smtp://smtp.example.org"
+starttls = true
+
+[accounts.hm-account.smtp.sasl.plain]
+username = "home.manager.jr"
+
+[accounts.hm-account.smtp.sasl.plain.password]
+command = "password-command 2"
+
+[accounts."maildir@example.com"]
+default = false
+
+[accounts."maildir@example.com".mailbox.alias]
+drafts = "Drafts"
+inbox = "Inbox"
+sent = "Sent"
+trash = "Trash"
+
+[accounts."maildir@example.com".maildir]
+root = "/home/hm-user/Mail/maildir@example.com"
