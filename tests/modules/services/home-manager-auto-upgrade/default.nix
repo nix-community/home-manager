@@ -6,4 +6,5 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   home-manager-auto-upgrade-deprecated-flake-configuration = ./deprecated-flake-configuration.nix;
   home-manager-auto-upgrade-flake-configuration = ./flake-configuration.nix;
   home-manager-auto-upgrade-nix-package = ./nix-package.nix;
+  home-manager-auto-upgrade-remote-flake-configuration = ./remote-flake-configuration.nix;
 }
