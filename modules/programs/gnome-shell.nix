@@ -112,11 +112,19 @@ in
       (lib.mkIf (cfg.theme != null) {
         dconf.settings."org/gnome/shell/extensions/user-theme".name = cfg.theme.name;
 
-        programs.gnome-shell.extensions = [
-          {
-            package = pkgs.gnomeExtensions.user-themes;
-          }
-        ];
+        programs.gnome-shell.extensions =
+          let
+            user-themes-package =
+              if (lib.lists.any (x: x == pkgs.gnome-shell-extensions) cfg.extensions) then
+                pkgs.gnome-shell-extensions
+              else
+                pkgs.gnomeExtensions.user-themes;
+          in
+          [
+            {
+              package = user-themes-package;
+            }
+          ];
 
         home.packages = [ cfg.theme.package ];
       })
