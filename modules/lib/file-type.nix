@@ -87,6 +87,32 @@ in
               '';
             };
 
+            mutable = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                Install a writable copy instead of a symbolic link. Only regular
+                source files are supported; recursive directory copying is not.
+
+                The target remains owned by Home Manager even when an application
+                edits or replaces it with another regular file. Each activation
+                replaces its contents, and removing or disabling the declaration
+                deletes it, including application changes. Stop the application
+                before activating. This does not merge or preserve edits.
+
+                Existing unmanaged files require a backup or {option}`force`,
+                even when their contents match. Symlink targets are never written
+                through, and directories are not replaced. Parent directories
+                must not be symlinks.
+                File/directory layout transitions require a separate activation
+                removing the old file first.
+                Only supported with the default legacy file activator; the
+                experimental putter activator does not manage mutable copies.
+
+                Sources are stored in the Nix store and must not contain secrets.
+              '';
+            };
+
             recursive = mkOption {
               type = types.bool;
               default = false;
