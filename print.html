@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-faa63a5f.js";
+            window.path_to_searchindex_js = "searchindex-8528e14c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4b64f479.js"></script>
@@ -51958,65 +51958,6 @@ string</p>
 <p>Executable path for the custom rofi script mode.</p>
 <p><em>Type:</em>
 string</p>
-<h2 id="opt-programs.rofi.pass.enable"><a class="header" href="#opt-programs.rofi.pass.enable">programs.rofi.pass.enable</a></h2>
-<p>Whether to enable rofi integration with password-store.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix">&lt;home-manager/modules/programs/rofi-pass.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.pass.package"><a class="header" href="#opt-programs.rofi.pass.package">programs.rofi.pass.package</a></h2>
-<p>The rofi-pass package to use.</p>
-<p><em>Type:</em>
-null or package</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">pkgs.rofi-pass
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.rofi-pass-wayland
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix">&lt;home-manager/modules/programs/rofi-pass.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.pass.extraConfig"><a class="header" href="#opt-programs.rofi.pass.extraConfig">programs.rofi.pass.extraConfig</a></h2>
-<p>Extra configuration to be added at to the rofi-pass config file.
-Additional examples can be found at
-<a href="https://github.com/carnager/rofi-pass/blob/master/config.example">https://github.com/carnager/rofi-pass/blob/master/config.example</a>.</p>
-<p><em>Type:</em>
-strings concatenated with “\n”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">""
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">''
-  URL_field='url'
-  USERNAME_field='user'
-  AUTOTYPE_field='autotype'
-''
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix">&lt;home-manager/modules/programs/rofi-pass.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.pass.stores"><a class="header" href="#opt-programs.rofi.pass.stores">programs.rofi.pass.stores</a></h2>
-<p>Directory roots of your password-stores.</p>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi-pass.nix">&lt;home-manager/modules/programs/rofi-pass.nix&gt;</a></li>
-</ul>
 <h2 id="opt-programs.rofi.plugins"><a class="header" href="#opt-programs.rofi.plugins">programs.rofi.plugins</a></h2>
 <p>List of rofi plugins to be installed.</p>
 <p><em>Type:</em>
