@@ -37,7 +37,7 @@ in
 
       Service = {
         ExecStart = lib.getExe cfg.package;
-        Environment = lib.mapAttrsToList (key: val: "${key}=${val}") cfg.environment;
+        Environment = lib.hm.systemd.envToList cfg.environment;
       };
 
       Install = {

@@ -64,7 +64,7 @@ in
         ExecSearchPath = "/bin";
         Restart = "always";
         RestartSec = 10;
-        Environment = lib.mapAttrsToList (key: val: "${key}=${val}") cfg.environment;
+        Environment = lib.hm.systemd.envToList cfg.environment;
       };
     };
   };
