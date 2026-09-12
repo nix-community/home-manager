@@ -1,0 +1,18 @@
+{
+  "execute_after": [
+    "before",
+    "middle",
+    "after"
+  ],
+  "rules": [
+    {
+      "name": "Before"
+    },
+    {
+      "name": "Middle"
+    },
+    {
+      "name": "After"
+    }
+  ]
+}
