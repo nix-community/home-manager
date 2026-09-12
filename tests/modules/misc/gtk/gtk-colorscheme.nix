@@ -22,7 +22,7 @@
     assertFileContains home-files/.config/gtk-4.0/settings.ini \
       'gtk-application-prefer-dark-theme=true'
     assertFileContains home-files/.config/gtk-4.0/settings.ini \
-      'gtk-interface-color-scheme=2'
+      'gtk-interface-color-scheme=dark'
 
     echo "ColorScheme test completed successfully"
   '';
