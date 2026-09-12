@@ -1,6 +1,11 @@
 { lib, ... }:
 {
   imports = [
+    (lib.mkRemovedOptionModule [ "programs" "rofi" "pass" ] ''
+      The rofi-pass module has been removed because nixpkgs removed the package.
+      The rofi-pass project is unmaintained upstream.
+    '')
+
     (lib.mkRemovedOptionModule [ "programs" "animdl" ] ''
       The animdl module has been removed because nixpkgs removed the package.
       The animdl project was unmaintained and its scraper providers no longer
