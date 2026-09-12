@@ -12,8 +12,10 @@
     `Library/Application Support/org.nixos.firefox`.
 
     This is needed on macOS 27 and later, where Firefox builds not signed by
-    Mozilla cannot access the traditional data directory. Before updating
-    `home.stateVersion`, quit Firefox and migrate your Firefox data from
+    Mozilla cannot access the traditional data directory. Users with a
+    `home.stateVersion` earlier than `"26.11"` should set
+    `programs.firefox.configPath = "Library/Application Support/org.nixos.firefox";`
+    explicitly. Before changing `configPath`, quit Firefox and migrate your data from
     `~/Library/Application Support/Firefox` to
     `~/Library/Application Support/org.nixos.firefox`.
   '';
