@@ -158,6 +158,14 @@ in
       '';
     };
 
+    skills = mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        Path to the skills directory for Pi Coding Agent.
+      '';
+    };
+
     context = mkOption {
       type = lib.types.either lib.types.lines lib.types.path;
       default = "";
@@ -201,6 +209,13 @@ in
         (mkIf (cfg.models != { }) {
           "${cfg.configDir}/models.json".source =
             jsonFormat.generate "pi-coding-agent-models.json" cfg.models;
+        })
+
+        (mkIf (cfg.skills != null) {
+          "${cfg.configDir}/skills" = {
+            source = cfg.skills;
+            recursive = true;
+          };
         })
 
         (
