@@ -1,8 +1,19 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 {
   programs.rofi = {
     enable = true;
+    font = lib.mkOverride 1501 "ignored";
+    terminal = lib.mkOverride 1501 "/ignored";
+    cycle = lib.mkOverride 1501 true;
+    location = lib.mkOverride 1501 "bottom";
+    modes = lib.mkOverride 1501 [ "ignored" ];
+    xoffset = lib.mkOverride 1501 9;
+    yoffset = lib.mkOverride 1501 9;
+    extraConfig = lib.mkOverride 1501 {
+      font = lib.mkForce "ignored-overlay";
+      xoffset = lib.mkForce 9;
+    };
 
     theme =
       let
@@ -33,6 +44,20 @@
         };
       };
   };
+
+  assertions = [
+    {
+      assertion =
+        config.programs.rofi.font == null
+        && config.programs.rofi.terminal == null
+        && config.programs.rofi.cycle == null
+        && config.programs.rofi.location == "center"
+        && config.programs.rofi.modes == [ ]
+        && config.programs.rofi.xoffset == 0
+        && config.programs.rofi.yoffset == 0;
+      message = "Legacy sources below option-default priority must retain historical defaults.";
+    }
+  ];
 
   nmt.script = ''
     assertFileContent \
