@@ -180,9 +180,16 @@ in
 
       skillsArePath = lib.hm.strings.isPathLike cfg.skills;
       skillsAreAttrs = !skillsArePath && builtins.isAttrs cfg.skills;
+
+      # Shared skills participate only when both integrations are enabled.
+      sharedSkillsEnabled = cfg.enableSkillsIntegration && config.programs.agent-skills.enable;
+      mergedSkillsAttrs =
+        (lib.optionalAttrs sharedSkillsEnabled config.programs.agent-skills.skillEntries)
+        // (lib.optionalAttrs skillsAreAttrs cfg.skills);
+
       skillNames = lib.attrNames (
         if skillsAreAttrs then
-          cfg.skills
+          mergedSkillsAttrs
         else
           lib.optionalAttrs (lib.isPath cfg.skills && lib.pathIsDirectory cfg.skills) (
             builtins.readDir cfg.skills
@@ -268,6 +275,10 @@ in
             message = "`programs.claude-code.skills` must be a directory when set to a path";
           }
           {
+            assertion = !sharedSkillsEnabled || skillsAreAttrs;
+            message = "`programs.claude-code.skills` must be an attribute set when `enableSkillsIntegration` is true";
+          }
+          {
             assertion =
               !supportsPersonalPlugins || lib.length pluginNames == lib.length (lib.unique pluginNames);
             message = "`programs.claude-code.plugins` entries must resolve to unique personal-plugin directory names";
@@ -346,7 +357,7 @@ in
           })
           pluginFileEntries
           (mkHookEntries cfg.hooks)
-          (lib.optionalAttrs skillsAreAttrs (lib.mapAttrs' mkSkillEntry cfg.skills))
+          (lib.optionalAttrs skillsAreAttrs (lib.mapAttrs' mkSkillEntry mergedSkillsAttrs))
           (mkMarkdownEntries "output-styles" cfg.outputStyles)
         ];
       };
