@@ -2,7 +2,6 @@ modulePath:
 {
   config,
   lib,
-  pkgs,
   realPkgs,
   ...
 }:
@@ -13,14 +12,9 @@ let
 
 in
 lib.mkIf config.test.enableBig (
-  lib.setAttrByPath modulePath (
-    {
-      enable = true;
-    }
-    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-      configPath = ".mozilla/firefox";
-    }
-  )
+  lib.setAttrByPath modulePath {
+    enable = true;
+  }
   // {
     _module.args.pkgs = lib.mkForce realPkgs;
 
