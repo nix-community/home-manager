@@ -1,0 +1,4 @@
+#!/usr/bin/env nu
+def cow [] {
+  print "Mooooooooooo"
+}
