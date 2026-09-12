@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "database": {
+      "args": [
+        "-y",
+        "@bytebase/dbhub",
+        "--dsn",
+        "postgresql://user:pass@localhost:5432/db"
+      ],
+      "command": "npx",
+      "enabled": true,
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/db"
+      },
+      "type": "stdio"
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "type": "stdio"
+    }
+  }
+}
