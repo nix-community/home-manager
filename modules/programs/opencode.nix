@@ -473,6 +473,15 @@ in
         }
       '';
     };
+
+    validateFiles = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to validate the generated configuration file against the
+        OpenCode JSON schema using {command}`check-jsonschema`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -542,6 +551,21 @@ in
             }
             // mergedSettings
           );
+        validate = {
+          enabled = cfg.validateFiles;
+          validator =
+            let
+              schemafile = lib.attrByPath [ "passthru" "jsonschema" "config" ] null cfg.package;
+            in
+            if schemafile == null then
+              null
+            else
+              { source }: ''
+                ${lib.getExe pkgs.check-jsonschema} \
+                  --schemafile=${lib.escapeShellArg schemafile} \
+                  ${lib.escapeShellArg source}
+              '';
+        };
       };
 
       "opencode/tui.json" = mkIf (cfg.tui != { }) {
