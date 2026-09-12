@@ -14,7 +14,13 @@ let
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.lists) optional;
   inherit (lib.attrsets) mapAttrs' nameValuePair;
-  inherit (lib.strings) toLower toUpper replaceStrings;
+  inherit (lib.strings)
+    concatMapStringsSep
+    toLower
+    toUpper
+    replaceStrings
+    optionalString
+    ;
   inherit (lib.trivial) boolToString;
   inherit (lib.types)
     nullOr
@@ -40,6 +46,16 @@ in
 
   options.programs.anyrun = {
     enable = mkEnableOption "anyrun";
+
+    daemon.enable = mkOption {
+      type = bool;
+      default = true;
+      description = ''
+        Enable running Anyrun as a daemon, allowing for faster startup speed.
+
+        This is required for the clipboard functionality
+      '';
+    };
 
     package = lib.mkPackageOption pkgs "anyrun" { nullable = true; };
 
@@ -89,6 +105,8 @@ in
           '';
         };
 
+        provider = lib.mkPackageOption pkgs "anyrun-provider" { nullable = true; };
+
         x = mkNumericOption {
           default.fraction = 0.5;
           description = ''
@@ -117,19 +135,11 @@ in
         };
 
         height = mkNumericOption {
-          default.absolute = 0;
+          default.absolute = 1;
           description = ''
             The minimum height of the runner, the runner will expand to fit all the entries.
 
             ${numericInfo}
-          '';
-        };
-
-        margin = mkOption {
-          type = int;
-          default = 0;
-          description = ''
-            Add a margin around the window to allow for CSS shadow styling.
           '';
         };
 
@@ -156,6 +166,15 @@ in
           description = "Layer shell layer (background, bottom, top or overlay).";
         };
 
+        keyboardMode = mkOption {
+          type = enum [
+            "exclusive"
+            "on-demand"
+          ];
+          default = "exclusive";
+          description = "Layer shell keyboard mode";
+        };
+
         hidePluginInfo = mkOption {
           type = bool;
           default = false;
@@ -178,6 +197,50 @@ in
           type = nullOr int;
           default = null;
           description = "Limit amount of entries shown in total.";
+        };
+
+        keybinds = mkOption {
+          type = nullOr (
+            listOf (submodule {
+              options = {
+                ctrl = mkOption {
+                  type = bool;
+                  default = false;
+                };
+                alt = mkOption {
+                  type = bool;
+                  default = false;
+                };
+                shift = mkOption {
+                  type = bool;
+                  default = false;
+                };
+                key = mkOption {
+                  type = str;
+                  description = ''
+                    Name of the GDK keysym.
+
+                    A list of possible values can be found at [https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h]
+                  '';
+                };
+                action = mkOption {
+                  type = enum [
+                    "close"
+                    "select"
+                    "up"
+                    "down"
+                  ];
+                };
+              };
+            })
+          );
+          default = null;
+        };
+
+        extraLines = mkOption {
+          type = nullOr lines;
+          default = null;
+          description = "Extra lines to add inside the `Config()` object";
         };
       };
 
@@ -226,8 +289,47 @@ in
             if lib.types.package.check entry then
               "${entry}/lib/lib${replaceStrings [ "-" ] [ "_" ] entry.pname}.so"
             else
-              entry
+              let
+                path = "${cfg.package}/lib/${entry}";
+              in
+              if builtins.pathExists path then
+                path
+              else
+                let
+                  path = "${cfg.package}/lib/lib${replaceStrings [ "-" ] [ "_" ] entry}.so";
+                in
+                if builtins.pathExists path then
+                  path
+                else if lib.strings.hasPrefix "/" entry then
+                  entry
+                else
+                  throw "Anyrun: Plugin ${entry} does not exist"
           ) cfg.config.plugins;
+
+      keybinds =
+        if cfg.config.keybinds == null then
+          ""
+        else
+          ''
+            keybinds: [
+              ${
+                concatMapStringsSep "\n" (x: ''
+                  Keybind(
+                    ${optionalString x.ctrl "ctrl: true,"}
+                    ${optionalString x.alt "alt: true,"}
+                    ${optionalString x.shift "shift: true,"}
+                    key: "${x.key}",
+                    action: ${capitalize x.action},
+                  ),
+                '') cfg.config.keybinds
+              }],
+          '';
+      keyboardMode =
+        {
+          "exclusive" = "Exclusive";
+          "on-demand" = "OnDemand";
+        }
+        .${cfg.config.keyboardMode};
     in
     {
       assertions =
@@ -246,12 +348,42 @@ in
           (assertNumeric cfg.config.height)
           (assertNumeric cfg.config.x)
           (assertNumeric cfg.config.y)
+
+          {
+            assertion = (builtins.hasAttr "anyrun-provider" cfg.package) || cfg.config.provider != null;
+            message = ''
+              Anyrun expects 'anyrun-provider' to be exposed under 'passthru.anyrun-provider'.
+              You may consider:
+
+              1. Ensure that your Anyrun package correctly provides 'anyrun-provider' under the passthru attr
+              2. Provide a provider in 'config.programs.anyrun.config.provider'
+            '';
+          }
         ];
 
       warnings = optional (cfg.config.plugins == null) ''
         You haven't enabled any plugins. Anyrun will not show any results, unless you specify plugins with the --override-plugins flag.
         Add plugins to programs.anyrun.config.plugins, or set it to [] to silence the warning.
       '';
+
+      systemd.user.services.anyrun = mkIf cfg.daemon.enable {
+        Unit = {
+          Description = "Anyrun daemon";
+          PartOf = "graphical-session.target";
+          After = "graphical-session.target";
+        };
+
+        Service = {
+          Type = "simple";
+          ExecStart = "${lib.getExe cfg.package} daemon";
+          Restart = "on-failure";
+          KillMode = "process";
+        };
+
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
 
       home.packages = optional (cfg.package != null) cfg.package;
 
@@ -265,10 +397,10 @@ in
               y: ${stringifyNumeric cfg.config.y},
               width: ${stringifyNumeric cfg.config.width},
               height: ${stringifyNumeric cfg.config.height},
-              margin: ${toString cfg.config.margin},
               hide_icons: ${boolToString cfg.config.hideIcons},
               ignore_exclusive_zones: ${boolToString cfg.config.ignoreExclusiveZones},
               layer: ${capitalize cfg.config.layer},
+              keyboard_mode: ${keyboardMode},
               hide_plugin_info: ${boolToString cfg.config.hidePluginInfo},
               close_on_click: ${boolToString cfg.config.closeOnClick},
               show_results_immediately: ${boolToString cfg.config.showResultsImmediately},
@@ -276,6 +408,9 @@ in
                 if cfg.config.maxEntries == null then "None" else "Some(${toString cfg.config.maxEntries})"
               },
               plugins: ${toJSON parsedPlugins},
+              ${optionalString (cfg.config.provider != null) "provider: \"${lib.getExe cfg.config.provider}\","}
+              ${optionalString (cfg.config.extraLines != null) cfg.config.extraLines}
+              ${keybinds}
             )
           '';
         }
