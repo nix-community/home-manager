@@ -270,8 +270,15 @@ in
     systemd.user.services.easyeffects = {
       Unit = {
         Description = "Easyeffects daemon";
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
+        After = [
+          "graphical-session.target"
+          "pipewire.service"
+        ];
+        Wants = [ "pipewire.service" ];
+        PartOf = [
+          "graphical-session.target"
+          "pipewire.service"
+        ];
         X-Restart-Triggers = [ (builtins.hashString "sha256" (builtins.toJSON cfg.settings)) ];
       };
 
