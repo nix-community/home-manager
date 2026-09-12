@@ -1,0 +1,12 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+ExecStart=@t3code@/bin/t3 serve --host 0.0.0.0 --port 3773
+Restart=on-failure
+RestartSec=5
+
+[Unit]
+After=network.target
+Description=t3code headless server
+Documentation=https://t3.codes
