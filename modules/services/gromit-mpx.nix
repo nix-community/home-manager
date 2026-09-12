@@ -33,15 +33,6 @@ let
     undokey
   ];
 
-  # Gromit reads and writes from this file to store it's run time
-  # state.  That will break our config so we set it manually which,
-  # thanks to the read-only Nix store, prevents Gromit from writing to
-  # it.
-  keyFile = lib.generators.toINI { } {
-    General.ShowIntroOnStartup = false;
-    Drawing.Opacity = cfg.opacity;
-  };
-
   # Allowed modifiers:
   modsAndButtons = [
     "1"
@@ -134,6 +125,22 @@ let
 
 in
 {
+  imports =
+    lib.hm.deprecations.mkSettingsRenamedOptionModules
+      [ "services" "gromit-mpx" ]
+      [ "services" "gromit-mpx" ]
+      { }
+      [
+        {
+          old = "opacity";
+          new = [
+            "iniSettings"
+            "Drawing"
+            "Opacity"
+          ];
+        }
+      ];
+
   meta.maintainers = [ lib.maintainers.pjones ];
 
   options.services.gromit-mpx = {
@@ -164,13 +171,27 @@ in
       '';
     };
 
-    opacity = mkOption {
-      type = types.addCheck types.float (f: f >= 0.0 && f <= 1.0) // {
-        description = "float between 0.0 and 1.0 (inclusive)";
+    iniSettings = mkOption {
+      type = types.submodule {
+        freeformType = (pkgs.formats.ini { }).type;
+        config = {
+          General.ShowIntroOnStartup = lib.mkOptionDefault false;
+          Drawing.Opacity = lib.mkOptionDefault 0.75;
+        };
       };
-      default = 0.75;
-      example = 1.0;
-      description = "Opacity of the drawing overlay.";
+      default = { };
+      example = {
+        General.ShowIntroOnStartup = false;
+        Drawing.Opacity = 0.75;
+      };
+      description = ''
+        Settings written to {file}`$XDG_CONFIG_HOME/gromit-mpx.ini`.
+        The defaults are `General.ShowIntroOnStartup = false` and
+        `Drawing.Opacity = 0.75`. The file is read-only, so changes made
+        through Gromit-MPX are not saved. Drawing tools belong in
+        {option}`services.gromit-mpx.tools` or
+        {option}`services.gromit-mpx.extraConfig`.
+      '';
     };
 
     extraConfig = mkOption {
@@ -235,13 +256,15 @@ in
       (lib.hm.assertions.assertPlatform "services.gromit-mpx" pkgs lib.platforms.linux)
     ];
 
-    xdg.configFile."gromit-mpx.ini".text = keyFile;
-    xdg.configFile."gromit-mpx.cfg".text = lib.concatStringsSep "\n" (
-      lib.filter (settings: settings != "") [
-        (lib.concatStringsSep "\n" (lib.imap1 toolToCfg cfg.tools))
-        cfg.extraConfig
-      ]
-    );
+    xdg.configFile = {
+      "gromit-mpx.ini".text = lib.generators.toINI { } cfg.iniSettings;
+      "gromit-mpx.cfg".text = lib.concatStringsSep "\n" (
+        lib.filter (settings: settings != "") [
+          (lib.concatStringsSep "\n" (lib.imap1 toolToCfg cfg.tools))
+          cfg.extraConfig
+        ]
+      );
+    };
 
     home.packages = [ cfg.package ];
 

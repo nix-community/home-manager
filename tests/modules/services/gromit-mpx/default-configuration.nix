@@ -1,12 +1,15 @@
-{ config, ... }:
-
 {
   services.gromit-mpx = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
   };
 
   nmt.script = (import ./nmt-script.nix ./default-configuration.cfg) + ''
-    assertFileRegex home-files/.config/gromit-mpx.ini 'ShowIntroOnStartup=false'
+    assertFileContent home-files/.config/gromit-mpx.ini ${builtins.toFile "expected.ini" ''
+      [Drawing]
+      Opacity=0.750000
+
+      [General]
+      ShowIntroOnStartup=false
+    ''}
   '';
 }

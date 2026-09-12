@@ -6,7 +6,7 @@ golden_file:
   assertFileExists $serviceFile
   assertFileRegex $serviceFile 'X-Restart-Triggers=.*gromitmpx\.cfg'
   assertFileRegex $serviceFile 'X-Restart-Triggers=.*gromitmpx\.ini'
-  assertFileRegex $serviceFile 'ExecStart=.*/bin/gromit-mpx'
+  assertFileRegex $serviceFile 'ExecStart=.*/bin/gromit-mpx --key F9 --undo-key F10$'
 
   assertFileExists home-files/.config/gromit-mpx.ini
   assertFileExists home-files/.config/gromit-mpx.cfg

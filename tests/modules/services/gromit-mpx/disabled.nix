@@ -2,6 +2,7 @@
   services.gromit-mpx = {
     enable = false;
     extraConfig = throw "disabled Gromit-MPX extra configuration was evaluated";
+    iniSettings = throw "disabled Gromit-MPX INI settings were evaluated";
   };
 
   nmt.script = ''
