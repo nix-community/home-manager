@@ -1,0 +1,12 @@
+configuration {
+filebrowser {
+directories-first: true;
+}
+font: "monospace 12";
+location: 2;
+matching: normal;
+modes: [ "drun","custom:/some/script" ];
+xoffset: 0;
+yoffset: 0;
+}
+@theme "Arc"
