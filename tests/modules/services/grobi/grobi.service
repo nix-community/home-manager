@@ -1,0 +1,14 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+Environment=PATH=@xrandr@/bin:@bash-interactive@/bin
+ExecStart=@grobi@/bin/grobi watch -v
+Restart=always
+RestartSec=2s
+Type=simple
+
+[Unit]
+After=graphical-session.target
+Description=grobi display auto config daemon
+PartOf=graphical-session.target
