@@ -46,11 +46,47 @@ let
             when the store volume is encrypted.
 
             When disabled, the agent's command is run through a launcher
-            script named after the agent instead. This makes the agent appear
-            under its own name, rather than as "sh", in System Settings >
-            Login Items & Extensions, but the agent will fail to start if
-            launchd runs it before the Nix store is mounted.
+            script named after the agent instead (see
+            {option}`launchd.agents.<name>.launcher`). This makes the agent
+            appear under its own name, rather than as "sh", in System
+            Settings > Login Items & Extensions, but the agent will fail to
+            start if launchd runs it before the Nix store is mounted.
           '';
+        };
+        launcher = {
+          name = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            example = "nix-my-agent";
+            description = ''
+              Base name of the launcher script the agent is started through
+              when {option}`launchd.agents.<name>.waitForNixStore` is
+              disabled. This is the name macOS shows for the agent in
+              System Settings > Login Items & Extensions ("Allow in the
+              Background"), so a common prefix makes every Home Manager
+              agent recognisable at a glance.
+
+              Defaults to the agent's attribute name.
+            '';
+          };
+          shell = lib.mkOption {
+            type = lib.types.str;
+            default = "/bin/sh";
+            defaultText = lib.literalExpression ''"/bin/sh"'';
+            example = lib.literalExpression "lib.getExe pkgs.bash";
+            description = ''
+              Interpreter for the launcher script used when
+              {option}`launchd.agents.<name>.waitForNixStore` is disabled.
+
+              A launcher script lives in the Nix store either way, so a
+              store-resident interpreter adds no new failure mode. It does
+              change which binary macOS attributes the agent's process to
+              (for example for the privacy prompts that gate access to
+              `~/Desktop` and `~/Downloads`): with `/bin/sh` the
+              attribution follows Apple's shell, with a store-resident shell
+              it follows the launcher itself.
+            '';
+          };
         };
         config = lib.mkOption {
           type = lib.types.submodule (import ./launchd.nix);
@@ -88,18 +124,21 @@ let
   # before running the original command. This is intentional to fix the
   # issue where launchd starts the agent before /nix/store is ready (before
   # the Nix store is mounted.) When waitForNixStore is disabled, the command
-  # is run through a launcher script named after the agent instead, so that
-  # the agent is displayed under its own name (rather than "sh") in System
-  # Settings > Login Items & Extensions.
+  # is run through a launcher script instead — named after the agent unless
+  # `launcher.name` says otherwise, interpreted by `launcher.shell` — so
+  # that the agent is displayed under its own name (rather than "sh") in
+  # System Settings > Login Items & Extensions.
   mutateConfig =
-    name: waitForNixStore: cnf:
+    name: v:
     let
+      cnf = v.config;
       args =
         lib.optional (cnf.Program != null) cnf.Program
         ++ lib.optionals (cnf.ProgramArguments != null) cnf.ProgramArguments;
-      launcherName = lib.strings.sanitizeDerivationName name;
+      launcherName =
+        if v.launcher.name != null then v.launcher.name else lib.strings.sanitizeDerivationName name;
       launcher = pkgs.writeScriptBin launcherName ''
-        #!/bin/sh
+        #!${v.launcher.shell}
         exec ${lib.escapeShellArgs args}
       '';
     in
@@ -109,7 +148,7 @@ let
     ])
     // {
       ProgramArguments =
-        if waitForNixStore then
+        if v.waitForNixStore then
           [
             "/bin/sh"
             "-c"
@@ -121,9 +160,7 @@ let
 
   toAgent =
     name: v:
-    pkgs.writeText "${v.config.Label}.plist" (
-      toPlist { escape = true; } (mutateConfig name v.waitForNixStore v.config)
-    );
+    pkgs.writeText "${v.config.Label}.plist" (toPlist { escape = true; } (mutateConfig name v));
 
   agentPlists = lib.mapAttrs' (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent n v)) (
     lib.filterAttrs (_n: v: v.enable) cfg.agents
