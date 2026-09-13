@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-64cdb04f.js";
+            window.path_to_searchindex_js = "searchindex-4668bc42.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4b64f479.js"></script>
@@ -43742,14 +43742,23 @@ boolean</p>
 </ul>
 <h2 id="opt-programs.nh.clean.extraArgs"><a class="header" href="#opt-programs.nh.clean.extraArgs">programs.nh.clean.extraArgs</a></h2>
 <p>Options given to nh clean when the service is run automatically.</p>
+<p>A list is preferred, each element being one argument.</p>
+<p>A string keeps its platform-specific meaning: on Linux it is command
+line text that systemd splits into arguments, on Darwin it is passed
+to nh as a single argument.</p>
 <p>See <code>nh clean all --help</code> for more information.</p>
 <p><em>Type:</em>
-(optionally newline-terminated) single-line string</p>
+(optionally newline-terminated) single-line string or list of string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">""
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">"--keep 5 --keep-since 3d"
+<pre><code class="language-nix">[
+  "--keep"
+  "5"
+  "--keep-since"
+  "3d"
+]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
