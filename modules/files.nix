@@ -62,7 +62,7 @@ let
     }) (lib.filter (file: file.mutable && safeMutableTarget file.target) cfg)
   );
 
-  mutableFileFunctions = ./files/mutable-files.sh;
+  mutableFileFunctions = "${./files/mutable-files.sh}";
   safeMutableTarget =
     target: lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" target);
 
@@ -152,8 +152,7 @@ in
         message = "home.file: mutable targets must be safe relative paths without empty, dot, or parent components.";
       }
       {
-        assertion =
-          config.home.fileActivator != "putter" || !lib.any (file: file.mutable) cfg;
+        assertion = config.home.fileActivator != "putter" || !lib.any (file: file.mutable) cfg;
         message = "home.file: mutable files require the legacy file activator.";
       }
       (
@@ -249,6 +248,17 @@ in
           pkgs.writeText "hm-putter-state.json" manifest;
 
         putterCheckLinkTargets = ''
+          # Switching backends must not abandon regular files owned by the
+          # previous generation, even if the new declaration set is empty.
+          if [[ -v oldGenPath && -d "$oldGenPath/home-mutable-files" ]]; then
+            previousMutable="$(${pkgs.findutils}/bin/find \
+              "$(readlink -e "$oldGenPath/home-mutable-files")" -type l -print -quit)" || exit 1
+            if [[ -n "$previousMutable" ]]; then
+              errorEcho "Cannot switch to Putter while the previous generation contains mutable files. Remove their declarations and activate once with the legacy activator first."
+              exit 1
+            fi
+          fi
+
           # If no Putter state file exists already, then we assume that we are
           # moving from a legacy file placement setup to a Putter one. We
           # therefore copy in a Putter compatible state file to avoid conflict
