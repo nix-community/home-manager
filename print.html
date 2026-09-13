@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f09211de.js";
+            window.path_to_searchindex_js = "searchindex-b6b73ad8.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a9f85a1.js"></script>
@@ -73139,10 +73139,71 @@ null or absolute path</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.linux-wallpaperengine.clamping"><a class="header" href="#opt-services.linux-wallpaperengine.clamping">services.linux-wallpaperengine.clamping</a></h2>
-<p>Clamping mode for all wallpapers.</p>
+<h2 id="opt-services.linux-wallpaperengine.audio.automute"><a class="header" href="#opt-services.linux-wallpaperengine.audio.automute">services.linux-wallpaperengine.audio.automute</a></h2>
+<p>Automutes when another app is playing sound.</p>
 <p><em>Type:</em>
-null or one of “clamp”, “border”, “repeat”</p>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.linux-wallpaperengine.audio.processing"><a class="header" href="#opt-services.linux-wallpaperengine.audio.processing">services.linux-wallpaperengine.audio.processing</a></h2>
+<p>Enables audio processing for wallpapers.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.linux-wallpaperengine.audio.silent"><a class="header" href="#opt-services.linux-wallpaperengine.audio.silent">services.linux-wallpaperengine.audio.silent</a></h2>
+<p>Mutes sound of all wallpapers.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.linux-wallpaperengine.audio.volume"><a class="header" href="#opt-services.linux-wallpaperengine.audio.volume">services.linux-wallpaperengine.audio.volume</a></h2>
+<p>Volume of all wallpapers</p>
+<p><em>Type:</em>
+null or signed integer</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.linux-wallpaperengine.extraOptions"><a class="header" href="#opt-services.linux-wallpaperengine.extraOptions">services.linux-wallpaperengine.extraOptions</a></h2>
+<p>Extra arguments to pass to the linux-wallpaperengine command.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--no-fullscreen-pause"
+  "--disable-particles"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.linux-wallpaperengine.fps"><a class="header" href="#opt-services.linux-wallpaperengine.fps">services.linux-wallpaperengine.fps</a></h2>
+<p>Limits the FPS to the given number.</p>
+<p><em>Type:</em>
+null or signed integer</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
@@ -73161,34 +73222,12 @@ list of (submodule)</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.linux-wallpaperengine.wallpapers._.audio.automute"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.audio.automute">services.linux-wallpaperengine.wallpapers.*.audio.automute</a></h2>
-<p>Automute when another app is playing sound.</p>
+<h2 id="opt-services.linux-wallpaperengine.wallpapers._.clamp"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.clamp">services.linux-wallpaperengine.wallpapers.*.clamp</a></h2>
+<p>Clamping mode for this wallpaper.</p>
 <p><em>Type:</em>
-boolean</p>
+null or one of “clamp”, “border”, “repeat”</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.linux-wallpaperengine.wallpapers._.audio.processing"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.audio.processing">services.linux-wallpaperengine.wallpapers.*.audio.processing</a></h2>
-<p>Enables audio processing for background.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.linux-wallpaperengine.wallpapers._.audio.silent"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.audio.silent">services.linux-wallpaperengine.wallpapers.*.audio.silent</a></h2>
-<p>Mutes all sound of the wallpaper.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
+<pre><code class="language-nix">config.services.linux-wallpaperengine.clamping
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -73211,23 +73250,26 @@ list of string</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.linux-wallpaperengine.wallpapers._.fps"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.fps">services.linux-wallpaperengine.wallpapers.*.fps</a></h2>
-<p>Limits the FPS to a given number.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
-</ul>
 <h2 id="opt-services.linux-wallpaperengine.wallpapers._.monitor"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.monitor">services.linux-wallpaperengine.wallpapers.*.monitor</a></h2>
 <p>Which monitor to display the wallpaper.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"HDMI-A-1"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.linux-wallpaperengine.wallpapers._.playlist"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.playlist">services.linux-wallpaperengine.wallpapers.*.playlist</a></h2>
+<p>Name of a playlist in Wallpaper Engine’s <code>config.json</code>. Do not set alongside <code>wallpaper</code>.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"My Playlist"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -73244,10 +73286,13 @@ null or one of “stretch”, “fit”, “fill”, “default”</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/linux-wallpaperengine.nix">&lt;home-manager/modules/services/linux-wallpaperengine.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.linux-wallpaperengine.wallpapers._.wallpaperId"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.wallpaperId">services.linux-wallpaperengine.wallpapers.*.wallpaperId</a></h2>
-<p>Wallpaper to be used. Can either be a Steam Workshop ID or the path to the background folder.</p>
+<h2 id="opt-services.linux-wallpaperengine.wallpapers._.wallpaper"><a class="header" href="#opt-services.linux-wallpaperengine.wallpapers._.wallpaper">services.linux-wallpaperengine.wallpapers.*.wallpaper</a></h2>
+<p>Wallpaper to be used. Can be Steam Workshop ID or path to the background folder. Do not set alongside <code>playlist</code>.</p>
 <p><em>Type:</em>
-string</p>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"3527223773"
 </code></pre>
