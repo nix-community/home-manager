@@ -1,5 +1,6 @@
 {
   config,
+  options,
   lib,
   pkgs,
   ...
@@ -8,6 +9,9 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.services.linux-wallpaperengine;
+
+  escapeSystemdExecArg =
+    arg: lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (lib.strings.toJSON (toString arg));
 in
 {
   meta.maintainers = [ lib.maintainers.ckgxrg ];
@@ -24,6 +28,49 @@ in
       example = "~/.local/share/Steam/steamapps/common/wallpaper_engine/assets";
     };
 
+    audio = {
+      silent = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Mutes sound of all wallpapers.";
+      };
+
+      volume = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = "Volume of all wallpapers";
+      };
+
+      automute = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Automutes when another app is playing sound.";
+      };
+
+      processing = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enables audio processing for wallpapers.";
+      };
+    };
+
+    fps = mkOption {
+      type = types.nullOr types.int;
+      default = null;
+      description = "Limits the FPS to the given number.";
+    };
+
+    extraOptions = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Extra arguments to pass to the linux-wallpaperengine command.";
+      example = [
+        "--no-fullscreen-pause"
+        "--disable-particles"
+      ];
+    };
+
+    # Backwards compatibility
     clamping = mkOption {
       type = types.nullOr (
         types.enum [
@@ -33,12 +80,25 @@ in
         ]
       );
       default = null;
+      visible = false;
       description = "Clamping mode for all wallpapers.";
     };
 
     wallpapers = mkOption {
       type = types.listOf (
         types.submodule {
+          imports = [
+            (lib.mkRenamedOptionModule [ "wallpaperId" ] [ "wallpaper" ])
+
+            # Not working, workaround below
+            #
+            # (lib.mkRemovedOptionModule [ "fps" ] ''
+            #   Set `services.linux-wallpaperengine.fps` instead.
+            # '')
+            # (lib.mkRemovedOptionModule [ "audio" ] ''
+            #   Set `services.linux-wallpaperengine.audio` instead.
+            # '')
+          ];
           options = {
             monitor = mkOption {
               type = types.str;
@@ -46,10 +106,16 @@ in
               example = "HDMI-A-1";
             };
 
-            wallpaperId = mkOption {
-              type = types.str;
-              description = "Wallpaper to be used. Can either be a Steam Workshop ID or the path to the background folder.";
+            wallpaper = mkOption {
+              type = types.nullOr types.str;
+              description = "Wallpaper to be used. Can be Steam Workshop ID or path to the background folder. Do not set alongside `playlist`.";
               example = "3527223773";
+            };
+
+            playlist = mkOption {
+              type = types.nullOr types.str;
+              description = "Name of a playlist in Wallpaper Engine's `config.json`. Do not set alongside `wallpaper`.";
+              example = "My Playlist";
             };
 
             extraOptions = mkOption {
@@ -75,30 +141,32 @@ in
               description = "Scaling mode for this wallpaper.";
             };
 
+            clamp = mkOption {
+              type = types.nullOr (
+                types.enum [
+                  "clamp"
+                  "border"
+                  "repeat"
+                ]
+              );
+              default = cfg.clamping;
+              defaultText = lib.literalExpression "config.services.linux-wallpaperengine.clamping";
+              description = "Clamping mode for this wallpaper.";
+            };
+
+            # Backwards compatibility, workaround
             fps = mkOption {
               type = types.nullOr types.int;
               default = null;
-              description = "Limits the FPS to a given number.";
+              visible = false;
+              description = "Removed, use `services.linux-wallpaperengine.fps`.";
             };
 
-            audio = {
-              silent = mkOption {
-                type = types.bool;
-                default = false;
-                description = "Mutes all sound of the wallpaper.";
-              };
-
-              automute = mkOption {
-                type = types.bool;
-                default = true;
-                description = "Automute when another app is playing sound.";
-              };
-
-              processing = mkOption {
-                type = types.bool;
-                default = true;
-                description = "Enables audio processing for background.";
-              };
+            audio = mkOption {
+              type = types.nullOr (types.attrsOf types.anything);
+              default = null;
+              visible = false;
+              description = "Removed, use `services.linux-wallpaperengine.audio`.";
             };
           };
         }
@@ -112,29 +180,76 @@ in
     assertions = [
       (lib.hm.assertions.assertPlatform "services.linux-wallpaperengine" pkgs lib.platforms.linux)
       {
-        assertion = cfg.wallpapers != null;
-        message = "linux-wallpaperengine: You must set at least one wallpaper";
+        assertion = !(cfg.audio.silent && cfg.audio.volume != null);
+        message = ''
+          services.linux-wallpaperengine.audio.silent and services.linux-wallpaperengine.audio.volume cannot be set together.
+
+          Definitions:
+            services.linux-wallpaperengine.audio.silent defined in ${lib.showFiles options.services.linux-wallpaperengine.audio.silent.files}
+            services.linux-wallpaperengine.audio.volume defined in ${lib.showFiles options.services.linux-wallpaperengine.audio.volume.files}
+        '';
       }
-    ];
+    ]
+    # Backwards compatibility, workaround
+    ++ lib.flip lib.concatMap cfg.wallpapers (each: [
+      {
+        assertion = each.fps == null;
+        message = ''
+          The option definition `services.linux-wallpaperengine.wallpapers.*.fps' no longer has any effect; please remove it.
+          Set `services.linux-wallpaperengine.fps' instead.
+        '';
+      }
+      {
+        assertion = each.audio == null;
+        message = ''
+          The option definition `services.linux-wallpaperengine.wallpapers.*.audio' no longer has any effect; please remove it.
+          Set `services.linux-wallpaperengine.audio' instead.
+        '';
+      }
+    ]);
+
+    warnings =
+      if
+        lib.lists.any (
+          each:
+          (each.wallpaper != null && each.playlist != null)
+          || (each.wallpaper == null && each.playlist == null)
+        ) cfg.wallpapers
+      then
+        [
+          "linux-wallpaperengine: Please specify one of `services.linux-wallpaperengine.wallpapers.*.wallpaper` or `services.linux-wallpaperengine.wallpapers.*.playlist`"
+        ]
+      else
+        [ ];
 
     home.packages = [ cfg.package ];
 
     systemd.user.services."linux-wallpaperengine" =
       let
         args = lib.lists.forEach cfg.wallpapers (
+          # `lib.toGNUCommandLine` cannot be used here because `linux-wallpaperengine` requires specific order of the arguments supplied, and `lib.toGNUCommandLine` cannot preserve the order.
           each:
           lib.concatStringsSep " " (
-            lib.cli.toCommandLineGNU { } {
-              screen-root = each.monitor;
-              inherit (each) scaling fps;
-              inherit (each.audio) silent;
-              noautomute = !each.audio.automute;
-              no-audio-processing = !each.audio.processing;
-            }
+            [
+              "--screen-root"
+              (escapeSystemdExecArg each.monitor)
+            ]
+            ++ lib.optionals (each.scaling != null) [
+              "--scaling"
+              each.scaling
+            ]
+            ++ lib.optionals (each.clamp != null) [
+              "--clamp"
+              each.clamp
+            ]
             ++ each.extraOptions
-            ++ [
+            ++ lib.optionals (each.wallpaper != null) [
               "--bg"
-              each.wallpaperId
+              (escapeSystemdExecArg each.wallpaper)
+            ]
+            ++ lib.optionals (each.playlist != null) [
+              "--playlist"
+              (escapeSystemdExecArg each.playlist)
             ]
           )
         );
@@ -148,8 +263,13 @@ in
         Service = {
           ExecStart = lib.concatStringsSep " " (
             [ (lib.getExe cfg.package) ]
-            ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${cfg.assetsPath}"
-            ++ lib.optional (cfg.clamping != null) "--clamping ${cfg.clamping}"
+            ++ lib.optional (cfg.assetsPath != null) "--assets-dir ${escapeSystemdExecArg cfg.assetsPath}"
+            ++ lib.optional (cfg.fps != null) "--fps ${lib.toString cfg.fps}"
+            ++ lib.optional (cfg.audio.silent) "--silent"
+            ++ lib.optional (cfg.audio.volume != null) "--volume ${lib.toString cfg.audio.volume}"
+            ++ lib.optional (!cfg.audio.automute) "--noautomute"
+            ++ lib.optional (!cfg.audio.processing) "--no-audio-processing"
+            ++ cfg.extraOptions
             ++ args
           );
           Restart = "on-failure";
