@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2c9a56b2.js";
+            window.path_to_searchindex_js = "searchindex-582584e1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d58b34dd.js"></script>
@@ -2208,6 +2208,35 @@ features that are not configured.</p>
 configuration location with an environment variable, for example
 <code>FOO_HOME</code>, expose a <code>configDir</code> option and use it to respect
 <code>home.preferXdgDirectories</code>.</p>
+<p><a id="sec-guidelines-settings-migrations"></a></p>
+<h2 id="migrate-settings-with-shared-helpers"><a class="header" href="#migrate-settings-with-shared-helpers">Migrate settings with shared helpers</a></h2>
+<p>Use <code>lib.hm.deprecations.mkSettingsRenamedOptionModules</code> for unchanged values
+moving into settings. Specify native key paths explicitly when casing or
+literal dotted keys differ from the default snake-case transformation.
+Set <code>preserveOrder = true</code> when legacy and new list definitions must retain
+relative <code>mkBefore</code> and <code>mkAfter</code> ordering. Value conversions belong in
+<code>lib.mkChangedOptionModule</code>, not in a path-rename mapping.</p>
+<p>For a default-empty attribute-set option formerly applied as a final overlay,
+use <code>lib.hm.deprecations.mkSettingsOverlay</code>:</p>
+<pre><code class="language-nix">let
+  overlay = lib.hm.deprecations.mkSettingsOverlay {
+    inherit options;
+    from = [ "programs" "example" "extraConfig" ];
+    to = [ "programs" "example" "settings" ];
+  };
+in
+{
+  imports = [ overlay.module ];
+}
+</code></pre>
+<p>The helper forwards raw definitions, applying root priorities only to supplied
+keys. Use <code>overlay.keys</code> to suppress modeled contributions for keys that the
+old overlay overwrote. Disabled conditional keys are absent; explicit null
+and empty values still count as supplied. Whole sources weaker than the old
+empty option default are ignored.</p>
+<p>Keep application defaults, conversions, and output filtering in the module.
+Test legacy overlay precedence and ordinary settings overrides separately.
+Do not replace module merging with a final attribute-set overlay on settings.</p>
 <p><a id="sec-guidelines-add-tests"></a></p>
 <h2 id="add-relevant-tests"><a class="header" href="#add-relevant-tests">Add relevant tests</a></h2>
 <p>If at all possible, make sure to add new tests and expand existing tests
