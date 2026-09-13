@@ -1,5 +1,5 @@
 [Service]
-ExecStart=@nh@/bin/nh clean user --keep 5 --keep-since 3d
+ExecStart=@nh@/bin/nh clean user "--keep" "5" "--keep-since" "3d"
 Type=oneshot
 
 [Unit]

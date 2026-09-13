@@ -151,7 +151,7 @@ in
             let
               extraArgs =
                 if builtins.isList cfg.clean.extraArgs then
-                  lib.escapeShellArgs cfg.clean.extraArgs
+                  lib.hm.strings.escapeSystemdExecArgs cfg.clean.extraArgs
                 else
                   cfg.clean.extraArgs;
             in

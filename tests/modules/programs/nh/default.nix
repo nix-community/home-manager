@@ -10,6 +10,7 @@
   nh = ./linux/config.nix;
   nh-clean-extra-args = ./linux/clean-extra-args.nix;
   nh-clean-extra-args-spaces = ./linux/clean-extra-args-spaces.nix;
+  nh-clean-extra-args-newline = ./linux/clean-extra-args-newline.nix;
   nh-clean-extra-args-string = ./linux/clean-extra-args-string.nix;
   nh-clean-extra-args-empty = ./linux/clean-extra-args-empty.nix;
 })
