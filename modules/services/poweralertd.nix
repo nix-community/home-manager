@@ -6,24 +6,8 @@
 }:
 let
   inherit (lib) types;
-  inherit (lib.strings) toJSON;
 
   cfg = config.services.poweralertd;
-  escapeSystemdExecArg =
-    arg:
-    let
-      s =
-        if lib.isPath arg then
-          "${arg}"
-        else if lib.isString arg then
-          arg
-        else if lib.isInt arg || lib.isFloat arg || lib.isDerivation arg then
-          toString arg
-        else
-          throw "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
-    in
-    lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (toJSON s);
-  escapeSystemdExecArgs = lib.concatMapStringsSep " " escapeSystemdExecArg;
 in
 {
   meta.maintainers = [ lib.maintainers.thibautmarty ];
@@ -63,7 +47,7 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${lib.getExe cfg.package} ${escapeSystemdExecArgs cfg.extraArgs}";
+        ExecStart = "${lib.getExe cfg.package} ${lib.hm.systemd.escapeExecArgs cfg.extraArgs}";
         Restart = "always";
       };
     };
