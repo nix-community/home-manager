@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-cccfd5b6.js";
+            window.path_to_searchindex_js = "../../searchindex-2c0c0c49.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-d58b34dd.js"></script>
@@ -642,6 +642,118 @@ null or one of “left”, “bottom”, “right”</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
 </ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-apps"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-apps">targets.darwin.defaults.“com.apple.dock”.persistent-apps</a></h2>
+<p>Persistent applications, spacers, files, and folders in the Dock.
+Strings and paths are shorthand for applications. Native Dock tile
+dictionaries are passed through unchanged and can be mixed with
+shorthand entries.</p>
+<p>Set to <code>null</code> to leave the setting unchanged or <code>[ ]</code> to clear it.
+Restart the Dock or log out and back in for changes to take effect.</p>
+<p><em>Type:</em>
+null or (list of (((attribute set of anything) or attribute-tagged union with choices: app, file, folder, spacer) or (string or absolute path) convertible to it))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.app"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.app">targets.darwin.defaults.“com.apple.dock”.persistent-apps.*.app</a></h2>
+<p>An application to be added to the dock.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.file"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.file">targets.darwin.defaults.“com.apple.dock”.persistent-apps.*.file</a></h2>
+<p>A file to be added to the dock.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.folder"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.folder">targets.darwin.defaults.“com.apple.dock”.persistent-apps.*.folder</a></h2>
+<p>A folder to be added to the dock.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.spacer"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.spacer">targets.darwin.defaults.“com.apple.dock”.persistent-apps.*.spacer</a></h2>
+<p>A spacer to be added to the dock. Can be small or regular size.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.spacer.small"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-apps._.spacer.small">targets.darwin.defaults.“com.apple.dock”.persistent-apps.*.spacer.small</a></h2>
+<p>Whether the spacer is small.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others">targets.darwin.defaults.“com.apple.dock”.persistent-others</a></h2>
+<p>Persistent files and folders in the Dock.
+Strings and paths are shorthand for folders. Native Dock tile
+dictionaries are passed through unchanged and can be mixed with
+shorthand entries.</p>
+<p>Set to <code>null</code> to leave the setting unchanged or <code>[ ]</code> to clear it.
+Restart the Dock or log out and back in for changes to take effect.</p>
+<p><em>Type:</em>
+null or (list of (((attribute set of anything) or attribute-tagged union with choices: file, folder) or (string or absolute path) convertible to it))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others._.file"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others._.file">targets.darwin.defaults.“com.apple.dock”.persistent-others.*.file</a></h2>
+<p>A file to be added to the dock.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder">targets.darwin.defaults.“com.apple.dock”.persistent-others.*.folder</a></h2>
+<p>A folder to be added to the dock.</p>
+<p><em>Type:</em>
+(submodule) or string convertible to it</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/targets/darwin/user-defaults/opts-allhosts.nix">&lt;home-manager/modules/targets/darwin/user-defaults/opts-allhosts.nix&gt;</a></li>
+</ul>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.arrangement"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.arrangement">targets.darwin.defaults.“com.apple.dock”.persistent-others.*.folder.arrangement</a></h2>
+<p>Sort order for files in folder when clicked.</p>
+<p><em>Type:</em>
+one of “name”, “date-added”, “date-modified”, “date-created”, “kind”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"name"
+</code></pre>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.displayas"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.displayas">targets.darwin.defaults.“com.apple.dock”.persistent-others.*.folder.displayas</a></h2>
+<p>How to display the folder before clicked. stack: Stack of file previews. folder: A folder icon</p>
+<p><em>Type:</em>
+one of “stack”, “folder”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"stack"
+</code></pre>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.path"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.path">targets.darwin.defaults.“com.apple.dock”.persistent-others.*.folder.path</a></h2>
+<p>Path to a folder to be added to the dock.</p>
+<p><em>Type:</em>
+string</p>
+<h2 id="opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.showas"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.persistent-others._.folder.showas">targets.darwin.defaults.“com.apple.dock”.persistent-others.*.folder.showas</a></h2>
+<p>Effect to show files when clicked. fan: fan-out effect, grid: box, list: list</p>
+<p><em>Type:</em>
+one of “automatic”, “fan”, “grid”, “list”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"automatic"
+</code></pre>
 <h2 id="opt-targets.darwin.defaults.com.apple.dock.size-immutable"><a class="header" href="#opt-targets.darwin.defaults.com.apple.dock.size-immutable">targets.darwin.defaults.“com.apple.dock”.size-immutable</a></h2>
 <p>Whether to enable locking of the dock size.</p>
 <p><em>Type:</em>
