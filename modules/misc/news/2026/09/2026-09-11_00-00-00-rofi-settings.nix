@@ -8,6 +8,9 @@
     terminal, cycle, location, offset, and modes options provide compatibility
     defaults. Use numeric locations and `"name:path"` strings for script modes
     in settings.
-    Theme and package configuration are unchanged.
+    Unset location and offset options now use Rofi's defaults instead of
+    writing zero values. Explicit legacy values are still migrated.
+    Enabling Rofi alone no longer generates a configuration file; configure
+    settings or a theme to generate one. Theme and package options are unchanged.
   '';
 }
