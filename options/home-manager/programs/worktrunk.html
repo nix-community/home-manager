@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-2c0c0c49.js";
+            window.path_to_searchindex_js = "../../../searchindex-2c9a56b2.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-d58b34dd.js"></script>
@@ -191,12 +191,153 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.worktrunk.enableBashIntegration"><a class="header" href="#opt-programs.worktrunk.enableBashIntegration">programs.worktrunk.enableBashIntegration</a></h2>
+<p>Whether to enable Bash integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableBashIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.enableFishIntegration"><a class="header" href="#opt-programs.worktrunk.enableFishIntegration">programs.worktrunk.enableFishIntegration</a></h2>
+<p>Whether to enable Fish integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableFishIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.enableNushellIntegration"><a class="header" href="#opt-programs.worktrunk.enableNushellIntegration">programs.worktrunk.enableNushellIntegration</a></h2>
+<p>Whether to enable Nushell integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableNushellIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.enableZshIntegration"><a class="header" href="#opt-programs.worktrunk.enableZshIntegration">programs.worktrunk.enableZshIntegration</a></h2>
+<p>Whether to enable Zsh integration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableZshIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.worktrunk.package"><a class="header" href="#opt-programs.worktrunk.package">programs.worktrunk.package</a></h2>
 <p>The worktrunk package to use.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.worktrunk
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.claudeCodeIntegration.enable"><a class="header" href="#opt-programs.worktrunk.claudeCodeIntegration.enable">programs.worktrunk.claudeCodeIntegration.enable</a></h2>
+<p>Whether to enable Integrate worktrunk with Claude Code’s statusLine, worktree isolation, and skills.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.claudeCodeIntegration.activityTrackingHooks"><a class="header" href="#opt-programs.worktrunk.claudeCodeIntegration.activityTrackingHooks">programs.worktrunk.claudeCodeIntegration.activityTrackingHooks</a></h2>
+<p>Whether to enable Claude Code activity-tracking state markers (🤖/💬 in wt list).</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.worktrunk.claudeCodeIntegration.enable
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.claudeCodeIntegration.configurationSkill"><a class="header" href="#opt-programs.worktrunk.claudeCodeIntegration.configurationSkill">programs.worktrunk.claudeCodeIntegration.configurationSkill</a></h2>
+<p>Whether to enable Worktrunk’s /worktrunk configuration skill.</p>
+<p>Warning: this should not be enabled together with <code>settings</code>, as the skill
+may attempt to modify the Home Manager-managed Worktrunk configuration file.
+Such edits will fail due to insufficient permissions and may cause the agent
+to attempt unsafe workarounds such as using elevated privileges
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.claudeCodeIntegration.statusLine"><a class="header" href="#opt-programs.worktrunk.claudeCodeIntegration.statusLine">programs.worktrunk.claudeCodeIntegration.statusLine</a></h2>
+<p>Whether to enable Claude Code statusLine powered by worktrunk.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.worktrunk.claudeCodeIntegration.enable
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.claudeCodeIntegration.switchCreateSkill"><a class="header" href="#opt-programs.worktrunk.claudeCodeIntegration.switchCreateSkill">programs.worktrunk.claudeCodeIntegration.switchCreateSkill</a></h2>
+<p>Whether to enable worktrunk’s /wt-switch-create skill.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.worktrunk.claudeCodeIntegration.enable
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/worktrunk.nix">&lt;home-manager/modules/programs/worktrunk.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.worktrunk.claudeCodeIntegration.worktreeHooks"><a class="header" href="#opt-programs.worktrunk.claudeCodeIntegration.worktreeHooks">programs.worktrunk.claudeCodeIntegration.worktreeHooks</a></h2>
+<p>Whether to enable Claude Code WorktreeCreate/WorktreeRemove hooks.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.worktrunk.claudeCodeIntegration.enable
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
