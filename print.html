@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b6b73ad8.js";
+            window.path_to_searchindex_js = "searchindex-cb02010f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a9f85a1.js"></script>
@@ -11209,6 +11209,48 @@ one of “gui”, “user”</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
 </ul>
+<h2 id="opt-launchd.agents._name_.launcher.name"><a class="header" href="#opt-launchd.agents._name_.launcher.name">launchd.agents.&lt;name&gt;.launcher.name</a></h2>
+<p>Base name of the launcher script the agent is started through
+when <code>launchd.agents.&lt;name&gt;.waitForNixStore</code> is
+disabled. This is the name macOS shows for the agent in
+System Settings &gt; Login Items &amp; Extensions (“Allow in the
+Background”), so a common prefix makes every Home Manager
+agent recognisable at a glance.</p>
+<p>Defaults to the agent’s attribute name.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"nix-my-agent"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.launcher.shell"><a class="header" href="#opt-launchd.agents._name_.launcher.shell">launchd.agents.&lt;name&gt;.launcher.shell</a></h2>
+<p>Interpreter for the launcher script used when
+<code>launchd.agents.&lt;name&gt;.waitForNixStore</code> is disabled.</p>
+<p>A launcher script lives in the Nix store either way, so a
+store-resident interpreter adds no new failure mode. It does
+change which binary macOS attributes the agent’s process to
+(for example for the privacy prompts that gate access to
+<code>~/Desktop</code> and <code>~/Downloads</code>): with <code>/bin/sh</code> the
+attribution follows Apple’s shell, with a store-resident shell
+it follows the launcher itself.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"/bin/sh"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">lib.getExe pkgs.bash
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
 <h2 id="opt-launchd.agents._name_.waitForNixStore"><a class="header" href="#opt-launchd.agents._name_.waitForNixStore">launchd.agents.&lt;name&gt;.waitForNixStore</a></h2>
 <p>Whether to start the agent through a <code>/bin/sh</code> wrapper that waits
 for the Nix store to be mounted before running the agent’s
@@ -11216,10 +11258,11 @@ command. This guards against launchd starting the agent before
 the Nix store volume is available, for example early during login
 when the store volume is encrypted.</p>
 <p>When disabled, the agent’s command is run through a launcher
-script named after the agent instead. This makes the agent appear
-under its own name, rather than as “sh”, in System Settings &gt;
-Login Items &amp; Extensions, but the agent will fail to start if
-launchd runs it before the Nix store is mounted.</p>
+script named after the agent instead (see
+<code>launchd.agents.&lt;name&gt;.launcher</code>). This makes the agent
+appear under its own name, rather than as “sh”, in System
+Settings &gt; Login Items &amp; Extensions, but the agent will fail to
+start if launchd runs it before the Nix store is mounted.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>
