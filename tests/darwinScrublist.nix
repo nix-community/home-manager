@@ -171,6 +171,7 @@ let
     "poetry"
     "pomo"
     "powerline-go"
+    "prismlauncher"
     "proton-pass-cli"
     "pubs"
     "pyenv"
