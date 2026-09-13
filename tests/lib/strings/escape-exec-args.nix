@@ -1,36 +1,37 @@
 { lib, pkgs, ... }:
 let
-  inherit (lib.hm.systemd) escapeExecArg escapeExecArgs;
+  inherit (lib.hm.strings) escapeSystemdExecArg escapeSystemdExecArgs;
   contextString = builtins.toFile "systemd-argument" "argument";
 in
 {
   assertions = [
     {
-      assertion = escapeExecArgs [ ] == "";
+      assertion = escapeSystemdExecArgs [ ] == "";
       message = "Empty lists must produce no arguments.";
     }
     {
       assertion =
-        escapeExecArgs [
+        escapeSystemdExecArgs [
           42
           1.5
         ] == ''"42" "1.500000"'';
       message = "Numbers must become strings.";
     }
     {
-      assertion = escapeExecArg ./default.nix == builtins.toJSON "${./default.nix}";
+      assertion = escapeSystemdExecArg ./default.nix == builtins.toJSON "${./default.nix}";
       message = "Paths must retain store references.";
     }
     {
-      assertion = escapeExecArg pkgs.emptyDirectory == builtins.toJSON "${pkgs.emptyDirectory}";
+      assertion = escapeSystemdExecArg pkgs.emptyDirectory == builtins.toJSON "${pkgs.emptyDirectory}";
       message = "Derivations must use output paths.";
     }
     {
-      assertion = builtins.getContext (escapeExecArg contextString) == builtins.getContext contextString;
+      assertion =
+        builtins.getContext (escapeSystemdExecArg contextString) == builtins.getContext contextString;
       message = "String context must be preserved.";
     }
     {
-      assertion = lib.all (arg: !(builtins.tryEval (escapeExecArg arg)).success) [
+      assertion = lib.all (arg: !(builtins.tryEval (escapeSystemdExecArg arg)).success) [
         null
         true
         [ ]
@@ -41,7 +42,7 @@ in
   ];
 
   home.file."escaped-args".text =
-    escapeExecArgs [
+    escapeSystemdExecArgs [
       "plain"
       ""
       "two words"

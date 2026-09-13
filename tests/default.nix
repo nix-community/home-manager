@@ -190,7 +190,7 @@ import nmtSrc {
           ./lib/deprecations
           ./lib/generators
           ./lib/mcp
-          ./lib/systemd
+          ./lib/strings
           ./lib/types
           ./modules/files
           ./modules/home-environment
