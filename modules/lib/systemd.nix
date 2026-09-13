@@ -1,9 +1,9 @@
 { lib }:
 
 rec {
-  # Quote a string, path, number, or derivation for a systemd Exec* argument.
+  # Quote strings, paths, numbers, or derivations for systemd Exec*.
   # JSON quoting preserves argument boundaries and escapes control characters.
-  # Escape systemd specifiers and environment substitutions as literal text.
+  # Double % and $ to prevent specifier and environment expansion.
   escapeExecArg =
     arg:
     let
@@ -19,6 +19,6 @@ rec {
     in
     lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (builtins.toJSON s);
 
-  # Quote each argument separately, including empty arguments.
+  # Preserve argument boundaries, including empty arguments.
   escapeExecArgs = lib.concatMapStringsSep " " escapeExecArg;
 }
