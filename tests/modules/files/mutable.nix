@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  realPkgs,
   extendModules,
   ...
 }:
@@ -92,17 +93,13 @@ in
   nmt.script = ''
     export HOME="$TMPDIR/mutable-home"
 
-    # The activation code under test shells out to `bash`, which is not on
-    # the test PATH (nmt only provides coreutils, diffutils, findutils,
-    # gnugrep, and gnused). Reuse the interpreter running this script,
-    # falling back to the sandbox /bin/sh (bash on Linux and Darwin).
-    mkdir -p "$TMPDIR/test-bin"
-    if ! command -v bash >/dev/null 2>&1; then
-      ln -s "''${BASH:-/bin/sh}" "$TMPDIR/test-bin/bash"
-      export PATH="$TMPDIR/test-bin:$PATH"
-    fi
-    test -x "$(command -v bash)"
-    export PATH="${pkgs.gettext}/bin:$PATH"
+    # Runtime dependencies must not use nmt's scrubbed package paths.
+    export PATH="${
+      lib.makeBinPath [
+        realPkgs.bash
+        realPkgs.gettext
+      ]
+    }:$PATH"
 
     mkdir -p "$HOME/app"
     printf unmanaged > "$HOME/app/unmanaged"
@@ -167,8 +164,8 @@ in
     test ! -e "$HOME/app/removed"
     test "$(cat "$HOME/app/unmanaged")" = unmanaged
 
-    # Retrying after a partially installed generation converges instead of
-    # reporting the new copy as an unmanaged collision.
+    # Previously owned copies can be overwritten on retry. Recovery for a
+    # newly introduced path is covered by the full-activation integration test.
     printf third > "$HOME/app/config"
     ${third.activate} ${first.package}
     test "$(cat "$HOME/app/config")" = third
@@ -179,7 +176,7 @@ in
     test "$(cat "$HOME/app/removed")" = "remove me"
 
     # Transition between a copy and the ordinary home.file symlink mode.
-    ${linked.activate} ${second.package}
+    ${linked.activate} ${first.package}
     test -L "$HOME/app/config"
     ${second.activate} ${linked.package}
     test ! -L "$HOME/app/config"
