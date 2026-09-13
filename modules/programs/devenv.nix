@@ -14,6 +14,7 @@ let
     ;
 
   cfg = config.programs.devenv;
+  yamlFormat = pkgs.formats.yaml { };
 
 in
 {
@@ -33,6 +34,21 @@ in
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
+
+    settings = lib.mkOption {
+      inherit (yamlFormat) type;
+      default = { };
+      example = {
+        shell.prompt_prefix = false;
+        tui.statusline.enabled = false;
+      };
+      description = ''
+        Configuration written to {file}`$XDG_CONFIG_HOME/devenv/config.yaml`.
+
+        See <https://devenv.sh/tui-customization/> for
+        available options and documentation.
+      '';
+    };
 
   };
 
@@ -58,6 +74,9 @@ in
           ''
         } ";
       };
+    };
+    xdg.configFile."devenv/config.yaml" = lib.mkIf (cfg.settings != { }) {
+      source = yamlFormat.generate "config.yaml" ({ version = 1; } // cfg.settings);
     };
   };
 }
