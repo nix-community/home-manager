@@ -26,7 +26,10 @@ let
   };
 in
 {
-  meta.maintainers = [ lib.maintainers.eveeifyeve ];
+  meta.maintainers = with lib.maintainers; [
+    eveeifyeve
+    yzx9
+  ];
 
   options.programs.worktrunk = {
     enable = lib.mkEnableOption "worktrunk";
