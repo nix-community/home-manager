@@ -14,7 +14,6 @@ rec {
   maintainers = import ./maintainers.nix;
   mcp = import ./mcp.nix { inherit lib; };
   strings = import ./strings.nix { inherit lib; };
-  systemd = import ./systemd.nix { inherit lib; };
   types = import ./types.nix { inherit gvariant lib; };
 
   shell = import ./shell.nix { inherit lib; };

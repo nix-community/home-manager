@@ -47,7 +47,7 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${lib.getExe cfg.package} ${lib.hm.systemd.escapeExecArgs cfg.extraArgs}";
+        ExecStart = "${lib.getExe cfg.package} ${lib.hm.strings.escapeSystemdExecArgs cfg.extraArgs}";
         Restart = "always";
       };
     };

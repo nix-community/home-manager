@@ -11,6 +11,27 @@ let
     ;
 in
 rec {
+  # Quote strings, paths, numbers, or derivations for systemd Exec*.
+  # JSON quoting preserves argument boundaries and escapes control characters.
+  # Double % and $ to prevent specifier and environment expansion.
+  escapeSystemdExecArg =
+    arg:
+    let
+      s =
+        if lib.isPath arg then
+          "${arg}"
+        else if lib.isString arg then
+          arg
+        else if lib.isInt arg || lib.isFloat arg || lib.isDerivation arg then
+          toString arg
+        else
+          throw "escapeSystemdExecArg only allows strings, paths, numbers and derivations";
+    in
+    lib.replaceStrings [ "%" "$" ] [ "%%" "$$" ] (builtins.toJSON s);
+
+  # Preserve argument boundaries, including empty arguments.
+  escapeSystemdExecArgs = lib.concatMapStringsSep " " escapeSystemdExecArg;
+
   # Figures out a valid Nix store name for the given path.
   storeFileName =
     path:
