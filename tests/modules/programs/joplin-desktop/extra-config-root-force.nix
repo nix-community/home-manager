@@ -40,7 +40,7 @@
     ];
 
   nmt.script =
-    assert config.programs.joplin-desktop.general.editor == "nano";
+    assert config.programs.joplin-desktop.general.editor == "kate";
     assert config.programs.joplin-desktop.sync.interval == "10m";
     ''
       generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"

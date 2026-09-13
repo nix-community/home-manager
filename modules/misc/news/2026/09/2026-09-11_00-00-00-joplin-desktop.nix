@@ -17,5 +17,7 @@
 
     Activation still merges settings into Joplin's writable file and preserves
     unmanaged settings. Top-level null and empty strings remain omitted.
+    When no settings remain, activation no longer creates or rewrites
+    the configuration file.
   '';
 }

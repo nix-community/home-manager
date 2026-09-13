@@ -29,75 +29,47 @@ in
 
       convertSync =
         name: values:
-        args@{ options, ... }:
-        let
+        lib.hm.deprecations.mkSettingsChangedOptionModule {
           from = [
             "programs"
             "joplin-desktop"
             "sync"
             name
           ];
-          key = "sync.${name}";
-          changed = lib.mkChangedOptionModule from [ "programs" "joplin-desktop" "settings" ] (
-            config:
-            lib.optionalAttrs (!(builtins.elem key overlay.keys)) {
-              ${key} = lib.mkOptionDefault values.${config.programs.joplin-desktop.sync.${name}};
-            }
-          ) args;
-        in
-        changed
-        // {
-          options = lib.recursiveUpdate changed.options (
-            lib.setAttrByPath from {
-              default = "undefined";
-            }
-          );
-          config = lib.mkIf (
-            (lib.getAttrFromPath from options).highestPrio < (lib.mkOptionDefault null).priority
-          ) changed.config;
-        };
-    in
-    [
-      overlay.module
-      (
-        args@{ options, ... }:
-        let
-          from = [
+          to = [
             "programs"
             "joplin-desktop"
-            "general"
-            "editor"
+            "settings"
           ];
-          old = lib.getAttrFromPath from options;
-        in
-        lib.doRename
-          {
-            inherit from;
-            to = [
-              "programs"
-              "joplin-desktop"
-              "settings"
-              "editor"
-            ];
-            visible = false;
-            warn = true;
-            use = _: cfg.settings.editor or null;
-            condition = old.isDefined && old.highestPrio <= (lib.mkOptionDefault null).priority;
-          }
-          (
-            args
-            // {
-              # The old extraConfig overlay won even over a forced editor. Keep the
-              # winning source definitions, but forward them as compatibility defaults.
-              options = lib.recursiveUpdate options (
-                lib.setAttrByPath from {
-                  highestPrio = (lib.mkOptionDefault null).priority;
-                  definitions = if builtins.elem "editor" overlay.keys then [ ] else old.definitions;
-                }
-              );
-            }
-          )
-      )
+          key = "sync.${name}";
+          oldOption.default = "undefined";
+          convert = value: values.${value};
+          shadowed = lib.elem "sync.${name}" overlay.keys;
+        };
+    in
+    [ overlay.module ]
+    ++ [
+      # Keep legacy reads independent of settings used by conditional overlays.
+      (lib.hm.deprecations.mkSettingsChangedOptionModule {
+        from = [
+          "programs"
+          "joplin-desktop"
+          "general"
+          "editor"
+        ];
+        to = [
+          "programs"
+          "joplin-desktop"
+          "settings"
+        ];
+        key = "editor";
+        oldOption = {
+          type = lib.types.nullOr lib.types.str;
+          default = null;
+        };
+        convert = lib.id;
+        shadowed = lib.elem "editor" overlay.keys;
+      })
       (convertSync "target" {
         undefined = null;
         none = 0;
@@ -140,7 +112,9 @@ in
       description = ''
         Settings merged into the writable
         {file}`$XDG_CONFIG_HOME/joplin-desktop/settings.json` during activation.
-        Settings not configured here are preserved.
+        Settings not configured here are preserved. If no settings remain after
+        omitting top-level null values and empty strings, activation leaves
+        the file untouched and does not create it.
 
         Dotted names such as `"sync.interval"` are literal JSON keys.
         Sync targets and intervals use Joplin's numeric values. For example,
@@ -160,19 +134,20 @@ in
 
     home.activation.activateJoplinDesktopConfig =
       let
+        settings = lib.filterAttrs (_: value: value != null && value != "") cfg.settings;
         configPath = "${config.xdg.configHome}/joplin-desktop/settings.json";
-        newConfig = jsonFormat.generate "joplin-settings.json" (
-          lib.filterAttrs (_: value: value != null && value != "") cfg.settings
-        );
+        newConfig = jsonFormat.generate "joplin-settings.json" settings;
       in
-      lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-        # Ensure that settings.json exists.
-        mkdir -p ${dirOf configPath}
-        touch ${configPath}
-        # Config has to be written to temporary variable because jq cannot edit files in place.
-        config="$(jq -s '.[0] + .[1]' ${configPath} ${newConfig})"
-        printf '%s\n' "$config" > ${configPath}
-        unset config
-      '';
+      lib.mkIf (settings != { }) (
+        lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+          # Ensure that settings.json exists.
+          mkdir -p ${dirOf configPath}
+          touch ${configPath}
+          # Config has to be written to temporary variable because jq cannot edit files in place.
+          config="$(jq -s '.[0] + .[1]' ${configPath} ${newConfig})"
+          printf '%s\n' "$config" > ${configPath}
+          unset config
+        ''
+      );
   };
 }

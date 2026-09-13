@@ -30,7 +30,7 @@
   };
 
   nmt.script =
-    assert config.programs.joplin-desktop.general.editor == "";
+    assert config.programs.joplin-desktop.general.editor == null;
     assert config.programs.joplin-desktop.sync.target == "undefined";
     assert config.programs.joplin-desktop.sync.interval == "undefined";
     assert options.programs.joplin-desktop.settings.default == { };
