@@ -55,6 +55,23 @@ include a basic Bash configuration and the packages atool and httpie.
 Home Manager activation runs as part of nix-darwin activation for each
 configured user.
 
+When using Fish with `home-manager.useUserPackages = true`, also enable
+Fish in the nix-darwin configuration, outside `home-manager.users`:
+
+``` nix
+programs.fish.enable = true;
+home-manager.users.eve.programs.fish.enable = true;
+```
+
+The system module links package-provided Fish completions, functions, and
+configuration snippets into the per-user profile. It also sets up the shell
+environment before Fish discovers those files. Home Manager's `config.fish`
+runs too late to provide that early setup by itself.
+
+Home Manager warns when this system integration is implicitly disabled.
+If you provide your own integration, explicitly set nix-darwin's
+`programs.fish.enable = false` to suppress the warning.
+
 If you do not plan on having Home Manager manage your shell
 configuration then you must add either
 
