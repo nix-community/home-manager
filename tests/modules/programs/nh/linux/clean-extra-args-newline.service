@@ -1,5 +1,5 @@
 [Service]
-ExecStart=@nh@/bin/nh clean user "--keep-since" "1 day"
+ExecStart=@nh@/bin/nh clean user "--keep-since" "1\nday"
 Type=oneshot
 
 [Unit]
