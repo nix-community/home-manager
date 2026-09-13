@@ -1,0 +1,10 @@
+%YAML 1.1
+---
+clouds:
+  current-cloud:
+    cloud: current
+  legacy-cloud:
+    cloud: legacy
+  shared-cloud:
+    interface: public
+    region_name: current

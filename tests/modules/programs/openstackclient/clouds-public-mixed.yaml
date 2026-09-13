@@ -1,0 +1,9 @@
+%YAML 1.1
+---
+public-clouds:
+  current-cloud:
+    auth:
+      auth_url: https://current.example.com
+  legacy-cloud:
+    auth:
+      auth_url: https://legacy.example.com
