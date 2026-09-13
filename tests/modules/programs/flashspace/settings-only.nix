@@ -10,7 +10,8 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/flashspace/settings.toml
+    assertFileExists home-files/.config/flashspace/settings.json
+    assertFileContains home-files/.config/flashspace/settings.json '"displayMode": "static"'
     assertPathNotExists home-files/.config/flashspace/profiles.json
   '';
 }
