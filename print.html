@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4668bc42.js";
+            window.path_to_searchindex_js = "searchindex-cccfd5b6.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4b64f479.js"></script>
+        <script src="toc-d58b34dd.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -11967,6 +11967,7 @@ string</p>
 <li><a href="#autojump">autojump</a></li>
 <li><a href="#autorandr">autorandr</a></li>
 <li><a href="#awscli">awscli</a></li>
+<li><a href="#b4">b4</a></li>
 <li><a href="#bacon">bacon</a></li>
 <li><a href="#bash">bash</a></li>
 <li><a href="#bashmount">bashmount</a></li>
@@ -17101,6 +17102,156 @@ open submodule of attribute set of section of an INI file (attrs of INI atom (nu
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="b4"><a href="#b4" class="header">b4</a></h1>
+<h2 id="opt-programs.b4.enable"><a class="header" href="#opt-programs.b4.enable">programs.b4.enable</a></h2>
+<p>Whether to enable b4, a tool for kernel-style patch/email review workflows.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.package"><a class="header" href="#opt-programs.b4.package">programs.b4.package</a></h2>
+<p>The b4 package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.b4
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.agentReview.enable"><a class="header" href="#opt-programs.b4.agentReview.enable">programs.b4.agentReview.enable</a></h2>
+<p>Whether to enable the AI reviewer behind the <code>a</code> key in the <code>b4 review</code> TUI, by writing the
+<code>review-agent-command</code> and <code>review-agent-prompt-path</code> <code>[b4]</code> settings
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.agentReview.command"><a class="header" href="#opt-programs.b4.agentReview.command">programs.b4.agentReview.command</a></h2>
+<p>The command b4 runs for the agent action. It is POSIX-shlex-split, gets
+a final argument pointing at
+<code>programs.b4.agentReview.instructions</code>, and runs with the
+repository top as its working directory, so relative <code>.git</code> paths
+resolve per-repo.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em>
+A Claude Code invocation (<code>pkgs.claude-code</code>)</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"${lib.getExe pkgs.aider-chat} --message"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.agentReview.instructions"><a class="header" href="#opt-programs.b4.agentReview.instructions">programs.b4.agentReview.instructions</a></h2>
+<p>Instructions telling the agent how to write review files under
+<code>.git/b4-review/</code>. Written to <code>review-agent-prompt-path</code> as an
+absolute path, so it applies to every repository.</p>
+<p><em>Type:</em>
+string or absolute path</p>
+<p><em>Default:</em>
+b4’s shipped <code>misc/agent-reviewer.md</code></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">./my-agent-reviewer.md
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.emacsPackage"><a class="header" href="#opt-programs.b4.emacsPackage">programs.b4.emacsPackage</a></h2>
+<p>Selector picking b4’s <code>b4-review-mode.el</code> out of an Emacs package set, for
+adding to e.g. <code>programs.emacs.extraPackages</code>.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">epkgs: epkgs.b4-review-mode
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.emacsSyntax"><a class="header" href="#opt-programs.b4.emacsSyntax">programs.b4.emacsSyntax</a></h2>
+<p>Whether to add b4’s <code>b4-review-mode</code>, which autoloads for
+<code>*.b4-review.eml</code> files, to <code>programs.emacs</code>. Editors managed
+outside home-manager can instead consume
+<code>programs.b4.emacsPackage</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.emacs.enable
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.settings"><a class="header" href="#opt-programs.b4.settings">programs.b4.settings</a></h2>
+<p>Settings making up git-config’s <code>[b4]</code> section, b4’s only configuration
+source. The generated section is merged into
+<code>$XDG_CONFIG_HOME/git/config</code>, so a non-empty value requires
+<code>programs.git.enable</code>.</p>
+<p>See <a href="https://b4.docs.kernel.org/en/latest/config.html">https://b4.docs.kernel.org/en/latest/config.html</a> for the keys.</p>
+<p><em>Type:</em>
+attribute set of (boolean or signed integer or string or list of string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  attestation-policy = "hardfail";
+  midmask = "https://lore.kernel.org/all/%s";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.vimPlugin"><a class="header" href="#opt-programs.b4.vimPlugin">programs.b4.vimPlugin</a></h2>
+<p>The b4-review-vim package to use. b4’s Vim review-editor files as a runtimepath plugin, for adding to
+e.g. <code>programs.neovim.plugins</code>.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.vimPlugins.b4-review-vim
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.b4.vimSyntax"><a class="header" href="#opt-programs.b4.vimSyntax">programs.b4.vimSyntax</a></h2>
+<p>Whether to add b4’s review-editor syntax highlighting, which activates for
+<code>*.b4-review.eml</code> buffers, to
+<code>programs.vim</code>/<code>programs.neovim</code>. Editors managed outside
+home-manager can instead put <code>programs.b4.vimPlugin</code> on their
+runtimepath.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.vim.enable || config.programs.neovim.enable
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/b4.nix">&lt;home-manager/modules/programs/b4.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="bacon"><a href="#bacon" class="header">bacon</a></h1>
