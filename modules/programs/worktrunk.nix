@@ -24,6 +24,14 @@ let
     type = "command";
     command = "${wt} config state marker ${op} || true";
   };
+
+  skillsPackage = pkgs.runCommandLocal "worktrunk-skills" { } ''
+    if [ -d "${cfg.package}/share/skills/worktrunk" ]; then
+      ln -s "${cfg.package}/share/skills/worktrunk" "$out"
+    else
+      ln -s "${cfg.package}/skills" "$out"
+    fi
+  '';
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -206,15 +214,15 @@ in
       };
 
       # Install worktrunk's skills directly into Claude Code (no plugin marketplace).
-      # The skill markdown ships inside the nixpkgs `worktrunk` package,
-      # version-aligned with the `wt` binary. Each skill has its own enable flag.
+      # The skills ship inside the nixpkgs `worktrunk` package, version-aligned with
+      # the `wt` binary. Each skill has its own enable flag.
       skills = lib.mkMerge [
         (lib.mkIf cfg.claudeCodeIntegration.configurationSkill {
-          worktrunk = "${cfg.package}/skills/worktrunk";
+          worktrunk = "${skillsPackage}/worktrunk";
         })
 
         (lib.mkIf cfg.claudeCodeIntegration.switchCreateSkill {
-          wt-switch-create = "${cfg.package}/skills/wt-switch-create";
+          wt-switch-create = "${skillsPackage}/wt-switch-create";
         })
       ];
     };
