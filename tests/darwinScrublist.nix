@@ -19,6 +19,7 @@ let
     "autojump"
     "autorandr"
     "awscli2"
+    "b4"
     "bacon"
     "bash"
     "bash-completion"
