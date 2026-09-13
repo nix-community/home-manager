@@ -19,7 +19,7 @@
   nmt.script =
     assert config.programs.joplin-desktop.general.editor == null;
     ''
-      generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"
-      diff -u "$generated" ${./empty.json}
+      assertFileNotRegex activate 'activateJoplinDesktopConfig|joplin-settings.json'
+      assertPathNotExists home-files/.config/joplin-desktop/settings.json
     '';
 }

@@ -21,7 +21,7 @@
     assert config.programs.joplin-desktop.sync.target == "undefined";
     assert config.programs.joplin-desktop.sync.interval == "undefined";
     ''
-      generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"
-      diff -u "$generated" ${./empty.json}
+      assertFileNotRegex activate 'activateJoplinDesktopConfig|joplin-settings.json'
+      assertPathNotExists home-files/.config/joplin-desktop/settings.json
     '';
 }

@@ -1,4 +1,6 @@
 {
+  joplin-desktop-no-settings = ./no-settings.nix;
+  joplin-desktop-omitted-settings = ./omitted-settings.nix;
   joplin-desktop-basic-configuration = ./basic-configuration.nix;
   joplin-desktop-legacy-configuration = ./legacy-configuration.nix;
   joplin-desktop-extra-config-root-force = ./extra-config-root-force.nix;
