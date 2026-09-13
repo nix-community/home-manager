@@ -168,6 +168,7 @@ let
     "pimsync"
     "pistol"
     "pls"
+    "pnpm"
     "podman"
     "poetry"
     "pomo"
