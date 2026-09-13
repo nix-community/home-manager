@@ -7,7 +7,7 @@ in
   assertions = [
     {
       assertion = escapeExecArgs [ ] == "";
-      message = "An empty argument list must produce no arguments.";
+      message = "Empty lists must produce no arguments.";
     }
     {
       assertion =
@@ -15,19 +15,19 @@ in
           42
           1.5
         ] == ''"42" "1.500000"'';
-      message = "Numeric arguments must be converted to strings.";
+      message = "Numbers must become strings.";
     }
     {
       assertion = escapeExecArg ./default.nix == builtins.toJSON "${./default.nix}";
-      message = "Path arguments must retain their store references.";
+      message = "Paths must retain store references.";
     }
     {
       assertion = escapeExecArg pkgs.emptyDirectory == builtins.toJSON "${pkgs.emptyDirectory}";
-      message = "Derivation arguments must use their output paths.";
+      message = "Derivations must use output paths.";
     }
     {
       assertion = builtins.getContext (escapeExecArg contextString) == builtins.getContext contextString;
-      message = "Escaping must preserve string context.";
+      message = "String context must be preserved.";
     }
     {
       assertion = lib.all (arg: !(builtins.tryEval (escapeExecArg arg)).success) [
@@ -36,7 +36,7 @@ in
         [ ]
         { }
       ];
-      message = "Unsupported argument types must be rejected.";
+      message = "Unsupported types must be rejected.";
     }
   ];
 
