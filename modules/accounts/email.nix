@@ -751,6 +751,7 @@ in
       default = "/etc/ssl/certs/ca-certificates.crt";
       description = ''
         Path to default file containing certificate authorities that
+        
         should be used to validate the connection authenticity. This
         path may be overridden on a per-account basis.
       '';
