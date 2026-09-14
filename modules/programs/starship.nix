@@ -149,31 +149,20 @@ in
 
       file.${cfg.configPath} = mkIf hasGeneratedConfig (
         let
-          settingsFile = tomlFormat.generate "starship-config.toml" cfg.settings;
-          validate = {
-            enabled = cfg.validateFiles;
-            validator =
-              let
-                schemafile = lib.attrByPath [ "passthru" "jsonschema" "config" ] null cfg.package;
-              in
-              if schemafile == null then
-                null
-              else
-                { source }: ''
-                  ${lib.getExe pkgs.check-jsonschema} \
-                    --schemafile=${lib.escapeShellArg schemafile} \
-                    ${lib.escapeShellArg source}
-                '';
+          orderedTomlFormat = lib.hm.generators.mkDAGOrderedTomlFormat {
+            inherit pkgs tomlFormat;
+            schema = lib.optionalString cfg.validateFiles (
+              lib.attrByPath [ "passthru" "jsonschema" "config" ] null cfg.package
+            );
           };
+          settingsFile = orderedTomlFormat.generate "starship-config.toml" cfg.settings;
         in
         if cfg.presets == [ ] then
           {
-            inherit validate;
             source = settingsFile;
           }
         else
           {
-            inherit validate;
             source =
               pkgs.runCommand "starship.toml"
                 {
