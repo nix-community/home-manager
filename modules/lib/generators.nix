@@ -456,7 +456,7 @@ in
       nativeBuildInputs = [
         pkgs.buildPackages.jq
       ]
-      ++ (lib.optional (schema != null) pkgs.buildPackages.check-jsonschema);
+      ++ (lib.optional (schema != "") pkgs.buildPackages.check-jsonschema);
       buildCommand = ''
         jq . "$valuePath" > "$out"
         if [[ -n "${schema}" ]]; then
@@ -553,7 +553,7 @@ in
       nativeBuildInputs = [
         pkgs.buildPackages.remarshal
       ]
-      ++ (lib.optional (schema != null) pkgs.buildPackages.check-jsonschema);
+      ++ (lib.optional (schema != "") pkgs.buildPackages.check-jsonschema);
       buildCommand = ''
         json2toml "$valuePath" "$out"
         if [[ -n "${schema}" ]]; then
