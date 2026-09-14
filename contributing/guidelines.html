@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-cb02010f.js";
+            window.path_to_searchindex_js = "../searchindex-f3b21d6b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-5a9f85a1.js"></script>
@@ -258,8 +258,10 @@ configuration location with an environment variable, for example
 moving into settings. Specify native key paths explicitly when casing or
 literal dotted keys differ from the default snake-case transformation.
 Set <code>preserveOrder = true</code> when legacy and new list definitions must retain
-relative <code>mkBefore</code> and <code>mkAfter</code> ordering. Value conversions belong in
-<code>lib.mkChangedOptionModule</code>, not in a path-rename mapping.</p>
+relative <code>mkBefore</code> and <code>mkAfter</code> ordering. For value conversions into a
+freeform setting, use <code>lib.hm.deprecations.mkSettingsChangedOptionModule</code>.
+It wraps <code>lib.mkChangedOptionModule</code> and retains reads of the legacy value;
+a rename instead reads back the canonical setting.</p>
 <p>For a default-empty attribute-set option formerly applied as a final overlay,
 use <code>lib.hm.deprecations.mkSettingsOverlay</code>:</p>
 <pre><code class="language-nix">let
@@ -278,6 +280,33 @@ keys. Use <code>overlay.keys</code> to suppress modeled contributions for keys t
 old overlay overwrote. Disabled conditional keys are absent; explicit null
 and empty values still count as supplied. Whole sources weaker than the old
 empty option default are ignored.</p>
+<p>To forward legacy values at a different priority, pass <code>priority</code> to the
+same rename helper. The default, <code>null</code>, preserves source priorities.
+For example:</p>
+<pre><code class="language-nix">lib.hm.deprecations.mkSettingsRenamedOptionModules
+  [ "programs" "example" ] [ "programs" "example" "settings" ]
+  { priority = 1400; }
+  [
+    { old = "font"; new = "font"; shadowed = lib.elem "font" overlay.keys; }
+  ]
+</code></pre>
+<p>This resolves competing legacy definitions first, then forwards the winners
+at priority 1400, below ordinary and per-setting <code>mkDefault</code> values. With a
+priority override, source definitions weaker than option defaults are ignored.
+Destinations must be freeform keys; specifications can supply <code>fallback</code> for
+reads of absent keys and <code>shadowed</code> to retain the old overlay’s precedence
+without suppressing warnings. Priority overrides also compose with
+<code>preserveOrder = true</code>.</p>
+<p>An active legacy source can discard a whole-settings <code>mkDefault</code>, including
+unrelated keys. Use per-setting defaults when combining legacy and new values.</p>
+<p>For converted settings, supply <code>from</code>, the settings-root <code>to</code>, a literal <code>key</code>,
+<code>convert</code>, and the historical <code>oldOption</code> declaration. The helper handles
+warnings, source-priority checks, and forwarding. Its <code>priority</code> defaults to
+1500, and <code>shadowed</code> suppresses conversion without suppressing the warning.
+Option-default definitions are ignored unless the <code>applyDefault</code> predicate
+selects their merged value. For example, a legacy list that permits additions
+at option-default priority can use <code>applyDefault = value: value != [ ];</code>.
+Do not enable this for defaults that the application should supply itself.</p>
 <p>Keep application defaults, conversions, and output filtering in the module.
 Test legacy overlay precedence and ordinary settings overrides separately.
 Do not replace module merging with a final attribute-set overlay on settings.</p>
