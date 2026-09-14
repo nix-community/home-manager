@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dag-ordered-format",
+  "title": "DAG Ordered Format",
+  "description": "Schema for DAG ordered format configuration",
+  "type": "object",
+  "required": ["ordered"],
+  "properties": {
+    "ordered": {
+      "type": "object",
+      "required": ["before", "plainDagEntryShape", "after"],
+      "properties": {
+        "before": {
+          "type": "string"
+        },
+        "plainDagEntryShape": {
+          "$ref": "#/$defs/dagEntry"
+        },
+        "after": {
+          "$ref": "#/$defs/dagEntries"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "dagEntry": {
+      "type": "object",
+      "required": ["after", "before", "data"],
+      "properties": {
+        "after": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "before": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "keep": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "dagEntries": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/dagEntry"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "before": {},
+              "after": {}
+            }
+          },
+          {
+            "$ref": "#/$defs/dagEntries"
+          }
+        ]
+      }
+    }
+  }
+}
