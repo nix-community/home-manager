@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   time = "2026-06-20T21:13:28+00:00";
-  condition = pkgs.stdenv.isDarwin;
+  condition = pkgs.stdenv.hostPlatform.isDarwin;
   message = ''
     The options `targets.darwin.defaults."com.apple.dock".persistent-apps`
     and `targets.darwin.defaults."com.apple.dock".persistent-others` now
