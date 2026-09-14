@@ -120,8 +120,9 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to validate the generated configuration file against the
-        Starship JSON schema using {command}`check-jsonschema`.
+        Whether to validate the generated configuration file
+        ({file}`$XDG_CONFIG_HOME/starship.toml`) against the Starship JSON
+        schema of the configured package using {command}`check-jsonschema`.
       '';
     };
   };

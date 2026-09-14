@@ -475,8 +475,12 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Whether to validate the generated configuration file against the
-        OpenCode JSON schema using {command}`check-jsonschema`.
+        Whether to validate the generated configuration files
+        ({file}`$XDG_CONFIG_HOME/opencode/opencode.json` and
+        {file}`$XDG_CONFIG_HOME/opencode/tui.json`) against the
+        corresponding OpenCode JSON schemas of the configured package
+        ({option}`programs.opencode.package`, `config.json` and `tui.json`
+        from `passthru.jsonschema`) using {command}`check-jsonschema`.
       '';
     };
   };
