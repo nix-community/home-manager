@@ -6,21 +6,33 @@ let
       to,
       value,
       condition,
+      use ? lib.id,
+      freeform ? false,
     }:
     args@{ options, ... }:
     lib.doRename
       {
-        inherit from to condition;
+        inherit
+          from
+          to
+          condition
+          use
+          ;
         visible = false;
         warn = true;
-        use = lib.id;
         # The forwarded definitions already carry their intended priorities.
         withPriority = false;
       }
       (
         args
         // {
-          options = lib.recursiveUpdate options (lib.setAttrByPath from { definitions = [ value ]; });
+          options =
+            if freeform then
+              # Freeform keys such as "value" must not resolve to option metadata.
+              lib.setAttrByPath from ((lib.getAttrFromPath from options) // { definitions = [ value ]; })
+              // lib.optionalAttrs (options ? warnings) { inherit (options) warnings; }
+            else
+              lib.recursiveUpdate options (lib.setAttrByPath from { definitions = [ value ]; });
         }
       );
 in
@@ -161,12 +173,24 @@ in
       `preserveOrder` (boolean; optional)
       : Preserve definition ordering. Defaults to `false`.
 
+      `priority` (integer or null; optional)
+      : Override the forwarding priority after resolving competing legacy
+        definitions. Defaults to `null`, preserving the source priority.
+        For example, `1400` makes legacy values yield to ordinary and
+        per-setting mkDefault values. In this mode, destinations are freeform
+        keys and source definitions weaker than option defaults are ignored.
+        Whole-settings priorities still apply at the root.
+
       `transform` (function; optional)
       : Transform each implicit new path element. Defaults to `lib.hm.strings.toSnakeCase`.
 
     `specs`
 
     : List of strings, path lists, or attribute sets with explicit `old` and `new` paths.
+      With a forwarding `priority`, attribute-set specifications can also set
+      `fallback` (default `null`) for reads of an absent destination and
+      `shadowed` (default `false`) to suppress forwarding without suppressing
+      the warning. Use `mkSettingsOverlay.keys` to determine shadowing.
 
     # Type
 
@@ -208,6 +232,7 @@ in
     oldPrefix: newPrefix:
     {
       preserveOrder ? false,
+      priority ? null,
       transform ? lib.hm.strings.toSnakeCase,
     }:
     map (
@@ -215,7 +240,11 @@ in
       let
         finalSpec =
           if lib.isAttrs spec then
-            lib.mapAttrs (_: lib.toList) spec
+            spec
+            // {
+              old = lib.toList spec.old;
+              new = lib.toList spec.new;
+            }
           else
             {
               old = lib.toList spec;
@@ -224,27 +253,130 @@ in
         from = oldPrefix ++ finalSpec.old;
         to = newPrefix ++ finalSpec.new;
       in
-      if !preserveOrder then
+      if priority == null && !preserveOrder then
         lib.mkRenamedOptionModule from to
       else
-        args@{ options, ... }:
+        args@{ config, options, ... }:
         let
           option = lib.getAttrFromPath from options;
+          targetPriority = if priority == null then option.highestPrio else priority;
           forwardDefinition =
             definition:
             lib.modules.mkDefinition {
               inherit (definition) file;
-              value = lib.mkOverride option.highestPrio (
-                lib.mkOrder (definition.priority or lib.modules.defaultOrderPriority) definition.value
+              value = lib.mkOverride targetPriority (
+                if preserveOrder then
+                  lib.mkOrder (definition.priority or lib.modules.defaultOrderPriority) definition.value
+                else
+                  definition.value
               );
             };
         in
         mkRenamedOptionModuleWith {
           inherit from to;
-          condition = option.isDefined;
-          value = lib.mkMerge (map forwardDefinition option.definitionsWithLocations);
+          condition =
+            option.isDefined && (priority == null || option.highestPrio <= (lib.mkOptionDefault { }).priority);
+          freeform = priority != null;
+          use = if priority == null then lib.id else _: lib.attrByPath to (finalSpec.fallback or null) config;
+          value = lib.mkMerge (
+            map forwardDefinition (
+              lib.optionals (!(priority != null && (finalSpec.shadowed or false))) option.definitionsWithLocations
+            )
+          );
         } args
     );
+
+  /**
+    Convert a legacy option into one freeform setting while retaining legacy reads.
+
+    Uses the standard changed-option warning. Ordinary legacy definitions are
+    converted after source merging; option-default definitions are ignored
+    unless `applyDefault` selects their merged value. Shadowed sources still
+    warn, but their conversion is not evaluated.
+
+    # Inputs
+
+    `from`
+    : Legacy option path.
+
+    `to`
+    : Settings option receiving the converted key and named in the warning.
+
+    `key`
+    : Literal key within settings. Dots are not path separators.
+
+    `convert`
+    : Function from the merged legacy value to the native setting value.
+
+    `oldOption`
+    : Historical option declaration, including its default and any required type.
+      This is declaration data, not an evaluated entry from `options`.
+
+    `priority` (integer; optional)
+    : Forwarding priority. Defaults to the option-default priority, 1500.
+      Whole-settings priorities still apply at the root.
+
+    `shadowed` (boolean; optional)
+    : Suppress forwarding while retaining warnings. Defaults to `false`.
+      Use `mkSettingsOverlay.keys` to preserve old overlay precedence.
+
+    `applyDefault` (function; optional)
+    : Predicate selecting merged legacy values at option-default priority.
+      Defaults to `_: false`; it is not called for stronger definitions.
+
+    # Type
+
+    ```
+    mkSettingsChangedOptionModule :: AttrSet -> Function
+    ```
+
+    # Examples
+    :::{.example}
+    ## `lib.hm.deprecations.mkSettingsChangedOptionModule` usage example
+
+    ```nix
+    lib.hm.deprecations.mkSettingsChangedOptionModule {
+      from = [ "programs" "example" "sync" "interval" ];
+      to = [ "programs" "example" "settings" ];
+      key = "sync.interval";
+      oldOption.default = "disabled";
+      convert = value: { disabled = 0; hourly = 3600; }.${value};
+    }
+    ```
+
+    :::
+  */
+  mkSettingsChangedOptionModule =
+    {
+      from,
+      to,
+      key,
+      convert,
+      oldOption,
+      priority ? (lib.mkOptionDefault { }).priority,
+      shadowed ? false,
+      applyDefault ? (_: false),
+    }:
+    args@{ options, ... }:
+    let
+      old = lib.getAttrFromPath from options;
+      defaultPriority = (lib.mkOptionDefault { }).priority;
+      changed = lib.mkChangedOptionModule from to (
+        config:
+        lib.optionalAttrs (!shadowed) {
+          ${key} = lib.mkOverride priority (convert (lib.getAttrFromPath from config));
+        }
+      ) args;
+    in
+    changed
+    // {
+      options = lib.recursiveUpdate changed.options (lib.setAttrByPath from oldOption);
+      # Replacing the native sentinel default makes an unused option look set.
+      # Gate both its warning and converted value by the legacy definition priority.
+      config = lib.mkIf (
+        old.highestPrio < defaultPriority || (old.highestPrio == defaultPriority && applyDefault old.value)
+      ) changed.config;
+    };
 
   /**
     Migrate a default-empty attribute-set overlay to freeform settings.

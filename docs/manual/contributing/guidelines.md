@@ -91,8 +91,10 @@ Use `lib.hm.deprecations.mkSettingsRenamedOptionModules` for unchanged values
 moving into settings. Specify native key paths explicitly when casing or
 literal dotted keys differ from the default snake-case transformation.
 Set `preserveOrder = true` when legacy and new list definitions must retain
-relative `mkBefore` and `mkAfter` ordering. Value conversions belong in
-`lib.mkChangedOptionModule`, not in a path-rename mapping.
+relative `mkBefore` and `mkAfter` ordering. For value conversions into a
+freeform setting, use `lib.hm.deprecations.mkSettingsChangedOptionModule`.
+It wraps `lib.mkChangedOptionModule` and retains reads of the legacy value;
+a rename instead reads back the canonical setting.
 
 For a default-empty attribute-set option formerly applied as a final overlay,
 use `lib.hm.deprecations.mkSettingsOverlay`:
@@ -115,6 +117,39 @@ keys. Use `overlay.keys` to suppress modeled contributions for keys that the
 old overlay overwrote. Disabled conditional keys are absent; explicit null
 and empty values still count as supplied. Whole sources weaker than the old
 empty option default are ignored.
+
+To forward legacy values at a different priority, pass `priority` to the
+same rename helper. The default, `null`, preserves source priorities.
+For example:
+
+``` nix
+lib.hm.deprecations.mkSettingsRenamedOptionModules
+  [ "programs" "example" ] [ "programs" "example" "settings" ]
+  { priority = 1400; }
+  [
+    { old = "font"; new = "font"; shadowed = lib.elem "font" overlay.keys; }
+  ]
+```
+
+This resolves competing legacy definitions first, then forwards the winners
+at priority 1400, below ordinary and per-setting `mkDefault` values. With a
+priority override, source definitions weaker than option defaults are ignored.
+Destinations must be freeform keys; specifications can supply `fallback` for
+reads of absent keys and `shadowed` to retain the old overlay's precedence
+without suppressing warnings. Priority overrides also compose with
+`preserveOrder = true`.
+
+An active legacy source can discard a whole-settings `mkDefault`, including
+unrelated keys. Use per-setting defaults when combining legacy and new values.
+
+For converted settings, supply `from`, the settings-root `to`, a literal `key`,
+`convert`, and the historical `oldOption` declaration. The helper handles
+warnings, source-priority checks, and forwarding. Its `priority` defaults to
+1500, and `shadowed` suppresses conversion without suppressing the warning.
+Option-default definitions are ignored unless the `applyDefault` predicate
+selects their merged value. For example, a legacy list that permits additions
+at option-default priority can use `applyDefault = value: value != [ ];`.
+Do not enable this for defaults that the application should supply itself.
 
 Keep application defaults, conversions, and output filtering in the module.
 Test legacy overlay precedence and ordinary settings overrides separately.
