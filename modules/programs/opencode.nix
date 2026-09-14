@@ -17,9 +17,6 @@ let
   webCfg = cfg.web;
 
   jsonFormat = pkgs.formats.json { };
-  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
-    inherit pkgs jsonFormat;
-  };
 
   toOpencodeShape =
     s:
@@ -544,6 +541,12 @@ in
             # Merge all settings
             mergedSettings =
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
+            orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+              inherit pkgs jsonFormat;
+              schema = lib.optionalString cfg.validateFiles (
+                lib.attrByPath [ "passthru" "jsonschema" "config" ] null cfg.package
+              );
+            };
           in
           orderedJsonFormat.generate "opencode.json" (
             {
@@ -551,21 +554,6 @@ in
             }
             // mergedSettings
           );
-        validate = {
-          enabled = cfg.validateFiles;
-          validator =
-            let
-              schemafile = lib.attrByPath [ "passthru" "jsonschema" "config" ] null cfg.package;
-            in
-            if schemafile == null then
-              null
-            else
-              { source }: ''
-                ${lib.getExe pkgs.check-jsonschema} \
-                  --schemafile=${lib.escapeShellArg schemafile} \
-                  ${lib.escapeShellArg source}
-              '';
-        };
       };
 
       "opencode/tui.json" = mkIf (cfg.tui != { }) {

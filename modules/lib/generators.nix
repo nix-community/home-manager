@@ -444,6 +444,7 @@ in
       pkgs,
       jsonFormat ? pkgs.formats.json { },
       cycleErrorMessage ? null,
+      schema ? "",
     }:
     mkDAGOrderedFormat' {
       inherit
@@ -452,9 +453,15 @@ in
         ;
       format = jsonFormat;
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.jq ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.jq
+      ]
+      ++ (lib.optional (schema != null) pkgs.buildPackages.check-jsonschema);
       buildCommand = ''
         jq . "$valuePath" > "$out"
+        if [[ -n "${schema}" ]]; then
+          check-jsonschema --schemafile=${lib.escapeShellArg schema} "$out"
+        fi
       '';
     };
 
