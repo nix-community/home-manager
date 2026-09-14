@@ -473,7 +473,7 @@ in
 
     validateFiles = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = ''
         Whether to validate the generated configuration file against the
         OpenCode JSON schema using {command}`check-jsonschema`.
@@ -556,14 +556,24 @@ in
           );
       };
 
-      "opencode/tui.json" = mkIf (cfg.tui != { }) {
-        source = jsonFormat.generate "tui.json" (
-          {
-            "$schema" = "https://opencode.ai/tui.json";
-          }
-          // cfg.tui
-        );
-      };
+      "opencode/tui.json" = mkIf (cfg.tui != { }) (
+        let
+          orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+            inherit pkgs jsonFormat;
+            schema = lib.optionalString cfg.validateFiles (
+              lib.attrByPath [ "passthru" "jsonschema" "tui" ] null cfg.package
+            );
+          };
+        in
+        {
+          source = orderedJsonFormat.generate "tui.json" (
+            {
+              "$schema" = "https://opencode.ai/tui.json";
+            }
+            // cfg.tui
+          );
+        }
+      );
 
       "opencode/AGENTS.md" = (
         if lib.isPath cfg.context then

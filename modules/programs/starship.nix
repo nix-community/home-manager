@@ -118,7 +118,7 @@ in
 
     validateFiles = mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = ''
         Whether to validate the generated configuration file against the
         Starship JSON schema using {command}`check-jsonschema`.
