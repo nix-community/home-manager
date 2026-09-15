@@ -2,20 +2,26 @@
   config,
   lib,
   pkgs,
+  realPkgs,
   ...
 }:
 
 let
-  configPath = ".local/share/PrismLauncher/prismlauncher.cfg";
+  inherit (lib) escapeShellArg mkForce;
+  inherit (pkgs) stdenv writeScript writeText;
 
-  preexistingConfig = pkgs.writeText "preexisting.cfg" ''
+  settingsPath =
+    (if stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".local/share")
+    + "/PrismLauncher/prismlauncher.cfg";
+
+  existingSettings = writeText "prismlauncher-existing.cfg" ''
     [General]
     ApplicationTheme=system
     MaxMemAlloc=8192
     MinMemAlloc=512
   '';
 
-  expectedConfig = pkgs.writeText "expected.cfg" ''
+  expectedSettings = writeText "prismlauncher-expected.cfg" ''
     [General]
     ApplicationTheme=dark
     MaxMemAlloc=8192
@@ -24,13 +30,12 @@ let
     ShowConsole=true
   '';
 
-  activationScript = pkgs.writeScript "activation" config.home.activation.prismlauncherConfigActivation.data;
+  activationScript = writeScript "configurePrismLauncher" config.home.activation.configurePrismLauncher.data;
 in
 
 {
   programs.prismlauncher = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
 
     settings = {
       ApplicationTheme = "dark";
@@ -39,27 +44,42 @@ in
     };
   };
 
-  home.homeDirectory = lib.mkForce "/@TMPDIR@/hm-user";
+  home.homeDirectory = mkForce "/@TMPDIR@/hm-user";
+
+  # activation script depends on crudini to merge settings
+  test.unstubs = [ (_self: _super: { inherit (realPkgs) crudini; }) ];
 
   nmt.script = ''
-    export HOME=$TMPDIR/hm-user
+    export HOME="$TMPDIR"/hm-user
 
-    # write preexisting config
-    mkdir -p $HOME/.local/share/PrismLauncher
-    cat ${preexistingConfig} > $HOME/${configPath}
+    settingsPath=~/${escapeShellArg settingsPath}
+    existingFile=${existingSettings}
+    expectedFile=${expectedSettings}
+
+    # write existing config
+    mkdir -p "$(dirname "$settingsPath")"
+    cat "$existingFile" > "$settingsPath"
+
+    # validate the existing config
+    assertFileExists "$settingsPath"
+    assertFileContent "$settingsPath" "$existingFile"
+
+    # prepare the activation script
+    substitute ${activationScript} ~/activate --subst-var TMPDIR
+    chmod +x ~/activate
 
     # run the activation script
-    substitute ${activationScript} $TMPDIR/activate --subst-var TMPDIR
-    chmod +x $TMPDIR/activate
-    $TMPDIR/activate
+    ~/activate
 
     # validate the merged config
-    assertFileExists "$HOME/${configPath}"
-    assertFileContent "$HOME/${configPath}" "${expectedConfig}"
+    assertFileExists "$settingsPath"
+    assertFileContent "$settingsPath" "$expectedFile"
 
-    # test idempotence
-    $TMPDIR/activate
-    assertFileExists "$HOME/${configPath}"
-    assertFileContent "$HOME/${configPath}" "${expectedConfig}"
+    # run the activation script AGAIN
+    ~/activate
+
+    # validate again to check idempotence
+    assertFileExists "$settingsPath"
+    assertFileContent "$settingsPath" "$expectedFile"
   '';
 }
