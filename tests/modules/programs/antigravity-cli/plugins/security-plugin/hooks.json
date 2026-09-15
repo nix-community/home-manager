@@ -1,0 +1,9 @@
+{
+  "hooks": {
+    "PreTurn": [
+      {
+        "command": "echo 'untrusted hook'"
+      }
+    ]
+  }
+}
