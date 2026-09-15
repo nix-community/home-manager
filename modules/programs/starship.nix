@@ -7,6 +7,7 @@
 let
   inherit (lib)
     literalExpression
+    mkEnableOption
     mkIf
     mkOption
     types
@@ -115,10 +116,90 @@ in
         Relative path to the user's home directory where the Starship config should be stored.
       '';
     };
+
+    validation = {
+      enable = mkEnableOption "validation of the Starship configuration file";
+
+      validator = mkOption {
+        type = lib.types.functionTo lib.types.str;
+        default =
+          {
+            schema,
+            instances,
+            extraArgs,
+          }:
+          ''
+            ${lib.getExe pkgs.check-jsonschema} \
+              --schemafile ${lib.escapeShellArg schema} \
+              ${lib.escapeShellArgs extraArgs} \
+              ${lib.escapeShellArgs instances} >&2
+          '';
+        defaultText = lib.literalExpression ''
+          { schema, instances, extraArgs }: \'\'
+            $${lib.getExe pkgs.check-jsonschema} \
+              --schemafile $${lib.escapeShellArg schema} \
+              $${lib.escapeShellArgs extraArgs} \
+              $${lib.escapeShellArgs instances} >&2
+          \'\'
+        '';
+        example = lib.literalExpression ''
+          { schema, instances, extraArgs }: \'\'
+            $${lib.getExe pkgs.jsonschema-cli} validate \
+              -i $${lib.escapeShellArgs instances} \
+              $${lib.escapeShellArgs extraArgs} \
+              $${lib.escapeShellArg schema} >&2
+          \'\'
+        '';
+        description = ''
+          A function that validates the Starship configuration file against its JSON schema.
+
+          The function receives an attribute set with:
+          - `schema`: The path to the JSON schema file
+          - `instances`: A list of paths to configuration files to validate
+          - `extraArgs`: Additional arguments for the validator, taken from
+            {option}`programs.starship.validation.extraArgs`.
+
+          This is used during home activation to validate the configuration file
+          before Starship reads it, ensuring it conforms to the expected schema.
+        '';
+      };
+
+      extraArgs = mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [ ];
+        example = lib.literalExpression ''
+          [
+            "--output-format"
+            "json"
+          ]
+        '';
+        description = ''
+          Extra arguments passed to the validator invoked by
+          {option}`programs.starship.validation.validator`.
+        '';
+      };
+    };
   };
 
   config = mkIf cfg.enable {
     home = {
+      activation.validateStarshipConfig =
+        mkIf
+          (
+            cfg.validation.enable
+            && cfg.settings != { }
+            && lib.hasAttrByPath [ "passthru" "jsonschema" "config" ] cfg.package
+          )
+          (
+            lib.hm.dag.entryBefore [ "writeBoundary" ] (
+              cfg.validation.validator {
+                schema = cfg.package.passthru.jsonschema.config;
+                instances = [ config.home.file.${cfg.configPath}.source ];
+                extraArgs = cfg.validation.extraArgs;
+              }
+            )
+          );
+
       packages =
         if cfg.extraPackages != [ ] then
           [
@@ -140,7 +221,12 @@ in
 
       file.${cfg.configPath} = mkIf hasGeneratedConfig (
         let
-          settingsFile = tomlFormat.generate "starship-config" cfg.settings;
+          settingsFile = tomlFormat.generate "starship-config.toml" (
+            {
+              "$schema" = "https://starship.rs/config-schema.json";
+            }
+            // cfg.settings
+          );
         in
         if cfg.presets == [ ] then
           { source = settingsFile; }
