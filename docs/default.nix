@@ -69,6 +69,12 @@ let
 
   hmPath = toString ./..;
 
+  # The Nixpkgs source tree, used to rewrite declaration sites that come from
+  # Nixpkgs' own `lib` rather than from Home Manager. Currently that is the
+  # generic `meta.maintainers` / `meta.teams` module, which
+  # `modules/services-modular` pulls in via `lib/services`.
+  nixpkgsPath = toString pkgs.path;
+
   # Keep submodule option docs visible when wrapped in `either` (and therefore
   # in `nullOr (either ...)`), which upstream currently omits.
   docsLib = lib.extend (
@@ -182,6 +188,10 @@ let
                 # TODO: handle this in a better way (may require upstream
                 # changes to nixpkgs)
                 gitHubDeclaration "NixOS" "nixpkgs" decl
+              else if lib.hasPrefix nixpkgsPath (toString decl) then
+                gitHubDeclaration "NixOS" "nixpkgs" (
+                  lib.removePrefix "/" (lib.removePrefix nixpkgsPath (toString decl))
+                )
               else
                 decl
             ) opt.declarations;
