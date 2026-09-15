@@ -33,6 +33,28 @@
     $ nix-shell '<home-manager>' -A install
     ```
 
+    :::{.note}
+    If there are any conflicts with files that Home Manager installs (for
+    example `~/.profile`), then the installation command by default will abort.
+    
+    In order to set a conflict resolution strategy you can run the installation
+    command with the `HOME_MANAGER_BACKUP_EXT` environment variable set in order
+    to automatically backup conflicting files with a given extension:
+
+    ``` shell
+    $ HOME_MANAGER_BACKUP_EXT="bak" nix-shell '<home-manager>' -A install
+    ```
+
+    If an old file `~/.profile` conflicts with the one installed by Home
+    Manager, its contents will be moved to `~/.profile.bak`. If you want to
+    instead destroy conflicting files, you can run with the installation command
+    like so:
+
+    ``` shell
+    $ HOME_MANAGER_BACKUP_OVERWRITE=1 nix-shell '<home-manager>' -A install
+    ```
+    :::
+
     Once finished, Home Manager should be active and available in your
     user environment.
 
