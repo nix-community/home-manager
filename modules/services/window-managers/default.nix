@@ -11,6 +11,7 @@
     ./niri.nix
     ./river.nix
     ./spectrwm.nix
+    ./umbriel.nix
     ./wayfire.nix
     ./xmonad.nix
   ];
