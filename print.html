@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d95e9469.js";
+            window.path_to_searchindex_js = "searchindex-cc72d6bb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a9f85a1.js"></script>
@@ -47275,51 +47275,57 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix">&lt;home-manager/modules/programs/openstackclient.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.openstackclient.clouds"><a class="header" href="#opt-programs.openstackclient.clouds">programs.openstackclient.clouds</a></h2>
-<p>Configuration needed to connect to one or more clouds.</p>
-<p>Do not include passwords here as they will be publicly readable in the Nix store.
-Configuration written to <code>$XDG_CONFIG_HOME/openstack/clouds.yaml</code>.
-See <a href="https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-yaml">https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-yaml</a>.</p>
-<p><em>Type:</em>
-open submodule of (YAML 1.1 value)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  my-infra = {
-    auth = {
-      project_id = "0123456789abcdef0123456789abcdef";
-      username = "openstack";
-    };
-    cloud = "example-cloud";
-    interface = "internal";
-    region_name = "XXX";
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix">&lt;home-manager/modules/programs/openstackclient.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.openstackclient.publicClouds"><a class="header" href="#opt-programs.openstackclient.publicClouds">programs.openstackclient.publicClouds</a></h2>
-<p>Public information about clouds.</p>
+<h2 id="opt-programs.openstackclient.cloudsPublicSettings"><a class="header" href="#opt-programs.openstackclient.cloudsPublicSettings">programs.openstackclient.cloudsPublicSettings</a></h2>
+<p>Whole-file public cloud configuration, including the <code>public-clouds</code>
+mapping.</p>
 <p>Configuration written to <code>$XDG_CONFIG_HOME/openstack/clouds-public.yaml</code>.
 See <a href="https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-public-yaml">https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-public-yaml</a>.</p>
 <p><em>Type:</em>
-open submodule of (YAML 1.1 value)</p>
+attribute set of (YAML 1.1 value or (open submodule of (YAML 1.1 value)))</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  example-cloud = {
+  public-clouds.example-cloud = {
     auth = {
       auth_url = "https://identity.cloud.example.com/v2.0";
     };
   };
 };
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/openstackclient.nix">&lt;home-manager/modules/programs/openstackclient.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.openstackclient.cloudsSettings"><a class="header" href="#opt-programs.openstackclient.cloudsSettings">programs.openstackclient.cloudsSettings</a></h2>
+<p>Whole-file configuration for the OpenStack client, including <code>clouds</code>,
+<code>cache</code>, and <code>client</code> settings.</p>
+<p>Do not include passwords, tokens, or application credential secrets
+here, as they will be publicly readable in the Nix store. Use the
+runtime environment or an externally managed <code>secure.yaml</code> file.
+Configuration written to <code>$XDG_CONFIG_HOME/openstack/clouds.yaml</code>.
+See <a href="https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-yaml">https://docs.openstack.org/python-openstackclient/latest/configuration/index.html#clouds-yaml</a>.</p>
+<p><em>Type:</em>
+attribute set of (YAML 1.1 value or (open submodule of (YAML 1.1 value)))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  clouds = {
+    my-infra = {
+      auth = {
+        project_id = "0123456789abcdef0123456789abcdef";
+        username = "openstack";
+      };
+      cloud = "example-cloud";
+      interface = "internal";
+      region_name = "XXX";
+    };
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -93519,6 +93525,13 @@ and <code>extraConfig</code> values into <code>settings</code>, resolving duplic
 Enabling the service without configuration no longer creates a config file.
 Settings-only configurations use TWMN’s native defaults; see the option
 documentation for compatibility limits and preserving previous defaults.</p>
+</li>
+<li>
+<p>Move <code>programs.openstackclient.clouds</code> to
+<code>programs.openstackclient.cloudsSettings.clouds</code>, and move
+<code>programs.openstackclient.publicClouds</code> to
+<code>programs.openstackclient.cloudsPublicSettings.public-clouds</code>. The old
+options remain as deprecated aliases and emit warnings.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>

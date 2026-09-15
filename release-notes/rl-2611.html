@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-d95e9469.js";
+            window.path_to_searchindex_js = "../searchindex-cc72d6bb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-5a9f85a1.js"></script>
@@ -231,6 +231,13 @@ and <code>extraConfig</code> values into <code>settings</code>, resolving duplic
 Enabling the service without configuration no longer creates a config file.
 Settings-only configurations use TWMN’s native defaults; see the option
 documentation for compatibility limits and preserving previous defaults.</p>
+</li>
+<li>
+<p>Move <code>programs.openstackclient.clouds</code> to
+<code>programs.openstackclient.cloudsSettings.clouds</code>, and move
+<code>programs.openstackclient.publicClouds</code> to
+<code>programs.openstackclient.cloudsPublicSettings.public-clouds</code>. The old
+options remain as deprecated aliases and emit warnings.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
