@@ -20,7 +20,12 @@ in
 
   options.services.awww = {
     enable = lib.mkEnableOption "awww, An Answer to your Wayland Wallpaper Woes";
-    package = lib.mkPackageOption pkgs "awww" { };
+
+    package = lib.mkPackageOption pkgs "awww" {
+      nullable = true;
+      extraDescription = "Set to null to skip installing the package and creating the systemd service.";
+    };
+
     extraArgs = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
@@ -42,9 +47,9 @@ in
       (lib.hm.assertions.assertPlatform "services.awww" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
-    systemd.user.services.awww = {
+    systemd.user.services.awww = lib.mkIf (cfg.package != null) {
       Install = {
         WantedBy = [ config.wayland.systemd.target ];
       };
