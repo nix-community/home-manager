@@ -40,11 +40,17 @@ in
           "foo3.desktop"
         ];
         "mimetype2" = "foo4.desktop";
+        "image/*" = "foo5.desktop";
       };
       description = ''
         Defines additional associations of applications with
         mimetypes, as if the .desktop file was listing this mimetype
         in the first place.
+
+        Keys ending in `*` are treated as prefix globs. They are expanded
+        against all MIME types known to the shared-mime-info database before
+        being written to `mimeapps.list`. Exact keys take precedence over glob
+        matches, e.g., `"text/html"` overrides `"text/*"`.
       '';
     };
 
@@ -53,11 +59,16 @@ in
       default = { };
       example = {
         "mimetype1" = "foo5.desktop";
+        "text/*" = "foo6.desktop";
       };
       description = ''
         Removes associations of applications with mimetypes, as if the
         .desktop file was *not* listing this
         mimetype in the first place.
+
+        Keys ending in `*` are treated as prefix globs. They are expanded
+        against all MIME types known to the shared-mime-info database before
+        being written to `mimeapps.list`.
       '';
     };
 
@@ -69,6 +80,8 @@ in
           "default1.desktop"
           "default2.desktop"
         ];
+        "text/*" = "default3.desktop";
+        "text/html" = "default4.desktop";
       };
       description = ''
         The default application to be used for a given mimetype. This
@@ -76,6 +89,12 @@ in
         double-clicking on a file in a file manager. If the
         application is no longer installed, the next application in
         the list is attempted, and so on.
+
+        Keys ending in `*` are treated as prefix globs. They are
+        expanded against all MIME types known to the shared-mime-info
+        database before being written to `mimeapps.list`. Exact keys
+        take precedence over glob matches, e.g., `"text/html"`
+        overrides `"text/*"`.
       '';
     };
 
@@ -154,10 +173,35 @@ in
         let
           joinValues = lib.mapAttrs (_n: lib.concatStringsSep ";");
 
+          allTypes = lib.pipe "${pkgs.shared-mime-info}/share/mime/types" [
+            builtins.readFile
+            (lib.splitString "\n")
+            (builtins.filter (s: s != ""))
+          ]; # -> [ "text/html" "text/plain" "video/mp4" ... ]
+
+          expandGlob =
+            glob: app: # "text/*" -> "foo.desktop"
+            lib.pipe allTypes [
+              (builtins.filter (lib.hasPrefix (lib.removeSuffix "*" glob)))
+              (lib.flip lib.genAttrs (_: app))
+            ]; # -> { "text/html" = "foo.desktop"; "text/plain" = "foo.desktop"; ... }
+
+          expand =
+            attrs: # { "text/*" = "foo.desktop"; "text/html" = "bar.desktop" }
+            let
+              globAttrs = lib.filterAttrs (k: _v: lib.hasSuffix "*" k) attrs;
+              exactAttrs = lib.filterAttrs (k: _v: !(lib.hasSuffix "*" k)) attrs;
+            in
+            lib.pipe globAttrs [
+              (lib.mapAttrsToList expandGlob)
+              lib.mergeAttrsList
+              (acc: acc // exactAttrs) # rhs wins on conflicts
+            ]; # -> { "text/plain" = "foo.desktop"; ...; "text/html" = "bar.desktop" }
+
           baseFile = (pkgs.formats.ini { }).generate "mimeapps.list" {
-            "Added Associations" = joinValues cfg.associations.added;
-            "Removed Associations" = joinValues cfg.associations.removed;
-            "Default Applications" = joinValues cfg.defaultApplications;
+            "Added Associations" = joinValues (expand cfg.associations.added);
+            "Removed Associations" = joinValues (expand cfg.associations.removed);
+            "Default Applications" = joinValues (expand cfg.defaultApplications);
           };
 
           # With default application packages merged into the generated base file.
