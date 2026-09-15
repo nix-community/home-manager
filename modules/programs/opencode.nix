@@ -17,9 +17,6 @@ let
   webCfg = cfg.web;
 
   jsonFormat = pkgs.formats.json { };
-  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
-    inherit pkgs jsonFormat;
-  };
 
   toOpencodeShape =
     s:
@@ -473,6 +470,19 @@ in
         }
       '';
     };
+
+    validateFiles = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to validate the generated configuration files
+        ({file}`$XDG_CONFIG_HOME/opencode/opencode.json` and
+        {file}`$XDG_CONFIG_HOME/opencode/tui.json`) against the
+        corresponding OpenCode JSON schemas of the configured package
+        ({option}`programs.opencode.package`, `config.json` and `tui.json`
+        from `passthru.jsonschema`) using {command}`check-jsonschema`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -535,6 +545,12 @@ in
             # Merge all settings
             mergedSettings =
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
+            orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+              inherit pkgs jsonFormat;
+              schema = lib.optionalString cfg.validateFiles (
+                lib.attrByPath [ "passthru" "jsonschema" "config" ] null cfg.package
+              );
+            };
           in
           orderedJsonFormat.generate "opencode.json" (
             {
@@ -544,14 +560,24 @@ in
           );
       };
 
-      "opencode/tui.json" = mkIf (cfg.tui != { }) {
-        source = jsonFormat.generate "tui.json" (
-          {
-            "$schema" = "https://opencode.ai/tui.json";
-          }
-          // cfg.tui
-        );
-      };
+      "opencode/tui.json" = mkIf (cfg.tui != { }) (
+        let
+          orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+            inherit pkgs jsonFormat;
+            schema = lib.optionalString cfg.validateFiles (
+              lib.attrByPath [ "passthru" "jsonschema" "tui" ] null cfg.package
+            );
+          };
+        in
+        {
+          source = orderedJsonFormat.generate "tui.json" (
+            {
+              "$schema" = "https://opencode.ai/tui.json";
+            }
+            // cfg.tui
+          );
+        }
+      );
 
       "opencode/AGENTS.md" = (
         if lib.isPath cfg.context then

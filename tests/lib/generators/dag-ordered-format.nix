@@ -1,7 +1,10 @@
 { lib, pkgs, ... }:
 
 let
-  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat { inherit pkgs; };
+  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+    inherit pkgs;
+    schema = ./dag-ordered-format.schema.json;
+  };
   # YAML and TOML use the same DAG-ordered JSON renderer, then convert with
   # remarshal. Keep them disabled in NMT for now because remarshal in
   # nativeBuildInputs pulls a real Python closure through the scrubbed pkgs set.

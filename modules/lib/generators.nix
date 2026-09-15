@@ -444,6 +444,7 @@ in
       pkgs,
       jsonFormat ? pkgs.formats.json { },
       cycleErrorMessage ? null,
+      schema ? "",
     }:
     mkDAGOrderedFormat' {
       inherit
@@ -452,9 +453,15 @@ in
         ;
       format = jsonFormat;
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.jq ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.jq
+      ]
+      ++ (lib.optional (schema != "") pkgs.buildPackages.check-jsonschema);
       buildCommand = ''
         jq . "$valuePath" > "$out"
+        if [[ -n "${schema}" ]]; then
+          check-jsonschema --schemafile=${lib.escapeShellArg schema} "$out"
+        fi
       '';
     };
 
@@ -534,6 +541,7 @@ in
       pkgs,
       tomlFormat ? pkgs.formats.toml { },
       cycleErrorMessage ? null,
+      schema ? "",
     }:
     mkDAGOrderedFormat' {
       inherit
@@ -542,9 +550,15 @@ in
         ;
       format = tomlFormat;
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.remarshal
+      ]
+      ++ (lib.optional (schema != "") pkgs.buildPackages.check-jsonschema);
       buildCommand = ''
         json2toml "$valuePath" "$out"
+        if [[ -n "${schema}" ]]; then
+          check-jsonschema --schemafile=${lib.escapeShellArg schema} "$out"
+        fi
       '';
     };
 
