@@ -10,4 +10,5 @@
   fish-manpage = ./manpage.nix;
   fish-binds = ./binds.nix;
   fish-session-variables = ./session-variables.nix;
+  fish-confd = ./confd.nix;
 }
