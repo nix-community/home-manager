@@ -1,6 +1,15 @@
 {
+  "emptyList": [],
+  "emptyObject": {},
+  "falseValue": false,
+  "nested": {
+    "composed": true,
+    "empty": "",
+    "nullValue": null
+  },
   "newNoteFocus": "title",
   "richTextBannerDismissed": true,
   "sync.interval": 600,
-  "sync.target": 7
+  "sync.target": 7,
+  "zeroValue": 0
 }
