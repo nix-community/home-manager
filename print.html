@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-dfb871be.js";
+            window.path_to_searchindex_js = "searchindex-8fd8d84a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a9f85a1.js"></script>
@@ -74219,76 +74219,27 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdris2.nix">&lt;home-manager/modules/services/mpdris2.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.mpdris2.mpd.host"><a class="header" href="#opt-services.mpdris2.mpd.host">services.mpdris2.mpd.host</a></h2>
-<p>The address where MPD is listening for connections.</p>
+<h2 id="opt-services.mpdris2.settings"><a class="header" href="#opt-services.mpdris2.settings">services.mpdris2.settings</a></h2>
+<p>Configuration settings for mpDris2. The settings are written to
+<code>$XDG_CONFIG_HOME/mpDris2/mpDris2.conf</code>.</p>
+<p>See <a href="https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf">https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf</a>
+for available settings.</p>
 <p><em>Type:</em>
-string</p>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">"config.services.mpd.network.listenAddress"
+<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">"192.168.1.1"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdris2.nix">&lt;home-manager/modules/services/mpdris2.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.mpdris2.mpd.musicDirectory"><a class="header" href="#opt-services.mpdris2.mpd.musicDirectory">services.mpdris2.mpd.musicDirectory</a></h2>
-<p>If set, mpDris2 will use this directory to access music artwork.</p>
-<p><em>Type:</em>
-null or absolute path</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"config.services.mpd.musicDirectory"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdris2.nix">&lt;home-manager/modules/services/mpdris2.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.mpdris2.mpd.password"><a class="header" href="#opt-services.mpdris2.mpd.password">services.mpdris2.mpd.password</a></h2>
-<p>The password to connect to MPD.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdris2.nix">&lt;home-manager/modules/services/mpdris2.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.mpdris2.mpd.port"><a class="header" href="#opt-services.mpdris2.mpd.port">services.mpdris2.mpd.port</a></h2>
-<p>The port number where MPD is listening for connections.</p>
-<p><em>Type:</em>
-16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"config.services.mpd.network.port"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdris2.nix">&lt;home-manager/modules/services/mpdris2.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.mpdris2.multimediaKeys"><a class="header" href="#opt-services.mpdris2.multimediaKeys">services.mpdris2.multimediaKeys</a></h2>
-<p>Whether to enable multimedia key support.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpdris2.nix">&lt;home-manager/modules/services/mpdris2.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.mpdris2.notifications"><a class="header" href="#opt-services.mpdris2.notifications">services.mpdris2.notifications</a></h2>
-<p>Whether to enable song change notifications.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
+<pre><code class="language-nix">{
+  Library = {
+    cover_regex = "^(album|cover).*$";
+  };
+  Notify = {
+    summary = "%artist% - %title%";
+    timeout = 5000;
+    urgency = 1;
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
