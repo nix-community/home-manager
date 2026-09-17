@@ -19,6 +19,8 @@
     };
 
     nmt.script = ''
+      assertPathNotExists home-files/.getmail/getmaildisabled-account
+      assertPathNotExists home-files/.getmail/getmailhm-account
       assertFileExists home-files/.getmail/getmailrc
       assertFileContent home-files/.getmail/getmailrc ${./getmail-expected.conf}
     '';
