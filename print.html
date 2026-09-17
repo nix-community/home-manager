@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cba62c18.js";
+            window.path_to_searchindex_js = "searchindex-dfb871be.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a9f85a1.js"></script>
@@ -70987,63 +70987,35 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/grobi.nix">&lt;home-manager/modules/services/grobi.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.grobi.executeAfter"><a class="header" href="#opt-services.grobi.executeAfter">services.grobi.executeAfter</a></h2>
-<p>Commands to be run after an output configuration was
-changed. The Nix value declared here will be translated to
-JSON and written to the <code>execute_after</code> key
-in <code>$XDG_CONFIG_HOME/grobi.conf</code>.</p>
+<h2 id="opt-services.grobi.settings"><a class="header" href="#opt-services.grobi.settings">services.grobi.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/grobi.conf</code>.
+The <code>rules</code> list is evaluated from top to bottom, and processing
+stops after the first matching rule.</p>
+<p>See <a href="https://github.com/fd0/grobi/blob/master/doc/grobi.conf">https://github.com/fd0/grobi/blob/master/doc/grobi.conf</a> for
+available settings.</p>
 <p><em>Type:</em>
-list of string</p>
+open submodule of (JSON value)</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
+<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  "setxkbmap dvorak"
-]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/grobi.nix">&lt;home-manager/modules/services/grobi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.grobi.rules"><a class="header" href="#opt-services.grobi.rules">services.grobi.rules</a></h2>
-<p>These are the rules grobi tries to match to the current
-output configuration. The rules are evaluated top to bottom,
-the first matching rule is applied and processing stops. See
-<a href="https://github.com/fd0/grobi/blob/master/doc/grobi.conf">https://github.com/fd0/grobi/blob/master/doc/grobi.conf</a>
-for more information. The Nix value declared here will be
-translated to JSON and written to the <code>rules</code>
-key in <code>$XDG_CONFIG_HOME/grobi.conf</code>.</p>
-<p><em>Type:</em>
-list of attribute set of (string or boolean or signed integer or list of string)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  {
-    name = "Home";
-    outputs_connected = [ "DP-2" ];
-    configure_single = "DP-2";
-    primary = true;
-    atomic = true;
-    execute_after = [
-      "${lib.getExe pkgs.xrandr} --dpi 96"
-      "${pkgs.xmonad-with-packages}/bin/xmonad --restart";
-    ];
-  }
-  {
-    name = "Mobile";
-    outputs_disconnected = [ "DP-2" ];
-    configure_single = "eDP-1";
-    primary = true;
-    atomic = true;
-    execute_after = [
-      "${lib.getExe pkgs.xrandr} --dpi 120"
-      "${pkgs.xmonad-with-packages}/bin/xmonad --restart";
-    ];
-  }
-]
+<pre><code class="language-nix">{
+  execute_after = [ "setxkbmap dvorak" ];
+  on_failure = [ "notify-send 'Grobi failed'" ];
+  rules = [
+    {
+      name = "Home";
+      outputs_connected = [ "DP-2" ];
+      configure_single = "DP-2";
+      primary = "DP-2";
+      atomic = true;
+      execute_after = [
+        "${lib.getExe pkgs.xrandr} --dpi 96"
+        "${pkgs.xmonad-with-packages}/bin/xmonad --restart"
+      ];
+    }
+  ];
+}
 
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -93438,6 +93410,13 @@ documentation for compatibility limits and preserving previous defaults.</p>
 <code>programs.openstackclient.publicClouds</code> to
 <code>programs.openstackclient.cloudsPublicSettings.public-clouds</code>. The old
 options remain as deprecated aliases and emit warnings.</p>
+</li>
+<li>
+<p>Grobi now uses <a href="#opt-services.grobi.settings">services.grobi.settings</a> for its complete JSON
+configuration. Move <code>services.grobi.executeAfter</code> to
+<code>services.grobi.settings.execute_after</code> and <code>services.grobi.rules</code> to
+<code>services.grobi.settings.rules</code>. The deprecated aliases preserve list order
+and definition priorities. The generated JSON is now pretty-printed.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>

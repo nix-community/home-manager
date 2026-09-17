@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-cba62c18.js";
+            window.path_to_searchindex_js = "../searchindex-dfb871be.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-5a9f85a1.js"></script>
@@ -238,6 +238,13 @@ documentation for compatibility limits and preserving previous defaults.</p>
 <code>programs.openstackclient.publicClouds</code> to
 <code>programs.openstackclient.cloudsPublicSettings.public-clouds</code>. The old
 options remain as deprecated aliases and emit warnings.</p>
+</li>
+<li>
+<p>Grobi now uses <a href="../options/home-manager/services/grobi.html#opt-services.grobi.settings">services.grobi.settings</a> for its complete JSON
+configuration. Move <code>services.grobi.executeAfter</code> to
+<code>services.grobi.settings.execute_after</code> and <code>services.grobi.rules</code> to
+<code>services.grobi.settings.rules</code>. The deprecated aliases preserve list order
+and definition priorities. The generated JSON is now pretty-printed.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
