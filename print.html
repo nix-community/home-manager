@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-cc72d6bb.js";
+            window.path_to_searchindex_js = "searchindex-cba62c18.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5a9f85a1.js"></script>
@@ -52180,37 +52180,6 @@ non-empty string</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.rofi.cycle"><a class="header" href="#opt-programs.rofi.cycle">programs.rofi.cycle</a></h2>
-<p>Whether to cycle through the results list.</p>
-<p><em>Type:</em>
-null or boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.extraConfig"><a class="header" href="#opt-programs.rofi.extraConfig">programs.rofi.extraConfig</a></h2>
-<p>Additional configuration to add.</p>
-<p><em>Type:</em>
-attribute set of ((attribute set of (string or signed integer or boolean or (Rasi literal string) or list of (string or signed integer or boolean or (Rasi literal string)))) or string or signed integer or boolean or (Rasi literal string) or list of (string or signed integer or boolean or (Rasi literal string)))</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  kb-primary-paste = "Control+V,Shift+Insert";
-  kb-secondary-paste = "Control+v,Insert";
-  "run,drun" = {
-    display-name = "open:";
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
 <h2 id="opt-programs.rofi.finalPackage"><a class="header" href="#opt-programs.rofi.finalPackage">programs.rofi.finalPackage</a></h2>
 <p>Resulting customized rofi package.</p>
 <p><em>Type:</em>
@@ -52219,62 +52188,6 @@ package <em>(read only)</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.rofi.font"><a class="header" href="#opt-programs.rofi.font">programs.rofi.font</a></h2>
-<p>Font to use.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"Droid Sans Mono 14"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.location"><a class="header" href="#opt-programs.rofi.location">programs.rofi.location</a></h2>
-<p>The location rofi appears on the screen.</p>
-<p><em>Type:</em>
-one of “bottom”, “bottom-left”, “bottom-right”, “center”, “left”, “right”, “top”, “top-left”, “top-right”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"center"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.modes"><a class="header" href="#opt-programs.rofi.modes">programs.rofi.modes</a></h2>
-<p>Modes to enable. For custom modes see <code>man 5 rofi-script</code>.</p>
-<p><em>Type:</em>
-list of (string or (submodule))</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  "drun"
-  "emoji"
-  "ssh"
-  {
-    name = "whatnot";
-    path = lib.getExe pkgs.rofi-whatnot;
-  }
-]
-
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.modes._.name"><a class="header" href="#opt-programs.rofi.modes._.name">programs.rofi.modes.*.name</a></h2>
-<p>Name used to reference the custom mode in the mode list.</p>
-<p><em>Type:</em>
-string</p>
-<h2 id="opt-programs.rofi.modes._.path"><a class="header" href="#opt-programs.rofi.modes._.path">programs.rofi.modes.*.path</a></h2>
-<p>Executable path for the custom rofi script mode.</p>
-<p><em>Type:</em>
-string</p>
 <h2 id="opt-programs.rofi.plugins"><a class="header" href="#opt-programs.rofi.plugins">programs.rofi.plugins</a></h2>
 <p>List of rofi plugins to be installed.</p>
 <p><em>Type:</em>
@@ -52289,15 +52202,30 @@ list of package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.rofi.terminal"><a class="header" href="#opt-programs.rofi.terminal">programs.rofi.terminal</a></h2>
-<p>Path to the terminal which will be used to run console applications</p>
+<h2 id="opt-programs.rofi.settings"><a class="header" href="#opt-programs.rofi.settings">programs.rofi.settings</a></h2>
+<p>Settings for the Rasi <code>configuration</code> block. See <code>rofi(1)</code>.
+Unset options use Rofi’s defaults. No configuration file is generated
+unless non-null settings or a theme are configured.
+Use native names and values, including numeric locations and
+<code>"name:path"</code> strings for script modes. Use
+<code>config.lib.formats.rasi.mkLiteral</code> for unquoted Rasi values.</p>
+<p>Ordinary and per-setting <code>lib.mkDefault</code> assignments override values
+supplied through the former modeled options. The deprecated
+<code>programs.rofi.extraConfig</code> alias retains its precedence over those
+options.</p>
 <p><em>Type:</em>
-null or string</p>
+lazy attribute set of (null or (attribute set of (string or signed integer or boolean or (Rasi literal string) or list of (string or signed integer or boolean or (Rasi literal string)))) or string or signed integer or boolean or (Rasi literal string) or list of (string or signed integer or boolean or (Rasi literal string)))</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">null
+<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">"\${pkgs.gnome.gnome_terminal}/bin/gnome-terminal"
+<pre><code class="language-nix">{
+  kb-primary-paste = "Control+V,Shift+Insert";
+  kb-secondary-paste = "Control+v,Insert";
+  "run,drun" = {
+    display-name = "open:";
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -52341,28 +52269,6 @@ in {
   };
 }
 
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.xoffset"><a class="header" href="#opt-programs.rofi.xoffset">programs.rofi.xoffset</a></h2>
-<p>Offset in the x-axis in pixels relative to the chosen location.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rofi.nix">&lt;home-manager/modules/programs/rofi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.rofi.yoffset"><a class="header" href="#opt-programs.rofi.yoffset">programs.rofi.yoffset</a></h2>
-<p>Offset in the y-axis in pixels relative to the chosen location.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
