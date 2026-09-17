@@ -642,7 +642,7 @@ in
       (mkIf (allProfilesExceptDefault != { } && !cfg.mutableExtensionsDir) (
         lib.mapAttrs' (
           n: v:
-          lib.nameValuePair "${userDir}/profiles/${n}/extensions.json" {
+          lib.nameValuePair "${profileDir n}/extensions.json" {
             source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
           }
         ) allProfilesExceptDefault
