@@ -475,8 +475,9 @@ in
       type = types.attrsOf profileType;
       default = { };
       description = ''
-        A list of all ${name} profiles. Mutually exclusive
-        to ${moduleName}.mutableExtensionsDir
+        A list of all ${name} profiles. Extensions defined on
+        non-default profiles are mutually exclusive to
+        ${moduleName}.mutableExtensionsDir.
       '';
     };
   };
@@ -485,8 +486,11 @@ in
     assertions = [
       {
         assertion =
-          !(cfg.mutableExtensionsDir && (lib.any (v: v.extensions != [ ]) (lib.attrValues cfg.profiles)));
-        message = "${moduleName}.mutableExtensionsDir cannot be true if any profile specifies extensions.";
+          !(
+            cfg.mutableExtensionsDir
+            && lib.any (v: v.extensions != [ ]) (lib.attrValues allProfilesExceptDefault)
+          );
+        message = "${moduleName}.mutableExtensionsDir cannot be true if any non-default profile specifies extensions.";
       }
       {
         assertion = (
@@ -636,18 +640,12 @@ in
       # We write extensions.json for all profiles, except the default profile,
       # since that is handled by code below.
       (mkIf (allProfilesExceptDefault != { } && !cfg.mutableExtensionsDir) (
-        lib.listToAttrs (
-          map (
-            profile:
-            let
-              inherit (profile) name;
-              inherit (profile) value;
-            in
-            lib.nameValuePair "${userDir}/profiles/${name}/extensions.json" {
-              source = "${extensionJsonFile name (extensionJson value.extensions)}/share/vscode/extensions/extensions.json";
-            }
-          ) (lib.mapAttrsToList (name: value: { inherit name value; }) allProfilesExceptDefault)
-        )
+        lib.mapAttrs' (
+          n: v:
+          lib.nameValuePair "${userDir}/profiles/${n}/extensions.json" {
+            source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
+          }
+        ) allProfilesExceptDefault
       ))
 
       (mkIf (cfg.profiles != { }) (
