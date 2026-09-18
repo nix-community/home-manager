@@ -13,7 +13,8 @@ in
   options.programs.nix-your-shell = {
     enable = lib.mkEnableOption ''
       {command}`nix-your-shell`, a wrapper for `nix develop` or `nix-shell`
-      to retain the same shell inside the new environment'';
+      to retain the same shell inside the new environment
+    '';
 
     package = lib.mkPackageOption pkgs "nix-your-shell" { };
 
@@ -23,44 +24,51 @@ in
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-    nix-output-monitor = {
-      enable = lib.mkEnableOption ''
-        [nix-output-monitor](https://github.com/maralorn/nix-output-monitor).
-        Pipe your nix-build output through the nix-output-monitor a.k.a nom to get additional information while building
+    enableNixOutputMonitorIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = config.programs.nix-output-monitor.enable;
+      defaultText = lib.literalExpression "config.programs.nix-output-monitor.enable";
+      description = ''
+        Enable integration with nix-output-monitor, to use `nom` (`nix-output-monitor`) instead of `nix` for running
+        commands.
       '';
-
-      package = lib.mkPackageOption pkgs "nix-output-monitor" { };
+      example = true;
     };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [
-      cfg.package
-      (lib.mkIf cfg.nix-output-monitor.enable cfg.nix-output-monitor.package)
-    ];
+
+    home.packages = [ cfg.package ];
 
     programs =
       let
-        nom = if cfg.nix-output-monitor.enable then "--nom" else "";
+        nom = if cfg.enableNixOutputMonitorIntegration then " --nom" else "";
       in
       {
         fish.interactiveShellInit = lib.mkIf cfg.enableFishIntegration ''
-          ${lib.getExe cfg.package} ${nom} fish | source
+          ${lib.getExe cfg.package}${nom} fish | source
         '';
 
         nushell = lib.mkIf cfg.enableNushellIntegration {
           extraConfig = ''
             source ${
               pkgs.runCommand "nix-your-shell-nushell-config.nu" { } ''
-                ${lib.getExe cfg.package} ${nom} nu >> "$out"
+                ${lib.getExe cfg.package}${nom} nu >> "$out"
               ''
             }
           '';
         };
 
         zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
-          ${lib.getExe cfg.package} ${nom} zsh | source /dev/stdin
+          ${lib.getExe cfg.package}${nom} zsh | source /dev/stdin
         '';
       };
+
+    assertions = [
+      {
+        assertion = cfg.enableNixOutputMonitorIntegration -> config.programs.nix-output-monitor.enable;
+        message = "If programs.nix-your-shell.enableNixOutputMonitorIntegration is `true`, nix-output-monitor must be enabled as well (programs.nix-output-monitor.enable must be `true`).";
+      }
+    ];
   };
 }
