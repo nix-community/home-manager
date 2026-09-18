@@ -11,22 +11,8 @@ let
     mkEnableOption
     mkPackageOption
     mkIf
-    types
     ;
   tomlFormat = pkgs.formats.toml { };
-
-  styluaPackage =
-    if cfg.settings != { } then
-      pkgs.symlinkJoin {
-        name = "stylua-wrapped";
-        paths = [ cfg.package ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/stylua --add-flags '--search-parent-directories'
-        '';
-      }
-    else
-      cfg.package;
 in
 {
   meta.maintainers = [ lib.maintainers.rachitvrma ];
@@ -34,12 +20,6 @@ in
   options.programs.stylua = {
     enable = mkEnableOption "stylua, a formatter for lua";
     package = mkPackageOption pkgs "stylua" { };
-    finalPackage = mkOption {
-      readOnly = true;
-      visible = false;
-      type = types.package;
-      description = "Resulting stylua package";
-    };
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
@@ -53,7 +33,10 @@ in
         quote_style = "AutoPreferSingle";
       };
       description = ''
-        Configuration options that are written to {file}`XDG_CONFIG_HOME/stylua/stylua.toml`
+        Configuration options that are written to {file}`XDG_CONFIG_HOME/stylua/stylua.toml`.
+        To use this configuration file pass the `--search-parent-directories` flag to `stylua`.
+        Many formatters use this flag by default (for example `conform.nvim` passes this flag to stylua
+        by default).
 
         See <https://github.com/JohnnyMorganz/StyLua#options> for more options.
       '';
@@ -61,9 +44,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.finalPackage ];
-
-    programs.stylua.finalPackage = styluaPackage;
+    home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."stylua/stylua.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "hm_stylua.toml" cfg.settings;
