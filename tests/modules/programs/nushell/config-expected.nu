@@ -1,3 +1,5 @@
+# Higher Priority, Added first
+
 load-env {
     "ENV_CONVERSIONS": {
         "PATH": {
@@ -31,3 +33,5 @@ let config = {
 alias "ll" = ls -a
 alias "multi word alias" = cd -
 alias "z" = __zoxide_z
+
+# Lower Priority, Added Relatively later
