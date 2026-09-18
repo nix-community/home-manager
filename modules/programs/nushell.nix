@@ -188,6 +188,11 @@ in
       description = ''
         An attribute set that maps aliases (the top level attribute names in
         this option) to command strings or directly to build outputs.
+
+        Note that Nushell's {command}`alias` only supports aliasing a single
+        command call. Aliases containing pipes or semicolons will not work as
+        expected. For complex commands, use {option}`programs.nushell.extraConfig`
+        to define a {command}`def` manually.
       '';
     };
 
