@@ -182,8 +182,7 @@ in
 
       mkConfig = {
         notmuch = cfg: {
-          source = "notmuch://${config.accounts.email.maildirBasePath}";
-          maildir-store = "${config.accounts.email.maildirBasePath}";
+          source = "notmuch://";
           maildir-account-path = "${cfg.maildir.path}";
         };
         maildir = cfg: {
