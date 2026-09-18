@@ -8,7 +8,10 @@ let
   mkVscodeModule = import ./vscode/mkVscodeModule.nix;
 in
 {
-  meta.maintainers = with lib.maintainers; [ sei40kr ];
+  meta.maintainers = with lib.maintainers; [
+    sei40kr
+    Zocker1999NET
+  ];
 
   imports = [
     (mkVscodeModule {

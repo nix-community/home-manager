@@ -17,6 +17,10 @@ let
   };
 in
 {
+  meta.maintainers = with lib.maintainers; [
+    Zocker1999NET
+  ];
+
   imports = [
     (mkVscodeModule {
       inherit modulePath;
