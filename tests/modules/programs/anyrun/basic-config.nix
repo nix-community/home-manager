@@ -17,6 +17,22 @@
       closeOnClick = false;
       showResultsImmediately = false;
       maxEntries = 10;
+      keybinds = [
+        {
+          key = "j";
+          action = "down";
+        }
+        {
+          ctrl = true;
+          alt = false;
+          shift = true;
+          key = "k";
+          action = "up";
+        }
+      ];
+      extraLines = ''
+        margin: 0,
+      '';
     };
 
     extraConfigFiles = {
@@ -71,16 +87,37 @@
         x: Fraction(0.500000),
         y: Fraction(0.020000),
         width: Absolute(800),
-        height: Absolute(0),
-        margin: 0,
+        height: Absolute(1),
         hide_icons: false,
         ignore_exclusive_zones: false,
         layer: Overlay,
+        keyboard_mode: Exclusive,
         hide_plugin_info: false,
         close_on_click: false,
         show_results_immediately: false,
         max_entries: Some(10),
         plugins: ["@applications@/lib/libapplications.so"],
+        provider: "@anyrun-provider@/bin/anyrun-provider",
+        keybinds: [
+        Keybind(
+        
+        
+        
+        key: "j",
+        action: Down,
+      ),
+
+      Keybind(
+        ctrl: true,
+        
+        shift: true,
+        key: "k",
+        action: Up,
+      ),
+      ],
+
+        margin: 0,
+
       )
     ''}
   '';
