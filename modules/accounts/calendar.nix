@@ -149,6 +149,7 @@ in
       type = types.attrsOf (
         types.submodule [
           calendarOpts
+          (import ../programs/noctalia/accounts.nix)
           (import ../programs/vdirsyncer/accounts.nix)
           (import ../programs/pimsync/accounts.nix)
           (import ../programs/khal/accounts.nix)

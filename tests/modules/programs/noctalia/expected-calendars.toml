@@ -1,0 +1,14 @@
+[calendar]
+refresh_minutes = 30
+
+[calendar.account.personal]
+color = "primary"
+name = "personal"
+path = "/home/hm-user/calendars/personal"
+type = "vdir"
+
+[calendar.account.work]
+color = "#abcdef"
+name = "Work calendar"
+path = "/srv/calendars/work"
+type = "vdir"
