@@ -6,9 +6,7 @@
       centerCursorOnWorkspaceChange = true;
       enableWorkspaceTransitions = true;
       workspaceTransitionDuration = 0.25;
-      integrations = {
-        enableIntegrations = false;
-      };
+      enableIntegrations = false;
     };
     profiles = {
       profiles = [
@@ -59,7 +57,8 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/flashspace/settings.toml
+    assertFileExists home-files/.config/flashspace/settings.json
     assertFileExists home-files/.config/flashspace/profiles.json
+    assertPathNotExists home-files/.config/flashspace/settings.toml
   '';
 }

@@ -6,7 +6,10 @@
 }:
 let
   cfg = config.programs.flashspace;
-  tomlFormat = pkgs.formats.toml { };
+  # FlashSpace stores both files in ONE format. It detects that format from
+  # which `profiles.<ext>` exists (json, toml, yaml — json when none does) and
+  # then reads `settings.<same ext>`, so the two files must always share an
+  # extension. JSON is the app's own default.
   jsonFormat = pkgs.formats.json { };
 in
 {
@@ -18,29 +21,28 @@ in
     package = lib.mkPackageOption pkgs "flashspace" { nullable = true; };
 
     settings = lib.mkOption {
-      inherit (tomlFormat) type;
+      inherit (jsonFormat) type;
       default = { };
       example = {
         showFlashSpace = "cmd+shift+space";
-        toggleFlashSpace = "control+option+command+t";
+        toggleFlashSpace = "ctrl+opt+cmd+t";
         showFloatingNotifications = true;
         displayMode = "static";
         centerCursorOnWorkspaceChange = true;
         enableWorkspaceTransitions = true;
         workspaceTransitionDuration = 0.25;
-        integrations = {
-          enableIntegrations = true;
-          runScriptOnWorkspaceChange = "~/.config/flashspace/scripts/notify.sh";
-        };
+        enableIntegrations = true;
+        runScriptOnWorkspaceChange = "~/.config/flashspace/scripts/notify.sh";
       };
       description = ''
         General app settings written to
-        {file}`$XDG_CONFIG_HOME/flashspace/settings.toml`.
+        {file}`$XDG_CONFIG_HOME/flashspace/settings.json`. The keys are the
+        flat fields of the app's `AppSettings` (hotkeys, display mode,
+        transition effects, focus navigation, gestures, integrations, and
+        advanced options); hotkey strings use the modifier tokens `cmd`,
+        `ctrl`, `opt` and `shift`.
 
-        Covers hotkeys, display mode, transition effects, focus navigation,
-        gestures, integrations, and advanced options.
-
-        See <https://github.com/wojciech-zurek/FlashSpace> for available keys.
+        See <https://github.com/wojciech-kulik/FlashSpace> for available keys.
       '';
     };
 
@@ -102,7 +104,7 @@ in
         workspace holds a list of {var}`apps` identified by their
         {var}`bundleIdentifier`.
 
-        See <https://github.com/wojciech-zurek/FlashSpace> for the full schema.
+        See <https://github.com/wojciech-kulik/FlashSpace> for the full schema.
       '';
     };
   };
@@ -115,8 +117,8 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
     xdg.configFile = {
-      "flashspace/settings.toml" = lib.mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "flashspace-settings" cfg.settings;
+      "flashspace/settings.json" = lib.mkIf (cfg.settings != { }) {
+        source = jsonFormat.generate "flashspace-settings" cfg.settings;
       };
 
       "flashspace/profiles.json" = lib.mkIf (cfg.profiles != { }) {
