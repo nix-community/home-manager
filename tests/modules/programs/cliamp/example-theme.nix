@@ -1,0 +1,20 @@
+{
+  programs.cliamp = {
+    enable = true;
+    themes = {
+      gruvbox-custom = {
+        accent = "#7daea3";
+        bg = "#202020";
+        bright_fg = "#ddc7a1";
+        fg = "#89b482";
+        green = "#a9b665";
+        red = "#ea6962";
+        yellow = "#d8a657";
+      };
+    };
+  };
+
+  nmt.script = ''
+    assertFileContent "home-files/.config/cliamp/themes/gruvbox-custom.toml" ${./expected-theme.toml}
+  '';
+}
