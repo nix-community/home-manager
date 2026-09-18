@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-d4493593.js";
+            window.path_to_searchindex_js = "../../searchindex-a1cb0d44.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-83272ded.js"></script>
@@ -1126,22 +1126,20 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
 </ul>
 <h2 id="opt-wayland.windowManager.niri.extraConfig"><a class="header" href="#opt-wayland.windowManager.niri.extraConfig">wayland.windowManager.niri.extraConfig</a></h2>
-<p>Extra configuration lines added to <code>$XDG_CONFIG_HOME/niri/config.kdl</code> after the config generated from the options.</p>
+<p>Extra configuration lines added to <code>$XDG_CONFIG_HOME/niri/config.kdl</code>.</p>
+<p>By default, lines are appended after the generated configuration.
+To insert them before instead, use <code>lib.mkBefore</code>.</p>
 <p><em>Type:</em>
 strings concatenated with “\n”</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">""
 </code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/niri.nix">&lt;home-manager/modules/services/window-managers/niri.nix&gt;</a></li>
-</ul>
-<h2 id="opt-wayland.windowManager.niri.extraConfigEarly"><a class="header" href="#opt-wayland.windowManager.niri.extraConfigEarly">wayland.windowManager.niri.extraConfigEarly</a></h2>
-<p>Extra configuration lines added to <code>$XDG_CONFIG_HOME/niri/config.kdl</code> before config generated from the options.</p>
-<p><em>Type:</em>
-strings concatenated with “\n”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">""
+<p><em>Example:</em></p>
+<pre><code class="language-nix">lib.mkMerge [
+  (lib.mkBefore "// early config")
+  "// late config"
+]
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
