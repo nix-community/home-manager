@@ -24,6 +24,12 @@ user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd00
 user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.description", "family");
 user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.dirType", 102);
 user_pref("ldap_2.servers.contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.filename", "contact_d34a569ab7aaa54dacd715ae64953455d86b768846cd0085ef4e9e7471489b7b.sqlite");
+user_pref("ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49.auth.dn", "");
+user_pref("ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49.description", "example-ldap");
+user_pref("ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49.filename", "ldap.sqlite");
+user_pref("ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49.maxHits", 100);
+user_pref("ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49.saslmech.dn", "");
+user_pref("ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49.uri", "ldaps://ldap.home.com:636/dc=home,dc=com??sub?");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.identities", "id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.server", "server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_c6cc42837ed0a8041f93ff12c579a4af0dbe702461c97eef069f9f5f8dc4bfab.server", "server_c6cc42837ed0a8041f93ff12c579a4af0dbe702461c97eef069f9f5f8dc4bfab");
@@ -69,6 +75,7 @@ user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da5039
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.valid", true);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.attachPgpKey", false);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.autoEncryptDrafts", true);
+user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.directoryServer", "ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49");
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.e2etechpref", 0);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.encryptionpolicy", 0);
 user_pref("mail.identity.id_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f.fullName", "H. M. Test");
