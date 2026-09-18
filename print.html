@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2edcac2c.js";
+            window.path_to_searchindex_js = "searchindex-d4493593.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-62238130.js"></script>
+        <script src="toc-83272ded.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12190,6 +12190,7 @@ string</p>
 <li><a href="#i3status">i3status</a></li>
 <li><a href="#i3status-rust">i3status-rust</a></li>
 <li><a href="#iamb">iamb</a></li>
+<li><a href="#impala">impala</a></li>
 <li><a href="#imv">imv</a></li>
 <li><a href="#infat">infat</a></li>
 <li><a href="#info">info</a></li>
@@ -33170,6 +33171,84 @@ TOML value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/iamb.nix">&lt;home-manager/modules/programs/iamb.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="impala"><a href="#impala" class="header">impala</a></h1>
+<h2 id="opt-programs.impala.enable"><a class="header" href="#opt-programs.impala.enable">programs.impala.enable</a></h2>
+<p>Whether to enable impala, a TUI for iwd network.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/impala.nix">&lt;home-manager/modules/programs/impala.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.impala.package"><a class="header" href="#opt-programs.impala.package">programs.impala.package</a></h2>
+<p>The impala package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.impala
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/impala.nix">&lt;home-manager/modules/programs/impala.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.impala.settings"><a class="header" href="#opt-programs.impala.settings">programs.impala.settings</a></h2>
+<p>Settings writteng to <code>XDG_CONFIG_HOME/impala/config.toml</code>.</p>
+<p>See <a href="https://github.com/pythops/impala#%EF%B8%8Fcustom-keybindings-and-themes">https://github.com/pythops/impala#️custom-keybindings-and-themes</a>
+for more configuration options.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  access_point = {
+    start = "n";
+    stop = "x";
+  };
+  ascii = false;
+  device = {
+    infos = "i";
+    toggle_power = "o";
+  };
+  esc_quit = false;
+  mode = "station";
+  station = {
+    known_network = {
+      remove = "d";
+      share = "p";
+      show_all = "a";
+      toggle_autoconnect = "t";
+    };
+    new_network = {
+      connect_hidden = "";
+      show_all = "a";
+    };
+    toggle_scanning = "s";
+  };
+  switch = "r";
+  theme = {
+    background = "dark gray";
+    border = "green";
+    error_color = "red";
+    hidden_color = "dark gray";
+    info_color = "green";
+    text_color = "white";
+    warning_color = "yellow";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/impala.nix">&lt;home-manager/modules/programs/impala.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="imv"><a href="#imv" class="header">imv</a></h1>
