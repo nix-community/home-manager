@@ -5,21 +5,16 @@
   ...
 }:
 let
-  inherit (builtins)
-    toJSON
-    substring
-    stringLength
-    ;
+  inherit (builtins) toJSON;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.lists) optional;
   inherit (lib.attrsets) mapAttrs' nameValuePair;
   inherit (lib.strings)
     concatMapStringsSep
-    toLower
-    toUpper
     replaceStrings
     optionalString
+    toSentenceCase
     ;
   inherit (lib.trivial) boolToString;
   inherit (lib.types)
@@ -296,9 +291,6 @@ in
         else
           "Fraction(${toString numeric.fraction})";
 
-      capitalize =
-        string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
-
       parsedPlugins =
         if cfg.config.plugins == null then
           [ ]
@@ -324,7 +316,7 @@ in
                     ${optionalString x.alt "alt: true,"}
                     ${optionalString x.shift "shift: true,"}
                     key: "${x.key}",
-                    action: ${capitalize x.action},
+                    action: ${toSentenceCase x.action},
                   ),
                 '') cfg.config.keybinds
               }],
@@ -394,7 +386,7 @@ in
               height: ${stringifyNumeric cfg.config.height},
               hide_icons: ${boolToString cfg.config.hideIcons},
               ignore_exclusive_zones: ${boolToString cfg.config.ignoreExclusiveZones},
-              layer: ${capitalize cfg.config.layer},
+              layer: ${toSentenceCase cfg.config.layer},
               keyboard_mode: ${cfg.config.keyboardMode},
               hide_plugin_info: ${boolToString cfg.config.hidePluginInfo},
               close_on_click: ${boolToString cfg.config.closeOnClick},
