@@ -211,6 +211,49 @@ in
         Inline values can be set with `lib.hm.nushell.mkNushellInline`.
       '';
     };
+
+    autoload = lib.mkOption {
+      type = types.listOf (
+        types.either (types.pathWith { absolute = null; }) (
+          types.addCheck (types.submodule {
+            options = {
+              name = lib.mkOption {
+                type = types.strMatching "^[^/\\\\]+\\.nu$";
+                description = "The Nushell filename. Must be a single filename ending in `.nu`.";
+                example = "my-script.nu";
+              };
+              content = lib.mkOption {
+                type = types.either (types.pathWith { absolute = null; }) types.lines;
+                description = "The Nushell script content, either as a relative `.nu` path or inline Nushell text.";
+                example = lib.literalExpression ''
+                  \'\'
+                    echo "loaded"
+                    let x = 1
+                  \'\'
+                '';
+              };
+            };
+          }) builtins.isAttrs
+        )
+      );
+      default = [ ];
+      example = lib.literalExpression ''
+        [
+          ./my-module.nu
+          {
+            name = "my-script.nu";
+            content = \'\'
+              echo "loaded"
+              let x = 1
+            \'\';
+          }
+        ]
+      '';
+      description = ''
+        Files are symlinked into the "autoload/" folder in the config directory.
+        Nushell loads the files in the autoload folders at startup.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -308,6 +351,24 @@ in
           "${cfg.configDir}/plugin.msgpackz".source = "${msgPackz}/plugin.msgpackz";
         }
       )
+
+      (lib.mkMerge (
+        map (
+          script:
+          let
+            fileName = if (lib.isPath script) then baseNameOf (toString script) else script.name;
+          in
+          {
+            "${cfg.configDir}/autoload/${fileName}" =
+              if (lib.isPath script) then
+                { source = script; }
+              else if (lib.isPath script.content) then
+                { source = script.content; }
+              else
+                { text = script.content; };
+          }
+        ) cfg.autoload
+      ))
     ];
   };
 }
