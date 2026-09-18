@@ -1212,6 +1212,14 @@
     name = "Fugi";
     source = "nixpkgs";
   };
+  fzakaria = {
+    email = "farid.m.zakaria@gmail.com";
+    github = "fzakaria";
+    githubId = 605070;
+    matrix = "@fzakaria:matrix.org";
+    name = "Farid Zakaria";
+    source = "nixpkgs";
+  };
   garklein = {
     email = "garklein97@gmail.com";
     github = "garklein";
@@ -2481,6 +2489,12 @@
     name = "Jessica";
     source = "nixpkgs";
   };
+  typeparameter = {
+    github = "typeparameter";
+    githubId = 9686215;
+    name = "Drew Davis";
+    source = "home-manager";
+  };
   uncenter = {
     email = "uncenter@uncenter.dev";
     github = "uncenter";
@@ -2585,6 +2599,18 @@
     github = "yethal";
     githubId = 26117918;
     name = "Yethal";
+    source = "nixpkgs";
+  };
+  yzx9 = {
+    email = "yuan.zx@outlook.com";
+    github = "yzx9";
+    githubId = 41458459;
+    keys = [
+      {
+        fingerprint = "FE16 B281 90EF 6C3F F661  6441 C2DD 1916 FE47 1BE2";
+      }
+    ];
+    name = "Zexin Yuan";
     source = "nixpkgs";
   };
   zeratax = {
