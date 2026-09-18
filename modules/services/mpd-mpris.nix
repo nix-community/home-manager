@@ -6,78 +6,112 @@
 }:
 let
   cfg = config.services.mpd-mpris;
-
-  ignoreIfLocalMpd = value: if cfg.mpd.useLocal then null else value;
-
-  renderArg =
-    name: value:
-    if lib.isBool value && value then
-      "-${name}"
-    else if lib.isInt value then
-      "-${name} ${toString value}"
-    else if lib.isString value then
-      "-${name} ${lib.escapeShellArg value}"
-    else
-      "";
-
-  concatArgs = strings: lib.concatStringsSep " " (lib.filter (s: s != "") strings);
-
-  renderArgs = args: concatArgs (lib.mapAttrsToList renderArg args);
-
-  renderCmd = pkg: args: "${pkg}/bin/mpd-mpris ${renderArgs args}";
 in
 {
   meta.maintainers = [ lib.hm.maintainers.olmokramer ];
+
+  imports = [
+    (lib.mkRemovedOptionModule [ "services" "mpd-mpris" "mpd" "useLocal" ] ''
+      Just don't configure the network settings and it should automatically
+      connect to the local MPD server.
+    '')
+
+    (lib.mkRenamedOptionModule
+      [ "services" "mpd-mpris" "mpd" "network" ]
+      [ "services" "mpd-mpris" "settings" "network" ]
+    )
+
+    (lib.mkRenamedOptionModule
+      [ "services" "mpd-mpris" "mpd" "host" ]
+      [ "services" "mpd-mpris" "settings" "host" ]
+    )
+
+    (lib.mkRenamedOptionModule
+      [ "services" "mpd-mpris" "mpd" "port" ]
+      [ "services" "mpd-mpris" "settings" "port" ]
+    )
+
+    (lib.mkRemovedOptionModule [ "services" "mpd-mpris" "mpd" "password" ] ''
+      Use `services.mpd-mpris.settings.pwd-file` instead, which will not
+      write your password to the world readable nix store.
+    '')
+  ];
 
   options.services.mpd-mpris = {
     enable = lib.mkEnableOption "mpd-mpris: An implementation of the MPRIS protocol for MPD";
 
     package = lib.mkPackageOption pkgs "mpd-mpris" { };
 
-    mpd = {
-      useLocal = lib.mkOption {
-        type = lib.types.bool;
-        default = config.services.mpd.enable;
-        defaultText = lib.literalExpression "config.services.mpd.enable";
-        description = ''
-          Whether to configure for the local MPD daemon. If
-          `true` the `network`,
-          `host`, and `port`
-          settings are ignored.
-        '';
-      };
+    settings = lib.mkOption {
+      type = lib.types.submodule (settings: {
+        freeformType =
+          with lib.types;
+          attrsOf (
+            nullOr (oneOf [
+              bool
+              int
+              str
+            ])
+          );
 
-      network = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          The network used to dial to the MPD server. Check
-          <https://golang.org/pkg/net/#Dial>
-          for available values (most common are "tcp" and "unix")
-        '';
-      };
+        options = {
+          instance-name = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            description = ''
+              Name of the MPRIS instance. Leave at `null` to set the
+              `-no-instance` flag.
+            '';
+          };
 
-      host = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        example = "192.168.1.1";
-        description = "The address where MPD is listening for connections.";
-      };
+          no-instance = lib.mkOption {
+            type = with lib.types; nullOr bool;
+            default = if settings.config.instance-name == null then true else null;
+            description = ''
+              Whether to pass the `-no-instance` flag. Automatically enabled if
+              `instance-name` is not set.
+            '';
+          };
 
-      port = lib.mkOption {
-        type = with lib.types; nullOr port;
-        default = null;
-        description = ''
-          The port number where MPD is listening for connections.
-        '';
-      };
+          network = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            description = ''
+              The network used to dial to the MPD server. Check <https://golang.org/pkg/net/#Dial>
+              for available values (most common are "tcp" and "unix")
+            '';
+          };
 
-      password = lib.mkOption {
-        type = with lib.types; nullOr str;
-        default = null;
-        description = ''
-          The password to connect to MPD.
-        '';
+          host = lib.mkOption {
+            type = with lib.types; nullOr str;
+            default = null;
+            example = "192.168.1.1";
+            description = "The address where MPD is listening for connections.";
+          };
+
+          port = lib.mkOption {
+            type = with lib.types; nullOr port;
+            default = null;
+            description = ''
+              The port number where MPD is listening for connections.
+            '';
+          };
+
+          pwd-file = lib.mkOption {
+            type = with lib.types; nullOr path;
+            default = null;
+            description = ''
+              Path to a file containing the password to connect to MPD.
+            '';
+          };
+        };
+      });
+      default = { };
+      description = "Options to be set on the command line.";
+      example = {
+        instance-name = "desktop";
+        port = 9876;
+        pwd-file = "/home/me/passwords/mpd";
       };
     };
   };
@@ -85,6 +119,19 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "services.mpd-mpris" pkgs lib.platforms.linux)
+
+      (
+        let
+          inherit (cfg.settings) port network;
+        in
+        {
+          assertion = port != null -> network == null || network == "tcp";
+          message = ''
+            `services.mpd-mpris.port` can only be specified when `services.mpd-mpris.network`
+            is 'tcp' (the default), but network has value: '${network}'
+          '';
+        }
+      )
     ];
 
     systemd.user.services.mpd-mpris = {
@@ -94,21 +141,33 @@ in
 
       Unit = {
         Description = "mpd-mpris: An implementation of the MPRIS protocol for MPD";
-        After = [ "mpd.service" ];
-        Requires = lib.mkIf cfg.mpd.useLocal [ "mpd.service" ];
+        After = lib.mkIf (cfg.settings.host == "") [ "mpd.service" ];
+        Requires = lib.mkIf (cfg.settings.host == "") [ "mpd.service" ];
       };
 
       Service = {
-        Type = "simple";
+        Type = "dbus";
         Restart = "on-failure";
         RestartSec = "5s";
-        ExecStart = renderCmd cfg.package {
-          no-instance = true;
-          network = ignoreIfLocalMpd cfg.mpd.network;
-          host = ignoreIfLocalMpd cfg.mpd.host;
-          port = ignoreIfLocalMpd cfg.mpd.port;
-          pwd = cfg.mpd.password;
-        };
+
+        BusName =
+          let
+            base = "org.mpris.MediaPlayer2.mpd";
+            name = cfg.settings.instance-name;
+          in
+          if name == null then base else "${base}.${name}";
+
+        ExecStart =
+          let
+            optionFormat = optionName: {
+              option = "-${optionName}";
+              sep = null;
+              explicitBool = false;
+            };
+
+            flags = lib.cli.toCommandLine optionFormat cfg.settings;
+          in
+          lib.escapeShellArgs ([ (lib.getExe cfg.package) ] ++ flags);
       };
     };
   };
