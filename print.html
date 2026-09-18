@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8fd8d84a.js";
+            window.path_to_searchindex_js = "searchindex-2edcac2c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-5a9f85a1.js"></script>
+        <script src="toc-62238130.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -67009,6 +67009,7 @@ null or string</p>
 <li><a href="#way-displays">way-displays</a></li>
 <li><a href="#wayle">wayle</a></li>
 <li><a href="#wayvnc">wayvnc</a></li>
+<li><a href="#wbg">wbg</a></li>
 <li><a href="#wl-clip-persist">wl-clip-persist</a></li>
 <li><a href="#wlsunset">wlsunset</a></li>
 <li><a href="#wluma">wluma</a></li>
@@ -82517,6 +82518,57 @@ string</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/wayvnc.nix">&lt;home-manager/modules/services/wayvnc.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="wbg"><a href="#wbg" class="header">wbg</a></h1>
+<h2 id="opt-services.wbg.enable"><a class="header" href="#opt-services.wbg.enable">services.wbg.enable</a></h2>
+<p>Whether to enable wbg, a super simple wallpaper application for Wayland compositors.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/wbg.nix">&lt;home-manager/modules/services/wbg.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.wbg.package"><a class="header" href="#opt-services.wbg.package">services.wbg.package</a></h2>
+<p>The wbg package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.wbg
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/wbg.nix">&lt;home-manager/modules/services/wbg.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.wbg.extraArgs"><a class="header" href="#opt-services.wbg.extraArgs">services.wbg.extraArgs</a></h2>
+<p>Extra command-line arguments to pass to wbg.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "-s"
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/wbg.nix">&lt;home-manager/modules/services/wbg.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.wbg.image"><a class="header" href="#opt-services.wbg.image">services.wbg.image</a></h2>
+<p>Path to the wallpaper image.</p>
+<p><em>Type:</em>
+absolute path or string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/wbg.nix">&lt;home-manager/modules/services/wbg.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wl-clip-persist"><a href="#wl-clip-persist" class="header">wl-clip-persist</a></h1>
