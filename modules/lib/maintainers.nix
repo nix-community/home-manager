@@ -233,6 +233,12 @@
     github = "glmlm";
     githubId = 91877885;
   };
+  hectorgray = {
+    name = "Hector Gray";
+    email = "nix.giant993@passmail.net";
+    github = "hectorgray";
+    githubId = 194114763;
+  };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
