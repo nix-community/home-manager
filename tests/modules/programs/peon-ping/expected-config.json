@@ -1,0 +1,11 @@
+{
+  "active_pack": "glados",
+  "categories": {
+    "input.required": false,
+    "session.start": true,
+    "task.complete": true
+  },
+  "desktop_notifications": false,
+  "enabled": true,
+  "volume": 0.8
+}
