@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-bafa1d57.js";
+            window.path_to_searchindex_js = "searchindex-07d362fe.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-83272ded.js"></script>
+        <script src="toc-c27bdda0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12443,6 +12443,7 @@ string</p>
 <li><a href="#yarn">yarn</a></li>
 <li><a href="#yazi">yazi</a></li>
 <li><a href="#yofi">yofi</a></li>
+<li><a href="#yopass">yopass</a></li>
 <li><a href="#yt-dlp">yt-dlp</a></li>
 <li><a href="#z-lua">z-lua</a></li>
 <li><a href="#zapzap">zapzap</a></li>
@@ -63735,6 +63736,56 @@ TOML value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yofi.nix">&lt;home-manager/modules/programs/yofi.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="yopass"><a href="#yopass" class="header">yopass</a></h1>
+<h2 id="opt-programs.yopass.enable"><a class="header" href="#opt-programs.yopass.enable">programs.yopass.enable</a></h2>
+<p>Whether to enable Yopass, a tool for sharing secrets and files securely.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yopass.nix">&lt;home-manager/modules/programs/yopass.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.yopass.package"><a class="header" href="#opt-programs.yopass.package">programs.yopass.package</a></h2>
+<p>The yopass package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.yopass
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yopass.nix">&lt;home-manager/modules/programs/yopass.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.yopass.settings"><a class="header" href="#opt-programs.yopass.settings">programs.yopass.settings</a></h2>
+<p>Configuration written to
+<code>$XDG_CONFIG_HOME/yopass/defaults.yml</code>.</p>
+<p>See the <a href="https://yopass.se/docs/cli">CLI documentation</a> for the
+full list of available settings (<code>api</code>, <code>api-token</code>, <code>url</code>,
+<code>one-time</code>, <code>expiration</code>).</p>
+<p><em>Type:</em>
+attribute set of (boolean or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  api = "https://api.example.com";
+  expiration = "1d";
+  one-time = false;
+  url = "https://example.com";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/yopass.nix">&lt;home-manager/modules/programs/yopass.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="yt-dlp"><a href="#yt-dlp" class="header">yt-dlp</a></h1>
