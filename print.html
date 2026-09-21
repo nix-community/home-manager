@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-0092f198.js";
+            window.path_to_searchindex_js = "searchindex-1f565204.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c27bdda0.js"></script>
@@ -5245,19 +5245,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/getmail">&lt;home-manager/modules/programs/getmail&gt;</a></li>
 </ul>
-<h2 id="opt-accounts.email.accounts._name_.getmail.delete"><a class="header" href="#opt-accounts.email.accounts._name_.getmail.delete">accounts.email.accounts.&lt;name&gt;.getmail.delete</a></h2>
-<p>Enable if you want to delete read messages from the server. Most
-users should either enable <code>delete</code> or disable
-<code>readAll</code>.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/getmail">&lt;home-manager/modules/programs/getmail&gt;</a></li>
-</ul>
 <h2 id="opt-accounts.email.accounts._name_.getmail.destinationCommand"><a class="header" href="#opt-accounts.email.accounts._name_.getmail.destinationCommand">accounts.email.accounts.&lt;name&gt;.getmail.destinationCommand</a></h2>
 <p>Specify a command delivering the incoming mail to your maildir.</p>
 <p><em>Type:</em>
@@ -5273,10 +5260,11 @@ null or string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/getmail">&lt;home-manager/modules/programs/getmail&gt;</a></li>
 </ul>
 <h2 id="opt-accounts.email.accounts._name_.getmail.mailboxes"><a class="header" href="#opt-accounts.email.accounts._name_.getmail.mailboxes">accounts.email.accounts.&lt;name&gt;.getmail.mailboxes</a></h2>
-<p>A non-empty list of mailboxes. To download all mail you can
+<p>Mailboxes to retrieve. An empty list omits the setting, for retrievers
+such as POP3 that do not use mailboxes. To download all IMAP mail,
 use the <code>ALL</code> mailbox.</p>
 <p><em>Type:</em>
-non-empty (list of string)</p>
+list of string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">[ ]
 </code></pre>
@@ -5290,14 +5278,29 @@ non-empty (list of string)</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/getmail">&lt;home-manager/modules/programs/getmail&gt;</a></li>
 </ul>
-<h2 id="opt-accounts.email.accounts._name_.getmail.readAll"><a class="header" href="#opt-accounts.email.accounts._name_.getmail.readAll">accounts.email.accounts.&lt;name&gt;.getmail.readAll</a></h2>
-<p>Enable if you want to fetch all, even the read messages from the
-server. Most users should either enable <code>delete</code> or
-disable <code>readAll</code>.</p>
+<h2 id="opt-accounts.email.accounts._name_.getmail.settings"><a class="header" href="#opt-accounts.email.accounts._name_.getmail.settings">accounts.email.accounts.&lt;name&gt;.getmail.settings</a></h2>
+<p>Native INI settings for this getmail account. Tuple values must be
+provided as raw getmail tuple syntax strings. Account connection and
+delivery options supply defaults that can be overridden per key.</p>
+<p>See <a href="https://getmail6.org/configuration.html">https://getmail6.org/configuration.html</a> for available settings.</p>
 <p><em>Type:</em>
-boolean</p>
+attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">true
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  destination = {
+    arguments = "('--message-from-stdin',)";
+  };
+  filter-1 = {
+    path = "/path/to/filter";
+    type = "Filter_external";
+  };
+  retriever = {
+    password_command = "('pass', 'show', 'mail/example')";
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
