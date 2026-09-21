@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-1f565204.js";
+            window.path_to_searchindex_js = "searchindex-257efadb.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-c27bdda0.js"></script>
+        <script src="toc-4e3ee37b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12276,6 +12276,7 @@ string</p>
 <li><a href="#newsboat">newsboat</a></li>
 <li><a href="#nh">nh</a></li>
 <li><a href="#nheko">nheko</a></li>
+<li><a href="#ninjabrain-bot">ninjabrain-bot</a></li>
 <li><a href="#nix-index">nix-index</a></li>
 <li><a href="#nix-init">nix-init</a></li>
 <li><a href="#nix-search-tv">nix-search-tv</a></li>
@@ -44186,6 +44187,56 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nheko.nix">&lt;home-manager/modules/programs/nheko.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ninjabrain-bot"><a href="#ninjabrain-bot" class="header">ninjabrain-bot</a></h1>
+<h2 id="opt-programs.ninjabrain-bot.enable"><a class="header" href="#opt-programs.ninjabrain-bot.enable">programs.ninjabrain-bot.enable</a></h2>
+<p>Whether to enable Ninjabrain Bot.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ninjabrain-bot.nix">&lt;home-manager/modules/programs/ninjabrain-bot.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.ninjabrain-bot.package"><a class="header" href="#opt-programs.ninjabrain-bot.package">programs.ninjabrain-bot.package</a></h2>
+<p>The ninjabrain-bot package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.ninjabrain-bot
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ninjabrain-bot.nix">&lt;home-manager/modules/programs/ninjabrain-bot.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.ninjabrain-bot.settings"><a class="header" href="#opt-programs.ninjabrain-bot.settings">programs.ninjabrain-bot.settings</a></h2>
+<p>Ninjabrain Bot preferences written to
+<code>$HOME/.java/.userPrefs/ninjabrainbot/prefs.xml</code>.</p>
+<p>Attribute names must use the preference keys understood by
+Ninjabrain Bot. Boolean, integer, floating-point, and string values are
+supported.</p>
+<p><em>Type:</em>
+attribute set of (boolean or floating point number or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  always_on_top = true;
+  language_v2 = "en-US";
+  sigma = 0.05;
+  theme = 1;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ninjabrain-bot.nix">&lt;home-manager/modules/programs/ninjabrain-bot.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nix-index"><a href="#nix-index" class="header">nix-index</a></h1>
