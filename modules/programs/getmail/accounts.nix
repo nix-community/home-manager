@@ -40,14 +40,15 @@ in
     };
 
     mailboxes = mkOption {
-      type = types.nonEmptyListOf types.str;
+      type = types.listOf types.str;
       default = [ ];
       example = [
         "INBOX"
         "INBOX.spam"
       ];
       description = ''
-        A non-empty list of mailboxes. To download all mail you can
+        Mailboxes to retrieve. An empty list omits the setting, for retrievers
+        such as POP3 that do not use mailboxes. To download all IMAP mail,
         use the `ALL` mailbox.
       '';
     };
@@ -92,7 +93,9 @@ in
           password_command = lib.mkIf (config.passwordCommand != null) (
             lib.mkDefault "(${lib.concatMapStringsSep ", " (x: "'${x}'") config.passwordCommand})"
           );
-          mailboxes = lib.mkDefault "( ${lib.concatMapStrings (x: "'${x}', ") config.getmail.mailboxes} )";
+          mailboxes = lib.mkIf (config.getmail.mailboxes != [ ]) (
+            lib.mkDefault "( ${lib.concatMapStrings (x: "'${x}', ") config.getmail.mailboxes} )"
+          );
         };
         destination = {
           type = lib.mkDefault (
