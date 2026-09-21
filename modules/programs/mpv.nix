@@ -105,7 +105,9 @@ in
         default = [ ];
         example = literalExpression "[ pkgs.mpvScripts.mpris ]";
         description = ''
-          List of scripts to use with mpv.
+          List of scripts to use with mpv. Requires the default
+          [](#opt-programs.mpv.package); cannot be used with a custom package
+          or `package = null`.
         '';
       };
 
@@ -121,7 +123,11 @@ in
           ]
         '';
         description = ''
-          List of scripts to use with mpv.
+          Extra arguments passed to `makeWrapper` when wrapping mpv, for
+          example to extend the wrapper's environment variables.
+
+          Requires the default [](#opt-programs.mpv.package); cannot be used
+          with a custom package or `package = null`.
         '';
       };
 
