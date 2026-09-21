@@ -98,6 +98,7 @@ let
     "irssi"
     "isync"
     "jankyborders"
+    "jjui"
     "joplin-desktop"
     "jqp"
     "jujutsu"
