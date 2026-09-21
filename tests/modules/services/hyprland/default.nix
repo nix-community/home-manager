@@ -2,6 +2,7 @@
 
 lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-simple-config = ./simple-config.nix;
+  hyprland-check-config-null-package = ./check-config-null-package.nix;
   hyprland-config-type-default-current = ./config-type-default-current.nix;
   hyprland-config-type-default-legacy = ./config-type-default-legacy.nix;
   hyprland-config-type-explicit-hyprlang-current = ./config-type-explicit-hyprlang-current.nix;
