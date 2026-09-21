@@ -54,6 +54,25 @@
         };
       };
     };
+    pop3-account = {
+      address = "pop3@example.org";
+      realName = "POP3 Account";
+      getmail = {
+        enable = true;
+        settings = {
+          retriever = {
+            type = "SimplePOP3SSLRetriever";
+            server = "pop.example.org";
+            username = "pop3-user";
+            password_command = "('helper', '--account', 'pop3')";
+          };
+          destination = {
+            type = "MDA_external";
+            path = "/bin/true";
+          };
+        };
+      };
+    };
     netrc-account = {
       address = "netrc@example.org";
       realName = "Netrc Account";
@@ -98,6 +117,7 @@
     assertFileContent home-files/.getmail/getmailrc ${./settings-primary.conf}
     assertFileContent home-files/.getmail/getmailhm-account ${./settings-native.conf}
     assertFileContent home-files/.getmail/getmailforced-account ${./settings-forced.conf}
+    assertFileContent home-files/.getmail/getmailpop3-account ${./settings-pop3.conf}
     assertFileContent home-files/.getmail/getmailnetrc-account ${./settings-netrc.conf}
   '';
 }
