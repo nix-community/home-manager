@@ -74,8 +74,9 @@ in
             };
             description = ''
               Extra config added to the configuration section for this account in
-              {file}`$HOME/.config/aerc/accounts.conf`.
-              See {manpage}`aerc-accounts(5)`.
+              {file}`accounts.conf`. See [](#opt-programs.aerc.extraConfig)
+              for the configuration directory and required permission setting,
+              and {manpage}`aerc-accounts(5)` for the syntax.
             '';
           };
 
@@ -85,7 +86,8 @@ in
             example = literalExpression ''{ messages = { d = ":move ''${folder.trash}<Enter>"; }; }'';
             description = ''
               Extra bindings specific to this account, added to
-              {file}`$HOME/.config/aerc/binds.conf`.
+              {file}`binds.conf` in aerc's configuration directory
+              (see [](#opt-programs.aerc.extraConfig)).
               See {manpage}`aerc-binds(5)`.
             '';
           };
@@ -99,10 +101,10 @@ in
               };
             };
             description = ''
-              Config specific to this account, added to {file}`$HOME/.config/aerc/aerc.conf`.
+              Config specific to this account, added to {file}`aerc.conf`.
               Aerc only supports per-account UI configuration.
-              For other sections of {file}`$HOME/.config/aerc/aerc.conf`,
-              use `programs.aerc.extraConfig`.
+              For other sections and the configuration directory location,
+              see [](#opt-programs.aerc.extraConfig).
               See {manpage}`aerc-config(5)`.
             '';
           };
