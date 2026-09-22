@@ -193,6 +193,7 @@ in
           // {
             color = "always";
             sort-paths = true;
+            width = "$width";
           }
         ))
         ++ [
