@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-abb567a6.js";
+            window.path_to_searchindex_js = "../../../searchindex-c5473ff3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-4e3ee37b.js"></script>
@@ -204,6 +204,21 @@ null or package</p>
 </ul>
 <h2 id="opt-programs.jjui.configDir"><a class="header" href="#opt-programs.jjui.configDir">programs.jjui.configDir</a></h2>
 <p>The directory to contain jjui configuration files.</p>
+<p>Home Manager does not set <code>JJUI_CONFIG_DIR</code> when this is
+<code>$XDG_CONFIG_HOME/jjui</code> on Linux with <code>xdg.enable</code>,
+or <code>$HOME/.config/jjui</code> otherwise, so jjui can load
+repository-specific configuration.</p>
+<p>For other directories, Home Manager sets <code>JJUI_CONFIG_DIR</code>
+so jjui can find the configuration. This disables loading
+repository-specific <code>.jjui/config.toml</code> and
+<code>.jjui/config.lua</code> files.</p>
+<p>On Darwin, Home Manager also sets <code>JJUI_CONFIG_DIR</code> when
+<code>configLua</code> or <code>plugins</code> is configured without
+<code>settings</code>, even at the default path. This prevents another
+directory’s <code>config.toml</code> from redirecting jjui away from the
+managed Lua files. Custom <code>xdg.configHome</code> paths also require
+the variable because jjui’s automatic directory selection depends
+on existing <code>config.toml</code> files.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Default:</em></p>
