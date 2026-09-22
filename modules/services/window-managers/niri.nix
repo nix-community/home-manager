@@ -58,7 +58,7 @@ in
       extraDescription = ''
         With `xwayland-satellite` in the {env}`$PATH`, niri can automatically
         start XWayland when needed. Set to `null` if you want to disable xwayland.
-        See <https://yalter.github.io/niri/Xwayland.html>.
+        See <https://niri-wm.github.io/niri/Xwayland.html>.
       '';
     };
 
@@ -148,7 +148,7 @@ in
       '';
       description = ''
         Configuration added to {file}`$XDG_CONFIG_HOME/niri/config.kdl`.
-        See <https://yalter.github.io/niri/Configuration%3A-Introduction.html> for the full list of options.
+        See <https://niri-wm.github.io/niri/Configuration%3A-Introduction.html> for the full list of options.
       '';
     };
 
