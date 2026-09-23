@@ -61,7 +61,7 @@ in
               description = ''
                 Configuration blocks to add to i3status-rust
                 {file}`config`. See
-                <https://github.com/greshake/i3status-rust/blob/master/blocks.md>
+                <https://greshake.github.io/i3status-rust/i3status_rs/blocks/index.html>
                 for block options.
               '';
               example = literalExpression ''
