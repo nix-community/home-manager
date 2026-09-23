@@ -48,7 +48,7 @@ in
       type = types.nullOr (
         gtkLib.mkThemeType {
           typeName = "theme";
-          packageExample = "pkgs.gnome.gnome-themes-extra";
+          packageExample = "pkgs.gnome-themes-extra";
         }
       );
       default = cfg.theme;
