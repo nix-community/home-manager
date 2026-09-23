@@ -395,7 +395,7 @@ in
       enable = lib.mkEnableOption "Thunderbird";
 
       package = lib.mkPackageOption pkgs "thunderbird" {
-        example = "pkgs.thunderbird-91";
+        example = "pkgs.thunderbird-esr";
       };
 
       finalPackage = mkOption {
