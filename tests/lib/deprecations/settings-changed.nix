@@ -6,7 +6,7 @@ let
       modules = [
         {
           options.settings = lib.mkOption {
-            type = lib.types.attrsOf lib.types.raw;
+            type = lib.types.attrsOf lib.types.anything;
             default = { };
           };
           options.warnings = lib.mkOption {
@@ -80,6 +80,13 @@ let
   };
   defaultList = evaluate listArgs [ { legacy = lib.mkOptionDefault [ "script" ]; } ];
   emptyList = evaluate (listArgs // { convert = _: throw "empty default conversion forced"; }) [ ];
+  nested = evaluate {
+    to = [
+      "settings"
+      "section"
+    ];
+    key = "value";
+  } [ { legacy = "old"; } ];
 in
 {
   assertions = [
@@ -90,8 +97,9 @@ in
     {
       assertion =
         lib.length forwarded.warnings == 1
-        && lib.hasInfix "legacy-source.nix" (lib.head forwarded.warnings);
-      message = "Converted options must emit the native changed-option warning with source attribution.";
+        && lib.hasInfix "legacy-source.nix" (lib.head forwarded.warnings)
+        && lib.hasInfix "has been changed to `settings.\"native.key\"'" (lib.head forwarded.warnings);
+      message = "Converted options must name the exact destination, quote literal dotted keys, and retain source attribution.";
     }
     {
       assertion = overridden.legacy == "old" && overridden.settings."native.key" == 9;
@@ -131,6 +139,12 @@ in
     {
       assertion = emptyList.settings == { } && emptyList.warnings == [ ];
       message = "Unselected empty defaults must not evaluate the converter or warn.";
+    }
+    {
+      assertion =
+        nested.settings.section.value == 7
+        && lib.hasInfix "has been changed to `settings.section.value'" (lib.head nested.warnings);
+      message = "Nested settings paths must forward the converted value and name the complete destination.";
     }
   ];
 }
