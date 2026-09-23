@@ -88,7 +88,7 @@ in
       package = lib.mkPackageOption pkgs "mpv" {
         nullable = true;
         extraDescription = "Set programs.mpv.package to null if package is already provided";
-        example = "pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
+        example = "pkgs.mpv.override { mpv-unwrapped = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
       };
 
       finalPackage = mkOption {
