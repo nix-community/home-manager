@@ -319,7 +319,7 @@ in
             `pinentry-gnome3` may not work on non-GNOME systems. You can fix it by
             adding the following to your configuration:
             ```nix
-            home.packages = [ pkgs.gcr ];
+            home.packages = [ pkgs.gcr_3 ];
             ```
           '';
         };
