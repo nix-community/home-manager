@@ -69,7 +69,7 @@ in
       '';
       description = ''
         Each theme is written to {file}`$XDG_CONFIG_HOME/halloy/themes/NAME.toml`.
-        See <https://halloy.chat/configuration/themes/index.html> for more information.
+        See <https://halloy.chat/configuration/themes> for more information.
       '';
     };
   };
