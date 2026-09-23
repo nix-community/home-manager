@@ -23,7 +23,7 @@ in
       description = ''
         Additional environment passed to local-ai service. Used to configure local-ai
 
-        See <https://localai.io/basics> for available options.
+        See <https://localai.io/docs/reference/cli-reference/> for available options.
       '';
     };
   };
