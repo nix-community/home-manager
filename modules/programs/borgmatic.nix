@@ -166,7 +166,7 @@ let
           encryptionPasscommand = mkNullableOption {
             type = types.str;
             description = "Command writing the passphrase to standard output.";
-            example = literalExpression ''"''${pkgs.password-store}/bin/pass borg-repo"'';
+            example = literalExpression ''"''${pkgs.pass}/bin/pass borg-repo"'';
           };
           extraConfig = extraConfigOption;
         };
