@@ -114,6 +114,13 @@ in
         Configuration settings for mpDris2. The settings are written to
         {file}`$XDG_CONFIG_HOME/mpDris2/mpDris2.conf`.
 
+        These settings are written to the world-readable Nix store, so avoid
+        putting a private `Connection.password` here. To keep it out of the
+        store, you can set `MPD_HOST=password@host` in a file referenced by
+        `systemd.user.services.mpdris2.Service.EnvironmentFile`; mpDris2
+        then uses the host and password from `MPD_HOST` instead of the ones
+        in this file.
+
         See <https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf>
         for available settings.
       '';
