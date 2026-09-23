@@ -39,7 +39,17 @@ let
           client_secret = mkOption {
             type = nullOr str;
             default = null;
-            description = "The OAuth2 client secret.";
+            description = ''
+              The OAuth2 client secret. When the matching `imapAuth` or
+              `smtpAuth` is `oauthbearer` or `xoauth2`, it is URL-encoded
+              into the IMAP `source` or SMTP `outgoing` URL in
+              {file}`accounts.conf`, which is written to the world-readable
+              Nix store, so avoid using a client secret that needs to stay
+              private. Aerc uses the output of
+              [](#opt-accounts.email.accounts._name_.passwordCommand) as the
+              access token, or as the refresh token when `token_endpoint` is
+              set, so the token can stay out of the Nix store.
+            '';
           };
           scope = mkOption {
             type = nullOr str;
