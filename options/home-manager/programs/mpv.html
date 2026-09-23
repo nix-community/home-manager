@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-63ecd505.js";
+            window.path_to_searchindex_js = "../../../searchindex-3e67ea57.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-4e3ee37b.js"></script>
@@ -285,7 +285,10 @@ strings concatenated with “\n”</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix">&lt;home-manager/modules/programs/mpv.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.mpv.extraMakeWrapperArgs"><a class="header" href="#opt-programs.mpv.extraMakeWrapperArgs">programs.mpv.extraMakeWrapperArgs</a></h2>
-<p>List of scripts to use with mpv.</p>
+<p>Extra arguments passed to <code>makeWrapper</code> when wrapping mpv, for
+example to extend the wrapper’s environment variables.</p>
+<p>Requires the default <a href="#opt-programs.mpv.package"></a>; cannot be used
+with a custom package or <code>package = null</code>.</p>
 <p><em>Type:</em>
 list of string</p>
 <p><em>Default:</em></p>
@@ -372,7 +375,9 @@ attribute set of attribute set of (string or signed integer or boolean or floati
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mpv.nix">&lt;home-manager/modules/programs/mpv.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.mpv.scripts"><a class="header" href="#opt-programs.mpv.scripts">programs.mpv.scripts</a></h2>
-<p>List of scripts to use with mpv.</p>
+<p>List of scripts to use with mpv. Requires the default
+<a href="#opt-programs.mpv.package"></a>; cannot be used with a custom package
+or <code>package = null</code>.</p>
 <p><em>Type:</em>
 list of package</p>
 <p><em>Default:</em></p>
