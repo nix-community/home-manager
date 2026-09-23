@@ -247,7 +247,7 @@ let
         {
           source_directories = config.location.sourceDirectories;
           inherit (config.location) patterns repositories;
-          inherit (config.consistency) checks;
+          checks = map removeNullValues config.consistency.checks;
           encryption_passcommand = config.storage.encryptionPasscommand;
           keep_within = config.retention.keepWithin;
           keep_secondly = config.retention.keepSecondly;

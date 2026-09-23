@@ -52,6 +52,7 @@ in
               name = "archives";
               frequency = "4 weeks";
             }
+            { name = "data"; }
           ];
 
           extraConfig = {
@@ -99,6 +100,7 @@ in
     expectations[checks[0].frequency]="${(builtins.elemAt backups.main.consistency.checks 0).frequency}"
     expectations[checks[1].name]="${(builtins.elemAt backups.main.consistency.checks 1).name}"
     expectations[checks[1].frequency]="${(builtins.elemAt backups.main.consistency.checks 1).frequency}"
+    expectations[checks[2].name]="data"
     expectations[prefix]="${backups.main.consistency.extraConfig.prefix}"
     expectations[color]="${boolToString backups.main.output.extraConfig.color}"
     expectations[before_actions[0]]="${builtins.elemAt backups.main.hooks.extraConfig.before_actions 0}"
@@ -113,6 +115,10 @@ in
         fail "Expected '$filter' to be '$expected_value' but was '$actual_value'"
       fi
     done
+
+    if [[ $($yq '.checks[2] | has("frequency")' $config_file) != "false" ]]; then
+      fail "Expected checks[2] to omit frequency"
+    fi
 
     one_file_system=$($yq ".one_file_system" $config_file)
     if [[ $one_file_system != "true" ]]; then
