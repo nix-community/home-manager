@@ -39,7 +39,7 @@ in
           Configuration written to
           {file}`$XDG_CONFIG_HOME/pantalaimon/pantalaimon.conf`.
 
-          See <https://github.com/matrix-org/pantalaimon/blob/master/docs/manpantalaimon.5.md> or
+          See <https://manpages.debian.org/unstable/pantalaimon/pantalaimon.5.en.html> or
           {manpage}`pantalaimon(5)`
           for options.
         '';
