@@ -152,7 +152,7 @@ in
       type = types.listOf types.package;
       default = [ ];
       example = lib.literalExpression ''
-        with pkgs.zellijPlugins; [ jbz vim-plugins-navigator zjstatus ]
+        with pkgs.zellijPlugins; [ jbz vim-zellij-navigator zjstatus ]
       '';
       description = "List of Zellij plugins";
     };
