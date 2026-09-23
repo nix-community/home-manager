@@ -226,7 +226,6 @@ in
           context7 = {
             type = "http";
             url = "https://mcp.context7.com/mcp";
-            headers = { CONTEXT7_API_KEY = "YOUR-API-KEY"; };
             tools = [ "*" ];
           };
         }
@@ -243,6 +242,12 @@ in
 
         The `tools` field accepts `["*"]` to enable all tools or a list of
         specific tool names.
+
+        These values are written to the world-readable Nix store, so avoid
+        putting API keys or tokens in `headers`, `env`, or other values. For
+        a local server that reads a secret from an environment variable, you
+        can set `env.<NAME>.file = "/run/secrets/..."` instead; Home Manager
+        then wraps the command so it reads the file at startup.
 
         See <https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers>
         for the documentation.
