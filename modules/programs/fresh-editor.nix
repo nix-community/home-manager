@@ -50,7 +50,7 @@ in
       };
       description = ''
         Configuration settings for fresh-editor. Find more configuration options in the user guide at:
-        <https://github.com/sinelaw/fresh/blob/master/docs/USER_GUIDE.md>
+        <https://getfresh.dev/docs/configuration/>
       '';
     };
   };
