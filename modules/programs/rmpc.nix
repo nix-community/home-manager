@@ -44,7 +44,7 @@ in
       description = ''
         Configuration settings for rmpc in the Rusty Object Notation
         format. All available options can be found in the official
-        documentation at <https://mierak.github.io/rmpc/next/configuration/>.
+        documentation at <https://rmpc.mierak.dev/configuration/>.
       '';
     };
   };
