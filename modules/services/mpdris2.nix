@@ -82,16 +82,15 @@ in
           "services"
           "mpdris2"
           "settings"
+          "Library"
         ];
-        key = "Library";
-        priority = 100;
+        key = "music_dir";
+        priority = 1400;
         oldOption = {
           type = lib.types.nullOr lib.types.path;
           default = config.services.mpd.musicDirectory;
         };
-        convert = value: {
-          music_dir = lib.mkOverride 1400 (if value == null then null else toString value);
-        };
+        convert = value: if value == null then null else toString value;
       })
     ];
 
