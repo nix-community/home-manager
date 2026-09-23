@@ -164,7 +164,7 @@ in
 
     package = lib.mkPackageOption pkgs "gnupg" {
       nullable = true;
-      example = "pkgs.gnupg23";
+      example = "pkgs.gnupg24";
       extraDescription = "Also used by the gpg-agent service.";
     };
 
