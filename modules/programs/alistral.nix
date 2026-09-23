@@ -29,7 +29,7 @@ in
       };
       description = ''
         Configuration settings for alistral. You can see the details here:
-        <https://rustynova016.github.io/Alistral/config/config.html>.
+        <https://rustynova016.github.io/Alistral/schemas/config/>.
       '';
     };
   };
