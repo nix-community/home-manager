@@ -1,4 +1,9 @@
-{ config, realPkgs, ... }:
+{
+  config,
+  lib,
+  realPkgs,
+  ...
+}:
 
 let
 
@@ -73,6 +78,44 @@ in
         };
       };
     };
+  };
+
+  test.asserts.warnings.expected = (import ./warnings.nix { inherit lib; }) {
+    file = ./basic-configuration.nix;
+    entries = [
+      { from = "hooks.extraConfig"; }
+      { from = "output.extraConfig"; }
+      { from = "consistency.extraConfig"; }
+      { from = "retention.extraConfig"; }
+      { from = "storage.extraConfig"; }
+      { from = "location.extraConfig"; }
+      {
+        from = "consistency.checks";
+        to = "settings.checks";
+        changed = true;
+      }
+      {
+        from = "location.repositories";
+        to = "settings.repositories";
+        changed = true;
+      }
+      {
+        from = "retention.keepSecondly";
+        to = "settings.keep_secondly";
+      }
+      {
+        from = "retention.keepWithin";
+        to = "settings.keep_within";
+      }
+      {
+        from = "storage.encryptionPasscommand";
+        to = "settings.encryption_passcommand";
+      }
+      {
+        from = "location.sourceDirectories";
+        to = "settings.source_directories";
+      }
+    ];
   };
 
   nmt.script = ''
