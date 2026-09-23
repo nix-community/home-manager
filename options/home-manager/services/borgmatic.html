@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-20e63b8e.js";
+            window.path_to_searchindex_js = "../../../searchindex-e3de7af3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-4e3ee37b.js"></script>
@@ -178,7 +178,18 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="opt-services.borgmatic.enable"><a class="header" href="#opt-services.borgmatic.enable">services.borgmatic.enable</a></h2>
-<p>Whether to enable Borgmatic service.</p>
+<p>Whether to run scheduled borgmatic backups as a user service.
+Set the schedule with <a href="#opt-services.borgmatic.frequency"></a>.</p>
+<p>On Linux, this creates a systemd user service and timer. The
+service only runs on AC power and waits three minutes before
+starting borgmatic. It runs with reduced CPU and I/O priority and
+inhibits sleep and shutdown while the backup runs. The persistent
+timer catches up on missed runs and adds a randomized delay of up
+to ten minutes.</p>
+<p>On Darwin, this creates a LaunchAgent with the configured schedule.
+The Linux power check, startup delay, scheduling priorities, sleep
+inhibition, randomized delay, and timer catch-up behavior are not
+configured for it.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>

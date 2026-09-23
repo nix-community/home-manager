@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-20e63b8e.js";
+            window.path_to_searchindex_js = "../../../searchindex-e3de7af3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-4e3ee37b.js"></script>
@@ -422,6 +422,8 @@ boolean</p>
 <p>Command which returns one of the repository’s passwords. Since
 <code>PATH</code> is set in the systemd service you need to provide
 the absolute path to the executable.</p>
+<p>Set exactly one of this option and
+<a href="#opt-services.restic.backups._name_.passwordFile"></a>.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -436,6 +438,8 @@ null or string</p>
 </ul>
 <h2 id="opt-services.restic.backups._name_.passwordFile"><a class="header" href="#opt-services.restic.backups._name_.passwordFile">services.restic.backups.&lt;name&gt;.passwordFile</a></h2>
 <p>A file containing the repository password.</p>
+<p>Set exactly one of this option and
+<a href="#opt-services.restic.backups._name_.passwordCommand"></a>.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -534,6 +538,8 @@ detailed here
 <a href="https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html">https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html</a>.</p>
 <p>If your using the rclone backend, you can configure your remotes with
 <code>programs.rclone.remotes</code> then use them in your backend specification.</p>
+<p>Set exactly one of this option and
+<a href="#opt-services.restic.backups._name_.repositoryFile"></a>.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -549,6 +555,8 @@ null or string</p>
 <h2 id="opt-services.restic.backups._name_.repositoryFile"><a class="header" href="#opt-services.restic.backups._name_.repositoryFile">services.restic.backups.&lt;name&gt;.repositoryFile</a></h2>
 <p>Path to a file containing the repository location to backup to. This should be
 in the same form as the <code>repository</code> option.</p>
+<p>Set exactly one of this option and
+<a href="#opt-services.restic.backups._name_.repository"></a>.</p>
 <p><em>Type:</em>
 null or absolute path</p>
 <p><em>Default:</em></p>
