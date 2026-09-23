@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-11744ff4.js";
+            window.path_to_searchindex_js = "../../../searchindex-20e63b8e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-4e3ee37b.js"></script>
@@ -203,7 +203,9 @@ null or package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-programs.aerc.extraAccounts"><a class="header" href="#opt-programs.aerc.extraAccounts">programs.aerc.extraAccounts</a></h2>
-<p>Extra lines added to <code>$HOME/.config/aerc/accounts.conf</code>.</p>
+<p>Extra lines added to <code>accounts.conf</code> in aerc’s configuration
+directory. See <a href="#opt-programs.aerc.extraConfig"></a> for the directory
+location and the permission check that must be disabled for this file.</p>
 <p>See <code>aerc-config(5)</code>.</p>
 <p><em>Type:</em>
 strings concatenated with “\n” or attribute set of (strings concatenated with “\n” or attribute set of (values (null, bool, int, string, or float) or a list of values, that will be joined with a comma))</p>
@@ -222,7 +224,8 @@ strings concatenated with “\n” or attribute set of (strings concatenated wit
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-programs.aerc.extraBinds"><a class="header" href="#opt-programs.aerc.extraBinds">programs.aerc.extraBinds</a></h2>
-<p>Extra lines added to <code>$HOME/.config/aerc/binds.conf</code>.
+<p>Extra lines added to <code>binds.conf</code> in aerc’s configuration
+directory (see <a href="#opt-programs.aerc.extraConfig"></a>).
 Global keybindings can be set in the <code>global</code> section.</p>
 <p>See <code>aerc-config(5)</code>.</p>
 <p><em>Type:</em>
@@ -242,7 +245,18 @@ strings concatenated with “\n” or attribute set of (strings concatenated wit
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-programs.aerc.extraConfig"><a class="header" href="#opt-programs.aerc.extraConfig">programs.aerc.extraConfig</a></h2>
-<p>Extra lines added to <code>$HOME/.config/aerc/aerc.conf</code>.</p>
+<p>Extra lines added to <code>aerc.conf</code> in aerc’s configuration
+directory. This directory is <code>$XDG_CONFIG_HOME/aerc</code>, except
+on Darwin with <a href="#opt-xdg.enable"></a> disabled, where it is
+<code>$HOME/Library/Preferences/aerc</code>.</p>
+<p>When Home Manager generates <code>accounts.conf</code>, set
+<code>programs.aerc.extraConfig.general.unsafe-accounts-conf = true</code>.
+Otherwise, aerc refuses to start because the store-backed file cannot
+have the owner-only permissions that aerc requires by default.</p>
+<p>Generated configuration files are world-readable in the Nix store.
+Retrieve passwords at runtime with
+<a href="#opt-accounts.email.accounts._name_.passwordCommand"></a> rather than
+putting credentials directly in the configuration.</p>
 <p>See <code>aerc-config(5)</code>.</p>
 <p><em>Type:</em>
 strings concatenated with “\n” or attribute set of (strings concatenated with “\n” or attribute set of (values (null, bool, int, string, or float) or a list of values, that will be joined with a comma))</p>
@@ -261,7 +275,8 @@ strings concatenated with “\n” or attribute set of (strings concatenated wit
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-programs.aerc.stylesets"><a class="header" href="#opt-programs.aerc.stylesets">programs.aerc.stylesets</a></h2>
-<p>Stylesets added to <code>$HOME/.config/aerc/stylesets/</code>.</p>
+<p>Stylesets added to <code>stylesets/</code> in aerc’s configuration
+directory (see <a href="#opt-programs.aerc.extraConfig"></a>).</p>
 <p>See <code>aerc-stylesets(7)</code>.</p>
 <p><em>Type:</em>
 attribute set of (strings concatenated with “\n” or attribute set of (strings concatenated with “\n” or attribute set of (values (null, bool, int, string, or float) or a list of values, that will be joined with a comma)))</p>
@@ -277,7 +292,8 @@ attribute set of (strings concatenated with “\n” or attribute set of (string
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-programs.aerc.templates"><a class="header" href="#opt-programs.aerc.templates">programs.aerc.templates</a></h2>
-<p>Templates added to <code>$HOME/.config/aerc/templates/</code>.</p>
+<p>Templates added to <code>templates/</code> in aerc’s configuration
+directory (see <a href="#opt-programs.aerc.extraConfig"></a>).</p>
 <p>See <code>aerc-templates(7)</code>.</p>
 <p><em>Type:</em>
 attribute set of strings concatenated with “\n”</p>
