@@ -96,8 +96,8 @@ let
             `ultimate` or `5`
             : I trust ultimately.
 
-            See the [Key Management chapter](https://www.gnupg.org/gph/en/manual/x334.html)
-            of the GNU Privacy Handbook for more.
+            See [Trust Values](https://www.gnupg.org/documentation/manuals/gnupg/Trust-Values.html)
+            in the GnuPG manual for more.
           '';
         };
       };
