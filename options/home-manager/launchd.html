@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-c5473ff3.js";
+            window.path_to_searchindex_js = "../../searchindex-63ecd505.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-4e3ee37b.js"></script>
@@ -190,11 +190,42 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
 </ul>
 <h2 id="opt-launchd.agents"><a class="header" href="#opt-launchd.agents">launchd.agents</a></h2>
-<p>Define LaunchAgents.</p>
+<p>Per-user launchd agents on Darwin. Set each agent’s <code>enable</code> option
+to <code>true</code> to manage it with Home Manager.</p>
+<p>During activation, Home Manager installs enabled agents as
+user-owned plist files in <code>~/Library/LaunchAgents</code> and loads
+them into their configured <a href="#opt-launchd.agents._name_.domain"></a>.
+Changed agents are unloaded and loaded again; agents removed from
+the configuration are unloaded and their plist files are removed.
+Home Manager skips removal if a plist file was modified outside
+Home Manager.</p>
+<p>Each agent’s <code>config</code> contains the job properties described in
+<code>launchd.plist(5)</code>. Unless overridden with <code>config.Label</code>,
+the job label is <code>org.nix-community.home.&lt;name&gt;</code>, where <code>&lt;name&gt;</code> is
+the attribute name in this option.</p>
 <p><em>Type:</em>
 attribute set of (submodule)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  greeting = {
+    config = {
+      ProgramArguments = [
+        "/usr/bin/say"
+        "Good afternoon"
+      ];
+      StartCalendarInterval = [
+        {
+          Hour = 12;
+          Minute = 0;
+        }
+      ];
+    };
+    enable = true;
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
