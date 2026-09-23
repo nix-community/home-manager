@@ -40,7 +40,7 @@ in
 
       description = ''
         Tomat configuration.
-        See <https://github.com/jolars/tomat/blob/main/docs/configuration.md> for supported values.
+        See <https://jolars.github.io/tomat/configuration/> for supported values.
       '';
     };
   };
