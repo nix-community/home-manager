@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-3e67ea57.js";
+            window.path_to_searchindex_js = "../../../searchindex-11744ff4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-4e3ee37b.js"></script>
@@ -207,6 +207,11 @@ null or package</p>
 <code>$XDG_CONFIG_HOME/nix-init/config.toml</code>.
 See <a href="https://github.com/nix-community/nix-init#configuration">https://github.com/nix-community/nix-init#configuration</a> for the full list
 of options.</p>
+<p>These settings are stored in the world-readable Nix store. For
+<code>access-tokens</code>, use a <code>command</code> or a <code>file</code> entry to retrieve the
+token at runtime instead of putting a literal token in this option.
+Specify token file paths as strings, as in the example, so Nix does
+not copy the token file into the store.</p>
 <p><em>Type:</em>
 TOML value</p>
 <p><em>Default:</em></p>
@@ -220,7 +225,9 @@ TOML value</p>
   nixpkgs = "&lt;nixpkgs&gt;";
   commit = true;
   access-tokens = {
-    "github.com" = "ghp_blahblahblah...";
+    "github.com" = {
+      file = "/path/to/github/token";
+    };
     "gitlab.com" = {
       command = [
         "secret-tool"
