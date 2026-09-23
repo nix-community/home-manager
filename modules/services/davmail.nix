@@ -48,6 +48,13 @@ in
         <http://davmail.sourceforge.net/serversetup.html>
         and <http://davmail.sourceforge.net/advanced.html>
         for details on supported values.
+
+        The generated properties file is written to the world-readable Nix
+        store, so avoid putting secrets such as `davmail.proxyPassword`,
+        `davmail.ssl.keystorePass`, `davmail.ssl.keyPass`, or OAuth refresh
+        tokens here. By default, the module points
+        `davmail.oauth.tokenFilePath` at {file}`$XDG_STATE_HOME/davmail-tokens`
+        so that persisted tokens stay out of the store.
       '';
       example = {
         "davmail.url" = "https://outlook.office365.com/EWS/Exchange.asmx";
