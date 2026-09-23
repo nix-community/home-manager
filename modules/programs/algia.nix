@@ -30,11 +30,15 @@ in
             search = false;
           };
         };
-        privatekey = "nsecXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
       };
       description = ''
         Configuration settings for algia. All the available options can be found here:
         <https://github.com/mattn/algia?tab=readme-ov-file#configuration>
+
+        The generated {file}`config.json` is written to the world-readable
+        Nix store, so other local users can read a `privatekey` set here. If
+        you need to set a private key, consider leaving this option empty
+        and managing {file}`config.json` outside Home Manager.
       '';
     };
   };
