@@ -36,7 +36,8 @@ in
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/vinegar/config.toml`.
 
-        See <https://vinegarhq.org/Configuration/> for more information.
+        See <https://github.com/vinegarhq/vinegar/tree/master/internal/config>
+        for the available keys.
       '';
     };
   };
