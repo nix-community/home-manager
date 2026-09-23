@@ -40,7 +40,7 @@ in
         Covers hotkeys, display mode, transition effects, focus navigation,
         gestures, integrations, and advanced options.
 
-        See <https://github.com/wojciech-zurek/FlashSpace> for available keys.
+        See <https://github.com/wojciech-kulik/FlashSpace> for available keys.
       '';
     };
 
@@ -102,7 +102,7 @@ in
         workspace holds a list of {var}`apps` identified by their
         {var}`bundleIdentifier`.
 
-        See <https://github.com/wojciech-zurek/FlashSpace> for the full schema.
+        See <https://github.com/wojciech-kulik/FlashSpace> for the full schema.
       '';
     };
   };
