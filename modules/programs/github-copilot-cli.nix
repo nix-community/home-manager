@@ -293,7 +293,7 @@ in
         Language server packages are not installed automatically. Add them to
         {option}`home.packages` when needed.
 
-        See <https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-lsp-servers>
+        See <https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/add-lsp-servers>
         for the documentation.
       '';
     };
