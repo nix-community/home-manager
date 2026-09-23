@@ -30,7 +30,7 @@
   };
 
   nmt.script = ''
-    assertPathNotExists home-files/.config/flashspace/settings.toml
+    assertPathNotExists home-files/.config/flashspace/settings.json
     assertFileExists home-files/.config/flashspace/profiles.json
   '';
 }
