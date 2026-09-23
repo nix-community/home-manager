@@ -54,7 +54,7 @@ in
           - A raw TOML string
           - A path to a `.toml` file
 
-        See <https://docs.noctalia.dev/v5> for more information and examples.
+        See <https://docs.noctalia.dev/noctalia/configuration/> for more information and examples.
 
         Note: these settings can still be overwritten at runtime via the settings menu.
       '';
@@ -89,7 +89,7 @@ in
         - A raw JSON string
         - A path to a {file}`.json` file
 
-        See <https://docs.noctalia.dev/v5/theming/#custom_palette>.
+        See <https://docs.noctalia.dev/noctalia/theming/palette/>.
       '';
     };
   };
