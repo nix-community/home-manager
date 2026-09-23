@@ -274,7 +274,7 @@ in
         home.packages = [ cfg.package ];
 
         # Notmuch should ignore non-mail files created by lieer.
-        programs.notmuch.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
+        programs.notmuch.settings.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
 
         home.file = lib.listToAttrs (map configFile lieerAccounts);
       }

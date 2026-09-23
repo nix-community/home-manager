@@ -321,7 +321,7 @@ in
       {
         home.packages = [ cfg.package ];
 
-        programs.notmuch.new.ignore = [
+        programs.notmuch.settings.new.ignore = [
           ".uidvalidity"
           ".mbsyncstate"
         ];
