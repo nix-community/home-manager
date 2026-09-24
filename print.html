@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-55250c4f.js";
+            window.path_to_searchindex_js = "searchindex-3ae24e0c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-01fe3fb8.js"></script>
@@ -74380,7 +74380,25 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.mpd-mpris.mpd.host"><a class="header" href="#opt-services.mpd-mpris.mpd.host">services.mpd-mpris.mpd.host</a></h2>
+<h2 id="opt-services.mpd-mpris.settings"><a class="header" href="#opt-services.mpd-mpris.settings">services.mpd-mpris.settings</a></h2>
+<p>Options to be set on the command line.</p>
+<p><em>Type:</em>
+open submodule of attribute set of (null or boolean or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  instance-name = "desktop";
+  port = 9876;
+  pwd-file = "/home/me/passwords/mpd";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.mpd-mpris.settings.host"><a class="header" href="#opt-services.mpd-mpris.settings.host">services.mpd-mpris.settings.host</a></h2>
 <p>The address where MPD is listening for connections.</p>
 <p><em>Type:</em>
 null or string</p>
@@ -74394,9 +74412,20 @@ null or string</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.mpd-mpris.mpd.network"><a class="header" href="#opt-services.mpd-mpris.mpd.network">services.mpd-mpris.mpd.network</a></h2>
-<p>The network used to dial to the MPD server. Check
-<a href="https://golang.org/pkg/net/#Dial">https://golang.org/pkg/net/#Dial</a>
+<h2 id="opt-services.mpd-mpris.settings.instance-name"><a class="header" href="#opt-services.mpd-mpris.settings.instance-name">services.mpd-mpris.settings.instance-name</a></h2>
+<p>Name of the MPRIS instance. Leave at <code>null</code> to set the
+<code>-no-instance</code> flag.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.mpd-mpris.settings.network"><a class="header" href="#opt-services.mpd-mpris.settings.network">services.mpd-mpris.settings.network</a></h2>
+<p>The network used to dial to the MPD server. Check <a href="https://golang.org/pkg/net/#Dial">https://golang.org/pkg/net/#Dial</a>
 for available values (most common are “tcp” and “unix”)</p>
 <p><em>Type:</em>
 null or string</p>
@@ -74407,18 +74436,19 @@ null or string</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.mpd-mpris.mpd.password"><a class="header" href="#opt-services.mpd-mpris.mpd.password">services.mpd-mpris.mpd.password</a></h2>
-<p>The password to connect to MPD.</p>
+<h2 id="opt-services.mpd-mpris.settings.no-instance"><a class="header" href="#opt-services.mpd-mpris.settings.no-instance">services.mpd-mpris.settings.no-instance</a></h2>
+<p>Whether to pass the <code>-no-instance</code> flag. Automatically enabled if
+<code>instance-name</code> is not set.</p>
 <p><em>Type:</em>
-null or string</p>
+null or boolean</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">null
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.mpd-mpris.mpd.port"><a class="header" href="#opt-services.mpd-mpris.mpd.port">services.mpd-mpris.mpd.port</a></h2>
+<h2 id="opt-services.mpd-mpris.settings.port"><a class="header" href="#opt-services.mpd-mpris.settings.port">services.mpd-mpris.settings.port</a></h2>
 <p>The port number where MPD is listening for connections.</p>
 <p><em>Type:</em>
 null or 16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
@@ -74429,15 +74459,12 @@ null or 16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/mpd-mpris.nix">&lt;home-manager/modules/services/mpd-mpris.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.mpd-mpris.mpd.useLocal"><a class="header" href="#opt-services.mpd-mpris.mpd.useLocal">services.mpd-mpris.mpd.useLocal</a></h2>
-<p>Whether to configure for the local MPD daemon. If
-<code>true</code> the <code>network</code>,
-<code>host</code>, and <code>port</code>
-settings are ignored.</p>
+<h2 id="opt-services.mpd-mpris.settings.pwd-file"><a class="header" href="#opt-services.mpd-mpris.settings.pwd-file">services.mpd-mpris.settings.pwd-file</a></h2>
+<p>Path to a file containing the password to connect to MPD.</p>
 <p><em>Type:</em>
-boolean</p>
+null or absolute path</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">config.services.mpd.enable
+<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
