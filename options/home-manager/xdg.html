@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-3ae24e0c.js";
+            window.path_to_searchindex_js = "../../searchindex-4ac13eec.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-01fe3fb8.js"></script>
@@ -997,6 +997,10 @@ boolean</p>
 <p>Defines additional associations of applications with
 mimetypes, as if the .desktop file was listing this mimetype
 in the first place.</p>
+<p>Keys ending in <code>*</code> are treated as prefix globs. They are expanded
+against all MIME types known to the shared-mime-info database before
+being written to <code>mimeapps.list</code>. Exact keys take precedence over glob
+matches, e.g., <code>"text/html"</code> overrides <code>"text/*"</code>.</p>
 <p><em>Type:</em>
 attribute set of ((list of string) or ((list of string) or string) convertible to it)</p>
 <p><em>Default:</em></p>
@@ -1004,6 +1008,7 @@ attribute set of ((list of string) or ((list of string) or string) convertible t
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
+  "image/*" = "foo5.desktop";
   mimetype1 = [
     "foo1.desktop"
     "foo2.desktop"
@@ -1020,6 +1025,9 @@ attribute set of ((list of string) or ((list of string) or string) convertible t
 <p>Removes associations of applications with mimetypes, as if the
 .desktop file was <em>not</em> listing this
 mimetype in the first place.</p>
+<p>Keys ending in <code>*</code> are treated as prefix globs. They are expanded
+against all MIME types known to the shared-mime-info database before
+being written to <code>mimeapps.list</code>.</p>
 <p><em>Type:</em>
 attribute set of ((list of string) or ((list of string) or string) convertible to it)</p>
 <p><em>Default:</em></p>
@@ -1028,6 +1036,7 @@ attribute set of ((list of string) or ((list of string) or string) convertible t
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
   mimetype1 = "foo5.desktop";
+  "text/*" = "foo6.desktop";
 }
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -1066,6 +1075,11 @@ is, for instance, the one that will be started when
 double-clicking on a file in a file manager. If the
 application is no longer installed, the next application in
 the list is attempted, and so on.</p>
+<p>Keys ending in <code>*</code> are treated as prefix globs. They are
+expanded against all MIME types known to the shared-mime-info
+database before being written to <code>mimeapps.list</code>. Exact keys
+take precedence over glob matches, e.g., <code>"text/html"</code>
+overrides <code>"text/*"</code>.</p>
 <p><em>Type:</em>
 attribute set of ((list of string) or ((list of string) or string) convertible to it)</p>
 <p><em>Default:</em></p>
@@ -1077,6 +1091,8 @@ attribute set of ((list of string) or ((list of string) or string) convertible t
     "default1.desktop"
     "default2.desktop"
   ];
+  "text/*" = "default3.desktop";
+  "text/html" = "default4.desktop";
 }
 </code></pre>
 <p><em>Declared by:</em></p>
