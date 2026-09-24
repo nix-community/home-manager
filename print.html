@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f0d624a7.js";
+            window.path_to_searchindex_js = "searchindex-a82f67ab.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4e3ee37b.js"></script>
+        <script src="toc-01fe3fb8.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -67175,6 +67175,7 @@ null or string</p>
 <li><a href="#notify-osd">notify-osd</a></li>
 <li><a href="#nvibrant">nvibrant</a></li>
 <li><a href="#ollama">ollama</a></li>
+<li><a href="#openlinkhub">openlinkhub</a></li>
 <li><a href="#opensnitch-ui">opensnitch-ui</a></li>
 <li><a href="#osmscout-server">osmscout-server</a></li>
 <li><a href="#owncloud-client">owncloud-client</a></li>
@@ -75250,6 +75251,327 @@ string</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/ollama.nix">&lt;home-manager/modules/services/ollama.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="openlinkhub"><a href="#openlinkhub" class="header">openlinkhub</a></h1>
+<h2 id="opt-services.openlinkhub.enable"><a class="header" href="#opt-services.openlinkhub.enable">services.openlinkhub.enable</a></h2>
+<p>Whether to enable OpenLinkHub.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.package"><a class="header" href="#opt-services.openlinkhub.package">services.openlinkhub.package</a></h2>
+<p>The openlinkhub package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.openlinkhub
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.allowGamepad"><a class="header" href="#opt-services.openlinkhub.allowGamepad">services.openlinkhub.allowGamepad</a></h2>
+<p>Whether to allow OpenLinkHub’s virtual gamepad to be enabled.</p>
+<p>Setting this to <code>true</code> will silence the associated warning, but it will
+not grant the required udev permissions. It is up to you as the user to
+supply safe access.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.dashboard.enable"><a class="header" href="#opt-services.openlinkhub.dashboard.enable">services.openlinkhub.dashboard.enable</a></h2>
+<p>Whether to enable the dashboard.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.dashboard.settings"><a class="header" href="#opt-services.openlinkhub.dashboard.settings">services.openlinkhub.dashboard.settings</a></h2>
+<p>Dashboard configuration to be merged into <code>dashboard.json</code>.</p>
+<p>This provides the default value of
+<code>config.services.openlinkhub.extraConfigs."dashboard.json"</code>.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  celsius = true;
+  languageCode = "en_US";
+  pageTitle = "OpenLinkHub WebUI";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.extraConfigs"><a class="header" href="#opt-services.openlinkhub.extraConfigs">services.openlinkhub.extraConfigs</a></h2>
+<p>Additional files to be written to <code>$XDG_CONFIG_HOME/OpenLinkHub</code>.</p>
+<p>Content generated from an attrset will be merged, while other content,
+such as lists and lines, will be written as is, overwriting any previous
+data.</p>
+<p>Null values and empty attrsets will be recursively filtered out.</p>
+<p><em>Type:</em>
+open submodule of attribute set of (JSON value or strings concatenated with “\n”)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  # merges with existing `i2c0.json`
+  "database/profiles/i2c0.json" = {
+    Active = true;
+    Path = "/run/user/1000/OpenLinkHub/database/profiles/i2c0.json";
+    Product = "Memory";
+    Serial = "i2c0";
+    # ...
+  };
+  # overwrites existing `display.json`
+  "display.json" = ''
+    [
+      {
+        "Index": 1,
+        "Name": "card1-DP-1",
+        "Width": 2560,
+        "Height": 1440,
+        "Left": false,
+        "Top": false
+      }
+    ]
+  '';
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.extraConfigs.config.json"><a class="header" href="#opt-services.openlinkhub.extraConfigs.config.json">services.openlinkhub.extraConfigs.“config.json”</a></h2>
+<p>Configuration to be written to <code>config.json</code>.</p>
+<p>Setting this value directly will override all values inherited
+from <code>config.services.openlinkhub.settings</code>, including any
+values that <code>settings</code> inherited from other options in the module.</p>
+<p><em>Type:</em>
+attribute set of (JSON value or strings concatenated with “\n”)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"config.services.openlinkhub.settings"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.extraConfigs.dashboard.json"><a class="header" href="#opt-services.openlinkhub.extraConfigs.dashboard.json">services.openlinkhub.extraConfigs.“dashboard.json”</a></h2>
+<p>Configuration to be written to <code>dashboard.json</code>.</p>
+<p>Setting this value directly will override all values inherited
+from <code>config.services.openlinkhub.dashboard.settings</code>.</p>
+<p><em>Type:</em>
+null or (attribute set of (JSON value or strings concatenated with “\n”))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">with config.services.openlinkhub.dashboard;
+lib.optionalAttrs enable settings;
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.memory.enable"><a class="header" href="#opt-services.openlinkhub.memory.enable">services.openlinkhub.memory.enable</a></h2>
+<p>Whether to enable memory configuration.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.memory.sku"><a class="header" href="#opt-services.openlinkhub.memory.sku">services.openlinkhub.memory.sku</a></h2>
+<p>The SKU of the device.</p>
+<p>You can find this by running <code>sudo dmidecode -t memory</code> and grepping
+by ‘Part Number’.</p>
+<p>See the OpenLinkHub <a href="https://github.com/jurkovic-nikola/OpenLinkHub/blob/main/docs/memory-configuration.md">docs</a> for more information.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"CMT64GX5M2B5600Z40"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.memory.smb"><a class="header" href="#opt-services.openlinkhub.memory.smb">services.openlinkhub.memory.smb</a></h2>
+<p>The SMBus controller for the device.</p>
+<p>You can find this by running <code>i2cdetect -l</code> and grepping by ‘SMBus’,
+with it typically being the first device from the list.</p>
+<p>See the OpenLinkHub <a href="https://github.com/jurkovic-nikola/OpenLinkHub/blob/main/docs/memory-configuration.md">docs</a> for more information.</p>
+<p><em>Type:</em>
+null or string matching the pattern i2c-[[:digit:]]+</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"i2c-0"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.memory.type"><a class="header" href="#opt-services.openlinkhub.memory.type">services.openlinkhub.memory.type</a></h2>
+<p>Which generation the device belongs to.</p>
+<p>You can find this by running <code>sudo dmidecode -t memory</code> and grepping
+by ‘Type: DDR[4-5]’.</p>
+<p>See the OpenLinkHub <a href="https://github.com/jurkovic-nikola/OpenLinkHub/blob/main/docs/supported-devices.md">docs</a> for a full list of supported devices and
+their generations.</p>
+<p><em>Type:</em>
+null or integer between 4 and 5 (both inclusive)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">5
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings"><a class="header" href="#opt-services.openlinkhub.settings">services.openlinkhub.settings</a></h2>
+<p>Configuration to be merged into <code>config.json</code>.</p>
+<p>This provides the default value of
+<code>config.services.openlinkhub.extraConfigs."config.json"</code>.</p>
+<p><em>Type:</em>
+open submodule of (JSON value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  debug = false;
+  logLevel = "info";
+  metrics = false;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.frontend"><a class="header" href="#opt-services.openlinkhub.settings.frontend">services.openlinkhub.settings.frontend</a></h2>
+<p>Whether to enable the dashboard.</p>
+<p>This is set by
+<code>config.services.openlinkhub.dashboard.enable</code>.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.listenAddress"><a class="header" href="#opt-services.openlinkhub.settings.listenAddress">services.openlinkhub.settings.listenAddress</a></h2>
+<p>Which local address the dashboard should listen from.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"127.0.0.1"
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"127.0.0.2"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.listenPort"><a class="header" href="#opt-services.openlinkhub.settings.listenPort">services.openlinkhub.settings.listenPort</a></h2>
+<p>Which port the dashboard should listen from.</p>
+<p><em>Type:</em>
+integer between 1 and 65535 (both inclusive)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">27003
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">27004
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.memory"><a class="header" href="#opt-services.openlinkhub.settings.memory">services.openlinkhub.settings.memory</a></h2>
+<p>Whether to enable the memory configuration.</p>
+<p>This is set by
+<code>config.services.openlinkhub.memory.enable</code>.</p>
+<p><em>Type:</em>
+boolean <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.memorySku"><a class="header" href="#opt-services.openlinkhub.settings.memorySku">services.openlinkhub.settings.memorySku</a></h2>
+<p>The SKU of the device.</p>
+<p>This is set by
+<code>config.services.openlinkhub.memory.sku</code>.</p>
+<p><em>Type:</em>
+null or string <em>(read only)</em></p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.memorySmBus"><a class="header" href="#opt-services.openlinkhub.settings.memorySmBus">services.openlinkhub.settings.memorySmBus</a></h2>
+<p>The SMBus controller for the device.</p>
+<p>This is set by
+<code>config.services.openlinkhub.memory.smb</code>.</p>
+<p><em>Type:</em>
+null or string <em>(read only)</em></p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.openlinkhub.settings.memoryType"><a class="header" href="#opt-services.openlinkhub.settings.memoryType">services.openlinkhub.settings.memoryType</a></h2>
+<p>Which generation the device belongs to.</p>
+<p>This is set by
+<code>config.services.openlinkhub.memory.type</code>.</p>
+<p><em>Type:</em>
+null or integer between 4 and 5 (both inclusive) <em>(read only)</em></p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/openlinkhub.nix">&lt;home-manager/modules/services/openlinkhub.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="opensnitch-ui"><a href="#opensnitch-ui" class="header">opensnitch-ui</a></h1>
