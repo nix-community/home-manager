@@ -16,26 +16,21 @@ in
       connect to the local MPD server.
     '')
 
-    (lib.mkRenamedOptionModule
-      [ "services" "mpd-mpris" "mpd" "network" ]
-      [ "services" "mpd-mpris" "settings" "network" ]
-    )
-
-    (lib.mkRenamedOptionModule
-      [ "services" "mpd-mpris" "mpd" "host" ]
-      [ "services" "mpd-mpris" "settings" "host" ]
-    )
-
-    (lib.mkRenamedOptionModule
-      [ "services" "mpd-mpris" "mpd" "port" ]
-      [ "services" "mpd-mpris" "settings" "port" ]
-    )
-
     (lib.mkRemovedOptionModule [ "services" "mpd-mpris" "mpd" "password" ] ''
       Use `services.mpd-mpris.settings.pwd-file` instead, which will not
       write your password to the world readable nix store.
     '')
-  ];
+  ]
+  ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules
+    [ "services" "mpd-mpris" "mpd" ]
+    [ "services" "mpd-mpris" "settings" ]
+    { transform = x: x; }
+    [
+      "network"
+      "host"
+      "port"
+    ]
+  );
 
   options.services.mpd-mpris = {
     enable = lib.mkEnableOption "mpd-mpris: An implementation of the MPRIS protocol for MPD";
