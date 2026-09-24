@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-b4463f1a.js";
+            window.path_to_searchindex_js = "../searchindex-f0d624a7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-4e3ee37b.js"></script>
@@ -299,10 +299,11 @@ without suppressing warnings. Priority overrides also compose with
 <code>preserveOrder = true</code>.</p>
 <p>An active legacy source can discard a whole-settings <code>mkDefault</code>, including
 unrelated keys. Use per-setting defaults when combining legacy and new values.</p>
-<p>For converted settings, supply <code>from</code>, the settings-root <code>to</code>, a literal <code>key</code>,
-<code>convert</code>, and the historical <code>oldOption</code> declaration. The helper handles
-warnings, source-priority checks, and forwarding. Its <code>priority</code> defaults to
-1500, and <code>shadowed</code> suppresses conversion without suppressing the warning.
+<p>For converted settings, supply <code>from</code>, the settings path <code>to</code>, a literal <code>key</code>
+under it, <code>convert</code>, and the historical <code>oldOption</code> declaration. Warnings name
+<code>to</code> followed by <code>key</code>. The helper handles warnings, source-priority checks,
+and forwarding. Its <code>priority</code> defaults to 1500, and <code>shadowed</code> suppresses
+conversion without suppressing the warning.
 Option-default definitions are ignored unless the <code>applyDefault</code> predicate
 selects their merged value. For example, a legacy list that permits additions
 at option-default priority can use <code>applyDefault = value: value != [ ];</code>.

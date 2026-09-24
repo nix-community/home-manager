@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b4463f1a.js";
+            window.path_to_searchindex_js = "searchindex-f0d624a7.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-4e3ee37b.js"></script>
@@ -2255,10 +2255,11 @@ without suppressing warnings. Priority overrides also compose with
 <code>preserveOrder = true</code>.</p>
 <p>An active legacy source can discard a whole-settings <code>mkDefault</code>, including
 unrelated keys. Use per-setting defaults when combining legacy and new values.</p>
-<p>For converted settings, supply <code>from</code>, the settings-root <code>to</code>, a literal <code>key</code>,
-<code>convert</code>, and the historical <code>oldOption</code> declaration. The helper handles
-warnings, source-priority checks, and forwarding. Its <code>priority</code> defaults to
-1500, and <code>shadowed</code> suppresses conversion without suppressing the warning.
+<p>For converted settings, supply <code>from</code>, the settings path <code>to</code>, a literal <code>key</code>
+under it, <code>convert</code>, and the historical <code>oldOption</code> declaration. Warnings name
+<code>to</code> followed by <code>key</code>. The helper handles warnings, source-priority checks,
+and forwarding. Its <code>priority</code> defaults to 1500, and <code>shadowed</code> suppresses
+conversion without suppressing the warning.
 Option-default definitions are ignored unless the <code>applyDefault</code> predicate
 selects their merged value. For example, a legacy list that permits additions
 at option-default priority can use <code>applyDefault = value: value != [ ];</code>.
@@ -11431,7 +11432,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-meta.teams"><a class="header" href="#opt-meta.teams">meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -11446,7 +11447,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="news-1"><a href="#news-1" class="header">news</a></h1>
@@ -24417,7 +24418,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.bookmarks.meta.teams"><a class="header" href="#opt-programs.firefox.profiles._name_.bookmarks.meta.teams">programs.firefox.profiles.&lt;name&gt;.bookmarks.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -24432,7 +24433,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.bookmarks.settings"><a class="header" href="#opt-programs.firefox.profiles._name_.bookmarks.settings">programs.firefox.profiles.&lt;name&gt;.bookmarks.settings</a></h2>
 <p>Custom bookmarks.</p>
@@ -24807,7 +24808,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.handlers.meta.teams"><a class="header" href="#opt-programs.firefox.profiles._name_.handlers.meta.teams">programs.firefox.profiles.&lt;name&gt;.handlers.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -24822,7 +24823,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.handlers.mimeTypes"><a class="header" href="#opt-programs.firefox.profiles._name_.handlers.mimeTypes">programs.firefox.profiles.&lt;name&gt;.handlers.mimeTypes</a></h2>
 <p>Attribute set mapping MIME types to their handler configurations.</p>
@@ -25215,7 +25216,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.search.meta.teams"><a class="header" href="#opt-programs.firefox.profiles._name_.search.meta.teams">programs.firefox.profiles.&lt;name&gt;.search.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -25230,7 +25231,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.firefox.profiles._name_.search.order"><a class="header" href="#opt-programs.firefox.profiles._name_.search.order">programs.firefox.profiles.&lt;name&gt;.search.order</a></h2>
 <p>The order the search engines are listed in. Any engines that
@@ -26550,7 +26551,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.floorp.profiles._name_.bookmarks.meta.teams"><a class="header" href="#opt-programs.floorp.profiles._name_.bookmarks.meta.teams">programs.floorp.profiles.&lt;name&gt;.bookmarks.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -26565,7 +26566,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.floorp.profiles._name_.bookmarks.settings"><a class="header" href="#opt-programs.floorp.profiles._name_.bookmarks.settings">programs.floorp.profiles.&lt;name&gt;.bookmarks.settings</a></h2>
 <p>Custom bookmarks.</p>
@@ -26940,7 +26941,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.floorp.profiles._name_.handlers.meta.teams"><a class="header" href="#opt-programs.floorp.profiles._name_.handlers.meta.teams">programs.floorp.profiles.&lt;name&gt;.handlers.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -26955,7 +26956,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.floorp.profiles._name_.handlers.mimeTypes"><a class="header" href="#opt-programs.floorp.profiles._name_.handlers.mimeTypes">programs.floorp.profiles.&lt;name&gt;.handlers.mimeTypes</a></h2>
 <p>Attribute set mapping MIME types to their handler configurations.</p>
@@ -27348,7 +27349,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.floorp.profiles._name_.search.meta.teams"><a class="header" href="#opt-programs.floorp.profiles._name_.search.meta.teams">programs.floorp.profiles.&lt;name&gt;.search.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -27363,7 +27364,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.floorp.profiles._name_.search.order"><a class="header" href="#opt-programs.floorp.profiles._name_.search.order">programs.floorp.profiles.&lt;name&gt;.search.order</a></h2>
 <p>The order the search engines are listed in. Any engines that
@@ -38187,7 +38188,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.librewolf.profiles._name_.bookmarks.meta.teams"><a class="header" href="#opt-programs.librewolf.profiles._name_.bookmarks.meta.teams">programs.librewolf.profiles.&lt;name&gt;.bookmarks.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -38202,7 +38203,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.librewolf.profiles._name_.bookmarks.settings"><a class="header" href="#opt-programs.librewolf.profiles._name_.bookmarks.settings">programs.librewolf.profiles.&lt;name&gt;.bookmarks.settings</a></h2>
 <p>Custom bookmarks.</p>
@@ -38577,7 +38578,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.librewolf.profiles._name_.handlers.meta.teams"><a class="header" href="#opt-programs.librewolf.profiles._name_.handlers.meta.teams">programs.librewolf.profiles.&lt;name&gt;.handlers.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -38592,7 +38593,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.librewolf.profiles._name_.handlers.mimeTypes"><a class="header" href="#opt-programs.librewolf.profiles._name_.handlers.mimeTypes">programs.librewolf.profiles.&lt;name&gt;.handlers.mimeTypes</a></h2>
 <p>Attribute set mapping MIME types to their handler configurations.</p>
@@ -38985,7 +38986,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.librewolf.profiles._name_.search.meta.teams"><a class="header" href="#opt-programs.librewolf.profiles._name_.search.meta.teams">programs.librewolf.profiles.&lt;name&gt;.search.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -39000,7 +39001,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.librewolf.profiles._name_.search.order"><a class="header" href="#opt-programs.librewolf.profiles._name_.search.order">programs.librewolf.profiles.&lt;name&gt;.search.order</a></h2>
 <p>The order the search engines are listed in. Any engines that
@@ -57565,7 +57566,7 @@ list of lib.maintainers</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.thunderbird.profiles._name_.search.meta.teams"><a class="header" href="#opt-programs.thunderbird.profiles._name_.search.meta.teams">programs.thunderbird.profiles.&lt;name&gt;.search.meta.teams</a></h2>
 <p>List of team maintainers of each module.
@@ -57580,7 +57581,7 @@ list of lib.teams</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="file:///nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix">/nix/store/83s9fdv49jnphkgckn9sadl0a40zl56v-source/lib/modules/generic/meta-maintainers.nix</a></li>
+<li><a href="file:///nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix">/nix/store/6qdpccb77vmah3jywf8mrskwca05as1z-source/lib/modules/generic/meta-maintainers.nix</a></li>
 </ul>
 <h2 id="opt-programs.thunderbird.profiles._name_.search.order"><a class="header" href="#opt-programs.thunderbird.profiles._name_.search.order">programs.thunderbird.profiles.&lt;name&gt;.search.order</a></h2>
 <p>The order the search engines are listed in. Any engines that
