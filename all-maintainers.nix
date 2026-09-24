@@ -2005,6 +2005,13 @@
     name = "Judson Lester";
     source = "nixpkgs";
   };
+  nyxar77 = {
+    email = "dev@nyxar.space";
+    github = "nyxar77";
+    githubId = 153492661;
+    name = "nyxar77";
+    source = "nixpkgs";
+  };
   ojsef39 = {
     email = "me+github@jhofer.de";
     github = "ojsef39";
