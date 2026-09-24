@@ -100,6 +100,7 @@ in
           pwd-file = lib.mkOption {
             type = with lib.types; nullOr path;
             default = null;
+            example = "/run/secrets/mpd";
             description = ''
               Path to a file containing the password to connect to MPD.
             '';
@@ -107,7 +108,14 @@ in
         };
       });
       default = { };
-      description = "Options to be set on the command line.";
+      description = ''
+        Options to be set on the command line.
+
+        These options are written to the world-readable Nix store as part of
+        the systemd unit, so avoid setting the MPD password with `pwd` here.
+        Use [](#opt-services.mpd-mpris.settings.pwd-file) instead, which
+        mpd-mpris reads when it starts.
+      '';
       example = {
         instance-name = "desktop";
         port = 9876;
