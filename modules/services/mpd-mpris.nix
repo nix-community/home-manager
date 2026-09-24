@@ -93,7 +93,7 @@ in
           };
 
           pwd-file = lib.mkOption {
-            type = with lib.types; nullOr path;
+            type = with lib.types; nullOr (either str path);
             default = null;
             example = "/run/secrets/mpd";
             description = ''
@@ -166,6 +166,12 @@ in
               option = "-${optionName}";
               sep = null;
               explicitBool = false;
+              formatArg =
+                value:
+                if lib.hm.strings.isPathLike value then
+                  toString value
+                else
+                  lib.generators.mkValueStringDefault { } value;
             };
 
             flags = lib.cli.toCommandLine optionFormat cfg.settings;
