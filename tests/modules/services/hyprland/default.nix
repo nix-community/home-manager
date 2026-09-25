@@ -2,6 +2,7 @@
 
 lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-simple-config = ./simple-config.nix;
+  hyprland-check-config-null-package = ./check-config-null-package.nix;
   hyprland-config-type-default-current = ./config-type-default-current.nix;
   hyprland-config-type-default-legacy = ./config-type-default-legacy.nix;
   hyprland-config-type-explicit-hyprlang-current = ./config-type-explicit-hyprlang-current.nix;
@@ -16,6 +17,7 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-submaps-on-dispatch = ./submaps-on-dispatch.nix;
   hyprland-xdph-no-settings = ./xdph-no-settings.nix;
   hyprland-xdph-settings = ./xdph-settings.nix;
+  hyprland-lua-check-config = ./lua-check-config.nix;
   hyprland-lua-config = ./lua-config.nix;
   hyprland-lua-files-assertions = ./lua-files-assertions.nix;
   hyprland-lua-files-config = ./lua-files-config.nix;
