@@ -10,7 +10,7 @@ let
   cfg = config.services.local-ai;
 in
 {
-  meta.maintainers = [ lib.maintainers.ipsavitsky ];
+  meta.maintainers = [ ];
 
   options.services.local-ai = {
     enable = lib.mkEnableOption "LocalAI is the free, Open Source OpenAI alternative.";
