@@ -59,6 +59,7 @@ in
           Description = "Pass libsecret service";
           Documentation = "https://github.com/mdellweg/pass_secret_service";
           PartOf = [ "default.target" ];
+          RequiresMountsFor = [ cfg.storePath ];
         };
 
         Service = {
