@@ -2,6 +2,7 @@
   imports = [
     ./awesome.nix
     ./bspwm
+    ./dwl.nix
     ./exwm.nix
     ./fluxbox.nix
     ./herbstluftwm.nix
