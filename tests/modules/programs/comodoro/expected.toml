@@ -1,14 +1,25 @@
-[test-preset]
-on-server-start = "echo server started"
-on-timer-stop = "echo timer stopped"
-on-work-begin = "echo work cycle began"
-tcp-host = "localhost"
-tcp-port = 8080
+[accounts.example]
+default = true
+precision = "minute"
 
-[[test-preset.cycles]]
+[[accounts.example.cycles]]
 duration = 1500
 name = "Work"
 
-[[test-preset.cycles]]
+[[accounts.example.cycles]]
 duration = 500
 name = "Rest"
+
+[accounts.example.hooks.on-timer-stop]
+command = "echo timer stopped"
+
+[accounts.example.hooks.on-work-begin.notify]
+body = "Work started!"
+summary = "Comodoro"
+
+[accounts.example.socket]
+default = true
+
+[accounts.example.tcp]
+host = "localhost"
+port = 8080
