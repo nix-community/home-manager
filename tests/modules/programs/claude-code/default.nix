@@ -20,6 +20,7 @@
   claude-code-skills-path-not-directory = ./skills-path-not-directory.nix;
   claude-code-skills-store-path = ./skills-store-path.nix;
   claude-code-skills-store-path-dir = ./skills-store-path-dir.nix;
+  claude-code-skills-shared = ./skills-shared.nix;
   claude-code-skills-subdir = ./skills-subdir.nix;
   claude-code-agents-path = ./agents-path.nix;
   claude-code-commands-path = ./commands-path.nix;

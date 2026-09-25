@@ -74,6 +74,20 @@ in
       '';
     };
 
+    enableSkillsIntegration = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the skills declared in
+        {option}`programs.agent-skills` into Claude Code by materializing
+        them under the {file}`skills/` subdirectory of
+        {option}`programs.claude-code.configDir`.
+
+        Shared skills are merged with {option}`programs.claude-code.skills`,
+        with Claude Code skills taking precedence on name conflicts.
+      '';
+    };
+
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
