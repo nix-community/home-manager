@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-98070c91.js";
+            window.path_to_searchindex_js = "searchindex-0fe675c0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-01fe3fb8.js"></script>
@@ -8076,7 +8076,7 @@ null or package</p>
 <pre><code class="language-nix">null
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.gnome.gnome-themes-extra
+<pre><code class="language-nix">pkgs.gnome-themes-extra
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -8326,7 +8326,7 @@ null or package</p>
 <pre><code class="language-nix">null
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.gnome.gnome-themes-extra
+<pre><code class="language-nix">pkgs.gnome-themes-extra
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -8565,7 +8565,7 @@ null or package</p>
 <pre><code class="language-nix">null
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.gnome.gnome-themes-extra
+<pre><code class="language-nix">pkgs.gnome-themes-extra
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -18498,7 +18498,7 @@ null or string</p>
 <pre><code class="language-nix">null
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">"${pkgs.password-store}/bin/pass borg-repo"
+<pre><code class="language-nix">"${pkgs.pass}/bin/pass borg-repo"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -23327,7 +23327,7 @@ package</p>
 <pre><code class="language-nix">pkgs.emacs
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.emacs25-nox
+<pre><code class="language-nix">pkgs.emacs-nox
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -24885,7 +24885,7 @@ attribute set of (submodule)</p>
     handlers = [
       {
         name = "Okular";
-        path = "${pkgs.okular}/bin/okular";
+        path = "${pkgs.kdePackages.okular}/bin/okular";
       }
     ];
     extensions = [ "pdf" ];
@@ -27018,7 +27018,7 @@ attribute set of (submodule)</p>
     handlers = [
       {
         name = "Okular";
-        path = "${pkgs.okular}/bin/okular";
+        path = "${pkgs.kdePackages.okular}/bin/okular";
       }
     ];
     extensions = [ "pdf" ];
@@ -30155,8 +30155,8 @@ null or (submodule)</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  name = "Plata-Noir";
-  package = pkgs.plata-theme;
+  name = "Orchis";
+  package = pkgs.orchis-theme;
 }
 
 </code></pre>
@@ -30173,7 +30173,7 @@ null or package</p>
 <pre><code class="language-nix">null
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.plata-theme
+<pre><code class="language-nix">pkgs.orchis-theme
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -30846,7 +30846,7 @@ null or package</p>
 <pre><code class="language-nix">pkgs.gnupg
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.gnupg23
+<pre><code class="language-nix">pkgs.gnupg24
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -31079,7 +31079,7 @@ null or package</p>
 <pre><code class="language-nix">pkgs.gradle
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.gradle_7
+<pre><code class="language-nix">pkgs.gradle_9
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -31849,9 +31849,9 @@ for more information.</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  language-server.typescript-language-server = with pkgs.nodePackages; {
-    command = "${typescript-language-server}/bin/typescript-language-server";
-    args = [ "--stdio" "--tsserver-path=${typescript}/lib/node_modules/typescript/lib" ];
+  language-server.typescript-language-server = {
+    command = "${pkgs.typescript-language-server}/bin/typescript-language-server";
+    args = [ "--stdio" ];
   };
 
   language = [{
@@ -34059,7 +34059,7 @@ list of package</p>
 <pre><code class="language-nix">[ ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">with pkgs.jetbrains; [ clion pycharm-professional ];
+<pre><code class="language-nix">with pkgs.jetbrains; [ clion pycharm ];
 
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -35399,7 +35399,7 @@ list of package</p>
 <pre><code class="language-nix">[ ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[ pkgs.kakounePlugins.kak-fzf ]
+<pre><code class="language-nix">[ pkgs.kakounePlugins.fzf-kak ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -38659,7 +38659,7 @@ attribute set of (submodule)</p>
     handlers = [
       {
         name = "Okular";
-        path = "${pkgs.okular}/bin/okular";
+        path = "${pkgs.kdePackages.okular}/bin/okular";
       }
     ];
     extensions = [ "pdf" ];
@@ -42075,7 +42075,7 @@ null or package</p>
 <pre><code class="language-nix">pkgs.mpv
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }
+<pre><code class="language-nix">pkgs.mpv.override { mpv-unwrapped = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -43630,7 +43630,7 @@ list of (package or (submodule))</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">with pkgs.vimPlugins;
 [
-  yankring
+  YankRing-vim
   vim-nix
   { plugin = vim-startify;
     config = "let g:startify_change_to_vcs_root = 0";
@@ -46532,9 +46532,9 @@ package</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">pkgs.offlineimap.overridePythonAttrs ( old: {
-  propagatedBuildInputs = old.propagatedBuildInputs
+  dependencies = old.dependencies
     ++ (with pkgs.python3Packages; [
-      requests_oauthlib xdg gpgme]);
+      requests-oauthlib xdg gpg]);
 })
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -48640,7 +48640,7 @@ unspecified value</p>
 <pre><code class="language-nix">[ ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[ pkgs.pidgin-otr pkgs.pidgin-osd ]
+<pre><code class="language-nix">[ pkgs.pidginPackages.pidgin-otr pkgs.pidginPackages.pidgin-osd ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -51127,7 +51127,7 @@ unsigned integer, meaning &gt;=0</p>
 <code>pinentry-gnome3</code> may not work on non-Gnome
 systems. You can fix it by adding the following to your
 system configuration:</p>
-<pre><code class="language-nix">services.dbus.packages = [ pkgs.gcr ];
+<pre><code class="language-nix">services.dbus.packages = [ pkgs.gcr_3 ];
 </code></pre>
 <p><em>Type:</em>
 null or package</p>
@@ -57289,7 +57289,7 @@ package</p>
 <pre><code class="language-nix">pkgs.thunderbird
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.thunderbird-91
+<pre><code class="language-nix">pkgs.thunderbird-esr
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -59934,7 +59934,7 @@ list of (string or package)</p>
 ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[ pkgs.vimPlugins.YankRing ]
+<pre><code class="language-nix">[ pkgs.vimPlugins.YankRing-vim ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -64764,7 +64764,7 @@ list of package</p>
 <pre><code class="language-nix">[ ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">with pkgs.zellijPlugins; [ jbz vim-plugins-navigator zjstatus ]
+<pre><code class="language-nix">with pkgs.zellijPlugins; [ jbz vim-zellij-navigator zjstatus ]
 
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -71224,7 +71224,7 @@ boolean</p>
 <code>pinentry-program</code> in <code>gpg-agent.conf</code>. Beware that
 <code>pinentry-gnome3</code> may not work on non-GNOME systems. You can fix it by
 adding the following to your configuration:</p>
-<pre><code class="language-nix">home.packages = [ pkgs.gcr ];
+<pre><code class="language-nix">home.packages = [ pkgs.gcr_3 ];
 </code></pre>
 <p><em>Type:</em>
 null or package</p>
@@ -73196,9 +73196,6 @@ package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.kdePackages.kdeconnect-kde
 </code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.plasma5Packages.kdeconnect-kde
-</code></pre>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kdeconnect.nix">&lt;home-manager/modules/services/kdeconnect.nix&gt;</a></li>
@@ -73718,7 +73715,7 @@ package</p>
 <pre><code class="language-nix">pkgs.nix
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.nixVersions.unstable
+<pre><code class="language-nix">pkgs.nixVersions.latest
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -76518,7 +76515,7 @@ list of package</p>
 <pre><code class="language-nix">[ ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[ pkgs.noisetorch-ladspa ]
+<pre><code class="language-nix">[ pkgs.rnnoise-plugin ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -90714,7 +90711,7 @@ list of package</p>
 <pre><code class="language-nix">[ ]
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[ pkgs.gnome.gnome-session ]
+<pre><code class="language-nix">[ pkgs.gnome-session ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -91424,9 +91421,6 @@ boolean</p>
 package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.bspwm
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.bspwm-unstable
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -93647,7 +93641,7 @@ unspecified value</p>
 <pre><code class="language-nix">pkgs.haskellPackages
 </code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">pkgs.haskell.packages.ghc784
+<pre><code class="language-nix">pkgs.haskell.packages.ghc912
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

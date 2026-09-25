@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
+            window.path_to_searchindex_js = "../../../searchindex-0fe675c0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -280,9 +280,9 @@ for more information.</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  language-server.typescript-language-server = with pkgs.nodePackages; {
-    command = "${typescript-language-server}/bin/typescript-language-server";
-    args = [ "--stdio" "--tsserver-path=${typescript}/lib/node_modules/typescript/lib" ];
+  language-server.typescript-language-server = {
+    command = "${pkgs.typescript-language-server}/bin/typescript-language-server";
+    args = [ "--stdio" ];
   };
 
   language = [{
