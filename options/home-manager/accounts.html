@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-01fe3fb8.js"></script>
@@ -1801,7 +1801,15 @@ null or string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-accounts.email.accounts._name_.aerc.imapOauth2Params.client_secret"><a class="header" href="#opt-accounts.email.accounts._name_.aerc.imapOauth2Params.client_secret">accounts.email.accounts.&lt;name&gt;.aerc.imapOauth2Params.client_secret</a></h2>
-<p>The OAuth2 client secret.</p>
+<p>The OAuth2 client secret. When the matching <code>imapAuth</code> or
+<code>smtpAuth</code> is <code>oauthbearer</code> or <code>xoauth2</code>, it is URL-encoded
+into the IMAP <code>source</code> or SMTP <code>outgoing</code> URL in
+<code>accounts.conf</code>, which is written to the world-readable
+Nix store, so avoid using a client secret that needs to stay
+private. Aerc uses the output of
+<a href="#opt-accounts.email.accounts._name_.passwordCommand"></a> as the
+access token, or as the refresh token when <code>token_endpoint</code> is
+set, so the token can stay out of the Nix store.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -1879,7 +1887,15 @@ null or string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-accounts.email.accounts._name_.aerc.smtpOauth2Params.client_secret"><a class="header" href="#opt-accounts.email.accounts._name_.aerc.smtpOauth2Params.client_secret">accounts.email.accounts.&lt;name&gt;.aerc.smtpOauth2Params.client_secret</a></h2>
-<p>The OAuth2 client secret.</p>
+<p>The OAuth2 client secret. When the matching <code>imapAuth</code> or
+<code>smtpAuth</code> is <code>oauthbearer</code> or <code>xoauth2</code>, it is URL-encoded
+into the IMAP <code>source</code> or SMTP <code>outgoing</code> URL in
+<code>accounts.conf</code>, which is written to the world-readable
+Nix store, so avoid using a client secret that needs to stay
+private. Aerc uses the output of
+<a href="#opt-accounts.email.accounts._name_.passwordCommand"></a> as the
+access token, or as the refresh token when <code>token_endpoint</code> is
+set, so the token can stay out of the Nix store.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>

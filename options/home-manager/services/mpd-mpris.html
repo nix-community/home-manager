@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -204,6 +204,10 @@ package</p>
 </ul>
 <h2 id="opt-services.mpd-mpris.settings"><a class="header" href="#opt-services.mpd-mpris.settings">services.mpd-mpris.settings</a></h2>
 <p>Options to be set on the command line.</p>
+<p>These options are written to the world-readable Nix store as part of
+the systemd unit, so avoid setting the MPD password with <code>pwd</code> here.
+Use <a href="#opt-services.mpd-mpris.settings.pwd-file"></a> instead, which
+mpd-mpris reads when it starts.</p>
 <p><em>Type:</em>
 open submodule of attribute set of (null or boolean or signed integer or string)</p>
 <p><em>Default:</em></p>
@@ -284,9 +288,12 @@ null or 16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
 <h2 id="opt-services.mpd-mpris.settings.pwd-file"><a class="header" href="#opt-services.mpd-mpris.settings.pwd-file">services.mpd-mpris.settings.pwd-file</a></h2>
 <p>Path to a file containing the password to connect to MPD.</p>
 <p><em>Type:</em>
-null or absolute path</p>
+null or string or absolute path</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"/run/secrets/mpd"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

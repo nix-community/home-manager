@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -206,6 +206,12 @@ package</p>
 <p>Configuration written to a yaml file that is read by glance. See
 <a href="https://github.com/glanceapp/glance/blob/main/docs/configuration.md">https://github.com/glanceapp/glance/blob/main/docs/configuration.md</a>
 for more.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting passwords, API tokens, or authentication secret keys here.
+Glance’s
+<a href="https://github.com/glanceapp/glance/blob/main/docs/configuration.md#other-ways-of-providing-tokenspasswordssecrets">runtime secret substitution</a>
+can read them from environment variables or secret files outside the
+Nix store instead.</p>
 <p><em>Type:</em>
 YAML 1.1 value</p>
 <p><em>Default:</em></p>

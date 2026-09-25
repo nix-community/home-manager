@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -221,6 +221,10 @@ list of absolute path</p>
 <h2 id="opt-services.mopidy.settings"><a class="header" href="#opt-services.mopidy.settings">services.mopidy.settings</a></h2>
 <p>Configuration written to
 <code>$XDG_CONFIG_HOME/mopidy/mopidy.conf</code>.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting passwords or client secrets here. You can keep them in a
+separately managed file outside the Nix store and add its absolute
+path, as a string, to <a href="#opt-services.mopidy.extraConfigFiles"></a>.</p>
 <p>See <a href="https://docs.mopidy.com/en/latest/config/">https://docs.mopidy.com/en/latest/config/</a> for
 more details.</p>
 <p><em>Type:</em>
@@ -243,13 +247,6 @@ attribute set of attribute set of (Mopidy config value)</p>
       ".jpeg"
       ".png"
     ];
-  };
-
-  # Please don't put your mopidy-spotify configuration in the public. :)
-  # Think of your Spotify Premium subscription!
-  spotify = {
-    client_id = "CLIENT_ID";
-    client_secret = "CLIENT_SECRET";
   };
 }
 

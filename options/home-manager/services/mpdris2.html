@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -205,6 +205,12 @@ package</p>
 <h2 id="opt-services.mpdris2.settings"><a class="header" href="#opt-services.mpdris2.settings">services.mpdris2.settings</a></h2>
 <p>Configuration settings for mpDris2. The settings are written to
 <code>$XDG_CONFIG_HOME/mpDris2/mpDris2.conf</code>.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting a private <code>Connection.password</code> here. To keep it out of the
+store, you can set <code>MPD_HOST=password@host</code> in a file referenced by
+<code>systemd.user.services.mpdris2.Service.EnvironmentFile</code>; mpDris2
+then uses the host and password from <code>MPD_HOST</code> instead of the ones
+in this file.</p>
 <p>See <a href="https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf">https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf</a>
 for available settings.</p>
 <p><em>Type:</em>

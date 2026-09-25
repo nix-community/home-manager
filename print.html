@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-01fe3fb8.js"></script>
@@ -4847,7 +4847,15 @@ null or string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-accounts.email.accounts._name_.aerc.imapOauth2Params.client_secret"><a class="header" href="#opt-accounts.email.accounts._name_.aerc.imapOauth2Params.client_secret">accounts.email.accounts.&lt;name&gt;.aerc.imapOauth2Params.client_secret</a></h2>
-<p>The OAuth2 client secret.</p>
+<p>The OAuth2 client secret. When the matching <code>imapAuth</code> or
+<code>smtpAuth</code> is <code>oauthbearer</code> or <code>xoauth2</code>, it is URL-encoded
+into the IMAP <code>source</code> or SMTP <code>outgoing</code> URL in
+<code>accounts.conf</code>, which is written to the world-readable
+Nix store, so avoid using a client secret that needs to stay
+private. Aerc uses the output of
+<a href="#opt-accounts.email.accounts._name_.passwordCommand"></a> as the
+access token, or as the refresh token when <code>token_endpoint</code> is
+set, so the token can stay out of the Nix store.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -4925,7 +4933,15 @@ null or string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aerc">&lt;home-manager/modules/programs/aerc&gt;</a></li>
 </ul>
 <h2 id="opt-accounts.email.accounts._name_.aerc.smtpOauth2Params.client_secret"><a class="header" href="#opt-accounts.email.accounts._name_.aerc.smtpOauth2Params.client_secret">accounts.email.accounts.&lt;name&gt;.aerc.smtpOauth2Params.client_secret</a></h2>
-<p>The OAuth2 client secret.</p>
+<p>The OAuth2 client secret. When the matching <code>imapAuth</code> or
+<code>smtpAuth</code> is <code>oauthbearer</code> or <code>xoauth2</code>, it is URL-encoded
+into the IMAP <code>source</code> or SMTP <code>outgoing</code> URL in
+<code>accounts.conf</code>, which is written to the world-readable
+Nix store, so avoid using a client secret that needs to stay
+private. Aerc uses the output of
+<a href="#opt-accounts.email.accounts._name_.passwordCommand"></a> as the
+access token, or as the refresh token when <code>token_endpoint</code> is
+set, so the token can stay out of the Nix store.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -12532,6 +12548,12 @@ null or package</p>
 <h2 id="opt-programs.abaddon.settings"><a class="header" href="#opt-programs.abaddon.settings">programs.abaddon.settings</a></h2>
 <p>Configuration settings for abaddon. All the available options can be found here:
 <a href="https://github.com/uowuo/abaddon?tab=readme-ov-file#settings">https://github.com/uowuo/abaddon?tab=readme-ov-file#settings</a></p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting a Discord login token in <code>discord.token</code>. Abaddon rewrites
+<code>abaddon.ini</code> when it exits, which replaces the file Home
+Manager manages, so if you log in from Abaddon’s Discord menu,
+consider leaving this option empty and letting Abaddon manage
+<code>abaddon.ini</code>.</p>
 <p><em>Type:</em>
 attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
 <p><em>Default:</em></p>
@@ -12541,7 +12563,6 @@ attribute set of section of an INI file (attrs of INI atom (null, bool, int, flo
 <pre><code class="language-nix">{
   discord = {
     autoconnect = true;
-    token = "MZ1yGvKTjE0rY0cV8i47CjAa.uRHQPq.Xb1Mk2nEhe-4iUcrGOuegj57zMC";
   };
   gui = {
     alt_menu = true;
@@ -13154,6 +13175,9 @@ null or package</p>
 <h2 id="opt-programs.aiac.settings"><a class="header" href="#opt-programs.aiac.settings">programs.aiac.settings</a></h2>
 <p>Configuration settings for aiac. All the available options can be found here:
 <a href="https://github.com/gofireflyio/aiac/?tab=readme-ov-file#configuration">https://github.com/gofireflyio/aiac/?tab=readme-ov-file#configuration</a>.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting a literal API key here. aiac expands environment variables
+in <code>api_key</code>, so you can reference one instead, as in the example.</p>
 <p><em>Type:</em>
 TOML value</p>
 <p><em>Default:</em></p>
@@ -13167,7 +13191,7 @@ TOML value</p>
       url = "http://localhost:11434/api";
     };
     official_openai = {
-      api_key = "API KEY";
+      api_key = "$OPENAI_API_KEY";
       default_model = "gpt-4o";
       type = "openai";
     };
@@ -13501,6 +13525,10 @@ null or package</p>
 <h2 id="opt-programs.algia.settings"><a class="header" href="#opt-programs.algia.settings">programs.algia.settings</a></h2>
 <p>Configuration settings for algia. All the available options can be found here:
 <a href="https://github.com/mattn/algia?tab=readme-ov-file#configuration">https://github.com/mattn/algia?tab=readme-ov-file#configuration</a></p>
+<p>The generated <code>config.json</code> is written to the world-readable
+Nix store, so other local users can read a <code>privatekey</code> set here. If
+you need to set a private key, consider leaving this option empty
+and managing <code>config.json</code> outside Home Manager.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>
@@ -13508,7 +13536,6 @@ JSON value</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  privatekey = "nsecXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
   relays = {
     "wss =//relay-jp.nostr.wirednet.jp" = {
       read = true;
@@ -20071,7 +20098,17 @@ attribute set of (package or absolute path)</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/claude-code/options.nix">&lt;home-manager/modules/programs/claude-code/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.claude-code.mcpServers"><a class="header" href="#opt-programs.claude-code.mcpServers">programs.claude-code.mcpServers</a></h2>
-<p>MCP (Model Context Protocol) servers configuration</p>
+<p>MCP (Model Context Protocol) servers configuration.</p>
+<p>These values are written to the world-readable Nix store, so avoid
+putting secrets in <code>env</code>, <code>headers</code>, <code>args</code>, or <code>url</code>.</p>
+<p>For a local <code>command</code> server that takes a secret through an
+environment variable, you can use <a href="#opt-programs.mcp.servers"></a> with
+<code>env.&lt;NAME&gt;.file = "/run/secrets/..."</code> and enable both
+<a href="#opt-programs.mcp.enable"></a> and
+<a href="#opt-programs.claude-code.enableMcpIntegration"></a>. Home Manager then
+wraps the command so it reads the file at startup. This covers
+environment variables of local servers, not credentials in
+arguments, URLs, or headers.</p>
 <p><em>Type:</em>
 attribute set of (JSON value)</p>
 <p><em>Default:</em></p>
@@ -20090,12 +20127,9 @@ attribute set of (JSON value)</p>
       "-y"
       "@bytebase/dbhub"
       "--dsn"
-      "postgresql://user:pass@localhost:5432/db"
+      "postgresql://localhost:5432/db"
     ];
     command = "npx";
-    env = {
-      DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-    };
     type = "stdio";
   };
   filesystem = {
@@ -22840,7 +22874,17 @@ string <em>(read only)</em></p>
 </ul>
 <h2 id="opt-programs.docker-cli.settings"><a class="header" href="#opt-programs.docker-cli.settings">programs.docker-cli.settings</a></h2>
 <p>Available configuration options for the Docker CLI see:
-&lt;https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties</p>
+<a href="https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties">https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties</a></p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting registry credentials or proxy passwords here. For registry
+credentials, Docker’s <code>credsStore</code> or <code>credHelpers</code> settings can keep
+them in a credential helper instead; see
+<a href="https://docs.docker.com/reference/cli/docker/login/#credential-stores">Docker credential stores</a>.
+Because Home Manager links <code>config.json</code> read-only,
+<code>docker login</code> still reports an error when it adds a registry to
+that file, even after the credential helper has stored the
+credential. You can store the credential with the helper’s own
+<code>store</code> command instead.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>
@@ -29837,6 +29881,11 @@ file. Supported server types:</p>
 </ul>
 <p>The <code>tools</code> field accepts <code>["*"]</code> to enable all tools or a list of
 specific tool names.</p>
+<p>These values are written to the world-readable Nix store, so avoid
+putting API keys or tokens in <code>headers</code>, <code>env</code>, or other values. For
+a local server that reads a secret from an environment variable, you
+can set <code>env.&lt;NAME&gt;.file = "/run/secrets/..."</code> instead; Home Manager
+then wraps the command so it reads the file at startup.</p>
 <p>See <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers">https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers</a>
 for the documentation.</p>
 <p><em>Type:</em>
@@ -29855,7 +29904,6 @@ attribute set of (JSON value)</p>
   context7 = {
     type = "http";
     url = "https://mcp.context7.com/mcp";
-    headers = { CONTEXT7_API_KEY = "YOUR-API-KEY"; };
     tools = [ "*" ];
   };
 }
@@ -69355,6 +69403,12 @@ boolean</p>
 <a href="http://davmail.sourceforge.net/serversetup.html">http://davmail.sourceforge.net/serversetup.html</a>
 and <a href="http://davmail.sourceforge.net/advanced.html">http://davmail.sourceforge.net/advanced.html</a>
 for details on supported values.</p>
+<p>The generated properties file is written to the world-readable Nix
+store, so avoid putting secrets such as <code>davmail.proxyPassword</code>,
+<code>davmail.ssl.keystorePass</code>, <code>davmail.ssl.keyPass</code>, or OAuth refresh
+tokens here. By default, the module points
+<code>davmail.oauth.tokenFilePath</code> at <code>$XDG_STATE_HOME/davmail-tokens</code>
+so that persisted tokens stay out of the store.</p>
 <p><em>Type:</em>
 attribute set of (string, package, bool, int or float)</p>
 <p><em>Default:</em></p>
@@ -70863,6 +70917,12 @@ package</p>
 <p>Configuration written to a yaml file that is read by glance. See
 <a href="https://github.com/glanceapp/glance/blob/main/docs/configuration.md">https://github.com/glanceapp/glance/blob/main/docs/configuration.md</a>
 for more.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting passwords, API tokens, or authentication secret keys here.
+Glance’s
+<a href="https://github.com/glanceapp/glance/blob/main/docs/configuration.md#other-ways-of-providing-tokenspasswordssecrets">runtime secret substitution</a>
+can read them from environment variables or secret files outside the
+Nix store instead.</p>
 <p><em>Type:</em>
 YAML 1.1 value</p>
 <p><em>Default:</em></p>
@@ -73581,7 +73641,12 @@ package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/local-ai.nix">&lt;home-manager/modules/services/local-ai.nix&gt;</a></li>
 </ul>
 <h2 id="opt-services.local-ai.environment"><a class="header" href="#opt-services.local-ai.environment">services.local-ai.environment</a></h2>
-<p>Additional environment passed to local-ai service. Used to configure local-ai</p>
+<p>Additional environment variables for the local-ai service.</p>
+<p>These variables are written to the world-readable Nix store as
+<code>Environment=</code> lines in the systemd unit, so avoid putting secrets
+such as <code>LOCALAI_API_KEY</code> here. You can set
+<code>systemd.user.services.local-ai.Service.EnvironmentFile</code> to a file
+outside the store instead.</p>
 <p>See <a href="https://localai.io/docs/reference/cli-reference/">https://localai.io/docs/reference/cli-reference/</a> for available options.</p>
 <p><em>Type:</em>
 attribute set of string</p>
@@ -74099,6 +74164,10 @@ list of absolute path</p>
 <h2 id="opt-services.mopidy.settings"><a class="header" href="#opt-services.mopidy.settings">services.mopidy.settings</a></h2>
 <p>Configuration written to
 <code>$XDG_CONFIG_HOME/mopidy/mopidy.conf</code>.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting passwords or client secrets here. You can keep them in a
+separately managed file outside the Nix store and add its absolute
+path, as a string, to <a href="#opt-services.mopidy.extraConfigFiles"></a>.</p>
 <p>See <a href="https://docs.mopidy.com/en/latest/config/">https://docs.mopidy.com/en/latest/config/</a> for
 more details.</p>
 <p><em>Type:</em>
@@ -74121,13 +74190,6 @@ attribute set of attribute set of (Mopidy config value)</p>
       ".jpeg"
       ".png"
     ];
-  };
-
-  # Please don't put your mopidy-spotify configuration in the public. :)
-  # Think of your Spotify Premium subscription!
-  spotify = {
-    client_id = "CLIENT_ID";
-    client_secret = "CLIENT_SECRET";
   };
 }
 
@@ -74382,6 +74444,10 @@ package</p>
 </ul>
 <h2 id="opt-services.mpd-mpris.settings"><a class="header" href="#opt-services.mpd-mpris.settings">services.mpd-mpris.settings</a></h2>
 <p>Options to be set on the command line.</p>
+<p>These options are written to the world-readable Nix store as part of
+the systemd unit, so avoid setting the MPD password with <code>pwd</code> here.
+Use <a href="#opt-services.mpd-mpris.settings.pwd-file"></a> instead, which
+mpd-mpris reads when it starts.</p>
 <p><em>Type:</em>
 open submodule of attribute set of (null or boolean or signed integer or string)</p>
 <p><em>Default:</em></p>
@@ -74462,9 +74528,12 @@ null or 16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
 <h2 id="opt-services.mpd-mpris.settings.pwd-file"><a class="header" href="#opt-services.mpd-mpris.settings.pwd-file">services.mpd-mpris.settings.pwd-file</a></h2>
 <p>Path to a file containing the password to connect to MPD.</p>
 <p><em>Type:</em>
-null or absolute path</p>
+null or string or absolute path</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"/run/secrets/mpd"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -74500,6 +74569,12 @@ package</p>
 <h2 id="opt-services.mpdris2.settings"><a class="header" href="#opt-services.mpdris2.settings">services.mpdris2.settings</a></h2>
 <p>Configuration settings for mpDris2. The settings are written to
 <code>$XDG_CONFIG_HOME/mpDris2/mpDris2.conf</code>.</p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting a private <code>Connection.password</code> here. To keep it out of the
+store, you can set <code>MPD_HOST=password@host</code> in a file referenced by
+<code>systemd.user.services.mpdris2.Service.EnvironmentFile</code>; mpDris2
+then uses the host and password from <code>MPD_HOST</code> instead of the ones
+in this file.</p>
 <p>See <a href="https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf">https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf</a>
 for available settings.</p>
 <p><em>Type:</em>

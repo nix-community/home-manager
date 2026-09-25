@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -205,6 +205,10 @@ null or package</p>
 <h2 id="opt-programs.algia.settings"><a class="header" href="#opt-programs.algia.settings">programs.algia.settings</a></h2>
 <p>Configuration settings for algia. All the available options can be found here:
 <a href="https://github.com/mattn/algia?tab=readme-ov-file#configuration">https://github.com/mattn/algia?tab=readme-ov-file#configuration</a></p>
+<p>The generated <code>config.json</code> is written to the world-readable
+Nix store, so other local users can read a <code>privatekey</code> set here. If
+you need to set a private key, consider leaving this option empty
+and managing <code>config.json</code> outside Home Manager.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>
@@ -212,7 +216,6 @@ JSON value</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  privatekey = "nsecXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
   relays = {
     "wss =//relay-jp.nostr.wirednet.jp" = {
       read = true;

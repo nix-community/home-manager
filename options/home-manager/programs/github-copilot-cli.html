@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -378,6 +378,11 @@ file. Supported server types:</p>
 </ul>
 <p>The <code>tools</code> field accepts <code>["*"]</code> to enable all tools or a list of
 specific tool names.</p>
+<p>These values are written to the world-readable Nix store, so avoid
+putting API keys or tokens in <code>headers</code>, <code>env</code>, or other values. For
+a local server that reads a secret from an environment variable, you
+can set <code>env.&lt;NAME&gt;.file = "/run/secrets/..."</code> instead; Home Manager
+then wraps the command so it reads the file at startup.</p>
 <p>See <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers">https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers</a>
 for the documentation.</p>
 <p><em>Type:</em>
@@ -396,7 +401,6 @@ attribute set of (JSON value)</p>
   context7 = {
     type = "http";
     url = "https://mcp.context7.com/mcp";
-    headers = { CONTEXT7_API_KEY = "YOUR-API-KEY"; };
     tools = [ "*" ];
   };
 }

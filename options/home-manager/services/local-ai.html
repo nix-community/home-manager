@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -203,7 +203,12 @@ package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/local-ai.nix">&lt;home-manager/modules/services/local-ai.nix&gt;</a></li>
 </ul>
 <h2 id="opt-services.local-ai.environment"><a class="header" href="#opt-services.local-ai.environment">services.local-ai.environment</a></h2>
-<p>Additional environment passed to local-ai service. Used to configure local-ai</p>
+<p>Additional environment variables for the local-ai service.</p>
+<p>These variables are written to the world-readable Nix store as
+<code>Environment=</code> lines in the systemd unit, so avoid putting secrets
+such as <code>LOCALAI_API_KEY</code> here. You can set
+<code>systemd.user.services.local-ai.Service.EnvironmentFile</code> to a file
+outside the store instead.</p>
 <p>See <a href="https://localai.io/docs/reference/cli-reference/">https://localai.io/docs/reference/cli-reference/</a> for available options.</p>
 <p><em>Type:</em>
 attribute set of string</p>

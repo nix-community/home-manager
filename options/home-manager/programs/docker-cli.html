@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -240,7 +240,17 @@ string <em>(read only)</em></p>
 </ul>
 <h2 id="opt-programs.docker-cli.settings"><a class="header" href="#opt-programs.docker-cli.settings">programs.docker-cli.settings</a></h2>
 <p>Available configuration options for the Docker CLI see:
-&lt;https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties</p>
+<a href="https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties">https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties</a></p>
+<p>These settings are written to the world-readable Nix store, so avoid
+putting registry credentials or proxy passwords here. For registry
+credentials, Docker’s <code>credsStore</code> or <code>credHelpers</code> settings can keep
+them in a credential helper instead; see
+<a href="https://docs.docker.com/reference/cli/docker/login/#credential-stores">Docker credential stores</a>.
+Because Home Manager links <code>config.json</code> read-only,
+<code>docker login</code> still reports an error when it adds a registry to
+that file, even after the credential helper has stored the
+credential. You can store the credential with the helper’s own
+<code>store</code> command instead.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>

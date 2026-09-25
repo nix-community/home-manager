@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -221,6 +221,12 @@ boolean</p>
 <a href="http://davmail.sourceforge.net/serversetup.html">http://davmail.sourceforge.net/serversetup.html</a>
 and <a href="http://davmail.sourceforge.net/advanced.html">http://davmail.sourceforge.net/advanced.html</a>
 for details on supported values.</p>
+<p>The generated properties file is written to the world-readable Nix
+store, so avoid putting secrets such as <code>davmail.proxyPassword</code>,
+<code>davmail.ssl.keystorePass</code>, <code>davmail.ssl.keyPass</code>, or OAuth refresh
+tokens here. By default, the module points
+<code>davmail.oauth.tokenFilePath</code> at <code>$XDG_STATE_HOME/davmail-tokens</code>
+so that persisted tokens stay out of the store.</p>
 <p><em>Type:</em>
 attribute set of (string, package, bool, int or float)</p>
 <p><em>Default:</em></p>

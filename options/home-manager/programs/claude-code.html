@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4ac13eec.js";
+            window.path_to_searchindex_js = "../../../searchindex-98070c91.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -490,7 +490,17 @@ attribute set of (package or absolute path)</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/claude-code/options.nix">&lt;home-manager/modules/programs/claude-code/options.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.claude-code.mcpServers"><a class="header" href="#opt-programs.claude-code.mcpServers">programs.claude-code.mcpServers</a></h2>
-<p>MCP (Model Context Protocol) servers configuration</p>
+<p>MCP (Model Context Protocol) servers configuration.</p>
+<p>These values are written to the world-readable Nix store, so avoid
+putting secrets in <code>env</code>, <code>headers</code>, <code>args</code>, or <code>url</code>.</p>
+<p>For a local <code>command</code> server that takes a secret through an
+environment variable, you can use <a href="#opt-programs.mcp.servers"></a> with
+<code>env.&lt;NAME&gt;.file = "/run/secrets/..."</code> and enable both
+<a href="#opt-programs.mcp.enable"></a> and
+<a href="#opt-programs.claude-code.enableMcpIntegration"></a>. Home Manager then
+wraps the command so it reads the file at startup. This covers
+environment variables of local servers, not credentials in
+arguments, URLs, or headers.</p>
 <p><em>Type:</em>
 attribute set of (JSON value)</p>
 <p><em>Default:</em></p>
@@ -509,12 +519,9 @@ attribute set of (JSON value)</p>
       "-y"
       "@bytebase/dbhub"
       "--dsn"
-      "postgresql://user:pass@localhost:5432/db"
+      "postgresql://localhost:5432/db"
     ];
     command = "npx";
-    env = {
-      DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-    };
     type = "stdio";
   };
   filesystem = {
