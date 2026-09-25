@@ -454,7 +454,7 @@ in
       description = ''
         Whether extensions can be installed or updated manually
         or by ${name}. Mutually exclusive to
-        ${moduleName}.profiles.
+        ${moduleName}.profiles.*.extensions.
       '';
     };
 
@@ -475,27 +475,33 @@ in
       type = types.attrsOf profileType;
       default = { };
       description = ''
-        A list of all ${name} profiles. Mutually exclusive
-        to ${moduleName}.mutableExtensionsDir
+        A list of all ${name} profiles. Extensions defined on
+        non-default profiles are mutually exclusive to
+        ${moduleName}.mutableExtensionsDir.
       '';
     };
   };
 
   config = mkIf cfg.enable {
-    warnings = [
-      (mkIf (
-        allProfilesExceptDefault != { } && cfg.mutableExtensionsDir
-      ) "${moduleName}.mutableExtensionsDir can be used only if no profiles apart from default are set.")
-      (mkIf
-        (
+    assertions = [
+      {
+        assertion =
+          !(
+            cfg.mutableExtensionsDir
+            && lib.any (v: v.extensions != [ ]) (lib.attrValues allProfilesExceptDefault)
+          );
+        message = "${moduleName}.mutableExtensionsDir cannot be true if any non-default profile specifies extensions.";
+      }
+      {
+        assertion = (
           (lib.filterAttrs (
             _n: v:
             (v ? enableExtensionUpdateCheck || v ? enableUpdateCheck)
             && (v.enableExtensionUpdateCheck != null || v.enableUpdateCheck != null)
-          ) allProfilesExceptDefault) != { }
-        )
-        "The option ${moduleName}.profiles.*.enableExtensionUpdateCheck and option ${moduleName}.profiles.*.enableUpdateCheck is invalid for all profiles except default."
-      )
+          ) allProfilesExceptDefault) == { }
+        );
+        message = "The option ${moduleName}.profiles.*.enableExtensionUpdateCheck and option ${moduleName}.profiles.*.enableUpdateCheck is invalid for all profiles except default.";
+      }
     ];
 
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
@@ -633,7 +639,7 @@ in
 
       # We write extensions.json for all profiles, except the default profile,
       # since that is handled by code below.
-      (mkIf (allProfilesExceptDefault != { }) (
+      (mkIf (allProfilesExceptDefault != { } && !cfg.mutableExtensionsDir) (
         lib.mapAttrs' (
           n: v:
           lib.nameValuePair "${profileDir n}/extensions.json" {
@@ -654,8 +660,11 @@ in
               else
                 builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
             );
+          allProfilesHaveNoExtensions = lib.all (v: v.extensions == [ ]) (lib.attrValues cfg.profiles);
         in
-        if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
+        if (cfg.mutableExtensionsDir && allProfilesHaveNoExtensions) then
+          { }
+        else if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
           # Mutable extensions dir can only occur when only default profile is set.
           # Force regenerating extensions.json using the below method,
           # causes VSCode to create the extensions.json with all the extensions
