@@ -1,4 +1,6 @@
 {
+  imports = [ ./opencode-stubs.nix ];
+
   programs.opencode = {
     enable = true;
     settings = {
@@ -8,6 +10,7 @@
     tui = {
       theme = "opencode";
     };
+    validateFiles.tui = true;
   };
   nmt.script = ''
     assertFileExists home-files/.config/opencode/opencode.json

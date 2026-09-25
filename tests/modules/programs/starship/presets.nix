@@ -1,15 +1,24 @@
 { pkgs, ... }:
 let
-  starshipPackage = pkgs.runCommand "starship-test-package" { } ''
+  starshipPackage =
+    pkgs.runCommand "starship-test-package"
+      {
+        passthru.jsonschema = {
+          config = ./config-schema.json;
+        };
+      }
+      ''
         mkdir -p "$out/share/starship/presets"
         cat > "$out/share/starship/presets/nerd-font-symbols.toml" <<'EOF'
-    format = "$all"
-    [directory]
-    style = "blue"
-    EOF
-  '';
+        format = "$all"
+        [directory]
+        style = "blue"
+        EOF
+      '';
 in
 {
+  imports = [ ./starship-stubs.nix ];
+
   programs.starship = {
     enable = true;
     package = starshipPackage;
@@ -18,6 +27,7 @@ in
       add_newline = false;
       scan_timeout = 10;
     };
+    validateFiles.config = true;
   };
 
   nmt.script = ''
