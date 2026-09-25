@@ -57,18 +57,20 @@ let
         ''
           set -euo pipefail
 
-          if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
-            echo "No flake.nix found in $FLAKE_DIR." >&2
-            exit 1
-          fi
+          if [[ "$FLAKE_URL" == "." ]]; then
+            if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
+              echo "No flake.nix found in $FLAKE_DIR." >&2
+              exit 1
+            fi
 
-          echo "Changing to flake directory $FLAKE_DIR"
-          cd "$FLAKE_DIR"
+            echo "Changing to flake directory $FLAKE_DIR"
+            cd "$FLAKE_DIR"
+          fi
 
           ${preSwitchScript}
 
           echo "Upgrade Home Manager"
-          home-manager switch --flake . ${hmExtraArgs}
+          home-manager switch --flake "$FLAKE_URL" ${hmExtraArgs}
         ''
       else
         ''
@@ -125,6 +127,15 @@ in
         description = ''
           Directory containing flake.nix.
           Also check `services.home-manager.autoUpgrade.useFlake` option.
+        '';
+      };
+
+      flakeUrl = lib.mkOption {
+        type = lib.types.str;
+        default = ".";
+        example = "github:your-user/dotfiles";
+        description = ''
+          git repository for your flake.
         '';
       };
 
@@ -200,6 +211,7 @@ in
 
           Environment = lib.mkIf cfg.useFlake [
             "FLAKE_DIR=${cfg.flakeDir}"
+            "FLAKE_URL=${cfg.flakeUrl}"
           ];
         };
       };
