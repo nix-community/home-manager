@@ -7,6 +7,7 @@
 # [1] https://github.com/NixOS/nixpkgs/blob/737449404589e4a80b3fa99ecbc6d4d803c1f6dc/maintainers/maintainer-list.nix#LC1
 {
   # keep-sorted start case=no numeric=no block=yes
+
   _3ulalia = {
     name = "Eulalia del Sol";
     email = "3ulalia@proton.me";
