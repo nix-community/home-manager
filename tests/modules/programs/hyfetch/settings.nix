@@ -1,4 +1,21 @@
 {
+  xdgEnable ? true,
+  configDir ? ".config",
+}:
+{ config, pkgs, ... }:
+let
+  darwinConfigFile = "Library/Application Support/hyfetch.json";
+  xdgConfigFile = "${configDir}/hyfetch.json";
+  expectedConfigFile = if pkgs.stdenv.hostPlatform.isDarwin then darwinConfigFile else xdgConfigFile;
+  unexpectedConfigFile =
+    if pkgs.stdenv.hostPlatform.isDarwin then xdgConfigFile else darwinConfigFile;
+in
+{
+  xdg = {
+    enable = xdgEnable;
+    configHome = "${config.home.homeDirectory}/${configDir}";
+  };
+
   programs.hyfetch = {
     enable = true;
 
@@ -16,6 +33,7 @@
   };
 
   nmt.script = ''
-    assertFileContent home-files/.config/hyfetch.json ${./hyfetch.json}
+    assertFileContent "home-files/${expectedConfigFile}" ${./hyfetch.json}
+    assertPathNotExists "home-files/${unexpectedConfigFile}"
   '';
 }
