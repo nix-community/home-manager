@@ -27,6 +27,7 @@ _arguments \
   '--update-input[update flake input]:NAME:()' \
   '--experimental-features[set experimental Nix features]:VALUE:()' \
   '--extra-experimental-features:[append to experimental Nix features]:VALUE:()' \
+  '--reference-lock-file[flake.lock path]:VALUE:()' \
   '1: :->cmds' \
   '*:: :->args' && ret=0
 
@@ -72,6 +73,7 @@ case "$state" in
           '--override-input[override flake input]:NAME VALUE:()' \
           '--update-input[update flake input]:NAME:()' \
           '--experimental-features[set experimental Nix features]:VALUE:()' \
+          '--reference-lock-file[flake.lock path]:VALUE:()' \
           '--extra-experimental-features:[append to experimental Nix features]:VALUE:()'
         ;;
       init)
