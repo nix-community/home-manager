@@ -1,4 +1,9 @@
-{ config, realPkgs, ... }:
+{
+  config,
+  lib,
+  realPkgs,
+  ...
+}:
 
 let
 
@@ -21,6 +26,21 @@ in
         };
       };
     };
+  };
+
+  test.asserts.warnings.expected = (import ./warnings.nix { inherit lib; }) {
+    file = ./patterns-configuration.nix;
+    entries = [
+      {
+        from = "location.repositories";
+        to = "settings.repositories";
+        changed = true;
+      }
+      {
+        from = "location.patterns";
+        to = "settings.patterns";
+      }
+    ];
   };
 
   nmt.script = ''
