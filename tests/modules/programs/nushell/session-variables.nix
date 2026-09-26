@@ -11,6 +11,7 @@ let
     export __NIXOS_SET_ENVIRONMENT_DONE=1
     export SYSTEM_VALUE="$HOME/$USER"
     export PATH="/system/bin:$PATH"
+    unset REMOVED_BY_SYSTEM
   '';
   expected = pkgs.writeText "expected-session-variables" ''
     /runtime/home/runtime-user
@@ -19,6 +20,7 @@ let
     home-is-set
     /runtime/home/.local/bin:/system/bin
     env-file-loaded
+    false
   '';
 in
 {
@@ -60,6 +62,7 @@ in
         HOME=/runtime/home \
         USER=runtime-user \
         PATH=/initial/bin \
+        REMOVED_BY_SYSTEM=inherited \
         ${lib.getExe realPkgs.nushell} \
           --no-history \
           --config /dev/null \
@@ -72,9 +75,33 @@ in
               $env.ALTERNATE_VALUE
               ($env.PATH | first 2 | str join (char esep))
               $env.USER_ENV_FILE
+              ("REMOVED_BY_SYSTEM" in $env)
             ] | str join (char newline))
           ' > "$actual"
 
       assertFileContent "$actual" ${expected}
+
+      # tmux on nix-darwin clears the marker to request reinitialization.
+      for marker in __NIX_DARWIN_SET_ENVIRONMENT_DONE \
+        __NIXOS_SET_ENVIRONMENT_DONE; do
+        env -i \
+          HOME=/runtime/home \
+          USER=runtime-user \
+          PATH=/initial/bin \
+          __HM_SESS_VARS_SOURCED=1 \
+          "$marker=" \
+          REMOVED_BY_SYSTEM=inherited \
+          ${lib.getExe realPkgs.nushell} \
+            --no-history \
+            --config /dev/null \
+            --env-config "$(_abs ${envFile})" \
+            --commands '
+              use std/assert
+              assert equal $env.SYSTEM_VALUE /runtime/home/runtime-user
+              assert equal ($env.PATH | first) /system/bin
+              assert ("EXPANDED_HOME" not-in $env)
+              assert ("REMOVED_BY_SYSTEM" not-in $env)
+            '
+      done
     '';
 }
