@@ -49,14 +49,14 @@ let
       '';
       shouldLoadSystemEnvironment = lib.optionalString hasSystemEnvironment ''
         or (
-          "__NIXOS_SET_ENVIRONMENT_DONE" not-in $env
-          and "__NIX_DARWIN_SET_ENVIRONMENT_DONE" not-in $env
+          ($env.__NIXOS_SET_ENVIRONMENT_DONE? | is-empty)
+          and ($env.__NIX_DARWIN_SET_ENVIRONMENT_DONE? | is-empty)
         )
       '';
     in
     pkgs.writeText "hm-session-vars.nu" ''
       if (
-        "__HM_SESS_VARS_SOURCED" not-in $env
+        ($env.__HM_SESS_VARS_SOURCED? | is-empty)
         ${shouldLoadSystemEnvironment}
       ) {
         let captured = (
@@ -85,17 +85,25 @@ let
           | first
           | split row (char nul)
           | compact --empty
+          | parse --regex '(?s)^(?<name>[^=]+)=(?<value>.*)$'
+          | transpose --header-row --as-record
         )
-        let changed = (
+        let after = (
           $sections
           | last
           | split row (char nul)
           | compact --empty
-          | where { |entry| $entry not-in $before }
           | parse --regex '(?s)^(?<name>[^=]+)=(?<value>.*)$'
-          | where { |entry| $entry.name not-in ["_" "_AST_FEATURES" "SHLVL"] }
           | transpose --header-row --as-record
         )
+        let ignored = ["_" "_AST_FEATURES" "SHLVL"]
+        let changed = ($after | items { |name, value|
+          if $name not-in $ignored and (
+            $name not-in $before or ($before | get $name) != $value
+          ) {
+            {name: $name, value: $value}
+          }
+        } | compact | transpose --header-row --as-record)
         let changed = if "PATH" in $changed {
           $changed | update PATH ($changed.PATH | split row (char esep))
         } else {
@@ -103,6 +111,11 @@ let
         }
 
         load-env $changed
+        for name in ($before | columns) {
+          if $name not-in $after and $name not-in $ignored {
+            hide-env --ignore-errors $name
+          }
+        }
       }
     '';
 
