@@ -81,3 +81,15 @@ lib.mapAttrs (
     programs.librewolf.package = lib.mkDefault mkLibrewolf;
   }
 ) tests
+// {
+  # Outside the wrapper above, which forces mozilla.librewolfNativeMessagingHosts
+  # to [ ] and would hide the native messaging assertions.
+  "librewolf-settings-default" = import ./librewolf-settings.nix { };
+  "librewolf-settings-legacy-custom" = import ./librewolf-settings.nix {
+    configPath = ".librewolf-custom";
+  };
+  "librewolf-settings-xdg" = import ./librewolf-settings.nix {
+    configPath = ".config/librewolf/librewolf";
+    linuxOverridesDir = ".config/librewolf/librewolf";
+  };
+}
