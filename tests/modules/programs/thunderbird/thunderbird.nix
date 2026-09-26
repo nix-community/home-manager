@@ -175,6 +175,7 @@
           ];
         };
         accountsOrder = [ "account1" ];
+        unifiedFolders.enable = true;
         calendarAccountsOrder = [ "calendar1" ];
       };
     };
