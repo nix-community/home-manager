@@ -8,6 +8,10 @@
 let
   inherit (lib) literalExpression mkOption types;
 
+  legacyNotmuch =
+    config.programs.aerc.package != null
+    && lib.versionOlder (lib.getVersion config.programs.aerc.package) "0.22.0";
+
   mapAttrNames =
     f: attr:
     lib.listToAttrs (
@@ -193,11 +197,15 @@ in
           "";
 
       mkConfig = {
-        notmuch = cfg: {
-          source = "notmuch://${config.accounts.email.maildirBasePath}";
-          maildir-store = "${config.accounts.email.maildirBasePath}";
-          maildir-account-path = "${cfg.maildir.path}";
-        };
+        notmuch =
+          cfg:
+          {
+            source = "notmuch://${lib.optionalString legacyNotmuch config.accounts.email.maildirBasePath}";
+            maildir-account-path = cfg.maildir.path;
+          }
+          // lib.optionalAttrs legacyNotmuch {
+            maildir-store = config.accounts.email.maildirBasePath;
+          };
         maildir = cfg: {
           source = "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };

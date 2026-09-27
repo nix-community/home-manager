@@ -91,3 +91,8 @@ from = test <test@email.invalid>
 outgoing = imap+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
 postpone = dRaFts
 source = smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
+
+[q_notmuch]
+from = Foo Bar <addr@mail.invalid>
+maildir-account-path = custom-notmuch
+source = notmuch://
