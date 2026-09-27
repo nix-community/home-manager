@@ -5,8 +5,44 @@ let
       echo test > $out/share/icons/catppuccin-macchiato-blue-cursors/index.theme
     '';
   };
+
+  cursorSwayTest =
+    { name, expected }:
+    { config, lib, ... }:
+    {
+      home.pointerCursor = {
+        enable = true;
+        package = config.lib.test.mkStubPackage package;
+        inherit name;
+        size = 64;
+        sway.enable = true;
+      };
+
+      wayland.windowManager.sway = {
+        enable = true;
+        package = null;
+        checkConfig = false;
+      };
+
+      nmt.script = ''
+        assertFileExists home-files/.config/sway/config
+        assertFileContains home-files/.config/sway/config ${lib.escapeShellArg expected}
+      '';
+    };
 in
 {
+  home-cursor-sway-simple = cursorSwayTest {
+    name = "Vanilla-DMZ";
+    expected = ''xcursor_theme "Vanilla-DMZ" 64'';
+  };
+  home-cursor-sway-spaces = cursorSwayTest {
+    name = "Capitaine Cursors (Gruvbox)";
+    expected = ''xcursor_theme "Capitaine Cursors (Gruvbox)" 64'';
+  };
+  home-cursor-sway-escaped = cursorSwayTest {
+    name = "Theme \"Quoted\" \\ Variant";
+    expected = ''xcursor_theme "Theme \"Quoted\" \\ Variant" 64'';
+  };
   home-cursor-no-config = {
     nmt.script = ''
       assertPathNotExists home-path/share/icons/catppuccin-macchiato-blue-cursors/index.theme
