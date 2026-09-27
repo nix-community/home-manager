@@ -48,14 +48,17 @@ in
     };
     forceUserConfig = mkOption {
       type = types.bool;
-      default = true;
+      default = cfg.settings != { };
+      defaultText = lib.literalExpression "config.programs.trippy.settings != { }";
       example = false;
       description = ''
-        Whatever to force trippy to use user's config through the -c flag.
-        This will prevent certain commands such as 'sudo' ignoring
-        the configured settings. This will only work if you have
-        'programs.<shell>.enable' (bash, zsh, fish, ...), depending
-        on your shell.
+        Whether to force trippy to use the config at
+        {file}`$XDG_CONFIG_HOME/trippy/trippy.toml` through the -c flag. This
+        defaults to true when settings are non-empty. Set it explicitly to true
+        if the file is managed another way. This prevents
+        certain commands such as 'sudo' from ignoring the configured settings.
+        This will only work if you have 'programs.<shell>.enable' (bash, zsh,
+        fish, ...), depending on your shell.
       '';
     };
   };
