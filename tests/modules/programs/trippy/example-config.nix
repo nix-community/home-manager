@@ -20,9 +20,13 @@
     };
   };
 
+  programs.zsh.enable = true;
+
   nmt.script = ''
     assertFileExists home-files/.config/trippy/trippy.toml
     assertFileContent home-files/.config/trippy/trippy.toml \
     ${./trippy.toml}
+    assertFileContains home-files/.zshrc \
+      "alias -- trip='trip -c /home/hm-user/.config/trippy/trippy.toml'"
   '';
 }
