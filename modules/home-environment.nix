@@ -530,6 +530,45 @@ in
       description = "The package containing the complete activation script.";
     };
 
+    home.backupCommand = mkOption {
+      type = types.nullOr (types.either types.str types.path);
+      default = null;
+      example = literalExpression "\${pkgs.trash-cli}/bin/trash";
+      description = ''
+        On activation run this command on each existing file
+        rather than exiting with an error.
+
+        This is useful for standalone installations, for example when
+        using {var}`home-manager.lib.homeManagerConfiguration`, where
+        this cannot be set through the `home-manager` command line
+        tool's `-B` option.
+      '';
+    };
+
+    home.backupFileExtension = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = "backup";
+      description = ''
+        On activation move existing files by appending the given
+        file extension rather than exiting with an error.
+
+        This is useful for standalone installations, for example when
+        using {var}`home-manager.lib.homeManagerConfiguration`, where
+        this cannot be set through the `home-manager` command line
+        tool's `-b` option.
+      '';
+    };
+
+    home.overwriteBackup = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to force overwriting of existing backup files when using
+        [](#opt-home.backupFileExtension).
+      '';
+    };
+
     home.activationGenerateGcRoot = mkOption {
       internal = true;
       type = types.bool;
@@ -824,6 +863,21 @@ in
           cd $HOME
 
           export PATH="${activationBinPaths}"
+
+          # Fall back to the declarative backup options when the
+          # corresponding environment variable has not already been set,
+          # for example by the `home-manager` command line tool or by the
+          # NixOS/nix-darwin modules.
+          ${lib.optionalString (config.home.backupCommand != null) ''
+            [[ -v HOME_MANAGER_BACKUP_COMMAND ]] || export HOME_MANAGER_BACKUP_COMMAND=${lib.escapeShellArg config.home.backupCommand}
+          ''}
+          ${lib.optionalString (config.home.backupFileExtension != null) ''
+            [[ -v HOME_MANAGER_BACKUP_EXT ]] || export HOME_MANAGER_BACKUP_EXT=${lib.escapeShellArg config.home.backupFileExtension}
+          ''}
+          ${lib.optionalString config.home.overwriteBackup ''
+            [[ -v HOME_MANAGER_BACKUP_OVERWRITE ]] || export HOME_MANAGER_BACKUP_OVERWRITE=1
+          ''}
+
           ${config.lib.bash.initHomeManagerLib}
 
           # The driver version indicates the behavior expected by the caller of
