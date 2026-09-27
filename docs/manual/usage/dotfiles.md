@@ -70,6 +70,25 @@ remove that path. If both `-B` and `-b` are set, the custom command takes
 precedence; the command may still use the
 `HOME_MANAGER_BACKUP_EXT` environment variable set by `-b`.
 
+The `-b` and `-B` flags are only available through the `home-manager`
+command line tool. If your standalone configuration is instead built with
+{var}`home-manager.lib.homeManagerConfiguration` and activated some other
+way, for example by running the resulting `activate` script directly or
+through a tool such as `deploy-rs`, set
+{option}`home.backupFileExtension` or {option}`home.backupCommand`
+instead:
+
+``` nix
+{
+  home.backupFileExtension = "backup";
+}
+```
+
+These behave the same as their `home-manager.*` counterparts described
+below, including {option}`home.overwriteBackup`, and are ignored if the
+corresponding `HOME_MANAGER_BACKUP_EXT`, `HOME_MANAGER_BACKUP_COMMAND`, or
+`HOME_MANAGER_BACKUP_OVERWRITE` environment variable is already set.
+
 When Home Manager is used as a NixOS or nix-darwin module, configure the
 corresponding module options instead of passing standalone command line
 flags:
