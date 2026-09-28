@@ -1,6 +1,6 @@
 package:
 
-_:
+{ pkgs, ... }:
 
 {
   # mutableExtensionsDir may be true when non-default profiles exist, as long
@@ -18,6 +18,11 @@ _:
   test.asserts.assertions.expected = [ ];
 
   nmt.script = ''
-    assertPathNotExists "home-files/.vscode/profiles/work/extensions.json"
+    assertPathNotExists "home-files/${
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        "Library/Application Support/Code/User"
+      else
+        ".config/Code/User"
+    }/profiles/work/extensions.json"
   '';
 }
