@@ -189,6 +189,29 @@ let
       "mail.smtpserver.smtp_${id}.username" = address.userName;
     };
 
+  toThunderbirdDirectory =
+    directory: accounts:
+    {
+      "ldap_2.servers.ldap_${directory.id}.auth.dn" = directory.bindDN;
+      "ldap_2.servers.ldap_${directory.id}.filename" = "ldap_${directory.id}.sqlite";
+      "ldap_2.servers.ldap_${directory.id}.description" = directory.name;
+      "ldap_2.servers.ldap_${directory.id}.uri" = directory.uri;
+    }
+    // lib.optionalAttrs directory.isDefault {
+      "ldap_2.autoComplete.directoryServer" = "ldap_2.servers.ldap_${directory.id}";
+      "ldap_2.autoComplete.useDirectory" = true;
+    }
+    # Set the directory as default for given accounts.
+    // lib.optionalAttrs (accounts != [ ]) (
+      lib.mergeAttrsList (
+        map (a: {
+          "mail.identity.id_${a.id}.directoryServer" = "ldap_2.servers.ldap_${directory.id}";
+          "mail.identity.id_${a.id}.overrideGlobal_Pref" = true;
+        }) accounts
+      )
+    )
+    // (directory.settings directory.id);
+
   toThunderbirdAccount =
     account:
     let
@@ -672,6 +695,148 @@ in
                     [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
                   '';
                 };
+
+                directories = mkOption {
+                  type = types.attrsOf (
+                    types.submodule (
+                      { config, name, ... }: {
+                        options = {
+                          name = mkOption {
+                            type = types.str;
+                            description = ''
+                              User-friendly name of the directory server.
+                              Defaults to the name of the attribute set.
+                            '';
+                            default = name;
+                          };
+                          isDefault = mkOption {
+                            type = types.bool;
+                            default = false;
+                            description = ''
+                              Whether LDAP directory server is the default. Only
+                              one default may be set.
+                            '';
+                          };
+                          hostname = mkOption {
+                            type = types.str;
+                            description = "Hostname of the directory server.";
+                          };
+                          ssl = mkOption {
+                            type = types.bool;
+                            default = false;
+                            description = "Whether to use SSL.";
+                          };
+                          port = mkOption {
+                            type = types.port;
+                            default = if config.ssl then 636 else 389;
+                            defaultText = literalExpression "if config.ssl then 636 else 389";
+                            description = ''
+                              The port to connect to. Defaults to 389 if ssl is
+                              disabled, or 636 if ssl is enabled.
+                            '';
+                            example = 389;
+                          };
+                          baseDN = mkOption {
+                            type = types.str;
+                            example = "ou=People,dc=example,dc=edu";
+                            description = ''
+                              The base distinguished name to search in. See
+                              [ldapsearch](https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html).
+                            '';
+                          };
+                          bindDN = mkOption {
+                            type = types.str;
+                            description = ''
+                              The distinguished name of the user account for
+                              authentication. See [ldapsearch](https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html).
+                            '';
+                            default = "";
+                          };
+                          uri = mkOption {
+                            type = types.str;
+                            internal = true;
+                            description = "Calculated ldap uri of the server.";
+                          };
+                          id = mkOption {
+                            type = types.str;
+                            internal = true;
+                            description = ''
+                              Unique ID of this server. Calculated by hashing
+                              the name.
+                            '';
+                          };
+
+                          subtree = mkOption {
+                            type = types.bool;
+                            default = true;
+                            example = false;
+                            description = ''
+                              Set to false to use only a single level directory.
+                            '';
+                          };
+
+                          searchFilter = mkOption {
+                            type = types.str;
+                            default = "";
+                            description = "Additional filters to apply to LDAP searches.";
+                            example = "(objectclass=person)";
+                          };
+
+                          settings = mkOption {
+                            type =
+                              with types;
+                              functionTo (
+                                attrsOf (oneOf [
+                                  bool
+                                  int
+                                  str
+                                ])
+                              );
+
+                            default = _: { };
+                            defaultText = literalExpression "_: { }";
+                            example = literalExpression ''
+                              id: {
+                                "ldap_2.servers.ldap_''${id}.maxHits" = 1000;
+                                "ldap_2.servers.ldap_''${id}.auth.saslmech" = "GSSAPI";
+                              };
+                            '';
+                            description = ''
+                              Attribute set of extra settings to add to this
+                              Thunderbird LDAP directory configuration. The
+                              {var}`id` given as argument is an automatically
+                              generated directory identifier.
+                            '';
+
+                          };
+                        };
+                        config = {
+                          id = builtins.hashString "sha256" name;
+                          uri =
+                            let
+                              ssl_char = lib.strings.optionalString config.ssl "s";
+                              scope_string = if config.subtree then "sub" else "one";
+                              inherit (config)
+                                hostname
+                                port
+                                baseDN
+                                searchFilter
+                                ;
+                            in
+                            "ldap${ssl_char}://${hostname}:${toString port}/${baseDN}??${scope_string}?${searchFilter}";
+                        };
+                      }
+                    )
+                  );
+                  description = "Attribute set of LDAP directories.";
+                  default = { };
+                  example = {
+                    "Work LDAP" = {
+                      hostname = "ldap.company.com";
+                      baseDN = "ou=People,dc=company,dc=com";
+                    };
+                  };
+                };
               };
             }
           )
@@ -867,6 +1032,16 @@ in
                   `msgFilterRules.dat` file and translate each filter block into
                   this option.
                 '';
+              };
+              directory = mkOption {
+                type = types.str;
+                description = ''
+                  The name of the LDAP directory to use on this account.
+
+                  The directory must be defined in `config.programs.thunderbird.profiles.<name>.directories`.
+                '';
+                example = "Company LDAP";
+                default = "";
               };
             };
           }
@@ -1075,7 +1250,21 @@ in
             '';
         }
       )
-    ];
+    ]
+    ++ (map (
+      profile:
+      let
+        defaults = lib.catAttrs "name" (filter (a: a.isDefault) (attrValues profile.directories));
+      in
+      {
+        assertion = length defaults <= 1;
+        message =
+          "Must have at most one default Thunderbird Directory but found "
+          + toString (length defaults)
+          + (", namely " + concatStringsSep "," defaults)
+          + "in profile ${profile.name}";
+      }
+    ) profilesWithId);
 
     warnings =
       lib.optionals (!cfg.darwinSetupWarning) [
@@ -1119,6 +1308,8 @@ in
               emailAccounts = getAccountsForProfile name enabledEmailAccountsWithId;
               calendarAccounts = getAccountsForProfile name enabledCalendarAccountsWithId;
               contactAccounts = getAccountsForProfile name enabledContactAccountsWithId;
+
+              directoryAccounts = filter (a: a.thunderbird.directory != "") emailAccounts;
 
               accountsSmtp = filter (a: a.smtp != null) emailAccounts;
               aliasesSmtp =
@@ -1201,6 +1392,10 @@ in
                 ++ (map (calendar: toThunderbirdCalendar calendar profile) calendarAccounts)
                 ++ (map (contact: toThunderbirdContact contact profile) contactAccounts)
                 ++ (map toThunderbirdFeed feedAccounts)
+                ++ (lib.mapAttrsToList (
+                  name: directory:
+                  (toThunderbirdDirectory directory (filter (a: a.thunderbird.directory == name) directoryAccounts))
+                ) profile.directories)
               )) profile.extraConfig;
             };
 
