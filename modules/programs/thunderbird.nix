@@ -193,7 +193,7 @@ let
     directory: accounts:
     {
       "ldap_2.servers.ldap_${directory.id}.auth.dn" = directory.bindDN;
-      "ldap_2.servers.ldap_${directory.id}.filename" = "ldap.sqlite";
+      "ldap_2.servers.ldap_${directory.id}.filename" = "ldap_${directory.id}.sqlite";
       "ldap_2.servers.ldap_${directory.id}.description" = directory.name;
       "ldap_2.servers.ldap_${directory.id}.uri" = directory.uri;
     }
@@ -206,6 +206,7 @@ let
       lib.mergeAttrsList (
         map (a: {
           "mail.identity.id_${a.id}.directoryServer" = "ldap_2.servers.ldap_${directory.id}";
+          "mail.identity.id_${a.id}.overrideGlobal_Pref" = true;
         }) accounts
       )
     )
@@ -452,7 +453,6 @@ in
           "en-GB"
           "de"
         ];
-
       };
 
       policies = mkOption {
@@ -564,7 +564,6 @@ in
                   default = [ ];
                   description = ''
                     Custom ordering of accounts and local folders in
-
                     Thunderbird's folder pane. The accounts are specified
                     by their name. For declarative accounts, it must be the name
                     of their attribute in `config.accounts.email.accounts` (or
@@ -599,7 +598,7 @@ in
                   '';
                   example = ''
                     [
-                      "my-awesome-account"config.
+                      "my-awesome-account"
                       "private"
                       "work"
                       "holidays"
@@ -728,8 +727,9 @@ in
                             description = "Whether to use SSL.";
                           };
                           port = mkOption {
-                            type = types.int;
+                            type = types.port;
                             default = if config.ssl then 636 else 389;
+                            defaultText = literalExpression "if config.ssl then 636 else 389";
                             description = ''
                               The port to connect to. Defaults to 389 if ssl is
                               disabled, or 636 if ssl is enabled.
@@ -766,11 +766,6 @@ in
                             '';
                           };
 
-                          # I'd probably prefer subtree and searchFilter to be
-                          # handled manually in settings (since they are in the
-                          # "advanced" section of the UI), but that isn't
-                          # possible since they're in the URI itself, which
-                          # home-manager needs to build.
                           subtree = mkOption {
                             type = types.bool;
                             default = true;
@@ -779,10 +774,12 @@ in
                               Set to false to use only a single level directory.
                             '';
                           };
+
                           searchFilter = mkOption {
                             type = types.str;
                             default = "";
-                            description = "";
+                            description = "Additional filters to apply to LDAP searches.";
+                            example = "(objectclass=person)";
                           };
 
                           settings = mkOption {
@@ -801,7 +798,7 @@ in
                             example = literalExpression ''
                               id: {
                                 "ldap_2.servers.ldap_''${id}.maxHits" = 1000;
-                                "ldap_2.servers.ldap_''${id}.saslmech.dn" = "GSSAPI";
+                                "ldap_2.servers.ldap_''${id}.auth.saslmech" = "GSSAPI";
                               };
                             '';
                             description = ''
@@ -819,7 +816,6 @@ in
                             let
                               ssl_char = lib.strings.optionalString config.ssl "s";
                               scope_string = if config.subtree then "sub" else "one";
-                              # Just to make the size of the string more bearable
                               inherit (config)
                                 hostname
                                 port
@@ -1116,11 +1112,6 @@ in
                 The {var}`id` given as argument is an automatically
                 generated account identifier.
               '';
-            };
-            directories = mkOption {
-              type = with types; listOf str;
-              description = "A list of LDAP directories to set as the default. They must be defined in `conifg.programs.thunderbird.directories`.";
-              default = [ ];
             };
           };
         });
