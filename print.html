@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7f09965c.js";
+            window.path_to_searchindex_js = "searchindex-954d3f9e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5064cf9d.js"></script>
@@ -3383,6 +3383,26 @@ one of “filesystem”, “singlefile”</p>
 attribute name of the calendar configuration.</p>
 <p><em>Type:</em>
 string <em>(read only)</em></p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/calendar.nix">&lt;home-manager/modules/accounts/calendar.nix&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.calendar.accounts._name_.noctalia.enable"><a class="header" href="#opt-accounts.calendar.accounts._name_.noctalia.enable">accounts.calendar.accounts.&lt;name&gt;.noctalia.enable</a></h2>
+<p>Add this calendar to Noctalia’s settings as a local vdir account.
+Only filesystem calendars are supported; single-file calendars are
+not included.</p>
+<p>Requires <code>programs.noctalia.enable</code> to be enabled and
+<code>programs.noctalia.settings</code> to be an attribute set.
+Generated account fields can be overridden through
+<code>programs.noctalia.settings.calendar.account</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/accounts/calendar.nix">&lt;home-manager/modules/accounts/calendar.nix&gt;</a></li>
@@ -44698,7 +44718,7 @@ boolean</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia">&lt;home-manager/modules/programs/noctalia&gt;</a></li>
 </ul>
 <h2 id="opt-programs.noctalia.package"><a class="header" href="#opt-programs.noctalia.package">programs.noctalia.package</a></h2>
 <p>The noctalia package to use.</p>
@@ -44709,7 +44729,7 @@ null or package</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia">&lt;home-manager/modules/programs/noctalia&gt;</a></li>
 </ul>
 <h2 id="opt-programs.noctalia.checkConfig"><a class="header" href="#opt-programs.noctalia.checkConfig">programs.noctalia.checkConfig</a></h2>
 <p>Validate the configuration file at build time.</p>
@@ -44720,7 +44740,7 @@ boolean</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia">&lt;home-manager/modules/programs/noctalia&gt;</a></li>
 </ul>
 <h2 id="opt-programs.noctalia.customPalettes"><a class="header" href="#opt-programs.noctalia.customPalettes">programs.noctalia.customPalettes</a></h2>
 <p>Custom color palettes, keyed by name. Each value can be:</p>
@@ -44737,7 +44757,7 @@ attribute set of (JSON value or string or absolute path)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia">&lt;home-manager/modules/programs/noctalia&gt;</a></li>
 </ul>
 <h2 id="opt-programs.noctalia.settings"><a class="header" href="#opt-programs.noctalia.settings">programs.noctalia.settings</a></h2>
 <p>Default settings for noctalia, can be written as:</p>
@@ -44770,7 +44790,7 @@ TOML value or string or absolute path</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia">&lt;home-manager/modules/programs/noctalia&gt;</a></li>
 </ul>
 <h2 id="opt-programs.noctalia.systemd.enable"><a class="header" href="#opt-programs.noctalia.systemd.enable">programs.noctalia.systemd.enable</a></h2>
 <p>Whether to enable a systemd user service for noctalia.</p>
@@ -44784,7 +44804,7 @@ boolean</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia.nix">&lt;home-manager/modules/programs/noctalia.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/noctalia">&lt;home-manager/modules/programs/noctalia&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="nom"><a href="#nom" class="header">nom</a></h1>
