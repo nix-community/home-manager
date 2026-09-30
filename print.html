@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-954d3f9e.js";
+            window.path_to_searchindex_js = "searchindex-ba69ebd1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-5064cf9d.js"></script>
@@ -21751,6 +21751,31 @@ boolean</p>
 package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.devenv
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/devenv.nix">&lt;home-manager/modules/programs/devenv.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.devenv.settings"><a class="header" href="#opt-programs.devenv.settings">programs.devenv.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/devenv/config.yaml</code>.</p>
+<p>See <a href="https://devenv.sh/tui-customization/">https://devenv.sh/tui-customization/</a> for
+available options and documentation.</p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  shell = {
+    prompt_prefix = false;
+  };
+  tui = {
+    statusline = {
+      enabled = false;
+    };
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
