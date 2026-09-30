@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-33117f4d.js";
+            window.path_to_searchindex_js = "../../../searchindex-51652d67.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -202,17 +202,6 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
 </ul>
-<h2 id="opt-programs.notmuch.extraConfig"><a class="header" href="#opt-programs.notmuch.extraConfig">programs.notmuch.extraConfig</a></h2>
-<p>Options that should be appended to the notmuch configuration file.</p>
-<p><em>Type:</em>
-attribute set of attribute set of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
-</ul>
 <h2 id="opt-programs.notmuch.hooks.postInsert"><a class="header" href="#opt-programs.notmuch.hooks.postInsert">programs.notmuch.hooks.postInsert</a></h2>
 <p>Bash statements run after a message has been inserted
 into the database and initial tags have been applied.</p>
@@ -257,78 +246,48 @@ strings concatenated with “\n”</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
 </ul>
-<h2 id="opt-programs.notmuch.maildir.synchronizeFlags"><a class="header" href="#opt-programs.notmuch.maildir.synchronizeFlags">programs.notmuch.maildir.synchronizeFlags</a></h2>
-<p>Whether to synchronize Maildir flags.</p>
+<h2 id="opt-programs.notmuch.settings"><a class="header" href="#opt-programs.notmuch.settings">programs.notmuch.settings</a></h2>
+<p>Native settings written to the notmuch configuration file. Lists are
+serialized as semicolon-separated values, including empty lists.
+Null settings and empty sections are omitted. Unset keys use notmuch’s
+own defaults. <code>database.path</code> defaults to
+<code>accounts.email.maildirBasePath</code> when an email account is enabled,
+and notmuch-enabled email accounts supply <code>user</code> values; any
+definition of the same key replaces these. For <code>home.stateVersion</code>
+below 26.11, <code>database.path</code> has this default even without email
+accounts, and <code>search.exclude_tags</code> defaults to <code>deleted;spam</code>.
+<code>new.ignore</code>, <code>new.tags</code>, <code>maildir.synchronizeFlags</code>,
+<code>search.excludeTags</code>, and <code>extraConfig</code> under <code>programs.notmuch</code> are
+deprecated aliases into settings. Alias definitions retain their
+priorities and list ordering.
+Definitions of the same list setting concatenate unless a stronger
+priority replaces them. Unlike the old final <code>extraConfig</code> overlay,
+conflicting ordinary scalar definitions must be resolved in settings.
+Apply <code>lib.mkDefault</code> to individual settings, not to a whole section
+or the whole attribute set; section-level priorities lose to definitions
+Home Manager or the mbsync, lieer, and mujmap modules supply in
+<code>database</code>, <code>new</code>, <code>search</code>, and <code>user</code>.</p>
+<p>See <a href="https://notmuchmail.org/manpages/notmuch-config-1/">https://notmuchmail.org/manpages/notmuch-config-1/</a> for
+available settings.</p>
 <p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
-</ul>
-<h2 id="opt-programs.notmuch.new"><a class="header" href="#opt-programs.notmuch.new">programs.notmuch.new</a></h2>
-<p>Options related to email processing performed by
-<code>notmuch new</code>.</p>
-<p><em>Type:</em>
-submodule</p>
+attribute set of attribute set of (INI atom (null, bool, int, float or string) or list of (INI atom (null, bool, int, float or string)))</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
-</ul>
-<h2 id="opt-programs.notmuch.new.ignore"><a class="header" href="#opt-programs.notmuch.new.ignore">programs.notmuch.new.ignore</a></h2>
-<p>A list to specify files and directories that will not be
-searched for messages by <code>notmuch new</code>.</p>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
-</ul>
-<h2 id="opt-programs.notmuch.new.tags"><a class="header" href="#opt-programs.notmuch.new.tags">programs.notmuch.new.tags</a></h2>
-<p>A list of tags that will be added to all messages
-incorporated by <code>notmuch new</code>.</p>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[
-  "unread"
-  "inbox"
-]
-</code></pre>
 <p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  "new"
-]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/notmuch">&lt;home-manager/modules/programs/notmuch&gt;</a></li>
-</ul>
-<h2 id="opt-programs.notmuch.search.excludeTags"><a class="header" href="#opt-programs.notmuch.search.excludeTags">programs.notmuch.search.excludeTags</a></h2>
-<p>A  list  of  tags  that  will be excluded from search results by
-default. Using an excluded tag in a  query  will  override  that
-exclusion.</p>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[
-  "deleted"
-  "spam"
-]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  "trash"
-  "spam"
-]
+<pre><code class="language-nix">{
+  new = {
+    tags = [
+      "inbox"
+    ];
+  };
+  show = {
+    extra_headers = [
+      "List-Id"
+      "Mailing-List"
+    ];
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-33117f4d.js";
+            window.path_to_searchindex_js = "../searchindex-51652d67.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-01fe3fb8.js"></script>
@@ -225,6 +225,21 @@ If you configured both <code>services.xsuspender.defaults</code> and
 replacing the entire defaults section.</p>
 </li>
 <li>
+<p>Notmuch now uses <a href="../options/home-manager/programs/notmuch.html#opt-programs.notmuch.settings">programs.notmuch.settings</a> for native INI
+configuration. Deprecated options warn and map to <code>settings</code>, for example
+<code>search.excludeTags</code> to <code>settings.search.exclude_tags</code>. Home Manager no
+longer writes values notmuch already defaults to (<code>new.tags</code>, <code>new.ignore</code>,
+<code>maildir.synchronize_flags</code>); <code>new.ignore</code> order may differ.</p>
+<p><code>programs.notmuch.extraConfig</code> no longer overwrites other definitions.
+Definitions follow module priorities: forced values win, lists concatenate,
+and ordinary scalar or string/list collisions fail. Use a list for
+<code>extraConfig.new.ignore</code> when
+mbsync, lieer, or mujmap contributes patterns. <code>lib.mkForce</code> on
+<code>extraConfig</code> replaces definitions in named sections. Section-level
+<code>lib.mkDefault</code> loses to sections Home Manager or sync modules define:
+<code>database</code>, <code>new</code>, <code>search</code>, and <code>user</code>. Null settings are omitted.</p>
+</li>
+<li>
 <p>TWMN now uses <a href="../options/home-manager/services/twmn.html#opt-services.twmn.settings">services.twmn.settings</a> for freeform INI configuration.
 Legacy options emit migration warnings. Move native options
 and <code>extraConfig</code> values into <code>settings</code>, resolving duplicate definitions.
@@ -280,6 +295,15 @@ unchanged. Users with a <code>home.stateVersion</code> earlier than <code>"26.11
 explicitly. Before changing <code>configPath</code>, quit Firefox and move your data from
 <code>~/Library/Application Support/Firefox</code> to
 <code>~/Library/Application Support/org.nixos.firefox</code>.</p>
+</li>
+<li>
+<p>From <code>home.stateVersion = "26.11"</code>, notmuch no longer defaults
+<code>search.exclude_tags</code> to <code>deleted;spam</code>, and it sets <code>database.path</code> only
+when an email account is enabled. Earlier versions keep both defaults. To
+retain them when upgrading, set
+<code>programs.notmuch.settings.search.exclude_tags = [ "deleted" "spam" ];</code> and,
+without email accounts, set <code>programs.notmuch.settings.database.path</code> to the
+mail directory, previously <code>accounts.email.maildirBasePath</code>.</p>
 </li>
 <li>
 <p>The KDL options under <code>programs.zellij</code> will now correctly escape backslashes
