@@ -95,6 +95,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    programs.noctalia.settings =
+      let
+        calendars = lib.filterAttrs (
+          _: account: account.noctalia.enable && account.local.type == "filesystem"
+        ) config.accounts.calendar.accounts;
+      in
+      lib.mkIf (calendars != { }) {
+        calendar.enabled = lib.mkDefault true;
+        calendar.account = lib.mapAttrs (_: account: {
+          name = lib.mkDefault account.name;
+          type = lib.mkDefault "vdir";
+          path = lib.mkDefault account.local.path;
+          color = lib.mkDefault "primary";
+        }) calendars;
+      };
+
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.noctalia" pkgs lib.platforms.linux)
 
