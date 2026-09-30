@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-51652d67.js";
+            window.path_to_searchindex_js = "../../../searchindex-4a518260.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -202,54 +202,6 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/astroid">&lt;home-manager/modules/programs/astroid&gt;</a></li>
 </ul>
-<h2 id="opt-programs.astroid.externalEditor"><a class="header" href="#opt-programs.astroid.externalEditor">programs.astroid.externalEditor</a></h2>
-<p>You can use the following variables:</p>
-<ul>
-<li>
-<p><em>‌<code>%1</code>‌</em></p>
-<p>file name</p>
-</li>
-<li>
-<p><em>‌<code>%2</code>‌</em></p>
-<p>server name</p>
-</li>
-<li>
-<p><em>‌<code>%3</code>‌</em></p>
-<p>socket ID</p>
-</li>
-</ul>
-<p>See <a href="https://github.com/astroidmail/astroid/wiki/Customizing-editor">Customizing editor</a>
-on the Astroid wiki.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/astroid">&lt;home-manager/modules/programs/astroid&gt;</a></li>
-</ul>
-<h2 id="opt-programs.astroid.extraConfig"><a class="header" href="#opt-programs.astroid.extraConfig">programs.astroid.extraConfig</a></h2>
-<p>JSON config that will override the default Astroid configuration.</p>
-<p><em>Type:</em>
-JSON value</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  poll = {
-    interval = 0;
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/astroid">&lt;home-manager/modules/programs/astroid&gt;</a></li>
-</ul>
 <h2 id="opt-programs.astroid.pollScript"><a class="header" href="#opt-programs.astroid.pollScript">programs.astroid.pollScript</a></h2>
 <p>Script to run to fetch/update mails.</p>
 <p><em>Type:</em>
@@ -259,6 +211,47 @@ string</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"mbsync gmail"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/astroid">&lt;home-manager/modules/programs/astroid&gt;</a></li>
+</ul>
+<h2 id="opt-programs.astroid.settings"><a class="header" href="#opt-programs.astroid.settings">programs.astroid.settings</a></h2>
+<p>JSON settings for Astroid. Only configured values are written;
+Astroid supplies its built-in defaults for missing keys. When Astroid
+email accounts are configured, Home Manager adds their account
+settings, the notmuch config path, and the GPG path as per-key
+defaults. When settings are empty, no config file is written.
+Deprecated <code>extraConfig</code> forwards into settings with its definition
+priorities. Deprecated <code>externalEditor</code> sets <code>editor.cmd</code> and
+<code>editor.external_editor</code> at ordinary priority (100), so differing
+ordinary definitions of either key conflict with it and a stronger
+definition, such as <code>lib.mkForce</code>, wins.</p>
+<p>Apply priorities to individual keys. A <code>lib.mkForce</code> on <code>accounts</code>
+drops generated account keys, and a weaker priority such as
+<code>lib.mkDefault</code> on a section with generated keys is ignored. Use
+<code>lib.mkForce</code> to set a generated section to a non-object value.</p>
+<p>Editor command variables: <code>%1</code> is the file name, <code>%2</code> is the server
+name, and <code>%3</code> is the socket ID. See
+<a href="https://github.com/astroidmail/astroid/wiki/Customizing-editor">https://github.com/astroidmail/astroid/wiki/Customizing-editor</a>.
+See <a href="https://github.com/astroidmail/astroid/wiki/Configuration-Reference">https://github.com/astroidmail/astroid/wiki/Configuration-Reference</a>
+for available settings.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  poll = {
+    interval = "15";
+  };
+  thread_view = {
+    gravatar = {
+      enable = "false";
+    };
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
