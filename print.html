@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7ecfe933.js";
+            window.path_to_searchindex_js = "searchindex-71cb27b8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-5064cf9d.js"></script>
+        <script src="toc-d16917f3.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12404,6 +12404,7 @@ string</p>
 <li><a href="#pnpm">pnpm</a></li>
 <li><a href="#poetry">poetry</a></li>
 <li><a href="#pomo">pomo</a></li>
+<li><a href="#positron">positron</a></li>
 <li><a href="#posting">posting</a></li>
 <li><a href="#powerline-go">powerline-go</a></li>
 <li><a href="#pqiv">pqiv</a></li>
@@ -48904,6 +48905,325 @@ YAML 1.1 value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pomo.nix">&lt;home-manager/modules/programs/pomo.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="positron"><a href="#positron" class="header">positron</a></h1>
+<h2 id="opt-programs.positron.enable"><a class="header" href="#opt-programs.positron.enable">programs.positron.enable</a></h2>
+<p>Whether to enable Positron.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.package"><a class="header" href="#opt-programs.positron.package">programs.positron.package</a></h2>
+<p>The positron-bin package to use. Version of Positron to install.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.positron-bin
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.argvSettings"><a class="header" href="#opt-programs.positron.argvSettings">programs.positron.argvSettings</a></h2>
+<p>Configuration written to Positron’s
+<code>argv.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
+<p><em>Type:</em>
+absolute path or JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  enable-crash-reporter = false;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.mutableExtensionsDir"><a class="header" href="#opt-programs.positron.mutableExtensionsDir">programs.positron.mutableExtensionsDir</a></h2>
+<p>Whether extensions can be installed or updated manually
+or by Positron. Mutually exclusive to
+programs.positron.profiles.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">(removeAttrs config.programs.positron.profiles [ "default" ]) == { }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles"><a class="header" href="#opt-programs.positron.profiles">programs.positron.profiles</a></h2>
+<p>A list of all Positron profiles. Mutually exclusive
+to programs.positron.mutableExtensionsDir</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.enableExtensionUpdateCheck"><a class="header" href="#opt-programs.positron.profiles._name_.enableExtensionUpdateCheck">programs.positron.profiles.&lt;name&gt;.enableExtensionUpdateCheck</a></h2>
+<p>Whether to enable update notifications for extensions.
+Can only be set for the default profile, but
+it applies to all profiles.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.enableMcpIntegration"><a class="header" href="#opt-programs.positron.profiles._name_.enableMcpIntegration">programs.positron.profiles.&lt;name&gt;.enableMcpIntegration</a></h2>
+<p>Whether to integrate the MCP servers config from
+<code>programs.mcp.servers</code> into
+<code>programs.positron.profiles.&lt;name&gt;.userMcp</code>.</p>
+<p>Note: Settings defined in <code>programs.mcp.servers</code> are merged
+with <code>programs.positron.profiles.&lt;name&gt;.userMcp</code>, with Positron
+settings taking precedence.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.enableUpdateCheck"><a class="header" href="#opt-programs.positron.profiles._name_.enableUpdateCheck">programs.positron.profiles.&lt;name&gt;.enableUpdateCheck</a></h2>
+<p>Whether to enable update checks/notifications.
+Can only be set for the default profile, but
+it applies to all profiles.</p>
+<p><em>Type:</em>
+null or boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.extensions"><a class="header" href="#opt-programs.positron.profiles._name_.extensions">programs.positron.profiles.&lt;name&gt;.extensions</a></h2>
+<p>The extensions Positron should be started with.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[ pkgs.vscode-extensions.bbenoist.nix ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.globalSnippets"><a class="header" href="#opt-programs.positron.profiles._name_.globalSnippets">programs.positron.profiles.&lt;name&gt;.globalSnippets</a></h2>
+<p>Defines global user snippets.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  fixme = {
+    body = [
+      "$LINE_COMMENT FIXME: $0"
+    ];
+    description = "Insert a FIXME remark";
+    prefix = [
+      "fixme"
+    ];
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.keybindings"><a class="header" href="#opt-programs.positron.profiles._name_.keybindings">programs.positron.profiles.&lt;name&gt;.keybindings</a></h2>
+<p>Keybindings written to Positron’s
+<code>keybindings.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
+<p><em>Type:</em>
+absolute path or list of (open submodule of (JSON value))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  {
+    command = "editor.action.clipboardCopyAction";
+    key = "ctrl+c";
+    when = "textInputFocus";
+  }
+]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.keybindings._.args"><a class="header" href="#opt-programs.positron.profiles._name_.keybindings._.args">programs.positron.profiles.&lt;name&gt;.keybindings.*.args</a></h2>
+<p>Optional arguments for a command.</p>
+<p><em>Type:</em>
+null or JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  direction = "up";
+}
+</code></pre>
+<h2 id="opt-programs.positron.profiles._name_.keybindings._.command"><a class="header" href="#opt-programs.positron.profiles._name_.keybindings._.command">programs.positron.profiles.&lt;name&gt;.keybindings.*.command</a></h2>
+<p>The VS Code command to execute.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"editor.action.clipboardCopyAction"
+</code></pre>
+<h2 id="opt-programs.positron.profiles._name_.keybindings._.key"><a class="header" href="#opt-programs.positron.profiles._name_.keybindings._.key">programs.positron.profiles.&lt;name&gt;.keybindings.*.key</a></h2>
+<p>The key or key-combination to bind.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"ctrl+c"
+</code></pre>
+<h2 id="opt-programs.positron.profiles._name_.keybindings._.when"><a class="header" href="#opt-programs.positron.profiles._name_.keybindings._.when">programs.positron.profiles.&lt;name&gt;.keybindings.*.when</a></h2>
+<p>Optional context filter.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"textInputFocus"
+</code></pre>
+<h2 id="opt-programs.positron.profiles._name_.languageSnippets"><a class="header" href="#opt-programs.positron.profiles._name_.languageSnippets">programs.positron.profiles.&lt;name&gt;.languageSnippets</a></h2>
+<p>Defines user snippets for different languages.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  haskell = {
+    fixme = {
+      body = [
+        "$LINE_COMMENT FIXME: $0"
+      ];
+      description = "Insert a FIXME remark";
+      prefix = [
+        "fixme"
+      ];
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.mutableUserSettings"><a class="header" href="#opt-programs.positron.profiles._name_.mutableUserSettings">programs.positron.profiles.&lt;name&gt;.mutableUserSettings</a></h2>
+<p>Whether to enable mutable user settings for Positron.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.userMcp"><a class="header" href="#opt-programs.positron.profiles._name_.userMcp">programs.positron.profiles.&lt;name&gt;.userMcp</a></h2>
+<p>Configuration written to Positron’s
+<code>mcp.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
+<p><em>Type:</em>
+absolute path or JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  servers = {
+    Github = {
+      url = "https://api.githubcopilot.com/mcp/";
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.userSettings"><a class="header" href="#opt-programs.positron.profiles._name_.userSettings">programs.positron.profiles.&lt;name&gt;.userSettings</a></h2>
+<p>Configuration written to Positron’s
+<code>settings.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
+<p><em>Type:</em>
+absolute path or JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "[nix]" = {
+    "editor.tabSize" = 2;
+  };
+  "files.autoSave" = "off";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.positron.profiles._name_.userTasks"><a class="header" href="#opt-programs.positron.profiles._name_.userTasks">programs.positron.profiles.&lt;name&gt;.userTasks</a></h2>
+<p>Configuration written to Positron’s
+<code>tasks.json</code>.
+This can be a JSON object or a path to a custom JSON file.</p>
+<p><em>Type:</em>
+absolute path or JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  tasks = [
+    {
+      command = "hello";
+      label = "Hello task";
+      type = "shell";
+    }
+  ];
+  version = "2.0.0";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/positron.nix">&lt;home-manager/modules/programs/positron.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="posting"><a href="#posting" class="header">posting</a></h1>
