@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-2492efcc.js";
+            window.path_to_searchindex_js = "../../../searchindex-5378854c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-5064cf9d.js"></script>
@@ -178,7 +178,7 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h2 id="opt-programs.himalaya.enable"><a class="header" href="#opt-programs.himalaya.enable">programs.himalaya.enable</a></h2>
-<p>Whether to enable the email client Himalaya CLI.</p>
+<p>Whether to enable Himalaya CLI, the CLI to manage emails.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em></p>
@@ -189,7 +189,7 @@ boolean</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix">&lt;home-manager/modules/programs/himalaya.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya">&lt;home-manager/modules/programs/himalaya&gt;</a></li>
 </ul>
 <h2 id="opt-programs.himalaya.package"><a class="header" href="#opt-programs.himalaya.package">programs.himalaya.package</a></h2>
 <p>The himalaya package to use.</p>
@@ -200,7 +200,26 @@ null or package</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix">&lt;home-manager/modules/programs/himalaya.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya">&lt;home-manager/modules/programs/himalaya&gt;</a></li>
+</ul>
+<h2 id="opt-programs.himalaya.mblaze.saveSent"><a class="header" href="#opt-programs.himalaya.mblaze.saveSent">programs.himalaya.mblaze.saveSent</a></h2>
+<p>Whether a copy of every message sent from <code>mcom(1)</code> is
+appended to the account’s sent mailbox, passed as
+<code>himalaya message send --save sent</code>.</p>
+<p><code>sent</code> is resolved through the account’s <code>[mailbox.alias]</code> map, which the
+module fills in from  <a href="#opt-accounts.email.accounts._name_.folders.sent"></a>.
+An account that has no sent mailbox is an error rather than a message
+silently sent without a copy.</p>
+<p>Turn this off when the server files its own copy, as a JMAP
+submission does.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya/mblaze.nix">&lt;home-manager/modules/programs/himalaya/mblaze.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.himalaya.settings"><a class="header" href="#opt-programs.himalaya.settings">programs.himalaya.settings</a></h2>
 <p>Himalaya CLI global configuration.
@@ -212,7 +231,7 @@ open submodule of (TOML value)</p>
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya.nix">&lt;home-manager/modules/programs/himalaya.nix&gt;</a></li>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/himalaya">&lt;home-manager/modules/programs/himalaya&gt;</a></li>
 </ul>
 
                     </main>
