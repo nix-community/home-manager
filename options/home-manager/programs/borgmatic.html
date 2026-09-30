@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-7b4dc39c.js";
+            window.path_to_searchindex_js = "../../../searchindex-33117f4d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-01fe3fb8.js"></script>
@@ -209,99 +209,16 @@ each with its own source directories and repositories.</p>
 attribute set of (submodule)</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  personal = {
-    location = {
-      sourceDirectories = [ "/home/me/personal" ];
-      repositories = [ "ssh://myuser@myserver.com/./personal-repo" ];
-    };
+  personal.settings = {
+    source_directories = [ "/home/me/personal" ];
+    repositories = [ { path = "ssh://myuser@myserver.com/./personal-repo"; } ];
   };
-  work = {
-    location = {
-      sourceDirectories = [ "/home/me/work" ];
-      repositories = [ "ssh://myuser@myserver.com/./work-repo" ];
-    };
+  work.settings = {
+    source_directories = [ "/home/me/work" ];
+    repositories = [ { path = "ssh://myuser@myserver.com/./work-repo"; } ];
   };
 };
 
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.consistency.checks"><a class="header" href="#opt-programs.borgmatic.backups._name_.consistency.checks">programs.borgmatic.backups.&lt;name&gt;.consistency.checks</a></h2>
-<p>Consistency checks to run</p>
-<p><em>Type:</em>
-list of (submodule)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  {
-    name = "repository";
-    frequency = "2 weeks";
-  }
-  {
-    name = "archives";
-    frequency = "4 weeks";
-  }
-  {
-    name = "data";
-    frequency = "6 weeks";
-  }
-  {
-    name = "extract";
-    frequency = "6 weeks";
-  }
-];
-
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.consistency.checks._.frequency"><a class="header" href="#opt-programs.borgmatic.backups._name_.consistency.checks._.frequency">programs.borgmatic.backups.&lt;name&gt;.consistency.checks.*.frequency</a></h2>
-<p>Frequency of this type of check</p>
-<p><em>Type:</em>
-null or string matching the pattern ([[:digit:]]+ .*)|always</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"2 weeks"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.consistency.checks._.name"><a class="header" href="#opt-programs.borgmatic.backups._name_.consistency.checks._.name">programs.borgmatic.backups.&lt;name&gt;.consistency.checks.*.name</a></h2>
-<p>Name of consistency check to run.</p>
-<p><em>Type:</em>
-one of “repository”, “archives”, “data”, “extract”</p>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"repository"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.consistency.extraConfig"><a class="header" href="#opt-programs.borgmatic.backups._name_.consistency.extraConfig">programs.borgmatic.backups.&lt;name&gt;.consistency.extraConfig</a></h2>
-<p>Extra settings.</p>
-<p><em>Type:</em>
-YAML 1.1 value</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.hooks.extraConfig"><a class="header" href="#opt-programs.borgmatic.backups._name_.hooks.extraConfig">programs.borgmatic.backups.&lt;name&gt;.hooks.extraConfig</a></h2>
-<p>Extra settings.</p>
-<p><em>Type:</em>
-YAML 1.1 value</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -324,249 +241,21 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.borgmatic.backups._name_.location.extraConfig"><a class="header" href="#opt-programs.borgmatic.backups._name_.location.extraConfig">programs.borgmatic.backups.&lt;name&gt;.location.extraConfig</a></h2>
-<p>Extra settings.</p>
+<h2 id="opt-programs.borgmatic.backups._name_.settings"><a class="header" href="#opt-programs.borgmatic.backups._name_.settings">programs.borgmatic.backups.&lt;name&gt;.settings</a></h2>
+<p>Native borgmatic YAML settings for this backup. Deprecated section
+options are forwarded into settings and emit migration warnings.
+Define new configuration here to avoid the legacy aliases.</p>
+<p>Home Manager exclusions append to <code>exclude_from</code>; use <code>lib.mkForce</code>
+to replace the list.</p>
+<p>Top-level null values are omitted, so enable hooks that take no
+options, such as <code>zfs</code>, <code>btrfs</code>, or <code>lvm</code>, with <code>{ }</code> instead of
+<code>null</code>. Deprecated aliases define settings at normal priority, so
+a <code>lib.mkDefault</code> on the whole settings value is ignored while any
+alias is set; apply it to individual keys instead.</p>
+<p>See <a href="https://github.com/borgmatic-collective/borgmatic/blob/main/borgmatic/config/schema.yaml">https://github.com/borgmatic-collective/borgmatic/blob/main/borgmatic/config/schema.yaml</a>
+for the available settings.</p>
 <p><em>Type:</em>
-YAML 1.1 value</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.location.patterns"><a class="header" href="#opt-programs.borgmatic.backups._name_.location.patterns">programs.borgmatic.backups.&lt;name&gt;.location.patterns</a></h2>
-<p>Patterns to include/exclude.</p>
-<p>See the output of <code>borg help patterns</code> for the syntax. Pattern paths
-are relative to <code>/</code> even when a different recursion root is set.</p>
-<p>Mutually exclusive with <a href="#opt-programs.borgmatic.backups._name_.location.sourceDirectories"></a>.</p>
-<p><em>Type:</em>
-null or (list of string)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  "R /home/user"
-  "- home/user/.cache"
-  "- home/user/Downloads"
-  "+ home/user/Videos/Important Video"
-  "- home/user/Videos"
-]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.location.repositories"><a class="header" href="#opt-programs.borgmatic.backups._name_.location.repositories">programs.borgmatic.backups.&lt;name&gt;.location.repositories</a></h2>
-<p>List of local or remote repositories with paths and optional labels.</p>
-<p><em>Type:</em>
-list of (string or (submodule))</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  {
-    "path" = "ssh://myuser@myrepo.myserver.com/./repo";
-    "label" = "server";
-  }
-  {
-    "path" = "/var/lib/backups/local.borg";
-    "label" = "local";
-  }
-]
-
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.location.repositories._.label"><a class="header" href="#opt-programs.borgmatic.backups._name_.location.repositories._.label">programs.borgmatic.backups.&lt;name&gt;.location.repositories.*.label</a></h2>
-<p>Short text describing the repository. Can be used with the
-<code>--repository</code> flag to select a repository.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"remote"
-</code></pre>
-<h2 id="opt-programs.borgmatic.backups._name_.location.repositories._.path"><a class="header" href="#opt-programs.borgmatic.backups._name_.location.repositories._.path">programs.borgmatic.backups.&lt;name&gt;.location.repositories.*.path</a></h2>
-<p>Path of the repository.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"ssh://myuser@myrepo.myserver.com/./repo"
-</code></pre>
-<h2 id="opt-programs.borgmatic.backups._name_.location.sourceDirectories"><a class="header" href="#opt-programs.borgmatic.backups._name_.location.sourceDirectories">programs.borgmatic.backups.&lt;name&gt;.location.sourceDirectories</a></h2>
-<p>Directories to backup.</p>
-<p>Mutually exclusive with <a href="#opt-programs.borgmatic.backups._name_.location.patterns"></a>.</p>
-<p><em>Type:</em>
-null or (list of string)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[config.home.homeDirectory]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.output.extraConfig"><a class="header" href="#opt-programs.borgmatic.backups._name_.output.extraConfig">programs.borgmatic.backups.&lt;name&gt;.output.extraConfig</a></h2>
-<p>Extra settings.</p>
-<p><em>Type:</em>
-YAML 1.1 value</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.extraConfig"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.extraConfig">programs.borgmatic.backups.&lt;name&gt;.retention.extraConfig</a></h2>
-<p>Extra settings.</p>
-<p><em>Type:</em>
-YAML 1.1 value</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepDaily"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepDaily">programs.borgmatic.backups.&lt;name&gt;.retention.keepDaily</a></h2>
-<p>Number of daily archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepHourly"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepHourly">programs.borgmatic.backups.&lt;name&gt;.retention.keepHourly</a></h2>
-<p>Number of hourly archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepMinutely"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepMinutely">programs.borgmatic.backups.&lt;name&gt;.retention.keepMinutely</a></h2>
-<p>Number of minutely archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepMonthly"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepMonthly">programs.borgmatic.backups.&lt;name&gt;.retention.keepMonthly</a></h2>
-<p>Number of monthly archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepSecondly"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepSecondly">programs.borgmatic.backups.&lt;name&gt;.retention.keepSecondly</a></h2>
-<p>Number of secondly archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepWeekly"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepWeekly">programs.borgmatic.backups.&lt;name&gt;.retention.keepWeekly</a></h2>
-<p>Number of weekly archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepWithin"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepWithin">programs.borgmatic.backups.&lt;name&gt;.retention.keepWithin</a></h2>
-<p>Keep all archives within this time interval.</p>
-<p><em>Type:</em>
-null or string matching the pattern [[:digit:]]+[Hdwmy]</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"2d"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.retention.keepYearly"><a class="header" href="#opt-programs.borgmatic.backups._name_.retention.keepYearly">programs.borgmatic.backups.&lt;name&gt;.retention.keepYearly</a></h2>
-<p>Number of yearly archives to keep. Use -1 for no limit.</p>
-<p><em>Type:</em>
-null or signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">3
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.storage.encryptionPasscommand"><a class="header" href="#opt-programs.borgmatic.backups._name_.storage.encryptionPasscommand">programs.borgmatic.backups.&lt;name&gt;.storage.encryptionPasscommand</a></h2>
-<p>Command writing the passphrase to standard output.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"${pkgs.pass}/bin/pass borg-repo"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/borgmatic.nix">&lt;home-manager/modules/programs/borgmatic.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.borgmatic.backups._name_.storage.extraConfig"><a class="header" href="#opt-programs.borgmatic.backups._name_.storage.extraConfig">programs.borgmatic.backups.&lt;name&gt;.storage.extraConfig</a></h2>
-<p>Extra settings.</p>
-<p><em>Type:</em>
-YAML 1.1 value</p>
+open submodule of (YAML 1.1 value)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>

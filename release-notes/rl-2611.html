@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-7b4dc39c.js";
+            window.path_to_searchindex_js = "../searchindex-33117f4d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-01fe3fb8.js"></script>
@@ -245,6 +245,22 @@ configuration. Move <code>services.grobi.executeAfter</code> to
 <code>services.grobi.settings.execute_after</code> and <code>services.grobi.rules</code> to
 <code>services.grobi.settings.rules</code>. The deprecated aliases preserve list order
 and definition priorities. The generated JSON is now pretty-printed.</p>
+</li>
+<li>
+<p>Borgmatic backups now use
+<a href="../options/home-manager/programs/borgmatic.html#opt-programs.borgmatic.backups._name_.settings">programs.borgmatic.backups.<em>name</em>.settings</a> for native YAML settings.
+Deprecated options warn with the backup name and move to their snake_case
+keys, such as <code>retention.keepDaily</code> to <code>settings.keep_daily</code>. Repository
+strings become <code>{ path = "..."; }</code>, and each section’s <code>extraConfig</code> moves
+directly into <code>settings</code>. <code>location.excludeHomeManagerSymlinks</code> remains
+available.</p>
+<p>Legacy configurations without overlapping keys keep their generated YAML,
+except that null check frequencies are now omitted. Overlapping
+<code>extraConfig</code> keys no longer take the last section’s value. Distinct
+scalars at the same priority conflict and lists concatenate, so resolve
+overlaps in <code>settings</code>. Backups no longer need exactly one of
+<code>sourceDirectories</code> and <code>patterns</code>, which allows native patterns and
+database-only backups. <code>repositories</code> is still required.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
