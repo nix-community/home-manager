@@ -1,4 +1,8 @@
 {
+  home-backup-command = ./backup-command.nix;
+  home-backup-file-extension = ./backup-file-extension.nix;
+  home-backup-overwrite = ./backup-overwrite.nix;
+  home-backup-options-default = ./backup-options-default.nix;
   home-session-path = ./session-path.nix;
   home-session-search-variables = ./session-search-variables.nix;
   home-session-variables = ./session-variables.nix;
