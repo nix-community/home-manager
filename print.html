@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4a518260.js";
+            window.path_to_searchindex_js = "searchindex-2492efcc.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-01fe3fb8.js"></script>
+        <script src="toc-5064cf9d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12200,6 +12200,7 @@ string</p>
 <li><a href="#flake-edit">flake-edit</a></li>
 <li><a href="#flashspace">flashspace</a></li>
 <li><a href="#floorp">floorp</a></li>
+<li><a href="#fnox">fnox</a></li>
 <li><a href="#foliate">foliate</a></li>
 <li><a href="#foot">foot</a></li>
 <li><a href="#formiko">formiko</a></li>
@@ -27215,6 +27216,122 @@ strings concatenated with “\n” or absolute path</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix">&lt;home-manager/modules/programs/floorp.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="fnox"><a href="#fnox" class="header">fnox</a></h1>
+<h2 id="opt-programs.fnox.enable"><a class="header" href="#opt-programs.fnox.enable">programs.fnox.enable</a></h2>
+<p>Whether to enable fnox, a flexible secret management tool.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fnox.enableBashIntegration"><a class="header" href="#opt-programs.fnox.enableBashIntegration">programs.fnox.enableBashIntegration</a></h2>
+<p>Whether to enable Bash integration.</p>
+<p>The integration automatically resolves and exports secrets when changing
+directories and before displaying a prompt.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableBashIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fnox.enableFishIntegration"><a class="header" href="#opt-programs.fnox.enableFishIntegration">programs.fnox.enableFishIntegration</a></h2>
+<p>Whether to enable Fish integration.</p>
+<p>The integration automatically resolves and exports secrets when changing
+directories and before displaying a prompt.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableFishIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fnox.enableNushellIntegration"><a class="header" href="#opt-programs.fnox.enableNushellIntegration">programs.fnox.enableNushellIntegration</a></h2>
+<p>Whether to enable Nushell integration.</p>
+<p>The integration automatically resolves and exports secrets when changing
+directories and before displaying a prompt.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableNushellIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fnox.enableZshIntegration"><a class="header" href="#opt-programs.fnox.enableZshIntegration">programs.fnox.enableZshIntegration</a></h2>
+<p>Whether to enable Zsh integration.</p>
+<p>The integration automatically resolves and exports secrets when changing
+directories and before displaying a prompt.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em>
+<a href="#opt-home.shell.enableZshIntegration"></a></p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fnox.package"><a class="header" href="#opt-programs.fnox.package">programs.fnox.package</a></h2>
+<p>The fnox package to use.</p>
+<p><em>Type:</em>
+package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.fnox
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fnox.settings"><a class="header" href="#opt-programs.fnox.settings">programs.fnox.settings</a></h2>
+<p>Configuration written to
+<code>$XDG_CONFIG_HOME/fnox/config.toml</code>.</p>
+<p>All values configured here are copied to the Nix store. Do not include
+plaintext secrets, private keys, authentication tokens, or other
+credentials. Use encrypted values or references to external secret
+providers instead.</p>
+<p>The generated file is immutable. Commands that modify fnox’s global
+configuration cannot update it.</p>
+<p>See <a href="https://github.com/jdx/fnox/blob/main/docs/reference/configuration.md">https://github.com/jdx/fnox/blob/main/docs/reference/configuration.md</a>
+for available settings.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  env = "exec";
+  if_missing = "warn";
+  prompt_auth = false;
+  daemon.enabled = false;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fnox.nix">&lt;home-manager/modules/programs/fnox.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="foliate"><a href="#foliate" class="header">foliate</a></h1>
