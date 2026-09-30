@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-5378854c.js";
+            window.path_to_searchindex_js = "../../../searchindex-7f09965c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-5064cf9d.js"></script>
@@ -197,6 +197,31 @@ boolean</p>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.pi-coding-agent
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pi-coding-agent.nix">&lt;home-manager/modules/programs/pi-coding-agent.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pi-coding-agent.appendSystem"><a class="header" href="#opt-programs.pi-coding-agent.appendSystem">programs.pi-coding-agent.appendSystem</a></h2>
+<p>Additional instructions appended to Pi Coding Agent’s system prompt.</p>
+<p>The value is either:</p>
+<ul>
+<li>Inline content as a string</li>
+<li>A path to a file containing the content</li>
+</ul>
+<p>The configured content is written to
+<code>APPEND_SYSTEM.md</code> inside
+<code>programs.pi-coding-agent.configDir</code>
+(default <code>~/.pi/agent/APPEND_SYSTEM.md</code>).</p>
+<p>A project-local <code>.pi/APPEND_SYSTEM.md</code> takes precedence
+over this file.</p>
+<p><em>Type:</em>
+strings concatenated with “\n” or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">./pi-append-system.md
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
