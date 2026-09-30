@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-71cb27b8.js";
+            window.path_to_searchindex_js = "searchindex-3dce761b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-d16917f3.js"></script>
@@ -15638,6 +15638,17 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.anyrun.config.extraConfig"><a class="header" href="#opt-programs.anyrun.config.extraConfig">programs.anyrun.config.extraConfig</a></h2>
+<p>Extra lines to add inside the <code>Config()</code> object</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.anyrun.config.height"><a class="header" href="#opt-programs.anyrun.config.height">programs.anyrun.config.height</a></h2>
 <p>The minimum height of the runner, the runner will expand to fit all the entries.</p>
 <p>This is a numeric option - pass either <code>{ absolute = int; };</code> or <code>{ fraction = float; };</code>.
@@ -15647,7 +15658,7 @@ when using <code>fraction</code>, it sets a fraction of the width or height of t
 submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{
-  absolute = 0;
+  absolute = 1;
 }
 </code></pre>
 <p><em>Example:</em></p>
@@ -15716,23 +15727,101 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.anyrun.config.keybinds"><a class="header" href="#opt-programs.anyrun.config.keybinds">programs.anyrun.config.keybinds</a></h2>
+<p>Navigation keybinds.</p>
+<p>Setting this option to something else than <code>null</code> will remove the
+default keybinds.</p>
+<p><em>Type:</em>
+null or (list of (submodule))</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.config.keybinds._.action"><a class="header" href="#opt-programs.anyrun.config.keybinds._.action">programs.anyrun.config.keybinds.*.action</a></h2>
+<p>Action to trigger on keybind.</p>
+<p><em>Type:</em>
+one of “close”, “select”, “up”, “down”</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"close"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.config.keybinds._.alt"><a class="header" href="#opt-programs.anyrun.config.keybinds._.alt">programs.anyrun.config.keybinds.*.alt</a></h2>
+<p>Require ALT to trigger the bind.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.config.keybinds._.ctrl"><a class="header" href="#opt-programs.anyrun.config.keybinds._.ctrl">programs.anyrun.config.keybinds.*.ctrl</a></h2>
+<p>Require CTRL to trigger the bind.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.config.keybinds._.key"><a class="header" href="#opt-programs.anyrun.config.keybinds._.key">programs.anyrun.config.keybinds.*.key</a></h2>
+<p>Name of the GDK keysym.</p>
+<p>A list of possible values can be found at [https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h]</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Escape"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.config.keybinds._.shift"><a class="header" href="#opt-programs.anyrun.config.keybinds._.shift">programs.anyrun.config.keybinds.*.shift</a></h2>
+<p>Require SHIFT to trigger the bind.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.config.keyboardMode"><a class="header" href="#opt-programs.anyrun.config.keyboardMode">programs.anyrun.config.keyboardMode</a></h2>
+<p>Layer shell keyboard mode</p>
+<p><em>Type:</em>
+one of “Exclusive”, “OnDemand”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"Exclusive"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.anyrun.config.layer"><a class="header" href="#opt-programs.anyrun.config.layer">programs.anyrun.config.layer</a></h2>
 <p>Layer shell layer (background, bottom, top or overlay).</p>
 <p><em>Type:</em>
 one of “background”, “bottom”, “top”, “overlay”</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">"overlay"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.anyrun.config.margin"><a class="header" href="#opt-programs.anyrun.config.margin">programs.anyrun.config.margin</a></h2>
-<p>Add a margin around the window to allow for CSS shadow styling.</p>
-<p><em>Type:</em>
-signed integer</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">0
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -15901,6 +15990,18 @@ null or signed integer</p>
 null or floating point number</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/anyrun.nix">&lt;home-manager/modules/programs/anyrun.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.anyrun.daemon.enable"><a class="header" href="#opt-programs.anyrun.daemon.enable">programs.anyrun.daemon.enable</a></h2>
+<p>Enable running Anyrun as a daemon, allowing for faster startup speed.</p>
+<p>This is required for the clipboard functionality</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
