@@ -5,6 +5,9 @@
   pi-coding-agent-context-inline = ./context-inline.nix;
   pi-coding-agent-context-path = ./context-path.nix;
   pi-coding-agent-context-empty = ./context-empty.nix;
+  pi-coding-agent-append-system-inline = ./append-system-inline.nix;
+  pi-coding-agent-append-system-path = ./append-system-path.nix;
+  pi-coding-agent-append-system-empty = ./append-system-empty.nix;
   pi-coding-agent-custom-config-dir = ./custom-config-dir.nix;
   pi-coding-agent-models = ./models.nix;
 }
