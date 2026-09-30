@@ -1,4 +1,5 @@
 [calendar]
+enabled = true
 refresh_minutes = 30
 
 [calendar.account.personal]
