@@ -2012,6 +2012,13 @@
     name = "nyxar77";
     source = "nixpkgs";
   };
+  o-az = {
+    email = "23618431+o-az@users.noreply.github.com";
+    github = "o-az";
+    githubId = 23618431;
+    name = "Omar Aziz";
+    source = "home-manager";
+  };
   ojsef39 = {
     email = "me+github@jhofer.de";
     github = "ojsef39";
