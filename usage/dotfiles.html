@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-3dce761b.js";
+            window.path_to_searchindex_js = "../searchindex-e174d153.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-d16917f3.js"></script>
@@ -232,6 +232,21 @@ choose an extension whose backup path does not already exist.</p>
 remove that path. If both <code>-B</code> and <code>-b</code> are set, the custom command takes
 precedence; the command may still use the
 <code>HOME_MANAGER_BACKUP_EXT</code> environment variable set by <code>-b</code>.</p>
+<p>The <code>-b</code> and <code>-B</code> flags are only available through the <code>home-manager</code>
+command line tool. If your standalone configuration is instead built with
+{var}<code>home-manager.lib.homeManagerConfiguration</code> and activated some other
+way, for example by running the resulting <code>activate</code> script directly or
+through a tool such as <code>deploy-rs</code>, set
+<a href="../options/home-manager/home.html#opt-home.backupFileExtension">home.backupFileExtension</a> or <a href="../options/home-manager/home.html#opt-home.backupCommand">home.backupCommand</a>
+instead:</p>
+<pre><code class="language-nix">{
+  home.backupFileExtension = "backup";
+}
+</code></pre>
+<p>These behave the same as their <code>home-manager.*</code> counterparts described
+below, including <a href="../options/home-manager/home.html#opt-home.overwriteBackup">home.overwriteBackup</a>, and are ignored if the
+corresponding <code>HOME_MANAGER_BACKUP_EXT</code>, <code>HOME_MANAGER_BACKUP_COMMAND</code>, or
+<code>HOME_MANAGER_BACKUP_OVERWRITE</code> environment variable is already set.</p>
 <p>When Home Manager is used as a NixOS or nix-darwin module, configure the
 corresponding module options instead of passing standalone command line
 flags:</p>

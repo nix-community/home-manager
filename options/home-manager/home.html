@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-3dce761b.js";
+            window.path_to_searchindex_js = "../../searchindex-e174d153.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-d16917f3.js"></script>
@@ -280,6 +280,44 @@ DAG of string</p>
   '';
 }
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix">&lt;home-manager/modules/home-environment.nix&gt;</a></li>
+</ul>
+<h2 id="opt-home.backupCommand"><a class="header" href="#opt-home.backupCommand">home.backupCommand</a></h2>
+<p>On activation run this command on each existing file
+rather than exiting with an error.</p>
+<p>This is useful for standalone installations, for example when
+using <code>home-manager.lib.homeManagerConfiguration</code>, where
+this cannot be set through the <code>home-manager</code> command line
+tool’s <code>-B</code> option.</p>
+<p><em>Type:</em>
+null or string or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">${pkgs.trash-cli}/bin/trash
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix">&lt;home-manager/modules/home-environment.nix&gt;</a></li>
+</ul>
+<h2 id="opt-home.backupFileExtension"><a class="header" href="#opt-home.backupFileExtension">home.backupFileExtension</a></h2>
+<p>On activation move existing files by appending the given
+file extension rather than exiting with an error.</p>
+<p>This is useful for standalone installations, for example when
+using <code>home-manager.lib.homeManagerConfiguration</code>, where
+this cannot be set through the <code>home-manager</code> command line
+tool’s <code>-b</code> option.</p>
+<p><em>Type:</em>
+null or string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"backup"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -700,6 +738,18 @@ null or string</p>
 null or string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/home-environment.nix">&lt;home-manager/modules/home-environment.nix&gt;</a></li>
+</ul>
+<h2 id="opt-home.overwriteBackup"><a class="header" href="#opt-home.overwriteBackup">home.overwriteBackup</a></h2>
+<p>Whether to force overwriting of existing backup files when using
+<a href="#opt-home.backupFileExtension"></a>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
