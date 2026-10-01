@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e174d153.js";
+            window.path_to_searchindex_js = "searchindex-f6f975e8.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d16917f3.js"></script>
+        <script src="toc-f77331e7.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -67525,6 +67525,7 @@ null or string</p>
 <li><a href="#hyprlauncher">hyprlauncher</a></li>
 <li><a href="#hyprpaper">hyprpaper</a></li>
 <li><a href="#hyprpolkitagent">hyprpolkitagent</a></li>
+<li><a href="#hyprscratch">hyprscratch</a></li>
 <li><a href="#hyprshell">hyprshell</a></li>
 <li><a href="#hyprsunset">hyprsunset</a></li>
 <li><a href="#imapnotify">imapnotify</a></li>
@@ -72424,6 +72425,80 @@ package</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprpolkitagent.nix">&lt;home-manager/modules/services/hyprpolkitagent.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="hyprscratch"><a href="#hyprscratch" class="header">hyprscratch</a></h1>
+<h2 id="opt-services.hyprscratch.enable"><a class="header" href="#opt-services.hyprscratch.enable">services.hyprscratch.enable</a></h2>
+<p>Whether to enable Hyprscratch, improved scratchpad functionality for Hyprland.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprscratch.nix">&lt;home-manager/modules/services/hyprscratch.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.hyprscratch.package"><a class="header" href="#opt-services.hyprscratch.package">services.hyprscratch.package</a></h2>
+<p>The hyprscratch package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.hyprscratch
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprscratch.nix">&lt;home-manager/modules/services/hyprscratch.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.hyprscratch.settings"><a class="header" href="#opt-services.hyprscratch.settings">services.hyprscratch.settings</a></h2>
+<p>Hyprscratch configuration written in Nix.</p>
+<p><em>Type:</em>
+Hyprscratch configuration value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  # Optional globals that apply to all scratchpads
+  daemon_options = "clean";
+  global_options = "special";
+  global_rules = "size 90% 90%";
+
+  name = {
+      # Mandatory fields
+      command = "command";
+
+      # At least one is mandatory, title takes priority
+      title = "title";
+      class = "class";
+
+      # Optional fields
+      options = "option1 option2 option3";
+      rules = "rule1;rule2;rule3";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprscratch.nix">&lt;home-manager/modules/services/hyprscratch.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.hyprscratch.systemdTarget"><a class="header" href="#opt-services.hyprscratch.systemdTarget">services.hyprscratch.systemdTarget</a></h2>
+<p>Systemd target to bind to.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.wayland.systemd.target
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"hyprland-session.target"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprscratch.nix">&lt;home-manager/modules/services/hyprscratch.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="hyprshell"><a href="#hyprshell" class="header">hyprshell</a></h1>
