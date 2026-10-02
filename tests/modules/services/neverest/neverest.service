@@ -1,0 +1,12 @@
+[Service]
+ExecStart=/nix/store/00000000000000000000000000000000-neverest-sync
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+IOWeight=100
+LogRateLimitIntervalSec=0
+Nice=19
+Restart=no
+Type=oneshot
+
+[Unit]
+Description=neverest mail synchronization
