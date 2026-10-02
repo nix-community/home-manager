@@ -17,6 +17,17 @@ let
 
   jsonFormat = pkgs.formats.json { };
 
+  # Copilot CLI drops trusted_folders from settings.json and moves
+  # trustedFolders into its own state in config.json, rewriting settings.json
+  # and so replacing a linked file. A merged copy would also outlive its
+  # removal from Nix.
+  trustedFolderKeys = [
+    "trusted_folders"
+    "trustedFolders"
+  ];
+  userSettings = removeAttrs cfg.settings trustedFolderKeys;
+  settingsFile = jsonFormat.generate "github-copilot-cli-settings.json" userSettings;
+
   upstreamConfigDir = "${config.home.homeDirectory}/.copilot";
 
   # Applied after transformMcpServer so that args = [] is not filtered out.
@@ -123,7 +134,7 @@ in
       example = literalExpression ''"''${config.xdg.configHome}/copilot"'';
       description = ''
         Directory holding Copilot CLI configuration files such as
-        {file}`config.json`, {file}`mcp-config.json`,
+        {file}`settings.json`, {file}`mcp-config.json`,
         {file}`lsp-config.json`, and
         {file}`copilot-instructions.md`.
 
@@ -158,13 +169,17 @@ in
       example = {
         model = "claude-sonnet-4-5";
         theme = "default";
-        trusted_folders = [ "/home/user/projects" ];
         renderMarkdown = true;
         autoUpdate = false;
       };
       description = ''
-        Configuration written to {file}`config.json` inside
-        {option}`programs.github-copilot-cli.configDir`.
+        Configuration written to {file}`settings.json` inside
+        {option}`programs.github-copilot-cli.configDir`. Empty settings leave
+        the file unmanaged.
+
+        Trusted folders (`trusted_folders`, `trustedFolders`) are not user
+        settings: Copilot CLI keeps them in its own state, so they are left
+        out of the file.
 
         Known configuration keys include:
         - `model` — AI model selection
@@ -178,8 +193,7 @@ in
         - `stream` — token-by-token response streaming (default: `true`)
         - `includeCoAuthoredBy` — agent commit attribution (default: `true`)
         - `respectGitignore` — exclude gitignored files from file picker
-        - `trusted_folders` — list of pre-approved directory paths
-        - `allowed_urls`, `denied_urls` — URL allowlists/blocklists
+        - `allowedUrls`, `deniedUrls` — URL allowlists/blocklists
         - `logLevel` — log verbosity
         - `disableAllHooks` — global hook disable toggle
         - `hooks` — inline hook definitions
@@ -409,15 +423,15 @@ in
 
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
+    warnings = lib.optional (lib.any (key: lib.hasAttr key cfg.settings) trustedFolderKeys) ''
+      programs.github-copilot-cli.settings: trusted_folders and trustedFolders
+      are not written to settings.json. Copilot CLI keeps trusted folders in
+      its own state; trust folders from Copilot CLI instead.
+    '';
+
     home.file = {
-      # NOTE: Copilot will try to add a firstLaunchAt date and crash if the
-      # file exists but does not have this key set. Only generate the file when
-      # the user has explicitly configured settings, and always inject the
-      # default so the managed file stays valid.
-      "${cfg.configDir}/config.json" = mkIf (cfg.settings != { }) {
-        source = jsonFormat.generate "github-copilot-cli-config.json" (
-          { firstLaunchAt = "1970-01-01T00:00:00.000Z"; } // cfg.settings
-        );
+      "${cfg.configDir}/settings.json" = mkIf (userSettings != { }) {
+        source = settingsFile;
       };
 
       "${cfg.configDir}/mcp-config.json" = mkIf (mergedMcpServers != { }) {
