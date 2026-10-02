@@ -8,14 +8,17 @@
 let
   cfg = config.services.comodoro;
 
-  args = with cfg; {
-    inherit preset;
-    protocols = if lib.isList protocols then lib.concatStringsSep " " protocols else protocols;
-  };
-
 in
 {
   meta.maintainers = with lib.maintainers; [ soywod ];
+
+  imports = [
+    (lib.mkRenamedOptionModule [ "services" "comodoro" "preset" ] [ "services" "comodoro" "account" ])
+    (lib.mkRenamedOptionModule
+      [ "services" "comodoro" "protocols" ]
+      [ "services" "comodoro" "transports" ]
+    )
+  ];
 
   options.services.comodoro = {
     enable = lib.mkEnableOption "Comodoro server";
@@ -33,17 +36,33 @@ in
       '';
     };
 
-    preset = lib.mkOption {
-      type = lib.types.nonEmptyStr;
+    account = lib.mkOption {
+      type = with lib.types; nullOr nonEmptyStr;
+      default = null;
+      example = "pomodoro";
       description = ''
-        Use configuration from the given preset as defined in the configuration file.
+        Serve the timer of the given account, as named in the `accounts` table
+        of the configuration file. When null, the account marked `default` is
+        served.
       '';
     };
 
-    protocols = lib.mkOption {
-      type = with lib.types; nonEmptyListOf nonEmptyStr;
+    transports = lib.mkOption {
+      type =
+        with lib.types;
+        listOf (enum [
+          "socket"
+          "tcp"
+        ]);
+      default = [ ];
+      example = [
+        "socket"
+        "tcp"
+      ];
       description = ''
-        Define protocols the server should use to accept requests.
+        Accept requests on the given transports. Naming both serves the same
+        timer over both at once. When empty, the transport the account marks as
+        default is served.
       '';
     };
   };
@@ -53,14 +72,25 @@ in
 
     systemd.user.services.comodoro = {
       Unit = {
-        Description = "Comodoro server";
+        Description = "Comodoro timer server";
         After = [ "network.target" ];
       };
       Install = {
         WantedBy = [ "default.target" ];
       };
       Service = {
-        ExecStart = with args; "${cfg.package}/bin/comodoro server start ${preset} ${protocols}";
+        ExecStart = lib.concatStringsSep " " (
+          [ (lib.getExe cfg.package) ]
+          ++ lib.optionals (cfg.account != null) [
+            "--account"
+            cfg.account
+          ]
+          ++ [
+            "server"
+            "start"
+          ]
+          ++ cfg.transports
+        );
         ExecSearchPath = "/bin";
         Restart = "always";
         RestartSec = 10;
