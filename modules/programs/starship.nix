@@ -115,6 +115,24 @@ in
         Relative path to the user's home directory where the Starship config should be stored.
       '';
     };
+
+    validateFiles = mkOption {
+      type = types.submodule {
+        options = {
+          config = lib.mkEnableOption ''
+            the validation of the generated configuration file
+            ({file}`$XDG_CONFIG_HOME/starship.toml`) against the corresponding
+            JSON schema of the configured package using {command}`check-jsonschema`.
+          '';
+        };
+      };
+      default = { };
+      description = ''
+        Whether to validate the generated configuration files against the
+        corresponding JSON schemas of the configured package
+        ({option}`programs.starship.package`) using {command}`check-jsonschema`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -140,25 +158,39 @@ in
 
       file.${cfg.configPath} = mkIf hasGeneratedConfig (
         let
-          settingsFile = tomlFormat.generate "starship-config" cfg.settings;
+          schema = if cfg.validateFiles.config then cfg.package.passthru.jsonschema.config else null;
+          orderedTomlFormat = lib.hm.generators.mkDAGOrderedTomlFormat {
+            inherit pkgs tomlFormat schema;
+          };
+          settingsFile = orderedTomlFormat.generate "starship-config.toml" cfg.settings;
         in
         if cfg.presets == [ ] then
-          { source = settingsFile; }
+          {
+            source = settingsFile;
+          }
         else
           {
             source =
               pkgs.runCommand "starship.toml"
                 {
-                  nativeBuildInputs = [ pkgs.yq ];
+                  nativeBuildInputs = [
+                    pkgs.yq
+                  ]
+                  ++ (lib.optional (schema != null) pkgs.check-jsonschema);
                 }
-                ''
-                  tomlq -s -t 'reduce .[] as $item ({}; . * $item)' \
-                    ${
-                      lib.concatStringsSep " " (map (f: "${cfg.package}/share/starship/presets/${f}.toml") cfg.presets)
-                    } \
-                    ${settingsFile} \
-                    > $out
-                '';
+                (
+                  ''
+                    tomlq -s -t 'reduce .[] as $item ({}; . * $item)' \
+                      ${
+                        lib.concatStringsSep " " (map (f: "${cfg.package}/share/starship/presets/${f}.toml") cfg.presets)
+                      } \
+                      ${settingsFile} \
+                      > $out
+                  ''
+                  + (lib.optionalString (schema != null) ''
+                    check-jsonschema --schemafile=${lib.escapeShellArg "${schema}"} "$out"
+                  '')
+                );
           }
       );
 

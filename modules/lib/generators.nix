@@ -133,6 +133,34 @@ let
       map mkSection (toDAGOrderedAttrs' { inherit cycleErrorMessage; } attrsOfAttrs)
     );
 
+  mkDAGOrderedFormatWithJsonSchemaValidation =
+    {
+      pkgs,
+      format,
+      generator,
+      nativeBuildInputs ? [ ],
+      buildCommand ? ''
+        cp "$valuePath" "$out"
+      '',
+      cycleErrorMessage ? null,
+      schema ? null,
+    }:
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        format
+        generator
+        cycleErrorMessage
+        ;
+      nativeBuildInputs =
+        nativeBuildInputs ++ (lib.optional (schema != null) pkgs.buildPackages.check-jsonschema);
+      buildCommand =
+        buildCommand
+        + (lib.optionalString (schema != null) ''
+          check-jsonschema --schemafile=${lib.escapeShellArg "${schema}"} "$out"
+        '');
+    };
+
   mkDAGOrderedFormat' =
     {
       pkgs,
@@ -433,10 +461,14 @@ in
       : Message prefix to use when a dependency cycle is detected. When `null`,
         the generated file name is used.
 
+      `schema` (path or null; optional)
+      : Path to a JSON Schema file that the generated output is checked
+        against. When `null`, no validation is performed.
+
     # Type
 
     ```
-    mkDAGOrderedJsonFormat :: { pkgs :: AttrSet; jsonFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    mkDAGOrderedJsonFormat :: { pkgs :: AttrSet; jsonFormat ? AttrSet; cycleErrorMessage ? NullOr String; schema ? NullOr Path; } -> AttrSet
     ```
   */
   mkDAGOrderedJsonFormat =
@@ -444,15 +476,19 @@ in
       pkgs,
       jsonFormat ? pkgs.formats.json { },
       cycleErrorMessage ? null,
+      schema ? null,
     }:
-    mkDAGOrderedFormat' {
+    mkDAGOrderedFormatWithJsonSchemaValidation {
       inherit
         pkgs
         cycleErrorMessage
+        schema
         ;
       format = jsonFormat;
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.jq ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.jq
+      ];
       buildCommand = ''
         jq . "$valuePath" > "$out"
       '';
@@ -478,10 +514,14 @@ in
       : Message prefix to use when a dependency cycle is detected. When `null`,
         the generated file name is used.
 
+      `schema` (path or null; optional)
+      : Path to a JSON Schema file that the generated output is checked
+        against. When `null`, no validation is performed.
+
     # Type
 
     ```
-    mkDAGOrderedYamlFormat :: { pkgs :: AttrSet; yamlFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    mkDAGOrderedYamlFormat :: { pkgs :: AttrSet; yamlFormat ? AttrSet; cycleErrorMessage ? NullOr String; schema ? NullOr Path; } -> AttrSet
     ```
   */
   mkDAGOrderedYamlFormat =
@@ -489,15 +529,19 @@ in
       pkgs,
       yamlFormat ? pkgs.formats.yaml { },
       cycleErrorMessage ? null,
+      schema ? null,
     }:
-    mkDAGOrderedFormat' {
+    mkDAGOrderedFormatWithJsonSchemaValidation {
       inherit
         pkgs
         cycleErrorMessage
+        schema
         ;
       format = yamlFormat;
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.remarshal
+      ];
       buildCommand = ''
         json2yaml "$valuePath" "$out"
       '';
@@ -523,10 +567,14 @@ in
       : Message prefix to use when a dependency cycle is detected. When `null`,
         the generated file name is used.
 
+      `schema` (path or null; optional)
+      : Path to a JSON Schema file that the generated output is checked
+        against. When `null`, no validation is performed.
+
     # Type
 
     ```
-    mkDAGOrderedTomlFormat :: { pkgs :: AttrSet; tomlFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    mkDAGOrderedTomlFormat :: { pkgs :: AttrSet; yamlFormat ? AttrSet; cycleErrorMessage ? NullOr String; schema ? NullOr Path; } -> AttrSet
     ```
   */
   mkDAGOrderedTomlFormat =
@@ -534,15 +582,19 @@ in
       pkgs,
       tomlFormat ? pkgs.formats.toml { },
       cycleErrorMessage ? null,
+      schema ? null,
     }:
-    mkDAGOrderedFormat' {
+    mkDAGOrderedFormatWithJsonSchemaValidation {
       inherit
         pkgs
         cycleErrorMessage
+        schema
         ;
       format = tomlFormat;
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.remarshal
+      ];
       buildCommand = ''
         json2toml "$valuePath" "$out"
       '';

@@ -1,6 +1,8 @@
 { lib, ... }:
 
 {
+  imports = [ ./starship-stubs.nix ];
+
   programs.starship = {
     enable = true;
 
@@ -43,6 +45,8 @@
         ];
       }
     ];
+
+    validateFiles.config = true;
   };
 
   nmt.script = ''
