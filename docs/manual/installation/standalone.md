@@ -64,7 +64,7 @@
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
     ```
 
-    to your `~/.profile` file.
+    to your `~/.bash_profile`, `~/.bash_login`, or `~/.profile` file.
 
 If instead of using channels you want to run Home Manager from a Git
 checkout of the repository then you can use the

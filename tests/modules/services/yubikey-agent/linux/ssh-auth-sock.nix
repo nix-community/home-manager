@@ -7,7 +7,7 @@
 
   nmt.script = ''
     assertFileContains \
-      home-files/.profile \
+      home-files/.bash_profile \
       'export SSH_AUTH_SOCK="''${XDG_RUNTIME_DIR:-/run/user/$UID}/yubikey-agent/yubikey-agent.sock"'
     assertFileContains \
       home-files/.config/fish/config.fish \

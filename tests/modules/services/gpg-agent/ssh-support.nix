@@ -11,7 +11,7 @@
 
   nmt.script = ''
     assertFileContains \
-      home-files/.profile \
+      home-files/.bash_profile \
       'export SSH_AUTH_SOCK="$(@gnupg@/bin/gpgconf --list-dirs agent-ssh-socket)"'
     assertFileContains \
       home-files/.config/fish/config.fish \
