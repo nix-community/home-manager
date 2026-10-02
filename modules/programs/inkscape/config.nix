@@ -1,0 +1,71 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+  xml = import ./xml.nix { inherit lib; };
+  xmlFormat = pkgs.formats.xml { };
+
+  cfg = config.programs.inkscape;
+
+  toSource =
+    name: content:
+    if lib.isPath content || lib.isStorePath content then content else pkgs.writeText name content;
+
+  mkConfigFiles =
+    subdir: items:
+    lib.concatMapAttrs (name: content: {
+      "inkscape/${subdir}/${name}" = {
+        source = toSource name content;
+      };
+    }) items;
+
+in
+{
+  config = lib.mkIf cfg.enable {
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+    xdg.configFile = lib.mkMerge [
+      (lib.mkIf (cfg.settings != { }) {
+        "inkscape/preferences.xml".text = xml.preferencesToXml cfg.settings;
+      })
+
+      (lib.mkIf (cfg.keymap != { } || cfg.keymapSet != null) {
+        "inkscape/keys/default.xml".source = xmlFormat.generate "default.xml" (
+          if cfg.keymap != { } then
+            cfg.keymap
+          else
+            {
+              keys = {
+                "@name" = "default";
+                "xi:include" = {
+                  "@href" = "${cfg.package}/share/inkscape/keys/${cfg.keymapSet}.xml";
+                  "@xmlns:xi" = "http://www.w3.org/2001/XInclude";
+                };
+              };
+            }
+        );
+      })
+
+      (mkConfigFiles "templates" cfg.templates)
+      (mkConfigFiles "symbols" cfg.symbols)
+      (mkConfigFiles "palettes" cfg.colorPalettes)
+      (mkConfigFiles "paint" cfg.patterns)
+      (mkConfigFiles "filters" cfg.filters)
+      (mkConfigFiles "extensions" cfg.extensions)
+
+      (lib.listToAttrs (
+        map (
+          font: lib.nameValuePair "inkscape/fonts/${baseNameOf (toString font)}" { source = font; }
+        ) cfg.fonts
+      ))
+
+      (lib.concatMapAttrs (name: text: {
+        "inkscape/fontscollections/${name}" = { inherit text; };
+      }) cfg.fontCollections)
+    ];
+  };
+}
