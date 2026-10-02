@@ -1,3 +1,10 @@
+# .profile handles login shells. Skip non-interactive shells because
+# sshd can read .bashrc for remote commands, where startup output can
+# corrupt protocols such as scp and rsync.
+if [[ $- == *i* ]] && ! shopt -q login_shell; then
+  . "/nix/store/00000000000000000000000000000000-hm-session-vars.sh/etc/profile.d/hm-session-vars.sh"
+fi
+
 
 
 # Commands that should be applied only for interactive shells.
