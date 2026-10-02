@@ -43,6 +43,8 @@ in
     settings = {
       model = "claude-sonnet-4-5";
       theme = "dark";
+      trusted_folders = [ "/home/user/ignored" ];
+      trustedFolders = [ "/home/user/ignored" ];
     };
     context = inlineContext;
     agents = {
@@ -57,6 +59,14 @@ in
       store-skill = "${storeSkillSrc}/skills/external-skill";
     };
   };
+
+  test.asserts.warnings.expected = [
+    ''
+      programs.github-copilot-cli.settings: trusted_folders and trustedFolders
+      are not written to settings.json. Copilot CLI keeps trusted folders in
+      its own state; use programs.github-copilot-cli.trustedFolders instead.
+    ''
+  ];
 
   nmt.script =
     assert !(config.home.activation ? githubCopilotCliSettings);

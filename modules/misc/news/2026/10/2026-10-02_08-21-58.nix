@@ -14,9 +14,9 @@
 
     If Copilot CLI already moved your settings into a regular settings.json,
     remove that file before switching, or enable
-    'programs.github-copilot-cli.mutableSettings' to merge into it. Otherwise
-    activation reports it as a collision, or leaves it unmanaged when its
-    content happens to match.
+    'programs.github-copilot-cli.mutableSettings' to merge into it. With
+    nonempty immutable settings, byte-identical files become managed links;
+    differing files use normal collision and backup handling.
 
     'trusted_folders' and 'trustedFolders' in 'settings' are no longer
     written, since Copilot CLI keeps trusted folders in its own state. Declare
