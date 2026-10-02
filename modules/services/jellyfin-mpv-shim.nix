@@ -8,6 +8,7 @@ let
   inherit (builtins) typeOf stringLength;
   jsonFormat = pkgs.formats.json { };
   cfg = config.services.jellyfin-mpv-shim;
+  staticSettings = jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings;
 
   renderOption =
     option:
@@ -60,6 +61,13 @@ in
           {file}`$XDG_CONFIG_HOME/jellyfin-mpv-shim/conf.json`. See
           <https://github.com/jellyfin/jellyfin-mpv-shim#configuration>
           for the configuration documentation.
+
+          Changed settings trigger a service restart when automatic systemd
+          service switching is enabled. A running shim can write its old
+          in-memory settings back between the merge and restart. Stop it before
+          switching and start it afterward to avoid this window. If
+          {option}`systemd.user.startServices` is `false` or `"suggest"`, restart
+          the shim manually to load changed settings.
         '';
       };
 
@@ -118,6 +126,7 @@ in
         Documentation = "https://github.com/jellyfin/jellyfin-mpv-shim";
         After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [ staticSettings ];
       };
 
       Service = {
@@ -133,14 +142,13 @@ in
     # writable. So we merge the settings defined here in Nix with the existing
     # configuration, if any.
     home.activation.jellyfinMpvShimSettingsActivation = lib.mkIf (cfg.settings != { }) (
-      lib.hm.dag.entryAfter [ "linkGeneration" ] (
+      lib.hm.dag.entryBetween [ "reloadSystemd" ] [ "linkGeneration" ] (
         lib.hm.generators.mkImpureConfigMerger {
-          inherit pkgs;
+          inherit pkgs staticSettings;
           format = "json";
           empty = "{}";
           jqOperation = "$dynamic * $static";
           path = "${config.xdg.configHome}/jellyfin-mpv-shim/conf.json";
-          staticSettings = jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings;
         }
       )
     );
