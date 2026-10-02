@@ -1034,6 +1034,19 @@ in
           "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} -c '.' > \"$tmp\"";
       defaultVerboseMsg = "Merging Nix-generated config into ${path}";
       verboseMsg' = if verboseMsg != null then verboseMsg else defaultVerboseMsg;
+      # Pass both documents through files: Linux caps a single argument at
+      # 128 KiB, so `--argjson` fails with E2BIG on larger configs. The
+      # operation sits on its own line so a trailing `#` comment in it cannot
+      # comment out the closing parenthesis.
+      mergeFilter = ''
+        if ($dynamic | length) != 1 or ($static | length) != 1 then
+          error("expected exactly one JSON value")
+        else
+          $dynamic[0] as $dynamic | $static[0] as $static | (
+            ${jqOperation}
+          )
+        end
+      '';
     in
     ''
       if [[ -v VERBOSE ]]; then
@@ -1057,7 +1070,10 @@ in
           exit 1
         fi
         static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
-        config="$(${jaqBin} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
+        if ! config="$(${jaqBin} -n ${lib.escapeShellArg mergeFilter} --slurpfile dynamic <(printf '%s' "$dynamic") --slurpfile static <(printf '%s' "$static"))"; then
+          errorEcho ${lib.escapeShellArg "Could not merge Nix-generated config into ${path}"}
+          exit 1
+        fi
         tmp="$(mktemp)"
         ${writeCmd}
         # Overwrite in place: an existing file keeps its permissions and
