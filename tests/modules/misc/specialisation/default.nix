@@ -1,1 +1,4 @@
-{ specialisation = ./specialisation.nix; }
+{
+  specialisation = ./specialisation.nix;
+  default-specialisation = ./default-specialisation.nix;
+}
