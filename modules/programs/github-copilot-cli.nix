@@ -216,17 +216,17 @@ in
         writable {file}`settings.json` at activation instead of linking it from
         the Nix store.
 
-        Copilot CLI replaces {file}`settings.json` when it saves a setting,
-        for example after changing the model or theme from inside the CLI.
-        With a linked file that replaces the link, and the next activation
-        reports a collision.
+        A store-linked file prevents the CLI from saving settings normally.
+        Versions that replace the file when saving a model or theme replace
+        the link, causing a collision on the next activation.
 
         When enabled, declared values take precedence over existing values,
         keys later removed from [](#opt-programs.github-copilot-cli.settings)
         stay in the file, and comments and formatting are not preserved.
-        Turning the option off links the file again: a merged file that Copilot
-        CLI has not changed is replaced automatically, and one it has changed
-        is reported as a collision.
+        Turning the option off links the file again. A merged file is replaced
+        automatically only when it is byte-identical to the declared settings.
+        Other files are left to the normal collision and backup handling.
+        If the remaining settings are empty, the file is left unmanaged.
       '';
     };
 
