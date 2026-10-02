@@ -17,6 +17,19 @@ let
   jsonFormat = pkgs.formats.json { };
   json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
 
+  immutableFiles = {
+    settings = !cfg.mutableUserSettings && cfg.userSettings != { };
+    keybindings = !cfg.mutableKeybindings && cfg.keybindings != [ ];
+    client-settings = !cfg.mutableClientSettings && cfg.clientSettings != { };
+  };
+
+  immutableConfigCleanup = lib.concatMapStrings (
+    name:
+    lib.hm.generators.mkImpureConfigCleanup {
+      file = config.home.file.".t3/userdata/${name}.json";
+    }
+  ) (lib.attrNames (lib.filterAttrs (_: lib.id) immutableFiles));
+
   userDataDir = "${config.home.homeDirectory}/.t3/userdata";
 in
 {
@@ -136,6 +149,11 @@ in
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     home.activation = mkMerge [
+      (mkIf (immutableConfigCleanup != "") {
+        t3codeImmutableConfig =
+          lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+            immutableConfigCleanup;
+      })
       (mkIf (cfg.mutableUserSettings && cfg.userSettings != { }) {
         t3codeSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
           lib.hm.generators.mkImpureConfigMerger {
@@ -144,6 +162,7 @@ in
             empty = "{}";
             jqOperation = "$dynamic * $static";
             path = "${userDataDir}/settings.json";
+            mode = "600";
             staticSettings = jsonFormat.generate "t3code-user-settings" cfg.userSettings;
             reader = "${lib.getExe json5} --as-json";
           }
