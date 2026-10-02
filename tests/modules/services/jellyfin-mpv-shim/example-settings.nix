@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   services.jellyfin-mpv-shim = {
     enable = true;
@@ -24,16 +25,20 @@
     };
   };
 
-  nmt.script = ''
-    # FIXME:
-    # assertFileContent \
-    #    home-files/.config/jellyfin-mpv-shim/conf.json \
-    #    ${./example-settings-expected-settings}
-    assertFileContent \
-       home-files/.config/jellyfin-mpv-shim/mpv.conf \
-       ${./example-settings-expected-config}
-    assertFileContent \
-       home-files/.config/jellyfin-mpv-shim/input.conf \
-       ${./example-settings-expected-bindings}
-  '';
+  nmt.script =
+    assert config.home.activation.jellyfinMpvShimSettingsActivation.after == [ "linkGeneration" ];
+    ''
+      # conf.json stays writable, so it is merged at activation instead of
+      # linked; the merge itself is covered by the mkImpureConfigMerger tests.
+      assertPathNotExists home-files/.config/jellyfin-mpv-shim/conf.json
+      assertFileContains activate '/home/hm-user/.config/jellyfin-mpv-shim/conf.json'
+      settings="$(grep -o '/nix/store/[^ ]*-jellyfin-mpv-shim-conf' "$TESTED/activate" | sort -u)"
+      assertFileContent "$settings" ${./example-settings-expected-settings}
+      assertFileContent \
+         home-files/.config/jellyfin-mpv-shim/mpv.conf \
+         ${./example-settings-expected-config}
+      assertFileContent \
+         home-files/.config/jellyfin-mpv-shim/input.conf \
+         ${./example-settings-expected-bindings}
+    '';
 }
