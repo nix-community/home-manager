@@ -971,6 +971,13 @@ in
       : Path to the Nix-generated static config file, typically produced by
         `format.generate`.
 
+      `mode` (string or null; optional)
+      : Octal permissions for a newly created file. When `null` (the default),
+        a new file gets the permissions shell redirection would give it under
+        the activation's umask, usually `644`. Existing files keep their mode.
+        Use `"600"` for files containing tokens, such as gh's `hosts.yml` or
+        Docker's `config.json`.
+
       `reader` (string or null; optional)
       : Shell command that reads the existing file given as its last argument
         and writes JSON to stdout. When `null` (the default), the reader is
@@ -986,7 +993,7 @@ in
     # Type
 
     ```
-    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
+    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; mode ? NullOr String; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
     ```
 
     # Examples
@@ -1017,6 +1024,7 @@ in
       jqOperation,
       path,
       staticSettings,
+      mode ? null,
       reader ? null,
       verboseMsg ? null,
     }:
@@ -1054,6 +1062,9 @@ in
         end
       '';
     in
+    assert lib.assertMsg
+      (mode == null || (builtins.isString mode && builtins.match "[0-7]{3,4}" mode != null))
+      "mkImpureConfigMerger: mode must be an octal string such as \"600\", got ${builtins.toJSON mode}.";
     ''
       if [[ -v VERBOSE ]]; then
         echo ${lib.escapeShellArg verboseMsg'}
@@ -1083,12 +1094,17 @@ in
         tmp="$(mktemp)"
         ${writeCmd}
         # Overwrite in place: an existing file keeps its permissions and
-        # symlink target (`install -m644` would reset the mode), while a new
-        # file is created with sane defaults.
+        # symlink target (`install -m` would reset the mode), while a new
+        # file gets `mode` or, by default, the activation's umask.
         if [ -e ${lib.escapeShellArg path} ]; then
           cat "$tmp" > ${lib.escapeShellArg path}
         else
-          install -m644 "$tmp" ${lib.escapeShellArg path}
+          ${
+            if mode == null then
+              ''cat "$tmp" > ${lib.escapeShellArg path}''
+            else
+              ''install -m${lib.escapeShellArg mode} "$tmp" ${lib.escapeShellArg path}''
+          }
         fi
         rm -f "$tmp"
         unset config

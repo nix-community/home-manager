@@ -5,4 +5,5 @@
   generators-toscfg-empty = ./toscfg-empty.nix;
   generators-toscfg-example = ./toscfg-example.nix;
   generators-mkimpureconfigmerger = ./mkImpureConfigMerger.nix;
+  generators-mkimpureconfigmerger-mode = ./mkImpureConfigMerger-mode.nix;
 }
