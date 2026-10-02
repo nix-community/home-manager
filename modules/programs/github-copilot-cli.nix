@@ -181,7 +181,8 @@ in
 
         Trusted folders (`trusted_folders`, `trustedFolders`) are not user
         settings: Copilot CLI keeps them in its own state, so they are left
-        out of the file.
+        out of the file. Use
+        [](#opt-programs.github-copilot-cli.trustedFolders) instead.
 
         Known configuration keys include:
         - `model` — AI model selection
@@ -226,6 +227,23 @@ in
         Turning the option off links the file again: a merged file that Copilot
         CLI has not changed is replaced automatically, and one it has changed
         is reported as a collision.
+      '';
+    };
+
+    trustedFolders = mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = literalExpression ''[ "''${config.home.homeDirectory}/projects" ]'';
+      description = ''
+        Folders Copilot CLI trusts without asking.
+
+        Copilot CLI keeps trusted folders in its own state file,
+        {file}`config.json` inside
+        {option}`programs.github-copilot-cli.configDir`, which it also uses for
+        login and plugin state. These folders are merged into its
+        `trustedFolders` list at activation, and the rest of the file is left
+        alone. Folders trusted from inside Copilot CLI are kept, and removing a
+        folder here does not untrust it.
       '';
     };
 
@@ -451,8 +469,31 @@ in
     warnings = lib.optional (lib.any (key: lib.hasAttr key cfg.settings) trustedFolderKeys) ''
       programs.github-copilot-cli.settings: trusted_folders and trustedFolders
       are not written to settings.json. Copilot CLI keeps trusted folders in
-      its own state; trust folders from Copilot CLI instead.
+      its own state; use programs.github-copilot-cli.trustedFolders instead.
     '';
+
+    home.activation.githubCopilotCliTrustedFolders = mkIf (cfg.trustedFolders != [ ]) (
+      lib.hm.dag.entryAfter [ "linkGeneration" ] (
+        lib.hm.generators.mkImpureConfigMerger {
+          inherit pkgs;
+          format = "json";
+          empty = "{}";
+          jqOperation = ''
+            $dynamic + {
+              trustedFolders: (($dynamic.trustedFolders // [ ]) as $have | $have + ($static.trustedFolders - $have))
+            }
+          '';
+          path = "${cfg.configDir}/config.json";
+          staticSettings = jsonFormat.generate "github-copilot-cli-trusted-folders.json" {
+            inherit (cfg) trustedFolders;
+          };
+          # Copilot CLI starts config.json with a comment header.
+          reader = "${lib.getExe json5} --as-json";
+          mode = "600";
+          verboseMsg = "Adding trusted folders to ${cfg.configDir}/config.json";
+        }
+      )
+    );
 
     home.activation.githubCopilotCliSettings = mkIf (cfg.mutableSettings && userSettings != { }) (
       lib.hm.dag.entryAfter [ "linkGeneration" ] (
