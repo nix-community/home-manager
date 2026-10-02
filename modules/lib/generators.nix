@@ -1182,6 +1182,85 @@ in
       fi
     '';
 
+  /**
+    Create a bash script snippet that removes an unchanged regular config file
+    before Home Manager replaces it with a managed symlink. This complements
+    `mkImpureConfigMerger` when a module switches back to immutable settings.
+
+    The file on disk is compared with the copy in the new generation, which is
+    what link generation will place. Only a byte-identical regular file is
+    removed. Files with user changes or formatting differences are left to Home
+    Manager's normal collision and backup handling. Symlinks are never removed,
+    and neither is a file that is the declared source itself or the
+    generation's link to it, for example an out-of-store source reached through
+    a symlinked parent directory. The
+    snippet uses the activation helpers `run` and `verboseEcho` to respect
+    dry-run and verbose mode, and is empty when the entry is disabled, since a
+    disabled declaration does not give the module ownership of the path.
+
+    Place this snippet with
+    `lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]`.
+    Collision checking accepts identical files before the write boundary; the
+    cleanup then allows link generation to replace them rather than skip them.
+
+    :::{.warning}
+    This function is **experimental**: it depends on how collision checking
+    and link generation treat identical files, and its interface may change in
+    future releases.
+    :::
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `file` (attribute set)
+      : The effective `home.file` (or `xdg.configFile`) entry that will replace
+        the config, such as `config.xdg.configFile."myapp/settings.json"`.
+
+    # Type
+
+    ```
+    mkImpureConfigCleanup :: { file :: AttrSet; } -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `lib.hm.generators.mkImpureConfigCleanup` usage example
+
+    ```nix
+    lib.mkIf (!cfg.mutableSettings && cfg.settings != { }) {
+      xdg.configFile."myapp/settings.json".source =
+        jsonFormat.generate "myapp-settings" cfg.settings;
+
+      home.activation.myappImmutableSettings =
+        lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] (
+          lib.hm.generators.mkImpureConfigCleanup {
+            file = config.xdg.configFile."myapp/settings.json";
+          }
+        );
+    }
+    ```
+
+    :::
+  */
+  mkImpureConfigCleanup =
+    { file }:
+    let
+      target = ''"$HOME"/${lib.escapeShellArg file.target}'';
+      generated = ''"$newGenPath/home-files"/${lib.escapeShellArg file.target}'';
+      source = lib.escapeShellArg (toString file.source);
+    in
+    lib.optionalString file.enable ''
+      if [[ -f ${target} && ! -L ${target} ]] \
+        && ! [[ ${target} -ef ${generated} || ${target} -ef ${source} ]] \
+        && cmp -s -- ${generated} ${target}; then
+        verboseEcho "Removing unchanged config at "${target}" before linking"
+        run rm -- ${target}
+      fi
+    '';
+
   toSCFG =
     _:
     let
