@@ -42,7 +42,16 @@
       assertFileContains activate \
         '/home/hm-user/.config/joplin-desktop/settings.json'
 
-      generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"
+      assertFileContains activate \
+        "if [[ -v VERBOSE ]]; then"
+
+      assertFileContains activate \
+        "Merging Nix-generated config into"
+
+      assertFileContains activate \
+        "if [[ -v DRY_RUN ]]; then"
+
+      generated="$(grep -o '/nix/store/[^ ]*-joplin-settings.json' $TESTED/activate)"
       diff -u "$generated" ${./basic-configuration.json}
 
       assertPathNotExists home-files/.config/joplin-desktop/settings.json
