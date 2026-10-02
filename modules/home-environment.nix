@@ -680,6 +680,7 @@ in
       shellAbbrs = lib.mkIf config.programs.fish.preferAbbrs cfg.shellAliases;
     };
     programs.nushell.shellAliases = cfg.shellAliases;
+    programs.xonsh.shellAliases = cfg.shellAliases;
 
     home.sessionVariables =
       let
