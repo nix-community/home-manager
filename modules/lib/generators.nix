@@ -923,7 +923,17 @@ in
     Create a bash script snippet that merges a Nix-generated config file with
     an existing user config file at activation time. This preserves any changes
     the user has made interactively while applying the Nix-declared settings on
-    top.
+    top. The result atomically replaces the resolved target, preserving symlinks
+    and existing file modes. A dangling symlink is written through, creating
+    its target; a target in the Nix store is rejected without changing the
+    link. If the content, mode, or target symlink changes while the merge runs,
+    activation fails rather than overwriting the newer file. This check is not
+    a lock: a write that lands between the final check and the replacement is
+    still lost, so applications that write the file should not be running
+    during activation. Ownership, ACLs, extended attributes, and hard links are
+    not preserved, and the directory containing the resolved target must be
+    writable. A target that cannot be replaced by renaming, such as a
+    bind-mounted file, is written in place instead, without the atomicity.
 
     The merge uses `jaq` internally to read and write JSON, YAML, TOML, and
     CBOR via its `--from`/`--to` flags. Comments and formatting are not
@@ -1030,6 +1040,7 @@ in
     }:
     let
       jaqBin = lib.getExe pkgs.jaq;
+      coreutil = lib.getExe' pkgs.coreutils;
       isJson = format == "json";
       readerCmd =
         if reader != null then
@@ -1043,9 +1054,9 @@ in
       # existing config.
       writeCmd =
         if isJson then
-          "printf '%s\\n' \"$config\" > \"$tmp\""
+          "printf '%s\\n' \"$config\" > \"$candidate_path\""
         else
-          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} '.' > \"$tmp\"";
+          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} '.' > \"$candidate_path\"";
       defaultVerboseMsg = "Merging Nix-generated config into ${path}";
       verboseMsg' = if verboseMsg != null then verboseMsg else defaultVerboseMsg;
       # Pass both documents through files: Linux caps a single argument at
@@ -1072,42 +1083,102 @@ in
       if [[ -v DRY_RUN ]]; then
         echo ${lib.escapeShellArg "Would merge Nix-generated config into ${path}"}
       else
-        mkdir -p "$(dirname ${lib.escapeShellArg path})"
-        # A missing or empty file is treated as `empty` (see the
-        # `-empty` tests), but an existing file with content that fails to
-        # parse must fail activation loudly instead of silently overwriting
-        # the user's settings with the generated defaults. The reader's exit
-        # status is checked because it can emit valid JSON before failing
-        # (e.g. jaq prints the first object of a truncated stream).
-        if [ ! -s ${lib.escapeShellArg path} ]; then
-          # Missing or zero-byte file: treat as absent.
-          dynamic=${lib.escapeShellArg empty}
-        elif ! dynamic="$(${readerCmd} ${lib.escapeShellArg path})" || [ -z "$dynamic" ]; then
-          errorEcho ${lib.escapeShellArg "Could not parse ${path}; refusing to merge"}
-          exit 1
-        fi
-        static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
-        if ! config="$(${jaqBin} -n ${lib.escapeShellArg mergeFilter} --slurpfile dynamic <(printf '%s' "$dynamic") --slurpfile static <(printf '%s' "$static"))"; then
-          errorEcho ${lib.escapeShellArg "Could not merge Nix-generated config into ${path}"}
-          exit 1
-        fi
-        tmp="$(mktemp)"
-        ${writeCmd}
-        # Overwrite in place: an existing file keeps its permissions and
-        # symlink target (`install -m` would reset the mode), while a new
-        # file gets `mode` or, by default, the activation's umask.
-        if [ -e ${lib.escapeShellArg path} ]; then
-          cat "$tmp" > ${lib.escapeShellArg path}
-        else
-          ${
-            if mode == null then
-              ''cat "$tmp" > ${lib.escapeShellArg path}''
-            else
-              ''install -m${lib.escapeShellArg mode} "$tmp" ${lib.escapeShellArg path}''
-          }
-        fi
-        rm -f "$tmp"
-        unset config
+        (
+          display_path=${lib.escapeShellArg path}
+          settings_path="$display_path"
+          was_symlink=
+          if [[ -L "$display_path" ]]; then
+            was_symlink=1
+            if ! settings_path="$(${coreutil "readlink"} -f -- "$display_path")"; then
+              errorEcho "Cannot resolve config at '$display_path'; leaving the symlink unchanged."
+              exit 1
+            fi
+          fi
+          case "$settings_path" in
+            ${lib.escapeShellArg builtins.storeDir}/*)
+              errorEcho "Config at '$display_path' resolves into the Nix store; refusing to replace it."
+              exit 1
+              ;;
+          esac
+
+          snapshot_dir=
+          candidate_path=
+          # Activation owns the outer EXIT trap; cleanup must stay in this subshell.
+          trap '
+            [[ -z "$snapshot_dir" ]] || rm -rf -- "$snapshot_dir"
+            [[ -z "$candidate_path" ]] || rm -f -- "$candidate_path"
+          ' EXIT
+
+          mkdir -p "$(dirname "$settings_path")"
+          snapshot_path=
+          input_path="$settings_path"
+          if [[ -e "$settings_path" ]]; then
+            # Keep the configured file name so a reader that detects the format
+            # from the extension still recognizes the snapshot, even when the
+            # path is a symlink to a differently named file.
+            snapshot_dir="$(${coreutil "mktemp"} -d "$settings_path.snapshot.XXXXXX")"
+            snapshot_path="$snapshot_dir/''${display_path##*/}"
+            ${coreutil "cp"} --preserve=mode -- "$settings_path" "$snapshot_path"
+            input_path="$snapshot_path"
+          fi
+
+          # A missing or empty file is treated as `empty`, but an existing file
+          # that fails to parse must fail activation instead of being replaced
+          # by the generated defaults. The reader's exit status is checked
+          # because it can emit valid JSON before failing (e.g. jaq prints the
+          # first object of a truncated stream).
+          if [[ ! -s "$input_path" ]]; then
+            dynamic=${lib.escapeShellArg empty}
+          elif ! dynamic="$(${readerCmd} "$input_path")" || [[ -z "$dynamic" ]]; then
+            errorEcho "Could not parse config at '$display_path'; refusing to merge."
+            exit 1
+          fi
+          static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
+          if ! config="$(${jaqBin} -n ${lib.escapeShellArg mergeFilter} --slurpfile dynamic <(printf '%s' "$dynamic") --slurpfile static <(printf '%s' "$static"))"; then
+            errorEcho "Could not merge Nix-generated config into '$display_path'."
+            exit 1
+          fi
+          candidate_path="$(${coreutil "mktemp"} "$settings_path.candidate.XXXXXX")"
+          ${writeCmd}
+          if [[ -n "$snapshot_path" ]]; then
+            ${coreutil "chmod"} --reference="$snapshot_path" -- "$candidate_path"
+          else
+            ${coreutil "chmod"} ${
+              if mode == null then ''"$(printf '%o' "$(( 0666 & ~$(umask) ))")"'' else lib.escapeShellArg mode
+            } -- "$candidate_path"
+          fi
+
+          conflict=
+          if [[ -n "$was_symlink" ]]; then
+            if [[ ! -L "$display_path" ]] \
+              || [[ "$(${coreutil "readlink"} -f -- "$display_path")" != "$settings_path" ]]; then
+              conflict=1
+            fi
+          elif [[ -L "$display_path" ]]; then
+            conflict=1
+          fi
+          if [[ -n "$snapshot_path" ]]; then
+            if [[ -L "$settings_path" ]] \
+              || ! ${lib.getExe' pkgs.diffutils "cmp"} -s -- "$snapshot_path" "$settings_path" \
+              || [[ "$(${coreutil "stat"} -c '%a' -- "$settings_path")" != "$(${coreutil "stat"} -c '%a' -- "$snapshot_path")" ]]; then
+              conflict=1
+            fi
+          elif [[ -e "$settings_path" || -L "$settings_path" ]]; then
+            conflict=1
+          fi
+          if [[ -n "$conflict" ]]; then
+            errorEcho "Config at '$display_path' changed during activation; keeping the newer file."
+            exit 1
+          fi
+
+          if ${coreutil "mv"} -fT -- "$candidate_path" "$settings_path" 2>/dev/null; then
+            candidate_path=
+          else
+            # rename(2) fails with EBUSY when the target is a mount point, such
+            # as a file bind-mounted by impermanence; write it in place instead.
+            ${coreutil "cat"} -- "$candidate_path" > "$settings_path"
+          fi
+        )
       fi
     '';
 
