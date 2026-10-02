@@ -15,6 +15,24 @@ let
 
   cfg = config.programs.opencode;
   webCfg = cfg.web;
+  hasSettings = cfg.settings != { } || transformedMcpServers != { };
+  settingsPath = "opencode/${if cfg.mutableSettings then "home-manager.json" else "opencode.json"}";
+  tuiPath = "opencode/${if cfg.mutableSettings then "home-manager-tui.json" else "tui.json"}";
+  effectiveFile = path: config.home.file."${config.xdg.configHome}/${path}";
+  absoluteTarget =
+    path:
+    let
+      inherit ((effectiveFile path)) target;
+    in
+    if lib.hasPrefix "/" target then target else "${config.home.homeDirectory}/${target}";
+  mutableEnvironment = lib.optionalAttrs cfg.mutableSettings (
+    lib.optionalAttrs (hasSettings && (effectiveFile settingsPath).enable) {
+      OPENCODE_CONFIG = absoluteTarget settingsPath;
+    }
+    // lib.optionalAttrs (cfg.tui != { } && (effectiveFile tuiPath).enable) {
+      OPENCODE_TUI_CONFIG = absoluteTarget tuiPath;
+    }
+  );
 
   jsonFormat = pkgs.formats.json { };
 
@@ -105,6 +123,9 @@ let
   ++ webCfg.extraArgs;
 
   opencodeWebLauncher = pkgs.writeShellScriptBin "opencode-web-launcher" ''
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (name: value: "export ${name}=${lib.escapeShellArg value}") mutableEnvironment
+    )}
     export PATH="${config.home.profileDirectory}/bin''${PATH:+:$PATH}"
     exec ${lib.escapeShellArgs webProgramArguments}
   '';
@@ -120,6 +141,35 @@ in
     enable = mkEnableOption "opencode";
 
     package = mkPackageOption pkgs "opencode" { nullable = true; };
+
+    mutableSettings = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to leave {file}`$XDG_CONFIG_HOME/opencode/opencode.json` and
+        {file}`$XDG_CONFIG_HOME/opencode/tui.json` writable by OpenCode.
+
+        When enabled, declarative settings and TUI settings are written to
+        {file}`$XDG_CONFIG_HOME/opencode/home-manager.json` and
+        {file}`$XDG_CONFIG_HOME/opencode/home-manager-tui.json` and loaded through
+        {env}`OPENCODE_CONFIG` and {env}`OPENCODE_TUI_CONFIG`. Declarative settings
+        override global user settings; project settings can still override them.
+        {env}`OPENCODE_TUI_CONFIG` requires OpenCode 1.2.15 or later.
+
+        These variables are set through {option}`home.sessionVariables` and must
+        reach OpenCode launches outside the web service for declarative settings
+        to be loaded. The web service receives them automatically.
+
+        Disabling this option restores Home Manager management of the main files.
+        If OpenCode has created those files, activation reports the normal file
+        collision; back up or move the app-owned files before switching back.
+        OpenCode can also create {file}`$XDG_CONFIG_HOME/opencode/opencode.jsonc`,
+        which takes precedence over the managed {file}`opencode.json` without
+        causing a collision. Back up and move that file, or reconcile its
+        contents with your declarations, before disabling this option.
+      '';
+    };
 
     extraPackages = mkOption {
       type = with lib.types; listOf package;
@@ -476,13 +526,15 @@ in
         options = {
           config = lib.mkEnableOption ''
             the validation of the generated configuration file
-            ({file}`$XDG_CONFIG_HOME/opencode/opencode.json`) against the
+            ({file}`$XDG_CONFIG_HOME/opencode/opencode.json`, or
+            {file}`home-manager.json` when mutable configuration is enabled) against the
             corresponding OpenCode JSON schema of the configured package using
             {command}`check-jsonschema`.
           '';
           tui = lib.mkEnableOption ''
             the validation of the generated configuration file
-            ({file}`$XDG_CONFIG_HOME/opencode/tui.json`) against the
+            ({file}`$XDG_CONFIG_HOME/opencode/tui.json`, or
+            {file}`home-manager-tui.json` when mutable configuration is enabled) against the
             corresponding OpenCode JSON schema of the configured package using
             {command}`check-jsonschema`.
           '';
@@ -496,6 +548,9 @@ in
         corresponding OpenCode JSON schemas of the configured package
         ({option}`programs.opencode.package`, `config.json` and `tui.json`
         from `passthru.jsonschema`) using {command}`check-jsonschema`.
+        When {option}`programs.opencode.mutableSettings` is enabled,
+        validation applies to the generated {file}`home-manager.json` and
+        {file}`home-manager-tui.json` layers instead of the writable user files.
       '';
     };
   };
@@ -553,10 +608,16 @@ in
         ''
       ];
 
-    home.packages = mkIf (packageWithExtraPackages != null) [ packageWithExtraPackages ];
+    home = {
+      packages = mkIf (packageWithExtraPackages != null) [ packageWithExtraPackages ];
+
+      sessionVariables = lib.mapAttrs (
+        _: value: lib.escape [ "\\" "\"" "$" "`" ] value
+      ) mutableEnvironment;
+    };
 
     xdg.configFile = {
-      "opencode/opencode.json" = mkIf (cfg.settings != { } || transformedMcpServers != { }) {
+      "${settingsPath}" = mkIf hasSettings {
         source =
           let
             # Merge MCP servers: transformed servers + user settings, with user settings taking precedence
@@ -577,7 +638,7 @@ in
           );
       };
 
-      "opencode/tui.json" = mkIf (cfg.tui != { }) (
+      "${tuiPath}" = mkIf (cfg.tui != { }) (
         let
           orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
             inherit pkgs jsonFormat;
