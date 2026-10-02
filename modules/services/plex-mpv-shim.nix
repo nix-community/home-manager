@@ -66,8 +66,8 @@ in
           written back before the restart.
 
           Disabling this option later leaves the writable {file}`conf.json` in
-          place. Move or remove it before switching, or Home Manager reports a
-          file collision.
+          place. If settings are nonempty, move or remove it before switching,
+          or Home Manager reports a file collision.
         '';
       };
     };
