@@ -17,18 +17,6 @@ let
   jsonFormat = pkgs.formats.json { };
   json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
 
-  impureConfigMerger = empty: jqOperation: path: staticSettings: ''
-    mkdir -p "$(dirname -- ${lib.escapeShellArg path})"
-    if [ ! -e ${lib.escapeShellArg path} ]; then
-      echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
-    fi
-    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path})"
-    static="$(cat ${lib.escapeShellArg staticSettings})"
-    config="$(${lib.getExe pkgs.jq} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
-    printf '%s\n' "$config" > ${lib.escapeShellArg path}
-    unset config
-  '';
-
   userDataDir = "${config.home.homeDirectory}/.t3/userdata";
 in
 {
@@ -150,24 +138,41 @@ in
     home.activation = mkMerge [
       (mkIf (cfg.mutableUserSettings && cfg.userSettings != { }) {
         t3codeSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" "$dynamic * $static" "${userDataDir}/settings.json" (
-            jsonFormat.generate "t3code-user-settings" cfg.userSettings
-          )
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "{}";
+            jqOperation = "$dynamic * $static";
+            path = "${userDataDir}/settings.json";
+            staticSettings = jsonFormat.generate "t3code-user-settings" cfg.userSettings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableKeybindings && cfg.keybindings != [ ]) {
         t3codeKeybindingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by([.key, .when]) | map(reduce .[] as $item ({}; . * $item))"
-            "${userDataDir}/keybindings.json"
-            (jsonFormat.generate "t3code-user-keybindings" cfg.keybindings)
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "[]";
+            jqOperation = "$dynamic + $static | group_by([.key, .when]) | map(reduce .[] as $item ({}; . * $item))";
+            path = "${userDataDir}/keybindings.json";
+            staticSettings = jsonFormat.generate "t3code-user-keybindings" cfg.keybindings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableClientSettings && cfg.clientSettings != { }) {
         t3codeClientSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" "$dynamic * $static" "${userDataDir}/client-settings.json" (
-            jsonFormat.generate "t3code-client-settings" cfg.clientSettings
-          )
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "{}";
+            jqOperation = "$dynamic * $static";
+            path = "${userDataDir}/client-settings.json";
+            staticSettings = jsonFormat.generate "t3code-client-settings" cfg.clientSettings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
     ];
