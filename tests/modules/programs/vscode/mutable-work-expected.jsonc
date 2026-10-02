@@ -1,0 +1,8 @@
+{
+  // A path-based settings file may use JSON with comments.
+  "editor.wordWrap": "on",
+  "nested": {
+    "declared": "from-path",
+    "pathOnly": true,
+  },
+}
