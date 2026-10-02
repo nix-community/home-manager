@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -14,7 +15,25 @@ in
   imports = [ ../nixos/common.nix ];
 
   config = lib.mkMerge [
-    { home-manager.extraSpecialArgs.darwinConfig = config; }
+    {
+      home-manager.extraSpecialArgs.darwinConfig = config;
+      warnings =
+        lib.optional
+          (
+            cfg.useUserPackages
+            && !(config.programs.fish.enable or false)
+            && (options.programs.fish.enable.highestPrio or 1500) >= 1500
+            && lib.any (user: user.programs.fish.enable or false) (lib.attrValues cfg.users)
+          )
+          ''
+            Home Manager fish users may be missing package-provided completions.
+            Set programs.fish.enable = true in your nix-darwin configuration,
+            outside home-manager.users, to enable vendor profile links and early
+            shell environment setup. If you manage this integration yourself,
+            explicitly set nix-darwin's programs.fish.enable = false to silence
+            this warning.
+          '';
+    }
     (lib.mkIf (cfg.users != { }) {
       system.activationScripts.postActivation.text = lib.concatStringsSep "\n" (
         lib.mapAttrsToList (
