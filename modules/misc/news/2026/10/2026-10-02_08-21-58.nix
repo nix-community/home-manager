@@ -13,11 +13,17 @@
     generation; a regular file left by Copilot CLI stays for it to manage.
 
     If Copilot CLI already moved your settings into a regular settings.json,
-    remove that file before switching. Otherwise activation reports it as a
-    collision, or leaves it unmanaged when its content happens to match.
+    remove that file before switching, or enable
+    'programs.github-copilot-cli.mutableSettings' to merge into it. Otherwise
+    activation reports it as a collision, or leaves it unmanaged when its
+    content happens to match.
 
     'trusted_folders' and 'trustedFolders' are no longer written, since
     Copilot CLI keeps trusted folders in its own state. Trust folders from
     Copilot CLI instead.
+
+    The new option 'programs.github-copilot-cli.mutableSettings' merges the
+    settings into a writable settings.json instead of linking it, for when
+    you change settings from inside Copilot CLI.
   '';
 }
