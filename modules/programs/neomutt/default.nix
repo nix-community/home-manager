@@ -254,42 +254,45 @@ let
 
   registerAccount =
     account:
-    let
-      mailboxes =
-        if account.neomutt.mailboxName == null then
-          "mailboxes"
-        else
-          ''named-mailboxes "${account.neomutt.mailboxName}"'';
-      mailroot = accountRoot account;
-      hookName = if account.neomutt.mailboxType == "imap" then "account-hook" else "folder-hook";
-      extraMailboxes = concatMapStringsSep "\n" (
-        extra:
-        let
-          mailboxroot =
-            if !isString extra && extra.type == "imap" then
-              accountRootIMAP account
-            else if !isString extra && extra.type == "maildir" then
-              account.maildir.absPath
-            else
-              mailroot;
-        in
-        if isString extra then
-          ''mailboxes "${mailboxroot}/${extra}"''
-        else if extra.name == null then
-          ''mailboxes "${mailboxroot}/${extra.mailbox}"''
-        else
-          ''named-mailboxes "${extra.name}" "${mailboxroot}/${extra.mailbox}"''
-      ) account.neomutt.extraMailboxes;
-    in
-    [ "## register account ${account.name}" ]
-    ++ lib.optional account.neomutt.showDefaultMailbox ''${mailboxes} "${mailroot}/${account.folders.inbox}"''
-    ++ [
-      extraMailboxes
-      ''
-        ${hookName} ${mailroot}/ " \
-                  source ${accountFilename account} "
-      ''
-    ];
+    if !account.neomutt.registerAccount then
+      [ ]
+    else
+      let
+        mailboxes =
+          if account.neomutt.mailboxName == null then
+            "mailboxes"
+          else
+            ''named-mailboxes "${account.neomutt.mailboxName}"'';
+        mailroot = accountRoot account;
+        hookName = if account.neomutt.mailboxType == "imap" then "account-hook" else "folder-hook";
+        extraMailboxes = concatMapStringsSep "\n" (
+          extra:
+          let
+            mailboxroot =
+              if !isString extra && extra.type == "imap" then
+                accountRootIMAP account
+              else if !isString extra && extra.type == "maildir" then
+                account.maildir.absPath
+              else
+                mailroot;
+          in
+          if isString extra then
+            ''mailboxes "${mailboxroot}/${extra}"''
+          else if extra.name == null then
+            ''mailboxes "${mailboxroot}/${extra.mailbox}"''
+          else
+            ''named-mailboxes "${extra.name}" "${mailboxroot}/${extra.mailbox}"''
+        ) account.neomutt.extraMailboxes;
+      in
+      [ "## register account ${account.name}" ]
+      ++ lib.optional account.neomutt.showDefaultMailbox ''${mailboxes} "${mailroot}/${account.folders.inbox}"''
+      ++ [
+        extraMailboxes
+        ''
+          ${hookName} ${mailroot}/ " \
+                    source ${accountFilename account} "
+        ''
+      ];
 
   mraSection =
     account:
