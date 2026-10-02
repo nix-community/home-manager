@@ -13,7 +13,9 @@ let
     lib.hm.generators.mkImpureConfigMerger {
       inherit pkgs format;
       empty = "{}";
-      jqOperation = "$dynamic * $static";
+      # The trailing comment must not break the filter the operation is
+      # embedded in.
+      jqOperation = "$dynamic * $static # recursive merge";
       path = "/@TMPDIR@/hm-user/.config/testmerger/settings.${format}";
       staticSettings = builtins.toFile "static-settings.${format}" static;
     };
@@ -30,6 +32,10 @@ let
 
   mergeJson = mkScript "merge-json" (mkMerger "json" (builtins.toJSON { nixManaged = true; }));
   mergeToml = mkScript "merge-toml" (mkMerger "toml" "nixManaged = true\n");
+
+  largeStatic = builtins.toJSON { nixManaged = lib.genList (i: i) 40000; };
+  largeStaticFile = builtins.toFile "static-settings.json" largeStatic;
+  mergeLargeStatic = mkScript "merge-large-static" (mkMerger "json" largeStatic);
 
   # jaq prints the first object of this stream before failing on the
   # truncated second one, so checking only the reader output would accept a
@@ -62,7 +68,8 @@ in
   nmt.script = ''
     substitute ${mergeJson} $TMPDIR/merge-json --subst-var TMPDIR
     substitute ${mergeToml} $TMPDIR/merge-toml --subst-var TMPDIR
-    chmod +x $TMPDIR/merge-json $TMPDIR/merge-toml
+    substitute ${mergeLargeStatic} $TMPDIR/merge-large-static --subst-var TMPDIR
+    chmod +x $TMPDIR/merge-json $TMPDIR/merge-toml $TMPDIR/merge-large-static
 
     mkdir -p $TMPDIR/hm-user/.config/testmerger
     jsonSettings=$TMPDIR/hm-user/.config/testmerger/settings.json
@@ -75,6 +82,29 @@ in
       fail "Merging a truncated JSON stream must fail activation"
     fi
     assertFileContent $jsonSettings ${truncatedJson}
+
+    printf '%s\n' '{"a":1}' '{"b":2}' > $jsonSettings
+    cp $jsonSettings $TMPDIR/original.json
+    if $TMPDIR/merge-json > /dev/null 2> $TMPDIR/merge-error; then
+      fail "Merging multiple JSON values must fail activation"
+    fi
+    assertFileContent $jsonSettings $TMPDIR/original.json
+    grep -qF "$jsonSettings" $TMPDIR/merge-error \
+      || fail "A failed merge must name the config file"
+
+    ${lib.getExe pkgs.jaq} -cn '{userSetting: [range(0; 40000)]}' > $jsonSettings
+    if [ "$(wc -c < $jsonSettings)" -le 131072 ]; then
+      fail "The existing JSON file must exceed 128 KiB"
+    fi
+    $TMPDIR/merge-json
+    ${lib.getExe pkgs.jaq} -e '.userSetting == [range(0; 40000)] and .nixManaged == true' $jsonSettings > /dev/null
+
+    if [ "$(wc -c < ${largeStaticFile})" -le 131072 ]; then
+      fail "The Nix-declared JSON settings must exceed 128 KiB"
+    fi
+    echo '{"userSetting":true}' > $jsonSettings
+    $TMPDIR/merge-large-static
+    ${lib.getExe pkgs.jaq} -e '.userSetting == true and .nixManaged == [range(0; 40000)]' $jsonSettings > /dev/null
 
     # A missing JSON target installs the generated settings.
     rm -f $jsonSettings
