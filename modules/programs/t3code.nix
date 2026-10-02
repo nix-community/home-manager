@@ -30,10 +30,42 @@ let
   '';
 
   userDataDir = "${config.home.homeDirectory}/.t3/userdata";
+
+  serverCfg = cfg.server;
+
+  # t3code's headless server binary. pkgs.t3code's mainProgram is the Electron
+  # desktop app (t3code-desktop); the server run as a service is `t3`.
+  serverBinName = "t3";
+
+  # Wrap the package so the coding-agent and VCS CLIs the user configures are
+  # on PATH for the server's subprocesses (git, gh, claude-code, opencode, ...).
+  serverPackage =
+    if cfg.package != null && serverCfg.extraPackages != [ ] then
+      pkgs.symlinkJoin {
+        inherit (cfg.package) meta;
+        name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+        paths = [ cfg.package ];
+        preferLocalBuild = true;
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/${serverBinName} \
+            --suffix PATH : ${lib.makeBinPath serverCfg.extraPackages}
+        '';
+      }
+    else
+      cfg.package;
+
+  serverExe = lib.getExe' serverPackage serverBinName;
+
+  serverArgs = [
+    "serve"
+  ]
+  ++ serverCfg.extraArgs;
 in
 {
   meta.maintainers = [
     lib.maintainers.iamanaws
+    lib.maintainers.jonocodes
   ];
 
   options.programs.t3code = {
@@ -142,6 +174,47 @@ in
         Configuration written to t3code's {file}`client-settings.json`.
       '';
     };
+
+    server = {
+      enable = lib.mkEnableOption "the t3code headless server as a user service";
+
+      extraPackages = mkOption {
+        type = types.listOf types.package;
+        default = [ ];
+        example = literalExpression "[ pkgs.git pkgs.gh pkgs.claude-code pkgs.opencode ]";
+        description = ''
+          Extra packages placed on the server's {env}`PATH` so t3code can shell
+          out to the coding-agent and version-control CLIs it drives.
+        '';
+      };
+
+      extraArgs = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [
+          "--host"
+          "0.0.0.0"
+          "--port"
+          "3773"
+        ];
+        description = ''
+          Extra arguments passed to {command}`t3 serve`, for example
+          `--host` and `--port`. Run {command}`t3 serve --help` for the
+          full list.
+        '';
+      };
+
+      environmentFile = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        example = "/run/secrets/t3code";
+        description = ''
+          Path to an environment file (see {manpage}`systemd.exec(5)`) loaded by
+          the service. The recommended way to pass secrets without exposing them
+          in the Nix store.
+        '';
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -185,5 +258,60 @@ in
           jsonFormat.generate "t3code-client-settings" cfg.clientSettings;
       })
     ];
+
+    assertions = [
+      {
+        assertion = !serverCfg.enable || cfg.package != null;
+        message = "programs.t3code.server.enable requires programs.t3code.package to be set (it is null).";
+      }
+    ];
+
+    systemd.user.services = mkIf serverCfg.enable {
+      t3code = {
+        Unit = {
+          Description = "t3code headless server";
+          Documentation = "https://t3.codes";
+          After = [ "network.target" ];
+        };
+
+        Service = {
+          ExecStart = "${serverExe} ${lib.escapeShellArgs serverArgs}";
+          Restart = "on-failure";
+          RestartSec = 5;
+        }
+        // lib.optionalAttrs (serverCfg.environmentFile != null) {
+          EnvironmentFile = serverCfg.environmentFile;
+        };
+
+        Install = {
+          WantedBy = [ "default.target" ];
+        };
+      };
+    };
+
+    launchd.agents = mkIf serverCfg.enable {
+      t3code = {
+        enable = true;
+        config = {
+          ProgramArguments =
+            let
+              launchdWrapper = pkgs.writeShellScriptBin "t3code-launchd-wrapper" ''
+                source ${toString serverCfg.environmentFile}
+                exec ${serverExe} ${lib.escapeShellArgs serverArgs}
+              '';
+            in
+            if serverCfg.environmentFile == null then
+              [ serverExe ] ++ serverArgs
+            else
+              [ (lib.getExe launchdWrapper) ];
+          KeepAlive = {
+            Crashed = true;
+            SuccessfulExit = false;
+          };
+          ProcessType = "Background";
+          RunAtLoad = true;
+        };
+      };
+    };
   };
 }
