@@ -16,6 +16,7 @@ let
   cfg = config.programs.github-copilot-cli;
 
   jsonFormat = pkgs.formats.json { };
+  json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
 
   # Copilot CLI drops trusted_folders from settings.json and moves
   # trustedFolders into its own state in config.json, rewriting settings.json
@@ -174,8 +175,9 @@ in
       };
       description = ''
         Configuration written to {file}`settings.json` inside
-        {option}`programs.github-copilot-cli.configDir`. Empty settings leave
-        the file unmanaged.
+        {option}`programs.github-copilot-cli.configDir`. See
+        [](#opt-programs.github-copilot-cli.mutableSettings) for how the file
+        is managed. Empty settings leave the file unmanaged.
 
         Trusted folders (`trusted_folders`, `trustedFolders`) are not user
         settings: Copilot CLI keeps them in its own state, so they are left
@@ -201,6 +203,29 @@ in
 
         See <https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference>
         for the documentation.
+      '';
+    };
+
+    mutableSettings = mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to merge [](#opt-programs.github-copilot-cli.settings) into a
+        writable {file}`settings.json` at activation instead of linking it from
+        the Nix store.
+
+        Copilot CLI replaces {file}`settings.json` when it saves a setting,
+        for example after changing the model or theme from inside the CLI.
+        With a linked file that replaces the link, and the next activation
+        reports a collision.
+
+        When enabled, declared values take precedence over existing values,
+        keys later removed from [](#opt-programs.github-copilot-cli.settings)
+        stay in the file, and comments and formatting are not preserved.
+        Turning the option off links the file again: a merged file that Copilot
+        CLI has not changed is replaced automatically, and one it has changed
+        is reported as a collision.
       '';
     };
 
@@ -429,8 +454,34 @@ in
       its own state; trust folders from Copilot CLI instead.
     '';
 
+    home.activation.githubCopilotCliSettings = mkIf (cfg.mutableSettings && userSettings != { }) (
+      lib.hm.dag.entryAfter [ "linkGeneration" ] (
+        lib.hm.generators.mkImpureConfigMerger {
+          inherit pkgs;
+          format = "json";
+          empty = "{}";
+          jqOperation = "$dynamic * $static";
+          path = "${cfg.configDir}/settings.json";
+          staticSettings = settingsFile;
+          reader = "${lib.getExe json5} --as-json";
+        }
+      )
+    );
+
+    # Turning mutableSettings off links settings.json again; remove an
+    # unchanged merged copy first so the link can replace it.
+    home.activation.githubCopilotCliImmutableSettings =
+      let
+        cleanup = lib.hm.generators.mkImpureConfigCleanup {
+          file = config.home.file."${cfg.configDir}/settings.json";
+        };
+      in
+      mkIf (!cfg.mutableSettings && userSettings != { } && cleanup != "") (
+        lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] cleanup
+      );
+
     home.file = {
-      "${cfg.configDir}/settings.json" = mkIf (userSettings != { }) {
+      "${cfg.configDir}/settings.json" = mkIf (!cfg.mutableSettings && userSettings != { }) {
         source = settingsFile;
       };
 

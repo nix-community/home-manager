@@ -4,6 +4,7 @@
   github-copilot-cli-lsp = ./lsp.nix;
   github-copilot-cli-mcp = ./mcp.nix;
   github-copilot-cli-mcp-integration = ./mcp-integration.nix;
+  github-copilot-cli-mutable-settings = ./mutable-settings.nix;
   github-copilot-cli-path-not-directory = ./path-not-directory.nix;
   github-copilot-cli-store-path-dir = ./store-path-dir.nix;
   github-copilot-cli-store-path-skills = ./store-path-skills.nix;

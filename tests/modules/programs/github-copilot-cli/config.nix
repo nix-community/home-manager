@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -59,6 +60,12 @@ in
 
   nmt.script =
     assert !(config.home.activation ? githubCopilotCliSettings);
+    # Turning mutableSettings off removes an unchanged merged copy before
+    # linking; the cleanup itself is covered by the mkImpureConfigCleanup tests.
+    assert config.home.activation.githubCopilotCliImmutableSettings.after == [ "writeBoundary" ];
+    assert config.home.activation.githubCopilotCliImmutableSettings.before == [ "linkGeneration" ];
+    assert lib.hasInfix ".copilot/settings.json"
+      config.home.activation.githubCopilotCliImmutableSettings.data;
     ''
       assertPathNotExists home-files/.copilot/config.json
       assertFileContent home-files/.copilot/settings.json ${./expected-config.json}
