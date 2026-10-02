@@ -925,8 +925,10 @@ in
     the user has made interactively while applying the Nix-declared settings on
     top.
 
-    The merge uses `jaq` internally, which supports JSON, YAML, TOML, and CBOR
-    natively via its `--from`/`--to` flags — no extra tools needed.
+    The merge uses `jaq` internally to read and write JSON, YAML, TOML, and
+    CBOR via its `--from`/`--to` flags. Comments and formatting are not
+    preserved. YAML is written in block style with `---` and `...` document
+    markers.
 
     :::{.warning}
     This function is **experimental**: its interface and generated script may
@@ -1031,7 +1033,7 @@ in
         if isJson then
           "printf '%s\\n' \"$config\" > \"$tmp\""
         else
-          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} -c '.' > \"$tmp\"";
+          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} '.' > \"$tmp\"";
       defaultVerboseMsg = "Merging Nix-generated config into ${path}";
       verboseMsg' = if verboseMsg != null then verboseMsg else defaultVerboseMsg;
       # Pass both documents through files: Linux caps a single argument at

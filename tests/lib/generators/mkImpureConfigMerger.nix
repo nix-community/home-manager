@@ -75,6 +75,33 @@ let
     userSetting = 5
     nixManaged = true
   '';
+
+  mergeYaml = mkScript "merge-yaml" (
+    mkMerger "yaml" ''
+      managed:
+        key: nix
+    ''
+  );
+
+  userYaml = builtins.toFile "user.yaml" ''
+    user:
+      theme: dark
+      recent:
+        - /a
+        - /b
+  '';
+
+  expectedYaml = builtins.toFile "expected.yaml" ''
+    ---
+    user:
+      theme: dark
+      recent:
+        - /a
+        - /b
+    managed:
+      key: nix
+    ...
+  '';
 in
 {
   nmt.script = ''
@@ -150,5 +177,17 @@ in
     : > $tomlSettings
     $TMPDIR/merge-toml
     assertFileContent $tomlSettings ${expectedToml}
+
+    substitute ${mergeYaml} $TMPDIR/merge-yaml --subst-var TMPDIR
+    chmod +x $TMPDIR/merge-yaml
+    yamlSettings=$TMPDIR/hm-user/.config/testmerger/settings.yaml
+
+    # YAML is written in block style, and merging the written file again
+    # leaves it unchanged.
+    cat ${userYaml} > $yamlSettings
+    $TMPDIR/merge-yaml
+    assertFileContent $yamlSettings ${expectedYaml}
+    $TMPDIR/merge-yaml
+    assertFileContent $yamlSettings ${expectedYaml}
   '';
 }
