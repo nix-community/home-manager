@@ -33,6 +33,18 @@ let
   mergeJson = mkScript "merge-json" (mkMerger "json" (builtins.toJSON { nixManaged = true; }));
   mergeToml = mkScript "merge-toml" (mkMerger "toml" "nixManaged = true\n");
 
+  # Messages must print the path literally instead of evaluating it.
+  mergeOddPath = mkScript "merge-odd-path" (
+    lib.hm.generators.mkImpureConfigMerger {
+      inherit pkgs;
+      format = "json";
+      empty = "{}";
+      jqOperation = "$dynamic * $static";
+      path = "/@TMPDIR@/hm-user/odd $(touch marker)/settings.json";
+      staticSettings = builtins.toFile "static-settings.json" "{}";
+    }
+  );
+
   largeStatic = builtins.toJSON { nixManaged = lib.genList (i: i) 40000; };
   largeStaticFile = builtins.toFile "static-settings.json" largeStatic;
   mergeLargeStatic = mkScript "merge-large-static" (mkMerger "json" largeStatic);
@@ -105,6 +117,19 @@ in
     echo '{"userSetting":true}' > $jsonSettings
     $TMPDIR/merge-large-static
     ${lib.getExe pkgs.jaq} -e '.userSetting == true and .nixManaged == [range(0; 40000)]' $jsonSettings > /dev/null
+
+    substitute ${mergeOddPath} $TMPDIR/merge-odd-path --subst-var TMPDIR
+    chmod +x $TMPDIR/merge-odd-path
+    oddSettings='/'"$TMPDIR"'/hm-user/odd $(touch marker)/settings.json'
+    DRY_RUN=1 $TMPDIR/merge-odd-path > $TMPDIR/odd-output
+    mkdir -p "$(dirname "$oddSettings")"
+    echo '{' > "$oddSettings"
+    if $TMPDIR/merge-odd-path 2>> $TMPDIR/odd-output; then
+      fail "Merging a malformed file must fail activation"
+    fi
+    [[ ! -e marker ]] || fail "Messages must not run commands in the path"
+    grep -qF 'odd $(touch marker)/settings.json' $TMPDIR/odd-output \
+      || fail "Messages must contain the literal path"
 
     # A missing JSON target installs the generated settings.
     rm -f $jsonSettings

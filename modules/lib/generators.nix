@@ -1053,7 +1053,7 @@ in
         echo ${lib.escapeShellArg verboseMsg'}
       fi
       if [[ -v DRY_RUN ]]; then
-        echo "Would merge Nix-generated config into ${path}"
+        echo ${lib.escapeShellArg "Would merge Nix-generated config into ${path}"}
       else
         mkdir -p "$(dirname ${lib.escapeShellArg path})"
         # A missing or empty file is treated as `empty` (see the
@@ -1066,7 +1066,7 @@ in
           # Missing or zero-byte file: treat as absent.
           dynamic=${lib.escapeShellArg empty}
         elif ! dynamic="$(${readerCmd} ${lib.escapeShellArg path})" || [ -z "$dynamic" ]; then
-          errorEcho "Could not parse ${lib.escapeShellArg path}; refusing to merge"
+          errorEcho ${lib.escapeShellArg "Could not parse ${path}; refusing to merge"}
           exit 1
         fi
         static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
