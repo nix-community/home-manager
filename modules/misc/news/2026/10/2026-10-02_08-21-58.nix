@@ -18,9 +18,11 @@
     activation reports it as a collision, or leaves it unmanaged when its
     content happens to match.
 
-    'trusted_folders' and 'trustedFolders' are no longer written, since
-    Copilot CLI keeps trusted folders in its own state. Trust folders from
-    Copilot CLI instead.
+    'trusted_folders' and 'trustedFolders' in 'settings' are no longer
+    written, since Copilot CLI keeps trusted folders in its own state. Declare
+    them with the new option 'programs.github-copilot-cli.trustedFolders',
+    which adds them to Copilot CLI's config.json and keeps folders you trust
+    from inside Copilot CLI.
 
     The new option 'programs.github-copilot-cli.mutableSettings' merges the
     settings into a writable settings.json instead of linking it, for when

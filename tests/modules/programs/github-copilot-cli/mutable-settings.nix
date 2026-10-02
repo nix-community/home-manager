@@ -20,7 +20,7 @@
     ''
       programs.github-copilot-cli.settings: trusted_folders and trustedFolders
       are not written to settings.json. Copilot CLI keeps trusted folders in
-      its own state; trust folders from Copilot CLI instead.
+      its own state; use programs.github-copilot-cli.trustedFolders instead.
     ''
   ];
 
