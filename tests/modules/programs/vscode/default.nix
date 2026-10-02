@@ -20,6 +20,9 @@ let
     snippets = import ./snippets.nix;
     null-package = import ./null-package.nix;
     fork-package-warning = import ./fork-package-warning.nix;
+    default-profile-extensions = import ./default-profile-extensions.nix;
+    mutable-extensions-dir-empty-profiles = import ./mutable-extensions-dir-empty-profiles.nix;
+    mutable-extensions-dir-non-default-extensions = import ./mutable-extensions-dir-non-default-extensions.nix;
   };
 
 in
