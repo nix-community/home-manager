@@ -48,6 +48,22 @@ let
       context_servers = mergedMcpServers;
     });
 
+  # Files linked from the store instead of merged. The cleanup reads the
+  # matching file entries, so both must use these conditions.
+  immutableFiles = {
+    settings = !cfg.mutableUserSettings && mergedSettings != { };
+    keymap = !cfg.mutableUserKeymaps && cfg.userKeymaps != [ ];
+    tasks = !cfg.mutableUserTasks && cfg.userTasks != [ ];
+    debug = !cfg.mutableUserDebug && cfg.userDebug != [ ];
+  };
+
+  immutableConfigCleanup = lib.concatMapStrings (
+    name:
+    lib.hm.generators.mkImpureConfigCleanup {
+      file = config.home.file."${config.xdg.configHome}/zed/${name}.json";
+    }
+  ) (lib.attrNames (lib.filterAttrs (_: lib.id) immutableFiles));
+
   editorEnv = {
     EDITOR = "${cfg.package.meta.mainProgram} --wait";
     VISUAL = "${cfg.package.meta.mainProgram} --wait";
@@ -298,6 +314,11 @@ in
     );
 
     home.activation = mkMerge [
+      (mkIf (immutableConfigCleanup != "") {
+        zedImmutableConfig =
+          lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+            immutableConfigCleanup;
+      })
       (mkIf (cfg.mutableUserSettings && mergedSettings != { }) {
         zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
           lib.hm.generators.mkImpureConfigMerger {
@@ -365,16 +386,16 @@ in
               jsonFormat.generate "zed-theme-${n}" v;
         }
       ) cfg.themes)
-      (mkIf (!cfg.mutableUserSettings && mergedSettings != { }) {
+      (mkIf immutableFiles.settings {
         "zed/settings.json".source = jsonFormat.generate "zed-user-settings" mergedSettings;
       })
-      (mkIf (!cfg.mutableUserKeymaps && cfg.userKeymaps != [ ]) {
+      (mkIf immutableFiles.keymap {
         "zed/keymap.json".source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
       })
-      (mkIf (!cfg.mutableUserTasks && cfg.userTasks != [ ]) {
+      (mkIf immutableFiles.tasks {
         "zed/tasks.json".source = jsonFormat.generate "zed-user-tasks" cfg.userTasks;
       })
-      (mkIf (!cfg.mutableUserDebug && cfg.userDebug != [ ]) {
+      (mkIf immutableFiles.debug {
         "zed/debug.json".source = jsonFormat.generate "zed-user-debug" cfg.userDebug;
       })
     ];
