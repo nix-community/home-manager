@@ -9,17 +9,17 @@ let
   extraHelper = pkgs.writeShellScriptBin "extra-helper" "";
   inheritedHelper = pkgs.writeShellScriptBin "inherited-helper" "";
   testOpencode = pkgs.writeShellScriptBin "opencode" ''
-    set -e
-    command -v profile-helper >/dev/null
-    command -v extra-helper >/dev/null
-    command -v inherited-helper >/dev/null
+    command -v profile-helper >/dev/null || exit 1
+    command -v extra-helper >/dev/null || exit 1
+    command -v inherited-helper >/dev/null || exit 1
   '';
-  serviceLauncher = config.systemd.user.services.opencode-web.Service.ExecStart;
-  testLauncher = "$TMPDIR/opencode-web-launcher";
+  serviceLauncher =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      builtins.head config.launchd.agents.opencode-web.config.ProgramArguments
+    else
+      builtins.head config.systemd.user.services.opencode-web.Service.ExecStart;
 in
 {
-  home.homeDirectory = lib.mkForce "/@TMPDIR@/hm-user";
-
   programs.opencode = {
     enable = true;
     package = testOpencode;
@@ -62,10 +62,15 @@ in
         ''
     )
     + ''
-      mkdir -p "$TMPDIR/hm-user/.nix-profile/bin"
-      ln -s ${lib.getExe profileHelper} "$TMPDIR/hm-user/.nix-profile/bin/profile-helper"
-      substitute ${lib.escapeShellArg serviceLauncher} ${testLauncher} --subst-var TMPDIR
-      chmod +x ${testLauncher}
-      PATH=${lib.makeBinPath [ inheritedHelper ]} ${testLauncher}
+      launcherNormalized="$(normalizeStorePaths "${serviceLauncher}")"
+      substitute ${./web-service-launcher.sh} "$TMPDIR/launcher-expected.sh" \
+        --replace-fail '@shell@' '${pkgs.runtimeShell}'
+      launcherExpectedNormalized="$(normalizeStorePaths "$TMPDIR/launcher-expected.sh")"
+      assertFileContent "$launcherNormalized" "$launcherExpectedNormalized"
+
+      substitute "${serviceLauncher}" "$TMPDIR/opencode-web-launcher" \
+        --replace-fail '${config.home.profileDirectory}/bin' '${lib.makeBinPath [ profileHelper ]}'
+      PATH=${lib.makeBinPath [ inheritedHelper ]} ${pkgs.runtimeShell} "$TMPDIR/opencode-web-launcher" \
+        || fail "OpenCode's launcher must provide profile and extra packages while preserving PATH"
     '';
 }

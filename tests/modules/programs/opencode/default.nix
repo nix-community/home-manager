@@ -1,5 +1,12 @@
 {
   opencode-assertions = ./assertions.nix;
+  opencode-layer-home-file-service = ./layer-home-file-service.nix;
+  opencode-layer-home-file-service-disabled = ./layer-home-file-service-disabled.nix;
+  opencode-layer-override = ./layer-override.nix;
+  opencode-layer-file-disabled = ./layer-file-disabled.nix;
+  opencode-layer-settings = ./layer-settings.nix;
+  opencode-layer-empty = ./layer-empty.nix;
+
   opencode-settings = ./settings.nix;
   opencode-settings-ordered-permissions = ./settings-ordered-permissions.nix;
   opencode-empty-settings = ./empty-settings.nix;
