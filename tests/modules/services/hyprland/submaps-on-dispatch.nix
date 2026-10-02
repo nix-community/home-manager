@@ -1,6 +1,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    checkConfig = false;
     submaps = {
       resize = {
         onDispatch = "reset";
