@@ -930,6 +930,10 @@ in
     preserved. YAML is written in block style with `---` and `...` document
     markers.
 
+    As of `jaq` 3.1.1, TOML date and time values are not supported. An existing
+    TOML file containing such values causes activation to fail without modifying
+    the file. Subsequent activations will also fail while those values remain.
+
     :::{.warning}
     This function is **experimental**: its interface and generated script may
     change without notice in future releases, as edge cases around the
