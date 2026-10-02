@@ -157,6 +157,21 @@ in
                 description = "Combined stdout and stderr log file for the Colima service.";
               };
 
+              mutableSettings = lib.mkOption {
+                type = lib.types.bool;
+                default = false;
+                description = ''
+                  Whether to merge settings into a writable configuration file during
+                  activation. Settings declared here take precedence; other settings are
+                  preserved. Removing a setting here does not remove it from the file.
+                  Comments and formatting are not preserved.
+
+                  This does not change the service's save-config flag. When switching
+                  back to immutable settings, existing files use Home Manager's normal
+                  collision and backup handling.
+                '';
+              };
+
               settings = lib.mkOption {
                 inherit (yamlFormat) type;
                 default = { };
@@ -238,14 +253,33 @@ in
       ];
 
       home = {
+        activation = lib.mapAttrs' (
+          name: profile:
+          lib.nameValuePair "colima-${name}MutableSettings" (
+            lib.hm.dag.entryAfter [ "linkGeneration" ] (
+              lib.hm.generators.mkImpureConfigMerger {
+                inherit pkgs;
+                format = "yaml";
+                empty = "{}";
+                jqOperation = "$dynamic * $static";
+                path = "${colimaHome}/${name}/colima.yaml";
+                staticSettings = yamlFormat.generate "colima.yaml" profile.settings;
+                mode = "600";
+              }
+            )
+          )
+        ) (lib.filterAttrs (_: profile: profile.mutableSettings && profile.settings != { }) cfg.profiles);
+
         packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
         file = lib.mkMerge (
-          lib.mapAttrsToList (profileName: profile: {
-            "${cfg.colimaHomeDir}/${profileName}/colima.yaml" = {
-              source = yamlFormat.generate "colima.yaml" profile.settings;
-            };
-          }) (lib.filterAttrs (_name: profile: profile.settings != { }) cfg.profiles)
+          lib.mapAttrsToList
+            (profileName: profile: {
+              "${cfg.colimaHomeDir}/${profileName}/colima.yaml" = {
+                source = yamlFormat.generate "colima.yaml" profile.settings;
+              };
+            })
+            (lib.filterAttrs (_name: profile: !profile.mutableSettings && profile.settings != { }) cfg.profiles)
         );
 
         sessionVariables = {
