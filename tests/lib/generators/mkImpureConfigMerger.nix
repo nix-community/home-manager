@@ -102,6 +102,12 @@ let
       key: nix
     ...
   '';
+
+  userDateToml = builtins.toFile "user-date.toml" ''
+    # Keep this file intact when jaq cannot parse its date value.
+    date = 1979-05-27T07:32:00Z
+    userSetting = 5
+  '';
 in
 {
   nmt.script = ''
@@ -177,6 +183,15 @@ in
     : > $tomlSettings
     $TMPDIR/merge-toml
     assertFileContent $tomlSettings ${expectedToml}
+
+    # jaq 3.1.1 cannot parse TOML dates. If a newer jaq can, they would pass
+    # through JSON as strings and come back as TOML strings, so this failing
+    # means the documented limitation needs revisiting.
+    cat ${userDateToml} > $tomlSettings
+    if $TMPDIR/merge-toml > /dev/null 2>&1; then
+      fail "Merging TOML with a date value must fail activation"
+    fi
+    assertFileContent $tomlSettings ${userDateToml}
 
     substitute ${mergeYaml} $TMPDIR/merge-yaml --subst-var TMPDIR
     chmod +x $TMPDIR/merge-yaml
