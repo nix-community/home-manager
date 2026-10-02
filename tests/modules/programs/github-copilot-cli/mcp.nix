@@ -20,5 +20,7 @@
     assertFileExists home-files/.copilot/mcp-config.json
     assertFileContent home-files/.copilot/mcp-config.json ${./expected-mcp-config.json}
     assertPathNotExists home-files/.copilot/config.json
+    assertPathNotExists home-files/.copilot/settings.json
+    assertFileNotRegex activate 'githubCopilotCliSettings|github-copilot-cli-settings.json'
   '';
 }

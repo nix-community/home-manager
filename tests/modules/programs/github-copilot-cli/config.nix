@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
   inlineAgent = ''
     ---
@@ -38,7 +42,6 @@ in
     settings = {
       model = "claude-sonnet-4-5";
       theme = "dark";
-      trusted_folders = [ "/home/user/projects" ];
     };
     context = inlineContext;
     agents = {
@@ -54,52 +57,54 @@ in
     };
   };
 
-  nmt.script = ''
-    assertFileExists home-files/.copilot/config.json
-    assertFileContent home-files/.copilot/config.json ${./expected-config.json}
+  nmt.script =
+    assert !(config.home.activation ? githubCopilotCliSettings);
+    ''
+      assertPathNotExists home-files/.copilot/config.json
+      assertFileContent home-files/.copilot/settings.json ${./expected-config.json}
 
-    assertFileExists home-files/.copilot/copilot-instructions.md
-    assertFileContent home-files/.copilot/copilot-instructions.md \
-      ${builtins.toFile "expected-copilot-instructions.md" inlineContext}
+      assertFileExists home-files/.copilot/copilot-instructions.md
+      assertFileContent home-files/.copilot/copilot-instructions.md \
+        ${builtins.toFile "expected-copilot-instructions.md" inlineContext}
 
-    assertFileExists home-files/.copilot/agents/inline-reviewer.agent.md
-    assertFileContent home-files/.copilot/agents/inline-reviewer.agent.md \
-      ${builtins.toFile "expected-inline-reviewer.agent.md" inlineAgent}
+      assertFileExists home-files/.copilot/agents/inline-reviewer.agent.md
+      assertFileContent home-files/.copilot/agents/inline-reviewer.agent.md \
+        ${builtins.toFile "expected-inline-reviewer.agent.md" inlineAgent}
 
-    assertFileExists home-files/.copilot/agents/path-reviewer.agent.md
-    assertLinkExists home-files/.copilot/agents/path-reviewer.agent.md
-    assertFileContent home-files/.copilot/agents/path-reviewer.agent.md \
-      ${./agents/documentation.agent.md}
+      assertFileExists home-files/.copilot/agents/path-reviewer.agent.md
+      assertLinkExists home-files/.copilot/agents/path-reviewer.agent.md
+      assertFileContent home-files/.copilot/agents/path-reviewer.agent.md \
+        ${./agents/documentation.agent.md}
 
-    assertFileExists home-files/.copilot/agents/store-reviewer.agent.md
-    assertLinkExists home-files/.copilot/agents/store-reviewer.agent.md
-    assertFileContent home-files/.copilot/agents/store-reviewer.agent.md \
-      ${storeAgentSrc}
+      assertFileExists home-files/.copilot/agents/store-reviewer.agent.md
+      assertLinkExists home-files/.copilot/agents/store-reviewer.agent.md
+      assertFileContent home-files/.copilot/agents/store-reviewer.agent.md \
+        ${storeAgentSrc}
 
-    assertFileExists home-files/.copilot/skills/inline-skill/SKILL.md
-    assertFileContent home-files/.copilot/skills/inline-skill/SKILL.md \
-      ${builtins.toFile "expected-inline-skill.md" inlineSkill}
+      assertFileExists home-files/.copilot/skills/inline-skill/SKILL.md
+      assertFileContent home-files/.copilot/skills/inline-skill/SKILL.md \
+        ${builtins.toFile "expected-inline-skill.md" inlineSkill}
 
-    assertFileExists home-files/.copilot/skills/path-skill/SKILL.md
-    assertLinkExists home-files/.copilot/skills/path-skill/SKILL.md
-    assertFileContent home-files/.copilot/skills/path-skill/SKILL.md \
-      ${./test-skill.md}
+      assertFileExists home-files/.copilot/skills/path-skill/SKILL.md
+      assertLinkExists home-files/.copilot/skills/path-skill/SKILL.md
+      assertFileContent home-files/.copilot/skills/path-skill/SKILL.md \
+        ${./test-skill.md}
 
-    assertFileExists home-files/.copilot/skills/dir-skill/SKILL.md
-    assertFileExists home-files/.copilot/skills/dir-skill/notes.txt
-    assertLinkExists home-files/.copilot/skills/dir-skill/SKILL.md
-    assertLinkExists home-files/.copilot/skills/dir-skill/notes.txt
-    assertFileContent home-files/.copilot/skills/dir-skill/SKILL.md \
-      ${./skills/data-analysis/SKILL.md}
-    assertFileContent home-files/.copilot/skills/dir-skill/notes.txt \
-      ${./skills/data-analysis/notes.txt}
+      assertFileExists home-files/.copilot/skills/dir-skill/SKILL.md
+      assertFileExists home-files/.copilot/skills/dir-skill/notes.txt
+      assertLinkExists home-files/.copilot/skills/dir-skill/SKILL.md
+      assertLinkExists home-files/.copilot/skills/dir-skill/notes.txt
+      assertFileContent home-files/.copilot/skills/dir-skill/SKILL.md \
+        ${./skills/data-analysis/SKILL.md}
+      assertFileContent home-files/.copilot/skills/dir-skill/notes.txt \
+        ${./skills/data-analysis/notes.txt}
 
-    assertFileExists home-files/.copilot/skills/store-skill/SKILL.md
-    assertLinkExists home-files/.copilot/skills/store-skill/SKILL.md
-    assertFileContent home-files/.copilot/skills/store-skill/SKILL.md \
-      "${storeSkillSrc}/skills/external-skill/SKILL.md"
+      assertFileExists home-files/.copilot/skills/store-skill/SKILL.md
+      assertLinkExists home-files/.copilot/skills/store-skill/SKILL.md
+      assertFileContent home-files/.copilot/skills/store-skill/SKILL.md \
+        "${storeSkillSrc}/skills/external-skill/SKILL.md"
 
-    assertPathNotExists home-files/.copilot/mcp-config.json
-    assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'COPILOT_HOME'
-  '';
+      assertPathNotExists home-files/.copilot/mcp-config.json
+      assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh 'COPILOT_HOME'
+    '';
 }
