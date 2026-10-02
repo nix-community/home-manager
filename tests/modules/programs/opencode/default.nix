@@ -1,4 +1,11 @@
 {
+  opencode-activation-config-invalid = ./activation-config-invalid.nix;
+  opencode-activation-config-valid = ./activation-config-valid.nix;
+  opencode-activation-theme-invalid = ./activation-theme-invalid.nix;
+  opencode-activation-theme-valid = ./activation-theme-valid.nix;
+  opencode-activation-tui-invalid = ./activation-tui-invalid.nix;
+  opencode-activation-tui-valid = ./activation-tui-valid.nix;
+  opencode-activation-config-validator-null = ./activation-config-validator-null.nix;
   opencode-settings = ./settings.nix;
   opencode-settings-ordered-permissions = ./settings-ordered-permissions.nix;
   opencode-empty-settings = ./empty-settings.nix;
