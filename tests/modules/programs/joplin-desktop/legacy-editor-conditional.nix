@@ -34,7 +34,7 @@ editor:
       ""
     else
       ''
-        generated="$(grep -o '/nix/store/.*-joplin-settings.json' $TESTED/activate)"
+        generated="$(grep -o '/nix/store/[^ ]*-joplin-settings.json' $TESTED/activate)"
         ${pkgs.jq}/bin/jq -e '. == {"editor":"nano","newNoteFocus":"title"}' "$generated"
       '';
 }
