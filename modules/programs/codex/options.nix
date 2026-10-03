@@ -23,6 +23,18 @@ in
       '';
     };
 
+    mutableSettings = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to merge declared settings into a writable Codex configuration
+        file during activation, preserving settings added by Codex or the user.
+        Declared values take precedence. Only supported for Codex 0.2.0 and
+        later. The default keeps the configuration file immutable.
+      '';
+    };
+
     settings = lib.mkOption {
       # NOTE: `yaml` type supports null, using `nullOr` for backwards compatibility period
       type = lib.types.nullOr tomlFormat.type;

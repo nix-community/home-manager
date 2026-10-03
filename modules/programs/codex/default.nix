@@ -148,6 +148,31 @@ in
         mergedSettingsWithoutMcp
         // lib.optionalAttrs (mergedMcpServers != { }) { mcp_servers = mergedMcpServers; };
 
+      generatedSettings =
+        if derivedPluginEntries == [ ] then
+          settingsFormat.generate "codex-config" mergedSettings
+        else
+          derivedPluginBundle + "/config.toml";
+      settingsSource =
+        if isTomlConfig then
+          pkgs.runCommand "codex-config.toml" { } ''
+            settings="$(${lib.getExe pkgs.jaq} --from toml --to toml '.' ${generatedSettings})"
+            printf '%s\n' "$settings" > "$out"
+          ''
+        else
+          generatedSettings;
+      settingsPath = "${config.home.homeDirectory}/${lib.removePrefix "/" configDir}/${configFileName}";
+
+      mutableSettingsActivation = lib.hm.generators.mkImpureConfigMerger {
+        inherit pkgs;
+        format = "toml";
+        empty = "{}";
+        jqOperation = "$dynamic * $static";
+        path = settingsPath;
+        staticSettings = settingsSource;
+        mode = "600";
+      };
+
       pluginMarketplace = {
         name = pluginsMarketplaceName;
         interface.displayName = "Home Manager";
@@ -266,6 +291,10 @@ in
           message = "`programs.codex.plugins` and `programs.codex.marketplaces` require Codex 0.2.0 or later";
         }
         {
+          assertion = !cfg.mutableSettings || isTomlConfig;
+          message = "`programs.codex.mutableSettings` requires Codex 0.2.0 or later";
+        }
+        {
           assertion = lib.all (plugin: !lib.isPath plugin || lib.pathIsDirectory plugin) cfg.plugins;
           message = "`programs.codex.plugins` entries must be directories";
         }
@@ -299,6 +328,18 @@ in
       home = {
         packages = mkIf (cfg.package != null) [ cfg.package ];
 
+        activation.codexMutableSettings = lib.mkIf (cfg.mutableSettings && mergedSettings != { }) (
+          lib.hm.dag.entryAfter [ "linkGeneration" ] mutableSettingsActivation
+        );
+
+        activation.codexImmutableSettings = lib.mkIf (!cfg.mutableSettings && mergedSettings != { }) (
+          lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] (
+            lib.hm.generators.mkImpureConfigCleanup {
+              file = config.home.file."${configDir}/${configFileName}";
+            }
+          )
+        );
+
         # This is needed because codex will convert the symlinked plugin directory into
         # an actual directory (which will not be overwritten by home-manager)
         activation.cleanCodexPluginCache = lib.mkIf (cfg.plugins != [ ]) (
@@ -331,12 +372,8 @@ in
         );
 
         file = {
-          "${configDir}/${configFileName}" = lib.mkIf (mergedSettings != { }) {
-            source =
-              if derivedPluginEntries == [ ] then
-                settingsFormat.generate "codex-config" mergedSettings
-              else
-                derivedPluginBundle + "/config.toml";
+          "${configDir}/${configFileName}" = lib.mkIf (!cfg.mutableSettings && mergedSettings != { }) {
+            source = settingsSource;
           };
           ".agents/plugins/marketplace.json" = lib.mkIf (cfg.plugins != [ ]) {
             source =

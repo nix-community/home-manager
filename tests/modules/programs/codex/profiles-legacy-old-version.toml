@@ -1,6 +1,8 @@
 model = "gpt-5"
 profile = "deep-review"
 
+[profiles]
+
 [profiles.deep-review]
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
