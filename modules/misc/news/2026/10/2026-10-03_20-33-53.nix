@@ -1,5 +1,4 @@
-_:
-{
+_: {
   time = "2026-10-03T12:33:53+00:00";
   # condition = pkgs.stdenv.hostPlatform.isLinux;
   # condition = config.programs.neovim.enable;
