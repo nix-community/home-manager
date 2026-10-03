@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 {
   programs.t3code = {
@@ -97,7 +97,27 @@
           }
         }
       '';
+      cleanup = config.home.activation.t3codeImmutableConfig;
+      expectedCleanup =
+        lib.concatMapStrings
+          (
+            name:
+            lib.hm.generators.mkImpureConfigCleanup {
+              file = config.home.file.".t3/userdata/${name}.json";
+            }
+          )
+          [
+            "client-settings"
+            "keybindings"
+            "settings"
+          ];
     in
+    assert cleanup.before == [ "linkGeneration" ];
+    assert cleanup.after == [ "writeBoundary" ];
+    assert cleanup.data == expectedCleanup;
+    assert !(config.home.activation ? t3codeSettingsActivation);
+    assert !(config.home.activation ? t3codeKeybindingsActivation);
+    assert !(config.home.activation ? t3codeClientSettingsActivation);
     ''
       assertFileExists "home-files/.t3/userdata/settings.json"
       assertFileContent "home-files/.t3/userdata/settings.json" "${expectedSettings}"
