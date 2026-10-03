@@ -380,6 +380,12 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  luke = {
+    name = "Yaoheng He/luke";
+    email = "62987171+awa2333@users.noreply.github.com";
+    github = "awa2333";
+    githubId = 62987171;
+  };
   lunahd = {
     name = "Miku B";
     email = "lunab08@proton.me";
