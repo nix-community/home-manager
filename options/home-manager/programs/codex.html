@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-e771d931.js";
+            window.path_to_searchindex_js = "../../../searchindex-2b50414c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-f77331e7.js"></script>
@@ -334,6 +334,23 @@ attribute set of (package or absolute path)</p>
   };
 }
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/codex/options.nix">&lt;home-manager/modules/programs/codex/options.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.codex.mutableSettings"><a class="header" href="#opt-programs.codex.mutableSettings">programs.codex.mutableSettings</a></h2>
+<p>Whether to merge declared settings into a writable Codex configuration
+file during activation, preserving settings added by Codex or the user.
+Declared values take precedence. Only supported for Codex 0.2.0 and
+later. The default keeps the configuration file immutable.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
