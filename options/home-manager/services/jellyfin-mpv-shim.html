@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-64a8c2bc.js";
+            window.path_to_searchindex_js = "../../../searchindex-c080be79.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-f77331e7.js"></script>
@@ -243,6 +243,12 @@ null or (attribute set of (string or signed integer or boolean or floating point
 <code>$XDG_CONFIG_HOME/jellyfin-mpv-shim/conf.json</code>. See
 <a href="https://github.com/jellyfin/jellyfin-mpv-shim#configuration">https://github.com/jellyfin/jellyfin-mpv-shim#configuration</a>
 for the configuration documentation.</p>
+<p>Changed settings trigger a service restart when automatic systemd
+service switching is enabled. A running shim can write its old
+in-memory settings back between the merge and restart. Stop it before
+switching and start it afterward to avoid this window. If
+<code>systemd.user.startServices</code> is <code>false</code> or <code>"suggest"</code>, restart
+the shim manually to load changed settings.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>
