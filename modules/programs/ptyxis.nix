@@ -14,7 +14,7 @@ in
 {
   meta.maintainers = [
     lib.maintainers.da157
-    lib.hm.maintainers.lukeaurio
+    lib.maintainers.lukeaurio
   ];
 
   options.programs.ptyxis = {
