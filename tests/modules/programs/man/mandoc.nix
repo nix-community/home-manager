@@ -24,8 +24,13 @@
       assertLinkExists home-files/.local/share/mandoc/man
 
       assertFileExists $hmSessVars
-      assertFileContains $hmSessVars \
-        'export MANPATH="/home/hm-user/.local/share/mandoc/man''${MANPATH:+:}''${MANPATH-}"'
+      (
+        export MANPATH=/inherited/man
+        unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
+        . "$TESTED/$hmSessVars"
+        [ "$MANPATH" = "/home/hm-user/.local/share/mandoc/man:/inherited/man" ] \
+          || { echo "MANPATH: $MANPATH"; exit 1; }
+      ) || fail "mandoc man directory was not prepended to MANPATH"
     '';
   };
 }

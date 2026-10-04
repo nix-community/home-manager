@@ -3,8 +3,14 @@
   xdg.localBinInPath = true;
 
   nmt.script = ''
-    assertFileExists home-path/etc/profile.d/hm-session-vars.sh
-    assertFileContains home-path/etc/profile.d/hm-session-vars.sh \
-      'export PATH="/home/hm-user/.local/bin''${PATH:+:}''${PATH-}"'
+    hmSessVars=home-path/etc/profile.d/hm-session-vars.sh
+    assertFileExists $hmSessVars
+    (
+      export PATH=/inherited/bin
+      unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
+      . "$TESTED/$hmSessVars"
+      [ "$PATH" = "/home/hm-user/.local/bin:/inherited/bin" ] \
+        || { echo "PATH: $PATH"; exit 1; }
+    ) || fail "xdg.localBinInPath did not prepend the local bin directory"
   '';
 }

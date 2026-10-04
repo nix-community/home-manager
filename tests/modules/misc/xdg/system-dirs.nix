@@ -38,15 +38,11 @@
       assertFileExists $sessionVarsFile
       assertFileContains $sessionVarsFile \
         'export XDG_CONFIG_DIRS="/plain-config"'
-      assertFileContains $sessionVarsFile \
-        'export XDG_CONFIG_DIRS="/existing-config:/etc/xdg:/foo/bar''${XDG_CONFIG_DIRS:+:}''${XDG_CONFIG_DIRS-}"'
-      assertFileContains $sessionVarsFile \
-        'export XDG_DATA_DIRS="/forced-data''${XDG_DATA_DIRS:+:}''${XDG_DATA_DIRS-}"'
 
       (
         XDG_CONFIG_DIRS=/inherited-config
         XDG_DATA_DIRS=/inherited-data
-        unset __HM_SESS_VARS_SOURCED
+        unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
         . "$TESTED/$sessionVarsFile"
         [ "$XDG_CONFIG_DIRS" = "/existing-config:/etc/xdg:/foo/bar:/plain-config" ] \
           || { echo "XDG_CONFIG_DIRS: $XDG_CONFIG_DIRS"; exit 1; }
