@@ -94,10 +94,15 @@ in
         Unit = {
           Description = "Proton Pass SSH agent";
           Documentation = "https://protonpass.github.io/pass-cli/commands/ssh-agent/#ssh-agent-integration";
+          # Retry forever: the agent exits as long as `pass-cli login` has not
+          # been run, which would otherwise exhaust systemd's start rate limit
+          # and leave the unit dead until it is restarted manually.
+          StartLimitIntervalSec = 0;
         };
         Service = {
           ExecStart = lib.concatStringsSep " " cmd;
           Restart = "on-failure";
+          RestartSec = 10;
           KeyringMode = "shared";
         };
       };
