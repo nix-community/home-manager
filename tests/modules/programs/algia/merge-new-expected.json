@@ -1,0 +1,7 @@
+{
+  "followList": [
+    "new-user",
+    "nix-user"
+  ],
+  "privatekey": "runtime-only"
+}
