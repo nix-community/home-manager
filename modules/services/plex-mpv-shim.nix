@@ -59,11 +59,12 @@ in
 
           When enabled, declared settings override existing values and other
           keys are preserved, including settings later removed from
-          [](#opt-services.plex-mpv-shim.settings). The service restarts when
-          the declared settings change, since a running instance would
-          otherwise write its old values back on its next save. A setting
-          changed from the application while activation runs can still be
-          written back before the restart.
+          [](#opt-services.plex-mpv-shim.settings). Changed settings trigger a
+          restart when automatic systemd service switching is enabled. If
+          {option}`systemd.user.startServices` is `false` or `"suggest"`, restart
+          the shim manually to load changed settings. A running shim can still
+          write its old values back between the merge and restart; stop it
+          before switching and start it afterward to avoid this window.
 
           Disabling this option later leaves the writable {file}`conf.json` in
           place. If settings are nonempty, move or remove it before switching,
