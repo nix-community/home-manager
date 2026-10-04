@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-4ef3b3fb.js";
+            window.path_to_searchindex_js = "../searchindex-7544538a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-f77331e7.js"></script>
@@ -293,6 +293,20 @@ scalars at the same priority conflict and lists concatenate, so resolve
 overlaps in <code>settings</code>. Backups no longer need exactly one of
 <code>sourceDirectories</code> and <code>patterns</code>, which allows native patterns and
 database-only backups. <code>repositories</code> is still required.</p>
+</li>
+<li>
+<p><a href="../options/home-manager/programs/github-copilot-cli.html#opt-programs.github-copilot-cli.settings">programs.github-copilot-cli.settings</a> is now written to
+<code>settings.json</code> instead of <code>config.json</code>, since Copilot CLI 1.0.35 and later
+keep user settings there and replace a linked <code>config.json</code>. The old link is
+removed on activation if it still points to a Home Manager generation; a
+regular state file is left alone. If Copilot CLI already created a regular
+<code>settings.json</code> from the old <code>config.json</code>, remove it before switching or
+enable <a href="../options/home-manager/programs/github-copilot-cli.html#opt-programs.github-copilot-cli.mutableSettings">programs.github-copilot-cli.mutableSettings</a> to merge into
+it. With nonempty immutable settings, byte-identical files become managed
+links; differing files use normal collision and backup handling. Trusted folders in
+<code>settings</code> are no longer written, because Copilot CLI keeps them in its own
+state; declare them with
+<a href="../options/home-manager/programs/github-copilot-cli.html#opt-programs.github-copilot-cli.trustedFolders">programs.github-copilot-cli.trustedFolders</a> instead.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>

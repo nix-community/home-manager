@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-4ef3b3fb.js";
+            window.path_to_searchindex_js = "searchindex-7544538a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f77331e7.js"></script>
@@ -29795,7 +29795,7 @@ for the documentation.</p>
 </ul>
 <h2 id="opt-programs.github-copilot-cli.configDir"><a class="header" href="#opt-programs.github-copilot-cli.configDir">programs.github-copilot-cli.configDir</a></h2>
 <p>Directory holding Copilot CLI configuration files such as
-<code>config.json</code>, <code>mcp-config.json</code>,
+<code>settings.json</code>, <code>mcp-config.json</code>,
 <code>lsp-config.json</code>, and
 <code>copilot-instructions.md</code>.</p>
 <p>Defaults to <code>${config.xdg.configHome}/copilot</code> when
@@ -29942,9 +29942,41 @@ attribute set of (JSON value)</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/github-copilot-cli.nix">&lt;home-manager/modules/programs/github-copilot-cli.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.github-copilot-cli.mutableSettings"><a class="header" href="#opt-programs.github-copilot-cli.mutableSettings">programs.github-copilot-cli.mutableSettings</a></h2>
+<p>Whether to merge <a href="#opt-programs.github-copilot-cli.settings"></a> into a
+writable <code>settings.json</code> at activation instead of linking it from
+the Nix store.</p>
+<p>A store-linked file prevents the CLI from saving settings normally.
+Versions that replace the file when saving a model or theme replace
+the link, causing a collision on the next activation.</p>
+<p>When enabled, declared values take precedence over existing values,
+keys later removed from <a href="#opt-programs.github-copilot-cli.settings"></a>
+stay in the file, and comments and formatting are not preserved.
+Turning the option off links the file again. A merged file is replaced
+automatically only when it is byte-identical to the declared settings.
+Other files are left to the normal collision and backup handling.
+If the remaining settings are empty, the file is left unmanaged.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/github-copilot-cli.nix">&lt;home-manager/modules/programs/github-copilot-cli.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.github-copilot-cli.settings"><a class="header" href="#opt-programs.github-copilot-cli.settings">programs.github-copilot-cli.settings</a></h2>
-<p>Configuration written to <code>config.json</code> inside
-<code>programs.github-copilot-cli.configDir</code>.</p>
+<p>Configuration written to <code>settings.json</code> inside
+<code>programs.github-copilot-cli.configDir</code>. See
+<a href="#opt-programs.github-copilot-cli.mutableSettings"></a> for how the file
+is managed. Empty settings leave the file unmanaged.</p>
+<p>Trusted folders (<code>trusted_folders</code>, <code>trustedFolders</code>) are not user
+settings: Copilot CLI keeps them in its own state, so they are left
+out of the file. Use
+<a href="#opt-programs.github-copilot-cli.trustedFolders"></a> instead.</p>
 <p>Known configuration keys include:</p>
 <ul>
 <li><code>model</code> — AI model selection</li>
@@ -29958,8 +29990,7 @@ attribute set of (JSON value)</p>
 <li><code>stream</code> — token-by-token response streaming (default: <code>true</code>)</li>
 <li><code>includeCoAuthoredBy</code> — agent commit attribution (default: <code>true</code>)</li>
 <li><code>respectGitignore</code> — exclude gitignored files from file picker</li>
-<li><code>trusted_folders</code> — list of pre-approved directory paths</li>
-<li><code>allowed_urls</code>, <code>denied_urls</code> — URL allowlists/blocklists</li>
+<li><code>allowedUrls</code>, <code>deniedUrls</code> — URL allowlists/blocklists</li>
 <li><code>logLevel</code> — log verbosity</li>
 <li><code>disableAllHooks</code> — global hook disable toggle</li>
 <li><code>hooks</code> — inline hook definitions</li>
@@ -29978,9 +30009,6 @@ attribute set of (JSON value)</p>
   model = "claude-sonnet-4-5";
   renderMarkdown = true;
   theme = "default";
-  trusted_folders = [
-    "/home/user/projects"
-  ];
 }
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -30027,6 +30055,27 @@ for the documentation.</p>
   '';
 }
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/github-copilot-cli.nix">&lt;home-manager/modules/programs/github-copilot-cli.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.github-copilot-cli.trustedFolders"><a class="header" href="#opt-programs.github-copilot-cli.trustedFolders">programs.github-copilot-cli.trustedFolders</a></h2>
+<p>Folders Copilot CLI trusts without asking.</p>
+<p>Copilot CLI keeps trusted folders in its own state file,
+<code>config.json</code> inside
+<code>programs.github-copilot-cli.configDir</code>, which it also uses for
+login and plugin state. These folders are merged into its
+<code>trustedFolders</code> list at activation, and the rest of the file is left
+alone. Folders trusted from inside Copilot CLI are kept, and removing a
+folder here does not untrust it.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[ "${config.home.homeDirectory}/projects" ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -94628,6 +94677,20 @@ scalars at the same priority conflict and lists concatenate, so resolve
 overlaps in <code>settings</code>. Backups no longer need exactly one of
 <code>sourceDirectories</code> and <code>patterns</code>, which allows native patterns and
 database-only backups. <code>repositories</code> is still required.</p>
+</li>
+<li>
+<p><a href="#opt-programs.github-copilot-cli.settings">programs.github-copilot-cli.settings</a> is now written to
+<code>settings.json</code> instead of <code>config.json</code>, since Copilot CLI 1.0.35 and later
+keep user settings there and replace a linked <code>config.json</code>. The old link is
+removed on activation if it still points to a Home Manager generation; a
+regular state file is left alone. If Copilot CLI already created a regular
+<code>settings.json</code> from the old <code>config.json</code>, remove it before switching or
+enable <a href="#opt-programs.github-copilot-cli.mutableSettings">programs.github-copilot-cli.mutableSettings</a> to merge into
+it. With nonempty immutable settings, byte-identical files become managed
+links; differing files use normal collision and backup handling. Trusted folders in
+<code>settings</code> are no longer written, because Copilot CLI keeps them in its own
+state; declare them with
+<a href="#opt-programs.github-copilot-cli.trustedFolders">programs.github-copilot-cli.trustedFolders</a> instead.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
