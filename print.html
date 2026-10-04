@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c080be79.js";
+            window.path_to_searchindex_js = "searchindex-4ef3b3fb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f77331e7.js"></script>
@@ -77386,9 +77386,42 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/plex-mpv-shim.nix">&lt;home-manager/modules/services/plex-mpv-shim.nix&gt;</a></li>
 </ul>
+<h2 id="opt-services.plex-mpv-shim.mutableSettings"><a class="header" href="#opt-services.plex-mpv-shim.mutableSettings">services.plex-mpv-shim.mutableSettings</a></h2>
+<p>Whether to merge <a href="#opt-services.plex-mpv-shim.settings"></a> into a
+writable <code>conf.json</code> at activation instead of linking it from
+the Nix store.</p>
+<p>Plex mpv shim writes this file when it loads settings and whenever a
+setting is changed from its menu or a Plex remote. With a linked file
+those writes fail, and the generated player identity
+(<code>client_uuid</code>) is not kept across restarts.</p>
+<p>When enabled, declared settings override existing values and other
+keys are preserved, including settings later removed from
+<a href="#opt-services.plex-mpv-shim.settings"></a>. Changed settings trigger a
+restart when automatic systemd service switching is enabled. If
+<code>systemd.user.startServices</code> is <code>false</code> or <code>"suggest"</code>, restart
+the shim manually to load changed settings. A running shim can still
+write its old values back between the merge and restart; stop it
+before switching and start it afterward to avoid this window.</p>
+<p>Disabling this option later leaves the writable <code>conf.json</code> in
+place. If settings are nonempty, move or remove it before switching,
+or Home Manager reports a file collision.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/plex-mpv-shim.nix">&lt;home-manager/modules/services/plex-mpv-shim.nix&gt;</a></li>
+</ul>
 <h2 id="opt-services.plex-mpv-shim.settings"><a class="header" href="#opt-services.plex-mpv-shim.settings">services.plex-mpv-shim.settings</a></h2>
 <p>Configuration written to
-<code>$XDG_CONFIG_HOME/plex-mpv-shim/config.json</code>. See
+<code>$XDG_CONFIG_HOME/plex-mpv-shim/conf.json</code>. See
+<a href="#opt-services.plex-mpv-shim.mutableSettings"></a> for how the file is
+managed, and
 <a href="https://github.com/iwalton3/plex-mpv-shim/blob/master/README.md">https://github.com/iwalton3/plex-mpv-shim/blob/master/README.md</a>
 for the configuration documentation.</p>
 <p><em>Type:</em>
