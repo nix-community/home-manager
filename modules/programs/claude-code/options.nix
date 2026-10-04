@@ -31,6 +31,21 @@ in
 
     package = lib.mkPackageOption pkgs "claude-code" { nullable = true; };
 
+    mutableSettings = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to merge declared settings and known marketplaces into
+        writable files during activation. Declared values, including
+        permission arrays, replace existing values; undeclared values and
+        application-owned marketplace timestamps and auto-update flags are
+        preserved. Comments and formatting are not preserved. Removing a
+        declaration does not remove it from the file. Switching back to
+        immutable settings requires backing up or removing the writable files.
+        This does not manage application state in {file}`~/.claude.json`.
+      '';
+    };
+
     finalPackage = mkOption {
       type = lib.types.package;
       readOnly = true;

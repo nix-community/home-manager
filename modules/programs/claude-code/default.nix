@@ -80,6 +80,51 @@ in
 
   config =
     let
+      settingsFile = jsonFormat.generate "claude-code-settings.json" (
+        cfg.settings
+        // {
+          "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+        }
+        // lib.optionalAttrs (cfg.marketplaces != { }) {
+          extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
+        }
+        // lib.optionalAttrs (disabledMcpServerNames != [ ]) {
+          disabledMcpjsonServers = lib.unique (
+            (cfg.settings.disabledMcpjsonServers or [ ]) ++ disabledMcpServerNames
+          );
+        }
+      );
+      hasSettings = cfg.settings != { } || cfg.marketplaces != { } || disabledMcpServerNames != [ ];
+      installedMarketplaces = lib.mapAttrs (
+        name: content:
+        let
+          entry = mkInstalledMarketplaceEntry name content;
+        in
+        if cfg.mutableSettings then
+          removeAttrs entry [
+            "lastUpdated"
+            "autoUpdate"
+          ]
+        else
+          entry
+      ) cfg.marketplaces;
+      marketplacesFile = jsonFormat.generate "claude-code-known-marketplaces.json" installedMarketplaces;
+      mutableFiles =
+        lib.optionalAttrs hasSettings {
+          "${cfg.configDir}/settings.json" = {
+            staticSettings = settingsFile;
+            jqOperation = ''if ($dynamic | type) == "object" and ($static | type) == "object" then $dynamic * $static else error("expected JSON objects") end'';
+          };
+        }
+        // lib.optionalAttrs (cfg.marketplaces != { }) {
+          "${cfg.configDir}/plugins/known_marketplaces.json" = {
+            staticSettings = marketplacesFile;
+            jqOperation = ''
+              ($dynamic * $static) | reduce ($static | keys[]) as $name
+                (.; .[$name] = {lastUpdated: "1970-01-01T00:00:00Z", autoUpdate: false} + .[$name])
+            '';
+          };
+        };
       helpers = claudeCodeLib.mkHelpers { inherit (cfg) configDir; };
       inherit (helpers)
         derivePluginName
@@ -283,6 +328,25 @@ in
         if useLegacyPluginWrapper then legacyFinalPackage else cfg.package
       );
 
+      home.activation = {
+        claudeCodeSettings = lib.mkIf (cfg.mutableSettings && mutableFiles != { }) (
+          lib.hm.dag.entryAfter [ "linkGeneration" ] (
+            lib.concatStringsSep "\n" (
+              lib.mapAttrsToList (
+                path: file:
+                lib.hm.generators.mkImpureConfigMerger {
+                  inherit pkgs path;
+                  inherit (file) staticSettings jqOperation;
+                  format = "json";
+                  empty = "{}";
+                  mode = "600";
+                }
+              ) mutableFiles
+            )
+          )
+        );
+      };
+
       home = {
         packages = lib.mkIf (cfg.package != null) [ cfg.finalPackage ];
 
@@ -291,24 +355,9 @@ in
         };
 
         file = lib.mkMerge [
-          (lib.mkIf (cfg.settings != { } || cfg.marketplaces != { } || disabledMcpServerNames != [ ]) {
+          (lib.mkIf (!cfg.mutableSettings && hasSettings) {
             "${cfg.configDir}/settings.json".source =
               let
-                settingsFile = jsonFormat.generate "claude-code-settings.json" (
-                  cfg.settings
-                  // {
-                    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-                  }
-                  // lib.optionalAttrs (cfg.marketplaces != { }) {
-                    extraKnownMarketplaces = lib.mapAttrs mkMarketplaceEntry cfg.marketplaces;
-                  }
-                  // lib.optionalAttrs (disabledMcpServerNames != [ ]) {
-                    disabledMcpjsonServers = lib.unique (
-                      (cfg.settings.disabledMcpjsonServers or [ ]) ++ disabledMcpServerNames
-                    );
-                  }
-                );
-
                 settingsDirectory = pkgs.runCommand "claude-code-settings-directory" { } ''
                   install -Dm444 ${settingsFile} "$out/settings.json"
                 '';
@@ -325,11 +374,8 @@ in
                 "${cfg.configDir}/CLAUDE.md".text = cfg.context;
               })
           )
-          (lib.mkIf (cfg.marketplaces != { }) {
-            "${cfg.configDir}/plugins/known_marketplaces.json".source =
-              jsonFormat.generate "claude-code-known-marketplaces.json" (
-                lib.mapAttrs mkInstalledMarketplaceEntry cfg.marketplaces
-              );
+          (lib.mkIf (!cfg.mutableSettings && cfg.marketplaces != { }) {
+            "${cfg.configDir}/plugins/known_marketplaces.json".source = marketplacesFile;
           })
           (mkMarkdownEntries "agents" cfg.agents)
           (mkMarkdownEntries "commands" cfg.commands)
