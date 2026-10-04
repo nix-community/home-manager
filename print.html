@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-b168d71c.js";
+            window.path_to_searchindex_js = "searchindex-559a9321.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f77331e7.js"></script>
+        <script src="toc-c599a4a0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12491,6 +12491,7 @@ string</p>
 <li><a href="#rbenv">rbenv</a></li>
 <li><a href="#rbw">rbw</a></li>
 <li><a href="#rclone">rclone</a></li>
+<li><a href="#readest">readest</a></li>
 <li><a href="#readline">readline</a></li>
 <li><a href="#rectangle">rectangle</a></li>
 <li><a href="#retext">retext</a></li>
@@ -51926,6 +51927,59 @@ null or string</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/rclone.nix">&lt;home-manager/modules/programs/rclone.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="readest"><a href="#readest" class="header">readest</a></h1>
+<h2 id="opt-programs.readest.enable"><a class="header" href="#opt-programs.readest.enable">programs.readest.enable</a></h2>
+<p>Whether to enable Readest.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/readest.nix">&lt;home-manager/modules/programs/readest.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.readest.package"><a class="header" href="#opt-programs.readest.package">programs.readest.package</a></h2>
+<p>The readest package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.readest
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/readest.nix">&lt;home-manager/modules/programs/readest.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.readest.settings"><a class="header" href="#opt-programs.readest.settings">programs.readest.settings</a></h2>
+<p>Readest preferences to merge into
+<code>$XDG_CONFIG_HOME/com.bilingify.readest/settings.json</code>.</p>
+<p>Readest owns this file and may add or update values while it is
+running. Values declared here take precedence on Home Manager
+activation, while values not declared here are preserved.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  globalViewSettings = {
+    defaultFontSize = 18;
+    lineHeight = 1.5;
+    theme = "dark";
+  };
+  libraryViewMode = "grid";
+  telemetryEnabled = false;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/readest.nix">&lt;home-manager/modules/programs/readest.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="readline"><a href="#readline" class="header">readline</a></h1>
