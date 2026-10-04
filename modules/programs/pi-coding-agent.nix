@@ -73,6 +73,27 @@ in
       '';
     };
 
+    mutableSettings = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Keep settings.json writable. Packages are matched by npm name or Git
+        repository, ignoring versions and refs. Declared entries replace matching
+        entries in place; other entries keep their relative order. Local paths
+        are resolved lexically against the configuration directory, without following
+        symlinks. Home-relative paths and local file URLs are also supported.
+        Unsupported Git source forms cause activation to fail rather than leave
+        a stale pin. The enabledModels list is replaced as a whole when declared.
+        Other configuration files remain immutable.
+
+        Declared values take precedence on activation. Removing a declaration does
+        not remove it from the existing file. Stop the application before activation
+        to avoid concurrent writes. Comments and formatting are not preserved.
+        Switching back to immutable configuration uses Home Manager's normal
+        file collision handling.
+      '';
+    };
+
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
@@ -200,6 +221,25 @@ in
 
   config = mkIf cfg.enable {
     home = {
+      activation.piCodingAgentMutableSettings = lib.mkIf (cfg.mutableSettings && cfg.settings != { }) (
+        lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "{}";
+            mode = "600";
+            path = "${cfg.configDir}/settings.json";
+            staticSettings = jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
+
+            jqOperation = ''
+              ${builtins.toJSON config.home.homeDirectory} as $homeDirectory
+              | ${builtins.toJSON cfg.configDir} as $configDir
+              | ${builtins.readFile ./pi-coding-agent-settings-filter.jq}
+            '';
+          }
+        )
+      );
+
       packages = mkIf (packageWithExtraPackages != null) [
         packageWithExtraPackages
       ];
@@ -209,7 +249,7 @@ in
       };
 
       file = lib.mkMerge [
-        (mkIf (cfg.settings != { }) {
+        (mkIf (!cfg.mutableSettings && cfg.settings != { }) {
           "${cfg.configDir}/settings.json".source =
             jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
         })
