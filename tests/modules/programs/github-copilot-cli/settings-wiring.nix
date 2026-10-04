@@ -15,17 +15,9 @@ in
       "mutable-empty"
       "disabled"
     ];
-    settings =
-      lib.optionalAttrs
-        (
-          !lib.elem mode [
-            "empty"
-            "mutable-empty"
-          ]
-        )
-        {
-          model = "claude-sonnet-4-5";
-        };
+    settings = lib.optionalAttrs (mode != "mutable-empty") {
+      model = "claude-sonnet-4-5";
+    };
     trustedFolders = lib.optionals (mode == "disabled") [ "/srv/projects" ];
   };
 

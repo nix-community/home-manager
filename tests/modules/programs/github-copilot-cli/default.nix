@@ -4,7 +4,6 @@
   github-copilot-cli-disabled = import ./settings-wiring.nix "disabled";
   github-copilot-cli-config = ./config.nix;
   github-copilot-cli-directories = ./directories.nix;
-  github-copilot-cli-empty-settings = import ./settings-wiring.nix "empty";
   github-copilot-cli-lsp = ./lsp.nix;
   github-copilot-cli-mcp = ./mcp.nix;
   github-copilot-cli-mcp-integration = ./mcp-integration.nix;
