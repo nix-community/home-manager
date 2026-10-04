@@ -1,4 +1,4 @@
-_: {
+{
   time = "2026-10-04T22:15:30+00:00";
   condition = true;
   message = ''
