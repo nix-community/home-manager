@@ -117,9 +117,150 @@ let
         unset ${lib.concatStringsSep " " mergeScratchVariables}
       '';
 
+  isSelfReferential =
+    name: value:
+    lib.isString value
+    && (
+      let
+        dollar = "$";
+        expansionStart = "${dollar}{";
+        escapedName = lib.escapeRegex name;
+        refers =
+          text:
+          let
+            # Escaped characters and `$$` cannot begin a variable reference.
+            plainParts = lib.filter lib.isString (builtins.split ''(\\.|[$][$])'' text);
+            refersInPart =
+              part:
+              builtins.match ".*[$][{]?${escapedName}([^A-Za-z0-9_].*)?" part != null
+              || builtins.match ".*[$][{]#${escapedName}[}].*" part != null;
+          in
+          lib.any refersInPart plainParts;
+        isWholeExpansion =
+          text:
+          let
+            length = lib.stringLength text;
+            # Keep nested parameter expansions inside the outer expression.
+            scan =
+              index: depth:
+              if index >= length then
+                false
+              else if builtins.substring index 2 text == expansionStart then
+                scan (index + 2) (depth + 1)
+              else if builtins.substring index 1 text == "}" then
+                if depth == 1 then index == length - 1 else scan (index + 1) (depth - 1)
+              else if builtins.substring index 1 text == "\\" then
+                scan (index + 2) depth
+              else
+                scan (index + 1) depth;
+          in
+          lib.hasPrefix expansionStart text && scan 2 1;
+        nameExpansionStart = "${expansionStart}${name}";
+        expansionBodyFor =
+          text:
+          if isWholeExpansion text && lib.hasPrefix nameExpansionStart text then
+            builtins.substring (lib.stringLength nameExpansionStart) (
+              lib.stringLength text - lib.stringLength nameExpansionStart - 1
+            ) text
+          else
+            null;
+        operatorFor =
+          body:
+          if body == null then
+            null
+          else
+            lib.findFirst (candidate: lib.hasPrefix candidate body) null [
+              ":-"
+              ":="
+              ":?"
+              ":+"
+              "-"
+              "="
+              "?"
+              "+"
+            ];
+        isStableValue =
+          text:
+          let
+            body = expansionBodyFor text;
+            operator = operatorFor body;
+            word = if operator == null then null else lib.removePrefix operator body;
+          in
+          !refers text
+          || text == "${dollar}${name}"
+          || body == ""
+          || lib.elem operator [
+            ":-"
+            ":="
+            ":?"
+            "-"
+            "="
+            "?"
+          ]
+          || (
+            lib.elem operator [
+              ":+"
+              "+"
+            ]
+            && isStableValue word
+          );
+      in
+      refers value && !isStableValue value
+    );
+
+  /*
+    Build the warning list for self-referential entries of a session-variable
+    option. Shared so every shell that has its own `sessionVariables` reports
+    the same thing.
+
+    # Type
+
+    ```
+    selfReferenceWarnings :: { option, optionPath, rationale, renderValue ? id } -> [ String ]
+    ```
+  */
+  selfReferenceWarnings =
+    {
+      option,
+      optionPath,
+      rationale,
+      renderValue ? lib.id,
+    }:
+    let
+      offenders = lib.attrNames (
+        lib.filterAttrs (name: value: isSelfReferential name (renderValue value)) option.value
+      );
+      formatOffender =
+        name:
+        let
+          files = lib.hm.options.attrDefinitionFiles option name;
+        in
+        "${name}, defined in ${lib.options.showFiles files}";
+    in
+    lib.optional (offenders != [ ]) ''
+      The following ${optionPath} may change when applied again:
+
+        ${lib.concatMapStringsSep "\n  " formatOffender offenders}
+
+      ${lib.removeSuffix "\n" rationale}
+
+      For search paths, use home.sessionPath,
+      home.sessionSearchVariables, or home.sessionSearchVariablesAppend.
+      Those options add only the entries that are missing. For other
+      variables, assign a complete value without referring to its previous
+      contents.
+
+      This check is best-effort and detects only direct parameter references
+      such as $NAME, ''${NAME...}, and ''${#NAME}.
+    '';
+
 in
 {
-  inherit export wrapLines;
+  inherit
+    export
+    wrapLines
+    selfReferenceWarnings
+    ;
 
   /**
     Generate a complete POSIX shell block that merges entries into
