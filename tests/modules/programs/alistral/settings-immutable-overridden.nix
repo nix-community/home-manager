@@ -12,11 +12,7 @@ let
       ".config/alistral";
   file = config.home.file."${configDir}/config.json";
   cleanup = config.home.activation.alistralImmutableSettings;
-  expectedTarget =
-    if pkgs.stdenv.hostPlatform.isDarwin then
-      "${configDir}/config.json"
-    else
-      "custom-config/alistral/config.json";
+  expectedTarget = "overridden/alistral.json";
 in
 {
   xdg.configHome = "${config.home.homeDirectory}/custom-config";
@@ -27,6 +23,10 @@ in
       listenbrainz_url = "https://api.listenbrainz.org/1/";
       musicbrainz_url = "http://musicbrainz.org/ws/2";
     };
+  };
+  home.file."${configDir}/config.json" = {
+    target = expectedTarget;
+    source = lib.mkForce (pkgs.writeText "alistral-overridden.json" "{}");
   };
 
   assertions = [
@@ -65,6 +65,6 @@ in
   ];
 
   nmt.script = ''
-    assertFileContent "home-files/${expectedTarget}" ${./config.json}
+    assertFileContent "home-files/${expectedTarget}" ${./override-expected.json}
   '';
 }

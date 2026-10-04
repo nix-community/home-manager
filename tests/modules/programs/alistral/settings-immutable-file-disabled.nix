@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -28,6 +27,7 @@ in
       musicbrainz_url = "http://musicbrainz.org/ws/2";
     };
   };
+  home.file."${configDir}/config.json".enable = false;
 
   assertions = [
     {
@@ -47,16 +47,12 @@ in
       message = "Immutable cleanup must run before linkGeneration.";
     }
     {
-      assertion = file.enable;
-      message = "The immutable alistral settings file must remain enabled.";
+      assertion = !file.enable;
+      message = "The disabled alistral settings file must remain disabled.";
     }
     {
-      assertion = lib.hasInfix (lib.escapeShellArg expectedTarget) cleanup.data;
-      message = "Immutable cleanup must use the configured file target.";
-    }
-    {
-      assertion = lib.hasInfix (lib.escapeShellArg (builtins.unsafeDiscardStringContext (toString file.source))) cleanup.data;
-      message = "Immutable cleanup must use the configured file source.";
+      assertion = cleanup.data == "";
+      message = "Disabled alistral settings files must not create cleanup commands.";
     }
     {
       assertion = file.target == expectedTarget;
@@ -65,6 +61,6 @@ in
   ];
 
   nmt.script = ''
-    assertFileContent "home-files/${expectedTarget}" ${./config.json}
+    assertPathNotExists "home-files/${expectedTarget}"
   '';
 }
