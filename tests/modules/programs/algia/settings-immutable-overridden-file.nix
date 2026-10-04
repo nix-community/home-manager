@@ -5,14 +5,21 @@
   ...
 }:
 let
-  configDir = ".config";
-  relativePath = ".config/algia/config.json";
+  configDir = "custom-config";
+  relativePath = "${
+    if pkgs.stdenv.hostPlatform.isDarwin then ".config" else configDir
+  }/algia/config.json";
   fileKey = if pkgs.stdenv.hostPlatform.isDarwin then relativePath else "/${relativePath}";
   file = config.home.file.${fileKey};
+  expectedTarget = "relocated/algia.json";
   activation = config.home.activation;
 in
 {
   xdg.configHome = "${config.home.homeDirectory}/${configDir}";
+  home.file.${fileKey} = {
+    target = expectedTarget;
+    source = lib.mkForce (pkgs.writeText "algia-override.json" ''{"followList":["override-user"]}'');
+  };
   programs.algia = {
     enable = true;
     settings = {
@@ -49,7 +56,7 @@ in
       message = "The immutable algia settings file must remain enabled.";
     }
     {
-      assertion = lib.hasInfix (lib.escapeShellArg fileKey) activation.algiaImmutableSettings.data;
+      assertion = lib.hasInfix (lib.escapeShellArg expectedTarget) activation.algiaImmutableSettings.data;
       message = "Immutable cleanup must use the configured file target.";
     }
     {
@@ -57,12 +64,12 @@ in
       message = "Immutable cleanup must use the configured file source.";
     }
     {
-      assertion = file.target == fileKey;
+      assertion = file.target == expectedTarget;
       message = "Immutable algia settings must use the configured file target.";
     }
   ];
 
   nmt.script = ''
-    assertFileContent "home-files/${fileKey}" ${./config.json}
+    assertFileContent "home-files/${expectedTarget}" ${./override-expected.json}
   '';
 }

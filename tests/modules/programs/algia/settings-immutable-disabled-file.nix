@@ -1,18 +1,20 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
 let
-  configDir = ".config";
-  relativePath = ".config/algia/config.json";
+  configDir = "custom-config";
+  relativePath = "${
+    if pkgs.stdenv.hostPlatform.isDarwin then ".config" else configDir
+  }/algia/config.json";
   fileKey = if pkgs.stdenv.hostPlatform.isDarwin then relativePath else "/${relativePath}";
   file = config.home.file.${fileKey};
   activation = config.home.activation;
 in
 {
   xdg.configHome = "${config.home.homeDirectory}/${configDir}";
+  home.file.${fileKey}.enable = false;
   programs.algia = {
     enable = true;
     settings = {
@@ -45,16 +47,12 @@ in
       message = "Immutable cleanup must run before linkGeneration.";
     }
     {
-      assertion = file.enable;
-      message = "The immutable algia settings file must remain enabled.";
+      assertion = !file.enable;
+      message = "The disabled algia settings file must remain disabled.";
     }
     {
-      assertion = lib.hasInfix (lib.escapeShellArg fileKey) activation.algiaImmutableSettings.data;
-      message = "Immutable cleanup must use the configured file target.";
-    }
-    {
-      assertion = lib.hasInfix (lib.escapeShellArg (builtins.unsafeDiscardStringContext (toString file.source))) activation.algiaImmutableSettings.data;
-      message = "Immutable cleanup must use the configured file source.";
+      assertion = activation.algiaImmutableSettings.data == "";
+      message = "Disabled algia settings files must not create cleanup commands.";
     }
     {
       assertion = file.target == fileKey;
@@ -63,6 +61,6 @@ in
   ];
 
   nmt.script = ''
-    assertFileContent "home-files/${fileKey}" ${./config.json}
+    assertPathNotExists "home-files/${relativePath}"
   '';
 }
