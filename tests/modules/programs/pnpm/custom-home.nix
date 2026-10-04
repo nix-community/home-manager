@@ -11,6 +11,6 @@
     assertFileContains $hmSessVars \
       'export PNPM_HOME="/home/hm-user/.pnpm"'
     assertFileContains $hmSessVars \
-      'export PATH="/home/hm-user/.pnpm/bin''${PATH:+:}$PATH"'
+      'export PATH="/home/hm-user/.pnpm/bin''${PATH:+:}''${PATH-}"'
   '';
 }
