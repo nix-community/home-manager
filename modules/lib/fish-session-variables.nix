@@ -76,6 +76,9 @@ pkgs.runCommandLocal "hm-session-vars.fish" { } ''
     }
     ${pkgs.buildPackages.babelfish}/bin/babelfish < ${prelude}
     ${lib.optionalString hasMerges "${pkgs.buildPackages.babelfish}/bin/babelfish < ${mergeScript}"}
+    ${lib.optionalString config.targets.genericLinux.enable ''
+      echo "  source ${config.targets.genericLinux.nixEnvironmentPackage}/etc/profile.d/hm-nix-env.fish"
+    ''}
     ${pkgs.buildPackages.babelfish}/bin/babelfish < ${extra}
     echo "end"
 
