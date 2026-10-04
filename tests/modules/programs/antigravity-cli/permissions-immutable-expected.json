@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "ask": [],
+    "deny": [
+      "command(curl)"
+    ]
+  }
+}
