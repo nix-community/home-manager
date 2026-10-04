@@ -14,7 +14,23 @@ let
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
   themeIsToml = packageVersion == null || lib.versionAtLeast packageVersion "0.15.0";
   versionPost0_17 = packageVersion == null || lib.versionAtLeast packageVersion "0.17.0";
-  settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
+  settingsPath =
+    if cfg.enableMutableConfig then
+      "vicinae/home-manager.json"
+    else if versionPost0_17 then
+      "vicinae/settings.json"
+    else
+      "vicinae/vicinae.json";
+  settingsFile = config.home.file."${config.xdg.configHome}/${settingsPath}";
+  mutableEnvironment =
+    lib.optionalAttrs (cfg.enableMutableConfig && cfg.settings != { } && settingsFile.enable)
+      {
+        VICINAE_OVERRIDES =
+          if lib.hasPrefix "/" settingsFile.target then
+            settingsFile.target
+          else
+            "${config.home.homeDirectory}/${settingsFile.target}";
+      };
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
@@ -23,6 +39,34 @@ in
     enable = lib.mkEnableOption "vicinae launcher daemon";
 
     package = lib.mkPackageOption pkgs "vicinae" { nullable = true; };
+
+    enableMutableConfig = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to load declarative settings through {env}`VICINAE_OVERRIDES`,
+        leaving {file}`vicinae/settings.json` writable by Vicinae. Declarative
+        settings override changes to the same keys in the user file.
+        Requires Vicinae 0.20.6 or later, which supports {env}`VICINAE_OVERRIDES`.
+        When {option}`programs.vicinae.package` is null, the externally installed
+        Vicinae is assumed to support this feature.
+        Declarative settings are written to
+        {file}`$XDG_CONFIG_HOME/vicinae/home-manager.json`. Use absolute or
+        `~/` paths for declared imports; relative imports resolve against the
+        generated file in the Nix store. Imported settings also override the
+        user file.
+        The installed declarative settings path must not contain a colon,
+        because {env}`VICINAE_OVERRIDES` is a colon-separated list of paths.
+        The user service receives {env}`VICINAE_OVERRIDES` directly. Otherwise,
+        start Vicinae from a session that loads {option}`home.sessionVariables`.
+
+        Before disabling this option while {option}`programs.vicinae.settings`
+        is non-empty, remove or back up the Vicinae-owned
+        {file}`$XDG_CONFIG_HOME/vicinae/settings.json`. Home Manager otherwise
+        treats it as a file collision.
+      '';
+    };
 
     systemd = {
       enable = lib.mkEnableOption "vicinae systemd integration";
@@ -163,7 +207,10 @@ in
         };
       };
       description = ''
-        Settings written as JSON to {file}`~/.config/vicinae/settings.json`.
+        Settings written as JSON to {file}`$XDG_CONFIG_HOME/vicinae/settings.json`
+        ({file}`vicinae.json` before Vicinae 0.17), or to
+        {file}`$XDG_CONFIG_HOME/vicinae/home-manager.json` when
+        {option}`programs.vicinae.enableMutableConfig` is enabled.
         See {command}`vicinae config default`.
       '';
     };
@@ -182,6 +229,17 @@ in
       assertions = [
         (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
         {
+          assertion =
+            cfg.enableMutableConfig -> packageVersion == null || lib.versionAtLeast packageVersion "0.20.6";
+          message = "programs.vicinae.enableMutableConfig requires Vicinae 0.20.6 or later.";
+        }
+        {
+          assertion =
+            !(mutableEnvironment ? VICINAE_OVERRIDES)
+            || !(lib.hasInfix ":" mutableEnvironment.VICINAE_OVERRIDES);
+          message = "programs.vicinae.enableMutableConfig cannot use a configuration path containing ':' because VICINAE_OVERRIDES is a colon-separated list.";
+        }
+        {
           assertion = cfg.systemd.enable -> cfg.package != null;
           message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
         }
@@ -193,7 +251,20 @@ in
 
       lib.vicinae = vicinaeLib;
 
-      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home = {
+        sessionVariables = lib.mapAttrs (
+          _: value: lib.escape [ "\\" "\"" "$" "`" ] value
+        ) mutableEnvironment;
+
+        packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+        activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
+          lib.hm.dag.entryAfter [ "installPackages" ] ''
+            verboseEcho "Refreshing the vicinae app list"
+            run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
+          ''
+        );
+      };
 
       xdg = {
         configFile = {
@@ -213,12 +284,6 @@ in
           // lib.optionalAttrs themeIsToml themeFiles;
       };
 
-      home.activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
-        lib.hm.dag.entryAfter [ "installPackages" ] ''
-          verboseEcho "Refreshing the vicinae app list"
-          run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
-        ''
-      );
       mozilla = lib.mkIf (cfg.enableFirefoxIntegration && cfg.package != null) (
         let
           vicinaeNativeMessagingHost =
@@ -251,6 +316,9 @@ in
             ++ cfg.extensions;
         };
         Service = {
+          Environment = lib.mapAttrsToList (
+            name: value: lib.replaceStrings [ "%" ] [ "%%" ] (builtins.toJSON "${name}=${value}")
+          ) mutableEnvironment;
           Type = "simple";
           ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
           Restart = "always";
