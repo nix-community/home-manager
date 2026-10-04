@@ -9,9 +9,13 @@ let
 
   iniFormat = pkgs.formats.ini { };
   cfg = config.programs.ptyxis;
+  defaultProfile = "home-manager";
 in
 {
-  meta.maintainers = [ lib.maintainers.da157 ];
+  meta.maintainers = [
+    lib.maintainers.da157
+    lib.maintainers.lukeaurio
+  ];
 
   options.programs.ptyxis = {
     enable = lib.mkEnableOption "ptyxis";
@@ -28,7 +32,7 @@ in
         ]);
       default = { };
       description = ''
-        Written to {file}`$XDG_CONFIG_HOME/org.gnome.Prompt/palettes/NAME.palette`.
+        Written to {file}`$XDG_DATA_HOME/org.gnome.Ptyxis/palettes/NAME.palette`.
         See <https://gitlab.gnome.org/chergert/ptyxis/-/tree/main/data/palettes>
         for more information.
       '';
@@ -49,18 +53,36 @@ in
         }
       '';
     };
+
+    defaultPalette = lib.mkOption {
+      type = types.nullOr types.str;
+      default = "Spacedust";
+      example = "myPalette";
+      description = ''
+        Palette to use for the Home Manager-managed default Ptyxis profile.
+
+        When set, Home Manager creates a profile named `${defaultProfile}` and
+        makes it Ptyxis's default profile. The palette can be one declared in
+        {option}`programs.ptyxis.palettes` or a built-in Ptyxis palette. 
+        See <https://gitlab.gnome.org/chergert/ptyxis/-/tree/main/data/palettes> for more information.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.ptyxis" pkgs lib.platforms.linux)
+      {
+        assertion = cfg.defaultPalette == null || cfg.defaultPalette != "";
+        message = "programs.ptyxis.defaultPalette must not be an empty string.";
+      }
     ];
 
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile = lib.mapAttrs' (
+    xdg.dataFile = lib.mapAttrs' (
       name: value:
-      lib.nameValuePair "org.gnome.Prompt/palettes/${name}.palette" {
+      lib.nameValuePair "org.gnome.Ptyxis/palettes/${name}.palette" {
         source =
           if lib.isString value then
             pkgs.writeText "ptyxis-theme-${name}" value
@@ -70,5 +92,13 @@ in
             iniFormat.generate "ptyxis-theme-${name}" value;
       }
     ) cfg.palettes;
+
+    dconf.settings = lib.optionalAttrs (cfg.defaultPalette != null) {
+      "org/gnome/Ptyxis" = {
+        default-profile-uuid = defaultProfile;
+        profile-uuids = [ defaultProfile ];
+      };
+      "org/gnome/Ptyxis/Profiles/${defaultProfile}".palette = cfg.defaultPalette;
+    };
   };
 }
