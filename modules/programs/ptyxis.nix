@@ -56,7 +56,7 @@ in
 
     defaultPalette = lib.mkOption {
       type = types.nullOr types.str;
-      default = "Spacedust";
+      default = null;
       example = "myPalette";
       description = ''
         Palette to use for the Home Manager-managed default Ptyxis profile.
