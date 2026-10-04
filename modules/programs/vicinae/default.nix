@@ -12,8 +12,8 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-  themeIsToml = lib.versionAtLeast packageVersion "0.15.0";
-  versionPost0_17 = lib.versionAtLeast packageVersion "0.17.0";
+  themeIsToml = packageVersion == null || lib.versionAtLeast packageVersion "0.15.0";
+  versionPost0_17 = packageVersion == null || lib.versionAtLeast packageVersion "0.17.0";
   settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
 in
 {
