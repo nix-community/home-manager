@@ -10,4 +10,7 @@
   pi-coding-agent-append-system-empty = ./append-system-empty.nix;
   pi-coding-agent-custom-config-dir = ./custom-config-dir.nix;
   pi-coding-agent-models = ./models.nix;
+  pi-coding-agent-mutable = ./mutable-settings.nix;
+  pi-coding-agent-empty = ./mutable-empty.nix;
+  pi-coding-agent-disabled = ./mutable-disabled.nix;
 }
