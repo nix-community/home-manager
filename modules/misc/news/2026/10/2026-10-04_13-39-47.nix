@@ -4,7 +4,7 @@
   condition = config.programs.pet.enable;
   message = ''
     The Pet module now supports adding snippets alongside declared snippets
-    through 'programs.pet.enableMutableSnippets'.
+    through 'programs.pet.mutableSnippets'.
 
     When enabled, Home Manager loads declared snippets from a directory of
     read-only files and leaves the main snippet file writable for snippets

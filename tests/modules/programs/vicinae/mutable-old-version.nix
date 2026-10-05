@@ -2,7 +2,7 @@
 {
   programs.vicinae = {
     enable = true;
-    enableMutableConfig = true;
+    mutableSettings = true;
     package = config.lib.test.mkStubPackage {
       name = "vicinae";
       version = "0.20.5";
@@ -12,7 +12,7 @@
     enableFirefoxIntegration = false;
   };
   test.asserts.assertions.expected = [
-    "programs.vicinae.enableMutableConfig requires Vicinae 0.20.6 or later."
+    "programs.vicinae.mutableSettings requires Vicinae 0.20.6 or later."
   ];
   nmt.script = ''
     assertFileContent "home-files/.config/vicinae/home-manager.json" ${./read-only-layer.json}

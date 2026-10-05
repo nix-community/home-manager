@@ -3,7 +3,7 @@
   xdg.configHome = "${config.home.homeDirectory}/config:personal";
   programs.vicinae = {
     enable = true;
-    enableMutableConfig = true;
+    mutableSettings = true;
     settings = { };
   };
   assertions = [

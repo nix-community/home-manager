@@ -12,11 +12,10 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-  settingsPath =
-    if cfg.enableMutableConfig then "vicinae/home-manager.json" else "vicinae/settings.json";
+  settingsPath = if cfg.mutableSettings then "vicinae/home-manager.json" else "vicinae/settings.json";
   settingsFile = config.home.file."${config.xdg.configHome}/${settingsPath}";
   mutableEnvironment =
-    lib.optionalAttrs (cfg.enableMutableConfig && cfg.settings != { } && settingsFile.enable)
+    lib.optionalAttrs (cfg.mutableSettings && cfg.settings != { } && settingsFile.enable)
       {
         VICINAE_OVERRIDES =
           if lib.hasPrefix "/" settingsFile.target then
@@ -39,7 +38,7 @@ in
 
     package = lib.mkPackageOption pkgs "vicinae" { nullable = true; };
 
-    enableMutableConfig = lib.mkOption {
+    mutableSettings = lib.mkOption {
       type = lib.types.bool;
       default = false;
       example = true;
@@ -198,7 +197,7 @@ in
         Settings written as JSON to {file}`$XDG_CONFIG_HOME/vicinae/settings.json`
         or to
         {file}`$XDG_CONFIG_HOME/vicinae/home-manager.json` when
-        {option}`programs.vicinae.enableMutableConfig` is enabled.
+        {option}`programs.vicinae.mutableSettings` is enabled.
         See {command}`vicinae config default`.
       '';
     };
@@ -222,14 +221,14 @@ in
         }
         {
           assertion =
-            cfg.enableMutableConfig -> packageVersion == null || lib.versionAtLeast packageVersion "0.20.6";
-          message = "programs.vicinae.enableMutableConfig requires Vicinae 0.20.6 or later.";
+            cfg.mutableSettings -> packageVersion == null || lib.versionAtLeast packageVersion "0.20.6";
+          message = "programs.vicinae.mutableSettings requires Vicinae 0.20.6 or later.";
         }
         {
           assertion =
             !(mutableEnvironment ? VICINAE_OVERRIDES)
             || !(lib.hasInfix ":" mutableEnvironment.VICINAE_OVERRIDES);
-          message = "programs.vicinae.enableMutableConfig cannot use a configuration path containing ':' because VICINAE_OVERRIDES is a colon-separated list.";
+          message = "programs.vicinae.mutableSettings cannot use a configuration path containing ':' because VICINAE_OVERRIDES is a colon-separated list.";
         }
         {
           assertion = cfg.systemd.enable -> cfg.package != null;
