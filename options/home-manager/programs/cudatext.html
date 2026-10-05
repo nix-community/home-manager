@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-b449612c.js";
+            window.path_to_searchindex_js = "../../../searchindex-7a622526.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -304,6 +304,23 @@ attribute set of (JSON value)</p>
     numbers_style = 2;
   };
 }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/cudatext.nix">&lt;home-manager/modules/programs/cudatext.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.cudatext.mutableSettings"><a class="header" href="#opt-programs.cudatext.mutableSettings">programs.cudatext.mutableSettings</a></h2>
+<p>Whether to merge declared user settings, hotkeys and lexer settings
+into writable files during activation. Existing comments and trailing
+commas are accepted, but comments and formatting are lost when writing
+JSON. Declared values, including arrays, take precedence. Removing a
+declaration does not remove it from the file. Switching back to
+immutable settings only removes byte-identical files; changed files
+require backup or removal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
