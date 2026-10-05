@@ -3,7 +3,7 @@
   home.stateVersion = "21.11";
   programs.pet = {
     enable = true;
-    enableMutableSnippets = true;
+    mutableSnippets = true;
     package = null;
   };
 

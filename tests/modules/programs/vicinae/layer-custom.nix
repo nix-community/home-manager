@@ -3,7 +3,7 @@
   xdg.configHome = "${config.home.homeDirectory}/.custom";
   programs.vicinae = {
     enable = true;
-    enableMutableConfig = true;
+    mutableSettings = true;
     package = null;
     settings.font.normal.size = 12;
     systemd.enable = false;

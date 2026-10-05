@@ -2,7 +2,7 @@
 {
   programs.vicinae = {
     enable = true;
-    enableMutableConfig = true;
+    mutableSettings = true;
     package = config.lib.test.mkStubPackage {
       name = "vicinae";
       version = "0.20.6";

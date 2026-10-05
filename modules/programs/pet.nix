@@ -61,7 +61,7 @@ in
 
     package = lib.mkPackageOption pkgs "pet" { nullable = true; };
 
-    enableMutableSnippets = lib.mkOption {
+    mutableSnippets = lib.mkOption {
       type = types.bool;
       default = false;
       description = ''
@@ -111,12 +111,12 @@ in
         defaultGeneral = {
           selectcmd = lib.mkDefault "fzf";
           snippetfile =
-            if cfg.enableMutableSnippets then
+            if cfg.mutableSnippets then
               lib.mkDefault (config.xdg.configHome + "/pet/snippet.toml")
             else
               config.xdg.configHome + "/pet/snippet.toml";
         }
-        // lib.optionalAttrs (cfg.enableMutableSnippets && cfg.snippets != [ ]) {
+        // lib.optionalAttrs (cfg.mutableSnippets && cfg.snippets != [ ]) {
           snippetdirs = [ "${config.xdg.configHome}/pet/home-manager-snippets" ];
         };
       in
@@ -132,11 +132,11 @@ in
         lib.optional (cfg.package != null) cfg.package
         ++ lib.optional (cfg.selectcmdPackage != null) cfg.selectcmdPackage;
 
-      sessionVariables = lib.mkIf cfg.enableMutableSnippets {
+      sessionVariables = lib.mkIf cfg.mutableSnippets {
         PET_CONFIG_DIR = "${config.xdg.configHome}/pet";
       };
 
-      activation.pet-user-snippets = lib.mkIf cfg.enableMutableSnippets (
+      activation.pet-user-snippets = lib.mkIf cfg.mutableSnippets (
         let
           general =
             if lib.versionAtLeast config.home.stateVersion "21.11" then cfg.settings.General else cfg.settings;
@@ -164,12 +164,11 @@ in
             General = cfg.settings;
           }
       );
-      "pet/${
-        if cfg.enableMutableSnippets then "home-manager-snippets/snippet.toml" else "snippet.toml"
-      }" =
-        lib.mkIf (cfg.snippets != [ ]) {
-          source = format.generate "snippet.toml" { inherit (cfg) snippets; };
-        };
+      "pet/${if cfg.mutableSnippets then "home-manager-snippets/snippet.toml" else "snippet.toml"}" =
+        lib.mkIf (cfg.snippets != [ ])
+          {
+            source = format.generate "snippet.toml" { inherit (cfg) snippets; };
+          };
     };
   };
 }

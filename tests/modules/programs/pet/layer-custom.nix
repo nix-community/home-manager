@@ -8,7 +8,7 @@ in
   xdg.configHome = "${config.home.homeDirectory}/.custom";
   programs.pet = {
     enable = true;
-    enableMutableSnippets = true;
+    mutableSnippets = true;
     package = null;
     snippets = [
       {

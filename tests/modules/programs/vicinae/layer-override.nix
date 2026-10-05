@@ -6,7 +6,7 @@
   };
   programs.vicinae = {
     enable = true;
-    enableMutableConfig = true;
+    mutableSettings = true;
     settings.font.normal.size = 12;
     systemd.enable = true;
     enableFirefoxIntegration = false;
