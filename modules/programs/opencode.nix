@@ -17,9 +17,6 @@ let
   webCfg = cfg.web;
 
   jsonFormat = pkgs.formats.json { };
-  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
-    inherit pkgs jsonFormat;
-  };
 
   toOpencodeShape =
     s:
@@ -473,10 +470,42 @@ in
         }
       '';
     };
+
+    validateFiles = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          config = lib.mkEnableOption ''
+            the validation of the generated configuration file
+            ({file}`$XDG_CONFIG_HOME/opencode/opencode.json`) against the
+            corresponding OpenCode JSON schema of the configured package using
+            {command}`check-jsonschema`.
+          '';
+          tui = lib.mkEnableOption ''
+            the validation of the generated configuration file
+            ({file}`$XDG_CONFIG_HOME/opencode/tui.json`) against the
+            corresponding OpenCode JSON schema of the configured package using
+            {command}`check-jsonschema`.
+          '';
+        };
+      };
+      default = { };
+      description = ''
+        Whether to validate the generated configuration files
+        ({file}`$XDG_CONFIG_HOME/opencode/opencode.json` and
+        {file}`$XDG_CONFIG_HOME/opencode/tui.json`) against the
+        corresponding OpenCode JSON schemas of the configured package
+        ({option}`programs.opencode.package`, `config.json` and `tui.json`
+        from `passthru.jsonschema`) using {command}`check-jsonschema`.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
     assertions = [
+      {
+        assertion = (cfg.validateFiles.config || cfg.validateFiles.tui) -> cfg.package != null;
+        message = "`programs.opencode.validateFiles` requires `programs.opencode.package` to be set";
+      }
       {
         assertion = !lib.isPath cfg.commands || lib.pathIsDirectory cfg.commands;
         message = "`programs.opencode.commands` must be a directory when set to a path";
@@ -535,6 +564,10 @@ in
             # Merge all settings
             mergedSettings =
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
+            orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+              inherit pkgs jsonFormat;
+              schema = if cfg.validateFiles.config then cfg.package.passthru.jsonschema.config else null;
+            };
           in
           orderedJsonFormat.generate "opencode.json" (
             {
@@ -544,14 +577,22 @@ in
           );
       };
 
-      "opencode/tui.json" = mkIf (cfg.tui != { }) {
-        source = jsonFormat.generate "tui.json" (
-          {
-            "$schema" = "https://opencode.ai/tui.json";
-          }
-          // cfg.tui
-        );
-      };
+      "opencode/tui.json" = mkIf (cfg.tui != { }) (
+        let
+          orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+            inherit pkgs jsonFormat;
+            schema = if cfg.validateFiles.tui then cfg.package.passthru.jsonschema.tui else null;
+          };
+        in
+        {
+          source = orderedJsonFormat.generate "tui.json" (
+            {
+              "$schema" = "https://opencode.ai/tui.json";
+            }
+            // cfg.tui
+          );
+        }
+      );
 
       "opencode/AGENTS.md" = (
         if lib.isPath cfg.context then
