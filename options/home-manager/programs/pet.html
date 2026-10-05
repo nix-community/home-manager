@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-949a2c92.js";
+            window.path_to_searchindex_js = "../../../searchindex-94d1627f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -186,6 +186,28 @@ boolean</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pet.enableMutableSnippets"><a class="header" href="#opt-programs.pet.enableMutableSnippets">programs.pet.enableMutableSnippets</a></h2>
+<p>Whether to load declarative snippets from a separate read-only directory,
+leaving the configured <code>snippetfile</code> setting writable for new snippets.
+The writable file is created if absent. Existing snippet directories
+are retained. Requires Pet’s <code>snippetdirs</code> support.
+<code>pet edit</code> can still select a declarative snippet, which cannot
+be saved; edit declarative snippets through Home Manager instead.</p>
+<p>When disabling this option, a writable file at the default snippet
+path follows Home Manager’s usual collision and backup handling.
+Move it aside or configure backups before switching back when its
+contents differ from the declared snippets.</p>
+<p>The configuration file itself remains read-only. <code>PET_CONFIG_DIR</code>
+is set to the Home Manager configuration directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

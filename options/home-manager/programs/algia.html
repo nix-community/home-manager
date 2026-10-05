@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-949a2c92.js";
+            window.path_to_searchindex_js = "../../../searchindex-94d1627f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -202,13 +202,33 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/algia.nix">&lt;home-manager/modules/programs/algia.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.algia.mutableSettings"><a class="header" href="#opt-programs.algia.mutableSettings">programs.algia.mutableSettings</a></h2>
+<p>Merge declarative settings into a writable configuration file during
+activation, preserving settings and credentials written by the application.
+Declarative values take precedence; removing a setting from Nix does not
+remove it from the existing file. Arrays are replaced, except that
+<code>followList</code> entries are combined and deduplicated.</p>
+<p>Formatting is not preserved. Keep secrets out of <code>settings</code>,
+since its values are still copied to the world-readable Nix store.
+New files have mode 0600; existing files retain their permissions.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/algia.nix">&lt;home-manager/modules/programs/algia.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.algia.settings"><a class="header" href="#opt-programs.algia.settings">programs.algia.settings</a></h2>
 <p>Configuration settings for algia. All the available options can be found here:
 <a href="https://github.com/mattn/algia?tab=readme-ov-file#configuration">https://github.com/mattn/algia?tab=readme-ov-file#configuration</a></p>
 <p>The generated <code>config.json</code> is written to the world-readable
 Nix store, so other local users can read a <code>privatekey</code> set here. If
 you need to set a private key, consider leaving this option empty
-and managing <code>config.json</code> outside Home Manager.</p>
+and managing <code>config.json</code> outside Home Manager, or enable
+<code>mutableSettings</code> and add the key to the writable file
+yourself; the merge keeps it.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>
