@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fd92d392.js";
+            window.path_to_searchindex_js = "searchindex-b449612c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -20018,6 +20018,24 @@ attribute set of (JSON value)</p>
     url = "https://api.githubcopilot.com/mcp/";
   };
 }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/claude-code/options.nix">&lt;home-manager/modules/programs/claude-code/options.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.claude-code.mutableSettings"><a class="header" href="#opt-programs.claude-code.mutableSettings">programs.claude-code.mutableSettings</a></h2>
+<p>Whether to merge declared settings and known marketplaces into
+writable files during activation. Declared values, including
+permission arrays, replace existing values; undeclared values and
+application-owned marketplace timestamps and auto-update flags are
+preserved. Comments and formatting are not preserved. Removing a
+declaration does not remove it from the file. Switching back to
+immutable settings requires backing up or removing the writable files.
+This does not manage application state in <code>~/.claude.json</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
