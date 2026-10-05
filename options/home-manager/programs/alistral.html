@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-b51c7d53.js";
+            window.path_to_searchindex_js = "../../../searchindex-b449612c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -197,23 +197,6 @@ boolean</p>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.alistral
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/alistral.nix">&lt;home-manager/modules/programs/alistral.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.alistral.mutableSettings"><a class="header" href="#opt-programs.alistral.mutableSettings">programs.alistral.mutableSettings</a></h2>
-<p>Merge declarative settings into a writable configuration file during
-activation, preserving settings and credentials written by the application.
-Declarative values take precedence; removing a setting from Nix does not
-remove it from the existing file. Arrays are replaced.</p>
-<p>Formatting is not preserved. Keep secrets out of <code>settings</code>,
-since its values are still copied to the world-readable Nix store.
-New files have mode 0600; existing files retain their permissions.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
