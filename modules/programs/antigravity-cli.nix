@@ -125,6 +125,92 @@ let
           )
       ) cfg.skills;
 
+  normalizePlugin =
+    name: value:
+    let
+      isDirLike = lib.isPath value || lib.isDerivation value || (lib.isAttrs value && value ? outPath);
+      isSubmodule = lib.isAttrs value && !isDirLike;
+      src = if isSubmodule then value.source else value;
+      allowHooks = if isSubmodule then value.allowHooks else false;
+      allowMcp = if isSubmodule then value.allowMcp else false;
+    in
+    pkgs.runCommandLocal "antigravity-cli-plugin-${name}" { } ''
+      mkdir -p "$out/rules" "$out/skills"
+
+      src="${src}"
+      if [[ ! -d "$src" ]]; then
+        echo "Antigravity CLI plugin source must be a directory: $src" >&2
+        exit 1
+      fi
+
+      # 1. Manifest
+      if [[ -f "$src/plugin.json" ]]; then
+        cp "$src/plugin.json" "$out/plugin.json"
+      fi
+
+      # 2. Always-on Rules
+      if [[ -d "$src/rules" ]]; then
+        cp -rL "$src/rules"/* "$out/rules/"
+      elif [[ -f "$src/rules/AGENTS.md" ]]; then
+        cp -L "$src/rules/AGENTS.md" "$out/rules/AGENTS.md"
+      elif [[ -f "$src/AGENTS.md" ]]; then
+        cp -L "$src/AGENTS.md" "$out/rules/AGENTS.md"
+      elif [[ -f "$src/GEMINI.md" ]]; then
+        cp -L "$src/GEMINI.md" "$out/rules/AGENTS.md"
+      fi
+
+      # 3. Skills
+      if [[ -d "$src/skills" ]]; then
+        cp -rL "$src/skills"/* "$out/skills/"
+      elif [[ -d "$src/.agents/skills" ]]; then
+        cp -rL "$src/.agents/skills"/* "$out/skills/"
+      elif [[ -f "$src/SKILL.md" ]]; then
+        mkdir -p "$out/skills/${name}"
+        cp -L "$src/SKILL.md" "$out/skills/${name}/SKILL.md"
+      fi
+
+      # 4. Custom Agents (if present)
+      if [[ -d "$src/agents" ]]; then
+        mkdir -p "$out/agents"
+        cp -rL "$src/agents"/* "$out/agents/"
+      elif [[ -d "$src/.agents/agents" ]]; then
+        mkdir -p "$out/agents"
+        cp -rL "$src/.agents/agents"/* "$out/agents/"
+      fi
+
+      # 5. Optional configs guarded by trust gates
+      ${lib.optionalString allowHooks ''
+        if [[ -f "$src/hooks.json" ]]; then
+          cp -L "$src/hooks.json" "$out/hooks.json"
+        fi
+      ''}
+
+      ${lib.optionalString allowMcp ''
+        if [[ -f "$src/mcp_config.json" ]]; then
+          cp -L "$src/mcp_config.json" "$out/mcp_config.json"
+        fi
+      ''}
+
+      # 6. Ensure plugin.json exists
+      if [[ ! -f "$out/plugin.json" ]]; then
+        cat > "$out/plugin.json" << 'EOF'
+      ${builtins.toJSON { inherit name; }}
+      EOF
+      fi
+
+      rmdir "$out/rules" 2>/dev/null || true
+      rmdir "$out/skills" 2>/dev/null || true
+      rmdir "$out/agents" 2>/dev/null || true
+    '';
+
+  pluginFiles = lib.mapAttrs' (
+    name: source:
+    lib.nameValuePair ".gemini/config/plugins/${name}" {
+      source = normalizePlugin name source;
+      recursive = true;
+    }
+  ) cfg.plugins;
+
 in
 {
   meta.maintainers = [ lib.maintainers.rrvsh ];
@@ -444,6 +530,80 @@ in
         symlinked to {file}`~/.gemini/antigravity-cli/skills/`.
       '';
     };
+
+    plugins =
+      let
+        pluginSubmodule = lib.types.submodule (_: {
+          options = {
+            source = lib.mkOption {
+              type = lib.types.either lib.types.path lib.types.package;
+              description = "Source directory or package for the plugin.";
+            };
+
+            allowHooks = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = ''
+                Whether to import {file}`hooks.json` from the plugin source.
+                Disabled by default to prevent untrusted plugins from executing
+                arbitrary shell commands.
+              '';
+            };
+
+            allowMcp = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = ''
+                Whether to import {file}`mcp_config.json` from the plugin source.
+                Disabled by default to prevent untrusted plugins from defining
+                unreviewed MCP servers.
+              '';
+            };
+          };
+        });
+      in
+      lib.mkOption {
+        type = lib.types.attrsOf (
+          lib.types.either (lib.types.either lib.types.path lib.types.package) pluginSubmodule
+        );
+        default = { };
+        example = lib.literalExpression ''
+          {
+            ponytail = pkgs.fetchFromGitHub {
+              owner = "DietrichGebert";
+              repo = "ponytail";
+              rev = "v4.9.0";
+              hash = "sha256-...";
+            };
+            trusted-plugin = {
+              source = ./my-plugin;
+              allowHooks = true;
+              allowMcp = true;
+            };
+          }
+        '';
+        description = ''
+          Plugins for Antigravity CLI written to
+          {file}`~/.gemini/config/plugins/<name>/`.
+
+          Plugins can bundle always-on rules in {file}`rules/AGENTS.md`,
+          skills in {file}`skills/`, custom subagents in {file}`agents/`,
+          lifecycle hooks, and MCP servers. External plugin sources with root
+          {file}`AGENTS.md` or {file}`GEMINI.md` are automatically normalized
+          so rules are active in every session.
+
+          Note: {file}`~/.gemini/config/plugins/` is the discovery root used by
+          Antigravity's builtin customization system and matches the path
+          convention used by {option}`programs.antigravity-cli.mcpServers`
+          ({file}`~/.gemini/config/mcp_config.json`). Given that Antigravity's
+          configuration hierarchy is actively evolving across upstream releases,
+          this path mapping may be adapted if upstream establishes a consolidated root.
+
+          For security, bundled hooks ({file}`hooks.json`) and MCP servers
+          ({file}`mcp_config.json`) are disabled by default and require explicit
+          opt-in via `allowHooks` and `allowMcp`.
+        '';
+      };
   };
 
   config =
@@ -579,13 +739,24 @@ in
                 '';
               }
             ) cfg.commands
-            // skillFiles antigravitySkillsDir;
+            // skillFiles antigravitySkillsDir
+            // pluginFiles;
         })
         {
           assertions = [
             {
               assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
               message = "`programs.antigravity-cli.skills` must be a directory when set to a path";
+            }
+            {
+              assertion = lib.all (
+                p:
+                let
+                  src = if lib.isAttrs p && p ? source then p.source else p;
+                in
+                src == null || !lib.isPath src || lib.pathIsDirectory src
+              ) (lib.attrValues cfg.plugins);
+              message = "Every path in `programs.antigravity-cli.plugins` must be a directory";
             }
           ];
         }

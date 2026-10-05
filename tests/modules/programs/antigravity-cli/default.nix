@@ -10,4 +10,6 @@
   antigravity-cli-policies-removed = ./policies-removed.nix;
   antigravity-cli-gemini-package-paths = ./gemini-package-paths.nix;
   antigravity-cli-legacy-gemini-config = ./legacy-gemini-config.nix;
+  antigravity-cli-plugins = ./plugins.nix;
+  antigravity-cli-plugins-normalize = ./plugins-normalize.nix;
 }
