@@ -61,7 +61,10 @@ in
     programs.neovim = {
       enable = mkEnableOption "Neovim";
 
-      package = mkPackageOption pkgs "neovim" { default = "neovim-unwrapped"; };
+      package = mkPackageOption pkgs "neovim" {
+        default = "neovim-unwrapped";
+        nullable = true;
+      };
 
       finalPackage = mkOption {
         type = types.package;
