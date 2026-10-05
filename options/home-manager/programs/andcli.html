@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-7a622526.js";
+            window.path_to_searchindex_js = "../../../searchindex-949a2c92.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -197,6 +197,22 @@ boolean</p>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.andcli
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/andcli.nix">&lt;home-manager/modules/programs/andcli.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.andcli.mutableSettings"><a class="header" href="#opt-programs.andcli.mutableSettings">programs.andcli.mutableSettings</a></h2>
+<p>Whether to merge settings into a writable configuration file during
+activation. Settings declared here take precedence; other settings are
+preserved. Removing a setting here does not remove it from the file.
+Comments and formatting are not preserved.</p>
+<p>When switching back to immutable settings, the writable file uses
+Home Manager’s normal collision and backup handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
