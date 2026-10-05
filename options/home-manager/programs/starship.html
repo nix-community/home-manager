@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-559a9321.js";
+            window.path_to_searchindex_js = "../../../searchindex-fd92d392.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -363,6 +363,36 @@ TOML value</p>
   };
 }
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix">&lt;home-manager/modules/programs/starship.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.starship.validateFiles"><a class="header" href="#opt-programs.starship.validateFiles">programs.starship.validateFiles</a></h2>
+<p>Whether to validate the generated configuration files against the
+corresponding JSON schemas of the configured package
+(<code>programs.starship.package</code>) using <code>check-jsonschema</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix">&lt;home-manager/modules/programs/starship.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.starship.validateFiles.config"><a class="header" href="#opt-programs.starship.validateFiles.config">programs.starship.validateFiles.config</a></h2>
+<p>Whether to enable the validation of the generated configuration file
+(<code>$XDG_CONFIG_HOME/starship.toml</code>) against the corresponding
+JSON schema of the configured package using <code>check-jsonschema</code>.
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

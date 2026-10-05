@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-559a9321.js";
+            window.path_to_searchindex_js = "searchindex-fd92d392.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -47482,6 +47482,58 @@ JSON value</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.opencode.validateFiles"><a class="header" href="#opt-programs.opencode.validateFiles">programs.opencode.validateFiles</a></h2>
+<p>Whether to validate the generated configuration files
+(<code>$XDG_CONFIG_HOME/opencode/opencode.json</code> and
+<code>$XDG_CONFIG_HOME/opencode/tui.json</code>) against the
+corresponding OpenCode JSON schemas of the configured package
+(<code>programs.opencode.package</code>, <code>config.json</code> and <code>tui.json</code>
+from <code>passthru.jsonschema</code>) using <code>check-jsonschema</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.opencode.validateFiles.config"><a class="header" href="#opt-programs.opencode.validateFiles.config">programs.opencode.validateFiles.config</a></h2>
+<p>Whether to enable the validation of the generated configuration file
+(<code>$XDG_CONFIG_HOME/opencode/opencode.json</code>) against the
+corresponding OpenCode JSON schema of the configured package using
+<code>check-jsonschema</code>.
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.opencode.validateFiles.tui"><a class="header" href="#opt-programs.opencode.validateFiles.tui">programs.opencode.validateFiles.tui</a></h2>
+<p>Whether to enable the validation of the generated configuration file
+(<code>$XDG_CONFIG_HOME/opencode/tui.json</code>) against the
+corresponding OpenCode JSON schema of the configured package using
+<code>check-jsonschema</code>.
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.opencode.web.enable"><a class="header" href="#opt-programs.opencode.web.enable">programs.opencode.web.enable</a></h2>
 <p>Whether to enable opencode web service.</p>
 <p><em>Type:</em>
@@ -55732,6 +55784,36 @@ TOML value</p>
   };
 }
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix">&lt;home-manager/modules/programs/starship.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.starship.validateFiles"><a class="header" href="#opt-programs.starship.validateFiles">programs.starship.validateFiles</a></h2>
+<p>Whether to validate the generated configuration files against the
+corresponding JSON schemas of the configured package
+(<code>programs.starship.package</code>) using <code>check-jsonschema</code>.</p>
+<p><em>Type:</em>
+submodule</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/starship.nix">&lt;home-manager/modules/programs/starship.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.starship.validateFiles.config"><a class="header" href="#opt-programs.starship.validateFiles.config">programs.starship.validateFiles.config</a></h2>
+<p>Whether to enable the validation of the generated configuration file
+(<code>$XDG_CONFIG_HOME/starship.toml</code>) against the corresponding
+JSON schema of the configured package using <code>check-jsonschema</code>.
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
