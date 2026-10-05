@@ -12,6 +12,6 @@ lib.optionalAttrs (pkgs.stdenv.hostPlatform.isLinux) {
   vicinae-mutable-supported-version = ./mutable-supported-version.nix;
   vicinae-layer-custom = ./layer-custom.nix;
 
-  vicinae-pre17-settings = ./pre17-settings.nix;
+  vicinae-unsupported-version = ./unsupported-version.nix;
   vicinae-example-settings = ./example-settings.nix;
 }
