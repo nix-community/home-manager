@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-94d1627f.js";
+            window.path_to_searchindex_js = "../searchindex-583ccbd2.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-c599a4a0.js"></script>
@@ -307,6 +307,12 @@ links; differing files use normal collision and backup handling. Trusted folders
 <code>settings</code> are no longer written, because Copilot CLI keeps them in its own
 state; declare them with
 <a href="../options/home-manager/programs/github-copilot-cli.html#opt-programs.github-copilot-cli.trustedFolders">programs.github-copilot-cli.trustedFolders</a> instead.</p>
+</li>
+<li>
+<p>Vicinae now requires version 0.17.0 or later. Legacy JSON themes and the
+<code>vicinae.json</code> configuration file are no longer supported. Replace
+<code>programs.vicinae.useLayerShell</code> with
+<code>programs.vicinae.settings.launcher_window.layer_shell.enabled</code>.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
