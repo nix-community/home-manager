@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-ce16d1f3.js";
+            window.path_to_searchindex_js = "../../../searchindex-54ad8ba6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -202,38 +202,6 @@ unspecified value</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
 </ul>
-<h2 id="opt-programs.vicinae.enableMutableConfig"><a class="header" href="#opt-programs.vicinae.enableMutableConfig">programs.vicinae.enableMutableConfig</a></h2>
-<p>Whether to load declarative settings through <code>VICINAE_OVERRIDES</code>,
-leaving <code>vicinae/settings.json</code> writable by Vicinae. Declarative
-settings override changes to the same keys in the user file.
-Requires Vicinae 0.20.6 or later, which supports <code>VICINAE_OVERRIDES</code>.
-When <code>programs.vicinae.package</code> is null, the externally installed
-Vicinae is assumed to support this feature.
-Declarative settings are written to
-<code>$XDG_CONFIG_HOME/vicinae/home-manager.json</code>. Use absolute or
-<code>~/</code> paths for declared imports; relative imports resolve against the
-generated file in the Nix store. Imported settings also override the
-user file.
-The installed declarative settings path must not contain a colon,
-because <code>VICINAE_OVERRIDES</code> is a colon-separated list of paths.
-The user service receives <code>VICINAE_OVERRIDES</code> directly. Otherwise,
-start Vicinae from a session that loads <code>home.sessionVariables</code>.</p>
-<p>Before disabling this option while <code>programs.vicinae.settings</code>
-is non-empty, remove or back up the Vicinae-owned
-<code>$XDG_CONFIG_HOME/vicinae/settings.json</code>. Home Manager otherwise
-treats it as a file collision.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
-</ul>
 <h2 id="opt-programs.vicinae.package"><a class="header" href="#opt-programs.vicinae.package">programs.vicinae.package</a></h2>
 <p>The vicinae package to use.</p>
 <p><em>Type:</em>
@@ -286,11 +254,43 @@ list of package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
 </ul>
+<h2 id="opt-programs.vicinae.mutableSettings"><a class="header" href="#opt-programs.vicinae.mutableSettings">programs.vicinae.mutableSettings</a></h2>
+<p>Whether to load declarative settings through <code>VICINAE_OVERRIDES</code>,
+leaving <code>vicinae/settings.json</code> writable by Vicinae. Declarative
+settings override changes to the same keys in the user file.
+Requires Vicinae 0.20.6 or later, which supports <code>VICINAE_OVERRIDES</code>.
+When <code>programs.vicinae.package</code> is null, the externally installed
+Vicinae is assumed to support this feature.
+Declarative settings are written to
+<code>$XDG_CONFIG_HOME/vicinae/home-manager.json</code>. Use absolute or
+<code>~/</code> paths for declared imports; relative imports resolve against the
+generated file in the Nix store. Imported settings also override the
+user file.
+The installed declarative settings path must not contain a colon,
+because <code>VICINAE_OVERRIDES</code> is a colon-separated list of paths.
+The user service receives <code>VICINAE_OVERRIDES</code> directly. Otherwise,
+start Vicinae from a session that loads <code>home.sessionVariables</code>.</p>
+<p>Before disabling this option while <code>programs.vicinae.settings</code>
+is non-empty, remove or back up the Vicinae-owned
+<code>$XDG_CONFIG_HOME/vicinae/settings.json</code>. Home Manager otherwise
+treats it as a file collision.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
+</ul>
 <h2 id="opt-programs.vicinae.settings"><a class="header" href="#opt-programs.vicinae.settings">programs.vicinae.settings</a></h2>
 <p>Settings written as JSON to <code>$XDG_CONFIG_HOME/vicinae/settings.json</code>
 or to
 <code>$XDG_CONFIG_HOME/vicinae/home-manager.json</code> when
-<code>programs.vicinae.enableMutableConfig</code> is enabled.
+<code>programs.vicinae.mutableSettings</code> is enabled.
 See <code>vicinae config default</code>.</p>
 <p><em>Type:</em>
 JSON value</p>

@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ce16d1f3.js";
+            window.path_to_searchindex_js = "searchindex-54ad8ba6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -41940,36 +41940,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix">&lt;home-manager/modules/programs/mise.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.mise.enableMutableConfig"><a class="header" href="#opt-programs.mise.enableMutableConfig">programs.mise.enableMutableConfig</a></h2>
-<p>Whether to leave <code>$XDG_CONFIG_HOME/mise/config.toml</code> mutable
-so it can be updated by commands such as <code>mise use --global</code>.</p>
-<p>When enabled, <code>programs.mise.globalConfig</code> is written to
-<code>$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml</code> instead,
-leaving the main configuration file unmanaged. The numeric prefix
-gives user-managed fragments predictable ordering around the Home
-Manager fragment. An empty mutable configuration file is created
-because global Mise commands otherwise try to update an existing
-global fragment, including the read-only Home Manager fragment.</p>
-<p>Keep settings in the mutable file and
-<code>programs.mise.globalConfig</code> disjoint. Mise may resolve
-conflicts between the global file and <code>conf.d</code> differently
-depending on the current directory.</p>
-<p>Before disabling this option while
-<code>programs.mise.globalConfig</code> is non-empty, remove or back up
-the mutable configuration file. Home Manager otherwise treats it as a
-file collision.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix">&lt;home-manager/modules/programs/mise.nix&gt;</a></li>
-</ul>
 <h2 id="opt-programs.mise.enableNushellIntegration"><a class="header" href="#opt-programs.mise.enableNushellIntegration">programs.mise.enableNushellIntegration</a></h2>
 <p>Whether to enable Nushell integration.</p>
 <p><em>Type:</em>
@@ -42011,7 +41981,7 @@ null or package</p>
 <p>Global configuration written to
 <code>$XDG_CONFIG_HOME/mise/config.toml</code>, or
 <code>$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml</code> when
-<code>programs.mise.enableMutableConfig</code> is enabled.</p>
+<code>programs.mise.mutableSettings</code> is enabled.</p>
 <p>See <a href="https://mise.jdx.dev/configuration.html">https://mise.jdx.dev/configuration.html</a> and
 <a href="https://mise.jdx.dev/configuration/settings.html">https://mise.jdx.dev/configuration/settings.html</a>
 for details on supported values.</p>
@@ -42038,6 +42008,36 @@ tools = {
   python = ["3.10" "3.11"];
 };
 
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/mise.nix">&lt;home-manager/modules/programs/mise.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.mise.mutableSettings"><a class="header" href="#opt-programs.mise.mutableSettings">programs.mise.mutableSettings</a></h2>
+<p>Whether to leave <code>$XDG_CONFIG_HOME/mise/config.toml</code> mutable
+so it can be updated by commands such as <code>mise use --global</code>.</p>
+<p>When enabled, <code>programs.mise.globalConfig</code> is written to
+<code>$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml</code> instead,
+leaving the main configuration file unmanaged. The numeric prefix
+gives user-managed fragments predictable ordering around the Home
+Manager fragment. An empty mutable configuration file is created
+because global Mise commands otherwise try to update an existing
+global fragment, including the read-only Home Manager fragment.</p>
+<p>Keep settings in the mutable file and
+<code>programs.mise.globalConfig</code> disjoint. Mise may resolve
+conflicts between the global file and <code>conf.d</code> differently
+depending on the current directory.</p>
+<p>Before disabling this option while
+<code>programs.mise.globalConfig</code> is non-empty, remove or back up
+the mutable configuration file. Home Manager otherwise treats it as a
+file collision.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -48408,7 +48408,18 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.pet.enableMutableSnippets"><a class="header" href="#opt-programs.pet.enableMutableSnippets">programs.pet.enableMutableSnippets</a></h2>
+<h2 id="opt-programs.pet.package"><a class="header" href="#opt-programs.pet.package">programs.pet.package</a></h2>
+<p>The pet package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.pet
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pet.mutableSnippets"><a class="header" href="#opt-programs.pet.mutableSnippets">programs.pet.mutableSnippets</a></h2>
 <p>Whether to load declarative snippets from a separate read-only directory,
 leaving the configured <code>snippetfile</code> setting writable for new snippets.
 The writable file is created if absent. Existing snippet directories
@@ -48425,17 +48436,6 @@ is set to the Home Manager configuration directory.</p>
 boolean</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.pet.package"><a class="header" href="#opt-programs.pet.package">programs.pet.package</a></h2>
-<p>The pet package to use.</p>
-<p><em>Type:</em>
-null or package</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">pkgs.pet
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -60300,38 +60300,6 @@ unspecified value</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
 </ul>
-<h2 id="opt-programs.vicinae.enableMutableConfig"><a class="header" href="#opt-programs.vicinae.enableMutableConfig">programs.vicinae.enableMutableConfig</a></h2>
-<p>Whether to load declarative settings through <code>VICINAE_OVERRIDES</code>,
-leaving <code>vicinae/settings.json</code> writable by Vicinae. Declarative
-settings override changes to the same keys in the user file.
-Requires Vicinae 0.20.6 or later, which supports <code>VICINAE_OVERRIDES</code>.
-When <code>programs.vicinae.package</code> is null, the externally installed
-Vicinae is assumed to support this feature.
-Declarative settings are written to
-<code>$XDG_CONFIG_HOME/vicinae/home-manager.json</code>. Use absolute or
-<code>~/</code> paths for declared imports; relative imports resolve against the
-generated file in the Nix store. Imported settings also override the
-user file.
-The installed declarative settings path must not contain a colon,
-because <code>VICINAE_OVERRIDES</code> is a colon-separated list of paths.
-The user service receives <code>VICINAE_OVERRIDES</code> directly. Otherwise,
-start Vicinae from a session that loads <code>home.sessionVariables</code>.</p>
-<p>Before disabling this option while <code>programs.vicinae.settings</code>
-is non-empty, remove or back up the Vicinae-owned
-<code>$XDG_CONFIG_HOME/vicinae/settings.json</code>. Home Manager otherwise
-treats it as a file collision.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
-</ul>
 <h2 id="opt-programs.vicinae.package"><a class="header" href="#opt-programs.vicinae.package">programs.vicinae.package</a></h2>
 <p>The vicinae package to use.</p>
 <p><em>Type:</em>
@@ -60384,11 +60352,43 @@ list of package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
 </ul>
+<h2 id="opt-programs.vicinae.mutableSettings"><a class="header" href="#opt-programs.vicinae.mutableSettings">programs.vicinae.mutableSettings</a></h2>
+<p>Whether to load declarative settings through <code>VICINAE_OVERRIDES</code>,
+leaving <code>vicinae/settings.json</code> writable by Vicinae. Declarative
+settings override changes to the same keys in the user file.
+Requires Vicinae 0.20.6 or later, which supports <code>VICINAE_OVERRIDES</code>.
+When <code>programs.vicinae.package</code> is null, the externally installed
+Vicinae is assumed to support this feature.
+Declarative settings are written to
+<code>$XDG_CONFIG_HOME/vicinae/home-manager.json</code>. Use absolute or
+<code>~/</code> paths for declared imports; relative imports resolve against the
+generated file in the Nix store. Imported settings also override the
+user file.
+The installed declarative settings path must not contain a colon,
+because <code>VICINAE_OVERRIDES</code> is a colon-separated list of paths.
+The user service receives <code>VICINAE_OVERRIDES</code> directly. Otherwise,
+start Vicinae from a session that loads <code>home.sessionVariables</code>.</p>
+<p>Before disabling this option while <code>programs.vicinae.settings</code>
+is non-empty, remove or back up the Vicinae-owned
+<code>$XDG_CONFIG_HOME/vicinae/settings.json</code>. Home Manager otherwise
+treats it as a file collision.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
+</ul>
 <h2 id="opt-programs.vicinae.settings"><a class="header" href="#opt-programs.vicinae.settings">programs.vicinae.settings</a></h2>
 <p>Settings written as JSON to <code>$XDG_CONFIG_HOME/vicinae/settings.json</code>
 or to
 <code>$XDG_CONFIG_HOME/vicinae/home-manager.json</code> when
-<code>programs.vicinae.enableMutableConfig</code> is enabled.
+<code>programs.vicinae.mutableSettings</code> is enabled.
 See <code>vicinae config default</code>.</p>
 <p><em>Type:</em>
 JSON value</p>
@@ -94987,6 +94987,12 @@ state; declare them with
 <code>vicinae.json</code> configuration file are no longer supported. Replace
 <code>programs.vicinae.useLayerShell</code> with
 <code>programs.vicinae.settings.launcher_window.layer_shell.enabled</code>.</p>
+</li>
+<li>
+<p>Mise’s mutable configuration switch is now
+<a href="#opt-programs.mise.mutableSettings">programs.mise.mutableSettings</a>. The former
+<code>programs.mise.enableMutableConfig</code> remains a deprecated alias.
+Defaults and configuration behavior are unchanged.</p>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>

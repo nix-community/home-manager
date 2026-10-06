@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-ce16d1f3.js";
+            window.path_to_searchindex_js = "../../../searchindex-54ad8ba6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -191,7 +191,18 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.pet.enableMutableSnippets"><a class="header" href="#opt-programs.pet.enableMutableSnippets">programs.pet.enableMutableSnippets</a></h2>
+<h2 id="opt-programs.pet.package"><a class="header" href="#opt-programs.pet.package">programs.pet.package</a></h2>
+<p>The pet package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.pet
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pet.mutableSnippets"><a class="header" href="#opt-programs.pet.mutableSnippets">programs.pet.mutableSnippets</a></h2>
 <p>Whether to load declarative snippets from a separate read-only directory,
 leaving the configured <code>snippetfile</code> setting writable for new snippets.
 The writable file is created if absent. Existing snippet directories
@@ -208,17 +219,6 @@ is set to the Home Manager configuration directory.</p>
 boolean</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pet.nix">&lt;home-manager/modules/programs/pet.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.pet.package"><a class="header" href="#opt-programs.pet.package">programs.pet.package</a></h2>
-<p>The pet package to use.</p>
-<p><em>Type:</em>
-null or package</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">pkgs.pet
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
