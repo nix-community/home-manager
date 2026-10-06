@@ -23,19 +23,13 @@ in
     lib.hm.maintainers.LucasWagler
   ];
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "k9s" "skin" ]
-      [
-        "programs"
-        "k9s"
-        "skins"
-        "skin"
-      ]
-    )
-    (lib.mkRenamedOptionModule [ "programs" "k9s" "hotkey" ] [ "programs" "k9s" "hotKeys" ])
-    (lib.mkRenamedOptionModule [ "programs" "k9s" "plugin" ] [ "programs" "k9s" "plugins" ])
-  ];
+  imports =
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "k9s" name ] message)
+      {
+        hotkey = "Use `programs.k9s.hotKeys` instead.";
+        plugin = "Use `programs.k9s.plugins` instead.";
+        skin = "Use `programs.k9s.skins` instead.";
+      };
 
   options.programs.k9s = {
     enable = lib.mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
@@ -199,17 +193,6 @@ in
     in
     mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      warnings =
-        (lib.optional (cfg.aliases ? alias)
-          "Nested 'alias' key in programs.k9s.aliases is deprecated, move the contents directly under programs.k9s.aliases"
-        )
-        ++ (lib.optional (cfg.plugins ? plugin)
-          "Nested 'plugin' key in programs.k9s.plugins is deprecated, move the contents directly under programs.k9s.plugins"
-        )
-        ++ (lib.optional (cfg.views ? k9s.views)
-          "Nested 'k9s.views' structure in programs.k9s.views is deprecated, move the contents directly under programs.k9s.views"
-        );
-
       xdg.configFile = mkIf enableXdgConfig (
         {
           "k9s/config.yaml" = mkIf (cfg.settings != { }) {
