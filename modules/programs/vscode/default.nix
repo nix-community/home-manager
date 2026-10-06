@@ -29,16 +29,6 @@ in
 
     ./haskell.nix
 
-    (lib.mkChangedOptionModule
-      [
-        "programs"
-        "vscode"
-        "immutableExtensionsDir"
-      ]
-      [ "programs" "vscode" "mutableExtensionsDir" ]
-      (config: !config.programs.vscode.immutableExtensionsDir)
-    )
-
     (lib.mkRemovedOptionModule [ "programs" "vscode" "pname" ] ''
       The programs.vscode.pname option has been removed. Each VSCode fork
       now has its own dedicated module (programs.vscodium, programs.cursor,
@@ -46,20 +36,22 @@ in
       to the module corresponding to your fork instead of setting
       programs.vscode.package to a fork package.
     '')
+
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "vscode"
+      "immutableExtensionsDir"
+    ] "Use the inverse `programs.vscode.mutableExtensionsDir` instead.")
   ]
   ++
     map
       (
         v:
-        lib.mkRenamedOptionModule
-          [ "programs" "vscode" v ]
-          [
-            "programs"
-            "vscode"
-            "profiles"
-            "default"
-            v
-          ]
+        lib.mkRemovedOptionModule [
+          "programs"
+          "vscode"
+          v
+        ] "Use `programs.vscode.profiles.default.${v}` instead."
       )
       [
         "enableUpdateCheck"
