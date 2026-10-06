@@ -164,22 +164,13 @@ in
     (lib.mkRemovedOptionModule [
       "services"
       "gpg-agent"
+      "pinentryPackage"
+    ] "Use `services.gpg-agent.pinentry.package` instead.")
+    (lib.mkRemovedOptionModule [
+      "services"
+      "gpg-agent"
       "pinentryFlavor"
-    ] "Use services.gpg-agent.pinentryPackage instead")
-
-    (lib.mkRenamedOptionModule
-      [
-        "services"
-        "gpg-agent"
-        "pinentryPackage"
-      ]
-      [
-        "services"
-        "gpg-agent"
-        "pinentry"
-        "package"
-      ]
-    )
+    ] "Use services.gpg-agent.pinentry.package instead")
   ];
 
   options = {
