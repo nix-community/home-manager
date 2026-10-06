@@ -18,8 +18,6 @@ let
     # Path normalization cases
     abs-no-slash = "${home}/subdir";
     abs-slash = "${home}/subdir/";
-    rel-no-slash = "subdir";
-    rel-slash = "subdir/";
     root-no-slash = "${home}";
     root-slash = "${home}/";
     abs-space = "${home}/subdir with space";
@@ -28,11 +26,7 @@ let
   dotDir = dotDirCases.${case} or (abort "Unknown case: ${case}");
 
   # Normalize absolute path to match module behavior (no trailing slash)
-  absDotDir =
-    let
-      fullPath = if lib.hasPrefix "/" dotDir then dotDir else "${home}/${dotDir}";
-    in
-    lib.removeSuffix "/" fullPath;
+  absDotDir = lib.removeSuffix "/" dotDir;
 
   # Calculate relative path for file location assertions
   relDotDir =
@@ -42,11 +36,7 @@ let
     in
     if lib.hasPrefix "/" rawRel then lib.removePrefix "/" rawRel else rawRel;
 
-  isRelative = lib.elem case [
-    "relative"
-    "rel-no-slash"
-    "rel-slash"
-  ];
+  isRelative = case == "relative";
 in
 {
   config = {
@@ -59,40 +49,28 @@ in
       stubs.zsh = { };
 
       asserts = {
-        assertions.expected = lib.optionals (case == "shell-variable") [
-          ''
-            programs.zsh.dotDir cannot contain shell variables as it is used for file creation at build time.
-            Current dotDir: ''${XDG_CONFIG_HOME:-''$HOME/.config}/zsh
-            Consider using an absolute path or home-manager config options instead.
-            You can replace shell variables with options like:
-            - config.home.homeDirectory (user's home directory)
-            - config.xdg.configHome (XDG config directory)
-            - config.xdg.dataHome (XDG data directory)
-            - config.xdg.cacheHome (XDG cache directory)
-          ''
-        ];
-
-        warnings.expected = lib.optionals isRelative [
-          ''
-            Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
-            Current dotDir: ${dotDir}
-            Consider using absolute paths or home-manager config options instead.
-            You can replace relative paths or environment variables with options like:
-            - config.home.homeDirectory (user's home directory)
-            - config.xdg.configHome (XDG config directory)
-            - config.xdg.dataHome (XDG data directory)
-            - config.xdg.cacheHome (XDG cache directory)
-          ''
-        ];
+        assertions.expected =
+          lib.optionals (case == "shell-variable") [
+            ''
+              programs.zsh.dotDir cannot contain shell variables as it is used for file creation at build time.
+              Current dotDir: ''${XDG_CONFIG_HOME:-''$HOME/.config}/zsh
+              Consider using an absolute path or home-manager config options instead.
+              You can replace shell variables with options like:
+              - config.home.homeDirectory (user's home directory)
+              - config.xdg.configHome (XDG config directory)
+              - config.xdg.dataHome (XDG data directory)
+              - config.xdg.cacheHome (XDG cache directory)
+            ''
+          ]
+          ++ lib.optionals isRelative [
+            "programs.zsh.dotDir must be an absolute path. Use home-manager config options instead of relative paths."
+          ];
       };
     };
 
     nmt.script =
-      if case == "shell-variable" then
-        ''
-          # Shell variable case should fail assertion, no files to check
-          echo "Shell variable case should trigger assertion failure"
-        ''
+      if case == "shell-variable" || isRelative then
+        ""
       else
         lib.concatStringsSep "\n" [
           # check dotDir entrypoint exists

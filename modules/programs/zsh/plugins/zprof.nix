@@ -10,7 +10,7 @@ let
 in
 {
   imports = [
-    (lib.mkRenamedOptionModule [ "programs" "zsh" "zproof" ] [ "programs" "zsh" "zprof" ])
+    (lib.mkRemovedOptionModule [ "programs" "zsh" "zproof" ] "Use `programs.zsh.zprof` instead.")
   ];
 
   options.programs.zsh.zprof = {

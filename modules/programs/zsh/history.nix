@@ -51,7 +51,10 @@ in
               default = "${dotDirAbs}/.zsh_history";
               defaultText = "`\${config.programs.zsh.dotDir}/.zsh_history`";
               example = "`\${config.xdg.dataHome}/zsh/zsh_history`";
-              description = "History file location";
+              description = ''
+                History file location, as an absolute path or a path containing
+                shell variables that will be expanded at runtime.
+              '';
             };
 
             ignorePatterns = mkOption {
@@ -174,20 +177,12 @@ in
     };
 
   config = {
-    warnings =
-      lib.optionals (!lib.hasPrefix "/" cfg.history.path && !lib.hasInfix "$" cfg.history.path)
-        [
-          ''
-            Using relative paths in programs.zsh.history.path is deprecated and will be removed in a future release.
-            Consider using absolute paths or home-manager config options instead.
-            You can replace relative paths or environment variables with options like:
-            - config.home.homeDirectory (user's home directory)
-            - config.xdg.configHome (XDG config directory)
-            - config.xdg.dataHome (XDG data directory)
-            - config.xdg.cacheHome (XDG cache directory)
-            Current history.path: ${cfg.history.path}
-          ''
-        ];
+    assertions = [
+      {
+        assertion = !cfg.enable || lib.hasPrefix "/" cfg.history.path || lib.hasInfix "$" cfg.history.path;
+        message = "programs.zsh.history.path must be an absolute path or contain shell variables. Use home-manager config options instead of relative paths.";
+      }
+    ];
 
     programs.zsh.setOptions =
       let
