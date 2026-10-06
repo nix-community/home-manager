@@ -9,7 +9,6 @@ let
     literalExpression
     mkIf
     mkOption
-    mkRenamedOptionModule
     types
     ;
 
@@ -156,35 +155,13 @@ in
     lib.maintainers.dermetfan
   ];
 
-  imports = [
-    (mkRenamedOptionModule
-      [ "programs" "broot" "modal" ]
-      [
-        "programs"
-        "broot"
-        "settings"
-        "modal"
-      ]
-    )
-    (mkRenamedOptionModule
-      [ "programs" "broot" "verbs" ]
-      [
-        "programs"
-        "broot"
-        "settings"
-        "verbs"
-      ]
-    )
-    (mkRenamedOptionModule
-      [ "programs" "broot" "skin" ]
-      [
-        "programs"
-        "broot"
-        "settings"
-        "skin"
-      ]
-    )
-  ];
+  imports =
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "broot" name ] message)
+      {
+        modal = "Use `programs.broot.settings.modal` instead.";
+        skin = "Use `programs.broot.settings.skin` instead.";
+        verbs = "Use `programs.broot.settings.verbs` instead.";
+      };
 
   options.programs.broot = {
     enable = lib.mkEnableOption "Broot, a better way to navigate directories";
