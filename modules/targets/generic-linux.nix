@@ -16,15 +16,12 @@ let
 in
 {
   imports = [
-    (lib.mkRenamedOptionModule
-      [ "targets" "genericLinux" "extraXdgDataDirs" ]
-      [
-        "xdg"
-        "systemDirs"
-        "data"
-      ]
-    )
-    (lib.mkRenamedOptionModule [ "nixGL" ] [ "targets" "genericLinux" "nixGL" ])
+    (lib.mkRemovedOptionModule [
+      "targets"
+      "genericLinux"
+      "extraXdgDataDirs"
+    ] "Use `xdg.systemDirs.data` instead.")
+    (lib.mkRemovedOptionModule [ "nixGL" ] "Use `targets.genericLinux.nixGL` instead.")
     ./generic-linux/nixgl.nix
     ./generic-linux/gpu
   ];

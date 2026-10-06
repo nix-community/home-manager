@@ -115,7 +115,7 @@ in
       description = ''
         If this option is set, the wrapper script `prime-offload` is installed
         into the environment. It allows starting programs on the secondary GPU
-        selected by the `nixGL.prime.card` option. This makes sense when the
+        selected by the {option}`targets.genericLinux.nixGL.prime.card` option. This makes sense when the
         program is not already using one of nixGL PRIME wrappers, or for
         programs not installed from Nixpkgs.
 
