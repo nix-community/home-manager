@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-583ccbd2.js";
+            window.path_to_searchindex_js = "searchindex-ce16d1f3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -15427,9 +15427,36 @@ JSON value</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/antigravity-cli.nix">&lt;home-manager/modules/programs/antigravity-cli.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.antigravity-cli.mutableSettings"><a class="header" href="#opt-programs.antigravity-cli.mutableSettings">programs.antigravity-cli.mutableSettings</a></h2>
+<p>Whether to merge native Antigravity settings and MCP servers into
+writable files during activation. This does not support the legacy
+Gemini CLI configuration or a Gemini CLI package. Gemini CLI supports
+a separate read-only system settings layer via
+<code>GEMINI_CLI_SYSTEM_SETTINGS_PATH</code> instead.</p>
+<p>Declared values, including permission arrays, take precedence over
+existing values. Unset permission lists preserve saved grants; an
+explicit list replaces the saved list, including an empty list.
+MCP files accept comments and trailing commas, but
+are written as JSON without comments or original formatting. Removing
+a declaration does not remove it from the file. Switching back to
+immutable settings only removes byte-identical files; changed files
+require backup or removal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/antigravity-cli.nix">&lt;home-manager/modules/programs/antigravity-cli.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.antigravity-cli.permissions"><a class="header" href="#opt-programs.antigravity-cli.permissions">programs.antigravity-cli.permissions</a></h2>
 <p>Antigravity CLI fine-grained permissions written to
-<code>programs.antigravity-cli.settings.permissions</code>.</p>
+<code>programs.antigravity-cli.settings.permissions</code>.
+Unspecified lists default to empty lists in immutable and legacy mode.
+In mutable native mode, unspecified lists default to null instead.
+Null lists are omitted from the file, preserving saved values in mutable
+mode; an explicit empty list clears the saved list.</p>
 <p><em>Type:</em>
 null or (submodule)</p>
 <p><em>Default:</em></p>
@@ -15450,10 +15477,9 @@ null or (submodule)</p>
 <h2 id="opt-programs.antigravity-cli.permissions.allow"><a class="header" href="#opt-programs.antigravity-cli.permissions.allow">programs.antigravity-cli.permissions.allow</a></h2>
 <p>Permissions to allow without prompting.</p>
 <p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
+null or (list of string)</p>
+<p><em>Default:</em>
+<code>null</code> in mutable native mode, otherwise <code>[ ]</code>.</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/antigravity-cli.nix">&lt;home-manager/modules/programs/antigravity-cli.nix&gt;</a></li>
@@ -15461,10 +15487,9 @@ list of string</p>
 <h2 id="opt-programs.antigravity-cli.permissions.ask"><a class="header" href="#opt-programs.antigravity-cli.permissions.ask">programs.antigravity-cli.permissions.ask</a></h2>
 <p>Permissions to ask before using.</p>
 <p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
+null or (list of string)</p>
+<p><em>Default:</em>
+<code>null</code> in mutable native mode, otherwise <code>[ ]</code>.</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/antigravity-cli.nix">&lt;home-manager/modules/programs/antigravity-cli.nix&gt;</a></li>
@@ -15472,10 +15497,9 @@ list of string</p>
 <h2 id="opt-programs.antigravity-cli.permissions.deny"><a class="header" href="#opt-programs.antigravity-cli.permissions.deny">programs.antigravity-cli.permissions.deny</a></h2>
 <p>Permissions to deny without prompting.</p>
 <p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
+null or (list of string)</p>
+<p><em>Default:</em>
+<code>null</code> in mutable native mode, otherwise <code>[ ]</code>.</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/antigravity-cli.nix">&lt;home-manager/modules/programs/antigravity-cli.nix&gt;</a></li>
