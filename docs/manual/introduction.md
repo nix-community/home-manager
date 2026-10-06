@@ -7,8 +7,8 @@ The following example snippet of Nix code:
 ```nix
 programs.git = {
   enable = true;
-  userEmail = "joe@example.org";
-  userName = "joe";
+  settings.user.email = "joe@example.org";
+  settings.user.name = "joe";
 };
 ```
 

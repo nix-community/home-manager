@@ -36,6 +36,22 @@ in
     rycee
   ];
 
+  imports =
+    (lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "git" name ] message) {
+      aliases = "Use `programs.git.settings.alias` instead.";
+      extraConfig = "Use `programs.git.settings` instead.";
+      userEmail = "Use `programs.git.settings.user.email` instead.";
+      userName = "Use `programs.git.settings.user.name` instead.";
+    })
+    ++ [
+      (lib.mkRemovedOptionModule [
+        "programs"
+        "git"
+        "signing"
+        "gpgPath"
+      ] "Use `programs.git.signing.signer` instead.")
+    ];
+
   options =
     let
       gitIniType =
@@ -308,56 +324,6 @@ in
         };
       };
     };
-
-  imports =
-    let
-      oldPrefix = [
-        "programs"
-        "git"
-      ];
-      newPrefix = [
-        "programs"
-        "git"
-        "settings"
-      ];
-    in
-    [
-      (lib.mkRenamedOptionModule
-        [ "programs" "git" "signing" "gpgPath" ]
-        [
-          "programs"
-          "git"
-          "signing"
-          "signer"
-        ]
-      )
-      (lib.mkRenamedOptionModule [ "programs" "git" "extraConfig" ] [ "programs" "git" "settings" ])
-    ]
-    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix
-      {
-        transform = x: x;
-      }
-      [
-        {
-          old = [ "userName" ];
-          new = [
-            "user"
-            "name"
-          ];
-        }
-        {
-          old = [ "userEmail" ];
-          new = [
-            "user"
-            "email"
-          ];
-        }
-        {
-          old = [ "aliases" ];
-          new = [ "alias" ];
-        }
-      ]
-    );
 
   config = mkIf cfg.enable (
     let
