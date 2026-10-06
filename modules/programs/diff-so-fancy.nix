@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -19,42 +18,28 @@ in
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
   imports =
-    let
-      oldPrefix = [
-        "programs"
-        "diff-so-fancy"
-      ];
-      newPrefix = [
-        "programs"
-        "diff-so-fancy"
-        "settings"
-      ];
-      renamedOptions = [
-        "markEmptyLines"
-        "changeHunkIndicators"
-        "stripLeadingSymbols"
-        "useUnicodeRuler"
-        "rulerWidth"
-      ];
-    in
-    [
-      (lib.mkRenamedOptionModule
-        [ "programs" "git" "diff-so-fancy" "enable" ]
-        [ "programs" "diff-so-fancy" "enable" ]
-      )
-      (lib.mkRenamedOptionModule
-        [ "programs" "git" "diff-so-fancy" "pagerOpts" ]
-        [ "programs" "diff-so-fancy" "pagerOpts" ]
-      )
-    ]
-    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix {
-      transform = x: x;
-    } renamedOptions)
-    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules [
-      "programs"
-      "git"
-      "diff-so-fancy"
-    ] newPrefix { transform = x: x; } renamedOptions);
+    (lib.mapAttrsToList
+      (name: message: lib.mkRemovedOptionModule [ "programs" "git" "diff-so-fancy" name ] message)
+      {
+        enable = "Use `programs.diff-so-fancy.enable` and `programs.diff-so-fancy.enableGitIntegration` instead.";
+        pagerOpts = "Use `programs.diff-so-fancy.pagerOpts` instead.";
+        changeHunkIndicators = "Use `programs.diff-so-fancy.settings.changeHunkIndicators` instead.";
+        markEmptyLines = "Use `programs.diff-so-fancy.settings.markEmptyLines` instead.";
+        rulerWidth = "Use `programs.diff-so-fancy.settings.rulerWidth` instead.";
+        stripLeadingSymbols = "Use `programs.diff-so-fancy.settings.stripLeadingSymbols` instead.";
+        useUnicodeRuler = "Use `programs.diff-so-fancy.settings.useUnicodeRuler` instead.";
+      }
+    )
+    ++ (lib.mapAttrsToList
+      (name: message: lib.mkRemovedOptionModule [ "programs" "diff-so-fancy" name ] message)
+      {
+        changeHunkIndicators = "Use `programs.diff-so-fancy.settings.changeHunkIndicators` instead.";
+        markEmptyLines = "Use `programs.diff-so-fancy.settings.markEmptyLines` instead.";
+        rulerWidth = "Use `programs.diff-so-fancy.settings.rulerWidth` instead.";
+        stripLeadingSymbols = "Use `programs.diff-so-fancy.settings.stripLeadingSymbols` instead.";
+        useUnicodeRuler = "Use `programs.diff-so-fancy.settings.useUnicodeRuler` instead.";
+      }
+    );
 
   options.programs.diff-so-fancy = {
     enable = mkEnableOption "diff-so-fancy, a diff colorizer";
@@ -108,41 +93,25 @@ in
     };
   };
 
-  config =
-    let
-      oldOption = lib.attrByPath [ "programs" "git" "diff-so-fancy" "enable" ] null options;
-      oldOptionEnabled =
-        oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
-    in
-    lib.mkMerge [
-      (mkIf cfg.enable {
-        home.packages = [ pkgs.diff-so-fancy ];
+  config = lib.mkMerge [
+    (mkIf cfg.enable {
+      home.packages = [ pkgs.diff-so-fancy ];
+    })
 
-        # Auto-enable git integration if programs.git.diff-so-fancy.enable was set to true
-        programs.diff-so-fancy.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
-
-        warnings =
-          lib.optional
-            (
-              cfg.enableGitIntegration && options.programs.diff-so-fancy.enableGitIntegration.highestPrio == 1490
-            )
-            "`programs.diff-so-fancy.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.diff-so-fancy.enableGitIntegration = true`.";
-      })
-
-      (mkIf (cfg.enable && cfg.enableGitIntegration) {
-        programs.git = {
-          enable = lib.mkDefault true;
-          iniContent =
-            let
-              dsfCommand = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
-              pagerCommand = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.pagerOpts}";
-            in
-            lib.hm.git.diffPagerConfig pagerCommand
-            // {
-              interactive.diffFilter = "${dsfCommand} --patch";
-              diff-so-fancy = cfg.settings;
-            };
-        };
-      })
-    ];
+    (mkIf (cfg.enable && cfg.enableGitIntegration) {
+      programs.git = {
+        enable = lib.mkDefault true;
+        iniContent =
+          let
+            dsfCommand = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
+            pagerCommand = "${dsfCommand} | ${pkgs.less}/bin/less ${lib.escapeShellArgs cfg.pagerOpts}";
+          in
+          lib.hm.git.diffPagerConfig pagerCommand
+          // {
+            interactive.diffFilter = "${dsfCommand} --patch";
+            diff-so-fancy = cfg.settings;
+          };
+      };
+    })
+  ];
 }
