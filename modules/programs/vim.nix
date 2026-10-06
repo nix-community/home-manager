@@ -78,17 +78,7 @@ let
     in
     lib.optionalString (value != null) ("set " + v);
 
-  plugins =
-    let
-      vpkgs = pkgs.vimPlugins;
-      getPkg =
-        p:
-        if lib.isDerivation p then
-          [ p ]
-        else
-          lib.optional (lib.isString p && lib.hasAttr p vpkgs) vpkgs.${p};
-    in
-    lib.concatMap getPkg cfg.plugins;
+  inherit (cfg) plugins;
 
 in
 {
@@ -97,14 +87,12 @@ in
       enable = lib.mkEnableOption "Vim";
 
       plugins = mkOption {
-        type = with types; listOf (either str package);
+        type = types.listOf types.package;
         default = defaultPlugins;
         example = literalExpression "[ pkgs.vimPlugins.YankRing-vim ]";
         description = ''
           List of vim plugins to install. To get a list of supported plugins run:
           {command}`nix-env -f '<nixpkgs>' -qaP -A vimPlugins`.
-
-          Note: String values are deprecated, please use actual packages.
         '';
       };
 
@@ -187,29 +175,6 @@ in
       };
     in
     lib.mkIf cfg.enable {
-      assertions =
-        let
-          packagesNotFound = lib.filter (p: lib.isString p && (!lib.hasAttr p pkgs.vimPlugins)) cfg.plugins;
-        in
-        [
-          {
-            assertion = packagesNotFound == [ ];
-            message = "Following VIM plugin not found in pkgs.vimPlugins: ${
-              lib.concatMapStringsSep ", " (p: ''"${p}"'') packagesNotFound
-            }";
-          }
-        ];
-
-      warnings =
-        let
-          stringPlugins = lib.filter lib.isString cfg.plugins;
-        in
-        lib.optional (stringPlugins != [ ]) ''
-          Specifying VIM plugins using strings is deprecated, found ${
-            lib.concatMapStringsSep ", " (p: ''"${p}"'') stringPlugins
-          } as strings.
-        '';
-
       home.packages = [ cfg.package ];
 
       home.sessionVariables = lib.mkIf cfg.defaultEditor {
