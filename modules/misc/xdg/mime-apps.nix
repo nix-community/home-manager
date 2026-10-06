@@ -125,42 +125,6 @@ in
   };
 
   config = lib.mkMerge [
-    {
-      # Given a package that installs .desktop files in the usual location,
-      # return a mapping from mime types to lists of desktop file names. This is
-      # suitable for use with `xdg.mimeApps.defaultApplications`.
-      lib.xdg.mimeAssociations =
-        let
-          processLines =
-            str: lib.zipAttrs (lib.filter (e: e != null) (map processLine (lib.splitString "\n" str)));
-
-          processLine =
-            str:
-            let
-              entry = lib.splitString ";" str;
-              k = lib.elemAt entry 0;
-              v = lib.elemAt entry 1;
-            in
-            if lib.length entry == 2 then { ${k} = v; } else null;
-
-          associations =
-            ps:
-            pkgs.runCommand "mime-assoc" { inherit ps; } ''
-              for p in $ps ; do
-                for path in "$p"/share/applications/*.desktop ; do
-                  name="''${path##*/}"
-                  sed -n -E "/^MimeType=/ { s/.*=//; s/;?$|;/;$name\n/g; p; }" "$path"
-                done
-              done > "$out"
-            '';
-
-          processAll = p: processLines (builtins.readFile (associations p));
-
-          warning = "The Home Manager `lib.xdg.mimeAssociations` function is deprecated, you can now instead use the option `xdg.mimeApps.defaultApplicationPackages` to achieve the same without import from derivation";
-        in
-        lib.warn warning processAll;
-    }
-
     (lib.mkIf cfg.enable {
       assertions = [
         (lib.hm.assertions.assertPlatform "xdg.mimeApps" pkgs lib.platforms.linux)
