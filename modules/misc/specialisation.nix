@@ -7,7 +7,9 @@
 }:
 
 {
-  imports = [ (lib.mkRenamedOptionModule [ "specialization" ] [ "specialisation" ]) ];
+  imports = [
+    (lib.mkRemovedOptionModule [ "specialization" ] "Use `specialisation` instead.")
+  ];
 
   options.specialisation = lib.mkOption {
     type = lib.types.attrsOf (
