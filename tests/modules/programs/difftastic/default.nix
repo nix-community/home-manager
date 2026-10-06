@@ -5,5 +5,4 @@
   difftastic-with-git-difftool = ./difftastic-with-git-difftool.nix;
   difftastic-with-git-both = ./difftastic-with-git-both.nix;
   difftastic-legacy-diff-tool-mode = ./difftastic-legacy-diff-tool-mode.nix;
-  difftastic-migration = ./difftastic-migration.nix;
 }
