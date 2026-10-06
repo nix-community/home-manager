@@ -14,15 +14,6 @@ let
   settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
   configFileName = if isTomlConfig then "ashell/config.toml" else "ashell.yml";
 
-  # Create migration function for camelCase to snake_case conversion
-  migrateSettings = lib.hm.deprecations.remapAttrsRecursive {
-    pred = lib.hm.strings.isCamelCase;
-    transform = lib.hm.strings.toSnakeCase;
-  };
-
-  # Apply migration only for TOML config (ashell >= 0.5.0)
-  processedSettings =
-    if isTomlConfig then migrateSettings "programs.ashell.settings" cfg.settings else cfg.settings;
 in
 {
   meta.maintainers = [ lib.maintainers.justdeeevin ];
@@ -49,7 +40,7 @@ in
             ]
           ];
         };
-        workspaces.visibilityMode = "MonitorSpecific";
+        workspaces.visibility_mode = "MonitorSpecific";
       };
       description = ''
         Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell/config.toml` (0.5.0+)
@@ -88,7 +79,7 @@ in
 
         home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
         xdg.configFile."${configFileName}" = lib.mkIf (cfg.settings != { }) {
-          source = settingsFormat.generate "ashell-config" processedSettings;
+          source = settingsFormat.generate "ashell-config" cfg.settings;
         };
       }
       (lib.mkIf cfg.systemd.enable {
