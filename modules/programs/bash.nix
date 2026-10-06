@@ -28,14 +28,11 @@ in
   meta.maintainers = [ lib.maintainers.rycee ];
 
   imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "bash" "enableAutojump" ]
-      [
-        "programs"
-        "autojump"
-        "enable"
-      ]
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "bash"
+      "enableAutojump"
+    ] "Use `programs.autojump.enable` instead.")
   ];
 
   options = {
