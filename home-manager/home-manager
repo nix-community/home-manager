@@ -75,22 +75,11 @@ function setConfigFile() {
     elif [[ ! -v HOME_MANAGER_CONFIG ]]; then
         local configHome="${XDG_CONFIG_HOME:-$HOME/.config}"
         local hmConfigHome="$configHome/home-manager"
-        local nixpkgsConfigHome="$configHome/nixpkgs"
         local defaultConfFile="$hmConfigHome/home.nix"
         local configFile
 
         if [[ -e "$defaultConfFile" ]]; then
             configFile="$defaultConfFile"
-        elif [[ -e "$nixpkgsConfigHome/home.nix" ]]; then
-            configFile="$nixpkgsConfigHome/home.nix"
-            # translators: The first '%s' specifier will be replaced by either
-            # 'home.nix' or 'flake.nix'.
-            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
-                   'home.nix' "$nixpkgsConfigHome" "$hmConfigHome" >&2
-        elif [[ -e "$HOME/.nixpkgs/home.nix" ]]; then
-            configFile="$HOME/.nixpkgs/home.nix"
-            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
-                   'home.nix' "$HOME/.nixpkgs" "$hmConfigHome" >&2
         fi
 
         if [[ -v configFile ]]; then
@@ -114,33 +103,6 @@ function setHomeManagerNixPath() {
             _iWarn 'Home Manager not found at %s.' "$path"
         fi
     fi
-
-    for p in "${XDG_CONFIG_HOME:-$HOME/.config}/nixpkgs/home-manager" \
-             "$HOME/.nixpkgs/home-manager" ; do
-        if [[ -e "$p" ]] ; then
-            # translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-            _iWarn $'The fallback Home Manager path %s has been deprecated and a file/directory was found there.' \
-                   "$p"
-            # translators: This message will be seen by very few users that likely are familiar with English. So feel free to leave this untranslated.
-            _i $'To remove this warning, do one of the following.
-
-1. Explicitly tell Home Manager to use the path, for example by adding
-
-     { programs.home-manager.path = "%s"; }
-
-   to your configuration.
-
-   If you import Home Manager directly, you can use the `path` parameter
-
-     pkgs.callPackage /path/to/home-manager-package { path = "%s"; }
-
-   when calling the Home Manager package.
-
-2. Remove the deprecated path.
-
-     $ rm -r "%s"' "$p" "$p" "$p"
-        fi
-    done
 }
 
 # Sets some useful Home Manager related paths as global read-only variables.
@@ -180,16 +142,11 @@ function setFlakeAttribute() {
     if [[ -z $FLAKE_ARG && ! -v HOME_MANAGER_CONFIG ]]; then
         local configHome="${XDG_CONFIG_HOME:-$HOME/.config}"
         local hmConfigHome="$configHome/home-manager"
-        local nixpkgsConfigHome="$configHome/nixpkgs"
 
         local configFlake
 
         if [[ -e "$hmConfigHome/flake.nix" ]]; then
             configFlake="$hmConfigHome/flake.nix"
-        elif [[ -e "$nixpkgsConfigHome/flake.nix" ]]; then
-            configFlake="$nixpkgsConfigHome/flake.nix"
-            _iWarn $'Keeping your Home Manager %s in %s is deprecated,\nplease move it to %s' \
-                   'flake.nix' "$nixpkgsConfigHome" "$hmConfigHome" >&2
         fi
 
         if [[ -v configFlake ]]; then
@@ -1064,7 +1021,7 @@ function doHelp() {
     echo "Options"
     echo
     echo "  -f FILE           The home configuration file."
-    echo "                    Default is '~/.config/nixpkgs/home.nix'."
+    echo "                    Default is '~/.config/home-manager/home.nix'."
     echo "  -A ATTRIBUTE      Optional attribute that selects a configuration"
     echo "                    expression in the configuration file."
     echo "  -I PATH           Add a path to the Nix expression search path."
