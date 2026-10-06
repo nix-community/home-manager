@@ -7,7 +7,6 @@
 let
   inherit (lib)
     mkOption
-    mkRenamedOptionModule
     mkRemovedOptionModule
     mkEnableOption
     types
@@ -30,14 +29,11 @@ in
   ];
 
   imports = [
-    (mkRenamedOptionModule
-      [
-        "programs"
-        "direnv"
-        "enableNixDirenvIntegration"
-      ]
-      [ "programs" "direnv" "nix-direnv" "enable" ]
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "direnv"
+      "enableNixDirenvIntegration"
+    ] "Use `programs.direnv.nix-direnv.enable` instead.")
     (mkRemovedOptionModule [
       "programs"
       "direnv"
