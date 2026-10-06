@@ -118,7 +118,7 @@
 # Options
 #
 #   -f FILE      The home configuration file.
-#                Default is '~/.config/nixpkgs/home.nix'.
+#                Default is '~/.config/home-manager/home.nix'.
 #   -A ATTRIBUTE Optional attribute that selects a configuration
 #                expression in the configuration file.
 #   -I PATH      Add a path to the Nix expression search path.
@@ -238,7 +238,7 @@ _home-manager_get-default-home-file ()
 {
     local HomeFileDefault
 
-    HomeFileDefault="$(_home-manager_xdg-get-config-home)/nixpkgs/home.nix"
+    HomeFileDefault="$(_home-manager_xdg-get-config-home)/home-manager/home.nix"
 
     echo "${HomeFileDefault}"
 }
@@ -246,7 +246,7 @@ _home-manager_get-default-home-file ()
 # e.g.:
 #
 #   $ _home-manager_get-default-home-file
-#   ~/.config/nixpkgs/home.nix
+#   ~/.config/home-manager/home.nix
 #
 
 ##################################################

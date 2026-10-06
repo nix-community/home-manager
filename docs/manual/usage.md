@@ -6,9 +6,9 @@ standard installation or `~/.config/home-manager/flake.nix` in a Nix
 flake based installation.
 
 ::: {.note}
-The default configuration used to be placed in `~/.config/nixpkgs`¸ so
-you may see references to that elsewhere. The old directory still works
-but Home Manager will print a warning message when used.
+The default configuration used to be placed in `~/.config/nixpkgs`, so
+you may see references to that elsewhere. Home Manager no longer looks
+for configurations there; move them to `~/.config/home-manager`.
 :::
 
 This configuration file can be *built* and *activated*.
