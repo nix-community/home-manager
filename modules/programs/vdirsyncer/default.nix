@@ -66,6 +66,7 @@ let
             "clientIdCommand"
             "clientSecretCommand"
             "timeRange"
+            "useVcard4"
           ] a.vdirsyncer
       )
     );
@@ -105,7 +106,7 @@ let
     else if (n == "itemTypes") then
       "item_types = ${listString (map wrap v)}"
     else if (n == "useVcard4") then
-      "use_vcard_4 = ${v}"
+      "use_vcard_4 = ${lib.boolToString v}"
     else if (n == "userName") then
       ''username = "${v}"''
     else if (n == "userNameCommand") then
@@ -272,7 +273,10 @@ in
             ]
             ++ remoteOptions
           else if (t == "carddav" || t == "http") then
-            remoteOptions
+            [
+              "useVcard4"
+            ]
+            ++ remoteOptions
           else if (t == "filesystem") then
             [
               "fileExt"
