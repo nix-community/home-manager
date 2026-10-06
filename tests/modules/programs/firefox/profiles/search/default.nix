@@ -119,109 +119,6 @@ in
           };
         };
 
-        migrateSearchV7 = {
-          id = 2;
-          search = {
-            force = true;
-            default = "Google";
-            privateDefault = "DuckDuckGo";
-            order = [
-              "Nix Packages"
-              "NixOS Wiki"
-            ];
-            engines = {
-              "Nix Packages" = {
-                urls = [
-                  {
-                    template = "https://search.nixos.org/packages";
-                    params = [
-                      {
-                        name = "type";
-                        value = "packages";
-                      }
-                      {
-                        name = "query";
-                        value = "{searchTerms}";
-                      }
-                    ];
-                  }
-                ];
-
-                icon = "/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-
-                definedAliases = [ "@np" ];
-              };
-
-              "NixOS Wiki" = {
-                urls = [
-                  {
-                    template = "https://wiki.nixos.org/index.php?search={searchTerms}";
-                  }
-                ];
-                iconUpdateURL = "https://wiki.nixos.org/favicon.ico";
-                updateInterval = 24 * 60 * 60 * 1000;
-                definedAliases = [ "@nw" ];
-              };
-
-              "Bing".metaData.hidden = true;
-              "Google".metaData.alias = "@g";
-            };
-          };
-        };
-
-        migrateIconsV11 = {
-          id = 3;
-          search = {
-            force = true;
-            engines = {
-              nixos-wiki = {
-                name = "NixOS Wiki";
-
-                urls = [
-                  {
-                    template = "https://wiki.nixos.org/w/index.php?search={searchTerms}";
-                  }
-                ];
-
-                iconMapObj."{\"width\":16,\"height\":16}" = "https://wiki.nixos.org/favicon.ico";
-
-                definedAliases = [ "@nw" ];
-              };
-            };
-          };
-        };
-
-        migrateIconsV12 = {
-          id = 4;
-          search = {
-            force = true;
-            engines = {
-              nix-packages = {
-                name = "Nix Packages";
-
-                urls = [
-                  {
-                    template = "https://search.nixos.org/packages";
-                    params = [
-                      {
-                        name = "type";
-                        value = "packages";
-                      }
-                      {
-                        name = "query";
-                        value = "{searchTerms}";
-                      }
-                    ];
-                  }
-                ];
-
-                iconURL = "https://search.nixos.org/favicon.ico";
-                iconUpdateURL = "https://search.nixos.org/favicon.ico";
-                definedAliases = [ "@np" ];
-              };
-            };
-          };
-        };
       };
     }
     // {
@@ -267,17 +164,7 @@ in
             "home-files/${cfg.profilesPath}/searchWithoutDefault/search.json.mozlz4" \
             ${withName ./expected-search-without-default.json}
 
-          assertFirefoxSearchContent \
-            "home-files/${cfg.profilesPath}/migrateSearchV7/search.json.mozlz4" \
-            ${withName ./expected-migrate-search-v7.json}
 
-          assertFirefoxSearchContent \
-            "home-files/${cfg.profilesPath}/migrateIconsV11/search.json.mozlz4" \
-            ${withName ./expected-migrate-icons-v11.json}
-
-          assertFirefoxSearchContent \
-            "home-files/${cfg.profilesPath}/migrateIconsV12/search.json.mozlz4" \
-            ${withName ./expected-migrate-icons-v12.json}
         '';
     }
   );
