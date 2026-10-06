@@ -11,7 +11,7 @@ in
   meta.maintainers = [ lib.maintainers.pamplemousse ];
 
   imports = [
-    (lib.mkRenamedOptionModule [ "programs" "less" "keys" ] [ "programs" "less" "config" ])
+    (lib.mkRemovedOptionModule [ "programs" "less" "keys" ] "Use `programs.less.config` instead.")
   ];
 
   options = {
