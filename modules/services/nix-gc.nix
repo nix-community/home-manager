@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkChangedOptionModule mkOption types;
+  inherit (lib) mkOption types;
 
   cfg = config.nix.gc;
 
@@ -16,9 +16,7 @@ in
   meta.maintainers = [ lib.maintainers.shivaraj-bh ];
 
   imports = [
-    (mkChangedOptionModule [ "nix" "gc" "frequency" ] [ "nix" "gc" "dates" ] (
-      config: lib.toList (lib.getAttrFromPath [ "nix" "gc" "frequency" ] config)
-    ))
+    (lib.mkRemovedOptionModule [ "nix" "gc" "frequency" ] "Use `nix.gc.dates` instead.")
   ];
 
   options = {
