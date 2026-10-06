@@ -16,8 +16,8 @@ For example, suppose you have a wonderful, painstakingly created
 
   programs.git = {
     enable = true;
-    userName = "Jane Doe";
-    userEmail = "jane.doe@example.org";
+    settings.user.name = "Jane Doe";
+    settings.user.email = "jane.doe@example.org";
   };
 
   # …
