@@ -53,11 +53,6 @@ let
 
   directivesStr = concatStringsSep "\n" (map tagToStr cfg.settings);
 
-  oldDirectivesStr = ''
-    ${concatStringsSep "\n" (lib.mapAttrsToList (n: v: profileStr (v // { name = n; })) cfg.profiles)}
-    ${cfg.extraConfig}
-  '';
-
   outputModule = types.submodule {
     options = {
 
@@ -225,47 +220,23 @@ in
 
   meta.maintainers = [ ];
 
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "services"
+      "kanshi"
+      "profiles"
+    ] "Use services.kanshi.settings instead.")
+    (lib.mkRemovedOptionModule [
+      "services"
+      "kanshi"
+      "extraConfig"
+    ] "Use services.kanshi.settings instead.")
+  ];
+
   options.services.kanshi = {
     enable = lib.mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
 
     package = lib.mkPackageOption pkgs "kanshi" { };
-
-    profiles = mkOption {
-      type = types.attrsOf profileModule;
-      default = { };
-      description = ''
-        Attribute set of profiles.
-      '';
-      example = {
-        undocked = {
-          outputs = [
-            {
-              criteria = "eDP-1";
-            }
-          ];
-        };
-        docked = {
-          outputs = [
-            {
-              criteria = "eDP-1";
-            }
-            {
-              criteria = "Some Company ASDF 4242";
-              transform = "90";
-            }
-          ];
-        };
-      };
-    };
-
-    extraConfig = mkOption {
-      type = types.lines;
-      default = "";
-      description = ''
-        Extra configuration lines to append to the kanshi
-        configuration file.
-      '';
-    };
 
     settings = mkOption {
       type = types.listOf directivesTag;
@@ -318,10 +289,6 @@ in
         assertions = [
           (lib.hm.assertions.assertPlatform "services.kanshi" pkgs lib.platforms.linux)
           {
-            assertion = (cfg.profiles == { } && cfg.extraConfig == "") || (lib.length cfg.settings) == 0;
-            message = "Cannot mix kanshi.settings with kanshi.profiles or kanshi.extraConfig";
-          }
-          {
             assertion =
               let
                 profiles = lib.filter (x: x ? profile) cfg.settings;
@@ -333,27 +300,10 @@ in
         ];
       }
 
-      (mkIf (cfg.profiles != { }) {
-        warnings = [
-          "kanshi.profiles option is deprecated. Use kanshi.settings instead."
-        ];
-      })
-
-      (mkIf (cfg.extraConfig != "") {
-        warnings = [
-          "kanshi.extraConfig option is deprecated. Use kanshi.settings instead."
-        ];
-      })
-
       {
         home.packages = [ cfg.package ];
 
-        xdg.configFile.${configPath} =
-          let
-            generatedConfigStr =
-              if cfg.profiles == { } && cfg.extraConfig == "" then directivesStr else oldDirectivesStr;
-          in
-          mkIf (generatedConfigStr != "") { text = generatedConfigStr; };
+        xdg.configFile.${configPath} = mkIf (directivesStr != "") { text = directivesStr; };
 
         systemd.user.services.kanshi = {
           Unit = {
