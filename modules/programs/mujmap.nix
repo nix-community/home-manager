@@ -314,7 +314,7 @@ in
         home.packages = [ cfg.package ];
 
         # Notmuch should ignore non-mail files created by mujmap.
-        programs.notmuch.new.ignore = [ "/.*[.](toml|json|lock)$/" ];
+        programs.notmuch.settings.new.ignore = [ "/.*[.](toml|json|lock)$/" ];
 
         home.file = lib.listToAttrs (map configFile mujmapAccounts);
       }

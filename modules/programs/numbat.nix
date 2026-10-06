@@ -35,7 +35,7 @@ in
       };
       description = ''
         Options to add to {file}`config.toml`. See
-        <https://numbat.dev/doc/cli-customization.html#configuration> for options.
+        <https://numbat.dev/docs/cli/customization/> for options.
       '';
     };
 

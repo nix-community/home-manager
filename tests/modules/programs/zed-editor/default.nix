@@ -10,6 +10,10 @@
   zed-settings = ./settings.nix;
   zed-settings-immutable = ./settings-immutable.nix;
   zed-settings-empty = ./settings-empty.nix;
+  zed-settings-dry-run = ./settings-dry-run.nix;
+  zed-immutable-transition = import ./immutable-transition.nix "immutable";
+  zed-immutable-transition-disabled = import ./immutable-transition.nix "disabled";
+  zed-immutable-transition-mutable = import ./immutable-transition.nix "mutable";
   zed-tasks = ./tasks.nix;
   zed-tasks-immutable = ./tasks-immutable.nix;
   zed-tasks-empty = ./tasks-empty.nix;

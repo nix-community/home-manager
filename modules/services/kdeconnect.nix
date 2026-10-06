@@ -16,7 +16,6 @@ in
     services.kdeconnect = {
       enable = lib.mkEnableOption "KDE connect";
       package = lib.mkPackageOption pkgs.kdePackages "kdeconnect-kde" {
-        example = "pkgs.plasma5Packages.kdeconnect-kde";
         pkgsText = "pkgs.kdePackages";
       };
 

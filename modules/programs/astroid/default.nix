@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  options,
   ...
 }:
 let
@@ -44,24 +45,51 @@ let
     }
     // astroid.extraConfig;
 
-  # See https://github.com/astroidmail/astroid/wiki/Configuration-Reference
-  finalConfig =
-    let
-      template = lib.importJSON ./astroid-config-template.json;
-      astroidConfig = lib.foldl' lib.recursiveUpdate template [
-        {
-          astroid.notmuch_config = "${config.xdg.configHome}/notmuch/default/config";
-          accounts = lib.mapAttrs (_n: accountAttr) astroidAccounts;
-          crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
-        }
-        cfg.extraConfig
-        cfg.externalEditor
-      ];
-    in
-    astroidConfig;
-
 in
 {
+  imports =
+    let
+      overlay = lib.hm.deprecations.mkSettingsOverlay {
+        inherit options;
+        from = [
+          "programs"
+          "astroid"
+          "extraConfig"
+        ];
+        to = [
+          "programs"
+          "astroid"
+          "settings"
+        ];
+      };
+    in
+    [
+      overlay.module
+      (lib.hm.deprecations.mkSettingsChangedOptionModule {
+        from = [
+          "programs"
+          "astroid"
+          "externalEditor"
+        ];
+        to = [
+          "programs"
+          "astroid"
+          "settings"
+        ];
+        key = "editor";
+        priority = 100;
+        oldOption = {
+          type = types.nullOr types.str;
+          default = null;
+        };
+        convert = cmd: {
+          external_editor = "true";
+          inherit cmd;
+        };
+        shadowed = cfg.externalEditor == null;
+      })
+    ];
+
   options = {
     programs.astroid = {
       enable = lib.mkEnableOption "Astroid";
@@ -77,44 +105,35 @@ in
         '';
       };
 
-      externalEditor = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        # Converts it into JSON that can be merged into the configuration.
-        apply =
-          cmd:
-          lib.optionalAttrs (cmd != null) {
-            editor = {
-              "external_editor" = "true";
-              "cmd" = cmd;
-            };
-          };
-        example = "nvim-qt -- -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
-        description = ''
-          You can use the following variables:
-
-          `%1`
-          : file name
-
-          `%2`
-          : server name
-
-          `%3`
-          : socket ID
-
-          See [Customizing editor](https://github.com/astroidmail/astroid/wiki/Customizing-editor)
-          on the Astroid wiki.
-        '';
-      };
-
-      extraConfig = mkOption {
+      settings = mkOption {
         inherit (jsonFormat) type;
         default = { };
         example = {
-          poll.interval = 0;
+          poll.interval = "15";
+          thread_view.gravatar.enable = "false";
         };
         description = ''
-          JSON config that will override the default Astroid configuration.
+          JSON settings for Astroid. Only configured values are written;
+          Astroid supplies its built-in defaults for missing keys. When Astroid
+          email accounts are configured, Home Manager adds their account
+          settings, the notmuch config path, and the GPG path as per-key
+          defaults. When settings are empty, no config file is written.
+          Deprecated `extraConfig` forwards into settings with its definition
+          priorities. Deprecated `externalEditor` sets `editor.cmd` and
+          `editor.external_editor` at ordinary priority (100), so differing
+          ordinary definitions of either key conflict with it and a stronger
+          definition, such as `lib.mkForce`, wins.
+
+          Apply priorities to individual keys. A `lib.mkForce` on `accounts`
+          drops generated account keys, and a weaker priority such as
+          `lib.mkDefault` on a section with generated keys is ignored. Use
+          `lib.mkForce` to set a generated section to a non-object value.
+
+          Editor command variables: `%1` is the file name, `%2` is the server
+          name, and `%3` is the socket ID. See
+          <https://github.com/astroidmail/astroid/wiki/Customizing-editor>.
+          See <https://github.com/astroidmail/astroid/wiki/Configuration-Reference>
+          for available settings.
         '';
       };
     };
@@ -125,9 +144,20 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Derivations such as signature files are JSON string values, not objects.
+    programs.astroid.settings = lib.mkIf (astroidAccounts != { }) (
+      lib.mapAttrsRecursiveCond (value: !lib.isDerivation value) (_: lib.mkOptionDefault) {
+        astroid.notmuch_config = "${config.xdg.configHome}/notmuch/default/config";
+        accounts = lib.mapAttrs (_n: accountAttr) astroidAccounts;
+        crypto.gpg.path = "${pkgs.gnupg}/bin/gpg";
+      }
+    );
+
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."astroid/config".source = jsonFormat.generate "astroid-config" finalConfig;
+    xdg.configFile."astroid/config" = lib.mkIf (cfg.settings != { }) {
+      source = jsonFormat.generate "astroid-config" cfg.settings;
+    };
 
     xdg.configFile."astroid/poll.sh" = lib.mkIf (cfg.pollScript != "") {
       executable = true;

@@ -1,36 +1,28 @@
 [accounts."hm@example.com"]
 default = true
-display-name = "H. M. Test"
-email = "hm@example.com"
 
-[accounts."hm@example.com".backend]
-host = "imap.example.com"
-login = "home.manager"
-port = 993
-type = "imap"
+[accounts."hm@example.com".imap]
+server = "imaps://imap.example.com:993"
+starttls = false
 
-[accounts."hm@example.com".backend.auth]
-cmd = "password-command"
-type = "password"
+[accounts."hm@example.com".imap.sasl.login]
+username = "home.manager"
 
-[accounts."hm@example.com".backend.encryption]
-type = "tls"
+[accounts."hm@example.com".imap.sasl.login.password]
+command = "password-command"
 
-[accounts."hm@example.com".folder.aliases]
+[accounts."hm@example.com".mailbox.alias]
 drafts = "Drafts"
 inbox = "Inbox"
 sent = "Sent"
 trash = "Trash"
 
-[accounts."hm@example.com".message.send.backend]
-host = "smtp.example.com"
-login = "home.manager"
-port = 465
-type = "smtp"
+[accounts."hm@example.com".smtp]
+server = "smtps://smtp.example.com:465"
+starttls = false
 
-[accounts."hm@example.com".message.send.backend.auth]
-cmd = "password-command"
-type = "password"
+[accounts."hm@example.com".smtp.sasl.login]
+username = "home.manager"
 
-[accounts."hm@example.com".message.send.backend.encryption]
-type = "tls"
+[accounts."hm@example.com".smtp.sasl.login.password]
+command = "password-command"

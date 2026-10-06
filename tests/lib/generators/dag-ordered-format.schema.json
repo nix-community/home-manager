@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://home-manager.nixos.org/schemas/dag-ordered-format.schema.json",
+  "title": "Home Manager DAG Ordered JSON Format",
+  "description": "Output of generators.mkDAGOrderedJsonFormat. Object members are emitted in topological order; a member that keeps the { before, after, data } shape is a plain value that coincidentally matches a DAG entry.",
+  "type": "object",
+  "properties": {
+    "ordered": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "string"
+        },
+        "plainDagEntryShape": {
+          "$ref": "#/$defs/dagEntry"
+        },
+        "after": {
+          "type": "object",
+          "properties": {
+            "nested": {
+              "type": "object",
+              "properties": {
+                "before": {
+                  "type": "integer"
+                },
+                "after": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "dagEntry": {
+      "type": "object",
+      "properties": {
+        "after": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "before": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

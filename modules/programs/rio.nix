@@ -39,7 +39,7 @@ in
       default = { };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/rio/config.toml`. See
-        <https://raphamorim.io/rio/docs/#configuration-file> for options.
+        <https://rioterm.com/docs/config> for options.
       '';
     };
 

@@ -18,7 +18,7 @@ in
 
       plugins = lib.mkOption {
         default = [ ];
-        example = lib.literalExpression "[ pkgs.pidgin-otr pkgs.pidgin-osd ]";
+        example = lib.literalExpression "[ pkgs.pidginPackages.pidgin-otr pkgs.pidginPackages.pidgin-osd ]";
         description = "Plugins that should be available to Pidgin.";
       };
     };

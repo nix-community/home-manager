@@ -5,16 +5,17 @@
   ...
 }:
 let
-  inherit (builtins)
-    toJSON
-    substring
-    stringLength
-    ;
+  inherit (builtins) toJSON;
   inherit (lib.modules) mkIf mkMerge;
   inherit (lib.options) mkOption mkEnableOption;
   inherit (lib.lists) optional;
   inherit (lib.attrsets) mapAttrs' nameValuePair;
-  inherit (lib.strings) toLower toUpper replaceStrings;
+  inherit (lib.strings)
+    concatMapStringsSep
+    replaceStrings
+    optionalString
+    toSentenceCase
+    ;
   inherit (lib.trivial) boolToString;
   inherit (lib.types)
     nullOr
@@ -38,8 +39,24 @@ in
     khaneliman
   ];
 
+  imports = [
+    (lib.mkRemovedOptionModule [ "programs" "anyrun" "config" "margin" ] ''
+      Anyrun removed the margin setting. Remove programs.anyrun.config.margin.
+    '')
+  ];
+
   options.programs.anyrun = {
     enable = mkEnableOption "anyrun";
+
+    daemon.enable = mkOption {
+      type = bool;
+      default = true;
+      description = ''
+        Enable running Anyrun as a daemon, allowing for faster startup speed.
+
+        This is required for the clipboard functionality
+      '';
+    };
 
     package = lib.mkPackageOption pkgs "anyrun" { nullable = true; };
 
@@ -117,19 +134,11 @@ in
         };
 
         height = mkNumericOption {
-          default.absolute = 0;
+          default.absolute = 1;
           description = ''
             The minimum height of the runner, the runner will expand to fit all the entries.
 
             ${numericInfo}
-          '';
-        };
-
-        margin = mkOption {
-          type = int;
-          default = 0;
-          description = ''
-            Add a margin around the window to allow for CSS shadow styling.
           '';
         };
 
@@ -156,6 +165,15 @@ in
           description = "Layer shell layer (background, bottom, top or overlay).";
         };
 
+        keyboardMode = mkOption {
+          type = enum [
+            "Exclusive"
+            "OnDemand"
+          ];
+          default = "Exclusive";
+          description = "Layer shell keyboard mode";
+        };
+
         hidePluginInfo = mkOption {
           type = bool;
           default = false;
@@ -178,6 +196,65 @@ in
           type = nullOr int;
           default = null;
           description = "Limit amount of entries shown in total.";
+        };
+
+        keybinds = mkOption {
+          type = nullOr (
+            listOf (submodule {
+              options = {
+                ctrl = mkOption {
+                  type = bool;
+                  default = false;
+                  example = true;
+                  description = "Require CTRL to trigger the bind.";
+                };
+                alt = mkOption {
+                  type = bool;
+                  default = false;
+                  example = true;
+                  description = "Require ALT to trigger the bind.";
+                };
+                shift = mkOption {
+                  type = bool;
+                  default = false;
+                  example = true;
+                  description = "Require SHIFT to trigger the bind.";
+                };
+                key = mkOption {
+                  type = str;
+                  example = "Escape";
+                  description = ''
+                    Name of the GDK keysym.
+
+                    A list of possible values can be found at [https://gitlab.gnome.org/GNOME/gtk/-/blob/main/gdk/gdkkeysyms.h]
+                  '';
+                };
+                action = mkOption {
+                  type = enum [
+                    "close"
+                    "select"
+                    "up"
+                    "down"
+                  ];
+                  example = "close";
+                  description = "Action to trigger on keybind.";
+                };
+              };
+            })
+          );
+          default = null;
+          description = ''
+            Navigation keybinds.
+
+            Setting this option to something else than `null` will remove the
+            default keybinds.
+          '';
+        };
+
+        extraConfig = mkOption {
+          type = nullOr lines;
+          default = null;
+          description = "Extra lines to add inside the `Config()` object";
         };
       };
 
@@ -214,9 +291,6 @@ in
         else
           "Fraction(${toString numeric.fraction})";
 
-      capitalize =
-        string: toUpper (substring 0 1 string) + toLower (substring 1 ((stringLength string) - 1) string);
-
       parsedPlugins =
         if cfg.config.plugins == null then
           [ ]
@@ -228,6 +302,25 @@ in
             else
               entry
           ) cfg.config.plugins;
+
+      keybinds =
+        if cfg.config.keybinds == null then
+          ""
+        else
+          ''
+            keybinds: [
+              ${
+                concatMapStringsSep "\n" (x: ''
+                  Keybind(
+                    ${optionalString x.ctrl "ctrl: true,"}
+                    ${optionalString x.alt "alt: true,"}
+                    ${optionalString x.shift "shift: true,"}
+                    key: "${x.key}",
+                    action: ${toSentenceCase x.action},
+                  ),
+                '') cfg.config.keybinds
+              }],
+          '';
     in
     {
       assertions =
@@ -246,12 +339,38 @@ in
           (assertNumeric cfg.config.height)
           (assertNumeric cfg.config.x)
           (assertNumeric cfg.config.y)
+
+          {
+            assertion = cfg.package == null || cfg.package ? anyrun-provider;
+            message = ''
+              Anyrun expects 'anyrun-provider' to be exposed under 'passthru.anyrun-provider'.
+            '';
+          }
         ];
 
       warnings = optional (cfg.config.plugins == null) ''
         You haven't enabled any plugins. Anyrun will not show any results, unless you specify plugins with the --override-plugins flag.
         Add plugins to programs.anyrun.config.plugins, or set it to [] to silence the warning.
       '';
+
+      systemd.user.services.anyrun = mkIf (cfg.daemon.enable && cfg.package != null) {
+        Unit = {
+          Description = "Anyrun daemon";
+          PartOf = "graphical-session.target";
+          After = "graphical-session.target";
+        };
+
+        Service = {
+          Type = "simple";
+          ExecStart = "${lib.getExe cfg.package} daemon";
+          Restart = "on-failure";
+          KillMode = "process";
+        };
+
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
 
       home.packages = optional (cfg.package != null) cfg.package;
 
@@ -265,10 +384,10 @@ in
               y: ${stringifyNumeric cfg.config.y},
               width: ${stringifyNumeric cfg.config.width},
               height: ${stringifyNumeric cfg.config.height},
-              margin: ${toString cfg.config.margin},
               hide_icons: ${boolToString cfg.config.hideIcons},
               ignore_exclusive_zones: ${boolToString cfg.config.ignoreExclusiveZones},
-              layer: ${capitalize cfg.config.layer},
+              layer: ${toSentenceCase cfg.config.layer},
+              keyboard_mode: ${cfg.config.keyboardMode},
               hide_plugin_info: ${boolToString cfg.config.hidePluginInfo},
               close_on_click: ${boolToString cfg.config.closeOnClick},
               show_results_immediately: ${boolToString cfg.config.showResultsImmediately},
@@ -276,6 +395,8 @@ in
                 if cfg.config.maxEntries == null then "None" else "Some(${toString cfg.config.maxEntries})"
               },
               plugins: ${toJSON parsedPlugins},
+              ${keybinds}
+              ${optionalString (cfg.config.extraConfig != null) cfg.config.extraConfig}
             )
           '';
         }

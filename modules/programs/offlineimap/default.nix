@@ -102,9 +102,9 @@ in
       package = lib.mkPackageOption pkgs "offlineimap" {
         example = ''
           pkgs.offlineimap.overridePythonAttrs ( old: {
-            propagatedBuildInputs = old.propagatedBuildInputs
+            dependencies = old.dependencies
               ++ (with pkgs.python3Packages; [
-                requests_oauthlib xdg gpgme]);
+                requests-oauthlib xdg gpg]);
           })'';
         extraDescription = "Can be used to specify extensions.";
       };

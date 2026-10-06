@@ -23,7 +23,7 @@
         name:
         "The option `programs.rofi.${name}' defined in ${
           lib.showFiles options.programs.rofi.${name}.files
-        } has been changed to `programs.rofi.settings' that has a different type. Please read `programs.rofi.settings' documentation and update your configuration accordingly."
+        } has been changed to `programs.rofi.settings.${name}' that has a different type. Please read `programs.rofi.settings.${name}' documentation and update your configuration accordingly."
       )
       [
         "modes"

@@ -89,7 +89,18 @@ in
       '';
       description = ''
         Available configuration options for the Docker CLI see:
-        <https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties
+        <https://docs.docker.com/reference/cli/docker/#docker-cli-configuration-file-configjson-properties>
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting registry credentials or proxy passwords here. For registry
+        credentials, Docker's `credsStore` or `credHelpers` settings can keep
+        them in a credential helper instead; see
+        [Docker credential stores](https://docs.docker.com/reference/cli/docker/login/#credential-stores).
+        Because Home Manager links {file}`config.json` read-only,
+        `docker login` still reports an error when it adds a registry to
+        that file, even after the credential helper has stored the
+        credential. You can store the credential with the helper's own
+        `store` command instead.
       '';
     };
   };

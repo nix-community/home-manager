@@ -99,7 +99,7 @@ in
       plugins = mkOption {
         type = with types; listOf (either str package);
         default = defaultPlugins;
-        example = literalExpression "[ pkgs.vimPlugins.YankRing ]";
+        example = literalExpression "[ pkgs.vimPlugins.YankRing-vim ]";
         description = ''
           List of vim plugins to install. To get a list of supported plugins run:
           {command}`nix-env -f '<nixpkgs>' -qaP -A vimPlugins`.

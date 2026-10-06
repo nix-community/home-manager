@@ -3,6 +3,9 @@
   codex-settings-toml-prefer-xdg-directories = ./settings-toml-prefer-xdg-directories.nix;
   codex-settings-yaml = ./settings-yaml.nix;
   codex-empty-settings = ./empty-settings.nix;
+  codex-mutable-settings = ./mutable-settings.nix;
+  codex-mutable-transition = ./mutable-transition.nix;
+  codex-immutable-transition = ./immutable-transition.nix;
   codex-legacy-custom-instructions = ./legacy-custom-instructions.nix;
   codex-hooks-dir = ./hooks-dir.nix;
   codex-hooks-dir-xdg = ./hooks-dir-xdg.nix;

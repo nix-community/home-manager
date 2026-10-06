@@ -142,10 +142,11 @@ without suppressing warnings. Priority overrides also compose with
 An active legacy source can discard a whole-settings `mkDefault`, including
 unrelated keys. Use per-setting defaults when combining legacy and new values.
 
-For converted settings, supply `from`, the settings-root `to`, a literal `key`,
-`convert`, and the historical `oldOption` declaration. The helper handles
-warnings, source-priority checks, and forwarding. Its `priority` defaults to
-1500, and `shadowed` suppresses conversion without suppressing the warning.
+For converted settings, supply `from`, the settings path `to`, a literal `key`
+under it, `convert`, and the historical `oldOption` declaration. Warnings name
+`to` followed by `key`. The helper handles warnings, source-priority checks,
+and forwarding. Its `priority` defaults to 1500, and `shadowed` suppresses
+conversion without suppressing the warning.
 Option-default definitions are ignored unless the `applyDefault` predicate
 selects their merged value. For example, a legacy list that permits additions
 at option-default priority can use `applyDefault = value: value != [ ];`.

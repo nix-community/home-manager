@@ -706,11 +706,12 @@ in
                     // {
                       # pass the defaults
                       inherit preferLocalBuild allowSubstitutes;
+                      passAsFile = [ "paths" ];
                     };
                 in
                 pkgs.runCommand name args ''
                   mkdir -p $out
-                  for i in $paths; do
+                  for i in $(cat $pathsPath); do
                     if [ -z "$(find $i -prune -empty)" ]; then
                       cp -srf $i/* $out
                     fi

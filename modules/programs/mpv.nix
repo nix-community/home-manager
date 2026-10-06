@@ -88,7 +88,7 @@ in
       package = lib.mkPackageOption pkgs "mpv" {
         nullable = true;
         extraDescription = "Set programs.mpv.package to null if package is already provided";
-        example = "pkgs.mpv-unwrapped.wrapper { mpv = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
+        example = "pkgs.mpv.override { mpv-unwrapped = pkgs.mpv-unwrapped.override { vapoursynthSupport = true; }; youtubeSupport = true; }";
       };
 
       finalPackage = mkOption {
@@ -105,7 +105,9 @@ in
         default = [ ];
         example = literalExpression "[ pkgs.mpvScripts.mpris ]";
         description = ''
-          List of scripts to use with mpv.
+          List of scripts to use with mpv. Requires the default
+          [](#opt-programs.mpv.package); cannot be used with a custom package
+          or `package = null`.
         '';
       };
 
@@ -121,7 +123,11 @@ in
           ]
         '';
         description = ''
-          List of scripts to use with mpv.
+          Extra arguments passed to `makeWrapper` when wrapping mpv, for
+          example to extend the wrapper's environment variables.
+
+          Requires the default [](#opt-programs.mpv.package); cannot be used
+          with a custom package or `package = null`.
         '';
       };
 

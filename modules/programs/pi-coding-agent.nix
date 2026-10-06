@@ -175,6 +175,27 @@ in
       '';
       example = literalExpression "./pi-context.md";
     };
+
+    appendSystem = mkOption {
+      type = lib.types.either lib.types.lines lib.types.path;
+      default = "";
+      description = ''
+        Additional instructions appended to Pi Coding Agent's system prompt.
+
+        The value is either:
+        - Inline content as a string
+        - A path to a file containing the content
+
+        The configured content is written to
+        {file}`APPEND_SYSTEM.md` inside
+        {option}`programs.pi-coding-agent.configDir`
+        (default {file}`~/.pi/agent/APPEND_SYSTEM.md`).
+
+        A project-local {file}`.pi/APPEND_SYSTEM.md` takes precedence
+        over this file.
+      '';
+      example = literalExpression "./pi-append-system.md";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -209,6 +230,15 @@ in
           else
             (mkIf (cfg.context != "") {
               "${cfg.configDir}/AGENTS.md".text = cfg.context;
+            })
+        )
+
+        (
+          if lib.hm.strings.isPathLike cfg.appendSystem then
+            { "${cfg.configDir}/APPEND_SYSTEM.md".source = cfg.appendSystem; }
+          else
+            (mkIf (cfg.appendSystem != "") {
+              "${cfg.configDir}/APPEND_SYSTEM.md".text = cfg.appendSystem;
             })
         )
       ];

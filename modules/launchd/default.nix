@@ -221,7 +221,40 @@ in
     agents = lib.mkOption {
       type = with lib.types; attrsOf (submodule launchdConfig);
       default = { };
-      description = "Define LaunchAgents.";
+      example = {
+        greeting = {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              "/usr/bin/say"
+              "Good afternoon"
+            ];
+            StartCalendarInterval = [
+              {
+                Hour = 12;
+                Minute = 0;
+              }
+            ];
+          };
+        };
+      };
+      description = ''
+        Per-user launchd agents on Darwin. Set each agent's `enable` option
+        to `true` to manage it with Home Manager.
+
+        During activation, Home Manager installs enabled agents as
+        user-owned plist files in {file}`~/Library/LaunchAgents` and loads
+        them into their configured [](#opt-launchd.agents._name_.domain).
+        Changed agents are unloaded and loaded again; agents removed from
+        the configuration are unloaded and their plist files are removed.
+        Home Manager skips removal if a plist file was modified outside
+        Home Manager.
+
+        Each agent's `config` contains the job properties described in
+        {manpage}`launchd.plist(5)`. Unless overridden with `config.Label`,
+        the job label is `org.nix-community.home.<name>`, where `<name>` is
+        the attribute name in this option.
+      '';
     };
   };
 

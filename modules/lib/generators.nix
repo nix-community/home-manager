@@ -133,6 +133,38 @@ let
       map mkSection (toDAGOrderedAttrs' { inherit cycleErrorMessage; } attrsOfAttrs)
     );
 
+  mkDAGOrderedFormatWithJsonSchemaValidation =
+    {
+      pkgs,
+      format,
+      generator,
+      nativeBuildInputs ? [ ],
+      buildCommand ? ''
+        cp "$valuePath" "$out"
+      '',
+      cycleErrorMessage ? null,
+      schema ? null,
+      schemaType,
+    }:
+    mkDAGOrderedFormat' {
+      inherit
+        pkgs
+        format
+        generator
+        cycleErrorMessage
+        ;
+      nativeBuildInputs =
+        nativeBuildInputs ++ (lib.optional (schema != null) pkgs.buildPackages.check-jsonschema);
+      buildCommand =
+        buildCommand
+        + (lib.optionalString (schema != null) ''
+          check-jsonschema \
+            --force-filetype=${schemaType} \
+            --schemafile=${lib.escapeShellArg "${schema}"} \
+            "$out"
+        '');
+    };
+
   mkDAGOrderedFormat' =
     {
       pkgs,
@@ -433,10 +465,14 @@ in
       : Message prefix to use when a dependency cycle is detected. When `null`,
         the generated file name is used.
 
+      `schema` (path or null; optional)
+      : Path to a JSON Schema file that the generated output is checked
+        against. When `null`, no validation is performed.
+
     # Type
 
     ```
-    mkDAGOrderedJsonFormat :: { pkgs :: AttrSet; jsonFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    mkDAGOrderedJsonFormat :: { pkgs :: AttrSet; jsonFormat ? AttrSet; cycleErrorMessage ? NullOr String; schema ? NullOr Path; } -> AttrSet
     ```
   */
   mkDAGOrderedJsonFormat =
@@ -444,15 +480,20 @@ in
       pkgs,
       jsonFormat ? pkgs.formats.json { },
       cycleErrorMessage ? null,
+      schema ? null,
     }:
-    mkDAGOrderedFormat' {
+    mkDAGOrderedFormatWithJsonSchemaValidation {
       inherit
         pkgs
         cycleErrorMessage
+        schema
         ;
       format = jsonFormat;
+      schemaType = "json";
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.jq ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.jq
+      ];
       buildCommand = ''
         jq . "$valuePath" > "$out"
       '';
@@ -478,10 +519,14 @@ in
       : Message prefix to use when a dependency cycle is detected. When `null`,
         the generated file name is used.
 
+      `schema` (path or null; optional)
+      : Path to a JSON Schema file that the generated output is checked
+        against. When `null`, no validation is performed.
+
     # Type
 
     ```
-    mkDAGOrderedYamlFormat :: { pkgs :: AttrSet; yamlFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    mkDAGOrderedYamlFormat :: { pkgs :: AttrSet; yamlFormat ? AttrSet; cycleErrorMessage ? NullOr String; schema ? NullOr Path; } -> AttrSet
     ```
   */
   mkDAGOrderedYamlFormat =
@@ -489,15 +534,20 @@ in
       pkgs,
       yamlFormat ? pkgs.formats.yaml { },
       cycleErrorMessage ? null,
+      schema ? null,
     }:
-    mkDAGOrderedFormat' {
+    mkDAGOrderedFormatWithJsonSchemaValidation {
       inherit
         pkgs
         cycleErrorMessage
+        schema
         ;
       format = yamlFormat;
+      schemaType = "yaml";
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.remarshal
+      ];
       buildCommand = ''
         json2yaml "$valuePath" "$out"
       '';
@@ -523,10 +573,14 @@ in
       : Message prefix to use when a dependency cycle is detected. When `null`,
         the generated file name is used.
 
+      `schema` (path or null; optional)
+      : Path to a JSON Schema file that the generated output is checked
+        against. When `null`, no validation is performed.
+
     # Type
 
     ```
-    mkDAGOrderedTomlFormat :: { pkgs :: AttrSet; tomlFormat ? AttrSet; cycleErrorMessage ? NullOr String; } -> AttrSet
+    mkDAGOrderedTomlFormat :: { pkgs :: AttrSet; tomlFormat ? AttrSet; cycleErrorMessage ? NullOr String; schema ? NullOr Path; } -> AttrSet
     ```
   */
   mkDAGOrderedTomlFormat =
@@ -534,15 +588,20 @@ in
       pkgs,
       tomlFormat ? pkgs.formats.toml { },
       cycleErrorMessage ? null,
+      schema ? null,
     }:
-    mkDAGOrderedFormat' {
+    mkDAGOrderedFormatWithJsonSchemaValidation {
       inherit
         pkgs
         cycleErrorMessage
+        schema
         ;
       format = tomlFormat;
+      schemaType = "toml";
       generator = { cycleErrorMessage }: toDAGOrderedJsonText' { inherit cycleErrorMessage; };
-      nativeBuildInputs = [ pkgs.buildPackages.remarshal ];
+      nativeBuildInputs = [
+        pkgs.buildPackages.remarshal
+      ];
       buildCommand = ''
         json2toml "$valuePath" "$out"
       '';
@@ -917,6 +976,348 @@ in
     in
     attrs: ''
       ${concatStringsSep "\n" (mapAttrsToList convertAttributeToKDL attrs)}
+    '';
+
+  /**
+    Create a bash script snippet that merges a Nix-generated config file with
+    an existing user config file at activation time. This preserves any changes
+    the user has made interactively while applying the Nix-declared settings on
+    top. The result atomically replaces the resolved target, preserving symlinks
+    and existing file modes. A dangling symlink is written through, creating
+    its target; a target in the Nix store is rejected without changing the
+    link. If the content, mode, or target symlink changes while the merge runs,
+    activation fails rather than overwriting the newer file. This check is not
+    a lock: a write that lands between the final check and the replacement is
+    still lost, so applications that write the file should not be running
+    during activation. Ownership, ACLs, extended attributes, and hard links are
+    not preserved, and the directory containing the resolved target must be
+    writable. A target that cannot be replaced by renaming, such as a
+    bind-mounted file, is written in place instead, without the atomicity.
+
+    The merge uses `jaq` internally to read and write JSON, YAML, TOML, and
+    CBOR via its `--from`/`--to` flags. Comments and formatting are not
+    preserved. YAML is written in block style with `---` and `...` document
+    markers.
+
+    As of `jaq` 3.1.1, TOML date and time values are not supported. An existing
+    TOML file containing such values causes activation to fail without modifying
+    the file. Subsequent activations will also fail while those values remain.
+
+    :::{.warning}
+    This function is **experimental**: its interface and generated script may
+    change without notice in future releases, as edge cases around the
+    activation contract are still being discovered. If you use it from an
+    external flake, pin the Home Manager input accordingly.
+    :::
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `pkgs` (attribute set)
+      : Package set used to find `jaq`.
+
+      `format` (string)
+      : Config file format. One of `"json"`, `"yaml"`, `"toml"`, `"cbor"`.
+
+      `empty` (string)
+      : JSON value used as `$dynamic` when the file is missing or empty.
+        Typically `"{}"` for objects or `"[]"` for arrays. It is kept in
+        memory; the target file is only created when the merge result is
+        serialized.
+
+      `jqOperation` (string)
+      : jq-compatible expression that merges `$dynamic` (existing config) with
+        `$static` (Nix-generated config). For example `"$dynamic * $static"`
+        for a recursive object merge.
+
+      `path` (string)
+      : Absolute path to the config file on disk.
+
+      `staticSettings` (path or derivation)
+      : Path to the Nix-generated static config file, typically produced by
+        `format.generate`.
+
+      `mode` (string or null; optional)
+      : Octal permissions for a newly created file. When `null` (the default),
+        a new file gets the permissions shell redirection would give it under
+        the activation's umask, usually `644`. Existing files keep their mode.
+        Use `"600"` for files containing tokens, such as gh's `hosts.yml` or
+        Docker's `config.json`.
+
+      `reader` (string or null; optional)
+      : Shell command that reads the existing file given as its last argument
+        and writes JSON to stdout. When `null` (the default), the reader is
+        auto-detected from `format`: `jaq -c '.'` for JSON, `jaq --from
+        <format> -c '.'` for others. Set this to something like
+        `"${json5Bin} --as-json"` when the existing file uses a superset of
+        JSON (e.g. JSON5 with comments).
+
+      `verboseMsg` (string or null; optional)
+      : Message to log when `$VERBOSE` is set. When `null` (the default), a
+        generic message is used.
+
+    # Type
+
+    ```
+    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; mode ? NullOr String; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `lib.hm.generators.mkImpureConfigMerger` usage example
+
+    ```nix
+    let
+      jsonFormat = pkgs.formats.json { };
+    in
+    lib.hm.generators.mkImpureConfigMerger {
+      inherit pkgs;
+      format = "json";
+      empty = "{}";
+      jqOperation = "$dynamic * $static";
+      path = "${config.xdg.configHome}/myapp/settings.json";
+      staticSettings = jsonFormat.generate "myapp-settings" cfg.settings;
+    }
+    ```
+
+    :::
+  */
+  mkImpureConfigMerger =
+    {
+      pkgs,
+      format,
+      empty,
+      jqOperation,
+      path,
+      staticSettings,
+      mode ? null,
+      reader ? null,
+      verboseMsg ? null,
+    }:
+    let
+      jaqBin = lib.getExe pkgs.jaq;
+      coreutil = lib.getExe' pkgs.coreutils;
+      isJson = format == "json";
+      readerCmd =
+        if reader != null then
+          reader
+        else if isJson then
+          "${jaqBin} -c '.'"
+        else
+          "${jaqBin} --from ${format} -c '.'";
+      # Write the merge result to a temporary file and move it into place only
+      # after the merge has succeeded, so a failing merge never clobbers the
+      # existing config.
+      writeCmd =
+        if isJson then
+          "printf '%s\\n' \"$config\" > \"$candidate_path\""
+        else
+          "printf '%s\\n' \"$config\" | ${jaqBin} --to ${format} '.' > \"$candidate_path\"";
+      defaultVerboseMsg = "Merging Nix-generated config into ${path}";
+      verboseMsg' = if verboseMsg != null then verboseMsg else defaultVerboseMsg;
+      # Pass both documents through files: Linux caps a single argument at
+      # 128 KiB, so `--argjson` fails with E2BIG on larger configs. The
+      # operation sits on its own line so a trailing `#` comment in it cannot
+      # comment out the closing parenthesis.
+      mergeFilter = ''
+        if ($dynamic | length) != 1 or ($static | length) != 1 then
+          error("expected exactly one JSON value")
+        else
+          $dynamic[0] as $dynamic | $static[0] as $static | (
+            ${jqOperation}
+          )
+        end
+      '';
+    in
+    assert lib.assertMsg
+      (mode == null || (builtins.isString mode && builtins.match "[0-7]{3,4}" mode != null))
+      "mkImpureConfigMerger: mode must be an octal string such as \"600\", got ${builtins.toJSON mode}.";
+    ''
+      if [[ -v VERBOSE ]]; then
+        echo ${lib.escapeShellArg verboseMsg'}
+      fi
+      if [[ -v DRY_RUN ]]; then
+        echo ${lib.escapeShellArg "Would merge Nix-generated config into ${path}"}
+      else
+        (
+          display_path=${lib.escapeShellArg path}
+          settings_path="$display_path"
+          was_symlink=
+          if [[ -L "$display_path" ]]; then
+            was_symlink=1
+            if ! settings_path="$(${coreutil "readlink"} -f -- "$display_path")"; then
+              errorEcho "Cannot resolve config at '$display_path'; leaving the symlink unchanged."
+              exit 1
+            fi
+          fi
+          case "$settings_path" in
+            ${lib.escapeShellArg builtins.storeDir}/*)
+              errorEcho "Config at '$display_path' resolves into the Nix store; refusing to replace it."
+              exit 1
+              ;;
+          esac
+
+          snapshot_dir=
+          candidate_path=
+          # Activation owns the outer EXIT trap; cleanup must stay in this subshell.
+          trap '
+            [[ -z "$snapshot_dir" ]] || rm -rf -- "$snapshot_dir"
+            [[ -z "$candidate_path" ]] || rm -f -- "$candidate_path"
+          ' EXIT
+
+          mkdir -p "$(dirname "$settings_path")"
+          snapshot_path=
+          input_path="$settings_path"
+          if [[ -e "$settings_path" ]]; then
+            # Keep the configured file name so a reader that detects the format
+            # from the extension still recognizes the snapshot, even when the
+            # path is a symlink to a differently named file.
+            snapshot_dir="$(${coreutil "mktemp"} -d "$settings_path.snapshot.XXXXXX")"
+            snapshot_path="$snapshot_dir/''${display_path##*/}"
+            ${coreutil "cp"} --preserve=mode -- "$settings_path" "$snapshot_path"
+            input_path="$snapshot_path"
+          fi
+
+          # A missing or empty file is treated as `empty`, but an existing file
+          # that fails to parse must fail activation instead of being replaced
+          # by the generated defaults. The reader's exit status is checked
+          # because it can emit valid JSON before failing (e.g. jaq prints the
+          # first object of a truncated stream).
+          if [[ ! -s "$input_path" ]]; then
+            dynamic=${lib.escapeShellArg empty}
+          elif ! dynamic="$(${readerCmd} "$input_path")" || [[ -z "$dynamic" ]]; then
+            errorEcho "Could not parse config at '$display_path'; refusing to merge."
+            exit 1
+          fi
+          static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
+          if ! config="$(${jaqBin} -n ${lib.escapeShellArg mergeFilter} --slurpfile dynamic <(printf '%s' "$dynamic") --slurpfile static <(printf '%s' "$static"))"; then
+            errorEcho "Could not merge Nix-generated config into '$display_path'."
+            exit 1
+          fi
+          candidate_path="$(${coreutil "mktemp"} "$settings_path.candidate.XXXXXX")"
+          ${writeCmd}
+          if [[ -n "$snapshot_path" ]]; then
+            ${coreutil "chmod"} --reference="$snapshot_path" -- "$candidate_path"
+          else
+            ${coreutil "chmod"} ${
+              if mode == null then ''"$(printf '%o' "$(( 0666 & ~$(umask) ))")"'' else lib.escapeShellArg mode
+            } -- "$candidate_path"
+          fi
+
+          conflict=
+          if [[ -n "$was_symlink" ]]; then
+            if [[ ! -L "$display_path" ]] \
+              || [[ "$(${coreutil "readlink"} -f -- "$display_path")" != "$settings_path" ]]; then
+              conflict=1
+            fi
+          elif [[ -L "$display_path" ]]; then
+            conflict=1
+          fi
+          if [[ -n "$snapshot_path" ]]; then
+            if [[ -L "$settings_path" ]] \
+              || ! ${lib.getExe' pkgs.diffutils "cmp"} -s -- "$snapshot_path" "$settings_path" \
+              || [[ "$(${coreutil "stat"} -c '%a' -- "$settings_path")" != "$(${coreutil "stat"} -c '%a' -- "$snapshot_path")" ]]; then
+              conflict=1
+            fi
+          elif [[ -e "$settings_path" || -L "$settings_path" ]]; then
+            conflict=1
+          fi
+          if [[ -n "$conflict" ]]; then
+            errorEcho "Config at '$display_path' changed during activation; keeping the newer file."
+            exit 1
+          fi
+
+          if ${coreutil "mv"} -fT -- "$candidate_path" "$settings_path" 2>/dev/null; then
+            candidate_path=
+          else
+            # rename(2) fails with EBUSY when the target is a mount point, such
+            # as a file bind-mounted by impermanence; write it in place instead.
+            ${coreutil "cat"} -- "$candidate_path" > "$settings_path"
+          fi
+        )
+      fi
+    '';
+
+  /**
+    Create a bash script snippet that removes an unchanged regular config file
+    before Home Manager replaces it with a managed symlink. This complements
+    `mkImpureConfigMerger` when a module switches back to immutable settings.
+
+    The file on disk is compared with the copy in the new generation, which is
+    what link generation will place. Only a byte-identical regular file is
+    removed. Files with user changes or formatting differences are left to Home
+    Manager's normal collision and backup handling. Symlinks are never removed,
+    and neither is a file that is the declared source itself or the
+    generation's link to it, for example an out-of-store source reached through
+    a symlinked parent directory. The
+    snippet uses the activation helpers `run` and `verboseEcho` to respect
+    dry-run and verbose mode, and is empty when the entry is disabled, since a
+    disabled declaration does not give the module ownership of the path.
+
+    Place this snippet with
+    `lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]`.
+    Collision checking accepts identical files before the write boundary; the
+    cleanup then allows link generation to replace them rather than skip them.
+
+    :::{.warning}
+    This function is **experimental**: it depends on how collision checking
+    and link generation treat identical files, and its interface may change in
+    future releases.
+    :::
+
+    # Inputs
+
+    `options`
+
+    : Function options
+
+      `file` (attribute set)
+      : The effective `home.file` (or `xdg.configFile`) entry that will replace
+        the config, such as `config.xdg.configFile."myapp/settings.json"`.
+
+    # Type
+
+    ```
+    mkImpureConfigCleanup :: { file :: AttrSet; } -> String
+    ```
+
+    # Examples
+    :::{.example}
+    ## `lib.hm.generators.mkImpureConfigCleanup` usage example
+
+    ```nix
+    lib.mkIf (!cfg.mutableSettings && cfg.settings != { }) {
+      xdg.configFile."myapp/settings.json".source =
+        jsonFormat.generate "myapp-settings" cfg.settings;
+
+      home.activation.myappImmutableSettings =
+        lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] (
+          lib.hm.generators.mkImpureConfigCleanup {
+            file = config.xdg.configFile."myapp/settings.json";
+          }
+        );
+    }
+    ```
+
+    :::
+  */
+  mkImpureConfigCleanup =
+    { file }:
+    let
+      target = ''"$HOME"/${lib.escapeShellArg file.target}'';
+      generated = ''"$newGenPath/home-files"/${lib.escapeShellArg file.target}'';
+      source = lib.escapeShellArg (toString file.source);
+    in
+    lib.optionalString file.enable ''
+      if [[ -f ${target} && ! -L ${target} ]] \
+        && ! [[ ${target} -ef ${generated} || ${target} -ef ${source} ]] \
+        && cmp -s -- ${generated} ${target}; then
+        verboseEcho "Removing unchanged config at "${target}" before linking"
+        run rm -- ${target}
+      fi
     '';
 
   toSCFG =

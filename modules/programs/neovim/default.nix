@@ -347,7 +347,7 @@ in
           example = literalExpression ''
             with pkgs.vimPlugins;
             [
-              yankring
+              YankRing-vim
               vim-nix
               { plugin = vim-startify;
                 config = "let g:startify_change_to_vcs_root = 0";

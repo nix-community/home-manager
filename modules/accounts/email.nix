@@ -481,6 +481,18 @@ let
           description = ''
             A command, which when run writes the account password on
             standard output.
+
+            A string is split on literal spaces into a list of arguments;
+            quotes and shell operators are not interpreted during this split.
+            An argument containing spaces therefore needs the list form, for
+            example `[ "secret-tool" "lookup" "label" "Personal mail" ]`.
+
+            Mail clients differ in how they run that list. aerc, himalaya,
+            mbsync, msmtp, and neomutt join it with spaces and hand it to a
+            shell, so `Personal mail` reaches those clients as two arguments.
+            meli, mujmap, imapnotify, getmail, and offlineimap quote each
+            argument. For a command that needs arguments with spaces across
+            clients, wrap it in an executable and name that executable here.
           '';
         };
 

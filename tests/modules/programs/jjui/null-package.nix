@@ -18,6 +18,9 @@
         configDir = ".config/jjui";
       in
       ''
+        assertFileNotRegex home-path/etc/profile.d/hm-session-vars.sh \
+          '^export JJUI_CONFIG_DIR='
+
         assertFileContent \
           "home-files/${configDir}/config.toml" \
           ${pkgs.writeText "expected" ''

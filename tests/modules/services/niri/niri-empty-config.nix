@@ -11,7 +11,6 @@
     xwaylandSatellitePackage = null;
 
     # Empty Config should not generate `$XDG_CONFIG_HOME/niri/config.kdl`
-    extraConfigEarly = "";
     extraConfig = "";
     settings = {
       _children = [ ];

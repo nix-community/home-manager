@@ -38,7 +38,7 @@ in
       haskellPackages = mkOption {
         default = pkgs.haskellPackages;
         defaultText = literalExpression "pkgs.haskellPackages";
-        example = literalExpression "pkgs.haskell.packages.ghc784";
+        example = literalExpression "pkgs.haskell.packages.ghc912";
         description = ''
           The {var}`haskellPackages` used to build xmonad
           and other packages. This can be used to change the GHC

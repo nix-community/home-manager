@@ -26,7 +26,6 @@ in
         windows.hideconsole = true;
         notifications.enabled = false;
         discord = {
-          token = "MZ1yGvKTjE0rY0cV8i47CjAa.uRHQPq.Xb1Mk2nEhe-4iUcrGOuegj57zMC";
           autoconnect = true;
         };
 
@@ -40,6 +39,13 @@ in
       description = ''
         Configuration settings for abaddon. All the available options can be found here:
         <https://github.com/uowuo/abaddon?tab=readme-ov-file#settings>
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting a Discord login token in `discord.token`. Abaddon rewrites
+        {file}`abaddon.ini` when it exits, which replaces the file Home
+        Manager manages, so if you log in from Abaddon's Discord menu,
+        consider leaving this option empty and letting Abaddon manage
+        {file}`abaddon.ini`.
       '';
     };
   };

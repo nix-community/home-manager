@@ -64,7 +64,7 @@ in
 
     package = lib.mkPackageOption pkgs "gradle" {
       nullable = true;
-      example = "pkgs.gradle_7";
+      example = "pkgs.gradle_9";
     };
 
     settings = mkOption {

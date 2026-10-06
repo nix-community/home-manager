@@ -82,16 +82,15 @@ in
           "services"
           "mpdris2"
           "settings"
+          "Library"
         ];
-        key = "Library";
-        priority = 100;
+        key = "music_dir";
+        priority = 1400;
         oldOption = {
           type = lib.types.nullOr lib.types.path;
           default = config.services.mpd.musicDirectory;
         };
-        convert = value: {
-          music_dir = lib.mkOverride 1400 (if value == null then null else toString value);
-        };
+        convert = value: if value == null then null else toString value;
       })
     ];
 
@@ -114,6 +113,13 @@ in
       description = ''
         Configuration settings for mpDris2. The settings are written to
         {file}`$XDG_CONFIG_HOME/mpDris2/mpDris2.conf`.
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting a private `Connection.password` here. To keep it out of the
+        store, you can set `MPD_HOST=password@host` in a file referenced by
+        `systemd.user.services.mpdris2.Service.EnvironmentFile`; mpDris2
+        then uses the host and password from `MPD_HOST` instead of the ones
+        in this file.
 
         See <https://github.com/eonpatapon/mpDris2/blob/master/src/mpDris2.conf>
         for available settings.

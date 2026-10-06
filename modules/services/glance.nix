@@ -69,6 +69,13 @@ in
         Configuration written to a yaml file that is read by glance. See
         <https://github.com/glanceapp/glance/blob/main/docs/configuration.md>
         for more.
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting passwords, API tokens, or authentication secret keys here.
+        Glance's
+        [runtime secret substitution](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#other-ways-of-providing-tokenspasswordssecrets)
+        can read them from environment variables or secret files outside the
+        Nix store instead.
       '';
     };
   };

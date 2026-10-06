@@ -182,9 +182,7 @@ in
   xsession.windowManager.bspwm = {
     enable = lib.mkEnableOption "bspwm window manager";
 
-    package = lib.mkPackageOption pkgs "bspwm" {
-      example = "pkgs.bspwm-unstable";
-    };
+    package = lib.mkPackageOption pkgs "bspwm" { };
 
     settings = mkOption {
       type = with types; attrsOf (either primitive (listOf primitive));

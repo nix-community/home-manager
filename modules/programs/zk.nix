@@ -39,7 +39,7 @@ in
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/zk/config.toml`.
 
-        See <https://github.com/mickael-menu/zk/blob/main/docs/config.md> for
+        See <https://zk-org.github.io/zk/config/config.html> for
         available options and documentation.
       '';
     };

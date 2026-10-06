@@ -300,10 +300,11 @@ in
     : Legacy option path.
 
     `to`
-    : Settings option receiving the converted key and named in the warning.
+    : Settings path receiving the converted key. The warning names this path
+      followed by `key`.
 
     `key`
-    : Literal key within settings. Dots are not path separators.
+    : Literal key within `to`. Dots are not path separators.
 
     `convert`
     : Function from the merged legacy value to the native setting value.
@@ -314,11 +315,13 @@ in
 
     `priority` (integer; optional)
     : Forwarding priority. Defaults to the option-default priority, 1500.
-      Whole-settings priorities still apply at the root.
+      It applies only to `key`: an active conversion still overrides
+      `mkDefault` on `to` or its parents, and `mkForce` there still wins.
 
     `shadowed` (boolean; optional)
     : Suppress forwarding while retaining warnings. Defaults to `false`.
-      Use `mkSettingsOverlay.keys` to preserve old overlay precedence.
+      Derive it from `mkSettingsOverlay.keys` so the overlay still defines the
+      key. Otherwise a `lazyAttrsOf` destination keeps the key without a value.
 
     `applyDefault` (function; optional)
     : Predicate selecting merged legacy values at option-default priority.
@@ -361,11 +364,8 @@ in
     let
       old = lib.getAttrFromPath from options;
       defaultPriority = (lib.mkOptionDefault { }).priority;
-      changed = lib.mkChangedOptionModule from to (
-        config:
-        lib.optionalAttrs (!shadowed) {
-          ${key} = lib.mkOverride priority (convert (lib.getAttrFromPath from config));
-        }
+      changed = lib.mkChangedOptionModule from (to ++ [ key ]) (
+        config: lib.mkIf (!shadowed) (lib.mkOverride priority (convert (lib.getAttrFromPath from config)))
       ) args;
     in
     changed

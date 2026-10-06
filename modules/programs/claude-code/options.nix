@@ -31,6 +31,21 @@ in
 
     package = lib.mkPackageOption pkgs "claude-code" { nullable = true; };
 
+    mutableSettings = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to merge declared settings and known marketplaces into
+        writable files during activation. Declared values, including
+        permission arrays, replace existing values; undeclared values and
+        application-owned marketplace timestamps and auto-update flags are
+        preserved. Comments and formatting are not preserved. Removing a
+        declaration does not remove it from the file. Switching back to
+        immutable settings requires backing up or removing the writable files.
+        This does not manage application state in {file}`~/.claude.json`.
+      '';
+    };
+
     finalPackage = mkOption {
       type = lib.types.package;
       readOnly = true;
@@ -475,7 +490,21 @@ in
     mcpServers = mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
-      description = "MCP (Model Context Protocol) servers configuration";
+      description = ''
+        MCP (Model Context Protocol) servers configuration.
+
+        These values are written to the world-readable Nix store, so avoid
+        putting secrets in `env`, `headers`, `args`, or `url`.
+
+        For a local `command` server that takes a secret through an
+        environment variable, you can use [](#opt-programs.mcp.servers) with
+        `env.<NAME>.file = "/run/secrets/..."` and enable both
+        [](#opt-programs.mcp.enable) and
+        [](#opt-programs.claude-code.enableMcpIntegration). Home Manager then
+        wraps the command so it reads the file at startup. This covers
+        environment variables of local servers, not credentials in
+        arguments, URLs, or headers.
+      '';
       example = {
         github = {
           type = "http";
@@ -497,11 +526,8 @@ in
             "-y"
             "@bytebase/dbhub"
             "--dsn"
-            "postgresql://user:pass@localhost:5432/db"
+            "postgresql://localhost:5432/db"
           ];
-          env = {
-            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-          };
         };
         customTransport = {
           type = "websocket";

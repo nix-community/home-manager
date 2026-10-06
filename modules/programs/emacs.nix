@@ -45,7 +45,7 @@ in
     programs.emacs = {
       enable = lib.mkEnableOption "Emacs";
 
-      package = lib.mkPackageOption pkgs "emacs" { example = "pkgs.emacs25-nox"; };
+      package = lib.mkPackageOption pkgs "emacs" { example = "pkgs.emacs-nox"; };
 
       # NOTE: The config is placed in default.el instead of ~/.emacs.d so that
       # it won't conflict with Emacs configuration frameworks. Users of these

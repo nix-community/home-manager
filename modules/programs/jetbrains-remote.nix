@@ -12,7 +12,7 @@ in
       type = lib.types.listOf lib.types.package;
       default = [ ];
       example = lib.literalExpression ''
-        with pkgs.jetbrains; [ clion pycharm-professional ];
+        with pkgs.jetbrains; [ clion pycharm ];
       '';
       description = ''
         IDEs accessible to the JetBrains remote development system.

@@ -8,7 +8,7 @@
   };
 
   test.asserts.warnings.expected = [
-    "The option `programs.rofi.location' defined in ${lib.showFiles options.programs.rofi.location.files} has been changed to `programs.rofi.settings' that has a different type. Please read `programs.rofi.settings' documentation and update your configuration accordingly."
+    "The option `programs.rofi.location' defined in ${lib.showFiles options.programs.rofi.location.files} has been changed to `programs.rofi.settings.location' that has a different type. Please read `programs.rofi.settings.location' documentation and update your configuration accordingly."
   ]
   ++
     map

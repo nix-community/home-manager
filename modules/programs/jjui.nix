@@ -28,6 +28,24 @@ in
       example = lib.literalExpression "\${config.home.homeDirectory}/.jjui";
       description = ''
         The directory to contain jjui configuration files.
+
+        Home Manager does not set {env}`JJUI_CONFIG_DIR` when this is
+        {file}`$XDG_CONFIG_HOME/jjui` on Linux with {option}`xdg.enable`,
+        or {file}`$HOME/.config/jjui` otherwise, so jjui can load
+        repository-specific configuration.
+
+        For other directories, Home Manager sets {env}`JJUI_CONFIG_DIR`
+        so jjui can find the configuration. This disables loading
+        repository-specific {file}`.jjui/config.toml` and
+        {file}`.jjui/config.lua` files.
+
+        On Darwin, Home Manager also sets {env}`JJUI_CONFIG_DIR` when
+        {option}`configLua` or {option}`plugins` is configured without
+        {option}`settings`, even at the default path. This prevents another
+        directory's {file}`config.toml` from redirecting jjui away from the
+        managed Lua files. Custom {option}`xdg.configHome` paths also require
+        the variable because jjui's automatic directory selection depends
+        on existing {file}`config.toml` files.
       '';
     };
 
@@ -143,9 +161,26 @@ in
           );
         };
 
-      sessionVariables = {
-        JJUI_CONFIG_DIR = cfg.configDir;
-      };
+      sessionVariables =
+        let
+          autoConfigDir =
+            if pkgs.stdenv.hostPlatform.isLinux && config.xdg.enable then
+              "${config.xdg.configHome}/jjui"
+            else
+              "${config.home.homeDirectory}/.config/jjui";
+        in
+        mkIf
+          (
+            cfg.configDir != autoConfigDir
+            || (
+              pkgs.stdenv.hostPlatform.isDarwin
+              && cfg.settings == { }
+              && (cfg.configLua != null || cfg.plugins != { })
+            )
+          )
+          {
+            JJUI_CONFIG_DIR = cfg.configDir;
+          };
     };
   };
 }

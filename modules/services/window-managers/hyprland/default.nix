@@ -96,7 +96,7 @@ in
       readOnly = true;
       default =
         if (cfg.portalPackage != null) then
-          if cfg.finalPackage != null then
+          if cfg.finalPackage != null && (lib.functionArgs cfg.portalPackage.override) ? hyprland then
             cfg.portalPackage.override { hyprland = cfg.finalPackage; }
           else
             cfg.portalPackage
