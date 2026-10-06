@@ -384,6 +384,14 @@ let
 
 in
 {
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "thunderbird"
+      "darwinSetupWarning"
+    ] "Thunderbird is supported on Darwin without additional setup.")
+  ];
+
   meta.maintainers = with lib.maintainers; [
     booxter
     lib.hm.maintainers.d-dervishi
@@ -709,17 +717,6 @@ in
         '';
       };
 
-      darwinSetupWarning = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        visible = false;
-        readOnly = !isDarwin;
-        description = ''
-          Using programs.thunderbird.darwinSetupWarning is deprecated. The
-          module is compatible with all Thunderbird installations.
-        '';
-      };
     };
 
     accounts.email.accounts = mkOption {
@@ -1094,14 +1091,7 @@ in
       )
     ];
 
-    warnings =
-      lib.optionals (!cfg.darwinSetupWarning) [
-        ''
-          Using programs.thunderbird.darwinSetupWarning is deprecated and will be
-          removed in the future. Thunderbird is now supported on Darwin.
-        ''
-      ]
-      ++ lib.flatten (map unsupportedAuthMethodWarnings enabledEmailAccounts);
+    warnings = lib.flatten (map unsupportedAuthMethodWarnings enabledEmailAccounts);
 
     home.packages = [
       cfg.finalPackage
