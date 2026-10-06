@@ -7,13 +7,6 @@
 let
   cfg = config.programs.ashell;
   tomlFormat = pkgs.formats.toml { };
-  yamlFormat = pkgs.formats.yaml { };
-
-  packageVersion = if cfg.package != null then lib.getVersion cfg.package else "0.5.0";
-  isTomlConfig = lib.versionAtLeast packageVersion "0.5.0";
-  settingsFormat = if isTomlConfig then tomlFormat else yamlFormat;
-  configFileName = if isTomlConfig then "ashell/config.toml" else "ashell.yml";
-
 in
 {
   meta.maintainers = [ lib.maintainers.justdeeevin ];
@@ -24,8 +17,7 @@ in
     package = lib.mkPackageOption pkgs "ashell" { nullable = true; };
 
     settings = lib.mkOption {
-      # NOTE: `yaml` type supports null, using `nullOr` for backwards compatibility period
-      type = lib.types.nullOr tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       example = {
         modules = {
@@ -43,8 +35,7 @@ in
         workspaces.visibility_mode = "MonitorSpecific";
       };
       description = ''
-        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell/config.toml` (0.5.0+)
-        or {file}`$XDG_CONFIG_HOME/ashell/config.yaml` (<0.5.0).
+        Ashell configuration written to {file}`$XDG_CONFIG_HOME/ashell/config.toml`.
         For available settings see
         <https://github.com/MalpenZibo/ashell?tab=readme-ov-file#configuration>.
       '';
@@ -75,11 +66,15 @@ in
       {
         assertions = [
           (lib.hm.assertions.assertPlatform "programs.ashell" pkgs lib.platforms.linux)
+          {
+            assertion = cfg.package == null || lib.versionAtLeast (lib.getVersion cfg.package) "0.5.0";
+            message = "programs.ashell requires ashell 0.5.0 or later. Upgrade programs.ashell.package to a supported version.";
+          }
         ];
 
         home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-        xdg.configFile."${configFileName}" = lib.mkIf (cfg.settings != { }) {
-          source = settingsFormat.generate "ashell-config" cfg.settings;
+        xdg.configFile."ashell/config.toml" = lib.mkIf (cfg.settings != { }) {
+          source = tomlFormat.generate "ashell-config" cfg.settings;
         };
       }
       (lib.mkIf cfg.systemd.enable {
