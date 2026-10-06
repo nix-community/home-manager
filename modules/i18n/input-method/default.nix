@@ -8,7 +8,6 @@ let
   cfg = config.i18n.inputMethod;
 
   allowedTypes = lib.types.enum [
-    "fcitx"
     "fcitx5"
     "nabi"
     "uim"
@@ -55,26 +54,20 @@ in
     ./kime.nix
     ./nabi.nix
     ./uim.nix
+    (lib.mkRemovedOptionModule [
+      "i18n"
+      "inputMethod"
+      "enabled"
+    ] "Use i18n.inputMethod.type and i18n.inputMethod.enable instead.")
   ];
 
   options.i18n = {
     inputMethod = {
-      enable = lib.mkEnableOption "an additional input method type" // {
-        default = cfg.enabled != null;
-        defaultText = lib.literalMD "`true` if the deprecated option `enabled` is set, false otherwise";
-      };
-
-      enabled = lib.mkOption {
-        type = lib.types.nullOr allowedTypes;
-        default = null;
-        example = "fcitx5";
-        description = "Deprecated - use `type` and `enable = true` instead";
-      };
+      enable = lib.mkEnableOption "an additional input method type";
 
       type = lib.mkOption {
         type = lib.types.nullOr allowedTypes;
-        default = cfg.enabled;
-        defaultText = lib.literalMD "The value of the deprecated option `enabled`, defaulting to null";
+        default = null;
         example = "fcitx5";
         description = ''
           Select the enabled input method. Input methods are software to input
@@ -120,15 +113,7 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "i18n.inputMethod" pkgs lib.platforms.linux)
-      {
-        assertion = cfg.enabled != "fcitx";
-        message = "fcitx has been removed, please use fcitx5 instead";
-      }
     ];
-
-    warnings =
-      lib.optional (cfg.enabled != null)
-        "i18n.inputMethod.enabled will be removed in a future release. Please use .type, and .enable = true instead";
 
     home.packages = [
       cfg.package
