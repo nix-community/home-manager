@@ -1,8 +1,7 @@
-{ config, ... }:
-
 {
   time = "2024-09-20T07:00:11+00:00";
-  condition = config.programs.kitty.theme != null;
+  # programs.kitty.theme was removed, and reading it now throws.
+  condition = false;
   message = ''
 
     The option 'programs.kitty.theme' has been deprecated, please use

@@ -95,35 +95,13 @@ in
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
   imports = [
-    (lib.mkChangedOptionModule
-      [ "programs" "kitty" "theme" ]
-      [
-        "programs"
-        "kitty"
-        "themeFile"
-      ]
-      (
-        config:
-        let
-          value = lib.getAttrFromPath [ "programs" "kitty" "theme" ] config;
-        in
-        if value != null then
-          (
-            let
-              matching = lib.filter (x: x.name == value) (
-                lib.importJSON "${pkgs.kitty-themes}/share/kitty-themes/themes.json"
-              );
-            in
-            lib.throwIf (lib.length matching == 0) "kitty-themes does not contain a theme named ${value}"
-              lib.strings.removeSuffix
-              ".conf"
-              (lib.strings.removePrefix "themes/" (lib.head matching).file)
-          )
-        else
-          null
-      )
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "kitty"
+      "theme"
+    ] "Use `programs.kitty.themeFile` with the theme's file name instead.")
   ];
+
   options.programs.kitty = {
     enable = mkEnableOption "Kitty terminal emulator";
 
