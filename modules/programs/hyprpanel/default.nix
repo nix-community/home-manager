@@ -94,26 +94,6 @@ in
       force = true;
     };
 
-    warnings = lib.optional (cfg.settings ? theme && cfg.settings.theme ? name) (
-      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
-        option = [
-          "programs"
-          "hyprpanel"
-          "settings"
-          "theme"
-          "name"
-        ];
-        old = "a named theme";
-        replacement = "`programs.hyprpanel.settings.theme`";
-        details = ''
-          Named theme loading was removed because it requires import-from-derivation.
-
-          Paste theme contents from:
-            https://github.com/Jas-SinghFSU/HyprPanel/blob/2c0c66a/themes/${cfg.settings.theme.name}.json
-        '';
-      }
-    );
-
     systemd.user.services.hyprpanel = lib.mkIf cfg.systemd.enable {
       Unit = {
         Description = "Bar/Panel for Hyprland with extensive customizability";
