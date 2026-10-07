@@ -61,6 +61,27 @@ in
 
     package = lib.mkPackageOption pkgs "pet" { nullable = true; };
 
+    mutableSnippets = lib.mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to load declarative snippets from a separate read-only directory,
+        leaving the configured `snippetfile` setting writable for new snippets.
+        The writable file is created if absent. Existing snippet directories
+        are retained. Requires Pet's `snippetdirs` support.
+        {command}`pet edit` can still select a declarative snippet, which cannot
+        be saved; edit declarative snippets through Home Manager instead.
+
+        When disabling this option, a writable file at the default snippet
+        path follows Home Manager's usual collision and backup handling.
+        Move it aside or configure backups before switching back when its
+        contents differ from the declared snippets.
+
+        The configuration file itself remains read-only. {env}`PET_CONFIG_DIR`
+        is set to the Home Manager configuration directory.
+      '';
+    };
+
     settings = mkOption {
       inherit (format) type;
       default = { };
@@ -89,7 +110,14 @@ in
       let
         defaultGeneral = {
           selectcmd = lib.mkDefault "fzf";
-          snippetfile = config.xdg.configHome + "/pet/snippet.toml";
+          snippetfile =
+            if cfg.mutableSnippets then
+              lib.mkDefault (config.xdg.configHome + "/pet/snippet.toml")
+            else
+              config.xdg.configHome + "/pet/snippet.toml";
+        }
+        // lib.optionalAttrs (cfg.mutableSnippets && cfg.snippets != [ ]) {
+          snippetdirs = [ "${config.xdg.configHome}/pet/home-manager-snippets" ];
         };
       in
       if lib.versionAtLeast config.home.stateVersion "21.11" then
@@ -99,9 +127,33 @@ in
       else
         defaultGeneral;
 
-    home.packages =
-      lib.optional (cfg.package != null) cfg.package
-      ++ lib.optional (cfg.selectcmdPackage != null) cfg.selectcmdPackage;
+    home = {
+      packages =
+        lib.optional (cfg.package != null) cfg.package
+        ++ lib.optional (cfg.selectcmdPackage != null) cfg.selectcmdPackage;
+
+      sessionVariables = lib.mkIf cfg.mutableSnippets {
+        PET_CONFIG_DIR = "${config.xdg.configHome}/pet";
+      };
+
+      activation.pet-user-snippets = lib.mkIf cfg.mutableSnippets (
+        let
+          general =
+            if lib.versionAtLeast config.home.stateVersion "21.11" then cfg.settings.General else cfg.settings;
+          snippetFile =
+            if lib.hasPrefix "~/" general.snippetfile then
+              "${config.home.homeDirectory}/${lib.removePrefix "~/" general.snippetfile}"
+            else
+              general.snippetfile;
+        in
+        lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+          if [[ ! -e ${lib.escapeShellArg snippetFile} && ! -L ${lib.escapeShellArg snippetFile} ]]; then
+            run mkdir -p ${lib.escapeShellArg (dirOf snippetFile)}
+            run install -m 600 ${pkgs.writeText "pet-empty-snippets" "snippets = []\n"} ${lib.escapeShellArg snippetFile}
+          fi
+        ''
+      );
+    };
 
     xdg.configFile = {
       "pet/config.toml".source = format.generate "config.toml" (
@@ -112,9 +164,11 @@ in
             General = cfg.settings;
           }
       );
-      "pet/snippet.toml" = lib.mkIf (cfg.snippets != [ ]) {
-        source = format.generate "snippet.toml" { inherit (cfg) snippets; };
-      };
+      "pet/${if cfg.mutableSnippets then "home-manager-snippets/snippet.toml" else "snippet.toml"}" =
+        lib.mkIf (cfg.snippets != [ ])
+          {
+            source = format.generate "snippet.toml" { inherit (cfg) snippets; };
+          };
     };
   };
 }

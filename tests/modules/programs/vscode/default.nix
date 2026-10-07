@@ -24,4 +24,7 @@ let
 
 in
 
-lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}" (v package)) tests
+{
+  vscode-mutable-operation = ./mutable-operation.nix;
+}
+// lib.mapAttrs' (k: v: lib.nameValuePair "vscode-${k}" (v package)) tests

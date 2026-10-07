@@ -1,0 +1,18 @@
+{
+  "editor.fontSize": 14,
+  "arraySetting": [
+    "declared"
+  ],
+  "nested": {
+    "declared": "from-nix",
+    "keep": true,
+    "deeper": {
+      "declared": "from-nix",
+      "keep": "nested-live"
+    },
+    "added": true
+  },
+  "unrelated": "survives",
+  "extensions.autoCheckUpdates": false,
+  "update.mode": "none"
+}

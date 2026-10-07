@@ -8,7 +8,7 @@ let
   inherit (lib) getExe mkIf mkOption;
   cfg = config.programs.mise;
   globalConfigPath =
-    if cfg.enableMutableConfig then "mise/conf.d/50-home-manager.toml" else "mise/config.toml";
+    if cfg.mutableSettings then "mise/conf.d/50-home-manager.toml" else "mise/config.toml";
   mutableConfigDir = "${config.xdg.configHome}/mise";
   mutableConfigPath = "${mutableConfigDir}/config.toml";
   tomlFormat = pkgs.formats.toml { };
@@ -26,6 +26,10 @@ in
         '');
     in
     [
+      (lib.mkRenamedOptionModule
+        [ "programs" "mise" "enableMutableConfig" ]
+        [ "programs" "mise" "mutableSettings" ]
+      )
       (lib.mkRenamedOptionModule
         [ "programs" "mise" "settings" ]
         [ "programs" "mise" "globalConfig" "settings" ]
@@ -55,7 +59,7 @@ in
 
       enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
-      enableMutableConfig = mkOption {
+      mutableSettings = mkOption {
         type = lib.types.bool;
         default = false;
         example = true;
@@ -109,7 +113,7 @@ in
           Global configuration written to
           {file}`$XDG_CONFIG_HOME/mise/config.toml`, or
           {file}`$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml` when
-          {option}`programs.mise.enableMutableConfig` is enabled.
+          {option}`programs.mise.mutableSettings` is enabled.
 
           See <https://mise.jdx.dev/configuration.html> and
           <https://mise.jdx.dev/configuration/settings.html>
@@ -143,7 +147,7 @@ in
       pkgs.usage
     ];
 
-    home.activation.miseMutableConfig = mkIf cfg.enableMutableConfig (
+    home.activation.miseMutableConfig = mkIf cfg.mutableSettings (
       lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         if [[ ! -e ${lib.escapeShellArg mutableConfigPath} && ! -L ${lib.escapeShellArg mutableConfigPath} ]]; then
           run mkdir -p ${lib.escapeShellArg mutableConfigDir}

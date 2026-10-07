@@ -12,17 +12,59 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-  themeIsToml = lib.versionAtLeast packageVersion "0.15.0";
-  versionPost0_17 = lib.versionAtLeast packageVersion "0.17.0";
-  settingsPath = if versionPost0_17 then "vicinae/settings.json" else "vicinae/vicinae.json";
+  settingsPath = if cfg.mutableSettings then "vicinae/home-manager.json" else "vicinae/settings.json";
+  settingsFile = config.home.file."${config.xdg.configHome}/${settingsPath}";
+  mutableEnvironment =
+    lib.optionalAttrs (cfg.mutableSettings && cfg.settings != { } && settingsFile.enable)
+      {
+        VICINAE_OVERRIDES =
+          if lib.hasPrefix "/" settingsFile.target then
+            settingsFile.target
+          else
+            "${config.home.homeDirectory}/${settingsFile.target}";
+      };
 in
 {
   meta.maintainers = [ lib.maintainers.leiserfg ];
+
+  imports = [
+    (lib.mkRemovedOptionModule [ "programs" "vicinae" "useLayerShell" ] ''
+      Set programs.vicinae.settings.launcher_window.layer_shell.enabled instead.
+    '')
+  ];
 
   options.programs.vicinae = {
     enable = lib.mkEnableOption "vicinae launcher daemon";
 
     package = lib.mkPackageOption pkgs "vicinae" { nullable = true; };
+
+    mutableSettings = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to load declarative settings through {env}`VICINAE_OVERRIDES`,
+        leaving {file}`vicinae/settings.json` writable by Vicinae. Declarative
+        settings override changes to the same keys in the user file.
+        Requires Vicinae 0.20.6 or later, which supports {env}`VICINAE_OVERRIDES`.
+        When {option}`programs.vicinae.package` is null, the externally installed
+        Vicinae is assumed to support this feature.
+        Declarative settings are written to
+        {file}`$XDG_CONFIG_HOME/vicinae/home-manager.json`. Use absolute or
+        `~/` paths for declared imports; relative imports resolve against the
+        generated file in the Nix store. Imported settings also override the
+        user file.
+        The installed declarative settings path must not contain a colon,
+        because {env}`VICINAE_OVERRIDES` is a colon-separated list of paths.
+        The user service receives {env}`VICINAE_OVERRIDES` directly. Otherwise,
+        start Vicinae from a session that loads {option}`home.sessionVariables`.
+
+        Before disabling this option while {option}`programs.vicinae.settings`
+        is non-empty, remove or back up the Vicinae-owned
+        {file}`$XDG_CONFIG_HOME/vicinae/settings.json`. Home Manager otherwise
+        treats it as a file collision.
+      '';
+    };
 
     systemd = {
       enable = lib.mkEnableOption "vicinae systemd integration";
@@ -43,16 +85,6 @@ in
       };
     };
 
-    useLayerShell = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = ''
-        Whether vicinae should use the layer shell.
-        If you are using version 0.17 or newer, you should use
-        {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false
-        instead.
-      '';
-    };
     enableFirefoxIntegration = lib.mkOption {
       default = true;
       description = ''
@@ -108,12 +140,11 @@ in
         Theme settings to add to the themes folder in `~/.config/vicinae/themes`. See <https://docs.vicinae.com/theming/getting-started> for supported values.
 
         The attribute name of the theme will be the name of theme file,
-        e.g. `base16-default-dark` will be `base16-default-dark.toml` (or `.json` if vicinae version is < 0.15.0).
+        e.g. `base16-default-dark` will be `base16-default-dark.toml`.
       '';
       example =
         lib.literalExpression # nix
           ''
-            # vicinae >= 0.15.0
             {
               catppuccin-mocha = {
                 meta = {
@@ -163,7 +194,10 @@ in
         };
       };
       description = ''
-        Settings written as JSON to {file}`~/.config/vicinae/settings.json`.
+        Settings written as JSON to {file}`$XDG_CONFIG_HOME/vicinae/settings.json`
+        or to
+        {file}`$XDG_CONFIG_HOME/vicinae/home-manager.json` when
+        {option}`programs.vicinae.mutableSettings` is enabled.
         See {command}`vicinae config default`.
       '';
     };
@@ -173,8 +207,8 @@ in
     let
       themeFiles = lib.mapAttrs' (
         name: theme:
-        lib.nameValuePair "vicinae/themes/${name}.${if themeIsToml then "toml" else "json"}" {
-          source = (if themeIsToml then tomlFormat else jsonFormat).generate "vicinae-${name}-theme" theme;
+        lib.nameValuePair "vicinae/themes/${name}.toml" {
+          source = tomlFormat.generate "vicinae-${name}-theme" theme;
         }
       ) cfg.themes;
     in
@@ -182,26 +216,49 @@ in
       assertions = [
         (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
         {
-          assertion = cfg.systemd.enable -> cfg.package != null;
-          message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
+          assertion = packageVersion == null || lib.versionAtLeast packageVersion "0.17.0";
+          message = "programs.vicinae requires Vicinae 0.17.0 or later. Upgrade programs.vicinae.package to a supported version.";
         }
         {
-          assertion = !cfg.useLayerShell -> !versionPost0_17;
-          message = "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false.";
+          assertion =
+            cfg.mutableSettings -> packageVersion == null || lib.versionAtLeast packageVersion "0.20.6";
+          message = "programs.vicinae.mutableSettings requires Vicinae 0.20.6 or later.";
+        }
+        {
+          assertion =
+            !(mutableEnvironment ? VICINAE_OVERRIDES)
+            || !(lib.hasInfix ":" mutableEnvironment.VICINAE_OVERRIDES);
+          message = "programs.vicinae.mutableSettings cannot use a configuration path containing ':' because VICINAE_OVERRIDES is a colon-separated list.";
+        }
+        {
+          assertion = cfg.systemd.enable -> cfg.package != null;
+          message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
         }
       ];
 
       lib.vicinae = vicinaeLib;
 
-      home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+      home = {
+        sessionVariables = lib.mapAttrs (
+          _: value: lib.escape [ "\\" "\"" "$" "`" ] value
+        ) mutableEnvironment;
+
+        packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+
+        activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
+          lib.hm.dag.entryAfter [ "installPackages" ] ''
+            verboseEcho "Refreshing the vicinae app list"
+            run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
+          ''
+        );
+      };
 
       xdg = {
         configFile = {
           "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "vicinae-settings" cfg.settings;
           };
-        }
-        // lib.optionalAttrs (!themeIsToml) themeFiles;
+        };
 
         dataFile =
           builtins.listToAttrs (
@@ -210,15 +267,9 @@ in
               value.source = item;
             }) cfg.extensions
           )
-          // lib.optionalAttrs themeIsToml themeFiles;
+          // themeFiles;
       };
 
-      home.activation.vicinae-refresh-apps = lib.mkIf (cfg.package != null) (
-        lib.hm.dag.entryAfter [ "installPackages" ] ''
-          verboseEcho "Refreshing the vicinae app list"
-          run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
-        ''
-      );
       mozilla = lib.mkIf (cfg.enableFirefoxIntegration && cfg.package != null) (
         let
           vicinaeNativeMessagingHost =
@@ -251,16 +302,14 @@ in
             ++ cfg.extensions;
         };
         Service = {
+          Environment = lib.mapAttrsToList (
+            name: value: lib.replaceStrings [ "%" ] [ "%%" ] (builtins.toJSON "${name}=${value}")
+          ) mutableEnvironment;
           Type = "simple";
           ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
           Restart = "always";
           RestartSec = 5;
           KillMode = "process";
-          EnvironmentFile = lib.mkIf (!versionPost0_17) (
-            pkgs.writeText "vicinae-env" ''
-              USE_LAYER_SHELL=${if cfg.useLayerShell then toString 1 else toString 0}
-            ''
-          );
         };
         Install = lib.mkIf cfg.systemd.autoStart {
           WantedBy = [ cfg.systemd.target ];

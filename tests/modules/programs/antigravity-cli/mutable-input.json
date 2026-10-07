@@ -1,0 +1,8 @@
+{
+  "colorScheme": "tokyo night",
+  "permissions": {
+    "allow": [
+      "command(git)"
+    ]
+  }
+}

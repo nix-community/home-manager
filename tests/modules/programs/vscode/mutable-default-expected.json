@@ -1,0 +1,15 @@
+{
+  "arraySetting": [
+    "declared"
+  ],
+  "editor.fontSize": 14,
+  "extensions.autoCheckUpdates": false,
+  "nested": {
+    "added": true,
+    "declared": "from-nix",
+    "deeper": {
+      "declared": "from-nix"
+    }
+  },
+  "update.mode": "none"
+}

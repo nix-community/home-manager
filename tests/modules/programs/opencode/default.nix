@@ -1,4 +1,5 @@
 {
+  opencode-assertions = ./assertions.nix;
   opencode-settings = ./settings.nix;
   opencode-settings-ordered-permissions = ./settings-ordered-permissions.nix;
   opencode-empty-settings = ./empty-settings.nix;
