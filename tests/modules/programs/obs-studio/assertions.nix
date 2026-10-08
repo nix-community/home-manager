@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   obsPackage = pkgs.runCommand "obs" { passthru = { }; } ''
     mkdir -p $out/bin $out/share/obs/obs-plugins
@@ -7,6 +7,11 @@ let
   '';
 in
 {
+  # nmt records failed assertions instead of rejecting the configuration, but
+  # still builds its generation. Do not materialize this intentionally invalid
+  # OBS file tree; the assertion messages still come from the full OBS config.
+  xdg.configFile = lib.mkForce { };
+
   test.asserts.assertions.expected = [
     "programs.obs-studio.profiles attribute names must be safe relative path components."
     "programs.obs-studio.sceneCollections attribute names must be safe relative path components."
