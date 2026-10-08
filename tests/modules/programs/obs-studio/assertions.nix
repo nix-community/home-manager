@@ -17,6 +17,7 @@ in
     "programs.obs-studio.integrations attribute names must be safe relative path components."
     "programs.obs-studio.integrations.*.extraConfigFiles attribute names must be safe relative paths."
     "programs.obs-studio.extraConfigFiles must not override generated integration config files."
+    "programs.obs-studio configuration paths must not overlap as files and directories."
   ];
 
   programs.obs-studio = {
@@ -35,10 +36,12 @@ in
     extraConfigFiles = {
       "bad//path.json".text = "{}";
       "safe-plugin/config.json".text = "{}";
+      "foo".text = "{}";
     };
     sceneCollections."bad/name".name = "Bad";
     integrations = {
       missing-plugin.enable = true;
+      foo.extraConfigFiles."config.json".text = "{}";
       "../plugin".extraConfigFiles."config.json".text = "{}";
       safe-plugin.extraConfigFiles = {
         "/absolute.json".text = "{}";

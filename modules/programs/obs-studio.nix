@@ -99,6 +99,8 @@ let
       )
     ) cfg.integrations;
 
+  configPaths = lib.attrNames generatedFiles;
+
   enabledIntegrationPackages = map (integration: integration.package) (
     lib.filter (integration: integration.enable && integration.package != null) (
       lib.attrValues cfg.integrations
@@ -311,6 +313,14 @@ in
       {
         assertion = lib.intersectLists (lib.attrNames cfg.extraConfigFiles) integrationConfigPaths == [ ];
         message = "programs.obs-studio.extraConfigFiles must not override generated integration config files.";
+      }
+      {
+        # ponytail: quadratic in the small declared file set; use a path trie
+        # if configurations ever contain enough files to make this expensive.
+        assertion = lib.all (
+          path: !lib.any (other: lib.hasPrefix "${path}/" other) configPaths
+        ) configPaths;
+        message = "programs.obs-studio configuration paths must not overlap as files and directories.";
       }
     ];
 
