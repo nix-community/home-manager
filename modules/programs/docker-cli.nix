@@ -21,8 +21,7 @@ let
 
   baseConfigFile = jsonFormat.generate "docker-cli-config.json" cfg.settings;
 
-  registryCredentialsScript = ''
-    (
+  registryCredentialsConfig = ''
     set -euo pipefail
     PATH=${
       lib.makeBinPath [
@@ -31,16 +30,7 @@ let
       ]
     }''${PATH:+:}$PATH
 
-    configFile=${lib.escapeShellArg configFile}
-    if [[ -v DRY_RUN ]]; then
-      echo "Would update Docker registry credentials in '$configFile'."
-      exit 0
-    fi
-    umask 077
-    mkdir -p "$(dirname "$configFile")"
-    tmpDir=$(mktemp -d "$configFile.XXXXXX")
-    trap 'rm -f -- "$tmpDir/config.json" "$tmpDir/next.json"; rmdir -- "$tmpDir"' EXIT
-    install -m 0600 ${baseConfigFile} "$tmpDir/config.json"
+    candidateConfig=$(cat ${baseConfigFile}) || exit 1
   ''
   + lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
@@ -56,21 +46,18 @@ let
           exit 1
         fi
 
-        password=$(cat ${passwordFile})
-        auth=$(printf '%s:%s' ${username} "$password" | base64 --wrap=0)
-        printf '%s' "$auth" | jq \
+        password=$(cat ${passwordFile}) || exit 1
+        auth=$(printf '%s:%s' ${username} "$password" | base64 --wrap=0) || exit 1
+        candidateConfig=$(printf '%s' "$candidateConfig" | jq \
           --arg registry ${registryArg} \
-          --rawfile auth /dev/stdin \
+          --rawfile auth <(printf '%s' "$auth") \
           '.auths[$registry] = { auth: $auth }' \
-          "$tmpDir/config.json" > "$tmpDir/next.json"
-        mv -- "$tmpDir/next.json" "$tmpDir/config.json"
+        ) || exit 1
       ''
     ) cfg.registryCredentials
   )
   + ''
-    # Only publish after every password file and JSON update has succeeded.
-    mv -T -- "$tmpDir/config.json" "$configFile"
-    )
+    printf '%s' "$candidateConfig"
   '';
 in
 {
@@ -188,6 +175,14 @@ in
         `https://index.docker.io/v1/` for Docker Hub. This option writes
         file-backed credentials directly to `config.json` and does not use a
         credential helper or credential store.
+
+        Credential files are validated before activation changes the home
+        directory. The configuration is a generation-owned mutable file:
+        activation replaces application edits, removing all credentials returns
+        to the ordinary settings symlink, and disabling the module removes the
+        managed file. Existing unmanaged files require a backup or explicit force.
+        Stop Docker clients before activation. This requires the legacy file
+        activator.
       '';
     };
   };
@@ -198,28 +193,51 @@ in
         DOCKER_CONFIG = "${config.home.homeDirectory}/${cfg.configDir}";
       };
 
-      file =
-        lib.optionalAttrs (!hasRegistryCredentials) {
-          "${cfg.configDir}/config.json" = {
-            source = jsonFormat.generate "config.json" cfg.settings;
+      file = {
+        "${cfg.configDir}/config.json" = {
+          source = baseConfigFile;
+          mutable = hasRegistryCredentials;
+        };
+      }
+      // lib.mapAttrs' (
+        _n: ctx:
+        let
+          path = "${cfg.configDir}/contexts/meta/${builtins.hashString "sha256" ctx.Name}/meta.json";
+        in
+        {
+          name = path;
+          value = {
+            source = jsonFormat.generate "config.json" ctx;
           };
         }
-        // lib.mapAttrs' (
-          _n: ctx:
-          let
-            path = "${cfg.configDir}/contexts/meta/${builtins.hashString "sha256" ctx.Name}/meta.json";
-          in
-          {
-            name = path;
-            value = {
-              source = jsonFormat.generate "config.json" ctx;
-            };
-          }
-        ) cfg.contexts;
+      ) cfg.contexts;
     };
 
-    home.activation.dockerCliRegistryCredentials = mkIf hasRegistryCredentials (
-      lib.hm.dag.entryAfter [ "writeBoundary" ] registryCredentialsScript
-    );
+    home.activation = mkIf hasRegistryCredentials {
+      checkDockerCliRegistryCredentials = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+        if [[ ! -v DRY_RUN ]]; then
+          dockerCliRegistryConfig="$(
+            ${registryCredentialsConfig}
+          )" || exit 1
+        fi
+      '';
+      dockerCliRegistryCredentials = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        (
+          set -euo pipefail
+          PATH=${lib.makeBinPath [ pkgs.coreutils ]}''${PATH:+:}$PATH
+          configFile=${lib.escapeShellArg configFile}
+          if [[ -v DRY_RUN ]]; then
+            echo "Would update Docker registry credentials in '$configFile'."
+            exit 0
+          fi
+          umask 077
+          tmpFile=$(mktemp "$configFile.XXXXXX") || exit 1
+          trap 'rm -f -- "$tmpFile"' EXIT
+          printf '%s\n' "$dockerCliRegistryConfig" > "$tmpFile" || exit 1
+          mv -T -- "$tmpFile" "$configFile" || exit 1
+        ) || exit 1
+        unset dockerCliRegistryConfig
+      '';
+    };
   };
 }

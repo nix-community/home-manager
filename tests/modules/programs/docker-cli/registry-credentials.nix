@@ -29,7 +29,10 @@
   nmt.script =
     let
       cfgDocker = config.programs.docker-cli;
-      activationScript = pkgs.writeScript "activation" config.home.activation.dockerCliRegistryCredentials.data;
+      activationScript = pkgs.writeScript "activation" ''
+        ${config.home.activation.checkDockerCliRegistryCredentials.data}
+        ${config.home.activation.dockerCliRegistryCredentials.data}
+      '';
       configTestPath = "$HOME/${cfgDocker.configDir}/config.json";
     in
     ''
@@ -37,7 +40,8 @@
       echo -n s3cr3t > $TMPDIR/docker-token
       echo -n s3cr3t > $TMPDIR/second-token
 
-      assertPathNotExists home-files/${cfgDocker.configDir}/config.json
+      assertFileExists home-files/${cfgDocker.configDir}/config.json
+      mkdir -p "$HOME/${cfgDocker.configDir}"
 
       substitute ${activationScript} $TMPDIR/activate --subst-var TMPDIR
       chmod +x $TMPDIR/activate
