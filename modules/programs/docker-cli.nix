@@ -17,7 +17,8 @@ let
 
   hasRegistryCredentials = cfg.registryCredentials != { };
 
-  configFile = "${config.home.homeDirectory}/${cfg.configDir}/config.json";
+  configTarget = "${cfg.configDir}/config.json";
+  configFile = "${config.home.homeDirectory}/${configTarget}";
 
   baseConfigFile = jsonFormat.generate "docker-cli-config.json" cfg.settings;
 
@@ -182,7 +183,8 @@ in
         to the ordinary settings symlink, and disabling the module removes the
         managed file. Existing unmanaged files require a backup or explicit force.
         Stop Docker clients before activation. This requires the legacy file
-        activator.
+        activator. If activation fails before credentials are published, the
+        previous generation's owned configuration is restored.
       '';
     };
   };
@@ -221,6 +223,50 @@ in
           )" || exit 1
         fi
       '';
+      prepareDockerCliRegistryCredentials =
+        lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+          ''
+            if [[ ! -v DRY_RUN ]]; then
+              dockerCliRegistryFile=${lib.escapeShellArg configFile}
+              dockerCliRegistryTarget=${lib.escapeShellArg configTarget}
+              dockerCliRegistryBackup=""
+              dockerCliRegistryRestore=false
+              dockerCliRegistryPreviousExitTrap="$(trap -p EXIT)"
+              function dockerCliRegistryCleanup() {
+                local status="$1"
+                trap - EXIT
+                if [[ "$dockerCliRegistryRestore" == true && $status -ne 0 ]]; then
+                  if checkMutableParents "$dockerCliRegistryTarget" &&
+                      mv -T -- "$dockerCliRegistryBackup/config" "$dockerCliRegistryFile"; then
+                    dockerCliRegistryRestore=false
+                  else
+                    errorEcho "Could not restore Docker configuration; recovery copy retained at '$dockerCliRegistryBackup/config'."
+                    status=1
+                  fi
+                fi
+                if [[ "$dockerCliRegistryRestore" == false && -n "$dockerCliRegistryBackup" ]]; then
+                  rm -f -- "$dockerCliRegistryBackup/config"
+                  rmdir -- "$dockerCliRegistryBackup"
+                fi
+                # Run the pre-existing EXIT handler in a subshell, including HM's
+                # GC-root cleanup, without recursively invoking this handler.
+                if [[ -n "$dockerCliRegistryPreviousExitTrap" ]]; then
+                  (eval "$dockerCliRegistryPreviousExitTrap"; exit "$status") || status=$?
+                fi
+                exit "$status"
+              }
+              trap 'dockerCliRegistryCleanup "$?"' EXIT
+              if [[ -v oldGenPath ]] &&
+                  [[ ( -L "$oldGenPath/home-mutable-files/$dockerCliRegistryTarget" &&
+                       -f "$dockerCliRegistryFile" && ! -L "$dockerCliRegistryFile" ) ||
+                     ( -L "$dockerCliRegistryFile" &&
+                       "$(readlink "$dockerCliRegistryFile")" == "$(readlink -e "$oldGenPath/home-files")/$dockerCliRegistryTarget" ) ]]; then
+                dockerCliRegistryBackup=$(mktemp -d "$dockerCliRegistryFile.rollback.XXXXXX") || exit 1
+                cp -pP -- "$dockerCliRegistryFile" "$dockerCliRegistryBackup/config" || exit 1
+                dockerCliRegistryRestore=true
+              fi
+            fi
+          '';
       dockerCliRegistryCredentials = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         (
           set -euo pipefail
@@ -236,6 +282,18 @@ in
           printf '%s\n' "$dockerCliRegistryConfig" > "$tmpFile" || exit 1
           mv -T -- "$tmpFile" "$configFile" || exit 1
         ) || exit 1
+        if [[ ! -v DRY_RUN ]]; then
+          dockerCliRegistryRestore=false
+          if [[ -n "$dockerCliRegistryBackup" ]]; then
+            rm -f -- "$dockerCliRegistryBackup/config"
+            rmdir -- "$dockerCliRegistryBackup"
+          fi
+          trap - EXIT
+          eval "$dockerCliRegistryPreviousExitTrap"
+          unset dockerCliRegistryFile dockerCliRegistryTarget dockerCliRegistryBackup \
+            dockerCliRegistryRestore dockerCliRegistryPreviousExitTrap
+          unset -f dockerCliRegistryCleanup
+        fi
         unset dockerCliRegistryConfig
       '';
     };

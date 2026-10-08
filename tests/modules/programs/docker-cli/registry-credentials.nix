@@ -31,6 +31,7 @@
       cfgDocker = config.programs.docker-cli;
       activationScript = pkgs.writeScript "activation" ''
         ${config.home.activation.checkDockerCliRegistryCredentials.data}
+        ${config.home.activation.prepareDockerCliRegistryCredentials.data}
         ${config.home.activation.dockerCliRegistryCredentials.data}
       '';
       configTestPath = "$HOME/${cfgDocker.configDir}/config.json";
