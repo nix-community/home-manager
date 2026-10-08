@@ -89,12 +89,13 @@ let
   };
   empty = generation { };
   failedLink = generation { "app/collision".text = "new declaration"; };
-  missingSource = generation {
-    "app/config" = {
-      mutable = true;
-      source = config.lib.file.mkOutOfStoreSymlink "/nonexistent/mutable-source";
-    };
-  };
+  # Model an old generation after its previously valid source disappears, not
+  # a new generation with an invalid source (which the builder must reject).
+  missingSource.package = pkgs.runCommand "mutable-test-missing-source-generation" { } ''
+    mkdir -p "$out/home-files/app" "$out/home-mutable-files/app"
+    ln -s /nonexistent/mutable-source "$out/home-files/app/config"
+    ln -s /nonexistent/mutable-source "$out/home-mutable-files/app/config"
+  '';
 in
 {
   nmt.script = ''
