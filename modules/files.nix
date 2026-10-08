@@ -56,6 +56,7 @@ let
       };
 
   mutableFiles = pkgs.linkFarm "home-manager-mutable-files" (
+    # These symlink entries record ownership independently of source existence.
     map (file: {
       name = file.target;
       path = sourceStorePath file;
@@ -326,7 +327,7 @@ in
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -f "$newMutable/$relativePath" || -f "$oldMutable/$relativePath" ]] ; then
+            if [[ -L "$newMutable/$relativePath" || -L "$oldMutable/$relativePath" ]] ; then
               checkMutableParents "$relativePath" || exit 1
               slowSources+=("$sourcePath")
             elif [[ -L "''${targetPath%/*}" ]] ; then
@@ -403,7 +404,7 @@ in
           for sourcePath in "''${slowSources[@]}" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" && ! -f "$oldMutable/$relativePath" ]] ; then
+            if [[ -e "$targetPath" && ! -L "$targetPath" && ! -L "$oldMutable/$relativePath" ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
                 verboseEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath'."
                 run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || { errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."; exit 1; }
@@ -417,7 +418,7 @@ in
               fi
             fi
 
-            if [[ -f "$newMutable/$relativePath" ]] ; then
+            if [[ -L "$newMutable/$relativePath" ]] ; then
               checkMutableParents "$relativePath" || exit 1
               if [[ -d "$targetPath" ]]; then
                 errorEcho "Cannot replace directory '$targetPath' with a mutable file."
@@ -435,7 +436,7 @@ in
                   exit 1
                 fi
               fi
-            elif [[ ! -f "$oldMutable/$relativePath" && -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
+            elif [[ ! -L "$oldMutable/$relativePath" && -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
               # The target exists but is identical - don't do anything.
               verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
@@ -461,7 +462,7 @@ in
           shift 3
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
-            if [[ -f "$oldMutable/$relativePath" ]]; then
+            if [[ -L "$oldMutable/$relativePath" ]]; then
               [[ "$cleanupMutable" == true ]] || continue
               checkMutableParents "$relativePath" || exit 1
             elif [[ "$cleanupMutable" == true ]]; then
@@ -470,7 +471,7 @@ in
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern &&
-                    ! ( -f "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ) ]] ; then
+                    ! ( -L "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ) ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
               verboseEcho "Checking $targetPath: gone (deleting)"

@@ -21,7 +21,7 @@ function checkCollision() {
   local sourcePath="$1"
   local targetPath="$2"
 
-  if [[ ! -f "$newMutable/${sourcePath#"$newGenFiles"/}" ]] && cmp -s "$sourcePath" "$targetPath"; then
+  if [[ ! -L "$newMutable/${sourcePath#"$newGenFiles"/}" ]] && cmp -s "$sourcePath" "$targetPath"; then
     # First compare the files' content. If they're equal, we're fine.
     warnEcho "Existing file '$targetPath' is in the way of '$sourcePath', will be skipped since they are the same"
   elif [[ ! -L "$targetPath" && -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
@@ -51,13 +51,13 @@ for sourcePath in "$@" ; do
   relativePath="${sourcePath#"$newGenFiles"/}"
   targetPath="$HOME/$relativePath"
 
-  if [[ -f "$newMutable/$relativePath" || -f "$oldMutable/$relativePath" ]]; then
+  if [[ -L "$newMutable/$relativePath" || -L "$oldMutable/$relativePath" ]]; then
     checkMutableParents "$relativePath" || exit 1
     if [[ -d "$targetPath" && ! -L "$targetPath" ]]; then
       collisionErrors+=("Directory '$targetPath' cannot be replaced by a mutable file")
       continue
     fi
-    if [[ -f "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ]]; then
+    if [[ -L "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ]]; then
       continue
     fi
   fi
@@ -65,7 +65,7 @@ for sourcePath in "$@" ; do
   forced=""
   for forcedPath in "${forcedPaths[@]}"; do
     if [[ "$targetPath" == "$forcedPath" ||
-          ( ! -f "$newMutable/$relativePath" && $targetPath == $forcedPath* ) ]]; then
+          ( ! -L "$newMutable/$relativePath" && $targetPath == $forcedPath* ) ]]; then
       forced="yeah"
       break
     fi
