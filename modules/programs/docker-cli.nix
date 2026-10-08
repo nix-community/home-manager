@@ -22,6 +22,7 @@ let
   baseConfigFile = jsonFormat.generate "docker-cli-config.json" cfg.settings;
 
   registryCredentialsScript = ''
+    (
     set -euo pipefail
     PATH=${
       lib.makeBinPath [
@@ -31,8 +32,15 @@ let
     }''${PATH:+:}$PATH
 
     configFile=${lib.escapeShellArg configFile}
+    if [[ -v DRY_RUN ]]; then
+      echo "Would update Docker registry credentials in '$configFile'."
+      exit 0
+    fi
+    umask 077
     mkdir -p "$(dirname "$configFile")"
-    install -m 0600 ${baseConfigFile} "$configFile"
+    tmpDir=$(mktemp -d "$configFile.XXXXXX")
+    trap 'rm -f -- "$tmpDir/config.json" "$tmpDir/next.json"; rmdir -- "$tmpDir"' EXIT
+    install -m 0600 ${baseConfigFile} "$tmpDir/config.json"
   ''
   + lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
@@ -44,23 +52,26 @@ let
       in
       ''
         if [ ! -f ${passwordFile} ]; then
-          echo "Docker registry password file not found for ${registry}: ${registryCfg.passwordFile}" >&2
+          printf 'Docker registry password file not found for %s: %s\n' ${registryArg} ${passwordFile} >&2
           exit 1
         fi
 
         password=$(cat ${passwordFile})
         auth=$(printf '%s:%s' ${username} "$password" | base64 --wrap=0)
-        tmpFile=$(mktemp)
-        jq \
+        printf '%s' "$auth" | jq \
           --arg registry ${registryArg} \
-          --arg auth "$auth" \
+          --rawfile auth /dev/stdin \
           '.auths[$registry] = { auth: $auth }' \
-          "$configFile" > "$tmpFile"
-        install -m 0600 "$tmpFile" "$configFile"
-        rm -f "$tmpFile"
+          "$tmpDir/config.json" > "$tmpDir/next.json"
+        mv -- "$tmpDir/next.json" "$tmpDir/config.json"
       ''
     ) cfg.registryCredentials
-  );
+  )
+  + ''
+    # Only publish after every password file and JSON update has succeeded.
+    mv -T -- "$tmpDir/config.json" "$configFile"
+    )
+  '';
 in
 {
   meta.maintainers = [
