@@ -37,6 +37,7 @@ let
     };
   };
   putter = home { home.fileActivator = "putter"; };
+  failedLink = home { home.file."mutable/collision".text = "new declaration"; };
 in
 {
   name = "standalone-mutable-files";
@@ -47,6 +48,7 @@ in
       candidate
       disabled
       putter
+      failedLink
     ];
     users.users.alice = {
       isNormalUser = true;
@@ -102,6 +104,14 @@ in
         assert succeed("cat ~/mutable/new.recovery") == "edited after failure"
         assert succeed("cat ~/mutable/new") == "declared"
         assert succeed(f'readlink -e "{gcroot}"').strip() == "${candidate}"
+
+    with subtest("failed linking preserves removed mutable files and successful generation"):
+        succeed("printf 'application edits' > ~/mutable/new; printf unmanaged > ~/mutable/collision")
+        rejected(activate("${failedLink}", "HOME_MANAGER_BACKUP_COMMAND=false"), "failed")
+        assert succeed("cat ~/mutable/new") == "application edits"
+        assert succeed("cat ~/mutable/collision") == "unmanaged"
+        assert succeed(f'readlink -e "{gcroot}"').strip() == "${candidate}"
+        succeed("rm ~/mutable/collision")
 
     with subtest("backend switch is rejected before creating Putter state"):
         rejected(activate("${putter}"), "Cannot switch to Putter")

@@ -88,6 +88,7 @@ let
     };
   };
   empty = generation { };
+  failedLink = generation { "app/collision".text = "new declaration"; };
 in
 {
   nmt.script = ''
@@ -156,6 +157,20 @@ in
     printf edited > "$HOME/app/replacement"
     mv "$HOME/app/replacement" "$HOME/app/config"
     printf edited > "$HOME/app/removed"
+    # A backup failure while linking must not destroy edited mutable files
+    # whose declarations are removed by the attempted generation.
+    printf unmanaged > "$HOME/app/collision"
+    if out=$(HOME_MANAGER_BACKUP_COMMAND=false ${failedLink.activate} ${first.package} 2>&1); then
+      fail "Mutable removal ignored a failed link operation"
+    fi
+    case "$out" in
+      *"failed"*) ;;
+      *) fail "Unexpected link failure: $out" ;;
+    esac
+    test "$(cat "$HOME/app/config")" = edited
+    test "$(cat "$HOME/app/removed")" = edited
+    test "$(cat "$HOME/app/collision")" = unmanaged
+    rm "$HOME/app/collision"
     DRY_RUN=1 ${second.activate} ${first.package}
     test "$(cat "$HOME/app/config")" = edited
     test -f "$HOME/app/removed"

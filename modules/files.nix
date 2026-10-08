@@ -287,6 +287,9 @@ in
     #
     # 2. Symlink files from the new generation into $HOME.
     #
+    # Mutable copies are cleaned up only after linking succeeds, since their
+    # application-edited contents cannot be recovered from the old generation.
+    #
     # This order is needed to ensure that we always know which links
     # belong to which generation. Specifically, if we're moving from
     # generation A to generation B having sets of home file links FA
@@ -454,11 +457,15 @@ in
 
           newGenFiles="$1"
           oldMutable="$2"
-          shift 2
+          cleanupMutable="$3"
+          shift 3
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
             if [[ -f "$oldMutable/$relativePath" ]]; then
+              [[ "$cleanupMutable" == true ]] || continue
               checkMutableParents "$relativePath" || exit 1
+            elif [[ "$cleanupMutable" == true ]]; then
+              continue
             fi
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
@@ -493,6 +500,8 @@ in
         #    generation.
         #
         # 2. Symlink files from the new generation into $HOME.
+        #
+        # 3. Remove orphaned mutable copies only after linking succeeds.
         #
         # This order is needed to ensure that we always know which links
         # belong to which generation. Specifically, if we're moving from
@@ -531,11 +540,12 @@ in
             # generation. The find command below will print the
             # relative path of the entry.
             find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
-              | xargs -0 bash ${legacyCleanup} "$newGenFiles" "$oldGenPath/home-mutable-files"
+              | xargs -0 bash ${legacyCleanup} "$newGenFiles" "$oldGenPath/home-mutable-files" "$1"
           }
 
-          cleanOldGen || exit 1
+          cleanOldGen false || exit 1
           linkNewGen || exit 1
+          cleanOldGen true || exit 1
         '';
 
         putterLinkGeneration = ''
