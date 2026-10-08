@@ -1,0 +1,49 @@
+[keymap]
+ClosePopup = "q"
+OpenDebugLog = "`"
+ReplyMessage = "<leader>mr"
+ToggleStream = "<leader>vs"
+VoiceDeafen = "<leader>vd"
+VoiceLeave = "<leader>vl"
+VoiceMute = "<leader>vm"
+
+[keymap.StartComposer]
+keys = ["c"]
+
+[keymap.channel_actions.ToggleMute]
+description = "mute channel"
+keys = ["x"]
+
+[keymap.channel_actions.ToggleStream]
+description = "toggle screen share"
+keys = ["s"]
+
+[keymap.channel_actions.VoiceParticipantAudio]
+description = "participant audio"
+keys = ["v"]
+
+[keymap.channel_actions.WatchStream]
+description = "watch stream"
+keys = ["w"]
+
+[keymap.composer]
+DeletePreviousWord = "<A-backspace>"
+OpenEditor = "<C-o>"
+
+[keymap.groups]
+"<leader>v" = "Voice"
+
+[keymap.guild_actions.LeaveServer]
+description = "leave server"
+keys = ["l"]
+
+[keymap.message_actions]
+GoToReferencedMessage = "g"
+
+[keymap.message_actions.OpenThread]
+description = "open thread"
+keys = ["t"]
+
+[keymap.notification_inbox_actions]
+MarkAllRead = "a"
+MarkRead = "r"

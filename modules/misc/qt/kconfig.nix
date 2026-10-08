@@ -65,9 +65,9 @@ in
             if v == null then
               "--delete"
             else if t == "bool" then
-              "--type bool ${builtins.toJSON v}"
+              "--type bool -- ${builtins.toJSON v}"
             else
-              lib.escapeShellArg (toString v);
+              "-- ${lib.escapeShellArg (toString v)}";
           toLine =
             file: path: value:
             if builtins.isAttrs value then

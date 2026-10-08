@@ -20,11 +20,9 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          extractor.base-directory = "~/Downloads";
-        }
-      '';
+      example = {
+        extractor.base-directory = "~/Downloads";
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/gallery-dl/config.json`. See

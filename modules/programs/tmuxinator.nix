@@ -25,26 +25,24 @@ in
         See <https://github.com/tmuxinator/tmuxinator> for the project
         configuration format.
       '';
-      example = lib.literalExpression ''
-        {
-          myproject = {
-            root = "~/code/myproject";
-            windows = [
-              {
-                editor = {
-                  layout = "main-vertical";
-                  panes = [
-                    { editor = [ "vim" ]; }
-                    "guard"
-                  ];
-                };
-              }
-              { server = "bundle exec rails s"; }
-              { logs = "tail -f log/development.log"; }
-            ];
-          };
-        }
-      '';
+      example = {
+        myproject = {
+          root = "~/code/myproject";
+          windows = [
+            {
+              editor = {
+                layout = "main-vertical";
+                panes = [
+                  { editor = [ "vim" ]; }
+                  "guard"
+                ];
+              };
+            }
+            { server = "bundle exec rails s"; }
+            { logs = "tail -f log/development.log"; }
+          ];
+        };
+      };
     };
   };
 

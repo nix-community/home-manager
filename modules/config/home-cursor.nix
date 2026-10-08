@@ -13,12 +13,10 @@ let
     mkIf
     mkMerge
     mkDefault
-    mkAliasOptionModule
     types
     literalExpression
     escapeShellArg
     hm
-    getAttrFromPath
     any
     optional
     ;
@@ -140,46 +138,10 @@ in
 {
   meta.maintainers = [ lib.maintainers.league ];
 
-  imports = [
-    (mkAliasOptionModule
-      [ "xsession" "pointerCursor" "package" ]
-      [
-        "home"
-        "pointerCursor"
-        "package"
-      ]
-    )
-    (mkAliasOptionModule
-      [ "xsession" "pointerCursor" "name" ]
-      [
-        "home"
-        "pointerCursor"
-        "name"
-      ]
-    )
-    (mkAliasOptionModule
-      [ "xsession" "pointerCursor" "size" ]
-      [
-        "home"
-        "pointerCursor"
-        "size"
-      ]
-    )
-    (mkAliasOptionModule
-      [ "xsession" "pointerCursor" "defaultCursor" ]
-      [
-        "home"
-        "pointerCursor"
-        "x11"
-        "defaultCursor"
-      ]
-    )
-  ];
-
   options = {
     home.pointerCursor = mkOption {
-      type = types.nullOr pointerCursorModule;
-      default = null;
+      type = pointerCursorModule;
+      default = { };
       description = ''
         Cursor configuration.
 
@@ -204,9 +166,10 @@ in
     let
       # Check if enable option was explicitly defined by the user
       enableDefined = any (x: x ? enable) opts.definitions;
+      pointerCursorDefined = opts.highestPrio != (lib.mkOptionDefault { }).priority;
 
       # Determine if cursor configuration should be enabled
-      enable = if enableDefined then cfg.enable else cfg != null;
+      enable = if enableDefined then cfg.enable else pointerCursorDefined;
     in
     mkMerge [
       (mkIf enable (mkMerge [
@@ -240,7 +203,7 @@ in
         (mkIf cfg.dotIcons.enable {
           # Add symlink of cursor icon directory to $HOME/.icons, needed for
           # backwards compatibility with some applications. See:
-          # https://specifications.freedesktop.org/icon-theme-spec/latest/ar01s03.html
+          # https://specifications.freedesktop.org/icon-theme/latest/#directory_layout
           home.file.".icons/default/index.theme".source =
             "${defaultIndexThemePackage}/share/icons/default/index.theme";
           home.file.".icons/${cfg.name}".source = "${cfg.package}/share/icons/${cfg.name}";
@@ -285,39 +248,12 @@ in
       ]))
 
       {
-        warnings =
-          (optional
-            (any
-              (
-                x:
-                getAttrFromPath (
-                  [
-                    "xsession"
-                    "pointerCursor"
-                  ]
-                  ++ [ x ]
-                  ++ [ "isDefined" ]
-                ) options
-              )
-              [
-                "package"
-                "name"
-                "size"
-                "defaultCursor"
-              ]
-            )
-            ''
-              The option `xsession.pointerCursor` has been merged into `home.pointerCursor` and will be removed
-              in the future. Please change to set `home.pointerCursor` directly and enable `home.pointerCursor.x11.enable`
-              to generate x11 specific cursor configurations. You can refer to the documentation for more details.
-            ''
-          )
-          ++ (optional (opts.highestPrio != (lib.mkOptionDefault { }).priority && cfg == null) ''
-            Setting home.pointerCursor to null is deprecated.
-            Please update your configuration to explicitly set:
+        warnings = optional (pointerCursorDefined && !enableDefined) ''
+          Relying on `home.pointerCursor` to enable cursor config generation is deprecated.
+          Please update your configuration to explicitly set:
 
-              home.pointerCursor.enable = false;
-          '');
+            home.pointerCursor.enable = ${lib.boolToString enable};
+        '';
       }
     ];
 }

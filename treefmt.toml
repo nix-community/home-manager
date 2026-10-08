@@ -8,11 +8,13 @@ includes = [ "*.nix" ]
 [formatter.statix]
 command = "treefmt-statix"
 includes = [ "*.nix" ]
+excludes = [ "tests/integration/standalone/*-init.nix" ]
 
 [formatter.deadnix]
 command = "deadnix"
 options = [ "--edit" ]
 includes = [ "*.nix" ]
+excludes = [ "tests/integration/standalone/*-init.nix" ]
 
 [formatter.nixf-diagnose]
 command = "nixf-diagnose"
@@ -23,6 +25,13 @@ options = [
   "--ignore=sema-primop-overridden"
 ]
 includes = [ "*.nix" ]
+
+[formatter.ruff]
+command = "ruff"
+options = [ "format" ]
+includes = [ "*.py" ]
+# Test fixtures are sample inputs (some intentionally invalid Python).
+excludes = [ "tests/modules/**/*.py" ]
 
 [formatter.keep-sorted]
 command = "keep-sorted"

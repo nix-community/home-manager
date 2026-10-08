@@ -15,7 +15,9 @@ let
     google-chrome-beta = "Google Chrome Beta";
     google-chrome-dev = "Google Chrome Dev";
     brave = "Brave Browser";
+    brave-origin = "Brave Origin";
     vivaldi = "Vivaldi Browser";
+    microsoft-edge = "Microsoft Edge";
   };
 
   plasmaSupportedBrowsers = [
@@ -74,27 +76,26 @@ let
         '';
       };
     }
-    // lib.optionalAttrs (lib.elem browser plasmaSupportedBrowsers) {
-      plasmaSupport = mkOption {
-        inherit visible;
-        type = types.bool;
-        default = false;
-        example = true;
-        description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
-      };
+    //
+      lib.optionalAttrs (pkgs.stdenv.hostPlatform.isLinux && lib.elem browser plasmaSupportedBrowsers)
+        {
+          plasmaSupport = mkOption {
+            inherit visible;
+            type = types.bool;
+            default = false;
+            example = true;
+            description = "Whether to enable the 'Use QT' theme for ${name} on Linux.";
+          };
 
-      plasmaBrowserIntegrationPackage = mkOption {
-        inherit visible;
-        type = types.package;
-        default = pkgs.kdePackages.plasma-browser-integration;
-        defaultText = literalExpression "pkgs.kdePackages.plasma-browser-integration";
-        example = literalExpression "pkgs.kdePackages.plasma-browser-integration";
-        description = ''
-          Package to use for the Plasma browser integration native messaging
-          host on Linux.
-        '';
-      };
-    }
+          plasmaBrowserIntegrationPackage =
+            lib.mkPackageOption pkgs.kdePackages "plasma-browser-integration" {
+              extraDescription = "Used for the native messaging host on Linux.";
+              pkgsText = "pkgs.kdePackages";
+            }
+            // {
+              inherit visible;
+            };
+        }
     // {
       dictionaries = mkOption {
         inherit visible;
@@ -226,7 +227,7 @@ let
         if builtins.hasAttr packageName supportedBrowsers then packageName else browser;
 
       isProprietaryChrome = lib.hasPrefix "google-chrome" effectiveBrowser;
-      supportsUserExtensions = !isProprietaryChrome || pkgs.stdenv.isDarwin;
+      supportsUserExtensions = !isProprietaryChrome || pkgs.stdenv.hostPlatform.isDarwin;
 
       darwinDirs = {
         chromium = "Chromium";
@@ -234,14 +235,17 @@ let
         google-chrome-beta = "Google/Chrome Beta";
         google-chrome-dev = "Google/Chrome Dev";
         brave = "BraveSoftware/Brave-Browser";
+        brave-origin = "BraveSoftware/Brave-Origin";
+        microsoft-edge = "Microsoft Edge";
       };
 
       linuxDirs = {
         brave = "BraveSoftware/Brave-Browser";
+        brave-origin = "BraveSoftware/Brave-Origin";
       };
 
       configDir =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "Library/Application Support/" + (darwinDirs."${effectiveBrowser}" or effectiveBrowser)
         else
           "${config.xdg.configHome}/" + (linuxDirs."${effectiveBrowser}" or effectiveBrowser);
@@ -269,7 +273,8 @@ let
         value.source = pkg;
       };
 
-      plasmaSupportEnabled = pkgs.stdenv.isLinux && (cfg.plasmaSupport or false);
+      plasmaSupportEnabled =
+        pkgs.stdenv.hostPlatform.isLinux && lib.elem browser plasmaSupportedBrowsers && cfg.plasmaSupport;
 
       nativeMessagingHosts = lib.unique (
         cfg.nativeMessagingHosts ++ lib.optional plasmaSupportEnabled cfg.plasmaBrowserIntegrationPackage
@@ -289,14 +294,14 @@ let
           message = "Cannot set `commandLineArgs` when `package` is null for ${browser}.";
         }
         {
-          assertion = !(isProprietaryChrome && pkgs.stdenv.isLinux && cfg.extensions != [ ]);
+          assertion = !(isProprietaryChrome && pkgs.stdenv.hostPlatform.isLinux && cfg.extensions != [ ]);
           message = "Cannot set `extensions` for `${effectiveBrowser}` on Linux. Google Chrome only loads external extensions from system-managed directories, which Home Manager does not manage.";
         }
         {
           assertion =
             !(
               isProprietaryChrome
-              && pkgs.stdenv.isDarwin
+              && pkgs.stdenv.hostPlatform.isDarwin
               && !builtins.all (
                 ext: ext.crxPath == null && ext.version == null && ext.updateUrl == chromeWebStoreUpdateUrl
               ) cfg.extensions

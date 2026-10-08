@@ -1,0 +1,14 @@
+{
+  "providers": {
+    "litellm": {
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "baseUrl": "http://localhost:11434/v1",
+      "models": [
+        {
+          "id": "llama3.1:8b"
+        }
+      ]
+    }
+  }
+}

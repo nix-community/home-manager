@@ -9,6 +9,8 @@ let
   cfg = config.programs.keepassxc;
 
   iniFormat = pkgs.formats.ini { };
+
+  settingsFile = iniFormat.generate "keepassxc-settings" cfg.settings;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -44,20 +46,18 @@ in
     settings = lib.mkOption {
       inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          Browser.Enabled = true;
+      example = {
+        Browser.Enabled = true;
 
-          GUI = {
-            AdvancedSettings = true;
-            ApplicationTheme = "dark";
-            CompactMode = true;
-            HidePasswords = true;
-          };
+        GUI = {
+          AdvancedSettings = true;
+          ApplicationTheme = "dark";
+          CompactMode = true;
+          HidePasswords = true;
+        };
 
-          SSHAgent.Enabled = true;
-        }
-      '';
+        SSHAgent.Enabled = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/keepassxc/keepassxc.ini`.
@@ -101,10 +101,18 @@ in
         xdg.autostart.entries = lib.mkIf cfg.autostart [
           "${cfg.package}/share/applications/org.keepassxc.KeePassXC.desktop"
         ];
-        xdg.configFile."keepassxc/keepassxc.ini" = lib.mkIf (cfg.settings != { }) {
-          source = iniFormat.generate "keepassxc-settings" cfg.settings;
-        };
       }
+
+      (lib.mkIf (cfg.settings != { }) {
+        xdg.configFile."keepassxc/keepassxc.ini" = {
+          enable = !pkgs.stdenv.hostPlatform.isDarwin;
+          source = settingsFile;
+        };
+        home.file."Library/Application Support/KeePassXC/keepassxc.ini" = {
+          enable = pkgs.stdenv.hostPlatform.isDarwin;
+          source = settingsFile;
+        };
+      })
 
       (lib.mkIf (cfg.package != null) {
         home.packages = [ cfg.package ];
@@ -112,6 +120,7 @@ in
         programs.chromium.nativeMessagingHosts = [ cfg.package ];
         programs.firefox.nativeMessagingHosts = [ cfg.package ];
         programs.floorp.nativeMessagingHosts = [ cfg.package ];
+        programs.librewolf.nativeMessagingHosts = [ cfg.package ];
         programs.vivaldi.nativeMessagingHosts = [ cfg.package ];
       })
 

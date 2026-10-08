@@ -64,7 +64,7 @@ in
       (lib.hm.assertions.assertPlatform "programs.getmail" pkgs lib.platforms.linux)
     ];
 
-    home.file = lib.foldl' (a: b: a // b) { } (
+    home.file = lib.mergeAttrsList (
       map (a: { "${renderConfigFilepath a}".text = renderAccountConfig a; }) accounts
     );
   };

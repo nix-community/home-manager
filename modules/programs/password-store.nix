@@ -23,7 +23,7 @@ let
       value = {
         PASSWORD_STORE_DIR = "${config.xdg.dataHome}/password-store";
       };
-      text = ''{ PASSWORD_STORE_DIR = "$XDG_DATA_HOME/password-store"; }'';
+      text = ''{ PASSWORD_STORE_DIR = "''${config.xdg.dataHome}/password-store"; }'';
     };
     current.value = { };
     deferWarningToConfig = true;

@@ -64,7 +64,7 @@ in
     systemd.user.services.vdirsyncer = {
       Unit = {
         Description = "vdirsyncer calendar&contacts synchronization";
-        PartOf = [ "network-online.target" ];
+        X-SwitchMethod = "keep-old";
       };
 
       Service = {

@@ -15,6 +15,8 @@ let
     removePrefix
     types
     ;
+  isAbsolutePath = hasPrefix "/";
+  removeHomePrefix = removePrefix (homeDirectory + "/");
 in
 {
   # Constructs a type suitable for a `home.file` like option. The
@@ -42,13 +44,13 @@ in
               '';
             };
             target = mkOption {
-              type = types.str;
+              type = types.nonEmptyStr;
               apply =
                 p:
                 let
-                  absPath = if hasPrefix "/" p then p else "${basePath}/${p}";
+                  absPath = if isAbsolutePath p then p else "${basePath}/${p}";
                 in
-                removePrefix (homeDirectory + "/") absPath;
+                removeHomePrefix absPath;
               defaultText = literalExpression "name";
               description = ''
                 Path to target file relative to ${basePathDesc}.
@@ -85,6 +87,44 @@ in
               '';
             };
 
+            mutable = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                Install a writable copy instead of a symbolic link. Only regular
+                source files are supported; recursive directory copying is not.
+
+                The target remains owned by Home Manager even when an application
+                edits or replaces it with another regular file. Each activation
+                replaces its contents, and removing or disabling the declaration
+                deletes it, including application changes. Stop the application
+                before activating. This does not merge or preserve edits.
+
+                Existing unmanaged files require a backup or {option}`force`,
+                even when their contents match. Symlink targets are never written
+                through, and directories are not replaced. Parent directories
+                must not be symlinks.
+                File/directory layout transitions require a separate activation
+                removing the old file first.
+                Only supported with the default legacy file activator; the
+                experimental putter activator does not manage mutable copies.
+                To switch to Putter, first remove the mutable declarations and
+                successfully activate with the legacy activator.
+
+                Activation is not transactional. If it fails after installing
+                a new copy, that copy is not owned by the last successful
+                generation. An ordinary retry refuses to overwrite it, even
+                when its contents match. Fix the activation error and retry
+                with a fresh backup suffix (`home-manager switch -b suffix`)
+                or a configured backup command. After that activation succeeds,
+                the copy is tracked normally. To abandon the declaration, first
+                complete this backed-up activation, then remove it and activate
+                again. Do not use `force` as failure recovery if edits matter.
+
+                Sources are stored in the Nix store and must not contain secrets.
+              '';
+            };
+
             recursive = mkOption {
               type = types.bool;
               default = false;
@@ -106,11 +146,13 @@ in
               type = types.bool;
               default = false;
               description = ''
-                When `recursive` is enabled, adds `-ignorelinks` flag to lndir
+                When `recursive` is enabled, adds the `-ignorelinks` flag to lndir.
 
                 It causes lndir to not treat symbolic links in the source directory specially.
                 The link created in the target directory will point back to the corresponding
-                (symbolic link) file in the source directory. If the link is to a directory
+                symbolic link in the source directory. If that link points to a directory, the
+                resulting target will be a link to the source tree's symlink rather than a
+                recursively linked directory tree.
               '';
             };
 

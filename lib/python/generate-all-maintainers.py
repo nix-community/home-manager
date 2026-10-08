@@ -40,6 +40,7 @@ def get_project_root() -> Path:
         # Assumes this script is at: <root>/flake/dev/generate-all-maintainers/
         return Path(__file__).parent.parent.parent.parent.resolve()
 
+
 class MetaMaintainerGenerator:
     """Generates maintainers list using meta.maintainers from Home Manager evaluation."""
 
@@ -54,9 +55,12 @@ class MetaMaintainerGenerator:
         print("🔍 Extracting maintainers using meta.maintainers...")
 
         try:
-            result = subprocess.run([
-                "nix", "eval", "--file", str(self.extractor_script), "--json"
-            ], capture_output=True, text=True, timeout=60)
+            result = subprocess.run(
+                ["nix", "eval", "--file", str(self.extractor_script), "--json"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+            )
 
             if result.returncode == 0:
                 data = json.loads(result.stdout)
@@ -87,7 +91,7 @@ class MetaMaintainerGenerator:
         print(f"🏠 Home Manager maintainers: {len(hm_maintainers)}")
         print(f"📦 Nixpkgs maintainers: {len(nixpkgs_maintainers)}")
 
-        with open(self.output_file, 'w') as f:
+        with open(self.output_file, "w") as f:
             f.write(
                 inspect.cleandoc("""
               # Home Manager all maintainers list.
@@ -114,9 +118,12 @@ class MetaMaintainerGenerator:
     def validate_generated_file(self) -> bool:
         """Validate the generated Nix file syntax."""
         try:
-            result = subprocess.run([
-                'nix-instantiate', '--eval', str(self.output_file), '--strict'
-            ], capture_output=True, text=True, timeout=10)
+            result = subprocess.run(
+                ["nix-instantiate", "--eval", str(self.output_file), "--strict"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
 
             if result.returncode == 0:
                 print("✅ Generated file has valid Nix syntax")
@@ -148,16 +155,16 @@ def main():
         description="Generate Home Manager all-maintainers.nix using meta.maintainers"
     )
     parser.add_argument(
-        '--root',
+        "--root",
         type=Path,
         default=None,
-        help='Path to Home Manager root (default: auto-detect)'
+        help="Path to Home Manager root (default: auto-detect)",
     )
     parser.add_argument(
-        '--output',
+        "--output",
         type=Path,
         default=None,
-        help='Output file path (default: <root>/all-maintainers.nix)'
+        help="Output file path (default: <root>/all-maintainers.nix)",
     )
 
     args = parser.parse_args()

@@ -1,0 +1,17 @@
+{
+  "autoAccept": true,
+  "permissions": {
+    "allow": [
+      "command(git)"
+    ],
+    "ask": [
+      "command(*)"
+    ],
+    "deny": [
+      "command(rm -rf)"
+    ]
+  },
+  "preferredEditor": "nvim",
+  "theme": "Default",
+  "vimMode": true
+}

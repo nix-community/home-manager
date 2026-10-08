@@ -4,13 +4,23 @@
   codex-settings-yaml = ./settings-yaml.nix;
   codex-empty-settings = ./empty-settings.nix;
   codex-legacy-custom-instructions = ./legacy-custom-instructions.nix;
+  codex-hooks-dir = ./hooks-dir.nix;
+  codex-hooks-dir-xdg = ./hooks-dir-xdg.nix;
+  codex-hooks-file = ./hooks-file.nix;
+  codex-hooks-store-path-file = ./hooks-store-path-file.nix;
+  codex-derived-store-paths = ./derived-store-paths.nix;
   codex-mcp-integration = ./mcp-integration.nix;
   codex-mcp-integration-with-override = ./mcp-integration-with-override.nix;
+  codex-plugins = ./plugins.nix;
+  codex-profiles-legacy-old-version = ./profiles-legacy-old-version.nix;
+  codex-profiles-legacy-warning = ./profiles-legacy-warning.nix;
+  codex-profiles = ./profiles.nix;
   codex-rules = ./rules.nix;
   codex-skills-inline = ./skills-inline.nix;
   codex-skills-inline-null-package = ./skills-inline-null-package.nix;
   codex-skills-inline-legacy-path = ./skills-inline-legacy-path.nix;
   codex-skills-dir = ./skills-dir.nix;
   codex-skills-store-path = ./skills-store-path.nix;
+  codex-skills-store-path-dir = ./skills-store-path-dir.nix;
   codex-skills-path-not-directory = ./skills-path-not-directory.nix;
 }

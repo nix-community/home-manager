@@ -1,0 +1,12 @@
+{
+  "output": {
+    "blocklist": [],
+    "limiter#0": {
+      "bypass": false,
+      "threshold": -1.0
+    },
+    "plugins_order": [
+      "limiter#0"
+    ]
+  }
+}

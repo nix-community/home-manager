@@ -1,0 +1,16 @@
+[highlight.ComposerPickerBorder]
+link = "FocusBorder"
+
+[highlight.FocusBorder]
+foreground = "light_magenta"
+
+[highlight.Normal]
+background = "terminal_default"
+foreground = "terminal_default"
+
+[highlight.Selection]
+background = "none"
+
+[ui.border]
+composer = "rounded"
+default = "plain"

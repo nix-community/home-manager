@@ -1,100 +1,141 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.sshAuthSock;
-
-  mkShellInitOption =
-    shell:
-    lib.mkOption {
-      description = "Code that initializes {env}`SSH_AUTH_SOCK` in ${shell}.";
-      type = lib.types.str;
-    };
-
-  initSubmodule = {
-    options.bash = mkShellInitOption "bash";
-    options.fish = mkShellInitOption "fish";
-    options.nushell = mkShellInitOption "nushell";
-  };
-
-  # Preserve $SSH_AUTH_SOCK only if it stems from a forwarded agent which
-  # is the case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
-  bashIntegration = ''
-    if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
-      ${cfg.initialization.bash}
-    fi
-  '';
-  fishIntegration = ''
-    if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
-      ${cfg.initialization.fish}
-    end
-  '';
-  nushellIntegration =
-    let
-      unsetOrEmpty = var: ''("${var}" not-in $env) or ($env.${var} | is-empty)'';
-    in
-    ''
-      if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
-        ${cfg.initialization.nushell}
-      }
-    '';
-
+  socketProviderIsSocket = lib.hasSuffix ".socket" cfg.systemd.socketProviderUnit;
+  orderedProviderUnits = lib.optional (!socketProviderIsSocket) cfg.systemd.socketProviderUnit;
 in
 {
   meta.maintainers = [ lib.maintainers.bmrips ];
 
-  options.sshAuthSock.initialization = lib.mkOption {
-    description = ''
-      Shell-specific code to initialize {env}`SSH_AUTH_SOCK`.
+  options.sshAuthSock = {
 
-      RATIONALE: {env}`SSH_AUTH_SOCK` must not be set unconditionally through
-      {option}`home.sessionVariables` since its value needs to be preserved if
-      it stems from a forwarded agent. Hence, this option establishes a
-      centralized interface for setting {env}`SSH_AUTH_SOCK`. It checks whether
-      its value has to be preserved and injects the initialization code into the
-      proper {option}`programs.(bash|fish|nushell|zsh).*` options.
-    '';
-    example = {
-      bash = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
-      fish = "set -x SSH_AUTH_SOCK $HOME/.ssh/agent.sock";
-      nushell = "$env.SSH_AUTH_SOCK = $HOME/.ssh/agent.sock";
+    enable = lib.mkEnableOption "" // {
+      description = ''
+        Whether to set {env}`SSH_AUTH_SOCK` in shells, systemd, and the D-BUS daemon
+        unless it was already defined through SSH agent forwarding.
+
+        Typically, this module will be implicitly enabled and configured by SSH
+        agent modules.
+      '';
     };
-    default = null;
-    internal = true;
-    type = with lib.types; nullOr (submodule initSubmodule);
+
+    initialization =
+      let
+        mkShellInitOption =
+          shell:
+          lib.mkOption {
+            description = "Code that initializes {env}`SSH_AUTH_SOCK` in ${shell}.";
+            type = lib.types.str;
+          };
+      in
+      {
+        bash = mkShellInitOption "bash" // {
+          example = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
+        };
+        fish = mkShellInitOption "fish" // {
+          example = "set -x SSH_AUTH_SOCK $HOME/.ssh/agent.sock";
+        };
+        nushell = mkShellInitOption "nushell" // {
+          example = "$env.SSH_AUTH_SOCK = ($nu.home-dir | path join .ssh agent.sock)";
+        };
+        zsh = mkShellInitOption "zsh" // {
+          example = "export SSH_AUTH_SOCK=$HOME/.ssh/agent.sock";
+          default = cfg.initialization.bash;
+          defaultText = lib.literalExpression "config.sshAuthSock.initialization.bash";
+        };
+      };
+
+    systemd.socketProviderUnit = lib.mkOption {
+      description = ''
+        The name of the systemd unit responsible for providing the {env}`SSH_AUTH_SOCK`.
+
+        Services that rely on an active SSH authentication agent can reference
+        this option to declare a dependency onto this unit, ensuring that the
+        socket is available and being served before they start.
+      '';
+      example = "ssh-agent.service";
+      type = lib.types.str;
+    };
+
   };
 
-  config = lib.mkMerge [
-    {
-      assertions = [
-        {
-          assertion =
-            lib.count (x: x) [
-              (config.services.ssh-agent.enable || config.services.ssh-tpm-agent.enable)
-              (config.services.gpg-agent.enable && config.services.gpg-agent.enableSshSupport)
-              config.services.proton-pass-agent.enable
-              config.services.yubikey-agent.enable
-            ] <= 1;
-          message = ''
-            Out of the SSH agents
-
-            - ssh-agent or ssh-tpm-agent (these two can coexist),
-            - gpg-agent with SSH support enabled, and
-            - proton-pass-agent,
-            - yubikey-agent,
-
-            at most one of them may be enabled (with the exception of ssh-agent and
-            ssh-tpm-agent).
-          '';
-        }
+  config =
+    let
+      indentNonEmptyLines = lib.flip lib.pipe [
+        (lib.splitString "\n")
+        (map (line: if line == "" then "" else "  ${line}"))
+        lib.concatLines
+        (lib.removeSuffix "\n")
       ];
-    }
 
-    (lib.mkIf (cfg.initialization != null) {
+      # Preserve $SSH_AUTH_SOCK if it stems from a forwarded agent which is the
+      # case if both $SSH_AUTH_SOCK and $SSH_CONNECTION are set.
+      mkShIntegration = code: ''
+        if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then
+        ${indentNonEmptyLines code}
+        fi
+      '';
+      bashIntegration = mkShIntegration cfg.initialization.bash;
+      zshIntegration = mkShIntegration cfg.initialization.zsh;
+      fishIntegration = ''
+        if test -z "$SSH_AUTH_SOCK"; or test -z "$SSH_CONNECTION"
+        ${indentNonEmptyLines cfg.initialization.fish}
+        end
+      '';
+      nushellIntegration =
+        let
+          unsetOrEmpty = var: ''("${var}" not-in $env) or ($env.${var} | is-empty)'';
+        in
+        ''
+          if ${unsetOrEmpty "SSH_AUTH_SOCK"} or ${unsetOrEmpty "SSH_CONNECTION"} {
+          ${indentNonEmptyLines cfg.initialization.nushell}
+          }
+        '';
+    in
+    lib.mkIf cfg.enable {
       # $SSH_AUTH_SOCK has to be set early since other tools rely on it
       programs.bash.profileExtra = lib.mkOrder 900 bashIntegration;
       programs.fish.shellInit = lib.mkOrder 900 fishIntegration;
       programs.nushell.extraConfig = lib.mkOrder 900 nushellIntegration;
-      programs.zsh.envExtra = lib.mkOrder 900 bashIntegration;
-    })
-  ];
+      programs.zsh = {
+        # Mimic how `home.sessionVariablesPackage` is sourced in the Zsh module
+        # to ensure that session variables which SSH_AUTH_SOCK might rely on are
+        # set.
+        envExtra = lib.mkOrder 900 ''
+          if [[ ! -o login ]]; then
+          ${indentNonEmptyLines zshIntegration}
+          fi
+        '';
+        profileExtra = lib.mkOrder 900 zshIntegration;
+      };
+
+      # Replace this service by an environment generator as soon as they are
+      # available per-user. See https://github.com/systemd/systemd/issues/32423
+      # for more information.
+      systemd.user.services.set-SSH_AUTH_SOCK = {
+        Unit = {
+          Description = "Sets SSH_AUTH_SOCK in the D-BUS daemon and systemd";
+          # Socket units are ordered before sockets.target by systemd. Ordering
+          # this service before them creates a cycle through basic.target.
+          Before = orderedProviderUnits;
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = pkgs.writeShellScript "set-SSH_AUTH_SOCK" ''
+            ${bashIntegration}
+            ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd SSH_AUTH_SOCK
+          '';
+        };
+        Install.WantedBy = [
+          "default.target"
+        ]
+        ++ orderedProviderUnits;
+      };
+    };
 }

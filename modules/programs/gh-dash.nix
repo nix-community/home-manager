@@ -23,14 +23,14 @@ in
     settings = lib.mkOption {
       inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          prSections = [{
+      example = {
+        prSections = [
+          {
             title = "My Pull Requests";
             filters = "is:open author:@me";
-          }];
-        }
-      '';
+          }
+        ];
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/gh-dash/config.yml`.
       '';

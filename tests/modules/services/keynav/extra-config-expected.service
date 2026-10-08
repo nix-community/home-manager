@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@keynav@/bin/keynav
+Restart=always
+RestartSec=3
+
+[Unit]
+After=graphical-session.target
+Description=keynav
+PartOf=graphical-session.target
+X-Restart-Triggers=/nix/store/00000000000000000000000000000000-keynavrc

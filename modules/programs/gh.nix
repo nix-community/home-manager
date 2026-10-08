@@ -23,12 +23,10 @@ let
       aliases = mkOption {
         type = with types; attrsOf str;
         default = { };
-        example = literalExpression ''
-          {
-            co = "pr checkout";
-            pv = "pr view";
-          }
-        '';
+        example = {
+          co = "pr checkout";
+          pv = "pr view";
+        };
         description = ''
           Aliases that allow you to create nicknames for gh commands.
         '';

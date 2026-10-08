@@ -25,7 +25,7 @@ let
 
 in
 {
-  meta.maintainers = [ lib.maintainers.adisbladis ];
+  meta.maintainers = [ ];
 
   options.services.hound = {
     enable = lib.mkEnableOption "hound";

@@ -31,6 +31,8 @@ in
       Service = {
         ExecStart = "${lib.getExe' cfg.package "tahoe"} run -C %h/.tahoe";
       };
+
+      Install.WantedBy = [ "default.target" ];
     };
   };
 }

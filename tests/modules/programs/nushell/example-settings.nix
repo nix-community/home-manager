@@ -39,6 +39,10 @@
     };
 
     settings = {
+      abbreviations = {
+        "gs" = "git status";
+        "ll" = "ls -l";
+      };
       show_banner = false;
       display_errors.exit_code = false;
       hooks.pre_execution = [ (lib.hm.nushell.mkNushellInline ''{|| "pre_execution hook"}'') ];
@@ -61,7 +65,7 @@
   nmt.script =
     let
       configDir =
-        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+        if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
           "home-files/Library/Application Support/nushell"
         else
           "home-files/.config/nushell";

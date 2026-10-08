@@ -11,6 +11,9 @@ let
 
   homeManagerPackage = config.programs.home-manager.package;
 
+  nixPackage =
+    if config.nix.enable && config.nix.package != null then config.nix.package else pkgs.nix;
+
   preSwitchCommandsStateVersion = lib.hm.deprecations.mkStateVersionOptionDefault {
     inherit (config.home) stateVersion;
     inherit config options;
@@ -44,9 +47,9 @@ let
   autoUpgradeApp = pkgs.writeShellApplication {
     name = "home-manager-auto-upgrade";
 
-    runtimeInputs = with pkgs; [
+    runtimeInputs = [
       homeManagerPackage
-      nix
+      nixPackage
     ];
 
     text =

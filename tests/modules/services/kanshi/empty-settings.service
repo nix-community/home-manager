@@ -1,0 +1,16 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecReload=/nix/store/00000000000000000000000000000000-dummy/bin/kanshictl reload
+ExecStart=/nix/store/00000000000000000000000000000000-dummy/bin/kanshi
+Restart=always
+Type=simple
+
+[Unit]
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+Description=Dynamic output configuration
+Documentation=man:kanshi(1)
+PartOf=graphical-session.target
+Requires=graphical-session.target

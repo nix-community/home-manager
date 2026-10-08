@@ -36,21 +36,19 @@ in
       settings = lib.mkOption {
         inherit (tomlFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            window.dimensions = {
-              lines = 3;
-              columns = 200;
-            };
-            keyboard.bindings = [
-              {
-                key = "K";
-                mods = "Control";
-                chars = "\\u000c";
-              }
-            ];
-          }
-        '';
+        example = {
+          window.dimensions = {
+            lines = 3;
+            columns = 200;
+          };
+          keyboard.bindings = [
+            {
+              key = "K";
+              mods = "Control";
+              chars = "\\u000c";
+            }
+          ];
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml` or
@@ -98,15 +96,37 @@ in
       };
 
     xdg.configFile."alacritty/alacritty.toml" = lib.mkIf (cfg.settings != { }) {
-      source = (tomlFormat.generate "alacritty.toml" cfg.settings).overrideAttrs (
-        _finalAttrs: prevAttrs: {
-          buildCommand = lib.concatStringsSep "\n" [
-            prevAttrs.buildCommand
-            # TODO: why is this needed? Is there a better way to retain escape sequences?
-            "substituteInPlace $out --replace-quiet '\\\\' '\\'"
-          ];
-        }
-      );
+      source =
+        let
+          # `pkgs.formats.toml` escapes backslashes and cannot emit raw
+          # control characters (NUL cannot even appear in a Nix string), so a
+          # `chars` escape like "\u001d" generates as literal "\\u001d",
+          # which Alacritty rejects. Stash each escape behind a placeholder that
+          # survives generation, then restore "\u" in the build command.
+          unicodeEscapePrefix = "__home_manager_alacritty_unicode_escape_";
+
+          normalizeAlacrittyEscapes =
+            value:
+            if builtins.isAttrs value then
+              lib.mapAttrs (_: normalizeAlacrittyEscapes) value
+            else if builtins.isList value then
+              map normalizeAlacrittyEscapes value
+            else if !builtins.isString value then
+              value
+            else
+              # Normalize the "\^[" caret form to "\u001b", then replace every
+              # "\uXXXX" with the placeholder.
+              lib.concatMapStrings (
+                chunk: if builtins.isList chunk then unicodeEscapePrefix + builtins.head chunk else chunk
+              ) (builtins.split "\\\\u([0-9a-fA-F]{4})" (builtins.replaceStrings [ "\\^[" ] [ "\\u001b" ] value));
+        in
+        (tomlFormat.generate "alacritty.toml" (normalizeAlacrittyEscapes cfg.settings)).overrideAttrs
+          (prevAttrs: {
+            buildCommand = lib.concatStringsSep "\n" [
+              prevAttrs.buildCommand
+              ''substituteInPlace $out --replace-quiet '${unicodeEscapePrefix}' '\u' ''
+            ];
+          });
     };
   };
 }

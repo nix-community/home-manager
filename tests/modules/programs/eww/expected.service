@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecReload=@eww@/bin/eww reload
+ExecStart=@eww@/bin/eww daemon --no-daemonize
+ExecStop=@eww@/bin/eww kill
+
+[Unit]
+After=graphical-session.target
+Description=ElKowars wacky widgets daemon
+Documentation=https://elkowar.github.io/eww/
+PartOf=graphical-session.target

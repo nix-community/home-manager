@@ -16,5 +16,7 @@
     assertFileExists home-files/.config/hypr/hyprlauncher.conf
     assertFileContent home-files/.config/hypr/hyprlauncher.conf \
       ${./hyprlauncher.conf}
+    assertFileContains home-files/.config/systemd/user/hyprlauncher.service \
+      "KillMode=process"
   '';
 }

@@ -18,5 +18,8 @@
     assertFileContains \
       home-files/.zshenv \
       'export SSH_AUTH_SOCK="/tmp/yubikey-agent.sock"'
+    assertFileContains \
+      home-files/.zprofile \
+      'export SSH_AUTH_SOCK="/tmp/yubikey-agent.sock"'
   '';
 }

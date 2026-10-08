@@ -1,0 +1,19 @@
+{
+  "compaction": {
+    "enabled": true,
+    "keepRecentTokens": 20000,
+    "reserveTokens": 16384
+  },
+  "defaultModel": "claude-sonnet-4-20250514",
+  "defaultProvider": "anthropic",
+  "defaultThinkingLevel": "medium",
+  "enabledModels": [
+    "claude-*",
+    "gpt-4o"
+  ],
+  "retry": {
+    "enabled": true,
+    "maxRetries": 3
+  },
+  "theme": "dark"
+}

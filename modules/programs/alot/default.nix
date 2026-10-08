@@ -251,13 +251,11 @@ in
           handle_mouse = true;
           prefer_plaintext = true;
         };
-        example = lib.literalExpression ''
-          {
-            auto_remove_unread = true;
-            ask_subject = false;
-            thread_indent_replies = 2;
-          }
-        '';
+        example = {
+          auto_remove_unread = true;
+          ask_subject = false;
+          thread_indent_replies = 2;
+        };
         description = ''
           Configuration options added to alot configuration file.
         '';

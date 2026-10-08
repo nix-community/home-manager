@@ -291,6 +291,7 @@ function doInspectOption() {
     for path in "${paths[@]}"; do
         nix-instantiate --eval --json \
             --arg nixos "$modulesExpr" \
+            "${extraArgs[@]}" \
             --argstr path "$path" \
             --arg recursive "$recursive" \
             "$NIXOS_OPTION_NIX" \
@@ -313,7 +314,7 @@ function doInit() {
     fi
 
     local homeManagerUrl="github:nix-community/home-manager"
-    local nixpkgsUrl="github:nixos/nixpkgs/nixos-unstable"
+    local nixpkgsUrl="github:nixos/nixpkgs/nixpkgs-unstable"
 
     while (( $# > 0 )); do
         local opt="$1"
@@ -403,7 +404,7 @@ $xdgVars
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "25.11"; # Please read the comment before changing.
+  home.stateVersion = "26.05"; # Please read the comment before changing.
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -1041,7 +1042,7 @@ function doUninstall() {
   uninstall = true;
   home.username = "$(escapeForNix "$USER")";
   home.homeDirectory = "$(escapeForNix "$HOME")";
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 }
 EOF
             # shellcheck disable=2064
@@ -1279,7 +1280,7 @@ while [[ $# -gt 0 ]]; do
             export VERBOSE=1
             ;;
         --version)
-            echo 26.05-pre
+            echo 26.11-pre
             exit 0
             ;;
         *)

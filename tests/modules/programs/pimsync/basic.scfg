@@ -1,12 +1,12 @@
 storage calendar-http-local {
+	type vdir/icalendar
 	fileext .ics
 	path /home/hm-user/.local/state/calendar/http
-	type vdir/icalendar
 }
 storage calendar-mine-local {
+	type vdir/icalendar
 	fileext .ics
 	path /home/hm-user/.local/state/calendar/mine
-	type vdir/icalendar
 }
 storage calendar-http-remote {
 	type webcal
@@ -29,9 +29,9 @@ pair calendar-mine {
 	storage_b calendar-mine-remote
 }
 storage contacts-mine-local {
+	type vdir/vcard
 	fileext .vcf
 	path /home/hm-user/.local/state/contact/mine
-	type vdir/vcard
 }
 storage contacts-mine-remote {
 	type carddav

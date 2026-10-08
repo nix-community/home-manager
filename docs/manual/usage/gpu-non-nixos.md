@@ -38,16 +38,17 @@ GPU drivers require an update, run
 
 Because the `/run` directory is volatile and disappears on reboot, libraries
 cannot be simply copied or linked there. The `non-nixos-gpu-setup` script
-installs a Systemd service which ensures that the drivers are linked to
-`/run/opengl-driver` on boot. Home Manager will always check and warn you when
-this setup needs to be refreshed.
+installs a
+[`tmpfiles.d`](https://www.freedesktop.org/software/systemd/man/latest/tmpfiles.d.html)
+config which ensures that the drivers are linked to `/run/opengl-driver` on
+boot. Home Manager will always check and warn you when this setup needs to be
+refreshed.
 
 If you ever wish to uninstall these drivers, all you need to do is
 
 ```sh
 sudo rm /run/opengl-driver
-sudo systemctl disable --now non-nixos-gpu.service
-sudo rm /etc/systemd/system/non-nixos-gpu.service
+sudo rm /etc/tmpfiles.d/non-nixos-gpu.conf
 ```
 
 

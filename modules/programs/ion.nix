@@ -32,11 +32,9 @@ in
     shellAliases = mkOption {
       type = with types; attrsOf str;
       default = { };
-      example = lib.literalExpression ''
-        {
-          g = "git";
-        }
-      '';
+      example = {
+        g = "git";
+      };
       description = ''
         An attribute set that maps aliases (the top level attribute names
         in this option) to command strings or directly to build outputs.

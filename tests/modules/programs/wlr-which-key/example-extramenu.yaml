@@ -1,0 +1,19 @@
+%YAML 1.1
+---
+anchor: bottom-right
+background: '#141617d0'
+border: '#d3869b'
+border_width: 2
+color: '#ddc7a1'
+column_padding: 25
+corner_r: 10
+font: monospace 12
+inhibit_compositor_keyboard_shortcuts: true
+menu:
+- cmd: firefox
+  desc: Firefox
+  key: f
+- cmd: qutebrowser
+  desc: Qutebrowser
+  key: q
+rows_per_column: 5

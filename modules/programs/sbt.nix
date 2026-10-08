@@ -123,20 +123,18 @@ in
     plugins = mkOption {
       type = types.listOf (sbtTypes.plugin);
       default = [ ];
-      example = literalExpression ''
-        [
-          {
-            org = "net.virtual-void";
-            artifact = "sbt-dependency-graph";
-            version = "0.10.0-RC1";
-          }
-          {
-            org = "com.dwijnand";
-            artifact = "sbt-project-graph";
-            version = "0.4.0";
-          }
-        ]
-      '';
+      example = [
+        {
+          org = "net.virtual-void";
+          artifact = "sbt-dependency-graph";
+          version = "0.10.0-RC1";
+        }
+        {
+          org = "com.dwijnand";
+          artifact = "sbt-project-graph";
+          version = "0.4.0";
+        }
+      ];
       description = ''
         A list of plugins to place in the sbt configuration directory.
       '';
@@ -145,11 +143,9 @@ in
     pluginsExtra = mkOption {
       type = types.listOf (types.str);
       default = [ ];
-      example = literalExpression ''
-        [
-          "addDependencyTreePlugin"
-        ]
-      '';
+      example = [
+        "addDependencyTreePlugin"
+      ];
       description = ''
         A list of extra commands to put in plugins conf file.
         Use it in last resort when you can't use the `plugins` option.
@@ -159,14 +155,14 @@ in
     credentials = mkOption {
       type = types.listOf (sbtTypes.credential);
       default = [ ];
-      example = literalExpression ''
-        [{
+      example = [
+        {
           realm = "Sonatype Nexus Repository Manager";
           host = "example.com";
           user = "user";
           passwordCommand = "pass show sbt/user@example.com";
-        }]
-      '';
+        }
+      ];
       description = ''
         A list of credentials to define in the sbt configuration directory.
       '';

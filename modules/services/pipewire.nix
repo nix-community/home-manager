@@ -467,7 +467,7 @@ in
 
         systemctl = "${ensureSystemd} systemctl";
       in
-      mkIf (systemdCfg.enable && config.home.username != "root") (
+      mkIf systemdCfg.enable (
         hm.dag.entryAfter [ "onFilesChange" "reloadSystemd" ] ''
           if [[ -v PIPEWIRE_RELOAD ]]; then
             if [[ -v DRY_RUN ]]; then

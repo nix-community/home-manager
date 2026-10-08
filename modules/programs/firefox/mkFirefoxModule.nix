@@ -20,6 +20,7 @@ let
     length
     literalExpression
     mapAttrsToList
+    mkDefault
     mkIf
     mkMerge
     mkOption
@@ -30,6 +31,8 @@ let
     types
     ;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
+  defaultConfigPath = with platforms; if isDarwin then darwin.configPath else linux.configPath;
 
   appName = name;
 
@@ -54,12 +57,17 @@ let
   profiles =
     lib.flip lib.mapAttrs' cfg.profiles (
       _: profile:
-      lib.nameValuePair "Profile${toString profile.id}" {
-        Name = profile.name;
-        Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
-        IsRelative = 1;
-        Default = if profile.isDefault then 1 else 0;
-      }
+      lib.nameValuePair "Profile${toString profile.id}" (
+        {
+          Name = profile.name;
+          Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
+          IsRelative = 1;
+          Default = if profile.isDefault then 1 else 0;
+        }
+        // (lib.optionalAttrs (profile.storeId != null) {
+          StoreID = profile.storeId;
+        })
+      )
     )
     // {
       General = {
@@ -83,6 +91,10 @@ let
 
   extensionSettingsNeedForce =
     extensionSettings: builtins.any (ext: ext.settings != { }) (attrValues extensionSettings);
+
+  extensionSettingsMissingForce =
+    extensionSettings:
+    builtins.any (ext: ext.settings != { } && !ext.force) (attrValues extensionSettings);
 
   mkUserJs =
     prePrefs: prefs: extraPrefs: bookmarksFile: extensions:
@@ -187,17 +199,56 @@ let
 
       # The configuration expected by the Firefox wrapper builder.
       bcfg = setAttrByPath [ browserName ] fcfg;
+
+      configureAppDataDir = cfg.configPath != defaultConfigPath;
+
+      absoluteConfigPath =
+        if lib.hasPrefix "/" cfg.configPath then
+          cfg.configPath
+        else
+          "${config.home.homeDirectory}/${cfg.configPath}";
+
+      callWithAppDataDir =
+        wrapper: args:
+        let
+          wrapperArgs = lib.functionArgs wrapper;
+          supportsAppDataDir = wrapperArgs ? appDataDir;
+          # Gracefully handle wrappers that don't, yet, support appDataDir.
+          appDataDirArgs = lib.optionalAttrs (configureAppDataDir && supportsAppDataDir) {
+            appDataDir = absoluteConfigPath;
+          };
+          argsWithAppDataDir =
+            if lib.isFunction args then
+              # Modern wrapped packages pass an override function.
+              old: args old // appDataDirArgs
+            else
+              # Legacy wrapFirefox passes an attribute set.
+              args // appDataDirArgs;
+        in
+        lib.warnIf (configureAppDataDir && !supportsAppDataDir)
+          "${moduleName}: '${browserName}' does not support the 'appDataDir' wrapper argument; 'configPath' will not be applied to the package wrapper."
+          (wrapper argsWithAppDataDir);
     in
     if package == null then
       null
     else if isWrapped then
-      package.override (old: {
-        cfg = old.cfg or { } // fcfg;
-        extraPolicies = (old.extraPolicies or { }) // cfg.policies;
-        pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
-      })
+      if lib.functionArgs package.override ? cfg then
+        callWithAppDataDir package.override (old: {
+          cfg = old.cfg or { } // fcfg;
+          extraPolicies = (old.extraPolicies or { }) // cfg.policies;
+          pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
+        })
+      else
+        let
+          droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
+          droppedOptions =
+            droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions || configureAppDataDir;
+        in
+        lib.warnIf droppedOptions
+          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', 'enableGnomeExtensions', and 'configPath' will not be applied."
+          package
     else
-      (pkgs.wrapFirefox.override { config = bcfg; }) package { };
+      callWithAppDataDir ((pkgs.wrapFirefox.override { config = bcfg; }) package) { };
 
   bookmarkTypes = import ./profiles/bookmark-types.nix { inherit lib; };
 in
@@ -239,6 +290,54 @@ in
       internal = true;
       type = types.str;
       description = "Upstream release version used to fetch from `releases.mozilla.org`.";
+    };
+
+    globalExtensions = mkOption {
+      type = types.listOf (
+        types.oneOf [
+          types.package
+          (types.submodule {
+            options = {
+              package = mkOption {
+                type = types.package;
+              };
+
+              settings = mkOption {
+                type = types.attrsOf jsonFormat.type;
+                default = { };
+                description = "Json formatted options for this extension.";
+              };
+            };
+          })
+        ]
+      );
+      default = [ ];
+      example = literalExpression ''
+        with pkgs.nur.repos.rycee.firefox-addons; [
+          privacy-badger
+          {
+            package = ublock-origin;
+            settings = {
+              private_browsing = true;
+            };
+          }
+        ]
+      '';
+      description = ''
+        Add-on package to install under policies.
+        For a package to work here it needs and addonId exposed in it's passthru.
+        This will be included in all add-ons accessible from the Nix User Repository.
+        Once you have NUR installed run
+
+        ```console
+        $ nix-env -f '<nixpkgs>' -qaP -A nur.repos.rycee.firefox-addons
+        ```
+
+        to list the available ${name} add-ons.
+
+        Installing extensions this way will automatically enable extensions
+        inside ${name} after the first installation.
+      '';
     };
 
     languagePacks = mkOption {
@@ -283,10 +382,13 @@ in
       internal = true;
       type = types.str;
       default =
-        lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
-        + lib.toLower (
-          lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
-        );
+        if platforms.darwin ? "appName" then
+          platforms.darwin.appName
+        else
+          lib.toUpper (lib.substring 0 1 cfg.wrappedPackageName)
+          + lib.toLower (
+            lib.substring 1 ((lib.stringLength cfg.wrappedPackageName) - 1) cfg.wrappedPackageName
+          );
       description = "Name of browser app on Darwin.";
     };
 
@@ -307,11 +409,19 @@ in
     };
 
     configPath = mkOption {
-      internal = true;
       type = types.str;
-      default = with platforms; if isDarwin then darwin.configPath else linux.configPath;
+      default = defaultConfigPath;
+      defaultText = literalExpression "platform specific default config path";
       example = ".mozilla/firefox";
-      description = "Directory containing the ${appName} configuration files.";
+      description = ''
+        Directory containing the ${appName} configuration files. A relative
+        path is interpreted relative to the user's home directory.
+
+        Setting this to a non-default path also configures the package wrapper
+        to use it as the application data directory. This can be useful on
+        macOS 27 and later, where wrapped applications may be denied access to
+        the traditional application data directory.
+      '';
     };
 
     nativeMessagingHosts = mkOption {
@@ -357,7 +467,11 @@ in
     profiles = mkOption {
       type = types.attrsOf (
         types.submodule (
-          { config, name, ... }:
+          {
+            config,
+            name,
+            ...
+          }:
           let
             profilePath = modulePath ++ [
               "profiles"
@@ -379,6 +493,22 @@ in
                 default = 0;
                 description = ''
                   Profile ID. This should be set to a unique number per profile.
+                '';
+              };
+
+              storeId = mkOption {
+                type = types.nullOr (types.strMatching "[0-9a-f]{8}");
+                default = null;
+                example = "e41de5fe";
+                description = ''
+                  Store ID. Either null, or the first segment of a UUID string (8 lowercase hex characters).
+
+                  If this value is set, then profiles.ini is created with predictable StoreIDs.
+                  'toolkit.profiles.storeID' is also set accordingly.
+
+                  A predictable StoreID helps bridge the old and new firefox profile implementations.
+                  The StoreID is the name of the sqlite database in "Profile Groups" holding the new
+                  profiles' metadata.
                 '';
               };
 
@@ -476,25 +606,11 @@ in
                     (
                       bookmarks:
                       if bookmarks != { } then
-                        lib.warn
-                          ''
-                            ${cfg.name} bookmarks have been refactored into a submodule that now explicitly require a 'force' option to be enabled.
-
-                            Replace:
-
-                            ${moduleName}.profiles.${name}.bookmarks = [ ... ];
-
-                            With:
-
-                            ${moduleName}.profiles.${name}.bookmarks = {
-                              force = true;
-                              settings = [ ... ];
-                            };
-                          ''
-                          {
-                            force = true;
-                            settings = bookmarks;
-                          }
+                        {
+                          force = true;
+                          _legacySettings = if builtins.isList bookmarks then "a list" else "an attribute set";
+                          settings = bookmarks;
+                        }
                       else
                         { }
                     )
@@ -689,6 +805,20 @@ in
                         `"extensions.autoDisableScopes" = 0;`
                         to
                         [{option}`${moduleName}.profiles.<profile>.settings`](#opt-${moduleName}.profiles._name_.settings)
+
+                        On systems using impermanence, this only prevents
+                        ${name} from requiring manual extension approval. It
+                        does not preserve extension runtime state such as
+                        extension UUIDs, logins, local storage, or
+                        per-extension data. Persist the ${name} profile state
+                        needed by your extensions, or configure supported
+                        extension settings declaratively with
+                        [{option}`${moduleName}.profiles.<profile>.extensions.settings`](#opt-${moduleName}.profiles._name_.extensions.settings).
+
+                        Persisting only the `extensions` directory is generally
+                        not sufficient, because ${name} stores extension state
+                        in other profile files and databases that are managed
+                        outside Home Manager.
                       '';
                     };
 
@@ -816,14 +946,35 @@ in
             };
 
             config = {
+              settings = mkMerge [
+                (mkIf (config.userChrome != "") {
+                  "toolkit.legacyUserProfileCustomizations.stylesheets" = mkDefault true;
+                })
+
+                (mkIf (config.storeId != null) {
+                  "toolkit.profiles.storeID" = mkDefault config.storeId;
+                })
+              ];
+
               assertions = [
                 (mkNoDuplicateAssertion config.containers "container")
                 {
-                  assertion = !(extensionSettingsNeedForce config.extensions.settings) || config.extensions.force;
+                  assertion = !(extensionSettingsMissingForce config.extensions.settings) || config.extensions.force;
                   message = ''
                     Using '${lib.showOption profilePath}.extensions.settings' will override all
-                    previous extensions settings. Enable
-                    '${lib.showOption profilePath}.extensions.force' to acknowledge this.
+                    previous extensions settings. Enable either
+                    '${lib.showOption profilePath}.extensions.force' or the corresponding
+                    '${lib.showOption profilePath}.extensions.settings.<extensionId>.force'
+                    to acknowledge this.
+                  '';
+                }
+                {
+                  assertion =
+                    (config.storeId == null)
+                    || ((config.settings."toolkit.profiles.storeID" or config.storeId) == config.storeId);
+                  message = ''
+                    ${moduleName}.profiles.${name}.storeId must match
+                    ${moduleName}.profiles.${name}.settings."toolkit.profiles.storeID"
                   '';
                 }
               ]
@@ -887,7 +1038,10 @@ in
                 ]
               ) config.extensions.packages)
               ++ (builtins.concatMap (
-                { name, value }:
+                {
+                  name,
+                  value,
+                }:
                 let
                   packages = builtins.filter (pkg: (pkg.addonId or pkg.name) == name) config.extensions.packages;
                 in
@@ -907,7 +1061,27 @@ in
         )
       );
       default = { };
-      description = "Attribute set of ${appName} profiles.";
+      example = lib.optionalAttrs (moduleName == "programs.firefox") (literalExpression ''
+        {
+          "dev-edition-default" = {
+            id = 0;
+            path = config.home.username;
+
+            settings = {
+              "browser.aboutConfig.showWarning" = false;
+            };
+          };
+        }
+      '');
+      description = ''
+        Attribute set of ${appName} profiles.
+
+        ${lib.optionalString (moduleName == "programs.firefox") ''
+          When using Firefox Developer Edition, the profile name should be
+          `dev-edition-default`. You can still set {option}`path` to store the
+          profile in a custom directory.
+        ''}
+      '';
     };
 
     enableGnomeExtensions = mkOption {
@@ -971,7 +1145,51 @@ in
           '';
         }
 
+        {
+          assertion =
+            cfg.globalExtensions == [ ] || cfg.package != null || (isDarwin && cfg.darwinDefaultsId != null);
+          message =
+            "'${moduleName}.globalExtensions' requires '${moduleName}.package'"
+            + " to be set to a non-null value unless"
+            + " '${moduleName}.darwinDefaultsId' is set on Darwin.";
+        }
+
+        {
+          assertion = builtins.all (
+            elem:
+            let
+              package = elem.package or elem;
+            in
+            package ? addonId
+          ) cfg.globalExtensions;
+          message = "${moduleName}.globalExtensions requires each package to expose addonId in passthru.";
+        }
+
         (mkNoDuplicateAssertion cfg.profiles "profile")
+
+        (
+          let
+            profilesWithStoreId = lib.filterAttrs (_: profile: profile.storeId != null) cfg.profiles;
+
+            duplicateStoreIds = lib.filterAttrs (_storeId: profileNames: length profileNames != 1) (
+              lib.zipAttrs (
+                mapAttrsToList (profileName: profile: {
+                  "${profile.storeId}" = profileName;
+                }) profilesWithStoreId
+              )
+            );
+
+            mkMsg =
+              storeId: profileNames: "  - StoreID ${storeId} is used by " + (concatStringsSep ", " profileNames);
+          in
+          {
+            assertion = cfg.profiles == { } || duplicateStoreIds == { };
+            message = ''
+              Must not have duplicate ${appName} profile StoreIDs:
+              ${concatStringsSep "\n" (mapAttrsToList mkMsg duplicateStoreIds)}
+            '';
+          }
+        )
       ]
       ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
 
@@ -985,10 +1203,61 @@ in
         ++ optional (cfg.vendorPath != null) ''
           Using '${moduleName}.vendorPath' has been deprecated and
           will be removed in the future. Native messaging hosts will function normally without specifying this path.
-        '';
+        ''
+        ++ lib.flatten (
+          lib.mapAttrsToList (
+            name: profile:
+            lib.optional (profile.bookmarks._legacySettings != null) (
+              let
+                legacySettingsExample =
+                  if profile.bookmarks._legacySettings == "a list" then "[ ... ]" else "{ ... }";
+              in
+              lib.hm.deprecations.mkDeprecatedOptionValueWarning {
+                option = modulePath ++ [
+                  "profiles"
+                  name
+                  "bookmarks"
+                ];
+                old = profile.bookmarks._legacySettings;
+                replacement = "`${
+                  lib.showOption (
+                    modulePath
+                    ++ [
+                      "profiles"
+                      name
+                      "bookmarks"
+                      "settings"
+                    ]
+                  )
+                }` with `${
+                  lib.showOption (
+                    modulePath
+                    ++ [
+                      "profiles"
+                      name
+                      "bookmarks"
+                      "force"
+                    ]
+                  )
+                } = true`";
+                details = ''
+                  Set `force = true` to acknowledge replacing existing custom bookmarks.
+
+                  Replace:
+                    ${moduleName}.profiles.${name}.bookmarks = ${legacySettingsExample};
+
+                  With:
+                    ${moduleName}.profiles.${name}.bookmarks = {
+                      force = true;
+                      settings = ${legacySettingsExample};
+                    };
+                '';
+              }
+            )
+          ) cfg.profiles
+        );
       targets.darwin.defaults = (
         mkIf (cfg.darwinDefaultsId != null && isDarwin) {
-
           ${cfg.darwinDefaultsId} = {
             EnterprisePoliciesEnabled = true;
           }
@@ -1095,17 +1364,38 @@ in
         NoDefaultBookmarks = lib.mkIf (builtins.any (profile: profile.bookmarks.enable) (
           builtins.attrValues cfg.profiles
         )) false;
-        ExtensionSettings = lib.mkIf (cfg.languagePacks != [ ]) (
-          lib.listToAttrs (
-            map (
-              lang:
-              lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
-                installation_mode = "normal_installed";
-                install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
-              }
-            ) cfg.languagePacks
-          )
-        );
+        ExtensionSettings = mkMerge [
+          (lib.mkIf (cfg.languagePacks != [ ]) (
+            lib.listToAttrs (
+              map (
+                lang:
+                lib.nameValuePair "langpack-${lang}@firefox.mozilla.org" {
+                  installation_mode = "normal_installed";
+                  install_url = "https://releases.mozilla.org/pub/firefox/releases/${cfg.release}/linux-x86_64/xpi/${lang}.xpi";
+                }
+              ) cfg.languagePacks
+            )
+          ))
+
+          (lib.mkIf (cfg.globalExtensions != [ ]) (
+            lib.listToAttrs (
+              map (
+                elem:
+                let
+                  package = elem.package or elem;
+                  settings = elem.settings or { };
+                in
+                lib.nameValuePair package.addonId (
+                  {
+                    installation_mode = "force_installed";
+                    install_url = "file://${package.outPath}/share/mozilla/${extensionPath}/${package.addonId}.xpi";
+                  }
+                  // settings
+                )
+              ) (builtins.filter (elem: (elem.package or elem) ? addonId) cfg.globalExtensions)
+            )
+          ))
+        ];
       };
     }
   );

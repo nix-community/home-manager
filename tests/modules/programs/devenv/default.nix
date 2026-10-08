@@ -1,0 +1,3 @@
+{
+  devenv = ./basic-config.nix;
+}

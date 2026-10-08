@@ -1,6 +1,48 @@
 { lib }:
 {
   /*
+    Builds a standard warning for an option value shape that is deprecated.
+
+    Example:
+      mkDeprecatedOptionValueWarning {
+        option = [ "programs" "example" "settings" ];
+        old = "a list";
+        replacement = "`programs.example.settings.items`";
+      }
+
+    => Using `programs.example.settings` as a list is deprecated and will be
+       removed in a future release. Please use `programs.example.settings.items`
+       instead.
+  */
+  mkDeprecatedOptionValueWarning =
+    {
+      option,
+      old,
+      replacement,
+      details ? "",
+    }:
+    ''
+      Using `${lib.showOption option}` as ${old} is deprecated and will be
+      removed in a future release. Please use ${replacement} instead.
+    ''
+    + lib.optionalString (details != "") ''
+
+      ${details}
+    '';
+
+  # Builds a standard warning for an option value that has been renamed.
+  mkDeprecatedOptionValueRenameWarning =
+    {
+      option,
+      old,
+      replacement,
+    }:
+    ''
+      The value ${old} for `${lib.showOption option}` is deprecated and will be
+      removed in a future release. Please use ${replacement} instead.
+    '';
+
+  /*
     Returns a function that maps
       [
         "someOption"

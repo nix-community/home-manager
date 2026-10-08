@@ -3,9 +3,9 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         dynamicBindPathWithPort = {
-          dynamicForwards = [
+          DynamicForward = [
             {
               # Error:
               address = "/run/user/1000/gnupg/S.gpg-agent.extra";

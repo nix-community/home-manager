@@ -43,7 +43,10 @@ let
       tag = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = lib.literalExpression ''["git" "nixpkgs"]'';
+        example = [
+          "git"
+          "nixpkgs"
+        ];
         description = ''
           List of tags attached to the command.
         '';

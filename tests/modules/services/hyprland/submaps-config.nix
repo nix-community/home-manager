@@ -26,6 +26,12 @@
           bind = [
             ", escape, submap, reset"
             ", return, submap, reset"
+            {
+              _args = [
+                "q"
+                "ignored-lua-dispatcher"
+              ];
+            }
           ];
         };
       };
@@ -51,6 +57,7 @@
   nmt.script = ''
     config=home-files/.config/hypr/hyprland.conf
     assertFileExists "$config"
+    assertFileNotRegex "$config" "ignored-lua-dispatcher"
 
     normalizedConfig=$(normalizeStorePaths "$config")
     assertFileContent "$normalizedConfig" ${./submaps-config.conf}

@@ -1,9 +1,36 @@
 {
   config,
-  realPkgs,
+  lib,
+  pkgs,
   ...
 }:
 let
+  mkRetroarchPackage =
+    {
+      cores,
+      settings,
+    }:
+    let
+      settingsFile = pkgs.writeText "declarative-retroarch.cfg" (
+        lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: ''${name} = "${value}"'') settings)
+      );
+    in
+    config.lib.test.mkStubPackage {
+      name = "retroarch";
+      buildScript = ''
+        mkdir -p $out/bin $out/lib/retroarch/cores
+        cat > $out/bin/retroarch <<'EOF'
+        #!/bin/sh
+        # -L $out/lib/retroarch/cores
+        exec retroarch --appendconfig ${settingsFile} "$@"
+        EOF
+        chmod 755 $out/bin/retroarch
+        ${lib.concatMapStringsSep "\n" (core: ''
+          ln -s ${core}${core.libretroCore}/* $out/lib/retroarch/cores/
+        '') cores}
+      '';
+    };
+
   mkLibretroCore =
     name:
     config.lib.test.mkStubPackage {
@@ -24,7 +51,7 @@ in
     };
     retroarch-bare = {
       extraAttrs = {
-        inherit (realPkgs.retroarch-bare) wrapper;
+        wrapper = mkRetroarchPackage;
       };
     };
   };

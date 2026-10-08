@@ -24,7 +24,6 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.aliae = {
     enable = mkEnableOption "aliae";
     package = mkPackageOption pkgs "aliae" { nullable = true; };

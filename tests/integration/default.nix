@@ -17,9 +17,11 @@ let
     home-with-symbols = runTest ./standalone/home-with-symbols.nix;
     kitty = runTest ./standalone/kitty.nix;
     mu = runTest ./standalone/mu;
+    mutable-files = runTest ./standalone/mutable-files.nix;
     nh = runTest ./standalone/nh.nix;
     nixos-basics = runTest ./nixos/basics.nix;
     nixos-legacy-profile-management = runTest ./nixos/legacy-profile-management.nix;
+    putter = runTest ./standalone/putter.nix;
     rclone = runTest ./standalone/rclone;
     rclone-sops-nix = runTest ./standalone/rclone/sops-nix.nix;
     rclone-agenix = runTest ./standalone/rclone/agenix.nix;

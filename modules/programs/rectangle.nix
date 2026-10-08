@@ -31,15 +31,13 @@ in
     defaults = lib.mkOption {
       type = lib.types.attrsOf lib.types.anything;
       default = { };
-      example = lib.literalExpression ''
-        {
-          launchOnLogin = true;
-          gapSize = 8.0;
-          windowSnapping = 1;
-          almostMaximizeHeight = 0.9;
-          almostMaximizeWidth = 0.9;
-        }
-      '';
+      example = {
+        launchOnLogin = true;
+        gapSize = 8.0;
+        windowSnapping = 1;
+        almostMaximizeHeight = 0.9;
+        almostMaximizeWidth = 0.9;
+      };
       description = ''
         Rectangle application defaults. Each attribute name is written as a
         native macOS preference key in Rectangle's plist file.
@@ -82,16 +80,32 @@ in
         }
       );
       default = { };
-      example = lib.literalExpression ''
-        {
-          leftHalf   = { keyCode = 123; modifierFlags = "ctrl+option+command"; };
-          rightHalf  = { keyCode = 124; modifierFlags = "ctrl+option+command"; };
-          topHalf    = { keyCode = 126; modifierFlags = "ctrl+option+command"; };
-          bottomHalf = { keyCode = 125; modifierFlags = "ctrl+option+command"; };
-          maximize   = { keyCode = 46;  modifierFlags = "ctrl+option+command"; };
-          center     = { keyCode = 8;   modifierFlags = "ctrl+option+command"; };
-        }
-      '';
+      example = {
+        leftHalf = {
+          keyCode = 123;
+          modifierFlags = "ctrl+option+command";
+        };
+        rightHalf = {
+          keyCode = 124;
+          modifierFlags = "ctrl+option+command";
+        };
+        topHalf = {
+          keyCode = 126;
+          modifierFlags = "ctrl+option+command";
+        };
+        bottomHalf = {
+          keyCode = 125;
+          modifierFlags = "ctrl+option+command";
+        };
+        maximize = {
+          keyCode = 46;
+          modifierFlags = "ctrl+option+command";
+        };
+        center = {
+          keyCode = 8;
+          modifierFlags = "ctrl+option+command";
+        };
+      };
       description = ''
         Rectangle keyboard shortcuts. Attribute names are Rectangle action
         identifiers (e.g. `leftHalf`, `rightHalf`, `maximize`). Each value

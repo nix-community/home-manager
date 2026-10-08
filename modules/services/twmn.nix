@@ -193,24 +193,20 @@ in
         easeIn = mkOption {
           type = types.submodule { options = animationOpts; };
           default = { };
-          example = literalExpression ''
-            {
-              curve = 19;
-              duration = 618;
-            }
-          '';
+          example = {
+            curve = 19;
+            duration = 618;
+          };
           description = "Options for the notification appearance's animation.";
         };
 
         easeOut = mkOption {
           type = types.submodule { options = animationOpts; };
           default = { };
-          example = literalExpression ''
-            {
-              curve = 19;
-              duration = 618;
-            }
-          '';
+          example = {
+            curve = 19;
+            duration = 618;
+          };
           description = "Options for the notification disappearance's animation.";
         };
 

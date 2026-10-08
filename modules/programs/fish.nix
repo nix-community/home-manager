@@ -421,7 +421,7 @@ let
         "onSignal"
         "onEvent"
       ];
-      isHandler = _name: def: isAttrs def && builtins.any (attr: builtins.hasAttr attr def) handlerAttrs;
+      isHandler = _name: def: isAttrs def && builtins.any (attr: def.${attr} != null) handlerAttrs;
       handlerFunctions = lib.filterAttrs isHandler cfg.functions;
       sourceFunction = name: _def: "source ${config.xdg.configHome}/fish/functions/${name}.fish";
     in
@@ -429,6 +429,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.SunOfLife1 ];
+
   imports = [
     (lib.mkRemovedOptionModule [ "programs" "fish" "promptInit" ] ''
       Prompt is now configured through the
@@ -469,16 +471,14 @@ in
       shellAbbrs = mkOption {
         type = with types; attrsOf (either str abbrModule);
         default = { };
-        example = literalExpression ''
-          {
-            l = "less";
-            gco = "git checkout";
-            "-C" = {
-              position = "anywhere";
-              expansion = "--color";
-            };
-          }
-        '';
+        example = {
+          l = "less";
+          gco = "git checkout";
+          "-C" = {
+            position = "anywhere";
+            expansion = "--color";
+          };
+        };
         description = ''
           An attribute set that maps aliases (the top level attribute names
           in this option) to abbreviations. Abbreviations are expanded with
@@ -658,17 +658,21 @@ in
                 ++ lib.filter (p: p != null) (
                   map (outName: package.${outName} or null) config.home.extraOutputsToInstall
                 );
-                nativeBuildInputs = [ pkgs.python3 ];
-                buildInputs = [ cfg.package ];
+                nativeBuildInputs = [
+                  pkgs.python3
+                  cfg.package
+                ];
                 preferLocalBuild = true;
               }
               ''
+                # The generator script is embedded in the fish binary, so extract it.
+                generator=$PWD/create_manpage_completions.py
+                fish --no-config -c 'status get-file tools/create_manpage_completions.py' > "$generator"
+
                 mkdir -p $out
                 for src in $srcs; do
                   if [ -d $src/share/man ]; then
-                    find -L $src/share/man -type f \
-                      -exec python ${cfg.package}/share/fish/tools/create_manpage_completions.py --directory $out {} + \
-                      > /dev/null
+                    find -L $src/share/man -type f -exec python "$generator" --directory $out {} + > /dev/null
                   fi
                 done
               '';

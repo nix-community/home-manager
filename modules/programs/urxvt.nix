@@ -26,12 +26,10 @@ in
       type = types.attrsOf types.str;
       default = { };
       description = "Mapping of keybindings to actions";
-      example = lib.literalExpression ''
-        {
-          "Shift-Control-C" = "eval:selection_to_clipboard";
-          "Shift-Control-V" = "eval:paste_clipboard";
-        }
-      '';
+      example = {
+        "Shift-Control-C" = "eval:selection_to_clipboard";
+        "Shift-Control-V" = "eval:paste_clipboard";
+      };
     };
 
     iso14755 = mkOption {

@@ -82,12 +82,54 @@ in
           };
         };
       };
+
+      fastSyntaxHighlightingModule = types.submodule {
+        options = {
+          enable = mkEnableOption "zsh fast syntax highlighting";
+
+          package = lib.mkPackageOption pkgs "zsh-fast-syntax-highlighting" { };
+
+          theme = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            example = "clean";
+            description = ''
+              If non-null, Home Manager will run {command}`fast-theme -q`
+              with this value to select the theme. `fast-theme` persists the
+              selected theme in fast-syntax-highlighting's work directory, so
+              setting this option back to `null` stops Home Manager from
+              invoking {command}`fast-theme` but does not reset an already
+              persisted theme. Run {command}`fast-theme -r` manually to clear
+              upstream state.
+
+              See [upstream's documentation](https://github.com/zdharma-continuum/fast-syntax-highlighting/blob/master/THEME_GUIDE.md)
+            '';
+          };
+
+          settings = mkOption {
+            type = types.attrsOf types.str;
+            default = { };
+            example = {
+              use_brackets = "0";
+              "chroma-," = "→chroma/-precommand.ch";
+              "chroma-comma" = "→chroma/-precommand.ch";
+            };
+            description = ''
+              Custom values to add to `FAST_HIGHLIGHT`, like custom chroma
+              configuration (see [upstream's documentation](https://github.com/zdharma-continuum/fast-syntax-highlighting/blob/master/CHROMA_GUIDE.adoc)
+              and its [built-in chromas](https://github.com/zdharma-continuum/fast-syntax-highlighting/tree/master/%E2%86%92chroma)).
+            '';
+          };
+        };
+      };
     in
     {
       programs.zsh = {
         enable = mkEnableOption "Z shell (Zsh)";
 
-        package = lib.mkPackageOption pkgs "zsh" { };
+        package = lib.mkPackageOption pkgs "zsh" {
+          nullable = true;
+        };
 
         autocd = mkOption {
           default = null;
@@ -128,12 +170,10 @@ in
 
         shellAliases = mkOption {
           default = { };
-          example = literalExpression ''
-            {
-              ll = "ls -l";
-              ".." = "cd ..";
-            }
-          '';
+          example = {
+            ll = "ls -l";
+            ".." = "cd ..";
+          };
           description = ''
             An attribute set that maps aliases (the top level attribute names in
             this option) to command strings or directly to build outputs.
@@ -143,12 +183,10 @@ in
 
         shellGlobalAliases = mkOption {
           default = { };
-          example = literalExpression ''
-            {
-              UUID = "$(uuidgen | tr -d \\n)";
-              G = "| grep";
-            }
-          '';
+          example = {
+            UUID = "$(uuidgen | tr -d \\n)";
+            G = "| grep";
+          };
           description = ''
             Similar to [](#opt-programs.zsh.shellAliases),
             but are substituted anywhere on a line.
@@ -193,6 +231,12 @@ in
           type = syntaxHighlightingModule;
           default = { };
           description = "Options related to zsh-syntax-highlighting.";
+        };
+
+        fastSyntaxHighlighting = mkOption {
+          type = fastSyntaxHighlightingModule;
+          default = { };
+          description = "Options related to zsh-fast-syntax-highlighting.";
         };
 
         autosuggestion = {
@@ -247,20 +291,35 @@ in
 
         sessionVariables = mkOption {
           default = { };
-          type = types.attrs;
+          type =
+            with types;
+            lazyAttrsOf (
+              nullOr (oneOf [
+                str
+                path
+                int
+                float
+                bool
+              ])
+            );
           example = {
             MAILCHECK = 30;
           };
-          description = "Environment variables that will be set for zsh session.";
+          description = ''
+            Environment variables that will be set for zsh session.
+
+            Setting a value to `null` will skip setting the variable at all, which
+            may be useful when overriding.
+          '';
         };
 
         initContent = mkOption {
           default = "";
           type = types.lines;
           example = lib.literalExpression ''
-            lib.mkOrder 1200 ''''
+            lib.mkOrder 1200 '''
               echo "Hello zsh initContent!"
-            '''';
+            ''';
           '';
           description = ''
             Content to be added to {file}`.zshrc`.
@@ -362,6 +421,21 @@ in
     let
       envVarsStr = config.lib.zsh.exportAll cfg.sessionVariables { indent = "  "; };
       localVarsStr = config.lib.zsh.defineAll cfg.localVariables;
+      sessionVarsStr = lib.removeSuffix "\n" ''
+        # Environment variables
+        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
+
+        # Only source this once
+        if [[ -z "''${__HM_ZSH_SESS_VARS_SOURCED-}" ]]; then
+          export __HM_ZSH_SESS_VARS_SOURCED=1
+          ${envVarsStr}
+        fi
+      '';
+      indentNonEmptyLines =
+        str:
+        concatStringsSep "\n" (
+          map (line: if line == "" then "" else "  ${line}") (lib.splitString "\n" str)
+        );
 
       aliasesStr = concatStringsSep "\n" (
         lib.mapAttrsToList (
@@ -369,9 +443,14 @@ in
         ) cfg.shellAliases
       );
 
+      # Keep double quotes so existing configs using shell variables like
+      # $HOME still expand, while escaping chars special inside them.
       dirHashesStr = concatStringsSep "\n" (
-        lib.mapAttrsToList (k: v: ''hash -d ${k}="${v}"'') cfg.dirHashes
+        lib.mapAttrsToList (
+          k: v: ''hash -d ${lib.escapeShellArg k}="${lib.escape [ "\\" "\"" "`" ] v}"''
+        ) cfg.dirHashes
       );
+      cdpathStr = concatStringsSep " " (map (v: ''"${lib.escape [ "\\" "\"" "`" ] v}"'') cfg.cdpath);
     in
     mkIf cfg.enable (
       lib.mkMerge [
@@ -388,6 +467,16 @@ in
                 - config.xdg.configHome (XDG config directory)
                 - config.xdg.dataHome (XDG data directory)
                 - config.xdg.cacheHome (XDG cache directory)
+              '';
+            }
+            {
+              assertion =
+                lib.count (x: x) [
+                  cfg.syntaxHighlighting.enable
+                  cfg.fastSyntaxHighlighting.enable
+                ] <= 1;
+              message = ''
+                Only one Zsh syntax highlighter can be enabled at a time.
               '';
             }
           ];
@@ -430,10 +519,6 @@ in
           home.file."${dotDirRel}/.zshenv".text = cfg.envExtra;
         })
 
-        (mkIf (cfg.profileExtra != "") {
-          home.file."${dotDirRel}/.zprofile".text = cfg.profileExtra;
-        })
-
         (mkIf (cfg.loginExtra != "") {
           home.file."${dotDirRel}/.zlogin".text = cfg.loginExtra;
         })
@@ -457,34 +542,47 @@ in
         })
 
         (lib.mkIf (cfg.siteFunctions != { }) {
+          assertions = lib.mapAttrsToList (funcName: _text: {
+            assertion = !(lib.hasPrefix "/" funcName);
+            message =
+              "programs.zsh.siteFunctions: function name '${funcName}' cannot start with a '/'. "
+              + "either rename it, or don't rely on autoloading for that function (e.g. by defining it inside your '.zshrc')";
+          }) cfg.siteFunctions;
           home.packages = lib.mapAttrsToList (
             name: pkgs.writeTextDir "share/zsh/site-functions/${name}"
           ) cfg.siteFunctions;
-          programs.zsh.initContent = concatStringsSep " " (
-            [ "autoload -Uz" ] ++ lib.attrNames cfg.siteFunctions
+          programs.zsh.initContent = lib.escapeShellArgs (
+            [
+              "autoload"
+              "-Uz"
+              "--"
+            ]
+            ++ (lib.attrNames cfg.siteFunctions)
           );
         })
 
         {
           home.file."${dotDirRel}/.zshenv".text = ''
-            # Environment variables
-            . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-
-            # Only source this once
-            if [[ -z "$__HM_ZSH_SESS_VARS_SOURCED" ]]; then
-              export __HM_ZSH_SESS_VARS_SOURCED=1
-              ${envVarsStr}
+            if [[ ! -o login ]]; then
+            ${indentNonEmptyLines sessionVarsStr}
             fi
+          '';
+
+          home.file."${dotDirRel}/.zprofile".text = ''
+            ${sessionVarsStr}
+          ''
+          + optionalString (cfg.profileExtra != "") ''
+
+            ${cfg.profileExtra}
           '';
         }
 
         {
           lib.zsh = zshLib;
 
-          home.packages = [
-            cfg.package
-          ]
-          ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions);
+          home.packages = lib.mkIf (cfg.package != null) (
+            [ cfg.package ] ++ lib.optional cfg.enableCompletion (lib.lowPrio pkgs.nix-zsh-completions)
+          );
 
           # NOTE: Always include "main" highlighter with normal priority.
           # Option default priority will cause `main` to get dropped by customization.
@@ -495,7 +593,7 @@ in
 
             (lib.mkIf (cfg.cdpath != [ ]) (
               mkOrder 510 ''
-                cdpath+=(${concatStringsSep " " cfg.cdpath})
+                cdpath+=(${cdpathStr})
               ''
             ))
 
@@ -503,9 +601,12 @@ in
               for profile in ''${(z)NIX_PROFILES}; do
                 fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
               done
-
-              HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
             '')
+            (lib.mkIf (cfg.package != null) (
+              mkOrder 520 ''
+                HELPDIR="${cfg.package}/share/zsh/$ZSH_VERSION/help"
+              ''
+            ))
 
             (lib.mkIf (cfg.defaultKeymap != null) (
               mkOrder 530 ''
@@ -586,6 +687,22 @@ in
                     lib.mapAttrsToList (
                       name: value: "ZSH_HIGHLIGHT_PATTERNS+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})"
                     ) cfg.syntaxHighlighting.patterns
+                  )}
+                ''
+            ))
+
+            (lib.mkIf cfg.fastSyntaxHighlighting.enable (
+              mkOrder 1200
+                # Load zsh-fast-syntax-highlighting after all custom widgets have been created
+                ''
+                  source ${cfg.fastSyntaxHighlighting.package}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+                  ${lib.optionalString (cfg.fastSyntaxHighlighting.theme != null) ''
+                    fast-theme -q ${cfg.fastSyntaxHighlighting.theme}
+                  ''}
+                  ${lib.concatStringsSep "\n" (
+                    lib.mapAttrsToList (
+                      name: value: "FAST_HIGHLIGHT+=(${lib.escapeShellArg name} ${lib.escapeShellArg value})"
+                    ) cfg.fastSyntaxHighlighting.settings
                   )}
                 ''
             ))

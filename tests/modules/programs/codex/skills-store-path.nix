@@ -1,14 +1,8 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 let
-  src = pkgs.writeTextDir "skills/external-skill/SKILL.md" ''
-    ---
-    name: external-skill
-    description: Store path skill fixture.
-    ---
-
-    # External Skill
-
-    This content simulates a skill living inside a package source.
+  src = realPkgs.runCommand "codex-ifd-skill-source" { } ''
+    mkdir -p "$out/skills/external-skill"
+    echo '# External Skill' > "$out/skills/external-skill/SKILL.md"
   '';
 in
 {
@@ -21,14 +15,14 @@ in
   };
 
   nmt.script = ''
-    assertLinkExists home-files/.agents/skills/dir-skill
-    assertFileExists home-files/.agents/skills/dir-skill/SKILL.md
-    assertFileContent home-files/.agents/skills/dir-skill/SKILL.md \
+    assertLinkExists home-files/.codex/skills/dir-skill
+    assertFileExists home-files/.codex/skills/dir-skill/SKILL.md
+    assertFileContent home-files/.codex/skills/dir-skill/SKILL.md \
       "${src}/skills/external-skill/SKILL.md"
 
-    assertLinkExists home-files/.agents/skills/file-skill
-    assertFileExists home-files/.agents/skills/file-skill/SKILL.md
-    assertFileContent home-files/.agents/skills/file-skill/SKILL.md \
+    assertLinkExists home-files/.codex/skills/file-skill
+    assertFileExists home-files/.codex/skills/file-skill/SKILL.md
+    assertFileContent home-files/.codex/skills/file-skill/SKILL.md \
       "${src}/skills/external-skill/SKILL.md"
   '';
 }

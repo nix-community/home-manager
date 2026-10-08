@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 model: gemma3:latest
 provider: ollama
 providers:

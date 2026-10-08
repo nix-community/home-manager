@@ -22,17 +22,15 @@ in
       settings = lib.mkOption {
         inherit (jsonFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            adaptive_transcode = false;
-            allow_http = false;
-            always_transcode = false;
-            audio_ac3passthrough = false;
-            audio_dtspassthrough = false;
-            auto_play = true;
-            auto_transcode = true;
-          }
-        '';
+        example = {
+          adaptive_transcode = false;
+          allow_http = false;
+          always_transcode = false;
+          audio_ac3passthrough = false;
+          audio_dtspassthrough = false;
+          auto_play = true;
+          auto_transcode = true;
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/plex-mpv-shim/config.json`. See

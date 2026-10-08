@@ -44,19 +44,17 @@ in
     settings = mkOption {
       type = with types; attrsOf (either configAtom (listOf configAtom));
       default = { };
-      example = lib.literalExpression ''
-        {
-          embed-thumbnail = true;
-          embed-subs = true;
-          sub-langs = "all";
-          downloader = "aria2c";
-          downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
-          color = [
-            "stdout:no_color"
-            "stderr:always"
-          ];
-        }
-      '';
+      example = {
+        embed-thumbnail = true;
+        embed-subs = true;
+        sub-langs = "all";
+        downloader = "aria2c";
+        downloader-args = "aria2c:'-c -x8 -s8 -k1M'";
+        color = [
+          "stdout:no_color"
+          "stderr:always"
+        ];
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/yt-dlp/config`.

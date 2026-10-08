@@ -19,7 +19,6 @@ let
   cfg = config.programs.fabric-ai;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.fabric-ai = {
     enable = mkEnableOption "Fabric AI";
     package = mkPackageOption pkgs "fabric-ai" { nullable = true; };

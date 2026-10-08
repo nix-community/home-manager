@@ -8,9 +8,8 @@ be as follows:
   description = "NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, ... }: {
@@ -44,10 +43,16 @@ module argument from within the module graph itself. For values that originate
 outside the module graph, such as flake inputs, prefer
 `home-manager.extraSpecialArgs`.
 
+Use `home-manager.sharedModules` for Home Manager modules or settings that
+should be imported by every user declared in `home-manager.users`.
+
 The Home Manager configuration is then part of the NixOS configuration
 and is automatically rebuilt with the system when using the appropriate
 command for the system, such as
-`nixos-rebuild switch --flake <flake-uri>`.
+
+``` shell
+$ nixos-rebuild switch --flake /etc/nixos
+```
 
 You can use the above `flake.nix` as a template in `/etc/nixos` by
 

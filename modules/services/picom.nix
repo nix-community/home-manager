@@ -294,7 +294,7 @@ in
     extraArgs = mkOption {
       type = with types; listOf str;
       default = [ ];
-      example = literalExpression ''[ "--legacy-backends" ]'';
+      example = [ "--legacy-backends" ];
       description = ''
         Extra arguments to be passed to the picom executable.
       '';

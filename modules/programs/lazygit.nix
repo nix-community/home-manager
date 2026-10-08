@@ -32,16 +32,17 @@ in
       inherit (yamlFormat) type;
       default = { };
       defaultText = lib.literalExpression "{ }";
-      example = lib.literalExpression ''
-        {
-          gui.theme = {
-            lightTheme = true;
-            activeBorderColor = [ "blue" "bold" ];
-            inactiveBorderColor = [ "black" ];
-            selectedLineBgColor = [ "default" ];
-          };
-        }
-      '';
+      example = {
+        gui.theme = {
+          lightTheme = true;
+          activeBorderColor = [
+            "blue"
+            "bold"
+          ];
+          inactiveBorderColor = [ "black" ];
+          selectedLineBgColor = [ "default" ];
+        };
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/lazygit/config.yml`

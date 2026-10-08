@@ -16,6 +16,8 @@ let
 
   cfg = config.services.kanshi;
 
+  configPath = "kanshi/config";
+
   directivesTag = types.attrTag {
     profile = mkOption {
       type = profileModule;
@@ -113,7 +115,7 @@ let
       scale = mkOption {
         type = types.nullOr types.float;
         default = null;
-        example = 2;
+        example = 2.0;
         description = ''
           Scales the output by the specified scale factor.
         '';
@@ -221,7 +223,7 @@ let
 in
 {
 
-  meta.maintainers = [ lib.hm.maintainers.nurelin ];
+  meta.maintainers = [ ];
 
   options.services.kanshi = {
     enable = lib.mkEnableOption "kanshi, a Wayland daemon that automatically configures outputs";
@@ -234,28 +236,26 @@ in
       description = ''
         Attribute set of profiles.
       '';
-      example = literalExpression ''
-        {
-          undocked = {
-            outputs = [
-              {
-                criteria = "eDP-1";
-              }
-            ];
-          };
-          docked = {
-            outputs = [
-              {
-                criteria = "eDP-1";
-              }
-              {
-                criteria = "Some Company ASDF 4242";
-                transform = "90";
-              }
-            ];
-          };
-        }
-      '';
+      example = {
+        undocked = {
+          outputs = [
+            {
+              criteria = "eDP-1";
+            }
+          ];
+        };
+        docked = {
+          outputs = [
+            {
+              criteria = "eDP-1";
+            }
+            {
+              criteria = "Some Company ASDF 4242";
+              transform = "90";
+            }
+          ];
+        };
+      };
     };
 
     extraConfig = mkOption {
@@ -278,7 +278,7 @@ in
         [
           { include = "path/to/included/files"; }
           { output.criteria = "eDP-1";
-            output.scale = 2;
+            output.scale = 2.0;
           }
           { profile.name = "undocked";
             profile.outputs = [
@@ -348,7 +348,7 @@ in
       {
         home.packages = [ cfg.package ];
 
-        xdg.configFile."kanshi/config" =
+        xdg.configFile.${configPath} =
           let
             generatedConfigStr =
               if cfg.profiles == { } && cfg.extraConfig == "" then directivesStr else oldDirectivesStr;
@@ -363,11 +363,15 @@ in
             PartOf = cfg.systemdTarget;
             Requires = cfg.systemdTarget;
             After = cfg.systemdTarget;
+            X-Reload-Triggers = lib.mkIf (cfg.settings != [ ]) [
+              "${config.xdg.configFile.${configPath}.source}"
+            ];
           };
 
           Service = {
             Type = "simple";
             ExecStart = "${cfg.package}/bin/kanshi";
+            ExecReload = "${lib.getExe' cfg.package "kanshictl"} reload";
             Restart = "always";
           };
 

@@ -9,6 +9,7 @@ lib.mkIf config.test.enableBig {
   wayland.windowManager.sway = {
     enable = true;
     checkConfig = true;
+    package = realPkgs.sway;
   };
 
   nixpkgs.overlays = [ (_self: _super: { inherit (realPkgs) xvfb-run; }) ];

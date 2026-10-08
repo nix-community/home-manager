@@ -39,17 +39,15 @@ in
     settings = mkOption {
       type = types.attrsOf (types.attrsOf types.str);
       default = { };
-      example = lib.literalExpression ''
-        {
-          "org.jkiss.dbeaver.core" = {
-            "ui.showSystemObjects" = "false";
-            "ui.showUtilityObjects" = "false";
-          };
-          "org.jkiss.dbeaver.model" = {
-            "read.expiration.period" = "10000";
-          };
-        }
-      '';
+      example = {
+        "org.jkiss.dbeaver.core" = {
+          "ui.showSystemObjects" = "false";
+          "ui.showUtilityObjects" = "false";
+        };
+        "org.jkiss.dbeaver.model" = {
+          "read.expiration.period" = "10000";
+        };
+      };
 
       description = ''
         DBeaver workspace preferences. Each attribute set key corresponds to
@@ -71,24 +69,22 @@ in
     dataSourcesSettings = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          folders = { };
-          connections = {
-            "postgresql-local" = {
-              provider = "postgresql";
-              driver = "postgres-jdbc";
-              name = "Local PostgreSQL";
-              save-password = false;
-              configuration = {
-                host = "localhost";
-                port = "5432";
-                database = "mydb";
-              };
+      example = {
+        folders = { };
+        connections = {
+          "postgresql-local" = {
+            provider = "postgresql";
+            driver = "postgres-jdbc";
+            name = "Local PostgreSQL";
+            save-password = false;
+            configuration = {
+              host = "localhost";
+              port = "5432";
+              database = "mydb";
             };
           };
-        }
-      '';
+        };
+      };
 
       description = ''
         Configuration for DBeaver's `data-sources.json`. This file stores

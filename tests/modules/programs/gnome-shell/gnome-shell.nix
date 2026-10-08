@@ -5,10 +5,15 @@
   ...
 }:
 let
-  dummy-gnome-shell-extensions = pkgs.runCommand "dummy-package" { } ''
-    mkdir -p $out/share/gnome-shell/extensions/dummy-package
-    touch $out/share/gnome-shell/extensions/dummy-package/test
-  '';
+  dummy-user-themes =
+    pkgs.runCommand "dummy-user-themes"
+      {
+        passthru.extensionUuid = "user-theme@gnome-shell-extensions.gcampax.github.com";
+      }
+      ''
+        mkdir -p $out/share/gnome-shell/extensions/user-theme@gnome-shell-extensions.gcampax.github.com
+        touch $out/share/gnome-shell/extensions/user-theme@gnome-shell-extensions.gcampax.github.com/test
+      '';
 
   test-extension = pkgs.runCommand "test-extension" { } ''
     mkdir -p $out/share/gnome-shell/extensions/test-extension
@@ -43,7 +48,11 @@ let
 in
 {
   nixpkgs.overlays = [
-    (_final: _prev: { gnome-shell-extensions = dummy-gnome-shell-extensions; })
+    (_final: prev: {
+      gnomeExtensions = prev.gnomeExtensions // {
+        user-themes = dummy-user-themes;
+      };
+    })
   ];
 
   programs.gnome-shell.enable = true;
@@ -82,7 +91,7 @@ in
   ];
 
   nmt.script = ''
-    assertFileExists home-path/share/gnome-shell/extensions/dummy-package/test
+    assertFileExists home-path/share/gnome-shell/extensions/user-theme@gnome-shell-extensions.gcampax.github.com/test
     assertFileExists home-path/share/gnome-shell/extensions/test-extension/test
     assertFileExists home-path/share/gnome-shell/extensions/test-extension-uuid/test
     assertFileExists home-path/share/themes/Test/gnome-shell/test

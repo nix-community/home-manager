@@ -8,7 +8,7 @@
     nmt.script =
       let
         configDir =
-          if pkgs.stdenv.isDarwin then
+          if pkgs.stdenv.hostPlatform.isDarwin then
             "home-files/Library/Application Support/clock-rs"
           else
             "home-files/.config/clock-rs";

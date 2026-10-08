@@ -1,0 +1,37 @@
+[composer]
+emojis_as_links = false
+
+[credentials]
+store = "auto"
+
+[display]
+attachment_viewer_quality = "original"
+circular_avatars = false
+disable_image_preview = false
+image_preview_quality = "balanced"
+image_protocol = "auto"
+media_playback = false
+show_avatars = true
+show_custom_emoji = true
+show_images = true
+
+[notifications]
+desktop_notifications = true
+notification_icon = "/path/to/icon.svg"
+notification_sound = "/path/to/message.wav"
+voice_join_sound = "/path/to/join.wav"
+voice_leave_sound = "/path/to/leave.wav"
+
+[presence]
+share_rich_presence = true
+
+[voice]
+allow_microphone_transmit = false
+microphone_sensitivity = -30
+microphone_volume = 100
+noise_suppression = true
+push_to_talk = false
+push_to_talk_shortcut = "F8"
+self_deaf = false
+self_mute = false
+voice_output_volume = 100

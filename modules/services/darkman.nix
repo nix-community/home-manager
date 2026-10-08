@@ -68,13 +68,11 @@ in
     settings = lib.mkOption {
       type = types.submodule { freeformType = yamlFormat.type; };
       default = { };
-      example = lib.literalExpression ''
-        {
-          lat = 52.3;
-          lng = 4.8;
-          usegeoclue = true;
-        }
-      '';
+      example = {
+        lat = 52.3;
+        lng = 4.8;
+        usegeoclue = true;
+      };
       description = ''
         Settings for the {command}`darkman` command. See
         <https://darkman.whynothugo.nl/#CONFIGURATION> for details.

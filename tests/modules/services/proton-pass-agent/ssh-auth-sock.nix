@@ -38,5 +38,8 @@
       assertFileContains \
         home-files/.zshenv \
         'export SSH_AUTH_SOCK="${bashDir}/proton-pass-agent"'
+      assertFileContains \
+        home-files/.zprofile \
+        'export SSH_AUTH_SOCK="${bashDir}/proton-pass-agent"'
     '';
 }

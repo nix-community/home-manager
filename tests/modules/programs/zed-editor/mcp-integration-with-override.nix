@@ -16,6 +16,9 @@
           "@modelcontextprotocol/server-everything"
         ];
       };
+      server-no-args = {
+        command = "echo";
+      };
     };
   };
 
@@ -43,7 +46,6 @@
         {
           "context_servers": {
             "custom-server": {
-              "enabled": false
             }
           },
         }
@@ -53,7 +55,6 @@
         {
           "context_servers": {
             "custom-server": {
-              "enabled": false,
               "headers": {
                 "Authorization": "Bearer token"
               },
@@ -64,8 +65,11 @@
                 "-y",
                 "@modelcontextprotocol/server-everything"
               ],
-              "command": "npx",
-              "enabled": true
+              "command": "npx"
+            },
+            "server-no-args": {
+              "args": [],
+              "command": "echo"
             }
           }
         }

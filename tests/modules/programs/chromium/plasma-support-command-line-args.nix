@@ -48,6 +48,18 @@ let
       "Library/Application Support/Google/Chrome/NativeMessagingHosts"
     else
       ".config/google-chrome/NativeMessagingHosts";
+
+  nativeHostAssertion =
+    if pkgs.stdenv.hostPlatform.isLinux then
+      ''
+        assertFileExists \
+          "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
+      ''
+    else
+      ''
+        assertPathNotExists \
+          "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
+      '';
 in
 {
   programs.google-chrome = {
@@ -57,6 +69,8 @@ in
       "--enable-logging=stderr"
       "--ignore-gpu-blocklist"
     ];
+  }
+  // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     plasmaSupport = true;
     inherit plasmaBrowserIntegrationPackage;
   };
@@ -76,17 +90,6 @@ in
         plasmaSupport=${lib.boolToString pkgs.stdenv.hostPlatform.isLinux}
       ''}
 
-    ${
-      if pkgs.stdenv.hostPlatform.isLinux then
-        ''
-          assertFileExists \
-            "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
-        ''
-      else
-        ''
-          assertPathNotExists \
-            "home-files/${nativeHostsDir}/org.kde.plasma.browser_integration.json"
-        ''
-    }
+    ${nativeHostAssertion}
   '';
 }

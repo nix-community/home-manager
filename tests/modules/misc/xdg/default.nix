@@ -8,6 +8,7 @@
   xdg-local-bin-in-path = ./local-bin-in-path.nix;
   xdg-local-bin-not-in-path = ./local-bin-not-in-path.nix;
   xdg-user-dirs-mixed = ./user-dirs-mixed.nix;
+  xdg-user-dirs-mixed-current = ./user-dirs-mixed-current.nix;
   xdg-user-dirs-null = ./user-dirs-null.nix;
   xdg-user-dirs-short = ./user-dirs-short.nix;
   xdg-user-dirs-session-vars-legacy = ./user-dirs-session-vars-legacy.nix;

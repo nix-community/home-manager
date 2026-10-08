@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 global_vars:
 - name: currentdate
   params:
@@ -10,9 +12,7 @@ global_vars:
 matches:
 - replace: It's {{currentdate}} {{currenttime}}
   trigger: :now
-- replace: 'line1
-
-    line2'
+- replace: "line1\nline2"
   trigger: :hello
 - regex: :hi(?P<person>.*)\.
   replace: Hi {{person}}!

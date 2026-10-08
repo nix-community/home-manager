@@ -115,16 +115,14 @@ let
       extraConfig = mkOption {
         type = podman-lib.extraConfigType;
         default = { };
-        example = lib.literalExpression ''
-          {
-            Network = {
-              ContainerConfModule = "/etc/nvd.conf";
-            };
-            Service = {
-              TimeoutStartSec = 30;
-            };
-          }
-        '';
+        example = {
+          Network = {
+            ContainerConfModule = "/etc/nvd.conf";
+          };
+          Service = {
+            TimeoutStartSec = 30;
+          };
+        };
         description = "INI sections and values to populate the Network Quadlet";
       };
 

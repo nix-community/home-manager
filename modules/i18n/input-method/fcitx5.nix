@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  options,
   ...
 }:
 let
@@ -32,6 +33,17 @@ in
           The fcitx5 package to use.
         '';
       };
+
+      systemd.enable = lib.mkEnableOption "" // {
+        default = true;
+        description = ''
+          Whether to enable the systemd user service.
+
+          This service is not required if the desktop environment supports
+          [XDG Autostart](https://fcitx-im.org/wiki/Setup_Fcitx_5#XDG_Autostart).
+        '';
+      };
+
       addons = lib.mkOption {
         type = with lib.types; listOf package;
         default = [ ];
@@ -50,15 +62,31 @@ in
         '';
       };
 
+      sessionVariables = lib.mkOption {
+        inherit (options.home.sessionVariables) type;
+        default = {
+          GLFW_IM_MODULE = "ibus"; # IME support in kitty
+          SDL_IM_MODULE = "fcitx";
+          XMODIFIERS = "@im=fcitx";
+        };
+        description = ''
+          The environment variables used to configure Fcitx5.
+
+          The default values should be suitable for most desktop environments and should
+          not normally need to be changed.
+
+          If you need to override them, see the
+          [Fcitx5 user guide](https://fcitx-im.org/wiki/Fcitx_5#For_Users).
+        '';
+      };
+
       quickPhrase = lib.mkOption {
         type = with lib.types; attrsOf str;
         default = { };
-        example = lib.literalExpression ''
-          {
-            smile = "（・∀・）";
-            angry = "(￣ー￣)";
-          }
-        '';
+        example = {
+          smile = "（・∀・）";
+          angry = "(￣ー￣)";
+        };
         description = "Quick phrases.";
       };
 
@@ -83,18 +111,16 @@ in
           description = ''
             The global options in `config` file in ini format.
           '';
-          example = lib.literalExpression ''
-            {
-              Behavior = {
-                ActiveByDefault = false;
-              };
-              Hotkey = {
-                EnumerateWithTriggerKeys = true;
-                EnumerateSkipFirst = false;
-                ModifierOnlyKeyTimeout = 250;
-              };
-            }
-          '';
+          example = {
+            Behavior = {
+              ActiveByDefault = false;
+            };
+            Hotkey = {
+              EnumerateWithTriggerKeys = true;
+              EnumerateSkipFirst = false;
+              ModifierOnlyKeyTimeout = 250;
+            };
+          };
         };
         inputMethod = lib.mkOption {
           type = lib.types.submodule {
@@ -104,18 +130,16 @@ in
           description = ''
             The input method configure in `profile` file in ini format.
           '';
-          example = lib.literalExpression ''
-            {
-              GroupOrder."0" = "Default";
-              "Groups/0" = {
-                Name = "Default";
-                "Default Layout" = "us";
-                DefaultIM = "pinyin";
-              };
-              "Groups/0/Items/0".Name = "keyboard-us";
-              "Groups/0/Items/1".Name = "pinyin";
-            }
-          '';
+          example = {
+            GroupOrder."0" = "Default";
+            "Groups/0" = {
+              Name = "Default";
+              "Default Layout" = "us";
+              DefaultIM = "pinyin";
+            };
+            "Groups/0/Items/0".Name = "keyboard-us";
+            "Groups/0/Items/1".Name = "pinyin";
+          };
         };
         addons = lib.mkOption {
           type = with lib.types; (attrsOf iniGlobalFormat.type);
@@ -124,12 +148,10 @@ in
             The addon configures in `conf` folder in ini format with global sections.
             Each item is written to the corresponding file.
           '';
-          example = lib.literalExpression ''
-            {
-              classicui.globalSection.Theme = "example";
-              pinyin.globalSection.EmojiEnabled = "True";
-            }
-          '';
+          example = {
+            classicui.globalSection.Theme = "example";
+            pinyin.globalSection.EmojiEnabled = "True";
+          };
         };
       };
 
@@ -209,18 +231,16 @@ in
     };
 
     home = {
-      sessionVariables = {
-        GLFW_IM_MODULE = "ibus"; # IME support in kitty
-        SDL_IM_MODULE = "fcitx";
-        XMODIFIERS = "@im=fcitx";
-      }
-      // lib.optionalAttrs (!cfg.waylandFrontend) {
-        GTK_IM_MODULE = "fcitx";
-        QT_IM_MODULE = "fcitx";
-      }
-      // lib.optionalAttrs cfg.ignoreUserConfig {
-        SKIP_FCITX_USER_PATH = "1";
-      };
+      sessionVariables = lib.mkMerge [
+        cfg.sessionVariables
+
+        (lib.optionalAttrs (!cfg.waylandFrontend) {
+          GTK_IM_MODULE = "fcitx";
+          QT_IM_MODULE = "fcitx";
+        })
+
+        (lib.optionalAttrs cfg.ignoreUserConfig { SKIP_FCITX_USER_PATH = "1"; })
+      ];
 
       sessionSearchVariables.QT_PLUGIN_PATH = [ "${fcitx5Package}/${pkgs.qt6.qtbase.qtPluginPrefix}" ];
     };
@@ -275,7 +295,7 @@ in
       ) cfg.themes;
     };
 
-    systemd.user.services.fcitx5-daemon = {
+    systemd.user.services.fcitx5-daemon = lib.mkIf cfg.systemd.enable {
       Unit = {
         Description = "Fcitx5 input method editor";
         PartOf = [ "graphical-session.target" ];

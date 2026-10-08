@@ -16,7 +16,6 @@ let
   cfg = config.programs.onagre;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.onagre = {
     enable = mkEnableOption "onagre";

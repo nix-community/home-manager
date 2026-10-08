@@ -37,12 +37,10 @@ in
         Configuration options for imv. See
         {manpage}`imv(5)`.
       '';
-      example = lib.literalExpression ''
-        {
-          options.background = "ffffff";
-          aliases.x = "close";
-        }
-      '';
+      example = {
+        options.background = "ffffff";
+        aliases.x = "close";
+      };
     };
   };
 

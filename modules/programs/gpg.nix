@@ -109,7 +109,7 @@ let
 
   importTrustBashFunctions =
     let
-      gpg = "${cfg.package}/bin/gpg";
+      gpg = if cfg.package != null then "${cfg.package}/bin/gpg" else "gpg";
     in
     ''
       function gpgKeyId() {
@@ -132,7 +132,7 @@ let
 
   keyringFiles =
     let
-      gpg = "${cfg.package}/bin/gpg";
+      gpg = if cfg.package != null then "${cfg.package}/bin/gpg" else "gpg";
 
       importKey =
         { source, trust, ... }:
@@ -163,18 +163,17 @@ in
     enable = lib.mkEnableOption "GnuPG";
 
     package = lib.mkPackageOption pkgs "gnupg" {
+      nullable = true;
       example = "pkgs.gnupg23";
       extraDescription = "Also used by the gpg-agent service.";
     };
 
     settings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
-      example = literalExpression ''
-        {
-          no-comments = false;
-          s2k-cipher-algo = "AES128";
-        }
-      '';
+      example = {
+        no-comments = false;
+        s2k-cipher-algo = "AES128";
+      };
       description = ''
         GnuPG configuration options. Available options are described
         in
@@ -189,11 +188,9 @@ in
     scdaemonSettings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
       default = { };
-      example = literalExpression ''
-        {
-          disable-ccid = true;
-        }
-      '';
+      example = {
+        disable-ccid = true;
+      };
       description = ''
         SCdaemon configuration options. Available options are described
         in
@@ -224,11 +221,9 @@ in
     gpgsmSettings = mkOption {
       type = types.attrsOf (types.either primitiveType (types.listOf types.str));
       default = { };
-      example = literalExpression ''
-        {
-          with-key-data = true;
-        }
-      '';
+      example = {
+        with-key-data = true;
+      };
       description = ''
         GPGSM configuration options. Available options are described
         in
@@ -309,7 +304,7 @@ in
       no-symkey-cache = mkDefault true;
     };
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     home.sessionVariables = {
       GNUPGHOME = cfg.homedir;
     };
@@ -342,7 +337,7 @@ in
 
       importGpgKeys =
         let
-          gpg = "${cfg.package}/bin/gpg";
+          gpg = if cfg.package != null then "${cfg.package}/bin/gpg" else "gpg";
 
           importKey =
             { source, trust, ... }:

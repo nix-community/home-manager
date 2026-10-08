@@ -20,7 +20,6 @@ let
   };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.onedrive = {
     enable = mkEnableOption "onedrive";

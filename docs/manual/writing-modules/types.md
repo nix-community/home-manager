@@ -4,7 +4,7 @@ Overall the basic option types are the same in Home Manager as NixOS. A
 few Home Manager options, however, make use of custom types that are
 worth describing in more detail. These are the option types `dagOf` and
 `gvariant` that are used, for example, by
-[programs.ssh.matchBlocks](#opt-programs.ssh.matchBlocks) and [dconf.settings](#opt-dconf.settings).
+[programs.ssh.settings](#opt-programs.ssh.settings) and [dconf.settings](#opt-dconf.settings).
 
 []{#sec-option-types-dag}`hm.types.dagOf`
 

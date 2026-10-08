@@ -113,7 +113,7 @@ in
 
     assertions = [
       {
-        assertion = pkgs.stdenv.isDarwin -> (lib.length cfg.dates == 1);
+        assertion = pkgs.stdenv.hostPlatform.isDarwin -> (lib.length cfg.dates == 1);
         message = "On Darwin, `nix.gc.dates` must contain a single element.";
       }
       (lib.hm.darwin.assertInterval "nix.gc.dates.*" (lib.elemAt cfg.dates 0) pkgs)

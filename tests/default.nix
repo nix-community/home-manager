@@ -36,6 +36,12 @@ let
           buildHost = value;
           hostTarget = value;
         };
+      }
+      // lib.optionalAttrs (value ? override && lib.isFunction value.override) {
+        override = args: scrubDerivation name (value.override args);
+      }
+      // lib.optionalAttrs (value ? overrideAttrs && lib.isFunction value.overrideAttrs) {
+        overrideAttrs = f: scrubDerivation name (value.overrideAttrs f);
       };
     in
     if lib.isAttrs value then
@@ -47,7 +53,7 @@ let
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
   whitelist =
     let
-      inner = _self: _super: {
+      inner = _self: super: {
         inherit (pkgs)
           coreutils
           crudini
@@ -66,6 +72,10 @@ let
           fish
           lndir
           ;
+
+        python3Packages = super.python3Packages.overrideScope (
+          _self: _super: { inherit (pkgs.python3Packages) json5; }
+        );
       };
 
       outer =
@@ -177,7 +187,9 @@ import nmtSrc {
       (
         [
           # keep-sorted start case=no numeric=yes
+          ./lib/deprecations
           ./lib/generators
+          ./lib/mcp
           ./lib/types
           ./modules/files
           ./modules/home-environment
@@ -185,7 +197,7 @@ import nmtSrc {
           ./modules/misc/manual
           ./modules/misc/news
           ./modules/misc/nix
-          ./modules/misc/nix-remote-build
+          ./modules/misc/nixpkgs-disabled
           ./modules/misc/specialisation
           ./modules/misc/ssh-auth-sock/default.nix
           ./modules/misc/xdg
@@ -212,6 +224,7 @@ import nmtSrc {
           ./modules/misc/qt
           ./modules/misc/xdg/linux.nix
           ./modules/misc/xsession
+          ./modules/services-modular
           ./modules/systemd
           ./modules/targets-linux
           # keep-sorted end

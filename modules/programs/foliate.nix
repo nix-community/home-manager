@@ -32,24 +32,22 @@ in
         the scheme is defined at
         <https://github.com/johnfactotum/foliate/blob/gtk4/data/com.github.johnfactotum.Foliate.gschema.xml>
       '';
-      example = lib.literalExpression ''
-        {
-          myTheme = {
-            color-scheme = 0;
-            library = {
-              view-mode = "grid";
-              show-covers = true;
-            };
-            "viewer/view" = {
-              theme = "myTheme.json";
-            };
-            "viewer/font" = {
-              monospace = "Maple Mono";
-              default-size = 12;
-            };
+      example = {
+        myTheme = {
+          color-scheme = 0;
+          library = {
+            view-mode = "grid";
+            show-covers = true;
           };
-        }
-      '';
+          "viewer/view" = {
+            theme = "myTheme.json";
+          };
+          "viewer/font" = {
+            monospace = "Maple Mono";
+            default-size = 12;
+          };
+        };
+      };
     };
     themes = mkOption {
       type = types.attrsOf (

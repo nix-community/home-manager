@@ -8,6 +8,10 @@ let
   inherit (lib) mkOption types;
 
   cfg = config.programs.senpai;
+
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+
 in
 {
   meta.maintainers = [ lib.maintainers.malte-v ];
@@ -15,6 +19,7 @@ in
   options.programs.senpai = {
     enable = lib.mkEnableOption "senpai";
     package = lib.mkPackageOption pkgs "senpai" { };
+
     config = mkOption {
       type = types.submodule {
         freeformType = types.attrsOf types.anything;
@@ -71,13 +76,11 @@ in
           };
         };
       };
-      example = lib.literalExpression ''
-        {
-          address = "libera.chat:6697";
-          nickname = "nicholas";
-          password = "verysecurepassword";
-        }
-      '';
+      example = {
+        address = "libera.chat:6697";
+        nickname = "nicholas";
+        password = "verysecurepassword";
+      };
       description = ''
         Configuration for senpai. For a complete list of options, see
         {manpage}`senpai(5)`.
@@ -104,8 +107,10 @@ in
         message = "senpai: no-tls is deprecated, use tls instead";
       }
     ];
+
     home.packages = [ cfg.package ];
-    xdg.configFile."senpai/senpai.scfg".text =
+
+    home.file."${configDir}/senpai/senpai.scfg".text =
       let
         attrsToDirectiveList = lib.mapAttrsToList (
           name: value:
@@ -113,22 +118,14 @@ in
             inherit name;
           }
           // (
-            if (builtins.typeOf value != "set") then
-              {
-                params = lib.toList value;
-              }
+            if builtins.typeOf value != "set" then
+              { params = lib.toList value; }
             else
               let
                 children = lib.filterAttrs (n: _: n != "_params") value;
               in
-              (
-                lib.optionalAttrs (value ? "_params") {
-                  params = value._params;
-                }
-                // lib.optionalAttrs (children != { }) {
-                  children = attrsToDirectiveList children;
-                }
-              )
+              lib.optionalAttrs (value ? "_params") { params = value._params; }
+              // lib.optionalAttrs (children != { }) { children = attrsToDirectiveList children; }
           )
         );
       in

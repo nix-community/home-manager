@@ -48,7 +48,7 @@ in
   nmt.script =
     let
       nushellConfigFile =
-        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+        if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
           "home-files/Library/Application Support/nushell/config.nu"
         else
           "home-files/.config/nushell/config.nu";
@@ -87,7 +87,10 @@ in
       assertFileRegex home-files/.zshrc \
         'eval.*direnv hook zsh'
 
-      # Test fish integration (enabled by default)
+      # Test fish integration includes a guard so the hook is a no-op when
+      # direnv's Fish vendor conf file has already been loaded.
+      assertFileRegex home-files/.config/fish/config.fish \
+        'functions -q __direnv_export_eval'
       assertFileRegex home-files/.config/fish/config.fish \
         'direnv hook fish.*source'
 
@@ -96,6 +99,10 @@ in
         'direnv export json'
       assertFileRegex "${nushellConfigFile}" \
         'load-env'
+      # Variables direnv marks for removal (null values) must be unset via
+      # hide-env; load-env alone cannot remove them and leaves empty ghosts.
+      assertFileRegex "${nushellConfigFile}" \
+        'hide-env'
 
       # Test mise integration creates library file
       assertFileExists home-files/.config/direnv/lib/hm-mise.sh

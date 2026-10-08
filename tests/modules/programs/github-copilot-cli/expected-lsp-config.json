@@ -1,0 +1,32 @@
+{
+  "lspServers": {
+    "python": {
+      "args": [
+        "--stdio"
+      ],
+      "command": "pyright-langserver",
+      "env": {
+        "PYTHONPATH": "${PYTHONPATH:-}"
+      },
+      "fileExtensions": {
+        ".py": "python",
+        ".pyi": "python",
+        ".pyw": "python"
+      },
+      "requestTimeoutMs": 120000,
+      "rootUri": "backend"
+    },
+    "typescript": {
+      "args": [
+        "--stdio"
+      ],
+      "command": "typescript-language-server",
+      "fileExtensions": {
+        ".js": "javascript",
+        ".jsx": "javascriptreact",
+        ".ts": "typescript",
+        ".tsx": "typescriptreact"
+      }
+    }
+  }
+}

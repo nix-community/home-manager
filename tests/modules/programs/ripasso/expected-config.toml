@@ -1,0 +1,3 @@
+[stores.default]
+path = "/home/user/.password-store"
+pgp_implementation = "gpg"

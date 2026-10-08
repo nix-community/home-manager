@@ -56,8 +56,6 @@ in
       Unit = {
         Description = "An MPRIS scrobbler";
         Documentation = "https://github.com/InputUsername/rescrobbled";
-        Wants = [ "network-online.target" ];
-        After = [ "network-online.target" ];
       };
 
       Service.ExecStart = lib.getExe cfg.package;

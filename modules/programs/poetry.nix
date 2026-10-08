@@ -11,12 +11,12 @@ let
     mkEnableOption
     mkPackageOption
     mkOption
-    literalExpression
     ;
 
   tomlFormat = pkgs.formats.toml { };
 
-  configDir = if pkgs.stdenv.isDarwin then "Library/Application Support" else config.xdg.configHome;
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 
   cfg = config.programs.poetry;
 
@@ -36,12 +36,10 @@ in
     settings = mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          virtualenvs.create = true;
-          virtualenvs.in-project = true;
-        }
-      '';
+      example = {
+        virtualenvs.create = true;
+        virtualenvs.in-project = true;
+      };
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/pypoetry/config.toml` on Linux or

@@ -15,7 +15,6 @@ let
   cfg = config.services.hyprlauncher;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.services.hyprlauncher = {
     enable = mkEnableOption "hyprlauncher";
@@ -78,6 +77,8 @@ in
 
       Service = {
         ExecStart = "${lib.getExe cfg.package} -d";
+        # Applications launched by hyprlauncher should outlive the daemon.
+        KillMode = "process";
         Restart = "on-failure";
         RestartSec = "10";
       };

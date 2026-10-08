@@ -1,0 +1,6 @@
+{
+  "name": "sample-plugin",
+  "version": "1.0.0",
+  "description": "Sample Codex plugin for Home Manager tests.",
+  "skills": "./skills"
+}

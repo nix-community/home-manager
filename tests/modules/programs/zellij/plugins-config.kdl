@@ -1,0 +1,12 @@
+load_plugins {
+	foo 
+	bar 
+	baz 
+}
+plugins {
+	bar location="file:/home/hm-user/.config/zellij/plugins/bar.wasm" {
+		foo 123
+	}
+	baz location="file:/home/hm-user/.config/zellij/plugins/baz.wasm"
+	foo location="file:/home/hm-user/.config/zellij/plugins/foo.wasm"
+}

@@ -16,7 +16,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.anime-downloader = {
     enable = mkEnableOption "anime-downloader";
     package = mkPackageOption pkgs "anime-downloader" { nullable = true; };

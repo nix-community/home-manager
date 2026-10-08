@@ -1,0 +1,11 @@
+after_sync_commands = ["query lastsync", 'tag rust title:"rust"', "read title:/^Advertisement/", "refresh"]
+audio_enclosure_command = "vlc {url}"
+feed_list = ['query: "Marked" marked', 'query: "Reviews" #reviews', "feeds", "* categories", "tags"]
+mouse_support = true
+share_targets = ["clipboard", 'feh feh "{url}"']
+startup_commands = ["sync"]
+video_enclosure_command = "mpv {url}"
+
+[input_config.mappings]
+"; i" = ["cmd hintshare feh"]
+y = ["confirm in articles read all", "nextunread"]

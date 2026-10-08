@@ -2,12 +2,19 @@
 
 set -e
 
-# Install the systemd service file and ensure that the store path won't be
-# garbage-collected as long as it's installed.
-unit_path=/etc/systemd/system/non-nixos-gpu.service
-ln -sf @@systemddir@@/non-nixos-gpu.service "$unit_path"
-ln -sf "$unit_path" "@@statedir@@"/gcroots/non-nixos-gpu.service
+# Migrate from old systemd service setup
+old_unit=/etc/systemd/system/non-nixos-gpu.service
+if [[ -L "$old_unit" || -f "$old_unit" ]]; then
+  systemctl disable --now non-nixos-gpu.service 2>/dev/null || true
+  rm -f "$old_unit"
+  rm -f "@@statedir@@/gcroots/non-nixos-gpu.service"
+  systemctl daemon-reload
+fi
 
-systemctl daemon-reload
-systemctl enable non-nixos-gpu.service
-systemctl restart non-nixos-gpu.service
+# Install the tmpfiles.d config file and ensure that the store path won't be
+# garbage-collected as long as it's installed.
+conf_path=/etc/tmpfiles.d/non-nixos-gpu.conf
+ln -sf @@tmpfilesdir@@/non-nixos-gpu.conf "$conf_path"
+ln -sf "$conf_path" "@@statedir@@"/gcroots/non-nixos-gpu.conf
+
+systemd-tmpfiles --create non-nixos-gpu.conf

@@ -35,17 +35,15 @@ in
     settings = lib.mkOption {
       inherit (iniFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          general = {
-            font-regular = "sans:size=14";
-            pin-square-amount = 32;
-          };
-          colours = {
-            background = "ffffffaa";
-          };
-        }
-      '';
+      example = {
+        general = {
+          font-regular = "sans:size=14";
+          pin-square-amount = 32;
+        };
+        colours = {
+          background = "ffffffaa";
+        };
+      };
       description = ''
         Configuration for wayprompt written to
         {file}`$XDG_CONFIG_HOME/wayprompt/config.ini`.

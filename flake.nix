@@ -1,7 +1,7 @@
 {
   description = "Home Manager for Nix";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
   outputs =
     {
@@ -45,14 +45,34 @@
     }
     // (
       let
-        forAllPkgs =
-          f:
-          nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system: f nixpkgs.legacyPackages.${system});
+        supportedSystems = [
+          "aarch64-darwin"
+          "aarch64-linux"
+          "i686-linux"
+          "x86_64-linux"
+        ];
+
+        forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+
+        forAllPkgs = forSystems (nixpkgs.lib.remove "x86_64-darwin" nixpkgs.lib.systems.flakeExposed);
+
+        forSupportedPkgs = forSystems supportedSystems;
 
         forCI = nixpkgs.lib.genAttrs [
           "aarch64-darwin"
           "x86_64-linux"
         ];
+
+        warn = builtins.warn or nixpkgs.lib.warn;
+
+        releaseInfo = nixpkgs.lib.importJSON ./release.json;
+
+        docsFor =
+          pkgs:
+          import ./docs {
+            inherit pkgs;
+            inherit (releaseInfo) release isReleaseBranch;
+          };
 
         testChunks =
           system:
@@ -63,8 +83,7 @@
             # Create chunked test packages for better CI parallelization
             tests = import ./tests {
               inherit pkgs;
-              # Disable big tests since this is only used for CI
-              enableBig = false;
+              enableBig = true;
             };
             allTests = lib.attrNames tests.build;
             # Remove 'all' from the test list as it's a meta-package
@@ -157,37 +176,51 @@
           lib.mapAttrs' renameTestPkg tests;
       in
       {
-        formatter = forAllPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
+        formatter = forSupportedPkgs (pkgs: pkgs.callPackage ./home-manager/formatter.nix { });
 
-        # TODO: increase buildbot testing scope
-        buildbot = forCI (
+        # TODO: increase nixbot testing scope
+        nixbot = forCI (
           system:
           let
+            docs = docsFor nixpkgs.legacyPackages.${system};
             allIntegrationTests = integrationTests system;
             workingIntegrationTests = nixpkgs.lib.filterAttrs (
               name: _:
               nixpkgs.lib.elem name [
                 "integration-nixos-basics"
                 "integration-nixos-legacy-profile-management"
+                "integration-mutable-files"
               ]
             ) allIntegrationTests;
           in
-          (testChunks system) // workingIntegrationTests
+          (testChunks system)
+          // workingIntegrationTests
+          // {
+            docs-html = docs.manual.html;
+            docs-json = docs.options.json;
+            docs-jsonModuleMaintainers = docs.jsonModuleMaintainers;
+            docs-manpages = docs.manPages;
+          }
+        );
+
+        # Alias for nixbot, added 2026-07-30
+        buildbot = forCI (
+          system:
+          warn "Home Manager: `buildbot.${system}` has been renamed to `nixbot.${system}`."
+            self.nixbot.${system}
         );
 
         packages = forAllPkgs (
           pkgs:
           let
-            releaseInfo = nixpkgs.lib.importJSON ./release.json;
-            docs = import ./docs {
-              inherit pkgs;
-              inherit (releaseInfo) release isReleaseBranch;
-            };
+            docs = docsFor pkgs;
             hmPkg = pkgs.callPackage ./home-manager { path = "${self}"; };
           in
           {
             default = hmPkg;
             home-manager = hmPkg;
+          }
+          // nixpkgs.lib.optionalAttrs (nixpkgs.lib.elem pkgs.stdenv.hostPlatform.system supportedSystems) {
 
             ci-parse = pkgs.callPackage ./ci/parse.nix { nix = pkgs.nixVersions.latest; };
             ci-parse-lix = pkgs.callPackage ./ci/parse.nix {
@@ -213,11 +246,11 @@
           }
         );
 
-        devShells = forAllPkgs (pkgs: {
+        devShells = forSupportedPkgs (pkgs: {
           default = pkgs.callPackage ./home-manager/devShell.nix { };
         });
 
-        legacyPackages = forAllPkgs (
+        legacyPackages = forSupportedPkgs (
           pkgs:
           let
             inherit (pkgs.stdenv.hostPlatform) system;

@@ -81,7 +81,7 @@
   nmt.script =
     let
       settingsPath =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "home-files/Library/Application Support/CudaText/settings"
         else
           "home-files/.config/cudatext/settings";

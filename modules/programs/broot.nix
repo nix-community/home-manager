@@ -83,24 +83,22 @@ let
       skin = mkOption {
         type = types.attrsOf types.str;
         default = { };
-        example = literalExpression ''
-          {
-            status_normal_fg = "grayscale(18)";
-            status_normal_bg = "grayscale(3)";
-            status_error_fg = "red";
-            status_error_bg = "yellow";
-            tree_fg = "red";
-            selected_line_bg = "grayscale(7)";
-            permissions_fg = "grayscale(12)";
-            size_bar_full_bg = "red";
-            size_bar_void_bg = "black";
-            directory_fg = "lightyellow";
-            input_fg = "cyan";
-            flag_value_fg = "lightyellow";
-            table_border_fg = "red";
-            code_fg = "lightyellow";
-          }
-        '';
+        example = {
+          status_normal_fg = "grayscale(18)";
+          status_normal_bg = "grayscale(3)";
+          status_error_fg = "red";
+          status_error_bg = "yellow";
+          tree_fg = "red";
+          selected_line_bg = "grayscale(7)";
+          permissions_fg = "grayscale(12)";
+          size_bar_full_bg = "red";
+          size_bar_void_bg = "black";
+          directory_fg = "lightyellow";
+          input_fg = "cyan";
+          flag_value_fg = "lightyellow";
+          table_border_fg = "red";
+          code_fg = "lightyellow";
+        };
         description = ''
           Color configuration.
 
@@ -141,9 +139,14 @@ let
     # manipulations of the prompt.
     lib.mkAfter ''
       source ${
-        pkgs.runCommand "br.${shell}" {
-          nativeBuildInputs = [ cfg.package ];
-        } "broot --print-shell-function ${shell} > $out"
+        pkgs.runCommand "br.${shell}" { nativeBuildInputs = [ cfg.package ]; } (
+          if shell == "nushell" then
+            # broot >= 1.51 exports `main` instead of `br`.
+            # Rename back to `br` to keep `source` working.
+            "broot --print-shell-function ${shell} | sed 's/export def --env main/export def --env br/' > $out"
+          else
+            "broot --print-shell-function ${shell} > $out"
+        )
       }
     '';
 in

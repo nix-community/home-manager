@@ -19,9 +19,9 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = [
-    lib.maintainers.khaneliman
-    lib.hm.maintainers."74k1"
+  meta.maintainers = with lib.maintainers; [
+    khaneliman
+    _74k1
   ];
 
   options.programs.sherlock = {
@@ -71,7 +71,7 @@ in
         "NixOS Wiki" = {
           name = "NixOS Wiki";
           icon = "nixos";
-          exec = "firefox https://nixos.wiki/index.php?search=%s";
+          exec = "firefox https://wiki.nixos.org/w/index.php?search=%s";
           keywords = "nix wiki docs";
         };
       };

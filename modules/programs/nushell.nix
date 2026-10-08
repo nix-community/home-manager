@@ -50,12 +50,12 @@ in
     configDir = lib.mkOption {
       type = types.either types.str types.path;
       default =
-        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+        if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
           "Library/Application Support/nushell"
         else
           "${config.xdg.configHome}/nushell";
       defaultText = lib.literalExpression ''
-        if pkgs.stdenv.isDarwin && !config.xdg.enable then
+        if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
           "Library/Application Support/nushell"
         else
           "''${config.xdg.configHome}/nushell";
@@ -228,7 +228,11 @@ in
       (
         let
           writeConfig =
-            cfg.configFile != null || cfg.extraConfig != "" || aliasesStr != "" || cfg.settings != { };
+            cfg.configFile != null
+            || cfg.extraConfig != ""
+            || aliasesStr != ""
+            || cfg.settings != { }
+            || cfg.environmentVariables != { };
 
           aliasesStr = lib.concatLines (
             lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}") cfg.shellAliases
@@ -292,6 +296,7 @@ in
         let
           msgPackz = pkgs.runCommand "nushellMsgPackz" { } ''
             mkdir -p "$out"
+            touch "$out/plugin.msgpackz"
             ${lib.getExe cfg.package} \
               --plugin-config "$out/plugin.msgpackz" \
               --commands '${

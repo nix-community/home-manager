@@ -136,14 +136,12 @@ in
           )}
         '';
         default = { };
-        example = lib.literalExpression ''
-          {
-            edge = "top";
-            padding = 6;
-            SetDockType = true;
-            tint = "0x282c34";
-          }
-        '';
+        example = {
+          edge = "top";
+          padding = 6;
+          SetDockType = true;
+          tint = "0x282c34";
+        };
       };
     };
   };

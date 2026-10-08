@@ -144,14 +144,12 @@ in
     remotes = mkOption {
       type = with types; attrsOf (submodule syncOptions);
       default = { };
-      example = lib.literalExpression ''
-        {
-          server = {
-            frequency = "*:0/10";
-            remote.host = "server.tld";
-          };
-        }
-      '';
+      example = {
+        server = {
+          frequency = "*:0/10";
+          remote.host = "server.tld";
+        };
+      };
       description = ''
         Muchsync remotes to synchronise with.
       '';

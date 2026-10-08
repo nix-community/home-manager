@@ -5,5 +5,6 @@
 user_pref("browser.bookmarks.file", "/nix/store/00000000000000000000000000000000-bookmarks.html");
 user_pref("browser.newtabpage.pinned", "[{\"title\":\"NixOS\",\"url\":\"https://nixos.org\"}]");
 user_pref("general.smoothScroll", false);
+user_pref("toolkit.profiles.storeID", "1a2b3c4d");
 
 

@@ -22,8 +22,6 @@ lib.mkIf config.test.enableBig (
     }
   )
   // {
-    home.stateVersion = "19.09";
-
     _module.args.pkgs = lib.mkForce realPkgs;
 
     nmt.script = ''

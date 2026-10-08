@@ -247,8 +247,8 @@ in
   options = {
     systemd.user = {
       enable = mkEnableOption "the user systemd service manager" // {
-        default = pkgs.stdenv.isLinux;
-        defaultText = literalExpression "pkgs.stdenv.isLinux";
+        default = pkgs.stdenv.hostPlatform.isLinux;
+        defaultText = literalExpression "pkgs.stdenv.hostPlatform.isLinux";
       };
 
       systemctlPath = mkOption {
@@ -414,11 +414,9 @@ in
                       ])
                     );
                   default = { };
-                  example = literalExpression ''
-                    {
-                      PATH = "%u/bin:%u/.cargo/bin";
-                    }
-                  '';
+                  example = {
+                    PATH = "%u/bin:%u/.cargo/bin";
+                  };
                   apply = value: concatStringsSep " " (mapAttrsToList (n: v: "${n}=${escapeShellArg v}") value);
                 }
                 // args;
@@ -439,11 +437,9 @@ in
             };
         };
         default = { };
-        example = literalExpression ''
-          {
-            Manager.DefaultCPUAccounting = true;
-          }
-        '';
+        example = {
+          Manager.DefaultCPUAccounting = true;
+        };
         description = ''
           Extra config options for user session service manager. See {manpage}`systemd-user.conf(5)` for
           available options.
@@ -454,8 +450,7 @@ in
 
   # If we run under a Linux system we assume that systemd is
   # available, in particular we assume that systemctl is in PATH.
-  # Do not install any user services if username is root.
-  config = mkIf (cfg.enable && config.home.username != "root") {
+  config = mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "systemd" pkgs lib.platforms.linux)
     ];

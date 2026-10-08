@@ -1,4 +1,0 @@
-[[rule]]
-toolName = "read_file"
-decision = "allow"
-priority = 50

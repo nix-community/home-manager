@@ -5,7 +5,6 @@
       "url": "https://example.com/mcp"
     },
     "context7": {
-      "enabled": true,
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },

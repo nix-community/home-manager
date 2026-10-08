@@ -11,7 +11,7 @@ let
   settingsFormat = pkgs.formats.toml { };
 
   configDir =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/org.dystroy.bacon"
     else
       "${config.xdg.configHome}/bacon";

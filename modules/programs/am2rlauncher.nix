@@ -16,7 +16,6 @@ let
   cfg = config.programs.am2rlauncher;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.am2rlauncher = {
     enable = mkEnableOption "am2rlauncher";
     package = mkPackageOption pkgs "am2rlauncher" { nullable = true; };

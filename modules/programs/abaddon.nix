@@ -16,7 +16,6 @@ let
   iniFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.abaddon = {
     enable = mkEnableOption "abaddon";
     package = mkPackageOption pkgs "abaddon" { nullable = true; };

@@ -38,18 +38,24 @@ let
     }:
     name: value: "${name}${sep}${mkValueString value}${end}";
 
+  isSection = value: isAttrs value && (value._type or "") != "literal";
+
+  toRasiKeyValue =
+    attrs:
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (
+        name: value:
+        if isSection value then
+          "${name} {\n${toRasiKeyValue (filterAttrs (_: v: v != null) value)}\n}"
+        else
+          mkKeyValue { } name value
+      ) (filterAttrs (_: v: v != null) attrs)
+    );
+
   mkRasiSection =
     name: value:
-    if isAttrs value then
-      let
-        toRasiKeyValue = lib.generators.toKeyValue { mkKeyValue = mkKeyValue { }; };
-        # Remove null values so the resulting config does not have empty lines
-        configStr = toRasiKeyValue (filterAttrs (_: v: v != null) value);
-      in
-      ''
-        ${name} {
-        ${configStr}}
-      ''
+    if isSection value then
+      "${name} {\n${toRasiKeyValue value}\n}\n"
     else
       (mkKeyValue {
         sep = " ";
@@ -96,7 +102,9 @@ let
   # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
   configType = with types; either sectionType str;
 
-  extraConfigType = with types; attrsOf (either sectionType configValueType);
+  extraConfigType =
+    with types;
+    attrsOf (either sectionType (either configValueType (listOf configValueType)));
 
   rasiLiteral =
     types.submodule {
@@ -137,11 +145,6 @@ let
       cfg.theme;
 
   modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
-
-  # Flat entries belong in `configuration { ... }`, while nested attrsets map
-  # to top-level Rasi sections such as `filebrowser { ... }`.
-  configurationExtraConfig = filterAttrs (_: v: !isAttrs v) cfg.extraConfig;
-  sectionExtraConfig = filterAttrs (_: isAttrs) cfg.extraConfig;
 in
 {
   meta.maintainers = [ ];
@@ -262,7 +265,7 @@ in
     configPath = mkOption {
       default = "${config.xdg.configHome}/rofi/config.rasi";
       defaultText = "$XDG_CONFIG_HOME/rofi/config.rasi";
-      type = types.str;
+      type = types.nonEmptyStr;
       description = "Path where to put generated configuration file.";
     };
 
@@ -300,15 +303,13 @@ in
 
     extraConfig = mkOption {
       default = { };
-      example = literalExpression ''
-        {
-          kb-primary-paste = "Control+V,Shift+Insert";
-          kb-secondary-paste = "Control+v,Insert";
-          "run,drun" = {
-            display-name = "open:";
-          };
-        }
-      '';
+      example = {
+        kb-primary-paste = "Control+V,Shift+Insert";
+        kb-secondary-paste = "Control+v,Insert";
+        "run,drun" = {
+          display-name = "open:";
+        };
+      };
       type = extraConfigType;
       description = "Additional configuration to add.";
     };
@@ -356,26 +357,24 @@ in
     home.packages = [ cfg.finalPackage ];
 
     home.file."${cfg.configPath}".text =
-      toRasi (
-        {
-          configuration = (
-            {
-              inherit (cfg)
-                cycle
-                font
-                terminal
-                xoffset
-                yoffset
-                ;
-              location = (lib.getAttr cfg.location locationsMap);
-            }
-            // lib.optionalAttrs (modes != [ ]) { inherit modes; }
-            // configurationExtraConfig
-          );
-        }
-        // sectionExtraConfig
-        # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
-      )
+      toRasi {
+        configuration = (
+          {
+            inherit (cfg)
+              cycle
+              font
+              terminal
+              xoffset
+              yoffset
+              ;
+            location = (lib.getAttr cfg.location locationsMap);
+          }
+          // lib.optionalAttrs (modes != [ ]) { inherit modes; }
+          // cfg.extraConfig
+        );
+      }
+      # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
+
       + (lib.optionalString (themeName != null) (toRasi {
         "@theme" = themeName;
       }));

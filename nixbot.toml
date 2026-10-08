@@ -1,0 +1,2 @@
+attribute = "nixbot"
+build_branches = ["release-*"]

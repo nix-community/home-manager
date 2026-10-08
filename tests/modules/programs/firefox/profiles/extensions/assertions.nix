@@ -55,8 +55,10 @@ in
       test.asserts.assertions.expected = [
         ''
           Using '${lib.showOption modulePath}.profiles.extensions.extensions.settings' will override all
-          previous extensions settings. Enable
-          '${lib.showOption modulePath}.profiles.extensions.extensions.force' to acknowledge this.
+          previous extensions settings. Enable either
+          '${lib.showOption modulePath}.profiles.extensions.extensions.force' or the corresponding
+          '${lib.showOption modulePath}.profiles.extensions.extensions.settings.<extensionId>.force'
+          to acknowledge this.
         ''
         ''
           Extension uBlock0@raymondhill.net requests permissions that weren't

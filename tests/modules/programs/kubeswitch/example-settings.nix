@@ -22,6 +22,8 @@
     assertFileContent \
       home-files/.kube/switch-config.yaml \
       ${builtins.toFile "example-settings-expected.yaml" ''
+        %YAML 1.1
+        ---
         kind: SwitchConfig
         kubeconfigName: '*.myconfig'
         kubeconfigStores:

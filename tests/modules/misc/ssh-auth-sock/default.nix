@@ -1,4 +1,5 @@
 {
-  sshAuthSock-conflicts = ./conflicts.nix;
-  sshAuthSock-initialization = ./initialization.nix;
+  sshAuthSock-disabled = ./disabled.nix;
+  sshAuthSock-enabled = ./enabled.nix;
+  sshAuthSock-socket-provider = ./socket-provider.nix;
 }

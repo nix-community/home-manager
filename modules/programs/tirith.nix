@@ -32,16 +32,14 @@ in
     policy = lib.mkOption {
       inherit (yamlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          version = 1;
-          fail_mode = "open";
-          allow_bypass = true;
-          severity_overrides = {
-            docker_untrusted_registry = "CRITICAL";
-          };
-        }
-      '';
+      example = {
+        version = 1;
+        fail_mode = "open";
+        allow_bypass = true;
+        severity_overrides = {
+          docker_untrusted_registry = "CRITICAL";
+        };
+      };
       description = ''
         Tirith policy configuration.
         Written to `$XDG_CONFIG_HOME/tirith/policy.yaml`.
@@ -77,7 +75,7 @@ in
       ${lib.getExe cfg.package} init --shell fish | source
     '';
 
-    programs.zsh.initExtra = lib.mkIf cfg.enableZshIntegration ''
+    programs.zsh.initContent = lib.mkIf cfg.enableZshIntegration ''
       eval "$(${lib.getExe cfg.package} init --shell zsh)"
     '';
   };

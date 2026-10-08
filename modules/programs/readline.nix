@@ -42,9 +42,9 @@ in
     bindings = mkOption {
       default = { };
       type = types.attrsOf types.str;
-      example = lib.literalExpression ''
-        { "\\C-h" = "backward-kill-word"; }
-      '';
+      example = {
+        "\\C-h" = "backward-kill-word";
+      };
       description = "Readline bindings.";
     };
 

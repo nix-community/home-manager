@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Window Settings</key>
+	<dict>
+		<key>Basic</key>
+		<dict>
+			<key>CommandString</key>
+			<string>echo test</string>
+			<key>ProfileCurrentVersion</key>
+			<real>2.070000</real>
+			<key>ShowActiveProcessArgumentsInTitle</key>
+			<false/>
+			<key>ShowTTYNameInTitle</key>
+			<true/>
+			<key>columnCount</key>
+			<integer>50</integer>
+			<key>name</key>
+			<string>Basic</string>
+			<key>rowCount</key>
+			<integer>24</integer>
+			<key>type</key>
+			<string>Window Settings</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -118,13 +118,11 @@ in
                 {manpage}`i3status(1)`
                 for options.
               '';
-              example = literalExpression ''
-                {
-                  format = "♪ %volume";
-                  format_muted = "♪ muted (%volume)";
-                  device = "pulse:1";
-                }
-              '';
+              example = {
+                format = "♪ %volume";
+                format_muted = "♪ muted (%volume)";
+                device = "pulse:1";
+              };
             };
           };
         }
@@ -136,24 +134,22 @@ in
         {manpage}`i3status(1)`
         for options.
       '';
-      example = literalExpression ''
-        {
-          "volume master" = {
-            position = 1;
-            settings = {
-              format = "♪ %volume";
-              format_muted = "♪ muted (%volume)";
-              device = "pulse:1";
-            };
+      example = {
+        "volume master" = {
+          position = 1;
+          settings = {
+            format = "♪ %volume";
+            format_muted = "♪ muted (%volume)";
+            device = "pulse:1";
           };
-          "disk /" = {
-            position = 2;
-            settings = {
-              format = "/ %avail";
-            };
+        };
+        "disk /" = {
+          position = 2;
+          settings = {
+            format = "/ %avail";
           };
-        }
-      '';
+        };
+      };
     };
 
     package = lib.mkPackageOption pkgs "i3status" { nullable = true; };

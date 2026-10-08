@@ -16,7 +16,6 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.amber = {
     enable = mkEnableOption "amber";
     package = mkPackageOption pkgs "amber" { nullable = true; };

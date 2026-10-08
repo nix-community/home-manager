@@ -81,7 +81,9 @@ in
       cmdKeybindings = mkOption {
         type = with types; attrsOf (nullOr str);
         default = { };
-        example = literalExpression ''{ "<c-g>" = "cmd-escape"; }'';
+        example = {
+          "<c-g>" = "cmd-escape";
+        };
         description = ''
           Keys to bind to command line commands which can only be one of the
           builtin commands. Keys set to null or an empty string are deleted.

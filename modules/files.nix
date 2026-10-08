@@ -55,6 +55,19 @@ let
         name = sourceName;
       };
 
+  mutableFiles = pkgs.linkFarm "home-manager-mutable-files" (
+    map (file: {
+      name = file.target;
+      path = sourceStorePath file;
+    }) (lib.filter (file: file.mutable && safeMutableTarget file.target) cfg)
+  );
+
+  mutableFileFunctions = "${./files/mutable-files.sh}";
+  safeMutableTarget =
+    target: lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" target);
+
+  putterStatePath = "${config.xdg.stateHome}/home-manager/putter-state.json";
+
 in
 
 {
@@ -88,15 +101,60 @@ in
       '';
     };
 
+    home.fileActivator = lib.mkOption {
+      type =
+        with lib.types;
+        enum [
+          "legacy"
+          "putter"
+        ];
+      default = "legacy";
+      example = "putter";
+      visible = false;
+      description = ''
+        The tooling to use to place files during activation.
+
+        The legacy option (currently the default) is the built-in tooling that
+        is very robust, but is limited in future potential.
+
+        The putter option is a new external tool that may replace the legacy
+        alternative in the future. It is not as hardened as the legacy
+        alternative but will allow future features such as file copying.
+
+        This option should be considered experimental and is therefore hidden
+        from documentation at this time.
+      '';
+    };
+
     home-files = lib.mkOption {
       type = lib.types.package;
       internal = true;
       description = "Package to contain all home files";
     };
+
+    home.internal = {
+      filePutterConfig = lib.mkOption {
+        type = lib.types.package;
+        internal = true;
+        description = "Putter configuration.";
+      };
+    };
   };
 
   config = {
     assertions = [
+      {
+        assertion = lib.all (file: !file.mutable || !file.recursive) cfg;
+        message = "home.file: mutable files cannot use recursive directory linking.";
+      }
+      {
+        assertion = lib.all (file: !file.mutable || safeMutableTarget file.target) cfg;
+        message = "home.file: mutable targets must be safe relative paths without empty, dot, or parent components.";
+      }
+      {
+        assertion = config.home.fileActivator != "putter" || !lib.any (file: file.mutable) cfg;
+        message = "home.file: mutable files require the legacy file activator.";
+      }
       (
         let
           dups = lib.attrNames (
@@ -120,6 +178,11 @@ in
         }
       )
     ];
+
+    # Generation-local ownership survives removal of the last declaration.
+    home.extraBuilderCommands = ''
+      ln -s ${mutableFiles} "$out/home-mutable-files"
+    '';
 
     #  Using this function it is possible to make `home.file` create a
     #  symlink to a path outside the Nix store. For example, a Home Manager
@@ -149,21 +212,72 @@ in
 
         storeDir = lib.escapeShellArg builtins.storeDir;
 
-        check = pkgs.replaceVars ./files/check-link-targets.sh {
+        legacyCheckScript = pkgs.replaceVars ./files/check-link-targets.sh {
           inherit (config.lib.bash) initHomeManagerLib;
-          inherit forcedPaths storeDir;
+          inherit forcedPaths storeDir mutableFileFunctions;
         };
-      in
-      ''
-        function checkNewGenCollision() {
-          local newGenFiles
-          newGenFiles="$(readlink -e "$newGenPath/home-files")"
-          find "$newGenFiles" \( -type f -or -type l \) \
-              -exec bash ${check} "$newGenFiles" {} +
-        }
+        legacyCheckLinkTargets = ''
+          function checkNewGenCollision() {
+            local newGenFiles
+            newGenFiles="$(readlink -e "$newGenPath/home-files")"
+            find "$newGenFiles" \( -type f -or -type l \) \
+                -exec bash ${legacyCheckScript} "$newGenFiles" "$newGenPath/home-mutable-files" \
+                  "''${oldGenPath:-/dev/null}/home-mutable-files" {} +
+          }
 
-        checkNewGenCollision || exit 1
-      ''
+          checkNewGenCollision || exit 1
+          source ${mutableFileFunctions}
+          if [[ -v oldGenPath && -e "$oldGenPath/home-mutable-files" ]]; then
+            while IFS= read -r -d "" relativePath; do
+              checkMutableParents "$relativePath" || exit 1
+            done < <(find "$(readlink -e "$oldGenPath/home-mutable-files")" -type l -printf '%P\0')
+          fi
+        '';
+
+        # If Putter is not enabled, then generate a fake state file to allow
+        # switching to Putter in the future.
+        putterCompatState =
+          let
+            putter = import ./lib/putter.nix { inherit lib; };
+            manifest = putter.mkPutterCompatState {
+              sourceBaseDirectory = config.home-files;
+              targetBaseDirectory = config.home.homeDirectory;
+              fileEntries = cfg;
+            };
+          in
+          pkgs.writeText "hm-putter-state.json" manifest;
+
+        putterCheckLinkTargets = ''
+          # Switching backends must not abandon regular files owned by the
+          # previous generation, even if the new declaration set is empty.
+          if [[ -v oldGenPath && -d "$oldGenPath/home-mutable-files" ]]; then
+            previousMutable="$(${pkgs.findutils}/bin/find \
+              "$(readlink -e "$oldGenPath/home-mutable-files")" -type l -print -quit)" || exit 1
+            if [[ -n "$previousMutable" ]]; then
+              errorEcho "Cannot switch to Putter while the previous generation contains mutable files. Remove their declarations and activate once with the legacy activator first."
+              exit 1
+            fi
+          fi
+
+          # If no Putter state file exists already, then we assume that we are
+          # moving from a legacy file placement setup to a Putter one. We
+          # therefore copy in a Putter compatible state file to avoid conflict
+          # errors from Putter.
+          if [[ ! -f ${lib.escapeShellArg putterStatePath} ]]; then
+            run install -Dp -m600 $VERBOSE_ARG ${
+              lib.escapeShellArgs [
+                putterCompatState
+                putterStatePath
+              ]
+            }
+          fi
+
+          ${lib.getExe pkgs.putter} check $VERBOSE_ARG \
+            --state-file ${lib.escapeShellArg putterStatePath} \
+            ${config.home.internal.filePutterConfig}
+        '';
+      in
+      if config.home.fileActivator == "putter" then putterCheckLinkTargets else legacyCheckLinkTargets
     );
 
     # This activation script will
@@ -172,6 +286,9 @@ in
     #    generation.
     #
     # 2. Symlink files from the new generation into $HOME.
+    #
+    # Mutable copies are cleaned up only after linking succeeds, since their
+    # application-edited contents cannot be recovered from the old generation.
     #
     # This order is needed to ensure that we always know which links
     # belong to which generation. Specifically, if we're moving from
@@ -186,30 +303,140 @@ in
     # source and target generation.
     home.activation.linkGeneration = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       let
-        link = pkgs.writeShellScript "link" ''
+        storeDir = lib.escapeShellArg builtins.storeDir;
+
+        legacyLink = pkgs.writeShellScript "link" ''
           ${config.lib.bash.initHomeManagerLib}
+          source ${mutableFileFunctions}
 
           newGenFiles="$1"
-          shift
+          newMutable="$2"
+          oldMutable="$3"
+          shift 3
+
+          # Classify every target using bash builtins only: even one forked
+          # process per file costs several milliseconds on some platforms
+          # (notably darwin), which dominates activation time when a profile
+          # carries hundreds of links. Targets occupied by a regular file or
+          # directory keep the original per-file handling (backup and
+          # identical-content skip) on the slow path below.
+          declare -a symlinkTargets=() symlinkSources=()
+          declare -a linkSources=() linkDirs=()
+          declare -a slowSources=()
           for sourcePath in "$@" ; do
             relativePath="''${sourcePath#$newGenFiles/}"
             targetPath="$HOME/$relativePath"
-            if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
+            if [[ -f "$newMutable/$relativePath" || -f "$oldMutable/$relativePath" ]] ; then
+              checkMutableParents "$relativePath" || exit 1
+              slowSources+=("$sourcePath")
+            elif [[ -L "''${targetPath%/*}" ]] ; then
+              # The parent directory is itself a symlink (e.g. a stale
+              # whole-directory link from an older layout). The batched
+              # `ln -n -t` below would refuse it ("Not a directory"), while
+              # the original per-file `ln -T` traverses it; keep upstream
+              # behavior on the slow path.
+              slowSources+=("$sourcePath")
+            elif [[ -L "$targetPath" ]] ; then
+              symlinkTargets+=("$targetPath")
+              symlinkSources+=("$sourcePath")
+            elif [[ -e "$targetPath" ]] ; then
+              slowSources+=("$sourcePath")
+            else
+              linkSources+=("$sourcePath")
+              linkDirs+=("''${targetPath%/*}")
+            fi
+          done
+
+          # Resolve all existing symlinks with a single readlink call and
+          # relink only those not already pointing at the new generation.
+          if [[ ''${#symlinkTargets[@]} -gt 0 ]] ; then
+            i=0
+            while IFS= read -r -d "" currentSource ; do
+              if [[ "$currentSource" != "''${symlinkSources[i]}" ]] ; then
+                linkSources+=("''${symlinkSources[i]}")
+                linkDirs+=("''${symlinkTargets[i]%/*}")
+              fi
+              i=$(( i + 1 ))
+            done < <(readlink -z -- "''${symlinkTargets[@]}")
+
+            # readlink prints no record for an operand that vanished since
+            # the classification loop above, and its exit status is lost
+            # through the process substitution. A missing record shifts
+            # every later result onto the wrong source, so the links after
+            # it would be compared against someone else's target and left
+            # stale. The record count is the only signal that happened.
+            if [[ $i -ne ''${#symlinkTargets[@]} ]] ; then
+              errorEcho "A link target changed while resolving symlinks; retry activation."
+              exit 1
+            fi
+          fi
+
+          # Create all missing parent directories in one mkdir call.
+          declare -A missingDirs=()
+          for targetDir in "''${linkDirs[@]}" ; do
+            [[ -d "$targetDir" ]] || missingDirs[$targetDir]=1
+          done
+          if [[ ''${#missingDirs[@]} -gt 0 ]] ; then
+            run mkdir -p $VERBOSE_ARG -- "''${!missingDirs[@]}" || exit 1
+          fi
+
+          # Group the pending links by parent directory, one ln call per
+          # directory. The link name always equals the source basename, and
+          # -f -n together replace a stale symlink even when it points at a
+          # directory (the case -T guarded against in the per-file version;
+          # a regular directory in the way takes the slow path instead and
+          # fails there just like it always did).
+          declare -A dirBatches=()
+          for i in "''${!linkSources[@]}" ; do
+            dirBatches[''${linkDirs[i]}]+="$i "
+          done
+          for targetDir in "''${!dirBatches[@]}" ; do
+            batch=()
+            for i in ''${dirBatches[$targetDir]} ; do
+              batch+=("''${linkSources[i]}")
+            done
+            run ln -sfn $VERBOSE_ARG -t "$targetDir" -- "''${batch[@]}" || exit 1
+          done
+
+          # Slow path: the target exists and is not a symlink. This is the
+          # original per-file logic, kept verbatim for the rare collisions.
+          for sourcePath in "''${slowSources[@]}" ; do
+            relativePath="''${sourcePath#$newGenFiles/}"
+            targetPath="$HOME/$relativePath"
+            if [[ -e "$targetPath" && ! -L "$targetPath" && ! -f "$oldMutable/$relativePath" ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
-                verboseEcho "Running $HOME_MANAGER_BACKUP_COMMAND $targetPath."
-                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running `$HOME_MANAGER_BACKUP_COMMAND` on '$targetPath' failed."
+                verboseEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath'."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || { errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."; exit 1; }
               elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 # The target exists, back it up
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
                 if [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
                   run rm $VERBOSE_ARG "$backup"
                 fi
-                run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+                run mv $VERBOSE_ARG "$targetPath" "$backup" || { errorEcho "Moving '$targetPath' failed!"; exit 1; }
               fi
             fi
 
-            if [[ -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
-              # The target exists but is identical – don't do anything.
+            if [[ -f "$newMutable/$relativePath" ]] ; then
+              checkMutableParents "$relativePath" || exit 1
+              if [[ -d "$targetPath" ]]; then
+                errorEcho "Cannot replace directory '$targetPath' with a mutable file."
+                exit 1
+              fi
+              run mkdir -p -- "''${targetPath%/*}" || exit 1
+              if [[ -v DRY_RUN ]]; then
+                verboseEcho "Would copy '$sourcePath' to '$targetPath'."
+              else
+                tmp="$(mktemp "$targetPath.XXXXXX")" || exit 1
+                mode=0644
+                [[ -x "$sourcePath" ]] && mode=0755
+                if ! install -m "$mode" -- "$sourcePath" "$tmp" || ! mv -T -- "$tmp" "$targetPath"; then
+                  rm -f -- "$tmp"
+                  exit 1
+                fi
+              fi
+            elif [[ ! -f "$oldMutable/$relativePath" && -e "$targetPath" && ! -L "$targetPath" ]] && cmp -s "$sourcePath" "$targetPath" ; then
+              # The target exists but is identical - don't do anything.
               verboseEcho "Skipping '$targetPath' as it is identical to '$sourcePath'"
             else
               # Place that symlink, --force
@@ -220,24 +447,34 @@ in
           done
         '';
 
-        cleanup = pkgs.writeShellScript "cleanup" ''
+        legacyCleanup = pkgs.writeShellScript "cleanup" ''
           ${config.lib.bash.initHomeManagerLib}
+          source ${mutableFileFunctions}
 
           # A symbolic link whose target path matches this pattern will be
           # considered part of a Home Manager generation.
-          homeFilePattern="$(readlink -e ${lib.escapeShellArg builtins.storeDir})/*-home-manager-files/*"
+          homeFilePattern="$(readlink -e ${storeDir})/*-home-manager-files/*"
 
           newGenFiles="$1"
-          shift 1
+          oldMutable="$2"
+          cleanupMutable="$3"
+          shift 3
           for relativePath in "$@" ; do
             targetPath="$HOME/$relativePath"
+            if [[ -f "$oldMutable/$relativePath" ]]; then
+              [[ "$cleanupMutable" == true ]] || continue
+              checkMutableParents "$relativePath" || exit 1
+            elif [[ "$cleanupMutable" == true ]]; then
+              continue
+            fi
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
+            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern &&
+                    ! ( -f "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ) ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
               verboseEcho "Checking $targetPath: gone (deleting)"
-              run rm $VERBOSE_ARG "$targetPath"
+              run rm $VERBOSE_ARG "$targetPath" || exit 1
 
               # Recursively delete empty parent directories.
               targetDir="$(dirname "$relativePath")"
@@ -256,38 +493,68 @@ in
             fi
           done
         '';
+
+        # This activation script will
+        #
+        # 1. Remove files from the old generation that are not in the new
+        #    generation.
+        #
+        # 2. Symlink files from the new generation into $HOME.
+        #
+        # 3. Remove orphaned mutable copies only after linking succeeds.
+        #
+        # This order is needed to ensure that we always know which links
+        # belong to which generation. Specifically, if we're moving from
+        # generation A to generation B having sets of home file links FA
+        # and FB, respectively then cleaning before linking produces state
+        # transitions similar to
+        #
+        #      FA   →   FA ∩ FB   →   (FA ∩ FB) ∪ FB = FB
+        #
+        # and a failure during the intermediate state FA ∩ FB will not
+        # result in lost links because this set of links are in both the
+        # source and target generation.
+        legacyLinkGeneration = ''
+          function linkNewGen() {
+            _i "Creating home file links in %s" "$HOME"
+
+            local newGenFiles
+            newGenFiles="$(readlink -e "$newGenPath/home-files")"
+            find "$newGenFiles" \( -type f -or -type l \) \
+              -exec bash ${legacyLink} "$newGenFiles" "$newGenPath/home-mutable-files" \
+                "''${oldGenPath:-/dev/null}/home-mutable-files" {} +
+          }
+
+          function cleanOldGen() {
+            if [[ ! -v oldGenPath || ! -e "$oldGenPath/home-files" ]] ; then
+              return
+            fi
+
+            _i "Cleaning up orphan links from %s" "$HOME"
+
+            local newGenFiles oldGenFiles
+            newGenFiles="$(readlink -e "$newGenPath/home-files")"
+            oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
+
+            # Apply the cleanup script on each leaf in the old
+            # generation. The find command below will print the
+            # relative path of the entry.
+            find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
+              | xargs -0 bash ${legacyCleanup} "$newGenFiles" "$oldGenPath/home-mutable-files" "$1"
+          }
+
+          cleanOldGen false || exit 1
+          linkNewGen || exit 1
+          cleanOldGen true || exit 1
+        '';
+
+        putterLinkGeneration = ''
+          ${lib.getExe pkgs.putter} apply $VERBOSE_ARG ''${DRY_RUN:+--dry-run} \
+            --state-file ${lib.escapeShellArg putterStatePath} \
+            ${config.home.internal.filePutterConfig}
+        '';
       in
-      ''
-        function linkNewGen() {
-          _i "Creating home file links in %s" "$HOME"
-
-          local newGenFiles
-          newGenFiles="$(readlink -e "$newGenPath/home-files")"
-          find "$newGenFiles" \( -type f -or -type l \) \
-            -exec bash ${link} "$newGenFiles" {} +
-        }
-
-        function cleanOldGen() {
-          if [[ ! -v oldGenPath || ! -e "$oldGenPath/home-files" ]] ; then
-            return
-          fi
-
-          _i "Cleaning up orphan links from %s" "$HOME"
-
-          local newGenFiles oldGenFiles
-          newGenFiles="$(readlink -e "$newGenPath/home-files")"
-          oldGenFiles="$(readlink -e "$oldGenPath/home-files")"
-
-          # Apply the cleanup script on each leaf in the old
-          # generation. The find command below will print the
-          # relative path of the entry.
-          find "$oldGenFiles" '(' -type f -or -type l ')' -printf '%P\0' \
-            | xargs -0 bash ${cleanup} "$newGenFiles"
-        }
-
-        cleanOldGen
-        linkNewGen
-      ''
+      if config.home.fileActivator == "putter" then putterLinkGeneration else legacyLinkGeneration
     );
 
     home.activation.checkFilesChanged = lib.hm.dag.entryBefore [ "linkGeneration" ] (
@@ -334,6 +601,18 @@ in
       '') (lib.filter (v: v.onChange != "") cfg)
     );
 
+    home.internal.filePutterConfig =
+      let
+        putter = import ./lib/putter.nix { inherit lib; };
+        manifest = putter.mkPutterManifest {
+          inherit putterStatePath;
+          sourceBaseDirectory = config.home-files;
+          targetBaseDirectory = config.home.homeDirectory;
+          fileEntries = cfg;
+        };
+      in
+      pkgs.writeText "hm-putter.json" manifest;
+
     # Symlink directories and files that have the right execute bit.
     # Copy files that need their execute bit changed.
     home-files =
@@ -353,6 +632,63 @@ in
             # file has been specified as recursive, then this array will only
             # contain the recursion root, not the visited files.
             declare -A seenTargets
+
+            function setExecutableBit() {
+              local target="$1"
+              local executable="$2"
+
+              if [[ $executable == inherit ]]; then
+                # Don't change file mode if it should match the source.
+                :
+              elif [[ $executable ]]; then
+                chmod +x "$target"
+              else
+                chmod -x "$target"
+              fi
+            }
+
+            function insertFileEntry() {
+              local source="$1"
+              local target="$2"
+              local executable="$3"
+              local isExecutable
+
+              [[ -x $source ]] && isExecutable=1 || isExecutable=""
+
+              # Link the file into the home file directory if possible,
+              # i.e., if the executable bit of the source is the same we
+              # expect for the target. Otherwise, we copy the file and
+              # set the executable bit to the expected value.
+              if [[ $executable == inherit || $isExecutable == $executable ]]; then
+                ln -s "$source" "$target"
+              else
+                cp "$source" "$target"
+                setExecutableBit "$target" "$executable"
+              fi
+            }
+
+            function setLinkedFileExecutableBit() {
+              local target="$1"
+              local executable="$2"
+              local isExecutable
+
+              if [[ -d $target || ! -e $target ]]; then
+                return
+              fi
+
+              [[ -x $target ]] && isExecutable=1 || isExecutable=""
+
+              if [[ $executable == inherit || $isExecutable == $executable ]]; then
+                return
+              fi
+
+              local tmp
+              tmp="$(mktemp "$target.XXXXXX")"
+
+              cp "$target" "$tmp"
+              setExecutableBit "$tmp" "$executable"
+              mv -f "$tmp" "$target"
+            }
 
             function insertFile() {
               local source="$1"
@@ -409,35 +745,30 @@ in
                   else
                     lndir -silent "$source" "$target"
                   fi
+
+                  if [[ $executable != inherit ]]; then
+                    local linkedFile
+
+                    while IFS= read -r -d "" linkedFile; do
+                      setLinkedFileExecutableBit "$linkedFile" "$executable"
+                    done < <(find "$target" \( -type f -or -type l \) -print0)
+                  fi
                 else
                   ln -s "$source" "$target"
                 fi
               else
-                [[ -x $source ]] && isExecutable=1 || isExecutable=""
-
-                # Link the file into the home file directory if possible,
-                # i.e., if the executable bit of the source is the same we
-                # expect for the target. Otherwise, we copy the file and
-                # set the executable bit to the expected value.
-                if [[ $executable == inherit || $isExecutable == $executable ]]; then
-                  ln -s "$source" "$target"
-                else
-                  cp "$source" "$target"
-
-                  if [[ $executable == inherit ]]; then
-                    # Don't change file mode if it should match the source.
-                    :
-                  elif [[ $executable ]]; then
-                    chmod +x "$target"
-                  else
-                    chmod -x "$target"
-                  fi
-                fi
+                insertFileEntry "$source" "$target" "$executable"
               fi
             }
           ''
           + lib.concatStrings (
             map (v: ''
+              ${lib.optionalString v.mutable ''
+                if [[ ! -f ${lib.escapeShellArg (sourceStorePath v)} ]]; then
+                  echo ${lib.escapeShellArg "Mutable home.file source must be a regular file: ${v.target}"} >&2
+                  exit 1
+                fi
+              ''}
               insertFile ${
                 lib.escapeShellArgs [
                   (sourceStorePath v)

@@ -80,6 +80,18 @@ let
         default = "none";
         description = "Method to communicate the signature.";
       };
+
+      htmlFormat = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether Thunderbird should interpret {option}`text` as an HTML signature.
+
+          This maps to Thunderbird's `mail.identity.id_*.htmlSigFormat`
+          preference. The signature content itself is still written through
+          `mail.identity.id_*.htmlSigText`.
+        '';
+      };
     };
   };
 
@@ -97,7 +109,9 @@ let
         type = types.bool;
         default = false;
         description = ''
-          Whether to use STARTTLS.
+          Whether to use STARTTLS. This is discouraged and should be avoided if
+          possible. See <https://datatracker.ietf.org/doc/html/rfc8314> for
+          more.
         '';
       };
 
@@ -400,6 +414,7 @@ let
             "gmail.com"
             "mailbox.org"
             "migadu.com"
+            "outlook.office365.com-ews"
             "outlook.office365.com"
             "plain"
             "posteo.de"
@@ -611,6 +626,17 @@ let
           };
         })
 
+        (mkIf (config.flavor == "outlook.office365.com-ews") {
+          userName = mkDefault config.address;
+
+          ews = {
+            host = "outlook.office365.com";
+            serviceDescriptionURL = "https://outlook.office365.com/EWS/Exchange.asmx";
+            authentication = "xoauth2";
+            tls.enable = true;
+          };
+        })
+
         (mkIf (config.flavor == "fastmail.com") {
           userName = mkDefault config.address;
 
@@ -633,8 +659,14 @@ let
         (mkIf (config.flavor == "mailbox.org") {
           userName = mkDefault config.address;
           folders.inbox = mkDefault "INBOX";
-          imap.host = "imap.mailbox.org";
-          smtp.host = "smtp.mailbox.org";
+          imap = {
+            host = "imap.mailbox.org";
+            port = 993;
+          };
+          smtp = {
+            host = "smtp.mailbox.org";
+            port = 465;
+          };
         })
 
         (mkIf (config.flavor == "migadu.com") {

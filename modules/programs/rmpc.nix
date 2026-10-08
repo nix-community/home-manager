@@ -16,7 +16,6 @@ let
   cfg = config.programs.rmpc;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.rmpc = {
     enable = mkEnableOption "rmpc";

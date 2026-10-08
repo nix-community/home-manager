@@ -16,7 +16,6 @@ let
   cfg = config.programs.calibre;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.calibre = {
     enable = mkEnableOption "calibre";
     package = mkPackageOption pkgs "calibre" { nullable = true; };

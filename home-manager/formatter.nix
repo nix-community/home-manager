@@ -18,6 +18,7 @@ pkgs.treefmt.withConfig {
     deadnix
     keep-sorted
     nixf-diagnose
+    ruff
   ];
   settings = pkgs.lib.importTOML ../treefmt.toml;
 }

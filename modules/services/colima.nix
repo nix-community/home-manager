@@ -312,8 +312,6 @@ in
         lib.nameValuePair "colima-${name}" {
           Unit = {
             Description = "Colima container runtime (${name} profile)";
-            After = [ "network-online.target" ];
-            Wants = [ "network-online.target" ];
           };
           Service = {
             ExecStart = ''

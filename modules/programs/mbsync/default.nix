@@ -9,7 +9,6 @@ let
     any
     concatStringsSep
     concatMapStringsSep
-    literalExpression
     mapAttrsToList
     mkIf
     mkOption
@@ -259,14 +258,12 @@ in
       groups = mkOption {
         type = types.attrsOf (types.attrsOf (types.listOf types.str));
         default = { };
-        example = literalExpression ''
-          {
-            inboxes = {
-              account1 = [ "Inbox" ];
-              account2 = [ "Inbox" ];
-            };
-          }
-        '';
+        example = {
+          inboxes = {
+            account1 = [ "Inbox" ];
+            account2 = [ "Inbox" ];
+          };
+        };
         description = ''
           Definition of groups.
         '';

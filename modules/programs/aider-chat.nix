@@ -16,7 +16,6 @@ let
   yamlFormat = pkgs.formats.yaml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.aider-chat = {
     enable = mkEnableOption "aider-chat";
     package = mkPackageOption pkgs "aider-chat" { nullable = true; };

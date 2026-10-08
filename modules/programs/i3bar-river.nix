@@ -16,7 +16,6 @@ let
   formatter = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.i3bar-river = {
     enable = mkEnableOption "i3bar-river";

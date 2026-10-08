@@ -1,2 +1,4 @@
+%YAML 1.1
+---
 commandTemplates:
   dockerCompose: docker compose

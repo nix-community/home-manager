@@ -7,10 +7,10 @@
           - modules/programs/aiac.nix
           - modules/programs/aichat.nix
           - modules/programs/aider-chat.nix
-          - modules/programs/claude-code.nix
+          - modules/programs/claude-code/**/*
           - modules/programs/codex.nix
           - modules/programs/fabric-ai.nix
-          - modules/programs/gemini-cli.nix
+          - modules/programs/antigravity-cli.nix
           - modules/programs/mcp.nix
           - modules/programs/mistral-vibe.nix
           - modules/programs/mods.nix
@@ -339,6 +339,7 @@
           - modules/programs/emacs.nix
           - modules/programs/formiko.nix
           - modules/programs/fresh-editor.nix
+          - modules/programs/gram.nix
           - modules/programs/helix.nix
           - modules/programs/kakoune.nix
           - modules/programs/lapce.nix
@@ -411,6 +412,7 @@
           - modules/programs/getmail/**/*
           - modules/programs/himalaya.nix
           - modules/programs/lieer.nix
+          - modules/programs/mblaze/*
           - modules/programs/mbsync/**/*
           - modules/programs/meli.nix
           - modules/programs/msmtp*
@@ -429,6 +431,7 @@
           - modules/services/protonmail-bridge.nix
           - tests/modules/programs/aerc/*
           - tests/modules/programs/alot/*
+          - tests/modules/programs/mblaze/*
           - tests/modules/programs/himalaya/*
           - tests/modules/programs/mbsync/*
           - tests/modules/programs/mujmap/*
@@ -633,7 +636,6 @@
 "video":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/programs/animdl.nix
           - modules/programs/anime-downloader.nix
           - modules/programs/aperture.nix
           - modules/programs/asciinema.nix

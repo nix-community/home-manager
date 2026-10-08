@@ -15,7 +15,7 @@
     assertFileContains home-files/.config/git/config '[diff]'
     # Should have diff.external set
     assertFileContains home-files/.config/git/config "external = \"@difftastic@/bin/difft '--color=always' '--display=side-by-side'\""
-    # Should NOT have difftool config since diffToolMode is false
+    # Should NOT have difftool config in the default external mode
     assertFileNotRegex home-files/.config/git/config 'tool = "difftastic"'
     assertFileNotRegex home-files/.config/git/config '\[difftool "difftastic"\]'
   '';

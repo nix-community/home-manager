@@ -20,21 +20,19 @@ in
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          showFlashSpace = "cmd+shift+space";
-          toggleFlashSpace = "control+option+command+t";
-          showFloatingNotifications = true;
-          displayMode = "static";
-          centerCursorOnWorkspaceChange = true;
-          enableWorkspaceTransitions = true;
-          workspaceTransitionDuration = 0.25;
-          integrations = {
-            enableIntegrations = true;
-            runScriptOnWorkspaceChange = "~/.config/flashspace/scripts/notify.sh";
-          };
-        }
-      '';
+      example = {
+        showFlashSpace = "cmd+shift+space";
+        toggleFlashSpace = "control+option+command+t";
+        showFloatingNotifications = true;
+        displayMode = "static";
+        centerCursorOnWorkspaceChange = true;
+        enableWorkspaceTransitions = true;
+        workspaceTransitionDuration = 0.25;
+        integrations = {
+          enableIntegrations = true;
+          runScriptOnWorkspaceChange = "~/.config/flashspace/scripts/notify.sh";
+        };
+      };
       description = ''
         General app settings written to
         {file}`$XDG_CONFIG_HOME/flashspace/settings.toml`.
@@ -49,54 +47,52 @@ in
     profiles = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          profiles = [
-            {
-              id = "550e8400-e29b-41d4-a716-446655440000";
-              name = "Work";
-              shortcut = "control+option+1";
-              workspaces = [
-                {
-                  id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
-                  name = "Coding";
-                  display = "Built-in Retina Display";
-                  shortcut = "cmd+1";
-                  symbolIconName = "terminal.fill";
-                  openAppsOnActivation = true;
-                  apps = [
-                    {
-                      name = "Xcode";
-                      bundleIdentifier = "com.apple.dt.Xcode";
-                      autoOpen = true;
-                    }
-                    {
-                      name = "iTerm2";
-                      bundleIdentifier = "com.googlecode.iterm2";
-                      autoOpen = true;
-                    }
-                  ];
-                }
-                {
-                  id = "b2c3d4e5-f6a7-8901-bcde-f12345678901";
-                  name = "Communication";
-                  display = "Built-in Retina Display";
-                  shortcut = "cmd+2";
-                  symbolIconName = "message.fill";
-                  openAppsOnActivation = false;
-                  apps = [
-                    {
-                      name = "Slack";
-                      bundleIdentifier = "com.tinyspeck.slackmacgap";
-                      autoOpen = false;
-                    }
-                  ];
-                }
-              ];
-            }
-          ];
-        }
-      '';
+      example = {
+        profiles = [
+          {
+            id = "550e8400-e29b-41d4-a716-446655440000";
+            name = "Work";
+            shortcut = "control+option+1";
+            workspaces = [
+              {
+                id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890";
+                name = "Coding";
+                display = "Built-in Retina Display";
+                shortcut = "cmd+1";
+                symbolIconName = "terminal.fill";
+                openAppsOnActivation = true;
+                apps = [
+                  {
+                    name = "Xcode";
+                    bundleIdentifier = "com.apple.dt.Xcode";
+                    autoOpen = true;
+                  }
+                  {
+                    name = "iTerm2";
+                    bundleIdentifier = "com.googlecode.iterm2";
+                    autoOpen = true;
+                  }
+                ];
+              }
+              {
+                id = "b2c3d4e5-f6a7-8901-bcde-f12345678901";
+                name = "Communication";
+                display = "Built-in Retina Display";
+                shortcut = "cmd+2";
+                symbolIconName = "message.fill";
+                openAppsOnActivation = false;
+                apps = [
+                  {
+                    name = "Slack";
+                    bundleIdentifier = "com.tinyspeck.slackmacgap";
+                    autoOpen = false;
+                  }
+                ];
+              }
+            ];
+          }
+        ];
+      };
       description = ''
         Profiles, workspaces, and app assignments written to
         {file}`$XDG_CONFIG_HOME/flashspace/profiles.json`.

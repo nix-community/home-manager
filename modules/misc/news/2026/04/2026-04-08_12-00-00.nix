@@ -5,7 +5,7 @@
     config.programs.claude-code.enable
     || config.programs.codex.enable
     || config.programs.opencode.enable
-    || config.programs.gemini-cli.enable;
+    || config.programs.antigravity-cli.enable;
   message = ''
     The Claude Code, Codex, and OpenCode modules now expose a canonical
     `context` option for configuring their global assistant instructions.

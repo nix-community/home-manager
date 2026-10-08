@@ -118,15 +118,13 @@ let
 
               Mutually exclusive with [](#opt-programs.borgmatic.backups._name_.location.sourceDirectories).
             '';
-            example = literalExpression ''
-              [
-                "R /home/user"
-                "- home/user/.cache"
-                "- home/user/Downloads"
-                "+ home/user/Videos/Important Video"
-                "- home/user/Videos"
-              ]
-            '';
+            example = [
+              "R /home/user"
+              "- home/user/.cache"
+              "- home/user/Downloads"
+              "+ home/user/Videos/Important Video"
+              "- home/user/Videos"
+            ];
           };
 
           repositories = mkOption {

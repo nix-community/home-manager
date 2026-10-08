@@ -16,6 +16,7 @@ from pathlib import Path
 
 class NixEvalError(Exception):
     """Custom exception for errors during Nix evaluation."""
+
     pass
 
 
@@ -39,7 +40,9 @@ def run_nix_eval(nix_file: Path, *args: str) -> str:
         )
         return result.stdout.strip()
     except FileNotFoundError:
-        logging.error("'nix-instantiate' command not found. Is Nix installed and in your PATH?")
+        logging.error(
+            "'nix-instantiate' command not found. Is Nix installed and in your PATH?"
+        )
         raise NixEvalError("'nix-instantiate' not found")
     except subprocess.CalledProcessError as e:
         logging.error(f"Nix evaluation failed with exit code {e.returncode}")

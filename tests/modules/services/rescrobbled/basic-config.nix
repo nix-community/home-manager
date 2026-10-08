@@ -39,8 +39,6 @@
 
     assertFileExists $service
     assertFileRegex $service 'Description=An MPRIS scrobbler'
-    assertFileRegex $service 'Wants=network-online.target'
-    assertFileRegex $service 'After=network-online.target'
     assertFileRegex $service 'WantedBy=default.target'
   '';
 }

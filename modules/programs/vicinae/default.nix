@@ -53,6 +53,12 @@ in
         instead.
       '';
     };
+    enableFirefoxIntegration = lib.mkOption {
+      default = true;
+      description = ''
+        Whether to install the messaging host so that the firefox extension <https://addons.mozilla.org/en-US/firefox/addon/vicinae/> works.
+      '';
+    };
 
     extensions = lib.mkOption {
       type = lib.types.listOf lib.types.package;
@@ -65,6 +71,7 @@ in
          [
           (config.lib.vicinae.mkExtension {
             name = "test-extension";
+            npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
             src =
               pkgs.fetchFromGitHub {
                 owner = "schromp";
@@ -78,6 +85,7 @@ in
             name = "gif-search";
             sha256 = "sha256-G7il8T1L+P/2mXWJsb68n4BCbVKcrrtK8GnBNxzt73Q=";
             rev = "4d417c2dfd86a5b2bea202d4a7b48d8eb3dbaeb1";
+            npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           })
           (config.lib.vicinae.mkRayCastExtension {
             name = "my-local-raycast-extension";
@@ -85,6 +93,11 @@ in
           })
          ],
           ```
+
+        Set `npmDepsHash` when `src` is produced by a fetcher such as
+        `pkgs.fetchFromGitHub` or `pkgs.fetchgit`; otherwise
+        dependency import reads `package-lock.json` from the fetched source
+        during evaluation.
       '';
     };
 
@@ -139,18 +152,16 @@ in
     settings = lib.mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          favicon_service = "twenty";
-          font.normal.size = 10;
-          pop_to_root_on_close=false;
-          search_files_in_root= false;
-          theme = {
-            dark.name = "vicinae-dark";
-            light.name = "vicinae-light";
-          };
-        }
-      '';
+      example = {
+        favicon_service = "twenty";
+        font.normal.size = 10;
+        pop_to_root_on_close = false;
+        search_files_in_root = false;
+        theme = {
+          dark.name = "vicinae-dark";
+          light.name = "vicinae-light";
+        };
+      };
       description = ''
         Settings written as JSON to {file}`~/.config/vicinae/settings.json`.
         See {command}`vicinae config default`.
@@ -207,6 +218,25 @@ in
           verboseEcho "Refreshing the vicinae app list"
           run --silence ${lib.getExe config.programs.vicinae.package} deeplink vicinae://launch/core/refresh-apps || verboseEcho "Failed to refresh the vicinae app list"
         ''
+      );
+      mozilla = lib.mkIf (cfg.enableFirefoxIntegration && cfg.package != null) (
+        let
+          vicinaeNativeMessagingHost =
+            pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/com.vicinae.vicinae.json"
+              (
+                builtins.toJSON {
+                  name = "com.vicinae.vicinae";
+                  description = "Vicinae Native Messaging Host";
+                  path = "${cfg.package}/libexec/vicinae/vicinae-browser-link";
+                  type = "stdio";
+                  allowed_extensions = [ "firefox@vicinae.com" ];
+                }
+              );
+        in
+        {
+          firefoxNativeMessagingHosts = [ vicinaeNativeMessagingHost ];
+          librewolfNativeMessagingHosts = [ vicinaeNativeMessagingHost ];
+        }
       );
 
       systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {

@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   programs.claude-code = {
     enable = true;
@@ -117,6 +118,19 @@
     };
   };
 
+  assertions = [
+    {
+      assertion =
+        let
+          settingsSource =
+            toString
+              config.home.file."${config.programs.claude-code.configDir}/settings.json".source;
+        in
+        dirOf settingsSource != builtins.storeDir && baseNameOf settingsSource == "settings.json";
+      message = "Claude Code settings source must be inside a dedicated store directory";
+    }
+  ];
+
   nmt.script = ''
     assertFileExists home-files/.claude/settings.json
     assertFileContent home-files/.claude/settings.json ${./expected-settings.json}
@@ -135,9 +149,11 @@
     assertFileContent home-files/.claude/commands/commit.md ${./expected-commit}
 
     assertFileExists home-files/.claude/hooks/pre-edit
+    assertFileIsExecutable home-files/.claude/hooks/pre-edit
     assertFileRegex home-files/.claude/hooks/pre-edit "About to edit file"
 
     assertFileExists home-files/.claude/hooks/post-commit
+    assertFileIsExecutable home-files/.claude/hooks/post-commit
     assertFileRegex home-files/.claude/hooks/post-commit "Committed with message"
   '';
 }

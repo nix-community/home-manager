@@ -23,7 +23,12 @@ let
     };
 
   # Produces a Bourne shell like variable export statement.
-  export = n: v: ''export ${n}="${toString v}"'';
+  export =
+    n: v:
+    let
+      value = if builtins.isBool v then lib.boolToString v else toString v;
+    in
+    ''export ${n}="${value}"'';
 
   # Wrap a list of strings to a given line width.
   # Packs as many items as possible per line without exceeding maxWidth.
@@ -69,7 +74,9 @@ in
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export
   # statement for each set entry.
-  exportAll = vars: lib.concatStringsSep "\n" (lib.mapAttrsToList export vars);
+  exportAll =
+    vars:
+    lib.concatStringsSep "\n" (lib.mapAttrsToList export (lib.filterAttrs (_k: v: v != null) vars));
 
   # Formats a list of items for shell array content with intelligent width optimization.
   # IMPORTANT: This formats the CONTENTS of an array (what goes inside parentheses),

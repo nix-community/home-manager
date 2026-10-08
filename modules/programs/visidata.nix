@@ -16,7 +16,6 @@ let
   cfg = config.programs.visidata;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.visidata = {
     enable = mkEnableOption "Visidata";

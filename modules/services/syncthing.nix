@@ -19,11 +19,32 @@ let
   isUnixGui = (builtins.substring 0 1 cfg.guiAddress) == "/";
 
   # syncthing's configuration directory (see https://docs.syncthing.net/users/config.html)
-  syncthing_dir =
-    if pkgs.stdenv.isDarwin then
+  syncthingDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "$HOME/Library/Application Support/Syncthing"
     else
       "\${XDG_STATE_HOME:-$HOME/.local/state}/syncthing";
+
+  syncthingDirShell =
+    if pkgs.stdenv.hostPlatform.isDarwin then
+      ''
+        syncthing_dir="${syncthingDir}"
+      ''
+    else
+      ''
+        syncthing_state_dir="${syncthingDir}"
+        syncthing_config_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/syncthing"
+
+        if [[ -e "$syncthing_state_dir/config.xml" || ! -e "$syncthing_config_dir/config.xml" ]]; then
+            syncthing_dir="$syncthing_state_dir"
+        else
+            syncthing_dir="$syncthing_config_dir"
+        fi
+      '';
+
+  defaultGuiAddress = "127.0.0.1:8384";
+
+  hasCustomGuiAddress = cfg.guiAddress != defaultGuiAddress;
 
   # Syncthing supports serving the GUI over Unix sockets. If that happens, the
   # API is served over the Unix socket as well.  This function returns the correct
@@ -33,11 +54,12 @@ let
     path:
     if
       isUnixGui
-    # if cfg.guiAddress is a unix socket, tell curl explicitly about it
-    # note that the dot in front of `${path}` is the hostname, which is
-    # required.
+    # if cfg.guiAddress is a unix socket, tell curl explicitly about it.
+    # `localhost` is a placeholder authority routed to the socket by
+    # --unix-socket; a bare-dot host (`http://.`) is rejected as an invalid
+    # hostname by curl >= 8.21.
     then
-      "--unix-socket ${cfg.guiAddress} http://.${path}"
+      "--unix-socket ${cfg.guiAddress} http://localhost${path}"
     # no adjustments are needed if cfg.guiAddress is a network address
     else
       "${cfg.guiAddress}${path}";
@@ -71,16 +93,20 @@ let
   mkpasswd = lib.getExe pkgs.mkpasswd;
 
   copyKeys = pkgs.writers.writeBash "syncthing-copy-keys" ''
-    ${install} -dm700 "${syncthing_dir}"
+    ${syncthingDirShell}
+
+    ${install} -dm700 "$syncthing_dir"
     ${lib.optionalString (cfg.cert != null) ''
-      ${install} -Dm400 ${toString cfg.cert} "${syncthing_dir}/cert.pem"
+      ${install} -Dm400 ${toString cfg.cert} "$syncthing_dir/cert.pem"
     ''}
     ${lib.optionalString (cfg.key != null) ''
-      ${install} -Dm400 ${toString cfg.key} "${syncthing_dir}/key.pem"
+      ${install} -Dm400 ${toString cfg.key} "$syncthing_dir/key.pem"
     ''}
   '';
 
   curlShellFunction = ''
+    ${syncthingDirShell}
+
     # systemd sets and creates RUNTIME_DIRECTORY on Linux
     # on Darwin, we create it manually via mktemp
     RUNTIME_DIRECTORY="''${RUNTIME_DIRECTORY:=$(${mktemp} -d)}"
@@ -90,7 +116,7 @@ let
         while
             ! ${pkgs.libxml2}/bin/xmllint \
                 --xpath 'string(configuration/gui/apikey)' \
-                "${syncthing_dir}/config.xml" \
+                "$syncthing_dir/config.xml" \
                 >"$RUNTIME_DIRECTORY/api_key"
         do ${sleep} 1; done
         (${printf} "X-API-Key: "; ${cat} "$RUNTIME_DIRECTORY/api_key") >"$RUNTIME_DIRECTORY/headers"
@@ -155,6 +181,7 @@ let
               override = cfg.overrideFolders;
               conf = folders;
               baseAddress = curlAddressArgs "/rest/config/folders";
+              ignoreAddress = curlAddressArgs "/rest/db/ignores";
             };
           }
           [
@@ -180,7 +207,8 @@ let
                   let
                     jsonPreSecretsFile = pkgs.writeTextFile {
                       name = "${conf_type}-${new_cfg.id}-conf-pre-secrets.json";
-                      text = builtins.toJSON new_cfg;
+                      # Remove the ignorePatterns attribute, it is handled separately
+                      text = builtins.toJSON (removeAttrs new_cfg [ "ignorePatterns" ]);
                     };
                     injectSecretsJqCmd =
                       {
@@ -247,6 +275,15 @@ let
                   ''
                     ${injectSecretsJqCmd} ${jsonPreSecretsFile} | curl --json @- -X POST ${s.baseAddress}
                   ''
+                  /*
+                    Check if we are configuring a folder which has ignore patterns.
+                    If it does, write the ignore patterns to the rest API.
+                  */
+                  + lib.optionalString ((conf_type == "dirs") && (new_cfg.ignorePatterns != null)) ''
+                    curl -d ${
+                      lib.escapeShellArg (builtins.toJSON { ignore = new_cfg.ignorePatterns; })
+                    } -X POST ${s.ignoreAddress}?folder=${lib.strings.escapeURL new_cfg.id}
+                  ''
                 ))
                 (lib.concatStringsSep "\n")
               ]
@@ -288,7 +325,7 @@ let
         ''))
         (lib.concatStringsSep "\n")
       ])
-    + lib.optionalString (cfg.guiAddress != null) ''
+    + lib.optionalString hasCustomGuiAddress ''
       curl -X PATCH -d '{"address": "'${cfg.guiAddress}'"}' ${curlAddressArgs "/rest/config/gui"}
     ''
     + ''
@@ -300,7 +337,7 @@ let
     ''
   );
 
-  doUpdateConfig = cleanedConfig != { } || cfg.guiCredentials != null || cfg.guiAddress != null;
+  doUpdateConfig = cleanedConfig != { } || cfg.guiCredentials != null || hasCustomGuiAddress;
 
   defaultSyncthingArgs = [
     "${syncthing}"
@@ -541,14 +578,12 @@ in
                 will be reverted on restart if [overrideFolders](#opt-services.syncthing.overrideFolders)
                 is enabled.
               '';
-              example = lib.literalExpression ''
-                {
-                  "/home/user/sync" = {
-                    id = "syncme";
-                    devices = [ "bigbox" ];
-                  };
-                }
-              '';
+              example = {
+                "/home/user/sync" = {
+                  id = "syncme";
+                  devices = [ "bigbox" ];
+                };
+              };
               type = types.attrsOf (
                 types.submodule (
                   { name, ... }:
@@ -727,6 +762,26 @@ in
                           Linux).
                         '';
                       };
+
+                      ignorePatterns = mkOption {
+                        type = types.nullOr (types.listOf types.str);
+                        default = null;
+                        description = ''
+                          Syncthing can be configured to ignore certain files in a folder using ignore patterns.
+                          Enter them as a list of strings, one string per line.
+                          See the Syncthing documentation for syntax: <https://docs.syncthing.net/users/ignoring.html>
+                          Patterns set using the WebUI will be overridden if you define this option.
+                          If you want to override the ignore patterns to be empty, use `ignorePatterns = []`.
+                          Deleting the `ignorePatterns` option will not remove the patterns from Syncthing automatically
+                          because patterns are only handled by the module if this option is defined. Either use
+                          `ignorePatterns = []` before deleting the option or remove the patterns afterwards using the WebUI.
+                        '';
+                        example = [
+                          "// This is a comment"
+                          "*.part // Firefox downloads and other things"
+                          "*.crdownload // Chrom(ium|e) downloads"
+                        ];
+                      };
                     };
                   }
                 )
@@ -771,7 +826,7 @@ in
 
       guiAddress = mkOption {
         type = types.str;
-        default = "127.0.0.1:8384";
+        default = defaultGuiAddress;
         description = ''
           The address to serve the web interface at.
         '';
@@ -811,7 +866,7 @@ in
           type = types.str;
           default = "syncthingtray --wait";
           defaultText = literalExpression "syncthingtray --wait";
-          example = literalExpression "qsyncthingtray";
+          example = "qsyncthingtray";
           description = "Syncthing tray command to use.";
         };
 
@@ -849,7 +904,7 @@ in
               3
               4
             ];
-            Environment = lib.mkIf (cfg.allProxy != null) { all_proxy = cfg.allProxy; };
+            Environment = lib.mkIf (cfg.allProxy != null) "all_proxy=${cfg.allProxy}";
 
             # Sandboxing.
             LockPersonality = true;

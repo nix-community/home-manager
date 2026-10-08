@@ -1,1 +1,5 @@
-import ./common.nix "floorp"
+{ lib, ... }:
+import ./common.nix {
+  inherit lib;
+  name = "floorp";
+}

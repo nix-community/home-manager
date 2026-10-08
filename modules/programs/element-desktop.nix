@@ -21,7 +21,6 @@ let
     if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.element-desktop = {
     enable = mkEnableOption "element-desktop";

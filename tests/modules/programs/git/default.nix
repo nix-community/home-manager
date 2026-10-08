@@ -2,11 +2,13 @@
   git-with-email = ./git-with-email.nix;
   git-with-most-options = ./git.nix;
   git-with-msmtp = ./git-with-msmtp.nix;
+  git-with-allowed-signers = ./git-with-allowed-signers.nix;
   git-with-signing-key-id-legacy = ./git-with-signing-key-id-legacy.nix;
   git-with-signing-key-id = ./git-with-signing-key-id.nix;
   git-without-signing-key-id = ./git-without-signing-key-id.nix;
   git-without-signing-key-id-current = ./git-without-signing-key-id-current.nix;
   git-without-signing = ./git-without-signing.nix;
+  git-without-signing-legacy = ./git-without-signing-legacy.nix;
   git-with-hooks = ./git-with-hooks.nix;
   git-with-lfs = ./git-with-lfs.nix;
   git-with-maintenance = ./git-with-maintenance.nix;

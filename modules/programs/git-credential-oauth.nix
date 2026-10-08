@@ -22,7 +22,7 @@ in
       extraFlags = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
-        example = lib.literalExpression ''[ "-device" ]'';
+        example = [ "-device" ];
         description = ''
           Extra command-line arguments passed to git-credential-oauth.
 

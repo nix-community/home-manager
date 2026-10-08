@@ -27,17 +27,15 @@ in
         See <https://myrepos.branchable.com/>
         for an example configuration.
       '';
-      example = lib.literalExpression ''
-        {
-          foo = {
-            checkout = "git clone git@github.com:joeyh/foo.git";
-            update = "git pull --rebase";
-          };
-          ".local/share/password-store" = {
-            checkout = "git clone git@github.com:myuser/password-store.git";
-          };
-        }
-      '';
+      example = {
+        foo = {
+          checkout = "git clone git@github.com:joeyh/foo.git";
+          update = "git pull --rebase";
+        };
+        ".local/share/password-store" = {
+          checkout = "git clone git@github.com:myuser/password-store.git";
+        };
+      };
     };
   };
 

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://charm.land/crush.json",
+  "lsp": {
+    "go": {
+      "command": "gopls",
+      "env": {
+        "GOTOOLCHAIN": "go1.24.5"
+      }
+    },
+    "nix": {
+      "command": "nil"
+    }
+  },
+  "mcp": {
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "command": "npx",
+      "type": "stdio"
+    }
+  },
+  "models": {
+    "large": {
+      "model": "claude-sonnet-4-20250514",
+      "provider": "anthropic"
+    }
+  },
+  "options": {
+    "disabled_tools": [
+      "sourcegraph"
+    ],
+    "initialize_as": "AGENTS.md"
+  },
+  "permissions": {
+    "allowed_tools": [
+      "view"
+    ]
+  },
+  "providers": {
+    "deepseek": {
+      "api_key": "$(cat /run/secrets/deepseek-api-key)",
+      "base_url": "https://api.deepseek.com/v1",
+      "models": [
+        {
+          "context_window": 64000,
+          "id": "deepseek-chat",
+          "name": "Deepseek V3"
+        }
+      ],
+      "type": "openai-compat"
+    }
+  }
+}

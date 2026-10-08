@@ -1,0 +1,17 @@
+{
+  "altScreenMode": "always",
+  "artifactReviewPolicy": "agent-decides",
+  "colorScheme": "tokyo night",
+  "permissions": {
+    "allow": [
+      "command(git)"
+    ],
+    "ask": [
+      "command(*)"
+    ],
+    "deny": [
+      "command(rm -rf)"
+    ]
+  },
+  "toolPermission": "proceed-in-sandbox"
+}

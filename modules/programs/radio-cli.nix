@@ -16,7 +16,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.radio-cli = {
     enable = mkEnableOption "radio-cli";

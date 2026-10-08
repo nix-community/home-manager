@@ -5,6 +5,10 @@
 
       functions = {
         normal-function = "";
+        function-with-args = {
+          argumentNames = [ "test" ];
+          body = "";
+        };
         event-handler = {
           body = "";
           onEvent = "test";
@@ -36,6 +40,7 @@
       assertFileContains home-files/.config/fish/config.fish "source /home/hm-user/.config/fish/functions/signal-handler.fish"
       assertFileContains home-files/.config/fish/config.fish "source /home/hm-user/.config/fish/functions/process-handler.fish"
       assertFileNotRegex home-files/.config/fish/config.fish "source /home/hm-user/.config/fish/functions/normal-function.fish"
+      assertFileNotRegex home-files/.config/fish/config.fish "source /home/hm-user/.config/fish/functions/function-with-args.fish"
     '';
   };
 }

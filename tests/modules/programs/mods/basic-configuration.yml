@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 apis:
   ollama:
     base-url: http://localhost:11434/api

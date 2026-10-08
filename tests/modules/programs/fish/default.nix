@@ -1,5 +1,6 @@
 {
   fish-abbrs = ./abbrs.nix;
+  fish-home-shell-aliases-prefer-abbrs = ./home-shell-aliases-prefer-abbrs.nix;
   fish-format-scripts = ./format-scripts.nix;
   fish-functions = ./functions.nix;
   fish-completions = ./completions.nix;

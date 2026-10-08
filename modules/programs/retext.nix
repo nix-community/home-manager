@@ -16,7 +16,6 @@ let
   iniFormat = pkgs.formats.ini { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.retext = {
     enable = mkEnableOption "retext";
     package = mkPackageOption pkgs "retext" { nullable = true; };

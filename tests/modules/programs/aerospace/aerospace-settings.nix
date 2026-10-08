@@ -70,6 +70,7 @@ in
     assertPathNotExists "home-files/.aerospace.toml";
     assertFileExists "home-files/.config/aerospace/aerospace.toml"
     assertFileContent "home-files/.config/aerospace/aerospace.toml" ${./settings-expected.toml}
+    assertFileContains activate 'list-modes --current >/dev/null 2>&1'
 
     serviceFile=$(normalizeStorePaths LaunchAgents/org.nix-community.home.aerospace.plist)
     assertFileExists $serviceFile

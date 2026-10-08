@@ -4,14 +4,19 @@
       "headers": {
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       },
-      "serverUrl": "https://mcp.context7.com/mcp"
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
     },
     "everything": {
       "args": [
         "-y",
         "@modelcontextprotocol/server-everything"
       ],
-      "command": "npx"
+      "command": "npx",
+      "env": {
+        "NPM_TOKEN": "{file:/run/secrets/npm-token}"
+      },
+      "type": "stdio"
     }
   }
 }

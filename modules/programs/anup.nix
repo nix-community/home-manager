@@ -16,7 +16,6 @@ let
   cfg = config.programs.anup;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.anup = {
     enable = mkEnableOption "anup";
     package = mkPackageOption pkgs "anup" { nullable = true; };

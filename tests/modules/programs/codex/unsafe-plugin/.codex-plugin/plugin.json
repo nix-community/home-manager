@@ -1,0 +1,5 @@
+{
+  "name": "../../../outside",
+  "version": "1.0.0$(touch pwned)",
+  "description": "Unsafe Codex plugin name for Home Manager tests."
+}

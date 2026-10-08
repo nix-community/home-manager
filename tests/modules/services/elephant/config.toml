@@ -1,0 +1,3 @@
+[providers]
+default = ["desktopapplications", "runner"]
+max_results = 50

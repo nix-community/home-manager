@@ -21,12 +21,10 @@ in
       settings = lib.mkOption {
         inherit (jsonFormat) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            autosu = false;
-            cursorline = false;
-          }
-        '';
+        example = {
+          autosu = false;
+          cursorline = false;
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/micro/settings.json`. See

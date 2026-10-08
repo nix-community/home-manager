@@ -306,7 +306,7 @@ in
       };
 
       secureSocket = mkOption {
-        default = pkgs.stdenv.isLinux;
+        default = pkgs.stdenv.hostPlatform.isLinux;
         type = types.bool;
         description = ''
           Store tmux socket under {file}`/run`, which is more

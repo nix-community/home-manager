@@ -16,9 +16,10 @@
 # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/development/libraries/glibc/nix-locale-archive.patch
 
 {
-  lib,
-  pkgs,
   config,
+  lib,
+  nixosConfig,
+  pkgs,
   ...
 }:
 
@@ -55,9 +56,8 @@ in
 
         This option only applies to the Linux platform.
 
-        When Home Manager is configured with NixOS, the default value
-        will be set to {var}`i18n.glibcLocales` from the
-        system configuration.
+        If Home Manager is installed as a NixOS submodule, this
+        option defaults to NixOS' {var}`i18n.glibcLocales`.
       '';
       example = lib.literalExpression ''
         pkgs.glibcLocales.override {
@@ -65,9 +65,8 @@ in
           locales = [ "en_US.UTF-8/UTF-8" ];
         }
       '';
-      # NB. See nixos/default.nix for NixOS default.
-      default = pkgs.glibcLocales;
-      defaultText = lib.literalExpression "pkgs.glibcLocales";
+      default = nixosConfig.i18n.glibcLocales or pkgs.glibcLocales;
+      defaultText = lib.literalExpression "nixosConfig.i18n.glibcLocales or pkgs.glibcLocales";
     };
   };
 

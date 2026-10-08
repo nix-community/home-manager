@@ -12,7 +12,7 @@
   nm.script =
     let
       modeFileDir =
-        if !pkgs.stdenv.isDarwin then
+        if !pkgs.stdenv.hostPlatform.isDarwin then
           ".config/go/telemetry"
         else
           "Library/Application Support/go/telemetry";

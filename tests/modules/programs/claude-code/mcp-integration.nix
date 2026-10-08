@@ -1,16 +1,7 @@
-{ config, ... }:
-
 {
   programs = {
     claude-code = {
-      package = config.lib.test.mkStubPackage {
-        name = "claude-code";
-        buildScript = ''
-          mkdir -p $out/bin
-          touch $out/bin/claude
-          chmod 755 $out/bin/claude
-        '';
-      };
+      package = null;
       enable = true;
 
       enableMcpIntegration = true;
@@ -19,6 +10,7 @@
         github = {
           type = "http";
           url = "https://api.githubcopilot.com/mcp/";
+          enabled = true;
         };
         filesystem = {
           type = "stdio";
@@ -61,22 +53,24 @@
           customOption = "value";
           timeout = 5000;
         };
+        disabled-server = {
+          command = "echo";
+          args = [ "test" ];
+          disabled = true;
+        };
       };
     };
   };
 
   nmt.script = ''
-    wrapperPath="$TESTED/home-path/bin/claude"
-    normalizedWrapper=$(normalizeStorePaths "$wrapperPath")
-    assertFileContent "$normalizedWrapper" ${./expected-mcp-wrapper}
+    assertPathNotExists "$TESTED/home-path/bin/claude"
 
-    pluginDir=$(grep -o -- '--plugin-dir /nix/store/[^ ]*' "$wrapperPath")
-    pluginDir="''${pluginDir#--plugin-dir }"
+    pluginDir="$TESTED/home-files/.claude/skills/claude-code-home-manager"
     assertFileContent "$pluginDir/.claude-plugin/plugin.json" ${./expected-plugin-manifest.json}
-    assertFileRegex "$pluginDir/.mcp.json" '"github"'
-    assertFileRegex "$pluginDir/.mcp.json" '"database"'
-    assertFileRegex "$pluginDir/.mcp.json" '"/tmp"'
-    (! grep -q -- '/other-tmp' "$pluginDir/.mcp.json")
+    assertFileContent "$pluginDir/.mcp.json" ${./expected-mcp-integration-plugin.json}
     assertPathNotExists "$pluginDir/.lsp.json"
+
+    settingsPath="$TESTED/home-files/.claude/settings.json"
+    assertFileContent "$settingsPath" ${./expected-mcp-settings.json}
   '';
 }

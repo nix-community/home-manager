@@ -65,24 +65,38 @@ in
           <https://khard.readthedocs.io/en/latest/#configuration>
           for more information.
         '';
-        example = lib.literalExpression ''
-          {
-            general = {
-              default_action = "list";
-              editor = ["vim" "-i" "NONE"];
-            };
+        example = {
+          general = {
+            default_action = "list";
+            editor = [
+              "vim"
+              "-i"
+              "NONE"
+            ];
+          };
 
-            "contact table" = {
-              display = "formatted_name";
-              preferred_phone_number_type = ["pref" "cell" "home"];
-              preferred_email_address_type = ["pref" "work" "home"];
-            };
+          "contact table" = {
+            display = "formatted_name";
+            preferred_phone_number_type = [
+              "pref"
+              "cell"
+              "home"
+            ];
+            preferred_email_address_type = [
+              "pref"
+              "work"
+              "home"
+            ];
+          };
 
-            vcard = {
-              private_objects = ["Jabber" "Skype" "Twitter"];
-            };
-          }
-        '';
+          vcard = {
+            private_objects = [
+              "Jabber"
+              "Skype"
+              "Twitter"
+            ];
+          };
+        };
       };
     };
 
@@ -137,19 +151,10 @@ in
 
     xdg.configFile."khard/khard.conf".text =
       let
-        makePath =
-          baseDir: subDir:
-          toString (
-            /.
-            + lib.concatStringsSep "/" [
-              baseDir
-              subDir
-            ]
-          );
         makeName = accName: abookName: accName + lib.optionalString (abookName != "") "-${abookName}";
         makeEntry = anAccount: anAbook: ''
           [[${makeName anAccount.name anAbook}]]
-          path = ${makePath anAccount.local.path anAbook}
+          path = ${anAccount.local.path}/${anAbook}
         '';
         makeDiscoverEntry = anAccount: ''
           [[${makeName anAccount.name ""}]]

@@ -25,9 +25,14 @@ let
     if [[ ! -v BROWSER || -z $BROWSER ]]; then
       echo "$0: unable to start a web browser; please set \$BROWSER"
       exit 1
-    else
-      exec "$BROWSER" "${html}/share/doc/${pathName}/index.xhtml"
     fi
+
+    manualPath="${html}/share/doc/${pathName}/index.html"
+    if [[ ! -e $manualPath ]]; then
+      manualPath="${html}/share/doc/${pathName}/index.xhtml"
+    fi
+
+    exec "$BROWSER" "$manualPath"
   '';
 
   desktopItem = makeDesktopItem {

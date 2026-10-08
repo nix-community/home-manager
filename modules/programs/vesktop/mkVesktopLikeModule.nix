@@ -84,22 +84,20 @@ in
           {file}`$XDG_CONFIG_HOME/${moduleName}/settings/settings.json`. See
           <${cordSettingsLink}> for available options.
         '';
-        example = lib.literalExpression ''
-          {
-            autoUpdate = false;
-            autoUpdateNotification = false;
-            notifyAboutUpdates = false;
-            useQuickCss = true;
-            disableMinSize = true;
-            plugins = {
-              MessageLogger = {
-                enabled = true;
-                ignoreSelf = true;
-              };
-              FakeNitro.enabled = true;
+        example = {
+          autoUpdate = false;
+          autoUpdateNotification = false;
+          notifyAboutUpdates = false;
+          useQuickCss = true;
+          disableMinSize = true;
+          plugins = {
+            MessageLogger = {
+              enabled = true;
+              ignoreSelf = true;
             };
-          }
-        '';
+            FakeNitro.enabled = true;
+          };
+        };
       };
       extraQuickCss = lib.mkOption {
         type = lib.types.lines;

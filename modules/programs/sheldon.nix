@@ -31,7 +31,7 @@ in
       inherit (tomlFormat) type;
       default = { };
       description = "";
-      example = lib.literalExpression "";
+      example = "";
     };
 
     enableZshIntegration = hm.shell.mkZshIntegrationOption { inherit config; };

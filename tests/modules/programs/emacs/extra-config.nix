@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  realPkgs,
   ...
 }:
 
@@ -33,7 +34,7 @@ in
 lib.mkIf config.test.enableBig {
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs-nox;
+    package = realPkgs.emacs-nox;
     extraConfig = ''
       (require 'hm-test)
       (setq hm 'home-manager)

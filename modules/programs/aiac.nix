@@ -16,7 +16,6 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
   options.programs.aiac = {
     enable = mkEnableOption "aiac";
     package = mkPackageOption pkgs "aiac" { nullable = true; };

@@ -17,33 +17,43 @@ let
   webCfg = cfg.web;
 
   jsonFormat = pkgs.formats.json { };
+  orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+    inherit pkgs jsonFormat;
+  };
 
-  transformMcpServer = name: server: {
-    inherit name;
-    value = {
-      enabled = !(server.disabled or false);
+  toOpencodeShape =
+    s:
+    let
+      isRemote = s ? url && s.url != null;
+      renderedEnv = lib.hm.mcp.renderEnv (p: "{file:${p}}") (s.env or { });
+    in
+    lib.optionalAttrs (s.enabled or null != null) { inherit (s) enabled; }
+    // {
+      type = if isRemote then "remote" else "local";
     }
     // (
-      if server ? url then
-        {
-          type = "remote";
-          inherit (server) url;
-        }
-        // (lib.optionalAttrs (server ? headers) { inherit (server) headers; })
-      else if server ? command then
-        {
-          type = "local";
-          command = [ server.command ] ++ (server.args or [ ]);
-        }
-        // (lib.optionalAttrs (server ? env) { environment = server.env; })
+      if isRemote then
+        { inherit (s) url; } // lib.optionalAttrs (s.headers or { } != { }) { inherit (s) headers; }
       else
-        { }
+        {
+          command = [ s.command ] ++ (s.args or [ ]);
+        }
+        // lib.optionalAttrs (renderedEnv != { }) { environment = renderedEnv; }
     );
-  };
 
   transformedMcpServers =
     if cfg.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
-      lib.listToAttrs (lib.mapAttrsToList transformMcpServer config.programs.mcp.servers)
+      lib.mapAttrs (
+        _: server:
+        lib.hm.mcp.transformMcpServer {
+          inherit server;
+          extraTransforms = [ toOpencodeShape ];
+          exclude = [
+            "args"
+            "env"
+          ];
+        }
+      ) config.programs.mcp.servers
     else
       { };
 
@@ -56,12 +66,51 @@ let
         preferLocalBuild = true;
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
-          wrapProgram $out/bin/opencode \
+          wrapProgram $out/bin/${cfg.package.meta.mainProgram} \
             --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
         '';
       }
     else
       cfg.package;
+
+  normalizeDirectory =
+    name: source:
+    if lib.isPath source then
+      source
+    else
+      pkgs.runCommandLocal name { } ''
+        if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
+          echo ${lib.escapeShellArg "programs.opencode.skills must be a directory"} >&2
+          exit 1
+        fi
+        ln -s ${lib.escapeShellArg (toString source)} "$out"
+      '';
+
+  normalizeSkill =
+    source:
+    pkgs.runCommandLocal "opencode-skill" { } ''
+      source=${lib.escapeShellArg (toString source)}
+      if [[ -d "$source" ]]; then
+        ln -s "$source" "$out"
+      elif [[ -f "$source" ]]; then
+        mkdir "$out"
+        ln -s "$source" "$out/SKILL.md"
+      else
+        echo "OpenCode skill source must be a file or directory: $source" >&2
+        exit 1
+      fi
+    '';
+
+  webProgramArguments = [
+    (lib.getExe packageWithExtraPackages)
+    "serve"
+  ]
+  ++ webCfg.extraArgs;
+
+  opencodeWebLauncher = pkgs.writeShellScriptBin "opencode-web-launcher" ''
+    export PATH="${config.home.profileDirectory}/bin''${PATH:+:$PATH}"
+    exec ${lib.escapeShellArgs webProgramArguments}
+  '';
 in
 {
   meta.maintainers = with lib.maintainers; [ delafthi ];
@@ -99,16 +148,24 @@ in
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          model = "anthropic/claude-sonnet-4-20250514";
-          autoshare = false;
-          autoupdate = true;
-        }
-      '';
+      example = {
+        model = "anthropic/claude-sonnet-4-20250514";
+        autoshare = false;
+        autoupdate = true;
+      };
       description = ''
         Configuration written to {file}`$XDG_CONFIG_HOME/opencode/opencode.json`.
         See <https://opencode.ai/docs/config/> for the documentation.
+
+        Attribute sets containing ordered `lib.hm.dag.entryBefore` or
+        `lib.hm.dag.entryAfter` values are rendered in topological order, with
+        raw sibling values treated as unordered entries. This is useful for
+        OpenCode permission rules, where the last matching rule wins.
+
+        The `plugin` key accepts a list of plugin references: local paths to
+        plugin directories or files, derivations (e.g. `fetchFromGitHub`),
+        string paths into derivations, or names of external plugins fetched and
+        built by OpenCode.
 
         Note, `"$schema": "https://opencode.ai/config.json"` is automatically added to the configuration.
       '';
@@ -117,14 +174,12 @@ in
     tui = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      example = literalExpression ''
-        {
-          theme = "system";
-          keybinds = {
-            leader = "alt+b";
-          };
-        }
-      '';
+      example = {
+        theme = "system";
+        keybinds = {
+          leader = "alt+b";
+        };
+      };
 
       description = ''
         TUI-specific configuration written to {file}`$XDG_CONFIG_HOME/opencode/tui.json`.
@@ -456,7 +511,7 @@ in
         ) (lib.attrNames cfg.settings);
 
         packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-        hasTuiConfig = lib.versionAtLeast packageVersion "1.2.15";
+        hasTuiConfig = packageVersion == null || lib.versionAtLeast packageVersion "1.2.15";
       in
       lib.optionals (hasTuiConfig && deprecatedConfigKeys != [ ]) [
         ''
@@ -481,7 +536,7 @@ in
             mergedSettings =
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
           in
-          jsonFormat.generate "opencode.json" (
+          orderedJsonFormat.generate "opencode.json" (
             {
               "$schema" = "https://opencode.ai/config.json";
             }
@@ -522,8 +577,8 @@ in
         recursive = true;
       };
 
-      "opencode/skills" = mkIf (lib.isPath cfg.skills) {
-        source = cfg.skills;
+      "opencode/skills" = mkIf (lib.hm.strings.isPathLike cfg.skills) {
+        source = normalizeDirectory "opencode-skills" cfg.skills;
         recursive = true;
       };
 
@@ -558,17 +613,19 @@ in
     )
     // lib.mapAttrs' (
       name: content:
-      if
-        (lib.isPath content && lib.pathIsDirectory content)
-        || (builtins.isString content && lib.hasPrefix builtins.storeDir content)
-      then
+      if lib.isPath content && lib.pathIsDirectory content then
         lib.nameValuePair "opencode/skills/${name}" {
           source = content;
           recursive = true;
         }
+      else if lib.hm.strings.isPathLike content && !lib.isPath content then
+        lib.nameValuePair "opencode/skills/${name}" {
+          source = normalizeSkill content;
+          recursive = true;
+        }
       else
         lib.nameValuePair "opencode/skills/${name}/SKILL.md" (
-          if lib.isPath content then { source = content; } else { text = content; }
+          if lib.hm.strings.isPathLike content then { source = content; } else { text = content; }
         )
     ) (if builtins.isAttrs cfg.skills then cfg.skills else { })
     // lib.optionalAttrs (builtins.isAttrs cfg.themes) (
@@ -600,7 +657,7 @@ in
         };
 
         Service = {
-          ExecStart = "${lib.getExe packageWithExtraPackages} serve ${lib.escapeShellArgs webCfg.extraArgs}";
+          ExecStart = lib.getExe opencodeWebLauncher;
           Restart = "always";
           RestartSec = 5;
         }
@@ -620,18 +677,13 @@ in
         config = {
           ProgramArguments =
             let
-              programArguments = [
-                (lib.getExe packageWithExtraPackages)
-                "serve"
-              ]
-              ++ webCfg.extraArgs;
               opencodeLaunchdWrapper = pkgs.writeShellScriptBin "opencode-launchd-wrapper" ''
                 source ${webCfg.environmentFile}
-                ${lib.escapeShellArgs programArguments}
+                exec ${lib.getExe opencodeWebLauncher}
               '';
             in
             if webCfg.environmentFile == null then
-              programArguments
+              [ (lib.getExe opencodeWebLauncher) ]
             else
               [
                 (lib.getExe opencodeLaunchdWrapper)

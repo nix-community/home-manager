@@ -22,27 +22,25 @@ in
     settings = lib.mkOption {
       inherit (settingsFormat) type;
       default = { };
-      example = lib.literalExpression ''
-        {
-          fork = false;
-          frame = "full";
-          idle = true;
-          maximized = false;
-          neovim-bin = "/usr/bin/nvim";
-          no-multigrid = false;
-          srgb = false;
-          tabs = true;
-          theme = "auto";
-          title-hidden = true;
-          vsync = true;
-          wsl = false;
+      example = {
+        fork = false;
+        frame = "full";
+        idle = true;
+        maximized = false;
+        neovim-bin = "/usr/bin/nvim";
+        no-multigrid = false;
+        srgb = false;
+        tabs = true;
+        theme = "auto";
+        title-hidden = true;
+        vsync = true;
+        wsl = false;
 
-          font = {
-            normal = [];
-            size = 14.0;
-          };
-        }
-      '';
+        font = {
+          normal = [ ];
+          size = 14.0;
+        };
+      };
       description = ''
         Neovide configuration.
         For available settings see <https://neovide.dev/config-file.html>.

@@ -17,7 +17,6 @@ let
   cfg = config.programs.nyxt;
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.programs.nyxt = {
     enable = mkEnableOption "Nyxt";

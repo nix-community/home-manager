@@ -1,16 +1,28 @@
-name:
+{ lib, name }:
+let
+  withDefaultStateVersion = module: {
+    imports = [ module ];
+
+    # Stronger than the global test default, but weaker than any test-local
+    # stateVersion assignment.
+    home.stateVersion = lib.mkOverride 900 "26.05";
+  };
+in
 builtins.mapAttrs
   (
     _test: module:
-    import module [
-      "programs"
-      name
-    ]
+    withDefaultStateVersion (
+      import module [
+        "programs"
+        name
+      ]
+    )
   )
   {
     "${name}-deprecated-native-messenger" = ./deprecated-native-messenger.nix;
     "${name}-null-package" = ./null-package.nix;
     "${name}-final-package" = ./final-package.nix;
+    "${name}-global-extensions-assertions" = ./global-extensions-assertions.nix;
     "${name}-policies" = ./policies.nix;
     "${name}-profiles-bookmarks" = ./profiles/bookmarks;
     "${name}-profiles-bookmarks-attrset" = ./profiles/bookmarks/attrset.nix;
@@ -22,6 +34,9 @@ builtins.mapAttrs
     "${name}-profiles-extensions" = ./profiles/extensions;
     "${name}-profiles-extensions-assertions" = ./profiles/extensions/assertions.nix;
     "${name}-profiles-extensions-extensible" = ./profiles/extensions/extensible.nix;
+    "${name}-profiles-extensions-per-extension-force" = ./profiles/extensions/per-extension-force.nix;
+    "${name}-profiles-extensions-per-extension-force-assertions" =
+      ./profiles/extensions/per-extension-force-assertions.nix;
     "${name}-profiles-extensions-exhaustive" = ./profiles/extensions/exhaustive.nix;
     "${name}-profiles-extensions-exact" = ./profiles/extensions/exact.nix;
     "${name}-profiles-handlers" = ./profiles/handlers;

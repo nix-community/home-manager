@@ -18,7 +18,6 @@ let
   jsonFormat = pkgs.formats.json { };
 in
 {
-  meta.maintainers = with lib.hm.maintainers; [ aguirre-matteo ];
 
   options.services.hyprshell = {
     enable = mkEnableOption "hyprshell";

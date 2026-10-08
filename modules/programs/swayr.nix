@@ -16,7 +16,7 @@ let
   '';
 in
 {
-  meta.maintainers = [ lib.hm.maintainers."9p4" ];
+  meta.maintainers = [ lib.hm.maintainers._9p4 ];
 
   options.programs.swayr = {
     enable = lib.mkEnableOption "the swayr service";

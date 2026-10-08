@@ -487,8 +487,6 @@ in
       lib.nameValuePair serviceName {
         Unit = {
           Description = "Restic backup service";
-          Wants = [ "network-online.target" ];
-          After = [ "network-online.target" ];
         };
 
         Service = {
@@ -498,7 +496,6 @@ in
           RuntimeDirectory = serviceName;
           CacheDirectory = serviceName;
           CacheDirectoryMode = "0700";
-          PrivateTmp = true;
 
           Environment = mkEnvironment backup ++ [ "RESTIC_CACHE_DIR=%C/${serviceName}" ];
 

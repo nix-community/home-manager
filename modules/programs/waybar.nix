@@ -55,9 +55,11 @@ let
         output = mkOption {
           type = nullOr (either str (listOf str));
           default = null;
-          example = literalExpression ''
-            [ "DP-1" "!DP-2" "!DP-3" ]
-          '';
+          example = [
+            "DP-1"
+            "!DP-2"
+            "!DP-3"
+          ];
           description = ''
             Specifies on which screen this bar will be displayed.
             Exclamation mark(!) can be used to exclude specific output.
@@ -94,18 +96,18 @@ let
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed on the left.";
-          example = literalExpression ''
-            [ "sway/workspaces" "sway/mode" "wlr/taskbar" ]
-          '';
+          example = [
+            "sway/workspaces"
+            "sway/mode"
+            "wlr/taskbar"
+          ];
         };
 
         modules-center = mkOption {
           type = nullOr (listOf str);
           default = null;
           description = "Modules that will be displayed in the center.";
-          example = literalExpression ''
-            [ "sway/window" ]
-          '';
+          example = [ "sway/window" ];
         };
 
         modules-right = mkOption {
@@ -122,16 +124,14 @@ let
           visible = false;
           default = null;
           description = "Modules configuration.";
-          example = literalExpression ''
-            {
-              "sway/window" = {
-                max-length = 50;
-              };
-              "clock" = {
-                format-alt = "{:%a, %d. %b  %H:%M}";
-              };
-            }
-          '';
+          example = {
+            "sway/window" = {
+              max-length = 50;
+            };
+            "clock" = {
+              format-alt = "{:%a, %d. %b  %H:%M}";
+            };
+          };
         };
 
         margin = mkOption {

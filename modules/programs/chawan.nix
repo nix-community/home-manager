@@ -24,15 +24,13 @@ in
 
         See {manpage}`cha-config(5)`
       '';
-      example = lib.literalExpression ''
-        {
-          buffer = {
-            images = true;
-            autofocus = true;
-          };
-          page."C-k" = "() => pager.load('ddg:')";
-        }
-      '';
+      example = {
+        buffer = {
+          images = true;
+          autofocus = true;
+        };
+        page."C-k" = "() => pager.load('ddg:')";
+      };
     };
   };
 

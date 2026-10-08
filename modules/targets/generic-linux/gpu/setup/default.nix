@@ -20,12 +20,22 @@ stdenv.mkDerivation {
     substituteInPlace non-nixos-gpu* \
       --replace-quiet '@@resources@@' "$out/resources" \
       --replace-quiet '@@statedir@@' '${nixStateDirectory}' \
-      --replace-quiet '@@systemddir@@' "$out/lib/systemd/system" \
+      --replace-quiet '@@tmpfilesdir@@' "$out/lib/tmpfiles.d" \
       --replace-quiet '@@env@@' "${nonNixosGpuEnv}"
   '';
   installPhase = ''
-    mkdir -p $out/{bin,resources,lib/systemd/system}
+    mkdir -p $out/{bin,resources,lib/tmpfiles.d}
     cp non-nixos-gpu-setup $out/bin
-    cp non-nixos-gpu.service $out/lib/systemd/system
+    cp non-nixos-gpu.conf $out/lib/tmpfiles.d
+
+    # Add Nvidia EGL config, when present
+    if [[ -d "${nonNixosGpuEnv}/share/egl/egl_external_platform.d" ]]; then
+      for path in "${nonNixosGpuEnv}/share/egl/egl_external_platform.d"/*; do
+        fname=$(basename "$path")
+        dstname=''${fname%.json}_nix_gpu.json
+        echo "L+ /etc/egl/egl_external_platform.d/$dstname - - - - $path" \
+          >> $out/lib/tmpfiles.d/non-nixos-gpu.conf
+      done
+    fi
   '';
 }

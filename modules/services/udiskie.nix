@@ -49,15 +49,13 @@ in
       settings = mkOption {
         inherit (yaml) type;
         default = { };
-        example = lib.literalExpression ''
-          {
-            program_options = {
-              udisks_version = 2;
-              tray = true;
-            };
-            icon_names.media = [ "media-optical" ];
-          }
-        '';
+        example = {
+          program_options = {
+            udisks_version = 2;
+            tray = true;
+          };
+          icon_names.media = [ "media-optical" ];
+        };
         description = ''
           Configuration written to
           {file}`$XDG_CONFIG_HOME/udiskie/config.yml`.

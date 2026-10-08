@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/usr/local/bin/codex-pre-tool-use",
+            "statusMessage": "Checking Bash command",
+            "timeout": 30,
+            "type": "command"
+          }
+        ],
+        "matcher": "^Bash$"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "/usr/local/bin/codex-stop",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  }
+}

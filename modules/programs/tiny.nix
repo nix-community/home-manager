@@ -8,7 +8,7 @@ let
   cfg = config.programs.tiny;
   format = pkgs.formats.yaml { };
   configDir =
-    if pkgs.stdenv.isDarwin then
+    if pkgs.stdenv.hostPlatform.isDarwin then
       "Library/Application Support/tiny"
     else
       "${config.xdg.configHome}/tiny";

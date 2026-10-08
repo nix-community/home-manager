@@ -1,1 +1,5 @@
-import ./common.nix "firefox"
+{ lib, ... }:
+import ./common.nix {
+  inherit lib;
+  name = "firefox";
+}

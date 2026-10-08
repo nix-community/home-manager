@@ -10,7 +10,16 @@ let
   cfg = config.programs.pistol;
 
   configDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Preferences" else config.xdg.configHome;
+    # NOTE: This intentionally diverges from the documentation
+    # pistol's README claims that the default is Library/Preferences
+    # However, this is part of a default set for XDG_CONFIG_DIRS,
+    # which gets overwritten by, e.g., nix-darwin.
+    # In such cases, the only directory checked is `XDG_CONFIG_HOME`,
+    # which falls back to Library/Application Support/.
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 
   configFile = lib.concatStringsSep "\n" (
     map (
@@ -62,13 +71,20 @@ in
     associations = mkOption {
       type = types.listOf association;
       default = [ ];
-      example = lib.literalExpression ''
-        [
-          { mime = "application/json"; command = "bat %pistol-filename%"; }
-          { mime = "application/*"; command = "hexyl %pistol-filename%"; }
-          { fpath = ".*.md$"; command = "sh: bat --paging=never --color=always %pistol-filename% | head -8"; }
-        ]
-      '';
+      example = [
+        {
+          mime = "application/json";
+          command = "bat %pistol-filename%";
+        }
+        {
+          mime = "application/*";
+          command = "hexyl %pistol-filename%";
+        }
+        {
+          fpath = ".*.md$";
+          command = "sh: bat --paging=never --color=always %pistol-filename% | head -8";
+        }
+      ];
       description = ''
         Associations written to the Pistol configuration at
         {file}`$XDG_CONFIG_HOME/pistol/pistol.conf`.

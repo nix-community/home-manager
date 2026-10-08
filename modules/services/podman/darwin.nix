@@ -83,15 +83,16 @@ let
 
       volumes = mkOption {
         type = types.listOf types.str;
-        default = [ ];
-        example = [
+        default = [
           "/Users:/Users"
           "/private:/private"
           "/var/folders:/var/folders"
         ];
+        example = [
+          "/Users:/Users"
+        ];
         description = ''
           Volumes to mount in the machine, specified as source:target pairs.
-          If empty, podman will use its default volume mounts.
         '';
       };
 
@@ -174,30 +175,41 @@ in
       type = types.attrsOf machineDefinitionType;
       default = { };
       description = "Declarative podman machine configurations.";
+      example = {
+        "dev-machine" = {
+          cpus = 4;
+          diskSize = 100;
+          memory = 8192;
+          swap = 2048;
+          timezone = "UTC";
+          volumes = [
+            "/Users:/Users"
+          ];
+          autoStart = true;
+          watchdogInterval = 30;
+        };
+        "testing" = {
+          cpus = 2;
+          diskSize = 50;
+          image = "ghcr.io/your-org/custom-image:latest";
+          memory = 4096;
+          username = "podman";
+          autoStart = false;
+        };
+      };
+    };
+
+    extraPackages = mkOption {
+      type = types.listOf types.package;
+      default = with pkgs; [
+        openssh
+      ];
+      defaultText = lib.literalExpression "[ pkgs.openssh ]";
       example = lib.literalExpression ''
-        {
-          "dev-machine" = {
-            cpus = 4;
-            diskSize = 100;
-            memory = 8192;
-            swap = 2048;
-            timezone = "UTC";
-            volumes = [
-              "/Users:/Users"
-              "/private:/private"
-            ];
-            autoStart = true;
-            watchdogInterval = 30;
-          };
-          "testing" = {
-            cpus = 2;
-            diskSize = 50;
-            image = "ghcr.io/your-org/custom-image:latest";
-            memory = 4096;
-            username = "podman";
-            autoStart = false;
-          };
-        }
+        with pkgs; [ openssh hello ];
+      '';
+      description = ''
+        Extra packages added to {env}`PATH` when creating Podman machines.
       '';
     };
   };
@@ -219,7 +231,11 @@ in
                 swap = null;
                 timezone = null;
                 username = null;
-                volumes = [ ];
+                volumes = [
+                  "/Users:/Users"
+                  "/private:/private"
+                  "/var/folders:/var/folders"
+                ];
                 autoStart = true;
                 watchdogInterval = 30;
               };
@@ -237,15 +253,18 @@ in
         ];
       }
 
-      (mkIf pkgs.stdenv.isDarwin {
+      (mkIf pkgs.stdenv.hostPlatform.isDarwin {
         home.activation.podmanMachines =
           let
             mkMachineInitScript =
               name: machine:
               let
-                # Automatically mount host's container config into the VM
+                # Automatically mount host's container config into the VM.
+                # The guest target uses /var/home/<user> rather than /home/<user>
+                # because on Fedora CoreOS /home is a filesystem-wide symlink
+                # to /var/home, and podman requires a canonical mount path.
                 username = if isNull machine.username then "core" else machine.username;
-                configVolume = "$HOME/.config/containers:/home/${username}/.config/containers";
+                configVolume = "$HOME/.config/containers:/var/home/${username}/.config/containers";
                 allVolumes = [ configVolume ] ++ machine.volumes;
               in
               ''
@@ -265,7 +284,14 @@ in
               '';
           in
           lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            PATH="${cfg.package}/bin:$PATH"
+            PATH="${
+              lib.makeBinPath (
+                [
+                  cfg.package
+                ]
+                ++ cfg.extraPackages
+              )
+            }:$PATH"
 
             ${concatStringsSep "\n" (lib.mapAttrsToList mkMachineInitScript allMachines)}
 

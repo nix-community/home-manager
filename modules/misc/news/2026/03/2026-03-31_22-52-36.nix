@@ -1,7 +1,7 @@
 { config, ... }:
 {
   time = "2026-03-31T17:22:36+00:00";
-  condition = config.programs.gemini-cli.enable;
+  condition = config.programs.antigravity-cli.enable;
   message = ''
     The `programs.gemini-cli.enableMcpIntegration` and `programs.gemini-cli.skills`
     options have been added to support configuring the Gemini CLI MCP servers and

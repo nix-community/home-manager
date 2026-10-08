@@ -15,6 +15,13 @@
       extraConfig.XDG_MISC_DIR = "${config.home.homeDirectory}/Misc";
     };
 
+    test.asserts.warnings.expected = [
+      ''
+        Using `xdg.userDirs.extraConfig` as keys like `XDG_MISC_DIR` is deprecated and will be
+        removed in a future release. Please use keys like `MISC` instead.
+      ''
+    ];
+
     nmt.script = ''
       configFile=home-files/.config/user-dirs.dirs
       assertFileExists $configFile

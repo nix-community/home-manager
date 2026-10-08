@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 hotKeys:
   shift-0:
     command: pods

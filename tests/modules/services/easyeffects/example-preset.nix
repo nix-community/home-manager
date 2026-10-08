@@ -1,3 +1,9 @@
+{ options, ... }:
+
+let
+  presetType =
+    options.services.easyeffects.extraPresets.type.nestedTypes.elemType.nestedTypes.elemType;
+in
 {
   services.easyeffects = {
     enable = true;
@@ -19,14 +25,32 @@
             wet = 0.0;
           };
         };
+        output = {
+          blocklist = [ ];
+          "plugins_order" = [ "limiter#0" ];
+          "limiter#0" = {
+            bypass = false;
+            threshold = -1.0;
+          };
+        };
       };
     };
   };
 
   test.stubs.easyeffects = { };
 
-  nmt.script = ''
-    assertFileContent \
-      home-files/.local/share/easyeffects/input/example-preset.json "${./example-preset.json}"
-  '';
+  nmt.script =
+    assert
+      !(presetType.check {
+        input = { };
+        outpt = { };
+      });
+    assert !(presetType.check { });
+    ''
+      inputPreset=home-files/.local/share/easyeffects/input/example-preset.json
+      outputPreset=home-files/.local/share/easyeffects/output/example-preset.json
+
+      assertFileContent "$inputPreset" "${./example-preset.json}"
+      assertFileContent "$outputPreset" "${./example-preset-output.json}"
+    '';
 }

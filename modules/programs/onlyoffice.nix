@@ -27,13 +27,13 @@ in
     settings = mkOption {
       inherit (formatter) type;
       default = { };
-      example = ''
+      example = {
         UITheme = "theme-contrast-dark";
         editorWindowMode = false;
         forcedRtl = false;
         maximized = true;
         titlebar = "custom";
-      '';
+      };
       description = ''
         Configuration settings for Onlyoffice.
 

@@ -8,4 +8,5 @@
   atuin-set-flags = ./set-flags.nix;
   atuin-theme = ./theme.nix;
   atuin-nushell = ./nushell.nix;
+  atuin-nushell-fzf-order = ./nushell-fzf-order.nix;
 }

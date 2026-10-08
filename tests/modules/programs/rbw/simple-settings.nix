@@ -22,7 +22,7 @@ in
   };
 
   nmt.script = ''
-    assertFileExists home-files/${path}
-    assertFileContent home-files/${path} '${expected}'
+    assertFileExists "home-files/${path}"
+    assertFileContent "home-files/${path}" '${expected}'
   '';
 }

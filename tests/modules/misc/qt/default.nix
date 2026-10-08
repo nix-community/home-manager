@@ -3,10 +3,12 @@
   qt-kvantum-settings = ./qt-kvantum-settings.nix;
   qt-kvantum-themes = ./qt-kvantum-themes.nix;
   qt-platform-theme-gtk = ./qt-platform-theme-gtk.nix;
+  qt-platform-theme-gtk2 = ./qt-platform-theme-gtk2.nix;
   qt-platform-theme-gtk3 = ./qt-platform-theme-gtk3.nix;
   qt-platform-theme-gnome = ./qt-platform-theme-gnome.nix;
   qt-platform-theme-kde6-migration = ./qt-platform-theme-kde6-migration.nix;
   qt-qt5ct-settings = ./qt-qt5ct-settings.nix;
   qt-qt6ct-settings = ./qt-qt6ct-settings.nix;
   qt-qtct-settings = ./qt-qtct-settings.nix;
+  qt-use-gtk-theme-migration = ./qt-use-gtk-theme-migration.nix;
 }
