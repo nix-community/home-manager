@@ -272,7 +272,9 @@ in
               "itemTypes"
             ]
             ++ remoteOptions
-          else if (t == "carddav" || t == "http") then
+          else if (t == "http") then
+            remoteOptions
+          else if (t == "carddav") then
             [
               "useVcard4"
             ]
