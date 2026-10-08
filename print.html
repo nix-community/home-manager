@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f5e34648.js";
+            window.path_to_searchindex_js = "searchindex-d350b417.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -58359,6 +58359,27 @@ Thunderbird preference (int, bool, string, and also attrs, list, float as a JSON
     };
   };
 }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.unifiedFolders.enable"><a class="header" href="#opt-programs.thunderbird.profiles._name_.unifiedFolders.enable">programs.thunderbird.profiles.&lt;name&gt;.unifiedFolders.enable</a></h2>
+<p>Whether to declare the hidden account that Thunderbird uses
+for the “Unified Folders” view of the folder pane.</p>
+<p>Thunderbird makes this account when you first use the view,
+and adds it to <code>mail.accountmanager.accounts</code>. This module
+sets that preference, so the account is removed from the
+list at each start. Thunderbird then makes a new account,
+and the settings of the unified folders (for example, their
+columns) are lost. Enable this option if you use the view.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
