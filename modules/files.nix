@@ -470,9 +470,9 @@ in
             fi
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
-            elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern &&
-                    ! ( -L "$oldMutable/$relativePath" && -f "$targetPath" && ! -L "$targetPath" ) ]] ; then
-              warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
+            elif [[ ( -L "$oldMutable/$relativePath" && ( ! -f "$targetPath" || -L "$targetPath" ) ) ||
+                    ( ! -L "$oldMutable/$relativePath" && ! "$(readlink "$targetPath")" == $homeFilePattern ) ]] ; then
+              warnEcho "Path '$targetPath' is no longer managed by Home Manager. Skipping delete."
             else
               verboseEcho "Checking $targetPath: gone (deleting)"
               run rm $VERBOSE_ARG "$targetPath" || exit 1
