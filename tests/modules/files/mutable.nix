@@ -89,6 +89,12 @@ let
   };
   empty = generation { };
   failedLink = generation { "app/collision".text = "new declaration"; };
+  missingSource = generation {
+    "app/config" = {
+      mutable = true;
+      source = config.lib.file.mkOutOfStoreSymlink "/nonexistent/mutable-source";
+    };
+  };
 in
 {
   nmt.script = ''
@@ -202,6 +208,21 @@ in
     test ! -e "$HOME/app/config"
     ${second.activate} ${disabled.package}
     ${empty.activate} ${second.package}
+    test ! -e "$HOME/app/config"
+
+    # A generation's ownership record must survive a vanished out-of-store
+    # source. Model the already installed copy after that source disappears.
+    test -L ${missingSource.package}/home-mutable-files/app/config
+    test ! -e ${missingSource.package}/home-mutable-files/app/config
+    mkdir -p "$HOME/app"
+    printf edited > "$HOME/app/config"
+    ${linked.activate} ${missingSource.package}
+    test -L "$HOME/app/config"
+    ${second.activate} ${linked.package}
+    ${disabled.activate} ${missingSource.package}
+    test ! -e "$HOME/app/config"
+    ${second.activate} ${disabled.package}
+    ${empty.activate} ${missingSource.package}
     test ! -e "$HOME/app/config"
 
     # Parent symlinks must not redirect either writes or cleanup.
