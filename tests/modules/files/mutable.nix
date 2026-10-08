@@ -160,6 +160,21 @@ in
     test "$(cat "$HOME/real")" = referent
     test "$(cat "$HOME/app/kept")" = kept
 
+    # A replacement symlink remains foreign even when its destination resembles
+    # another HM generation, including a dangling destination in that generation.
+    for referent in "$(readlink -e ${second.package}/home-files)/app/config" "$(readlink -e ${second.package}/home-files)/app/not-declared"; do
+      rm "$HOME/app/dropped"
+      ${drop.activate} ${nodrop.package}
+      rm "$HOME/app/dropped"
+      ln -s "$referent" "$HOME/app/dropped"
+      DRY_RUN=1 ${nodrop.activate} ${drop.package}
+      test -L "$HOME/app/dropped"
+      test "$(readlink "$HOME/app/dropped")" = "$referent"
+      ${nodrop.activate} ${drop.package}
+      test -L "$HOME/app/dropped"
+      test "$(readlink "$HOME/app/dropped")" = "$referent"
+    done
+
     # Model an application's atomic save replacing the regular file.
     printf edited > "$HOME/app/replacement"
     mv "$HOME/app/replacement" "$HOME/app/config"
