@@ -144,6 +144,22 @@ in
       '';
     };
 
+    jumps = mkOption {
+      inherit (yamlFormat) type;
+      default = { };
+      description = ''
+        Resource jumps written to {file}`$XDG_CONFIG_HOME/k9s/jumps.yaml` (linux)
+        or {file}`Library/Application Support/k9s/jumps.yaml` (darwin).
+        See <https://github.com/derailed/k9s#resource-jumps> for supported values.
+      '';
+      example = {
+        "argoproj.io/v1alpha1/applications" = {
+          targetGVR = "apps/v1/deployments";
+          labelSelector = "app.kubernetes.io/instance={{.metadata.name}}";
+        };
+      };
+    };
+
     views = mkOption {
       inherit (yamlFormat) type;
       default = { };
@@ -228,6 +244,10 @@ in
             source = yamlFormat.generate "k9s-plugins" { inherit (cfg) plugins; };
           };
 
+          "k9s/jumps.yaml" = mkIf (cfg.jumps != { }) {
+            source = yamlFormat.generate "k9s-jumps" { inherit (cfg) jumps; };
+          };
+
           "k9s/views.yaml" = mkIf (cfg.views != { }) {
             source = yamlFormat.generate "k9s-views" { inherit (cfg) views; };
           };
@@ -251,6 +271,10 @@ in
 
           "Library/Application Support/k9s/plugins.yaml" = mkIf (cfg.plugins != { }) {
             source = yamlFormat.generate "k9s-plugins" { inherit (cfg) plugins; };
+          };
+
+          "Library/Application Support/k9s/jumps.yaml" = mkIf (cfg.jumps != { }) {
+            source = yamlFormat.generate "k9s-jumps" { inherit (cfg) jumps; };
           };
 
           "Library/Application Support/k9s/views.yaml" = mkIf (cfg.views != { }) {
