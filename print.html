@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d350b417.js";
+            window.path_to_searchindex_js = "searchindex-5de61022.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -34827,6 +34827,27 @@ YAML 1.1 value</p>
     command = "pods";
     description = "Viewing pods";
     shortCut = "Shift-0";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/k9s.nix">&lt;home-manager/modules/programs/k9s.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.k9s.jumps"><a class="header" href="#opt-programs.k9s.jumps">programs.k9s.jumps</a></h2>
+<p>Resource jumps written to <code>$XDG_CONFIG_HOME/k9s/jumps.yaml</code> (linux)
+or <code>Library/Application Support/k9s/jumps.yaml</code> (darwin).
+See <a href="https://github.com/derailed/k9s#resource-jumps">https://github.com/derailed/k9s#resource-jumps</a> for supported values.</p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "argoproj.io/v1alpha1/applications" = {
+    labelSelector = "app.kubernetes.io/instance={{.metadata.name}}";
+    targetGVR = "apps/v1/deployments";
   };
 }
 </code></pre>
