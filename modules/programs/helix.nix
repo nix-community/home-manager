@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  options,
   pkgs,
   ...
 }:
@@ -87,11 +86,7 @@ in
     };
 
     languages = mkOption {
-      type =
-        with types;
-        coercedTo (listOf tomlFormat.type) (language: { inherit language; }) (
-          addCheck tomlFormat.type builtins.isAttrs
-        );
+      type = types.addCheck tomlFormat.type builtins.isAttrs;
       default = { };
       example = literalExpression ''
         {
@@ -210,24 +205,6 @@ in
       assertion = cfg.extraPackages != [ ] -> cfg.package != null;
       message = "programs.helix.extraPackages require programs.helix.package to not be null";
     };
-
-    warnings = lib.optional (lib.any builtins.isList options.programs.helix.languages.definitions) (
-      lib.hm.deprecations.mkDeprecatedOptionValueWarning {
-        option = [
-          "programs"
-          "helix"
-          "languages"
-        ];
-        old = "a list";
-        replacement = "`programs.helix.languages.language`";
-        details = ''
-          This option now generates the whole languages.toml file instead of just the language array in that file.
-
-          Use:
-            programs.helix.languages = { language = <languages list>; }
-        '';
-      }
-    );
 
     home.packages = lib.mkIf (cfg.package != null) (
       if cfg.extraPackages != [ ] then

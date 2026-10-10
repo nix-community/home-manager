@@ -148,7 +148,7 @@ let
             ];
           in
           with types;
-          either (enum menus) (listOf (enum menus));
+          listOf (enum menus);
         default = [ "index" ];
         description = "Select the menu to bind the command to.";
       };
@@ -311,7 +311,7 @@ let
   genBindMapper =
     bindType:
     concatMapStringsSep "\n" (
-      bind: ''${bindType} ${concatStringsSep "," (lib.toList bind.map)} ${bind.key} "${bind.action}"''
+      bind: ''${bindType} ${concatStringsSep "," bind.map} ${bind.key} "${bind.action}"''
     );
 
   bindSection = (genBindMapper "bind") cfg.binds;
@@ -486,7 +486,7 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
+        assertion = ((filter (b: (lib.length b.map) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
         message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
       }
     ];
@@ -547,13 +547,5 @@ in
           ]
         );
     };
-
-    warnings =
-      let
-        hasOldBinds = binds: (filter (b: !(lib.isList b.map)) binds) != [ ];
-      in
-      mkIf (hasOldBinds (cfg.binds ++ cfg.macros)) [
-        "Specifying 'programs.neomutt.(binds|macros).map' as a string is deprecated, use a list of strings instead. See https://github.com/nix-community/home-manager/pull/1885."
-      ];
   };
 }
