@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-5de61022.js";
+            window.path_to_searchindex_js = "searchindex-ed794f6c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -41963,6 +41963,11 @@ boolean</p>
 </ul>
 <h2 id="opt-programs.mise.enableNushellIntegration"><a class="header" href="#opt-programs.mise.enableNushellIntegration">programs.mise.enableNushellIntegration</a></h2>
 <p>Whether to enable Nushell integration.</p>
+<p>mise versions 2026.9.0 and 2026.9.1 have a broken Nushell PATH
+prelude; upgrade to 2026.9.2 or newer when using these versions.</p>
+<p>With mise 2026.9.2 or newer, activation is generated at shell startup.
+Restart Nushell to reload configuration; sourcing config.nu alone is
+unsupported because the session’s activation file is removed after loading.</p>
 <p><em>Type:</em>
 boolean</p>
 <p><em>Default:</em>
