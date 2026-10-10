@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-ed794f6c.js";
+            window.path_to_searchindex_js = "../../../searchindex-a726f132.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -197,6 +197,30 @@ boolean</p>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.herdr
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/herdr.nix">&lt;home-manager/modules/programs/herdr.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.herdr.mutableSettings"><a class="header" href="#opt-programs.herdr.mutableSettings">programs.herdr.mutableSettings</a></h2>
+<p>Whether to merge declared settings into a writable Herdr configuration
+file during activation, preserving settings added by Herdr or the user.
+Declared values, including arrays, take precedence. Removing a
+declaration does not remove it from the file. Comments and formatting
+are not preserved. New files have mode 0600; existing files retain
+their permissions.</p>
+<p>The default keeps the configuration file immutable. Switching back to
+immutable settings automatically replaces the writable file only when
+it is byte-identical to the declared settings. Changed files use Home
+Manager’s normal collision and backup handling. Empty settings leave
+the file unmanaged.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
