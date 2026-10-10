@@ -9,16 +9,24 @@ let
 
   cfg = config.programs.keychain;
 
-  flags =
-    cfg.extraFlags
-    ++ lib.optional (cfg.agents != [ ]) "--agents ${lib.concatStringsSep "," cfg.agents}"
-    ++ lib.optional (cfg.inheritType != null) "--inherit ${cfg.inheritType}";
-
-  shellCommand = "${cfg.package}/bin/keychain --eval ${lib.concatStringsSep " " flags} ${lib.concatStringsSep " " cfg.keys}";
+  shellCommand = "${cfg.package}/bin/keychain --eval ${lib.concatStringsSep " " cfg.extraFlags} ${lib.concatStringsSep " " cfg.keys}";
 
 in
 {
   meta.maintainers = [ ];
+
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "keychain"
+      "agents"
+    ] "Remove this option; keychain 2.9.0 no longer supports it.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "keychain"
+      "inheritType"
+    ] "Remove this option; keychain 2.9.0 no longer supports it.")
+  ];
 
   options.programs.keychain = {
     enable = lib.mkEnableOption "keychain";
@@ -30,29 +38,6 @@ in
       default = [ "id_rsa" ];
       description = ''
         Keys to add to keychain.
-      '';
-    };
-
-    agents = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      description = ''
-        Agents to add.
-      '';
-    };
-
-    inheritType = mkOption {
-      type = types.nullOr (
-        types.enum [
-          "local"
-          "any"
-          "local-once"
-          "any-once"
-        ]
-      );
-      default = null;
-      description = ''
-        Inherit type to attempt from agent variables from the environment.
       '';
     };
 
@@ -81,47 +66,25 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    lib.mkMerge [
-      (lib.mkIf ((lib.versionAtLeast cfg.package.version "2.9.0") && cfg.agents != [ ]) {
-        warnings = [
-          ''
-            Option `programs.keychain.agents` is deprecated and will be removed in the future.
-            Please avoid using it.
-            See https://github.com/funtoo/keychain/releases/tag/2.9.0 for more information
-          ''
-        ];
-      })
-      (lib.mkIf ((lib.versionAtLeast cfg.package.version "2.9.0") && cfg.inheritType != null) {
-        warnings = [
-          ''
-            Option `programs.keychain.inheritType` is deprecated and will be removed in the future.
-            Please avoid using it.
-            See https://github.com/funtoo/keychain/releases/tag/2.9.0 for more information
-          ''
-        ];
-      })
-      {
-        home.packages = [ cfg.package ];
-        programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
-          eval "$(SHELL=bash ${shellCommand})"
-        '';
-        programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
-          SHELL=fish eval (${shellCommand})
-        '';
-        programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
-          eval "$(SHELL=zsh ${shellCommand})"
-        '';
-        programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''
-          let keychain_shell_command = (SHELL=bash ${shellCommand}| parse -r '(\w+)="?(.*?)"?; export \1' | transpose -ird)
-          if not ($keychain_shell_command|is-empty) {
-            $keychain_shell_command | load-env
-          }
-        '';
-        xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
-          eval "$(SHELL=bash ${shellCommand})"
-        '';
+  config = mkIf cfg.enable {
+    home.packages = [ cfg.package ];
+    programs.bash.initExtra = mkIf cfg.enableBashIntegration ''
+      eval "$(SHELL=bash ${shellCommand})"
+    '';
+    programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration ''
+      SHELL=fish eval (${shellCommand})
+    '';
+    programs.zsh.initContent = mkIf cfg.enableZshIntegration ''
+      eval "$(SHELL=zsh ${shellCommand})"
+    '';
+    programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration ''
+      let keychain_shell_command = (SHELL=bash ${shellCommand}| parse -r '(\w+)="?(.*?)"?; export \1' | transpose -ird)
+      if not ($keychain_shell_command|is-empty) {
+        $keychain_shell_command | load-env
       }
-    ]
-  );
+    '';
+    xsession.initExtra = mkIf cfg.enableXsessionIntegration ''
+      eval "$(SHELL=bash ${shellCommand})"
+    '';
+  };
 }

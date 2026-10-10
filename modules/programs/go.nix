@@ -9,8 +9,6 @@ let
     literalExpression
     mkIf
     mkOption
-    mkChangedOptionModule
-    mkRenamedOptionModule
     types
     ;
 
@@ -22,22 +20,14 @@ in
 {
   meta.maintainers = [ lib.maintainers.rvolosatovs ];
 
-  imports = [
-    (mkChangedOptionModule [ "programs" "go" "goPath" ] [ "programs" "go" "env" "GOPATH" ] (config: [
-      "${config.home.homeDirectory}/${config.programs.go.goPath}"
-    ]))
-
-    (mkChangedOptionModule [ "programs" "go" "extraGoPaths" ] [ "programs" "go" "env" "GOPATH" ] (
-      config:
-      lib.mkOrder 1500 (map (x: "${config.home.homeDirectory}/${x}") config.programs.go.extraGoPaths)
-    ))
-
-    (mkChangedOptionModule [ "programs" "go" "goBin" ] [ "programs" "go" "env" "GOBIN" ] (
-      config: "${config.home.homeDirectory}/${config.programs.go.goBin}"
-    ))
-
-    (mkRenamedOptionModule [ "programs" "go" "goPrivate" ] [ "programs" "go" "env" "GOPRIVATE" ])
-  ];
+  imports =
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "go" name ] message)
+      {
+        goPath = "Use `programs.go.env.GOPATH` with absolute paths instead.";
+        extraGoPaths = "Use `programs.go.env.GOPATH` with absolute paths instead.";
+        goBin = "Use `programs.go.env.GOBIN` with an absolute path instead.";
+        goPrivate = "Use `programs.go.env.GOPRIVATE` instead.";
+      };
 
   options = {
     programs.go = {

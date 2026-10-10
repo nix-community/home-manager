@@ -52,17 +52,11 @@ in
   meta.maintainers = [ ];
 
   imports = [
-    (lib.mkChangedOptionModule # \
-      [ "programs" "mcfly" "enableFuzzySearch" ] # \
-      [ "programs" "mcfly" "fuzzySearchFactor" ] # \
-      (
-        config:
-        let
-          value = lib.getAttrFromPath [ "programs" "mcfly" "enableFuzzySearch" ] config;
-        in
-        if value then 2 else 0
-      )
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "mcfly"
+      "enableFuzzySearch"
+    ] "Use `programs.mcfly.fuzzySearchFactor` instead.")
   ];
 
   options.programs.mcfly = {
