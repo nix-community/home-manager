@@ -75,17 +75,52 @@ in
 
     configDir = mkOption {
       type = lib.types.str;
-      default = "${config.home.homeDirectory}/.claude";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/.claude"'';
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.11";
+          optionPath = [
+            "programs"
+            "claude-code"
+            "configDir"
+          ];
+          legacy = {
+            value = "${config.home.homeDirectory}/.claude";
+            text = ''"''${config.home.homeDirectory}/.claude"'';
+          };
+          current = {
+            value =
+              if config.home.preferXdgDirectories then
+                "${config.xdg.configHome}/claude"
+              else
+                "${config.home.homeDirectory}/.claude";
+            text = ''"''${config.xdg.configHome}/claude"'';
+          };
+          extraWarning = ''
+            To keep existing Claude Code data, move `~/.claude` to
+            `$XDG_CONFIG_HOME/claude` before adopting the new default.
+          '';
+        })
+        default
+        ;
+      defaultText = literalExpression ''
+        if config.home.preferXdgDirectories && lib.versionAtLeast config.home.stateVersion "26.11" then
+          "''${config.xdg.configHome}/claude"
+        else
+          "''${config.home.homeDirectory}/.claude"
+      '';
       example = literalExpression ''"''${config.xdg.configHome}/claude"'';
       description = ''
         Directory holding Claude Code's configuration files.
 
         Defaults to {file}`~/.claude`, matching the upstream
-        {command}`claude` CLI default. The {env}`CLAUDE_CONFIG_DIR`
-        environment variable is exported automatically whenever the
-        directory differs from this default so the CLI reads
-        configuration from the same location.
+        {command}`claude` CLI default, or
+        {file}`''${config.xdg.configHome}/claude` when
+        {option}`home.preferXdgDirectories` is enabled and
+        {option}`home.stateVersion` is at least 26.11. The
+        {env}`CLAUDE_CONFIG_DIR` environment variable is exported
+        automatically whenever the directory differs from the upstream
+        default so the CLI reads configuration from the same location.
       '';
     };
 
