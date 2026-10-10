@@ -1,0 +1,57 @@
+{ lib, pkgs, ... }:
+let
+  obsPackage = pkgs.runCommand "obs" { passthru = { }; } ''
+    mkdir -p $out/bin $out/share/obs/obs-plugins
+    printf '#!${pkgs.runtimeShell}\n' > $out/bin/obs
+    chmod +x $out/bin/obs
+  '';
+in
+{
+  # nmt records failed assertions instead of rejecting the configuration, but
+  # still builds its generation. Do not materialize this intentionally invalid
+  # OBS file tree; the assertion messages still come from the full OBS config.
+  xdg.configFile = lib.mkForce { };
+
+  test.asserts.assertions.expected = [
+    "programs.obs-studio.profiles attribute names must be safe relative path components."
+    "programs.obs-studio.sceneCollections attribute names must be safe relative path components."
+    "programs.obs-studio.extraConfigFiles attribute names must be safe relative paths."
+    "programs.obs-studio.profiles.*.extraFiles attribute names must be safe relative paths."
+    "programs.obs-studio.profiles.*.extraFiles must not override generated OBS profile files."
+    "programs.obs-studio.integrations.*.enable requires a matching derivation in pkgs.obs-studio-plugins or an explicit package override."
+    "programs.obs-studio.integrations attribute names must be safe relative path components."
+    "programs.obs-studio.integrations.*.extraConfigFiles attribute names must be safe relative paths."
+    "programs.obs-studio.extraConfigFiles must not override generated integration config files."
+    "programs.obs-studio configuration paths must not overlap as files and directories."
+  ];
+
+  programs.obs-studio = {
+    enable = true;
+    package = obsPackage;
+    profiles = {
+      "../Bad".settings.General.Name = "bad";
+      Safe = {
+        settings.General.Name = "safe";
+        extraFiles = {
+          "../escape.ini".text = "bad";
+          "basic.ini".text = "collision";
+        };
+      };
+    };
+    extraConfigFiles = {
+      "bad//path.json".text = "{}";
+      "safe-plugin/config.json".text = "{}";
+      "foo".text = "{}";
+    };
+    sceneCollections."bad/name".name = "Bad";
+    integrations = {
+      missing-plugin.enable = true;
+      foo.extraConfigFiles."config.json".text = "{}";
+      "../plugin".extraConfigFiles."config.json".text = "{}";
+      safe-plugin.extraConfigFiles = {
+        "/absolute.json".text = "{}";
+        "config.json".text = "{}";
+      };
+    };
+  };
+}
