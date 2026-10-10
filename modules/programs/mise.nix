@@ -53,7 +53,17 @@ in
 
       enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption {
+        inherit config;
+        extraDescription = ''
+          mise versions 2026.9.0 and 2026.9.1 have a broken Nushell PATH
+          prelude; upgrade to 2026.9.2 or newer when using these versions.
+
+          With mise 2026.9.2 or newer, activation is generated at shell startup.
+          Restart Nushell to reload configuration; sourcing config.nu alone is
+          unsupported because the session's activation file is removed after loading.
+        '';
+      };
 
       enableMutableConfig = mkOption {
         type = lib.types.bool;
@@ -120,6 +130,17 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          !cfg.enableNushellIntegration
+          || cfg.package == null
+          || lib.versionOlder (lib.getVersion cfg.package) "2026.9.0"
+          || lib.versionAtLeast (lib.getVersion cfg.package) "2026.9.2";
+        message = "programs.mise: Nushell integration with mise 2026.9.0 or 2026.9.1 has a broken PATH prelude; upgrade mise to 2026.9.2 or newer.";
+      }
+    ];
+
     warnings =
       lib.optional
         (
