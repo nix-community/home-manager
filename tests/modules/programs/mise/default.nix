@@ -7,5 +7,8 @@
   mise-bash-integration = ./bash-integration.nix;
   mise-zsh-integration = ./zsh-integration.nix;
   mise-fish-integration = ./fish-integration.nix;
-  mise-nushell-integration = ./nushell-integration.nix;
+  mise-nushell-integration = import ./nushell-integration.nix { };
+  mise-nushell-integration-legacy = import ./nushell-integration.nix {
+    miseVersion = "2026.8.16";
+  };
 }
