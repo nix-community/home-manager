@@ -45,57 +45,48 @@ in
 {
   meta.maintainers = [ lib.maintainers.onny ];
 
-  imports =
-    let
-      basePath = [
-        "services"
-        "mako"
-      ];
-
-      renamedOptions = [
-        "maxVisible"
-        "maxHistory"
-        "sort"
-        "output"
-        "layer"
-        "anchor"
-        "font"
-        "backgroundColor"
-        "textColor"
-        "width"
-        "height"
-        "margin"
-        "padding"
-        "borderSize"
-        "borderColor"
-        "borderRadius"
-        "progressColor"
-        "icons"
-        "maxIconSize"
-        "iconPath"
-        "markup"
-        "actions"
-        "format"
-        "defaultTimeout"
-        "ignoreTimeout"
-        "groupBy"
-      ];
-    in
-    [
-      (lib.mkRemovedOptionModule [
-        "services"
-        "mako"
-        "criterias"
-      ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
-      (lib.mkRemovedOptionModule [
-        "services"
-        "mako"
-        "criteria"
-      ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
-    ]
-    ++ lib.hm.deprecations.mkSettingsRenamedOptionModules basePath (basePath ++ [ "settings" ]) {
-      transform = lib.hm.strings.toKebabCase;
-    } renamedOptions;
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "services"
+      "mako"
+      "criterias"
+    ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
+    (lib.mkRemovedOptionModule [
+      "services"
+      "mako"
+      "criteria"
+    ] "Use services.mako.settings instead. If order is important, use `services.mako.extraConfig`.")
+  ]
+  ++
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "services" "mako" name ] message)
+      {
+        actions = "Use `services.mako.settings.actions` instead.";
+        anchor = "Use `services.mako.settings.anchor` instead.";
+        backgroundColor = "Use `services.mako.settings.background-color` instead.";
+        borderColor = "Use `services.mako.settings.border-color` instead.";
+        borderRadius = "Use `services.mako.settings.border-radius` instead.";
+        borderSize = "Use `services.mako.settings.border-size` instead.";
+        defaultTimeout = "Use `services.mako.settings.default-timeout` instead.";
+        font = "Use `services.mako.settings.font` instead.";
+        format = "Use `services.mako.settings.format` instead.";
+        groupBy = "Use `services.mako.settings.group-by` instead.";
+        height = "Use `services.mako.settings.height` instead.";
+        iconPath = "Use `services.mako.settings.icon-path` instead.";
+        icons = "Use `services.mako.settings.icons` instead.";
+        ignoreTimeout = "Use `services.mako.settings.ignore-timeout` instead.";
+        layer = "Use `services.mako.settings.layer` instead.";
+        margin = "Use `services.mako.settings.margin` instead.";
+        markup = "Use `services.mako.settings.markup` instead.";
+        maxHistory = "Use `services.mako.settings.max-history` instead.";
+        maxIconSize = "Use `services.mako.settings.max-icon-size` instead.";
+        maxVisible = "Use `services.mako.settings.max-visible` instead.";
+        output = "Use `services.mako.settings.output` instead.";
+        padding = "Use `services.mako.settings.padding` instead.";
+        progressColor = "Use `services.mako.settings.progress-color` instead.";
+        sort = "Use `services.mako.settings.sort` instead.";
+        textColor = "Use `services.mako.settings.text-color` instead.";
+        width = "Use `services.mako.settings.width` instead.";
+      };
 
   options.services.mako = {
     enable = mkEnableOption "mako";

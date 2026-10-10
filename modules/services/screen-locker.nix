@@ -8,7 +8,6 @@
 let
   inherit (lib)
     mkIf
-    mkRenamedOptionModule
     mkOption
     types
     ;
@@ -22,31 +21,23 @@ in
     lib.hm.maintainers.rszamszur
   ];
 
-  imports =
-    let
-      origOpt = name: [
-        "services"
-        "screen-locker"
-        name
-      ];
-      xautolockOpt = name: [
-        "services"
-        "screen-locker"
-        "xautolock"
-        name
-      ];
-      xssLockOpt = name: [
-        "services"
-        "screen-locker"
-        "xss-lock"
-        name
-      ];
-    in
-    [
-      (mkRenamedOptionModule (origOpt "xssLockExtraOptions") (xssLockOpt "extraOptions"))
-      (mkRenamedOptionModule (origOpt "xautolockExtraOptions") (xautolockOpt "extraOptions"))
-      (mkRenamedOptionModule (origOpt "enableDetectSleep") (xautolockOpt "detectSleep"))
-    ];
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "services"
+      "screen-locker"
+      "enableDetectSleep"
+    ] "Use `services.screen-locker.xautolock.detectSleep` instead.")
+    (lib.mkRemovedOptionModule [
+      "services"
+      "screen-locker"
+      "xautolockExtraOptions"
+    ] "Use `services.screen-locker.xautolock.extraOptions` instead.")
+    (lib.mkRemovedOptionModule [
+      "services"
+      "screen-locker"
+      "xssLockExtraOptions"
+    ] "Use `services.screen-locker.xss-lock.extraOptions` instead.")
+  ];
 
   options.services.screen-locker = {
     enable = lib.mkEnableOption "screen locker for X session";
