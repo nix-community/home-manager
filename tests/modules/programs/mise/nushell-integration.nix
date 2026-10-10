@@ -1,5 +1,6 @@
 {
   miseVersion ? "2026.9.2",
+  capturePath ? false,
 }:
 {
   config,
@@ -18,6 +19,16 @@ let
       chmod +x $out/bin/mise
     '';
   };
+  capturedMise = realPkgs.writeShellScriptBin "mise" ''
+    cat <<EOF
+    export-env {
+      \$env.PATH = (r#'$PATH'# | split row (char esep))
+      \$env.config.hooks.pre_prompt = [{code: {||
+        \$env.PATH = (r#'$PATH'# | split row (char esep))
+      }}]
+    }
+    EOF
+  '';
   pathTest = realPkgs.writeShellScript "hm-mise-path-test" ''
     echo runtime-path-ok
   '';
@@ -28,7 +39,9 @@ in
       # Exercise both sides of the version gate with the locked executable.
       package =
         (
-          if config.test.enableBig then
+          if capturePath then
+            capturedMise
+          else if config.test.enableBig then
             realPkgs.mise
           else
             stubMise
