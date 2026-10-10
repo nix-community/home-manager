@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -8,6 +9,115 @@ let
   inherit (lib) types;
   inherit (lib.hm.nushell) isNushellInline toNushell;
   cfg = config.programs.nushell;
+
+  systemEnvironmentPath = [
+    "system"
+    "build"
+    "setEnvironment"
+  ];
+  effectiveOsConfig = if osConfig == null then { } else osConfig;
+  getSystemEnvironment = lib.attrByPath systemEnvironmentPath null;
+  systemEnvironmentFile = getSystemEnvironment effectiveOsConfig;
+  hasSystemEnvironment = systemEnvironmentFile != null;
+  sessionVariablesPackage = toString config.home.sessionVariablesPackage;
+  sessionVariablesFile = "/etc/profile.d/hm-session-vars.sh";
+  homeSessionVariablesFile = sessionVariablesPackage + sessionVariablesFile;
+  hasSessionEnvironment =
+    systemEnvironmentFile != null
+    || config.home.sessionVariables != { }
+    || config.home.sessionSearchVariables != { }
+    || config.home.sessionVariablesExtra != "";
+  hasUserEnvFile = cfg.envFile != null || cfg.extraEnv != "";
+  writeEnvFile = hasSessionEnvironment || hasUserEnvFile;
+
+  # Translate the POSIX session scripts at shell startup so references to
+  # runtime values such as HOME and USER are expanded in the user environment.
+  sessionVariablesLoader =
+    let
+      sourceSystemEnvironment = lib.optionalString hasSystemEnvironment ''
+        if [ -z "''${__NIXOS_SET_ENVIRONMENT_DONE-}" ] \
+          && [ -z "''${__NIX_DARWIN_SET_ENVIRONMENT_DONE-}" ]; then
+          . ${lib.escapeShellArg systemEnvironmentFile} >/dev/null
+        fi
+      '';
+      captureEnvironment = ''
+        ${lib.getExe' pkgs.coreutils "env"} -0
+        printf '\0'
+        ${sourceSystemEnvironment}
+        . ${lib.escapeShellArg homeSessionVariablesFile} >/dev/null
+        ${lib.getExe' pkgs.coreutils "env"} -0
+      '';
+      shouldLoadSystemEnvironment = lib.optionalString hasSystemEnvironment ''
+        or (
+          ($env.__NIXOS_SET_ENVIRONMENT_DONE? | is-empty)
+          and ($env.__NIX_DARWIN_SET_ENVIRONMENT_DONE? | is-empty)
+        )
+      '';
+    in
+    pkgs.writeText "hm-session-vars.nu" ''
+      if (
+        ($env.__HM_SESS_VARS_SOURCED? | is-empty)
+        ${shouldLoadSystemEnvironment}
+      ) {
+        let captured = (
+          ^${pkgs.runtimeShell} -c ${toNushell { } captureEnvironment}
+          | complete
+        )
+
+        if $captured.exit_code != 0 {
+          error make {
+            msg: "failed to load the Home Manager session environment"
+            help: $captured.stderr
+          }
+        }
+
+        let separator = $"(char nul)(char nul)"
+        let sections = ($captured.stdout | split row $separator)
+
+        if ($sections | length) != 2 {
+          error make {
+            msg: "failed to parse the Home Manager session environment"
+          }
+        }
+
+        let before = (
+          $sections
+          | first
+          | split row (char nul)
+          | compact --empty
+          | parse --regex '(?s)^(?<name>[^=]+)=(?<value>.*)$'
+          | transpose --header-row --as-record
+        )
+        let after = (
+          $sections
+          | last
+          | split row (char nul)
+          | compact --empty
+          | parse --regex '(?s)^(?<name>[^=]+)=(?<value>.*)$'
+          | transpose --header-row --as-record
+        )
+        let ignored = ["_" "_AST_FEATURES" "SHLVL"]
+        let changed = ($after | items { |name, value|
+          if $name not-in $ignored and (
+            $name not-in $before or ($before | get $name) != $value
+          ) {
+            {name: $name, value: $value}
+          }
+        } | compact | transpose --header-row --as-record)
+        let changed = if "PATH" in $changed {
+          $changed | update PATH ($changed.PATH | split row (char esep))
+        } else {
+          $changed
+        }
+
+        load-env $changed
+        for name in ($before | columns) {
+          if $name not-in $after and $name not-in $ignored {
+            hide-env --ignore-errors $name
+          }
+        }
+      }
+    '';
 
   linesOrSource =
     name:
@@ -279,8 +389,9 @@ in
         }
       )
 
-      (lib.mkIf (cfg.envFile != null || cfg.extraEnv != "") {
+      (lib.mkIf writeEnvFile {
         "${cfg.configDir}/env.nu".text = lib.mkMerge [
+          (lib.mkIf hasSessionEnvironment "source ${sessionVariablesLoader}")
           (lib.mkIf (cfg.envFile != null) cfg.envFile.text)
           cfg.extraEnv
         ];
