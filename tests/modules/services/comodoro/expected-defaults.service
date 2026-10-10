@@ -3,7 +3,7 @@ WantedBy=default.target
 
 [Service]
 ExecSearchPath=/bin
-ExecStart=@comodoro@/bin/comodoro --account pomodoro server start socket tcp
+ExecStart=@comodoro@/bin/comodoro server start
 Restart=always
 RestartSec=10
 
