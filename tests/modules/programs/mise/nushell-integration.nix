@@ -1,5 +1,5 @@
 {
-  miseVersion ? "2026.9.0",
+  miseVersion ? "2026.9.2",
 }:
 {
   config,
@@ -8,6 +8,7 @@
   ...
 }:
 let
+  unsupported = lib.versionAtLeast miseVersion "2026.9.0" && lib.versionOlder miseVersion "2026.9.2";
   runtimeActivation = lib.versionAtLeast miseVersion "2026.9.0";
   stubMise = config.lib.test.mkStubPackage {
     name = "mise";
@@ -45,8 +46,10 @@ in
     };
   };
 
+  test.asserts.assertions.expected = lib.optional unsupported "programs.mise: Nushell integration with mise 2026.9.0 or 2026.9.1 has a broken PATH prelude; upgrade mise to 2026.9.2 or newer.";
+
   nmt.script =
-    lib.optionalString config.test.enableBig ''
+    lib.optionalString (config.test.enableBig && !unsupported) ''
       export HOME=$TMPDIR/hm-user
       export XDG_CONFIG_HOME=$HOME/.config
       export XDG_CACHE_HOME="$HOME/custom cache"
