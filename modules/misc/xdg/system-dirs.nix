@@ -51,13 +51,13 @@ in
     })
 
     (lib.mkIf (cfg.config != [ ]) {
-      home.sessionVariables.XDG_CONFIG_DIRS = "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
+      home.sessionSearchVariables.XDG_CONFIG_DIRS = lib.mkAfter cfg.config;
 
       systemd.user.sessionVariables.XDG_CONFIG_DIRS = "${configDirs}\${XDG_CONFIG_DIRS:+:$XDG_CONFIG_DIRS}";
     })
 
     (lib.mkIf (cfg.data != [ ]) {
-      home.sessionVariables.XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
+      home.sessionSearchVariables.XDG_DATA_DIRS = lib.mkAfter cfg.data;
 
       systemd.user.sessionVariables.XDG_DATA_DIRS = "${dataDirs}\${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}";
     })
