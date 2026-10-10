@@ -14,10 +14,6 @@ let
 
   # Map platform names to their packages.
   platformPackages = with pkgs; {
-    gnome = [
-      qgnomeplatform
-      qgnomeplatform-qt6
-    ];
     adwaita = [
       qadwaitadecorations
       qadwaitadecorations-qt6
@@ -95,150 +91,119 @@ in
   ];
 
   imports = [
+    (lib.mkRemovedOptionModule [ "qt" "useGtkTheme" ] "Set `qt.platformTheme.name = \"gtk2\"` instead.")
     ./kconfig.nix
     ./kvantum.nix
-
-    (lib.mkChangedOptionModule [ "qt" "useGtkTheme" ] [ "qt" "platformTheme" ] (
-      config:
-      if lib.getAttrFromPath [ "qt" "useGtkTheme" ] config then
-        {
-          name = "gtk2";
-        }
-      else
-        null
-    ))
   ];
 
   options = {
     qt = {
       enable = lib.mkEnableOption "Qt 5 and 6 configuration";
 
-      platformTheme =
-        let
-          newOption = {
-            name = lib.mkOption {
-              type = with lib.types; nullOr str;
-              default = null;
-              example = "adwaita";
-              relatedPackages = [
-                "qgnomeplatform"
-                "qgnomeplatform-qt6"
-                "qadwaitadecorations"
-                "qadwaitadecorations-qt6"
-                [
-                  "libsForQt5"
-                  "plasma-integration"
-                ]
-                [
-                  "libsForQt5"
-                  "qt5ct"
-                ]
-                [
-                  "libsForQt5"
-                  "qtstyleplugins"
-                ]
-                [
-                  "libsForQt5"
-                  "systemsettings"
-                ]
-                [
-                  "kdePackages"
-                  "plasma-integration"
-                ]
-                [
-                  "kdePackages"
-                  "systemsettings"
-                ]
-                [
-                  "lxqt"
-                  "lxqt-config"
-                ]
-                [
-                  "lxqt"
-                  "lxqt-qtplugin"
-                ]
-                [
-                  "qt6Packages"
-                  "qt6ct"
-                ]
-                [
-                  "qt6Packages"
-                  "qt6gtk2"
-                ]
-              ];
-              description = ''
-                Platform theme to use for Qt applications.
+      platformTheme = lib.mkOption {
+        type = lib.types.nullOr (
+          lib.types.submodule {
+            options = {
+              name = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                example = "adwaita";
+                relatedPackages = [
+                  "qadwaitadecorations"
+                  "qadwaitadecorations-qt6"
+                  [
+                    "libsForQt5"
+                    "plasma-integration"
+                  ]
+                  [
+                    "libsForQt5"
+                    "qt5ct"
+                  ]
+                  [
+                    "libsForQt5"
+                    "qtstyleplugins"
+                  ]
+                  [
+                    "libsForQt5"
+                    "systemsettings"
+                  ]
+                  [
+                    "kdePackages"
+                    "plasma-integration"
+                  ]
+                  [
+                    "kdePackages"
+                    "systemsettings"
+                  ]
+                  [
+                    "lxqt"
+                    "lxqt-config"
+                  ]
+                  [
+                    "lxqt"
+                    "lxqt-qtplugin"
+                  ]
+                  [
+                    "qt6Packages"
+                    "qt6ct"
+                  ]
+                  [
+                    "qt6Packages"
+                    "qt6gtk2"
+                  ]
+                ];
+                description = ''
+                  Platform theme to use for Qt applications.
 
-                Some examples are
+                  Some examples are
 
-                `gtk`
-                : Use Qt's [GTK platform theme plugin](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
+                  `gtk`
+                  : Use Qt's [GTK platform theme plugin](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
 
-                `gtk2`
-                : Use GTK2 theme with
-                  [`qtstyleplugins`](https://github.com/qt/qtstyleplugins)
-                  and [`qt6gtk2`](https://github.com/trialuser02/qt6gtk2)
+                  `gtk2`
+                  : Use GTK2 theme with
+                    [`qtstyleplugins`](https://github.com/qt/qtstyleplugins)
+                    and [`qt6gtk2`](https://github.com/trialuser02/qt6gtk2)
 
-                `gtk3`
-                : Use [GTK3 integration](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
-                  for file picker dialogs, font and theme configuration
+                  `gtk3`
+                  : Use [GTK3 integration](https://github.com/qt/qtbase/tree/dev/src/plugins/platformthemes/gtk3)
+                    for file picker dialogs, font and theme configuration
 
-                `adwaita`
-                : Use Adwaita theme with
-                  [`qadwaitadecorations`](https://github.com/FedoraQt/QAdwaitaDecorations)
+                  `adwaita`
+                  : Use Adwaita theme with
+                    [`qadwaitadecorations`](https://github.com/FedoraQt/QAdwaitaDecorations)
 
-                `gnome` (deprecated)
-                : Use GNOME theme with
-                  [`qgnomeplatform`](https://github.com/FedoraQt/QGnomePlatform).
-                  Is no longer maintained so prefer `adwaita`.
+                  `lxqt`
+                  : Use LXQt theme style set using the
+                    [`lxqt-config-appearance`](https://github.com/lxqt/lxqt-config)
+                    application
 
-                `lxqt`
-                : Use LXQt theme style set using the
-                  [`lxqt-config-appearance`](https://github.com/lxqt/lxqt-config)
-                  application
+                  `qtct`
+                  : Use Qt style set using
+                    [`qt5ct`](https://github.com/desktop-app/qt5ct)
+                    and [`qt6ct`](https://github.com/trialuser02/qt6ct)
+                    applications
 
-                `qtct`
-                : Use Qt style set using
-                  [`qt5ct`](https://github.com/desktop-app/qt5ct)
-                  and [`qt6ct`](https://github.com/trialuser02/qt6ct)
-                  applications
-
-                `kde`
-                : Use Qt settings from Plasma
-              '';
+                  `kde`
+                  : Use Qt settings from Plasma
+                '';
+              };
+              package = lib.mkOption {
+                type = with lib.types; nullOr (either package (listOf package));
+                default = null;
+                example = lib.literalExpression "[pkgs.adwaita-qt pkgs.adwaita-qt6]";
+                description = ''
+                  Theme package to be used in Qt5/Qt6 applications.
+                  Auto-detected from {option}`qt.platformTheme.name` if possible.
+                  See its documentation for available options.
+                '';
+              };
             };
-            package = lib.mkOption {
-              type = with lib.types; nullOr (either package (listOf package));
-              default = null;
-              example = lib.literalExpression "[pkgs.adwaita-qt pkgs.adwaita-qt6]";
-              description = ''
-                Theme package to be used in Qt5/Qt6 applications.
-                Auto-detected from {option}`qt.platformTheme.name` if possible.
-                See its documentation for available options.
-              '';
-            };
-          };
-        in
-        lib.mkOption {
-          type =
-            with lib.types;
-            nullOr (
-              either (enum [
-                "gtk"
-                "gtk3"
-                "gnome"
-                "adwaita"
-                "lxqt"
-                "qtct"
-                "kde"
-                "kde6"
-              ]) (lib.types.submodule { options = newOption; })
-            );
-          default = null;
-          description = ''
-            Deprecated. Use {option}`qt.platformTheme.name` instead.
-          '';
-        };
+          }
+        );
+        default = null;
+        description = "Platform theme configuration for Qt applications.";
+      };
       style = {
         name = lib.mkOption {
           type = with lib.types; nullOr str;
@@ -332,45 +297,14 @@ in
 
   config =
     let
-      deprecateKde6 = name: if name == "kde6" then "kde" else name;
-
-      deprecatedKde6PlatformThemeOption =
-        if builtins.isString cfg.platformTheme then
-          if cfg.platformTheme == "kde6" then
-            [
-              "qt"
-              "platformTheme"
-            ]
-          else
-            null
-        else if cfg.platformTheme != null && cfg.platformTheme.name == "kde6" then
-          [
-            "qt"
-            "platformTheme"
-            "name"
-          ]
-        else
-          null;
-
       platformTheme =
-        if (builtins.isString cfg.platformTheme) then
+        if cfg.platformTheme == null then
           {
-            option = "qt.platformTheme";
-            name = deprecateKde6 cfg.platformTheme;
-            package = null;
-          }
-        else if cfg.platformTheme == null then
-          {
-            option = null;
             name = null;
             package = null;
           }
         else
-          {
-            option = "qt.platformTheme.name";
-            name = deprecateKde6 cfg.platformTheme.name;
-            inherit (cfg.platformTheme) package;
-          };
+          cfg.platformTheme;
 
       # Necessary because home.sessionVariables doesn't support mkIf
       envVars = lib.filterAttrs (_n: v: v != null) {
@@ -409,22 +343,8 @@ in
       ];
 
       warnings =
-        (lib.lists.optional (
-          platformTheme.option == "qt.platformTheme"
-        ) "The option `qt.platformTheme` has been renamed to `qt.platformTheme.name`.")
-        ++ (lib.lists.optional (
-          platformTheme.name == "gnome" && platformTheme.package == null
-        ) "The value `gnome` for option `${platformTheme.option}` is deprecated. Use `adwaita` instead.")
-        ++ (lib.optional (deprecatedKde6PlatformThemeOption != null) (
-          lib.hm.deprecations.mkDeprecatedOptionValueRenameWarning {
-            option = deprecatedKde6PlatformThemeOption;
-            old = ''"kde6"'';
-            replacement = ''"kde"'';
-          }
-        ))
-        ++ (lib.lists.optional (platformTheme.name == "gtk")
-          "The value `gtk` for option `${platformTheme.option}` is deprecated. Use `gtk2` to keep the legacy qtstyleplugins or `gtk3` to use the modern native Qt GTK3 plugin."
-        );
+        lib.optional (platformTheme.name == "gtk")
+          "The value `gtk` for option `qt.platformTheme.name` is deprecated. Use `gtk2` to keep the legacy qtstyleplugins or `gtk3` to use the modern native Qt GTK3 plugin.";
 
       qt.style.package = lib.mkIf (cfg.style.name != null) (
         lib.mkDefault (stylePackages.${lib.toLower cfg.style.name} or null)
