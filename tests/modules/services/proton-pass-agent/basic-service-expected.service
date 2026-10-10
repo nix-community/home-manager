@@ -5,7 +5,9 @@ WantedBy=default.target
 ExecStart=@proton-pass-cli@/bin/pass-cli ssh-agent start --socket-path %t/proton-pass-agent/socket
 KeyringMode=shared
 Restart=on-failure
+RestartSec=10
 
 [Unit]
 Description=Proton Pass SSH agent
 Documentation=https://protonpass.github.io/pass-cli/commands/ssh-agent/#ssh-agent-integration
+StartLimitIntervalSec=0
