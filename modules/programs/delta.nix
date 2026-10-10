@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -16,11 +15,14 @@ in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
-  imports = [
-    (lib.mkRenamedOptionModule [ "programs" "git" "delta" "enable" ] [ "programs" "delta" "enable" ])
-    (lib.mkRenamedOptionModule [ "programs" "git" "delta" "package" ] [ "programs" "delta" "package" ])
-    (lib.mkRenamedOptionModule [ "programs" "git" "delta" "options" ] [ "programs" "delta" "options" ])
-  ];
+  imports =
+    lib.mapAttrsToList
+      (name: message: lib.mkRemovedOptionModule [ "programs" "git" "delta" name ] message)
+      {
+        enable = "Use `programs.delta.enable` and `programs.delta.enableGitIntegration` instead.";
+        options = "Use `programs.delta.options` instead.";
+        package = "Use `programs.delta.package` instead.";
+      };
 
   options.programs.delta = {
     enable = lib.mkEnableOption "delta, a syntax highlighter for git diffs";
@@ -106,47 +108,34 @@ in
     };
   };
 
-  config =
-    let
-      oldOption = lib.attrByPath [ "programs" "git" "delta" "enable" ] null options;
-      oldOptionEnabled =
-        oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
-    in
-    lib.mkMerge [
-      (lib.mkIf cfg.enable {
-        home.packages = [ cfg.finalPackage ];
+  config = lib.mkMerge [
+    (lib.mkIf cfg.enable {
+      home.packages = [ cfg.finalPackage ];
+    })
 
-        programs.delta.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
-
-        warnings =
-          lib.optional
-            (cfg.enableGitIntegration && options.programs.delta.enableGitIntegration.highestPrio == 1490)
-            "`programs.delta.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.delta.enableGitIntegration = true`.";
-      })
-
-      (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
-        programs.git.iniContent =
-          let
-            deltaCommand = lib.getExe cfg.package;
-          in
-          lib.recursiveUpdate (lib.hm.git.diffPagerConfig deltaCommand) {
-            pager.blame = deltaCommand;
-            interactive.diffFilter = "${deltaCommand} --color-only";
-            delta = cfg.options;
-          };
-      })
-
-      (lib.mkIf (cfg.enable && cfg.enableJujutsuIntegration) {
-        programs.jujutsu.settings = {
-          merge-tools.delta.diff-expected-exit-codes = [
-            0
-            1
-          ];
-          ui = {
-            diff-formatter = ":git";
-            pager = "${lib.getExe cfg.finalPackage}";
-          };
+    (lib.mkIf (cfg.enable && cfg.enableGitIntegration) {
+      programs.git.iniContent =
+        let
+          deltaCommand = lib.getExe cfg.package;
+        in
+        lib.recursiveUpdate (lib.hm.git.diffPagerConfig deltaCommand) {
+          pager.blame = deltaCommand;
+          interactive.diffFilter = "${deltaCommand} --color-only";
+          delta = cfg.options;
         };
-      })
-    ];
+    })
+
+    (lib.mkIf (cfg.enable && cfg.enableJujutsuIntegration) {
+      programs.jujutsu.settings = {
+        merge-tools.delta.diff-expected-exit-codes = [
+          0
+          1
+        ];
+        ui = {
+          diff-formatter = ":git";
+          pager = "${lib.getExe cfg.finalPackage}";
+        };
+      };
+    })
+  ];
 }
