@@ -10,4 +10,10 @@
   pi-coding-agent-append-system-empty = ./append-system-empty.nix;
   pi-coding-agent-custom-config-dir = ./custom-config-dir.nix;
   pi-coding-agent-models = ./models.nix;
+  pi-coding-agent-mcp = ./mcp.nix;
+  pi-coding-agent-mcp-empty = ./mcp-empty.nix;
+  pi-coding-agent-mcp-integration = ./mcp-integration.nix;
+  pi-coding-agent-mcp-integration-with-override = ./mcp-integration-with-override.nix;
+  pi-coding-agent-mcp-integration-disabled = ./mcp-integration-disabled.nix;
+  pi-coding-agent-mcp-env-files = ./mcp-env-files.nix;
 }
