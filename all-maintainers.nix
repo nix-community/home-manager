@@ -405,6 +405,13 @@
     name = "Philipp Mildenberger";
     source = "nixpkgs";
   };
+  PierreBorine = {
+    email = "nixpkgs@thecakeis.top";
+    github = "PierreBorine";
+    githubId = 85021467;
+    name = "Pierre Borine";
+    source = "nixpkgs";
+  };
   ReStranger = {
     github = "ReStranger";
     githubId = 69393944;
@@ -1319,6 +1326,13 @@
     githubId = 2796466;
     name = "Eliza Weisman";
     source = "nixpkgs";
+  };
+  hectorgray = {
+    email = "nix.giant993@passmail.net";
+    github = "hectorgray";
+    githubId = 194114763;
+    name = "Hector Gray";
+    source = "home-manager";
   };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
