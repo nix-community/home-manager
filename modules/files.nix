@@ -352,14 +352,20 @@ in
             if [[ -e "$targetPath" && ! -L "$targetPath" ]] ; then
               if [[ -n "$HOME_MANAGER_BACKUP_COMMAND" ]] ; then
                 verboseEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath'."
-                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."
+                run $HOME_MANAGER_BACKUP_COMMAND "$targetPath" || {
+                  errorEcho "Running '$HOME_MANAGER_BACKUP_COMMAND' on '$targetPath' failed."
+                  exit 1
+                }
               elif [[ -n "$HOME_MANAGER_BACKUP_EXT" ]] ; then
                 # The target exists, back it up
                 backup="$targetPath.$HOME_MANAGER_BACKUP_EXT"
                 if [[ -e "$backup" && -n "$HOME_MANAGER_BACKUP_OVERWRITE" ]]; then
                   run rm -f $VERBOSE_ARG "$backup"
                 fi
-                run mv $VERBOSE_ARG "$targetPath" "$backup" || errorEcho "Moving '$targetPath' failed!"
+                run mv $VERBOSE_ARG "$targetPath" "$backup" || {
+                  errorEcho "Moving '$targetPath' failed!"
+                  exit 1
+                }
               fi
             fi
 
