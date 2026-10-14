@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-e0778152.js";
+            window.path_to_searchindex_js = "../../../searchindex-9c87db40.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -379,6 +379,23 @@ boolean</p>
 absolute path</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">${config.xdg.stateHome}/colima/${name}.log
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/colima.nix">&lt;home-manager/modules/services/colima.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.colima.profiles._name_.mutableSettings"><a class="header" href="#opt-services.colima.profiles._name_.mutableSettings">services.colima.profiles.&lt;name&gt;.mutableSettings</a></h2>
+<p>Whether to merge settings into a writable configuration file during
+activation. Settings declared here take precedence; other settings are
+preserved. Removing a setting here does not remove it from the file.
+Comments and formatting are not preserved.</p>
+<p>This does not change the service’s save-config flag. When switching
+back to immutable settings, existing files use Home Manager’s normal
+collision and backup handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

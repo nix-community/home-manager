@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e0778152.js";
+            window.path_to_searchindex_js = "searchindex-9c87db40.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -60295,6 +60295,23 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop">&lt;home-manager/modules/programs/vesktop&gt;</a></li>
 </ul>
+<h2 id="opt-programs.vesktop.mutableSettings"><a class="header" href="#opt-programs.vesktop.mutableSettings">programs.vesktop.mutableSettings</a></h2>
+<p>Merge declarative settings into a writable JSON file during activation,
+preserving settings changed in the application. Declarative values take
+precedence; arrays are replaced rather than merged. Removing a
+declarative setting does not remove it from the file. Formatting is
+not preserved. Close Vesktop before activating to avoid concurrent writes.</p>
+<p>When disabled, files byte-identical to the generated configuration are
+replaced with managed symlinks. Other files use normal collision handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop">&lt;home-manager/modules/programs/vesktop&gt;</a></li>
+</ul>
 <h2 id="opt-programs.vesktop.settings"><a class="header" href="#opt-programs.vesktop.settings">programs.vesktop.settings</a></h2>
 <p>Vesktop settings written to
 <code>$XDG_CONFIG_HOME/vesktop/settings.json</code>. See
@@ -60338,6 +60355,23 @@ strings concatenated with “\n”</p>
   /* disable webcam preview mirroring */
   .media-engine-video { transform: none; }
 ''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vesktop">&lt;home-manager/modules/programs/vesktop&gt;</a></li>
+</ul>
+<h2 id="opt-programs.vesktop.vencord.mutableSettings"><a class="header" href="#opt-programs.vesktop.vencord.mutableSettings">programs.vesktop.vencord.mutableSettings</a></h2>
+<p>Merge declarative settings into a writable JSON file during activation,
+preserving settings changed in the application. Declarative values take
+precedence; arrays are replaced rather than merged. Removing a
+declarative setting does not remove it from the file. Formatting is
+not preserved. Close Vesktop before activating to avoid concurrent writes.</p>
+<p>When disabled, files byte-identical to the generated configuration are
+replaced with managed symlinks. Other files use normal collision handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -69771,6 +69805,23 @@ boolean</p>
 absolute path</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">${config.xdg.stateHome}/colima/${name}.log
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/colima.nix">&lt;home-manager/modules/services/colima.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.colima.profiles._name_.mutableSettings"><a class="header" href="#opt-services.colima.profiles._name_.mutableSettings">services.colima.profiles.&lt;name&gt;.mutableSettings</a></h2>
+<p>Whether to merge settings into a writable configuration file during
+activation. Settings declared here take precedence; other settings are
+preserved. Removing a setting here does not remove it from the file.
+Comments and formatting are not preserved.</p>
+<p>This does not change the service’s save-config flag. When switching
+back to immutable settings, existing files use Home Manager’s normal
+collision and backup handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
