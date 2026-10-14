@@ -67,7 +67,7 @@ in
         RunAtLoad = true;
         KeepAlive = true;
         ThrottleInterval = 5;
-        EnvironmentVariables.PATH = "${config.home.profileDirectory}/bin";
+        EnvironmentVariables.PATH = "${config.home.profileDirectory}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
         StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/tomat.log";
       };
     };
