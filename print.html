@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a726f132.js";
+            window.path_to_searchindex_js = "searchindex-720c7a4d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -24248,6 +24248,13 @@ boolean</p>
 this should be a wrapped Firefox package. For earlier state
 versions it should be an unwrapped Firefox package.
 Set to <code>null</code> to disable installing Firefox.</p>
+<p>Note that by default Firefox will attempt to update the <code>profiles.ini</code>
+configuration file on startup which will fail if Home Manager is managing
+it. If you wish to use an unwrapped Firefox (e.g. from outside Nix),
+consider setting the environment variable <code>MOZ_LEGACY_PROFILES=1</code> to
+disable attempts to write to the file. For macOS specifically, this
+should be done via <code>/bin/launchctl setenv MOZ_LEGACY_PROFILES 1</code> to
+ensure it is set when Firefox is launched through the Finder or Dock.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
@@ -26394,6 +26401,13 @@ boolean</p>
 this should be a wrapped Floorp package. For earlier state
 versions it should be an unwrapped Floorp package.
 Set to <code>null</code> to disable installing Floorp.</p>
+<p>Note that by default Floorp will attempt to update the <code>profiles.ini</code>
+configuration file on startup which will fail if Home Manager is managing
+it. If you wish to use an unwrapped Floorp (e.g. from outside Nix),
+consider setting the environment variable <code>MOZ_LEGACY_PROFILES=1</code> to
+disable attempts to write to the file. For macOS specifically, this
+should be done via <code>/bin/launchctl setenv MOZ_LEGACY_PROFILES 1</code> to
+ensure it is set when Floorp is launched through the Finder or Dock.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
@@ -38267,6 +38281,13 @@ boolean</p>
 this should be a wrapped LibreWolf package. For earlier state
 versions it should be an unwrapped LibreWolf package.
 Set to <code>null</code> to disable installing LibreWolf.</p>
+<p>Note that by default LibreWolf will attempt to update the <code>profiles.ini</code>
+configuration file on startup which will fail if Home Manager is managing
+it. If you wish to use an unwrapped LibreWolf (e.g. from outside Nix),
+consider setting the environment variable <code>MOZ_LEGACY_PROFILES=1</code> to
+disable attempts to write to the file. For macOS specifically, this
+should be done via <code>/bin/launchctl setenv MOZ_LEGACY_PROFILES 1</code> to
+ensure it is set when LibreWolf is launched through the Finder or Dock.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
