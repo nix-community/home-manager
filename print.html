@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-720c7a4d.js";
+            window.path_to_searchindex_js = "searchindex-abf6eb16.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -47487,6 +47487,37 @@ list of package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.opencode.mutableSettings"><a class="header" href="#opt-programs.opencode.mutableSettings">programs.opencode.mutableSettings</a></h2>
+<p>Whether to leave <code>$XDG_CONFIG_HOME/opencode/opencode.json</code> and
+<code>$XDG_CONFIG_HOME/opencode/tui.json</code> writable by OpenCode.</p>
+<p>When enabled, declarative settings and TUI settings are written to
+<code>$XDG_CONFIG_HOME/opencode/home-manager.json</code> and
+<code>$XDG_CONFIG_HOME/opencode/home-manager-tui.json</code> and loaded through
+<code>OPENCODE_CONFIG</code> and <code>OPENCODE_TUI_CONFIG</code>. Declarative settings
+override global user settings; project settings can still override them.
+<code>OPENCODE_TUI_CONFIG</code> requires OpenCode 1.2.15 or later.</p>
+<p>These variables are set through <code>home.sessionVariables</code> and must
+reach OpenCode launches outside the web service for declarative settings
+to be loaded. The web service receives them automatically.</p>
+<p>Disabling this option restores Home Manager management of the main files.
+If OpenCode has created those files, activation reports the normal file
+collision; back up or move the app-owned files before switching back.
+OpenCode can also create <code>$XDG_CONFIG_HOME/opencode/opencode.jsonc</code>,
+which takes precedence over the managed <code>opencode.json</code> without
+causing a collision. Back up and move that file, or reconcile its
+contents with your declarations, before disabling this option.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.opencode.settings"><a class="header" href="#opt-programs.opencode.settings">programs.opencode.settings</a></h2>
 <p>Configuration written to <code>$XDG_CONFIG_HOME/opencode/opencode.json</code>.
 See <a href="https://opencode.ai/docs/config/">https://opencode.ai/docs/config/</a> for the documentation.</p>
@@ -47671,7 +47702,10 @@ JSON value</p>
 <code>$XDG_CONFIG_HOME/opencode/tui.json</code>) against the
 corresponding OpenCode JSON schemas of the configured package
 (<code>programs.opencode.package</code>, <code>config.json</code> and <code>tui.json</code>
-from <code>passthru.jsonschema</code>) using <code>check-jsonschema</code>.</p>
+from <code>passthru.jsonschema</code>) using <code>check-jsonschema</code>.
+When <code>programs.opencode.mutableSettings</code> is enabled,
+validation applies to the generated <code>home-manager.json</code> and
+<code>home-manager-tui.json</code> layers instead of the writable user files.</p>
 <p><em>Type:</em>
 submodule</p>
 <p><em>Default:</em></p>
@@ -47683,7 +47717,8 @@ submodule</p>
 </ul>
 <h2 id="opt-programs.opencode.validateFiles.config"><a class="header" href="#opt-programs.opencode.validateFiles.config">programs.opencode.validateFiles.config</a></h2>
 <p>Whether to enable the validation of the generated configuration file
-(<code>$XDG_CONFIG_HOME/opencode/opencode.json</code>) against the
+(<code>$XDG_CONFIG_HOME/opencode/opencode.json</code>, or
+<code>home-manager.json</code> when mutable configuration is enabled) against the
 corresponding OpenCode JSON schema of the configured package using
 <code>check-jsonschema</code>.
 .</p>
@@ -47701,7 +47736,8 @@ boolean</p>
 </ul>
 <h2 id="opt-programs.opencode.validateFiles.tui"><a class="header" href="#opt-programs.opencode.validateFiles.tui">programs.opencode.validateFiles.tui</a></h2>
 <p>Whether to enable the validation of the generated configuration file
-(<code>$XDG_CONFIG_HOME/opencode/tui.json</code>) against the
+(<code>$XDG_CONFIG_HOME/opencode/tui.json</code>, or
+<code>home-manager-tui.json</code> when mutable configuration is enabled) against the
 corresponding OpenCode JSON schema of the configured package using
 <code>check-jsonschema</code>.
 .</p>
@@ -69735,6 +69771,23 @@ boolean</p>
 absolute path</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">${config.xdg.stateHome}/colima/${name}.log
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/colima.nix">&lt;home-manager/modules/services/colima.nix&gt;</a></li>
+</ul>
+<h2 id="opt-services.colima.profiles._name_.mutableSettings"><a class="header" href="#opt-services.colima.profiles._name_.mutableSettings">services.colima.profiles.&lt;name&gt;.mutableSettings</a></h2>
+<p>Whether to merge settings into a writable configuration file during
+activation. Settings declared here take precedence; other settings are
+preserved. Removing a setting here does not remove it from the file.
+Comments and formatting are not preserved.</p>
+<p>This does not change the service’s save-config flag. When switching
+back to immutable settings, existing files use Home Manager’s normal
+collision and backup handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
