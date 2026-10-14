@@ -15,7 +15,8 @@
           mkdir -p $out/bin
           cat > $out/bin/fzf <<'EOF'
           #!/bin/sh
-          echo "Stub fzf"
+          echo "Unexpected fzf execution" >&2
+          exit 97
           EOF
           chmod +x $out/bin/fzf
         '';
@@ -40,7 +41,8 @@
             "FZF_CTRL_R_COMMAND": ""
         }
 
-        source /nix/store/00000000000000000000000000000000-nushell-fzf-integration.nu
+        source /nix/store/00000000000000000000000000000000-fzf/share/fzf/key-bindings.nu
+        source /nix/store/00000000000000000000000000000000-fzf/share/fzf/completion.nu
 
       ''}
     '';

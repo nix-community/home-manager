@@ -20,7 +20,8 @@
           mkdir -p $out/bin
           cat > $out/bin/fzf <<'EOF'
           #!/bin/sh
-          echo "Stub fzf"
+          echo "Unexpected fzf execution" >&2
+          exit 97
           EOF
           chmod +x $out/bin/fzf
         '';
@@ -38,7 +39,7 @@
       'export FZF_CTRL_T_COMMAND="$HOME/bin/files"'
 
     overrideLine=$(grep -n 'export FZF_CTRL_R_COMMAND=' "$TESTED/home-files/.zshrc" | head -n1 | cut -d: -f1)
-    sourceLine=$(grep -n 'fzf.*--zsh' "$TESTED/home-files/.zshrc" | head -n1 | cut -d: -f1)
+    sourceLine=$(grep -n 'fzf/share/fzf/key-bindings.zsh' "$TESTED/home-files/.zshrc" | head -n1 | cut -d: -f1)
 
     if [[ -z "$overrideLine" || -z "$sourceLine" || "$overrideLine" -ge "$sourceLine" ]]; then
       fail "zsh fzf widget override must appear before fzf initialization"
