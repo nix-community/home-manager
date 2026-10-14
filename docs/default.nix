@@ -69,10 +69,8 @@ let
 
   hmPath = toString ./..;
 
-  # The Nixpkgs source tree, used to rewrite declaration sites that come from
-  # Nixpkgs' own `lib` rather than from Home Manager. Currently that is the
-  # generic `meta.maintainers` / `meta.teams` module, which
-  # `modules/services-modular` pulls in via `lib/services`.
+  # Rewrite Nixpkgs declaration paths as source links instead of exposing
+  # store paths in the generated documentation.
   nixpkgsPath = toString pkgs.path;
 
   # Keep submodule option docs visible when wrapped in `either` (and therefore
