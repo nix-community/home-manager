@@ -380,6 +380,12 @@
     github = "lukasngl";
     githubId = 69244516;
   };
+  lukeaurio = {
+    name = "Lukas Aurio";
+    email = "lukeaurio@proton.me";
+    github = "lukeaurio";
+    githubId = 16072348;
+  };
   lunahd = {
     name = "Miku B";
     email = "lunab08@proton.me";
