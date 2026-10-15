@@ -60,6 +60,18 @@
         to_string = lib.hm.nushell.mkNushellInline "{|v| $v | str join (char esep) }";
       };
     };
+
+    completions = [ "nix" ];
+  };
+
+  test.stubs.nu_scripts = {
+    name = "nu_scripts-stub";
+    outPath = null;
+    buildScript = ''
+      completionsPath="share/nu_scripts/custom-completions/nix"
+      mkdir -p "$out/$completionsPath"
+      echo "stub" > "$out/$completionsPath/nix-completions.nu"
+    '';
   };
 
   nmt.script =
@@ -72,7 +84,7 @@
     in
     ''
       assertFileContent \
-        "${configDir}/config.nu" \
+        $(normalizeStorePaths "${configDir}/config.nu") \
         ${./config-expected.nu}
       assertFileContent \
         "${configDir}/env.nu" \
