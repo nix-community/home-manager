@@ -40,6 +40,8 @@ in
   options.programs.eza = {
     enable = lib.mkEnableOption "eza, a modern replacement for {command}`ls`";
 
+    package = lib.mkPackageOption pkgs "eza" { nullable = true; };
+
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
@@ -104,7 +106,49 @@ in
       '';
     };
 
-    package = lib.mkPackageOption pkgs "eza" { nullable = true; };
+    all = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Show hidden and 'dot' files.
+      '';
+    };
+
+    long = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Display extended details and attributes.
+      '';
+    };
+
+    extended = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        List each file’s extended attributes and sizes.
+      '';
+    };
+
+    header = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Add a header row to each column.
+      '';
+    };
+
+    classify = mkOption {
+      type = types.enum [
+        "auto"
+        "always"
+        "never"
+      ];
+      default = "auto";
+      description = ''
+        Display type indicator by file names.
+      '';
+    };
 
     theme = mkOption {
       inherit (yamlFormat) type;
@@ -137,6 +181,11 @@ in
           cfg.colors
         ]
         ++ lib.optional cfg.git "--git"
+        ++ lib.optional cfg.all "--all"
+        ++ lib.optional cfg.long "--long"
+        ++ lib.optional cfg.extended "--extended"
+        ++ lib.optional cfg.header "--header"
+        ++ lib.optional cfg.classify "--classify"
         ++ cfg.extraOptions
       );
 
