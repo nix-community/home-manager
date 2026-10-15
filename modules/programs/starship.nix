@@ -235,7 +235,7 @@ in
         extraConfig = ''
           use ${
             pkgs.runCommand "starship-nushell-config.nu" { } ''
-              ${lib.getExe cfg.package} init nu >> "$out"
+              ${lib.getExe pkgs.buildPackages.starship} init nu >> "$out"
             ''
           }
         '';
