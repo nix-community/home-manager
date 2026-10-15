@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6268366e.js";
+            window.path_to_searchindex_js = "searchindex-045b1d6e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -18085,7 +18085,7 @@ list of package</p>
 <h2 id="opt-programs.bat.syntaxes"><a class="header" href="#opt-programs.bat.syntaxes">programs.bat.syntaxes</a></h2>
 <p>Additional syntaxes to provide.</p>
 <p><em>Type:</em>
-attribute set of (strings concatenated with “\n” or (submodule))</p>
+attribute set of (submodule)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -18114,14 +18114,22 @@ null or string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix">&lt;home-manager/modules/programs/bat.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.bat.syntaxes._name_.src"><a class="header" href="#opt-programs.bat.syntaxes._name_.src">programs.bat.syntaxes.&lt;name&gt;.src</a></h2>
 <p>Path to the syntax folder.</p>
 <p><em>Type:</em>
 absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix">&lt;home-manager/modules/programs/bat.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.bat.themes"><a class="header" href="#opt-programs.bat.themes">programs.bat.themes</a></h2>
 <p>Additional themes to provide.</p>
 <p><em>Type:</em>
-attribute set of (strings concatenated with “\n” or (submodule))</p>
+attribute set of (submodule)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -18150,10 +18158,18 @@ null or string</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix">&lt;home-manager/modules/programs/bat.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.bat.themes._name_.src"><a class="header" href="#opt-programs.bat.themes._name_.src">programs.bat.themes.&lt;name&gt;.src</a></h2>
 <p>Path to the theme folder.</p>
 <p><em>Type:</em>
 absolute path</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/bat.nix">&lt;home-manager/modules/programs/bat.nix&gt;</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="beets"><a href="#beets" class="header">beets</a></h1>
 <h2 id="opt-programs.beets.enable"><a class="header" href="#opt-programs.beets.enable">programs.beets.enable</a></h2>
@@ -23752,10 +23768,8 @@ boolean</p>
 </ul>
 <h2 id="opt-programs.eza.icons"><a class="header" href="#opt-programs.eza.icons">programs.eza.icons</a></h2>
 <p>Display icons next to file names (<code>--icons</code> argument).</p>
-<p>Note, the support for Boolean values is deprecated.
-Setting this option to <code>true</code> corresponds to <code>--icons=auto</code>.</p>
 <p><em>Type:</em>
-one of &lt;null&gt;, true, false, “auto”, “always”, “never”</p>
+one of &lt;null&gt;, “auto”, “always”, “never”</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
@@ -35767,17 +35781,6 @@ package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/keychain.nix">&lt;home-manager/modules/programs/keychain.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.keychain.agents"><a class="header" href="#opt-programs.keychain.agents">programs.keychain.agents</a></h2>
-<p>Agents to add.</p>
-<p><em>Type:</em>
-list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/keychain.nix">&lt;home-manager/modules/programs/keychain.nix&gt;</a></li>
-</ul>
 <h2 id="opt-programs.keychain.extraFlags"><a class="header" href="#opt-programs.keychain.extraFlags">programs.keychain.extraFlags</a></h2>
 <p>Extra flags to pass to keychain.</p>
 <p><em>Type:</em>
@@ -35786,17 +35789,6 @@ list of string</p>
 <pre><code class="language-nix">[
   "--quiet"
 ]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/keychain.nix">&lt;home-manager/modules/programs/keychain.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.keychain.inheritType"><a class="header" href="#opt-programs.keychain.inheritType">programs.keychain.inheritType</a></h2>
-<p>Inherit type to attempt from agent variables from the environment.</p>
-<p><em>Type:</em>
-null or one of “local”, “any”, “local-once”, “any-once”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -65974,9 +65966,10 @@ attribute set of string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
 </ul>
 <h2 id="opt-programs.zsh.dotDir"><a class="header" href="#opt-programs.zsh.dotDir">programs.zsh.dotDir</a></h2>
-<p>Directory where the zsh configuration and more should be located,
-relative to the users home directory. The default is the home
-directory.</p>
+<p>Absolute path to the directory where the zsh configuration should
+be located. Defaults to the XDG configuration directory when XDG
+is enabled and <code>home.stateVersion</code> is at least “26.05”, and to the
+home directory otherwise.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -66199,7 +66192,8 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh/history.nix">&lt;home-manager/modules/programs/zsh/history.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.zsh.history.path"><a class="header" href="#opt-programs.zsh.history.path">programs.zsh.history.path</a></h2>
-<p>History file location</p>
+<p>History file location, as an absolute path or a path containing
+shell variables that will be expanded at runtime.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Default:</em></p>
@@ -66316,9 +66310,9 @@ The default of <code>^[[A</code> may correspond to the UP key – if not, try
 <p>To specify the order, use <code>lib.mkOrder</code>.</p>
 <p>Common order values:</p>
 <ul>
-<li>500 (mkBefore): Early initialization (replaces initExtraFirst)</li>
-<li>550: Before completion initialization (replaces initExtraBeforeCompInit)</li>
-<li>1000 (default): General configuration (replaces initExtra)</li>
+<li>500 (mkBefore): Early initialization</li>
+<li>550: Before completion initialization</li>
+<li>1000 (default): General configuration</li>
 <li>1500 (mkAfter): Last to run configuration</li>
 </ul>
 <p>To specify both content in Early initialization and General configuration, use <code>lib.mkMerge</code>.</p>

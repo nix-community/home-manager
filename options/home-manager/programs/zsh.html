@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-6268366e.js";
+            window.path_to_searchindex_js = "../../../searchindex-045b1d6e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -404,9 +404,10 @@ attribute set of string</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh">&lt;home-manager/modules/programs/zsh&gt;</a></li>
 </ul>
 <h2 id="opt-programs.zsh.dotDir"><a class="header" href="#opt-programs.zsh.dotDir">programs.zsh.dotDir</a></h2>
-<p>Directory where the zsh configuration and more should be located,
-relative to the users home directory. The default is the home
-directory.</p>
+<p>Absolute path to the directory where the zsh configuration should
+be located. Defaults to the XDG configuration directory when XDG
+is enabled and <code>home.stateVersion</code> is at least “26.05”, and to the
+home directory otherwise.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -629,7 +630,8 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/zsh/history.nix">&lt;home-manager/modules/programs/zsh/history.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.zsh.history.path"><a class="header" href="#opt-programs.zsh.history.path">programs.zsh.history.path</a></h2>
-<p>History file location</p>
+<p>History file location, as an absolute path or a path containing
+shell variables that will be expanded at runtime.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Default:</em></p>
@@ -746,9 +748,9 @@ The default of <code>^[[A</code> may correspond to the UP key – if not, try
 <p>To specify the order, use <code>lib.mkOrder</code>.</p>
 <p>Common order values:</p>
 <ul>
-<li>500 (mkBefore): Early initialization (replaces initExtraFirst)</li>
-<li>550: Before completion initialization (replaces initExtraBeforeCompInit)</li>
-<li>1000 (default): General configuration (replaces initExtra)</li>
+<li>500 (mkBefore): Early initialization</li>
+<li>550: Before completion initialization</li>
+<li>1000 (default): General configuration</li>
 <li>1500 (mkAfter): Last to run configuration</li>
 </ul>
 <p>To specify both content in Early initialization and General configuration, use <code>lib.mkMerge</code>.</p>
