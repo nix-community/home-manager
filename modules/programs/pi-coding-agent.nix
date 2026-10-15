@@ -19,6 +19,21 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.pi/agent";
 
+  toPiServer =
+    name: server:
+    lib.hm.mcp.transformMcpServer {
+      inherit server;
+      extraTransforms = [
+        (lib.hm.mcp.wrapEnvFilesCommand { inherit pkgs name; })
+      ];
+    };
+
+  transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
+    lib.mapAttrs toPiServer config.programs.mcp.servers
+  );
+
+  mcpServers = transformedMcpServers // lib.mapAttrs toPiServer cfg.mcpServers;
+
   packageWithExtraPackages =
     if cfg.package != null && cfg.extraPackages != [ ] then
       pkgs.symlinkJoin {
@@ -42,6 +57,55 @@ in
     enable = mkEnableOption "pi-coding-agent";
 
     package = mkPackageOption pkgs "pi-coding-agent" { nullable = true; };
+
+    enableMcpIntegration = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the MCP servers config from
+        {option}`programs.mcp.servers` into
+        {option}`programs.pi-coding-agent.mcpServers`.
+
+        Servers defined in {option}`programs.pi-coding-agent.mcpServers`
+        take precedence over servers with the same name in
+        {option}`programs.mcp.servers`. Disabled servers are retained with
+        `enabled = false`.
+      '';
+    };
+
+    mcpServers = mkOption {
+      type = lib.types.attrsOf jsonFormat.type;
+      default = { };
+      example = {
+        filesystem = {
+          command = "npx";
+          args = [
+            "-y"
+            "@modelcontextprotocol/server-filesystem"
+            "."
+          ];
+        };
+        docs = {
+          url = "https://example.com/mcp";
+          exposure = "deferred";
+        };
+      };
+      description = ''
+        MCP server configurations written under `mcpServers` in
+        {file}`mcp.json` inside {option}`programs.pi-coding-agent.configDir`.
+        Requires Pi 1.0 or later with its built-in MCP support enabled.
+
+        Local servers use `command` and remote servers use `url`.
+        Supports stdio and streamable HTTP, but not legacy SSE.
+
+        Do not put secrets directly in this option: values are stored in the
+        world-readable Nix store. Use environment variable references such as
+        `''${API_KEY}`, or `env.<NAME>.file = "/run/secrets/..."` for local
+        servers.
+
+        See <https://pi.dev/docs/latest/mcp> for the documentation.
+      '';
+    };
 
     extraPackages = mkOption {
       type = with lib.types; listOf package;
@@ -83,7 +147,6 @@ in
         theme = "dark";
         packages = [
           "npm:@termdraw/pi"
-          "npm:pi-mcp-adapter"
         ];
         compaction = {
           enabled = true;
@@ -209,6 +272,12 @@ in
       };
 
       file = lib.mkMerge [
+        (mkIf (mcpServers != { }) {
+          "${cfg.configDir}/mcp.json".source = jsonFormat.generate "pi-coding-agent-mcp.json" {
+            inherit mcpServers;
+          };
+        })
+
         (mkIf (cfg.settings != { }) {
           "${cfg.configDir}/settings.json".source =
             jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
