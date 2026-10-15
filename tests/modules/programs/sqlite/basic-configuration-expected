@@ -1,0 +1,4 @@
+.mode box
+.separator " | " "\n\n"
+.prompt "> " "..> "
+.help
