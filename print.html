@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-045b1d6e.js";
+            window.path_to_searchindex_js = "searchindex-779ad0cb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -94815,6 +94815,210 @@ state; declare them with
 <a href="#opt-programs.mise.mutableSettings">programs.mise.mutableSettings</a>. The former
 <code>programs.mise.enableMutableConfig</code> remains a deprecated alias.
 Defaults and configuration behavior are unchanged.</p>
+</li>
+<li>
+<p>Option aliases, value conversions, and other compatibility code that had
+warned for at least one stable release were removed. Unless noted
+otherwise, configurations that still use the old options now fail to
+evaluate with an error that names the replacement. Options inside
+submodules, namely the lieer account options, the i3 and Sway
+<code>config.focus.forceWrapping</code> options, and i3’s
+<code>config.startup.*.workspace</code>, fail as unknown options instead. Update
+them as follows:</p>
+<ul>
+<li>
+<p>Core:</p>
+<ul>
+<li>The <code>home-manager</code> command no longer looks for configurations in
+<code>$XDG_CONFIG_HOME/nixpkgs</code> or <code>~/.nixpkgs</code>. Move them to
+<code>$XDG_CONFIG_HOME/home-manager</code>, or pass their path explicitly.</li>
+<li>Setting <code>nixpkgs.config</code> or <code>nixpkgs.overlays</code> while
+<code>home-manager.useGlobalPkgs</code> is enabled is now an error instead of a
+warning.</li>
+<li>Set <code>qt.platformTheme.name = "gtk2"</code> instead of
+<code>qt.useGtkTheme = true</code>, and <code>qt.platformTheme.name</code> instead of a
+string <code>qt.platformTheme</code>. Replace the <code>kde6</code> theme name with <code>kde</code>.
+The <code>gnome</code> theme name no longer installs qgnomeplatform; use
+<code>adwaita</code>, or set <code>qt.platformTheme.package</code> yourself. Neither name is
+checked any more, so old values are used as given without a warning.</li>
+<li>Replace <code>i18n.inputMethod.enabled</code> with <code>i18n.inputMethod.type</code> and
+<code>i18n.inputMethod.enable = true</code>. <code>fcitx</code>, removed in 23.05, is no
+longer an accepted <code>i18n.inputMethod.type</code>; use <code>fcitx5</code>.</li>
+<li>Replace <code>fonts.fontconfig.enableProfileFonts</code> with
+<code>fonts.fontconfig.enable</code>, <code>xdg.userDirs.publishShare</code> with
+<code>xdg.userDirs.publicShare</code>, <code>specialization</code> with <code>specialisation</code>,
+<code>targets.genericLinux.extraXdgDataDirs</code> with <code>xdg.systemDirs.data</code>,
+<code>nixGL</code> with <code>targets.genericLinux.nixGL</code>, and <code>nix.gc.frequency</code> with
+<code>nix.gc.dates</code>.</li>
+<li>The <code>lib.xdg.mimeAssociations</code> function was removed; use
+<code>xdg.mimeApps.defaultApplicationPackages</code>.</li>
+<li><code>launchd.agents.&lt;name&gt;.config.ProgramArguments</code> values containing a
+literal <code>&amp;amp;</code> no longer warn. Home Manager escapes plist values
+itself, so write <code>&amp;</code> instead.</li>
+</ul>
+</li>
+<li>
+<p>Services:</p>
+<ul>
+<li>In <code>xsession.windowManager.i3.config</code> and
+<code>wayland.windowManager.sway.config</code>, <code>fonts</code> and <code>bars.*.fonts</code> must be
+attribute sets. Replace <code>focus.forceWrapping = true</code> with
+<code>focus.wrapping = "force"</code> for i3 or <code>"yes"</code> for Sway, and i3
+<code>startup.*.workspace</code> with <code>assigns</code>. Replace
+<code>wayland.windowManager.sway.systemdIntegration</code> with
+<code>wayland.windowManager.sway.systemd.enable</code>.</li>
+<li>Replace <code>services.kanshi.profiles</code> and <code>services.kanshi.extraConfig</code>
+with the ordered list <code>services.kanshi.settings</code>. Turn each named
+profile into a list entry with <code>profile.name</code> set to its former
+attribute name and its other options under <code>profile</code>, and rewrite raw
+<code>extraConfig</code> as structured entries or put it in a file referenced by
+an <code>include</code> entry. Keep those entries after the profiles to preserve
+the previous order.</li>
+<li>Replace <code>services.hyprsunset.transitions</code> with native profiles in
+<code>services.hyprsunset.settings.profile</code>, such as
+<code>[ { time = "21:00"; temperature = 5000; } ]</code>. Rewrite each
+transition using the profile fields <code>time</code>, <code>temperature</code>, <code>gamma</code>,
+and <code>identity</code>; Home Manager no longer creates per-transition systemd
+timers or runs their <code>hyprctl</code> requests.</li>
+<li>Move the removed top-level <code>services.mako</code> options into
+<code>services.mako.settings</code>. Single-word names such as <code>font</code> and <code>width</code>
+stay the same; camelCase names such as <code>backgroundColor</code> and
+<code>defaultTimeout</code> become <code>background-color</code> and <code>default-timeout</code>.</li>
+<li>Move <code>services.redshift.brightness.day</code> and <code>brightness.night</code> to
+<code>services.redshift.settings.redshift.brightness-day</code> and
+<code>brightness-night</code>, and the Gammastep options to
+<code>services.gammastep.settings.general.brightness-day</code> and
+<code>brightness-night</code>.</li>
+<li>Replace <code>services.screen-locker.xssLockExtraOptions</code>,
+<code>xautolockExtraOptions</code>, and <code>enableDetectSleep</code> with
+<code>services.screen-locker.xss-lock.extraOptions</code>,
+<code>xautolock.extraOptions</code>, and <code>xautolock.detectSleep</code>.</li>
+<li>Replace <code>services.picom.opacityRule</code> with <code>services.picom.opacityRules</code>,
+<code>programs.wpaperd</code> with <code>services.wpaperd</code>, and
+<code>services.gpg-agent.pinentryPackage</code> with
+<code>services.gpg-agent.pinentry.package</code>.</li>
+</ul>
+</li>
+<li>
+<p>Git and diff tools:</p>
+<ul>
+<li>Move <code>programs.git.userName</code>, <code>userEmail</code>, and <code>aliases</code> to
+<code>programs.git.settings.user.name</code>, <code>settings.user.email</code>, and
+<code>settings.alias</code>, <code>programs.git.extraConfig</code> to <code>programs.git.settings</code>,
+and <code>programs.git.signing.gpgPath</code> to <code>programs.git.signing.signer</code>.</li>
+<li>Move the <code>programs.git.delta</code>, <code>diff-highlight</code>, <code>diff-so-fancy</code>,
+<code>difftastic</code>, <code>patdiff</code>, and <code>riff</code> options to <code>programs.&lt;tool&gt;</code>, with
+these exceptions. The diff-so-fancy <code>markEmptyLines</code>,
+<code>changeHunkIndicators</code>, <code>stripLeadingSymbols</code>, <code>useUnicodeRuler</code>, and
+<code>rulerWidth</code> options, under either <code>programs.git.diff-so-fancy</code> or
+<code>programs.diff-so-fancy</code>, move to <code>programs.diff-so-fancy.settings</code>.
+<code>programs.git.difftastic.background</code>, <code>color</code>, <code>context</code>, and <code>display</code>
+move to <code>programs.difftastic.options</code>, and
+<code>programs.git.difftastic.enableAsDifftool = true</code> becomes
+<code>programs.difftastic.git.mode = "both"</code>. The old <code>enable</code> options also
+turned on Git integration, so set
+<code>programs.&lt;tool&gt;.enableGitIntegration = true</code> (for difftastic,
+<code>programs.difftastic.git.enable = true</code>) explicitly.</li>
+<li>Replace <code>programs.gh.aliases</code>, <code>editor</code>, and <code>gitProtocol</code> with
+<code>programs.gh.settings.aliases</code>, <code>settings.editor</code>, and
+<code>settings.git_protocol</code>, and <code>programs.gh.enableGitCredentialHelper</code>
+with <code>programs.gh.gitCredentialHelper.enable</code>. <code>programs.gh.settings</code>
+no longer declares <code>aliases</code>, <code>editor</code>, and <code>git_protocol</code> with
+defaults, so the generated <code>config.yml</code> omits them unless they are
+set, and gh uses its own defaults.</li>
+</ul>
+</li>
+<li>
+<p>Shell and terminal programs:</p>
+<ul>
+<li>Replace <code>programs.zsh.initExtra</code> with <code>programs.zsh.initContent</code>,
+<code>initExtraFirst</code> with <code>initContent</code> wrapped in <code>lib.mkBefore</code>, and
+<code>initExtraBeforeCompInit</code> with <code>initContent</code> wrapped in
+<code>lib.mkOrder 550</code>. Replace <code>enableAutosuggestions</code>,
+<code>enableSyntaxHighlighting</code>, and <code>zproof</code> with <code>autosuggestion.enable</code>,
+<code>syntaxHighlighting.enable</code>, and <code>zprof</code>. Relative
+<code>programs.zsh.dotDir</code> and <code>programs.zsh.history.path</code> values are now
+rejected; use absolute paths.</li>
+<li>Replace <code>programs.bash.enableAutojump</code> with <code>programs.autojump.enable</code>,
+<code>programs.direnv.enableNixDirenvIntegration</code> with
+<code>programs.direnv.nix-direnv.enable</code>, and the top-level <code>programs.ssh</code>
+options, such as <code>forwardAgent</code> and <code>controlPath</code>, with the native
+directives under <code>programs.ssh.settings."*"</code>.</li>
+<li>Combine <code>programs.go.goPath</code> and <code>extraGoPaths</code>, in that order, into
+<code>programs.go.env.GOPATH</code>, and move <code>goBin</code> to <code>programs.go.env.GOBIN</code>
+and <code>goPrivate</code> to <code>programs.go.env.GOPRIVATE</code>. The old path options
+were relative to the home directory, so write absolute paths such as
+<code>"${config.home.homeDirectory}/go"</code>.</li>
+<li>Replace <code>programs.k9s.skin</code>, <code>hotkey</code>, and <code>plugin</code> with
+<code>programs.k9s.skins.skin</code>, <code>hotKeys</code>, and <code>plugins</code>. Nested <code>alias</code>,
+<code>plugin</code>, and <code>k9s.views</code> keys no longer warn; move their contents
+directly under <code>programs.k9s.aliases</code>, <code>plugins</code>, and <code>views</code>.</li>
+<li>Replace <code>programs.kitty.theme</code> with <code>programs.kitty.themeFile</code>, using
+the theme’s file name without <code>.conf</code> rather than its display name. For
+example, <code>"Space Gray Eighties"</code> becomes <code>"SpaceGray_Eighties"</code>.</li>
+<li>Replace <code>programs.mcfly.enableFuzzySearch</code> with
+<code>programs.mcfly.fuzzySearchFactor</code>, using <code>2</code> for <code>true</code> and <code>0</code> for
+<code>false</code>, and <code>programs.less.keys</code> with <code>programs.less.config</code>.</li>
+<li>Use <code>programs.eza</code> instead of <code>programs.exa</code>, and <code>"auto"</code> or <code>null</code>
+instead of a Boolean <code>programs.eza.icons</code>. <code>programs.bat.themes</code> and
+<code>programs.bat.syntaxes</code> accept only <code>{ src; file; }</code> attribute sets.
+Move <code>programs.broot.modal</code>, <code>verbs</code>, and <code>skin</code> to
+<code>programs.broot.settings</code>.</li>
+<li><code>programs.keychain.agents</code> and <code>programs.keychain.inheritType</code> were
+removed, because keychain 2.9.0 no longer supports them.</li>
+</ul>
+</li>
+<li>
+<p>Applications:</p>
+<ul>
+<li>For <code>programs.firefox</code> and the other Firefox-based browsers, add
+<code>pkgs.gnome-browser-connector</code> to <code>nativeMessagingHosts</code> instead of
+setting <code>enableGnomeExtensions</code>, and drop <code>vendorPath</code>. Put bookmarks
+under <code>bookmarks.settings</code> with <code>bookmarks.force = true</code>.</li>
+<li>Firefox search engines are now referenced only by id, such as <code>ddg</code> or
+<code>google</code>. Display names such as <code>"DuckDuckGo"</code> in <code>search.default</code>,
+<code>search.privateDefault</code>, <code>search.order</code>, and the <code>search.engines</code> keys
+are no longer converted and are written unchanged. For custom search
+engines, use <code>icon</code> or numeric <code>iconMapObj</code> keys: <code>iconURL</code>,
+<code>iconUpdateURL</code>, <code>hasPreferredIcon</code>, and JSON <code>iconMapObj</code> keys are
+no longer checked or converted and are written unchanged. Engines
+marked <code>isAppProvided = true</code> still ignore icon fields.</li>
+<li>Move <code>programs.vscode.enableUpdateCheck</code>, <code>enableExtensionUpdateCheck</code>,
+<code>userSettings</code>, <code>userTasks</code>, <code>userMcp</code>, <code>keybindings</code>, <code>extensions</code>,
+<code>languageSnippets</code>, and <code>globalSnippets</code> to
+<code>programs.vscode.profiles.default</code>, and replace
+<code>programs.vscode.immutableExtensionsDir</code> with the inverse
+<code>programs.vscode.mutableExtensionsDir</code>.</li>
+<li><code>programs.vim.plugins</code> accepts only packages, and
+<code>programs.helix.languages</code> only an attribute set, with the language
+list under <code>language</code>. <code>programs.neomutt.binds.*.map</code> and
+<code>programs.neomutt.macros.*.map</code> accept only lists.</li>
+<li>Replace <code>programs.msmtp.extraConfig</code> with <code>programs.msmtp.configContent</code>
+wrapped in <code>lib.mkBefore</code>, and <code>programs.msmtp.extraAccounts</code> with
+<code>configContent</code> wrapped in <code>lib.mkAfter</code>, so they stay before and after
+the generated accounts.</li>
+<li>Under <code>accounts.email.accounts.&lt;name&gt;.lieer</code>, replace
+<code>dropNonExistingLabels</code>, <code>ignoreTagsRemote</code>, <code>ignoreTagsLocal</code>,
+<code>timeout</code>, and <code>replaceSlashWithDot</code> with
+<code>settings.drop_non_existing_label</code>, <code>settings.ignore_remote_labels</code>,
+<code>settings.ignore_tags</code>, <code>settings.timeout</code>, and
+<code>settings.replace_slash_with_dot</code>.</li>
+<li>Replace <code>programs.rtorrent.settings</code> with
+<code>programs.rtorrent.extraConfig</code>.
+<code>programs.thunderbird.darwinSetupWarning</code> was removed.</li>
+<li>Replace <code>programs.anki.sync.passwordFile</code> with
+<code>programs.anki.profiles."User 1".sync.keyFile</code>.</li>
+<li><code>programs.ashell</code> now requires ashell 0.5.0 or later and always writes
+<code>ashell/config.toml</code>; it no longer generates <code>ashell.yml</code> for older
+versions, and <code>programs.ashell.settings</code> no longer accepts null.
+camelCase keys in <code>programs.ashell.settings</code> are no longer converted
+and are written as given, where ashell ignores them; use the upstream
+snake_case names.</li>
+<li><code>programs.hyprpanel.settings.theme.name</code> no longer warns; put theme
+contents directly under <code>programs.hyprpanel.settings.theme</code>.</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 <p><a id="sec-release-26.11-state-version-changes"></a></p>
