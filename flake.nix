@@ -189,6 +189,7 @@
               nixpkgs.lib.elem name [
                 "integration-nixos-basics"
                 "integration-nixos-legacy-profile-management"
+                "integration-mutable-files"
               ]
             ) allIntegrationTests;
           in
