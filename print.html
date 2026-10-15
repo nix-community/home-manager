@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e1eb87bb.js";
+            window.path_to_searchindex_js = "searchindex-6268366e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -16490,12 +16490,11 @@ null or package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ashell.nix">&lt;home-manager/modules/programs/ashell.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.ashell.settings"><a class="header" href="#opt-programs.ashell.settings">programs.ashell.settings</a></h2>
-<p>Ashell configuration written to <code>$XDG_CONFIG_HOME/ashell/config.toml</code> (0.5.0+)
-or <code>$XDG_CONFIG_HOME/ashell/config.yaml</code> (&lt;0.5.0).
+<p>Ashell configuration written to <code>$XDG_CONFIG_HOME/ashell/config.toml</code>.
 For available settings see
 <a href="https://github.com/MalpenZibo/ashell?tab=readme-ov-file#configuration">https://github.com/MalpenZibo/ashell?tab=readme-ov-file#configuration</a>.</p>
 <p><em>Type:</em>
-null or TOML value</p>
+TOML value</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -16518,7 +16517,7 @@ null or TOML value</p>
     ];
   };
   workspaces = {
-    visibilityMode = "MonitorSpecific";
+    visibility_mode = "MonitorSpecific";
   };
 }
 </code></pre>
@@ -24217,20 +24216,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox">&lt;home-manager/modules/programs/firefox&gt;</a></li>
 </ul>
-<h2 id="opt-programs.firefox.enableGnomeExtensions"><a class="header" href="#opt-programs.firefox.enableGnomeExtensions">programs.firefox.enableGnomeExtensions</a></h2>
-<p>Whether to enable the GNOME Shell native host connector. Note, you
-also need to set the NixOS option
-<code>services.gnome.gnome-browser-connector.enable</code> to
-<code>true</code>.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox">&lt;home-manager/modules/programs/firefox&gt;</a></li>
-</ul>
 <h2 id="opt-programs.firefox.package"><a class="header" href="#opt-programs.firefox.package">programs.firefox.package</a></h2>
 <p>The Firefox package to use. If state version ≥ 19.09 then
 this should be a wrapped Firefox package. For earlier state
@@ -24439,7 +24424,7 @@ attribute set of (submodule)</p>
 <h2 id="opt-programs.firefox.profiles._name_.bookmarks"><a class="header" href="#opt-programs.firefox.profiles._name_.bookmarks">programs.firefox.profiles.&lt;name&gt;.bookmarks</a></h2>
 <p>Declarative bookmarks.</p>
 <p><em>Type:</em>
-(submodule) or ((list of ((bookmark submodule) or (directory submodule) or value “separator” (singular enum))) or (attribute set of ((bookmark submodule) or (directory submodule) or value “separator” (singular enum))) convertible to it) convertible to it</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -26370,20 +26355,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix">&lt;home-manager/modules/programs/floorp.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.floorp.enableGnomeExtensions"><a class="header" href="#opt-programs.floorp.enableGnomeExtensions">programs.floorp.enableGnomeExtensions</a></h2>
-<p>Whether to enable the GNOME Shell native host connector. Note, you
-also need to set the NixOS option
-<code>services.gnome.gnome-browser-connector.enable</code> to
-<code>true</code>.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/floorp.nix">&lt;home-manager/modules/programs/floorp.nix&gt;</a></li>
-</ul>
 <h2 id="opt-programs.floorp.package"><a class="header" href="#opt-programs.floorp.package">programs.floorp.package</a></h2>
 <p>The Floorp package to use. If state version ≥ 19.09 then
 this should be a wrapped Floorp package. For earlier state
@@ -26579,7 +26550,7 @@ attribute set of (submodule)</p>
 <h2 id="opt-programs.floorp.profiles._name_.bookmarks"><a class="header" href="#opt-programs.floorp.profiles._name_.bookmarks">programs.floorp.profiles.&lt;name&gt;.bookmarks</a></h2>
 <p>Declarative bookmarks.</p>
 <p><em>Type:</em>
-(submodule) or ((list of ((bookmark submodule) or (directory submodule) or value “separator” (singular enum))) or (attribute set of ((bookmark submodule) or (directory submodule) or value “separator” (singular enum))) convertible to it) convertible to it</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -31993,7 +31964,7 @@ list of string</p>
 <p>See <a href="https://docs.helix-editor.com/languages.html">https://docs.helix-editor.com/languages.html</a>
 for more information.</p>
 <p><em>Type:</em>
-(TOML value) or (list of (TOML value)) convertible to it</p>
+TOML value</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -38205,20 +38176,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix">&lt;home-manager/modules/programs/librewolf.nix&gt;</a></li>
 </ul>
-<h2 id="opt-programs.librewolf.enableGnomeExtensions"><a class="header" href="#opt-programs.librewolf.enableGnomeExtensions">programs.librewolf.enableGnomeExtensions</a></h2>
-<p>Whether to enable the GNOME Shell native host connector. Note, you
-also need to set the NixOS option
-<code>services.gnome.gnome-browser-connector.enable</code> to
-<code>true</code>.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/librewolf.nix">&lt;home-manager/modules/programs/librewolf.nix&gt;</a></li>
-</ul>
 <h2 id="opt-programs.librewolf.package"><a class="header" href="#opt-programs.librewolf.package">programs.librewolf.package</a></h2>
 <p>The LibreWolf package to use. If state version ≥ 19.09 then
 this should be a wrapped LibreWolf package. For earlier state
@@ -38414,7 +38371,7 @@ attribute set of (submodule)</p>
 <h2 id="opt-programs.librewolf.profiles._name_.bookmarks"><a class="header" href="#opt-programs.librewolf.profiles._name_.bookmarks">programs.librewolf.profiles.&lt;name&gt;.bookmarks</a></h2>
 <p>Declarative bookmarks.</p>
 <p><em>Type:</em>
-(submodule) or ((list of ((bookmark submodule) or (directory submodule) or value “separator” (singular enum))) or (attribute set of ((bookmark submodule) or (directory submodule) or value “separator” (singular enum))) convertible to it) convertible to it</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -43267,7 +43224,7 @@ string</p>
 <h2 id="opt-programs.neomutt.binds._.map"><a class="header" href="#opt-programs.neomutt.binds._.map">programs.neomutt.binds.*.map</a></h2>
 <p>Select the menu to bind the command to.</p>
 <p><em>Type:</em>
-one of “alias”, “attach”, “browser”, “compose”, “editor”, “generic”, “index”, “mix”, “pager”, “pgp”, “postpone”, “query”, “smime” or list of (one of “alias”, “attach”, “browser”, “compose”, “editor”, “generic”, “index”, “mix”, “pager”, “pgp”, “postpone”, “query”, “smime”)</p>
+list of (one of “alias”, “attach”, “browser”, “compose”, “editor”, “generic”, “index”, “mix”, “pager”, “pgp”, “postpone”, “query”, “smime”)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">[
   "index"
@@ -43364,7 +43321,7 @@ string</p>
 <h2 id="opt-programs.neomutt.macros._.map"><a class="header" href="#opt-programs.neomutt.macros._.map">programs.neomutt.macros.*.map</a></h2>
 <p>Select the menu to bind the command to.</p>
 <p><em>Type:</em>
-one of “alias”, “attach”, “browser”, “compose”, “editor”, “generic”, “index”, “mix”, “pager”, “pgp”, “postpone”, “query”, “smime” or list of (one of “alias”, “attach”, “browser”, “compose”, “editor”, “generic”, “index”, “mix”, “pager”, “pgp”, “postpone”, “query”, “smime”)</p>
+list of (one of “alias”, “attach”, “browser”, “compose”, “editor”, “generic”, “index”, “mix”, “pager”, “pgp”, “postpone”, “query”, “smime”)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">[
   "index"
@@ -60723,9 +60680,8 @@ strings concatenated with “\n”</p>
 <h2 id="opt-programs.vim.plugins"><a class="header" href="#opt-programs.vim.plugins">programs.vim.plugins</a></h2>
 <p>List of vim plugins to install. To get a list of supported plugins run:
 <code>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</code>.</p>
-<p>Note: String values are deprecated, please use actual packages.</p>
 <p><em>Type:</em>
-list of (string or package)</p>
+list of package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">[
   &lt;derivation vimplugin-vim-sensible-2.0-unstable-2024-06-08&gt;

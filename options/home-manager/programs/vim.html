@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-e1eb87bb.js";
+            window.path_to_searchindex_js = "../../../searchindex-6268366e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -246,9 +246,8 @@ strings concatenated with “\n”</p>
 <h2 id="opt-programs.vim.plugins"><a class="header" href="#opt-programs.vim.plugins">programs.vim.plugins</a></h2>
 <p>List of vim plugins to install. To get a list of supported plugins run:
 <code>nix-env -f '&lt;nixpkgs&gt;' -qaP -A vimPlugins</code>.</p>
-<p>Note: String values are deprecated, please use actual packages.</p>
 <p><em>Type:</em>
-list of (string or package)</p>
+list of package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">[
   &lt;derivation vimplugin-vim-sensible-2.0-unstable-2024-06-08&gt;
