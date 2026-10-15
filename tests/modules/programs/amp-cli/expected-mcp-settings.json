@@ -1,0 +1,15 @@
+{
+  "amp.mcpServers": {
+    "linear": {
+      "url": "https://mcp.linear.app/sse"
+    },
+    "playwright": {
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--headless"
+      ],
+      "command": "npx"
+    }
+  }
+}
