@@ -211,6 +211,7 @@ let
     "topgrade"
     "translate-shell"
     "tray-tui"
+    "trippy"
     "usage"
     "vesktop"
     "vifm"
