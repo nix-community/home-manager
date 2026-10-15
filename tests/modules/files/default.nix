@@ -1,4 +1,5 @@
 {
+  files-backup-failure = ./backup-failure.nix;
   files-disabled = ./disabled.nix;
   files-executable = ./executable.nix;
   files-hidden-source = ./hidden-source.nix;
