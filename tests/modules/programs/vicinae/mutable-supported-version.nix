@@ -8,7 +8,7 @@
       version = "0.20.6";
     };
     settings.font.normal.size = 12;
-    systemd.enable = false;
+    service.enable = false;
     enableFirefoxIntegration = false;
   };
   nmt.script = ''

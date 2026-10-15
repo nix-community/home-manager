@@ -213,6 +213,7 @@ let
     "tray-tui"
     "usage"
     "vesktop"
+    "vicinae"
     "vifm"
     "vim-vint"
     "vimPlugins"

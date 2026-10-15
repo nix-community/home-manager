@@ -15,7 +15,7 @@ in
 {
   programs.vicinae = {
     enable = true;
-    systemd.enable = true;
+    service.enable = true;
     package = config.lib.test.mkStubPackage {
       name = "vicinae";
       version = "0.17.0";
@@ -71,7 +71,7 @@ in
   };
 
   nmt.script = ''
-    assertFileContent "home-files/.config/vicinae/settings.json" ${./settings.json}
+    assertFileContent "home-files/.config/vicinae/settings.json" ${../settings.json}
     assertPathNotExists "home-files/.config/vicinae/vicinae.json"
     assertFileExists      "home-files/.config/systemd/user/vicinae.service"
     assertFileExists      "home-files/.local/share/vicinae/themes/catppuccin-mocha.toml"
