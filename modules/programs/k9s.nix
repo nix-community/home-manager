@@ -28,7 +28,7 @@ in
       {
         hotkey = "Use `programs.k9s.hotKeys` instead.";
         plugin = "Use `programs.k9s.plugins` instead.";
-        skin = "Use `programs.k9s.skins` instead.";
+        skin = "Use `programs.k9s.skins.skin` instead.";
       };
 
   options.programs.k9s = {
