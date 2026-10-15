@@ -269,7 +269,6 @@
           - modules/programs/lesspipe.nix
           - modules/programs/lsd.nix
           - modules/programs/man/**/*
-          - modules/programs/mc.nix
           - modules/programs/mcfly.nix
           - modules/programs/moor.nix
           - modules/programs/navi.nix
@@ -291,7 +290,6 @@
           - modules/programs/sesh.nix
           - modules/programs/sherlock.nix
           - modules/programs/skim.nix
-          - modules/programs/superfile.nix
           - modules/programs/tealdeer.nix
           - modules/programs/television.nix
           - modules/programs/tmate.nix
@@ -299,6 +297,7 @@
           - modules/programs/tmuxinator.nix
           - modules/programs/topgrade.nix
           - modules/programs/translate-shell.nix
+          - modules/programs/ttyper.nix
           - modules/programs/ty.nix
           - modules/programs/uv.nix
           - modules/programs/vivid.nix
@@ -342,7 +341,6 @@
           - tests/modules/programs/lesspipe/**/*
           - tests/modules/programs/lsd/**/*
           - tests/modules/programs/man/**/*
-          - tests/modules/programs/mc/**/*
           - tests/modules/programs/moor/**/*
           - tests/modules/programs/nix-your-shell/**/*
           - tests/modules/programs/nom/**/*
@@ -360,13 +358,13 @@
           - tests/modules/programs/screen/**/*
           - tests/modules/programs/sesh/**/*
           - tests/modules/programs/sherlock/**/*
-          - tests/modules/programs/superfile/**/*
           - tests/modules/programs/tealdeer/**/*
           - tests/modules/programs/television/**/*
           - tests/modules/programs/tmate/**/*
           - tests/modules/programs/tmux/**/*
           - tests/modules/programs/topgrade/**/*
           - tests/modules/programs/translate-shell/**/*
+          - tests/modules/programs/ttyper/**/*
           - tests/modules/programs/ty/**/*
           - tests/modules/programs/uv/**/*
           - tests/modules/programs/vivid/**/*
@@ -403,6 +401,7 @@
           - modules/programs/hyprshot.nix
           - modules/programs/hyprtoolkit.nix
           - modules/programs/noctalia/**/*
+          - modules/programs/pywal.nix
           - modules/programs/quickshell.nix
           - modules/programs/satty.nix
           - modules/programs/swappy.nix
@@ -506,7 +505,6 @@
           - modules/programs/lazysql.nix
           - modules/programs/matplotlib.nix
           - modules/programs/mercurial.nix
-          - modules/programs/mergiraf.nix
           - modules/programs/mise.nix
           - modules/programs/mr.nix
           - modules/programs/mypy.nix
@@ -526,7 +524,6 @@
           - modules/programs/posting.nix
           - modules/programs/pyenv.nix
           - modules/programs/pylint.nix
-          - modules/programs/pywal.nix
           - modules/programs/rbenv.nix
           - modules/programs/rizin.nix
           - modules/programs/ruff.nix
@@ -565,7 +562,6 @@
           - tests/modules/programs/kubeswitch/**/*
           - tests/modules/programs/lazydocker/**/*
           - tests/modules/programs/lazysql/**/*
-          - tests/modules/programs/mergiraf/**/*
           - tests/modules/programs/mise/**/*
           - tests/modules/programs/mypy/**/*
           - tests/modules/programs/nh/**/*
@@ -652,39 +648,39 @@
       - any-glob-to-any-file:
           - modules/programs/joshuto.nix
           - modules/programs/lf.nix
+          - modules/programs/mc.nix
           - modules/programs/nnn.nix
           - modules/programs/ranger.nix
+          - modules/programs/superfile.nix
           - modules/programs/vifm.nix
           - modules/programs/xplr.nix
           - modules/programs/yazi.nix
           - tests/modules/programs/lf/**/*
+          - tests/modules/programs/mc/**/*
           - tests/modules/programs/nnn/**/*
           - tests/modules/programs/ranger/**/*
+          - tests/modules/programs/superfile/**/*
           - tests/modules/programs/vifm/**/*
           - tests/modules/programs/yazi/**/*
 "gaming":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/am2rlauncher.nix
-          - modules/programs/kodi.nix
           - modules/programs/lutris.nix
           - modules/programs/mangohud.nix
           - modules/programs/ninjabrain-bot.nix
           - modules/programs/prismlauncher.nix
           - modules/programs/retroarch.nix
           - modules/programs/sm64ex.nix
-          - modules/programs/ttyper.nix
           - modules/programs/vinegar.nix
           - modules/services/ludusavi.nix
           - tests/modules/programs/am2rlauncher/**/*
-          - tests/modules/programs/kodi/**/*
           - tests/modules/programs/lutris/**/*
           - tests/modules/programs/mangohud/**/*
           - tests/modules/programs/ninjabrain-bot/**/*
           - tests/modules/programs/prismlauncher/**/*
           - tests/modules/programs/retroarch/**/*
           - tests/modules/programs/sm64ex/**/*
-          - tests/modules/programs/ttyper/**/*
           - tests/modules/programs/vinegar/**/*
           - tests/modules/services/ludusavi/**/*
 "git":
@@ -699,6 +695,7 @@
           - modules/programs/jujutsu.nix
           - modules/programs/lazygit.nix
           - modules/programs/lazyworktree.nix
+          - modules/programs/mergiraf.nix
           - modules/programs/radicle.nix
           - modules/programs/sapling.nix
           - modules/programs/worktrunk.nix
@@ -718,6 +715,7 @@
           - tests/modules/programs/jujutsu/**/*
           - tests/modules/programs/lazygit/**/*
           - tests/modules/programs/lazyworktree/**/*
+          - tests/modules/programs/mergiraf/**/*
           - tests/modules/programs/radicle/**/*
           - tests/modules/programs/sapling/**/*
           - tests/modules/programs/worktrunk/**/*
@@ -766,6 +764,11 @@
           - tests/modules/services/imapnotify/**/*
           - tests/modules/services/lieer/**/*
           - tests/modules/services/protonmail-bridge/**/*
+"media":
+  - changed-files:
+      - any-glob-to-any-file:
+          - modules/programs/kodi.nix
+          - tests/modules/programs/kodi/**/*
 "messaging":
   - changed-files:
       - any-glob-to-any-file:
