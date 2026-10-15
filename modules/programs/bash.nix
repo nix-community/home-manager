@@ -246,12 +246,12 @@ in
     mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-      home.file.".bash_profile".source = writeBashScript "bash_profile" ''
-        # include .profile if it exists
-        [[ -f ~/.profile ]] && . ~/.profile
+      home.file.".bash_profile".source = writeBashScript "profile" ''
+        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
 
-        # include .bashrc if it exists
-        [[ -f ~/.bashrc ]] && . ~/.bashrc
+        ${sessionVarsStr}
+
+        ${cfg.profileExtra}
       '';
 
       # If completion is enabled then make sure it is sourced very early. This
@@ -264,14 +264,6 @@ in
           fi
         ''
       );
-
-      home.file.".profile".source = writeBashScript "profile" ''
-        . "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh"
-
-        ${sessionVarsStr}
-
-        ${cfg.profileExtra}
-      '';
 
       home.file.".bashrc".source = writeBashScript "bashrc" ''
         ${cfg.bashrcExtra}
