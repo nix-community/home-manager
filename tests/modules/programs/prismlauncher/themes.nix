@@ -1,48 +1,65 @@
-{ config, ... }:
+{ pkgs, ... }:
+
+let
+  inherit (pkgs)
+    formats
+    runCommand
+    stdenv
+    writeText
+    ;
+
+  jsonFormat = formats.json { };
+
+  themeAttrs = {
+    theme = {
+      name = "Custom";
+      colors = {
+        background = "#1a1b26";
+        foreground = "#c0caf5";
+      };
+    };
+    style = ''
+      QWidget {
+        font-family: "Inter";
+      }
+    '';
+  };
+
+  expectedTheme = jsonFormat.generate "theme.json" themeAttrs.theme;
+  expectedStyle = writeText "themeStyle.css" themeAttrs.style;
+
+  themeDir = runCommand "foobar-theme" { } ''
+    mkdir $out
+    ln -s ${expectedTheme} $out/theme.json
+    ln -s ${expectedStyle} $out/themeStyle.css
+  '';
+
+  dataDir =
+    (if stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".local/share")
+    + "/PrismLauncher";
+in
 
 {
   programs.prismlauncher = {
     enable = true;
-    package = config.lib.test.mkStubPackage { };
 
     themes = {
-      theme-dir = ./theme-dir;
-
-      inline-theme = {
-        theme = {
-          name = "Inline Theme";
-          colors = {
-            accent = "#7aa2f7";
-            background = "#1a1b26";
-            foreground = "#c0caf5";
-          };
-        };
-        style = ''
-          QWidget {
-            font-family: "Inter";
-          }
-        '';
-      };
+      theme-attrs = themeAttrs;
+      theme-dir = themeDir;
     };
   };
 
   nmt.script = ''
-    assertFileExists home-files/.local/share/PrismLauncher/themes/theme-dir/theme.json
-    assertFileContent \
-      home-files/.local/share/PrismLauncher/themes/theme-dir/theme.json \
-      ${./theme-dir/theme.json}
-    assertFileExists home-files/.local/share/PrismLauncher/themes/theme-dir/themeStyle.css
-    assertFileContent \
-      home-files/.local/share/PrismLauncher/themes/theme-dir/themeStyle.css \
-      ${./theme-dir/themeStyle.css}
+    basePath='home-files/${dataDir}/themes'
 
-    assertFileExists home-files/.local/share/PrismLauncher/themes/inline-theme/theme.json
-    assertFileContent \
-      home-files/.local/share/PrismLauncher/themes/inline-theme/theme.json \
-      ${./inline-theme.json}
-    assertFileExists home-files/.local/share/PrismLauncher/themes/inline-theme/themeStyle.css
-    assertFileContent \
-      home-files/.local/share/PrismLauncher/themes/inline-theme/themeStyle.css \
-      ${./inline-themeStyle.css}
+    assertFileExists "$basePath/theme-attrs/theme.json"
+    assertFileContent "$basePath/theme-attrs/theme.json" ${expectedTheme}
+    assertFileExists "$basePath/theme-attrs/themeStyle.css"
+    assertFileContent "$basePath/theme-attrs/themeStyle.css" ${expectedStyle}
+
+    assertFileExists "$basePath/theme-dir/theme.json"
+    assertFileContent "$basePath/theme-dir/theme.json" ${expectedTheme}
+    assertFileExists "$basePath/theme-dir/themeStyle.css"
+    assertFileContent "$basePath/theme-dir/themeStyle.css" ${expectedStyle}
   '';
 }
