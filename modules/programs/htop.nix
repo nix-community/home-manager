@@ -97,21 +97,6 @@ let
     ISCONTAINER = 133;
   };
 
-  defaultFields = with fields; [
-    PID
-    USER
-    PRIORITY
-    NICE
-    M_SIZE
-    M_RESIDENT
-    M_SHARE
-    STATE
-    PERCENT_CPU
-    PERCENT_MEM
-    TIME
-    COMM
-  ];
-
   modes = {
     Bar = 1;
     Text = 2;
@@ -126,6 +111,68 @@ let
   graph = meter modes.Graph;
   led = meter modes.LED;
   blank = text "Blank";
+
+  screenOptions = {
+    name = lib.mkOption {
+      type = lib.types.str;
+      description = "Name that shows on the screen tab.";
+    };
+
+    fields = lib.mkOption {
+      type = lib.types.oneOf [
+        lib.types.str
+        (lib.types.listOf lib.types.str)
+      ];
+      default = "PID USER M_VIRT STATE PERCENT_CPU PERCENT_MEM TIME Command";
+      description = "What fields to show in the screen.";
+    };
+
+    all_branches_collapsed = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to collapse all branches in the tree view.";
+    };
+
+    sort_direction = lib.mkOption {
+      type = lib.types.enum [
+        (-1)
+        1
+      ];
+      default = -1;
+      description = "Whether to sort ascending or descending.";
+    };
+    sort_key = lib.mkOption {
+      type = lib.types.str;
+      example = "PERCENT_MEM";
+      description = "Key to sort by.";
+    };
+
+    tree_sort_direction = lib.mkOption {
+      type = lib.types.enum [
+        (-1)
+        1
+      ];
+      default = -1;
+      description = "Whether to sort the tree ascending or descending.";
+    };
+    tree_sort_key = lib.mkOption {
+      type = lib.types.str;
+      example = "PERCENT_MEM";
+      description = "Key to sort the three by.";
+    };
+
+    tree_view = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether the use a tree view.";
+    };
+
+    tree_view_always_by_pid = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whther the tree view groups by pid.";
+    };
+  };
 
 in
 {
@@ -187,6 +234,46 @@ in
       '';
     };
 
+    screens = lib.mkOption {
+      type = lib.hm.types.dagOf (
+        lib.types.submodule (
+          { dagName, ... }:
+          {
+            options = screenOptions;
+            config.name = lib.mkDefault dagName;
+          }
+        )
+      );
+      default = { };
+      example = lib.literalExpression ''
+        {
+          "Main" = {
+            fields = "PID USER PRIORITY NICE M_VIRT M_RESIDENT M_SHARE STATE PERCENT_CPU PERCENT_MEM TIME Command";
+            sort_key = "PERCENT_MEM";
+            tree_sort_key = "PERCENT_MEM";
+            tree_view = false;
+            tree_view_always_by_pid = false;
+            sort_direction = -1;
+            tree_sort_direction = -1;
+            all_branches_collapsed = false;
+          };
+          "I/O" = lib.hm.dag.entryAfter ["Main"] {
+            fields = "PID STATE STARTTIME M_RESIDENT COMM EXE USER IO_PRIORITY IO_RATE IO_READ_RATE IO_WRITE_RATE";
+            sort_key = "IO_RATE";
+            tree_sort_key = "PID";
+            tree_view = false;
+            tree_view_always_by_pid = false;
+            sort_direction = -1;
+            tree_sort_direction = -1;
+            all_branches_collapsed = false;
+          };
+        };
+      '';
+      description = ''
+        List of screens.
+      '';
+    };
+
     package = lib.mkPackageOption pkgs "htop" { };
   };
 
@@ -194,7 +281,6 @@ in
     lib.htop = {
       inherit
         fields
-        defaultFields
         modes
         leftMeters
         rightMeters
@@ -210,23 +296,69 @@ in
 
     xdg.configFile."htop" =
       let
-        defaults = {
-          fields = if isDarwin then lib.remove fields.M_SHARE defaultFields else defaultFields;
-        };
-
-        before = lib.optionalAttrs (cfg.settings ? header_layout) {
-          inherit (cfg.settings) header_layout;
-        };
-
-        settings = defaults // (removeAttrs cfg.settings (lib.attrNames before));
 
         formatOptions = lib.mapAttrsToList formatOption;
 
+        hasScreens = cfg.screens != { };
+
+        settings =
+          let
+            # old (no screen) configuration support
+            defaultFields =
+              let
+                defaults = with fields; [
+                  PID
+                  USER
+                  PRIORITY
+                  NICE
+                  M_SIZE
+                  M_RESIDENT
+                  M_SHARE
+                  STATE
+                  PERCENT_CPU
+                  PERCENT_MEM
+                  TIME
+                  COMM
+                ];
+              in
+              if isDarwin then lib.remove fields.M_SHARE defaults else defaults;
+
+            oldDefaults = lib.optionalAttrs (!hasScreens) { fields = defaultFields; };
+
+            leading = lib.optionalAttrs (cfg.settings ? header_layout) {
+              inherit (cfg.settings) header_layout;
+            };
+
+            settings' = oldDefaults // (removeAttrs cfg.settings (lib.attrNames leading));
+          in
+          formatOptions leading ++ formatOptions settings';
+
+        screens =
+          let
+            formatOption' = k: formatOption ".${k}";
+            formatScreen =
+              { name, fields, ... }@screen:
+              let
+                options = removeAttrs screen [
+                  "fields"
+                  "name"
+                ];
+                newScreen = "screen:${formatOption name fields}";
+              in
+              [ newScreen ] ++ lib.mapAttrsToList formatOption' options;
+
+            screens' =
+              let
+                sorted = lib.hm.dag.topoSort cfg.screens;
+              in
+              sorted.result or (abort "Dependency cycle in htop screens: ${builtins.toJSON sorted}");
+
+          in
+          lib.concatMap (x: formatScreen x.data) screens';
+
       in
-      lib.mkIf (cfg.settings != { }) {
-        source = pkgs.writeTextDir "htoprc" (
-          lib.concatStringsSep "\n" (formatOptions before ++ formatOptions settings) + "\n"
-        );
+      lib.mkIf (cfg.settings != { } || hasScreens) {
+        source = pkgs.writeTextDir "htoprc" (lib.concatStringsSep "\n" (settings ++ screens) + "\n");
       };
   };
 }
