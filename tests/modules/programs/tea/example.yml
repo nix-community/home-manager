@@ -1,0 +1,23 @@
+%YAML 1.1
+---
+logins:
+- default: true
+  insecure: false
+  name: code.oliverdavies.uk
+  token: abc123
+  url: https://code.oliverdavies.uk
+  user: opdavies
+  version_check: true
+- default: false
+  insecure: true
+  name: example.com
+  ssh_agent: false
+  ssh_host: git.example.com
+  ssh_key: /home/opdavies/.ssh/id_rsa
+  token: ___HM_TEA_TOKEN_example_com___
+  url: https://example.com
+  version_check: false
+preferences:
+  editor: false
+  flag_defaults:
+    remote: ''
