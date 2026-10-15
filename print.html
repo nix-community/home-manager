@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-2515975e.js";
+            window.path_to_searchindex_js = "searchindex-f0a514b0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -578,9 +578,9 @@ standard installation or <code>~/.config/home-manager/flake.nix</code> in a Nix
 flake based installation.</p>
 <blockquote>
 <p><strong>Note</strong>
-The default configuration used to be placed in <code>~/.config/nixpkgs</code>¸ so
-you may see references to that elsewhere. The old directory still works
-but Home Manager will print a warning message when used.</p>
+The default configuration used to be placed in <code>~/.config/nixpkgs</code>, so
+you may see references to that elsewhere. Home Manager no longer looks
+for configurations there; move them to <code>~/.config/home-manager</code>.</p>
 </blockquote>
 <p>This configuration file can be <em>built</em> and <em>activated</em>.</p>
 <p>Building a configuration produces a directory in the Nix store that
@@ -9812,24 +9812,11 @@ absolute path</p>
 <p>Whether to enable an additional input method type.</p>
 <p><em>Type:</em>
 boolean</p>
-<p><em>Default:</em>
-<code>true</code> if the deprecated option <code>enabled</code> is set, false otherwise</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/default.nix">&lt;home-manager/modules/i18n/input-method/default.nix&gt;</a></li>
-</ul>
-<h2 id="opt-i18n.inputMethod.enabled"><a class="header" href="#opt-i18n.inputMethod.enabled">i18n.inputMethod.enabled</a></h2>
-<p>Deprecated - use <code>type</code> and <code>enable = true</code> instead</p>
-<p><em>Type:</em>
-null or one of “fcitx”, “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"fcitx5"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -10163,9 +10150,10 @@ uim mainly supports Chinese, Japanese and Korean.</p>
 </li>
 </ul>
 <p><em>Type:</em>
-null or one of “fcitx”, “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
-<p><em>Default:</em>
-The value of the deprecated option <code>enabled</code>, defaulting to null</p>
+null or one of “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"fcitx5"
 </code></pre>
@@ -32368,10 +32356,8 @@ package <em>(read only)</em></p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/home-manager.nix">&lt;home-manager/modules/programs/home-manager.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.home-manager.path"><a class="header" href="#opt-programs.home-manager.path">programs.home-manager.path</a></h2>
-<p>The default path to use for Home Manager. When
-<code>null</code>, then the <code>home-manager</code>
-channel, <code>$HOME/.config/nixpkgs/home-manager</code>, and
-<code>$HOME/.nixpkgs/home-manager</code> will be attempted.</p>
+<p>The default path to use for Home Manager. When <code>null</code>, the
+<code>home-manager</code> channel will be attempted.</p>
 <p><em>Type:</em>
 null or string</p>
 <p><em>Default:</em></p>
@@ -67775,9 +67761,9 @@ list of package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt/kvantum.nix">&lt;home-manager/modules/misc/qt/kvantum.nix&gt;</a></li>
 </ul>
 <h2 id="opt-qt.platformTheme"><a class="header" href="#opt-qt.platformTheme">qt.platformTheme</a></h2>
-<p>Deprecated. Use <code>qt.platformTheme.name</code> instead.</p>
+<p>Platform theme configuration for Qt applications.</p>
 <p><em>Type:</em>
-null or one of “gtk”, “gtk3”, “gnome”, “adwaita”, “lxqt”, “qtct”, “kde”, “kde6” or (submodule)</p>
+null or (submodule)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
@@ -67797,6 +67783,10 @@ null or package or list of package</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">[pkgs.adwaita-qt pkgs.adwaita-qt6]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt">&lt;home-manager/modules/misc/qt&gt;</a></li>
+</ul>
 <h2 id="opt-qt.platformTheme.name"><a class="header" href="#opt-qt.platformTheme.name">qt.platformTheme.name</a></h2>
 <p>Platform theme to use for Qt applications.</p>
 <p>Some examples are</p>
@@ -67820,12 +67810,6 @@ for file picker dialogs, font and theme configuration</p>
 <p><em>‌<code>adwaita</code>‌</em></p>
 <p>Use Adwaita theme with
 <a href="https://github.com/FedoraQt/QAdwaitaDecorations"><code>qadwaitadecorations</code></a></p>
-</li>
-<li>
-<p><em>‌<code>gnome</code> (deprecated)‌</em></p>
-<p>Use GNOME theme with
-<a href="https://github.com/FedoraQt/QGnomePlatform"><code>qgnomeplatform</code></a>.
-Is no longer maintained so prefer <code>adwaita</code>.</p>
 </li>
 <li>
 <p><em>‌<code>lxqt</code>‌</em></p>
@@ -67855,8 +67839,6 @@ null or string</p>
 </code></pre>
 <p><em>Related packages:</em></p>
 <ul>
-<li><a href="https://search.nixos.org/packages?show=qgnomeplatform&amp;sort=relevance&amp;query=qgnomeplatform"><code>pkgs.qgnomeplatform</code></a></li>
-<li><a href="https://search.nixos.org/packages?show=qgnomeplatform-qt6&amp;sort=relevance&amp;query=qgnomeplatform-qt6"><code>pkgs.qgnomeplatform-qt6</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qadwaitadecorations&amp;sort=relevance&amp;query=qadwaitadecorations"><code>pkgs.qadwaitadecorations</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qadwaitadecorations-qt6&amp;sort=relevance&amp;query=qadwaitadecorations-qt6"><code>pkgs.qadwaitadecorations-qt6</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=libsForQt5.plasma-integration&amp;sort=relevance&amp;query=libsForQt5.plasma-integration"><code>pkgs.libsForQt5.plasma-integration</code></a></li>
@@ -67869,6 +67851,10 @@ null or string</p>
 <li><a href="https://search.nixos.org/packages?show=lxqt.lxqt-qtplugin&amp;sort=relevance&amp;query=lxqt.lxqt-qtplugin"><code>pkgs.lxqt.lxqt-qtplugin</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qt6Packages.qt6ct&amp;sort=relevance&amp;query=qt6Packages.qt6ct"><code>pkgs.qt6Packages.qt6ct</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qt6Packages.qt6gtk2&amp;sort=relevance&amp;query=qt6Packages.qt6gtk2"><code>pkgs.qt6Packages.qt6gtk2</code></a></li>
+</ul>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt">&lt;home-manager/modules/misc/qt&gt;</a></li>
 </ul>
 <h2 id="opt-qt.qt5ctSettings"><a class="header" href="#opt-qt.qt5ctSettings">qt.qt5ctSettings</a></h2>
 <p>Qtct configuration. Writes settings to <code>qt5ct/qt5ct.conf</code>
@@ -73231,75 +73217,6 @@ string</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
 </ul>
-<h2 id="opt-services.hyprsunset.transitions"><a class="header" href="#opt-services.hyprsunset.transitions">services.hyprsunset.transitions</a></h2>
-<p>Deprecated - Use <code>services.hyprsunset.settings</code> instead to manage transitions.</p>
-<p>Set of transitions for different times of day (e.g., sunrise, sunset)</p>
-<p><em>Type:</em>
-attribute set of (submodule)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  sunrise = {
-    calendar = "*-*-* 06:00:00";
-    requests = [
-      [
-        "temperature"
-        "6500"
-      ]
-      [
-        "gamma 100"
-      ]
-    ];
-  };
-  sunset = {
-    calendar = "*-*-* 19:00:00";
-    requests = [
-      [
-        "temperature"
-        "3500"
-      ]
-    ];
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.hyprsunset.transitions._name_.calendar"><a class="header" href="#opt-services.hyprsunset.transitions._name_.calendar">services.hyprsunset.transitions.&lt;name&gt;.calendar</a></h2>
-<p>Deprecated - Use <code>services.hyprsunset.settings</code> instead to manage transitions.</p>
-<p>Systemd calendar expression for when to run this transition.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"*-*-* 06:00:00"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.hyprsunset.transitions._name_.requests"><a class="header" href="#opt-services.hyprsunset.transitions._name_.requests">services.hyprsunset.transitions.&lt;name&gt;.requests</a></h2>
-<p>Deprecated - Use <code>services.hyprsunset.settings</code> instead to manage transitions.</p>
-<p>List of requests to pass to <code>hyprctl hyprsunset</code> for this transition. Each inner list represents a separate command.</p>
-<p><em>Type:</em>
-list of list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  [
-    "temperature"
-    "3500"
-  ]
-]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
-</ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="imapnotify"><a href="#imapnotify" class="header">imapnotify</a></h1>
 <h2 id="opt-services.imapnotify.enable"><a class="header" href="#opt-services.imapnotify.enable">services.imapnotify.enable</a></h2>
@@ -73536,200 +73453,6 @@ boolean</p>
 package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.kanshi
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.extraConfig"><a class="header" href="#opt-services.kanshi.extraConfig">services.kanshi.extraConfig</a></h2>
-<p>Extra configuration lines to append to the kanshi
-configuration file.</p>
-<p><em>Type:</em>
-strings concatenated with “\n”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">""
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles"><a class="header" href="#opt-services.kanshi.profiles">services.kanshi.profiles</a></h2>
-<p>Attribute set of profiles.</p>
-<p><em>Type:</em>
-attribute set of (submodule)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  docked = {
-    outputs = [
-      {
-        criteria = "eDP-1";
-      }
-      {
-        criteria = "Some Company ASDF 4242";
-        transform = "90";
-      }
-    ];
-  };
-  undocked = {
-    outputs = [
-      {
-        criteria = "eDP-1";
-      }
-    ];
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.exec"><a class="header" href="#opt-services.kanshi.profiles._name_.exec">services.kanshi.profiles.&lt;name&gt;.exec</a></h2>
-<p>Commands executed after the profile is successfully applied.
-Note that if you provide multiple commands, they will be
-executed asynchronously with no guaranteed ordering.</p>
-<p><em>Type:</em>
-(list of string) or string convertible to it</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"[ \${pkg.sway}/bin/swaymsg workspace 1, move workspace to eDP-1 ]"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.name"><a class="header" href="#opt-services.kanshi.profiles._name_.name">services.kanshi.profiles.&lt;name&gt;.name</a></h2>
-<p>Profile name</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">""
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs">services.kanshi.profiles.&lt;name&gt;.outputs</a></h2>
-<p>Outputs configuration.</p>
-<p><em>Type:</em>
-list of (submodule)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.adaptiveSync"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.adaptiveSync">services.kanshi.profiles.&lt;name&gt;.outputs.*.adaptiveSync</a></h2>
-<p>Enables or disables adaptive synchronization
-(aka. Variable Refresh Rate).</p>
-<p><em>Type:</em>
-null or boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.alias"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.alias">services.kanshi.profiles.&lt;name&gt;.outputs.*.alias</a></h2>
-<p>Defines an alias for the output</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"laptopMonitor"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.criteria"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.criteria">services.kanshi.profiles.&lt;name&gt;.outputs.*.criteria</a></h2>
-<p>The criteria can either be an output name, an output description or “*”.
-The latter can be used to match any output.</p>
-<p>On
-<code>sway(1)</code>,
-output names and descriptions can be obtained via
-<code>swaymsg -t get_outputs</code>.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.mode"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.mode">services.kanshi.profiles.&lt;name&gt;.outputs.*.mode</a></h2>
-<p>&lt;width&gt;x&lt;height&gt;[@&lt;rate&gt;[Hz]]</p>
-<p>Configures the specified output to use the specified mode.
-Modes are a combination of width and height (in pixels) and
-a refresh rate (in Hz) that your display can be configured to use.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"1920x1080@60Hz"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.position"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.position">services.kanshi.profiles.&lt;name&gt;.outputs.*.position</a></h2>
-<p>&lt;x&gt;,&lt;y&gt;</p>
-<p>Places the output at the specified position in the global coordinates
-space.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"1600,0"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.scale"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.scale">services.kanshi.profiles.&lt;name&gt;.outputs.*.scale</a></h2>
-<p>Scales the output by the specified scale factor.</p>
-<p><em>Type:</em>
-null or floating point number</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">2.0
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.status"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.status">services.kanshi.profiles.&lt;name&gt;.outputs.*.status</a></h2>
-<p>Enables or disables the specified output.</p>
-<p><em>Type:</em>
-null or one of “enable”, “disable”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/kanshi.nix">&lt;home-manager/modules/services/kanshi.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.kanshi.profiles._name_.outputs._.transform"><a class="header" href="#opt-services.kanshi.profiles._name_.outputs._.transform">services.kanshi.profiles.&lt;name&gt;.outputs.*.transform</a></h2>
-<p>Sets the output transform.</p>
-<p><em>Type:</em>
-null or one of “normal”, “90”, “180”, “270”, “flipped”, “flipped-90”, “flipped-180”, “flipped-270”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -87152,7 +86875,7 @@ string</p>
 <h2 id="opt-targets.genericLinux.nixGL.prime.installScript"><a class="header" href="#opt-targets.genericLinux.nixGL.prime.installScript">targets.genericLinux.nixGL.prime.installScript</a></h2>
 <p>If this option is set, the wrapper script <code>prime-offload</code> is installed
 into the environment. It allows starting programs on the secondary GPU
-selected by the <code>nixGL.prime.card</code> option. This makes sense when the
+selected by the <code>targets.genericLinux.nixGL.prime.card</code> option. This makes sense when the
 program is not already using one of nixGL PRIME wrappers, or for
 programs not installed from Nixpkgs.</p>
 <p>This option can be set to either “mesa” or “nvidia”, making the script
@@ -89074,7 +88797,7 @@ strings concatenated with “\n”</p>
 <h2 id="opt-wayland.windowManager.sway.config.bars._.fonts"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts">wayland.windowManager.sway.config.bars.*.fonts</a></h2>
 <p>Font configuration for this bar.</p>
 <p><em>Type:</em>
-(list of string) or (submodule)</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -89106,6 +88829,10 @@ list of string</p>
   "Terminus"
 ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
 <h2 id="opt-wayland.windowManager.sway.config.bars._.fonts.size"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts.size">wayland.windowManager.sway.config.bars.*.fonts.size</a></h2>
 <p>The font size to use for window titles.</p>
 <p><em>Type:</em>
@@ -89116,6 +88843,10 @@ floating point number or string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">11.5
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
 <h2 id="opt-wayland.windowManager.sway.config.bars._.fonts.style"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.fonts.style">wayland.windowManager.sway.config.bars.*.fonts.style</a></h2>
 <p>The font style to use for window titles.</p>
 <p><em>Type:</em>
@@ -89126,6 +88857,10 @@ string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"Bold Semi-Condensed"
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
 <h2 id="opt-wayland.windowManager.sway.config.bars._.hiddenState"><a class="header" href="#opt-wayland.windowManager.sway.config.bars._.hiddenState">wayland.windowManager.sway.config.bars.*.hiddenState</a></h2>
 <p>The default bar mode when ‘bar.mode’ == ‘hide’.</p>
 <p><em>Type:</em>
@@ -89557,18 +89292,6 @@ one of “yes”, “no”, “always” or boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
 </ul>
-<h2 id="opt-wayland.windowManager.sway.config.focus.forceWrapping"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.forceWrapping">wayland.windowManager.sway.config.focus.forceWrapping</a></h2>
-<p>Whether to force focus wrapping in tabbed or stacked containers.</p>
-<p>This option is deprecated, use <code>focus.wrapping</code> instead.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
-</ul>
 <h2 id="opt-wayland.windowManager.sway.config.focus.mouseWarping"><a class="header" href="#opt-wayland.windowManager.sway.config.focus.mouseWarping">wayland.windowManager.sway.config.focus.mouseWarping</a></h2>
 <p>Whether mouse cursor should be warped to the center of the window when switching focus
 to a window on a different output.</p>
@@ -89602,7 +89325,7 @@ one of “smart”, “urgent”, “focus”, “none”</p>
 <p><em>Type:</em>
 one of “yes”, “no”, “force”, “workspace”</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">if focus.forceWrapping then "yes" else "no"
+<pre><code class="language-nix">"no"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -89611,7 +89334,7 @@ one of “yes”, “no”, “force”, “workspace”</p>
 <h2 id="opt-wayland.windowManager.sway.config.fonts"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts">wayland.windowManager.sway.config.fonts</a></h2>
 <p>Font configuration for window titles, nagbar…</p>
 <p><em>Type:</em>
-(list of string) or (submodule)</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -89643,6 +89366,10 @@ list of string</p>
   "Terminus"
 ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
 <h2 id="opt-wayland.windowManager.sway.config.fonts.size"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts.size">wayland.windowManager.sway.config.fonts.size</a></h2>
 <p>The font size to use for window titles.</p>
 <p><em>Type:</em>
@@ -89653,6 +89380,10 @@ floating point number or string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">11.5
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
 <h2 id="opt-wayland.windowManager.sway.config.fonts.style"><a class="header" href="#opt-wayland.windowManager.sway.config.fonts.style">wayland.windowManager.sway.config.fonts.style</a></h2>
 <p>The font style to use for window titles.</p>
 <p><em>Type:</em>
@@ -89663,6 +89394,10 @@ string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"Bold Semi-Condensed"
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/sway.nix">&lt;home-manager/modules/services/window-managers/i3-sway/sway.nix&gt;</a></li>
+</ul>
 <h2 id="opt-wayland.windowManager.sway.config.gaps"><a class="header" href="#opt-wayland.windowManager.sway.config.gaps">wayland.windowManager.sway.config.gaps</a></h2>
 <p>Gaps related settings.</p>
 <p><em>Type:</em>
@@ -93414,7 +93149,7 @@ strings concatenated with “\n”</p>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.fonts"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts">xsession.windowManager.i3.config.bars.*.fonts</a></h2>
 <p>Font configuration for this bar.</p>
 <p><em>Type:</em>
-(list of string) or (submodule)</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -93446,6 +93181,10 @@ list of string</p>
   "Terminus"
 ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.size"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.size">xsession.windowManager.i3.config.bars.*.fonts.size</a></h2>
 <p>The font size to use for window titles.</p>
 <p><em>Type:</em>
@@ -93456,6 +93195,10 @@ floating point number or string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">11.5
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.style"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.style">xsession.windowManager.i3.config.bars.*.fonts.style</a></h2>
 <p>The font style to use for window titles.</p>
 <p><em>Type:</em>
@@ -93466,6 +93209,10 @@ string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"Bold Semi-Condensed"
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.hiddenState"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.hiddenState">xsession.windowManager.i3.config.bars.*.hiddenState</a></h2>
 <p>The default bar mode when ‘bar.mode’ == ‘hide’.</p>
 <p><em>Type:</em>
@@ -93798,18 +93545,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
 </ul>
-<h2 id="opt-xsession.windowManager.i3.config.focus.forceWrapping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.forceWrapping">xsession.windowManager.i3.config.focus.forceWrapping</a></h2>
-<p>Whether to force focus wrapping in tabbed or stacked containers.</p>
-<p>This option is deprecated, use <code>focus.wrapping</code> instead.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
-</ul>
 <h2 id="opt-xsession.windowManager.i3.config.focus.mouseWarping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.mouseWarping">xsession.windowManager.i3.config.focus.mouseWarping</a></h2>
 <p>Whether mouse cursor should be warped to the center of the window when switching focus
 to a window on a different output.</p>
@@ -93843,7 +93578,7 @@ one of “smart”, “urgent”, “focus”, “none”</p>
 <p><em>Type:</em>
 one of “yes”, “no”, “force”, “workspace”</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">if focus.forceWrapping then "force" else "yes"
+<pre><code class="language-nix">"yes"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -93852,7 +93587,7 @@ one of “yes”, “no”, “force”, “workspace”</p>
 <h2 id="opt-xsession.windowManager.i3.config.fonts"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts">xsession.windowManager.i3.config.fonts</a></h2>
 <p>Font configuration for window titles, nagbar…</p>
 <p><em>Type:</em>
-(list of string) or (submodule)</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -93884,6 +93619,10 @@ list of string</p>
   "Terminus"
 ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.fonts.size"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.size">xsession.windowManager.i3.config.fonts.size</a></h2>
 <p>The font size to use for window titles.</p>
 <p><em>Type:</em>
@@ -93894,6 +93633,10 @@ floating point number or string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">11.5
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.fonts.style"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.style">xsession.windowManager.i3.config.fonts.style</a></h2>
 <p>The font style to use for window titles.</p>
 <p><em>Type:</em>
@@ -93904,6 +93647,10 @@ string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"Bold Semi-Condensed"
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.gaps"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps">xsession.windowManager.i3.config.gaps</a></h2>
 <p>Gaps related settings.</p>
 <p><em>Type:</em>
@@ -94192,19 +93939,6 @@ See <code>--no-startup-id</code> option description in the i3 user guide.</p>
 boolean</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
-</ul>
-<h2 id="opt-xsession.windowManager.i3.config.startup._.workspace"><a class="header" href="#opt-xsession.windowManager.i3.config.startup._.workspace">xsession.windowManager.i3.config.startup.*.workspace</a></h2>
-<p>Launch application on a particular workspace. DEPRECATED:
-Use <a href="#opt-xsession.windowManager.i3.config.assigns"></a>
-instead. See <a href="https://github.com/nix-community/home-manager/issues/265">https://github.com/nix-community/home-manager/issues/265</a>.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

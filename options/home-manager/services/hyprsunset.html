@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-2515975e.js";
+            window.path_to_searchindex_js = "../../../searchindex-f0a514b0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -276,75 +276,6 @@ string</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"hyprland-session.target"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.hyprsunset.transitions"><a class="header" href="#opt-services.hyprsunset.transitions">services.hyprsunset.transitions</a></h2>
-<p>Deprecated - Use <code>services.hyprsunset.settings</code> instead to manage transitions.</p>
-<p>Set of transitions for different times of day (e.g., sunrise, sunset)</p>
-<p><em>Type:</em>
-attribute set of (submodule)</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  sunrise = {
-    calendar = "*-*-* 06:00:00";
-    requests = [
-      [
-        "temperature"
-        "6500"
-      ]
-      [
-        "gamma 100"
-      ]
-    ];
-  };
-  sunset = {
-    calendar = "*-*-* 19:00:00";
-    requests = [
-      [
-        "temperature"
-        "3500"
-      ]
-    ];
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.hyprsunset.transitions._name_.calendar"><a class="header" href="#opt-services.hyprsunset.transitions._name_.calendar">services.hyprsunset.transitions.&lt;name&gt;.calendar</a></h2>
-<p>Deprecated - Use <code>services.hyprsunset.settings</code> instead to manage transitions.</p>
-<p>Systemd calendar expression for when to run this transition.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"*-*-* 06:00:00"
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/hyprsunset.nix">&lt;home-manager/modules/services/hyprsunset.nix&gt;</a></li>
-</ul>
-<h2 id="opt-services.hyprsunset.transitions._name_.requests"><a class="header" href="#opt-services.hyprsunset.transitions._name_.requests">services.hyprsunset.transitions.&lt;name&gt;.requests</a></h2>
-<p>Deprecated - Use <code>services.hyprsunset.settings</code> instead to manage transitions.</p>
-<p>List of requests to pass to <code>hyprctl hyprsunset</code> for this transition. Each inner list represents a separate command.</p>
-<p><em>Type:</em>
-list of list of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">[ ]
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">[
-  [
-    "temperature"
-    "3500"
-  ]
-]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

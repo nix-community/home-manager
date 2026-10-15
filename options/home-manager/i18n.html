@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-2515975e.js";
+            window.path_to_searchindex_js = "../../searchindex-f0a514b0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-c599a4a0.js"></script>
@@ -203,24 +203,11 @@ absolute path</p>
 <p>Whether to enable an additional input method type.</p>
 <p><em>Type:</em>
 boolean</p>
-<p><em>Default:</em>
-<code>true</code> if the deprecated option <code>enabled</code> is set, false otherwise</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/i18n/input-method/default.nix">&lt;home-manager/modules/i18n/input-method/default.nix&gt;</a></li>
-</ul>
-<h2 id="opt-i18n.inputMethod.enabled"><a class="header" href="#opt-i18n.inputMethod.enabled">i18n.inputMethod.enabled</a></h2>
-<p>Deprecated - use <code>type</code> and <code>enable = true</code> instead</p>
-<p><em>Type:</em>
-null or one of “fcitx”, “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"fcitx5"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -554,9 +541,10 @@ uim mainly supports Chinese, Japanese and Korean.</p>
 </li>
 </ul>
 <p><em>Type:</em>
-null or one of “fcitx”, “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
-<p><em>Default:</em>
-The value of the deprecated option <code>enabled</code>, defaulting to null</p>
+null or one of “fcitx5”, “nabi”, “uim”, “hime”, “kime”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"fcitx5"
 </code></pre>

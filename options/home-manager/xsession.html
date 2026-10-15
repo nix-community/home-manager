@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-2515975e.js";
+            window.path_to_searchindex_js = "../../searchindex-f0a514b0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-c599a4a0.js"></script>
@@ -1350,7 +1350,7 @@ strings concatenated with “\n”</p>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.fonts"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts">xsession.windowManager.i3.config.bars.*.fonts</a></h2>
 <p>Font configuration for this bar.</p>
 <p><em>Type:</em>
-(list of string) or (submodule)</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -1382,6 +1382,10 @@ list of string</p>
   "Terminus"
 ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.size"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.size">xsession.windowManager.i3.config.bars.*.fonts.size</a></h2>
 <p>The font size to use for window titles.</p>
 <p><em>Type:</em>
@@ -1392,6 +1396,10 @@ floating point number or string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">11.5
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.fonts.style"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.fonts.style">xsession.windowManager.i3.config.bars.*.fonts.style</a></h2>
 <p>The font style to use for window titles.</p>
 <p><em>Type:</em>
@@ -1402,6 +1410,10 @@ string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"Bold Semi-Condensed"
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.bars._.hiddenState"><a class="header" href="#opt-xsession.windowManager.i3.config.bars._.hiddenState">xsession.windowManager.i3.config.bars.*.hiddenState</a></h2>
 <p>The default bar mode when ‘bar.mode’ == ‘hide’.</p>
 <p><em>Type:</em>
@@ -1734,18 +1746,6 @@ boolean</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
 </ul>
-<h2 id="opt-xsession.windowManager.i3.config.focus.forceWrapping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.forceWrapping">xsession.windowManager.i3.config.focus.forceWrapping</a></h2>
-<p>Whether to force focus wrapping in tabbed or stacked containers.</p>
-<p>This option is deprecated, use <code>focus.wrapping</code> instead.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
-</ul>
 <h2 id="opt-xsession.windowManager.i3.config.focus.mouseWarping"><a class="header" href="#opt-xsession.windowManager.i3.config.focus.mouseWarping">xsession.windowManager.i3.config.focus.mouseWarping</a></h2>
 <p>Whether mouse cursor should be warped to the center of the window when switching focus
 to a window on a different output.</p>
@@ -1779,7 +1779,7 @@ one of “smart”, “urgent”, “focus”, “none”</p>
 <p><em>Type:</em>
 one of “yes”, “no”, “force”, “workspace”</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">if focus.forceWrapping then "force" else "yes"
+<pre><code class="language-nix">"yes"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -1788,7 +1788,7 @@ one of “yes”, “no”, “force”, “workspace”</p>
 <h2 id="opt-xsession.windowManager.i3.config.fonts"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts">xsession.windowManager.i3.config.fonts</a></h2>
 <p>Font configuration for window titles, nagbar…</p>
 <p><em>Type:</em>
-(list of string) or (submodule)</p>
+submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
 </code></pre>
@@ -1820,6 +1820,10 @@ list of string</p>
   "Terminus"
 ]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.fonts.size"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.size">xsession.windowManager.i3.config.fonts.size</a></h2>
 <p>The font size to use for window titles.</p>
 <p><em>Type:</em>
@@ -1830,6 +1834,10 @@ floating point number or string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">11.5
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.fonts.style"><a class="header" href="#opt-xsession.windowManager.i3.config.fonts.style">xsession.windowManager.i3.config.fonts.style</a></h2>
 <p>The font style to use for window titles.</p>
 <p><em>Type:</em>
@@ -1840,6 +1848,10 @@ string</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"Bold Semi-Condensed"
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
+</ul>
 <h2 id="opt-xsession.windowManager.i3.config.gaps"><a class="header" href="#opt-xsession.windowManager.i3.config.gaps">xsession.windowManager.i3.config.gaps</a></h2>
 <p>Gaps related settings.</p>
 <p><em>Type:</em>
@@ -2128,19 +2140,6 @@ See <code>--no-startup-id</code> option description in the i3 user guide.</p>
 boolean</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/i3-sway/i3.nix">&lt;home-manager/modules/services/window-managers/i3-sway/i3.nix&gt;</a></li>
-</ul>
-<h2 id="opt-xsession.windowManager.i3.config.startup._.workspace"><a class="header" href="#opt-xsession.windowManager.i3.config.startup._.workspace">xsession.windowManager.i3.config.startup.*.workspace</a></h2>
-<p>Launch application on a particular workspace. DEPRECATED:
-Use <a href="#opt-xsession.windowManager.i3.config.assigns"></a>
-instead. See <a href="https://github.com/nix-community/home-manager/issues/265">https://github.com/nix-community/home-manager/issues/265</a>.</p>
-<p><em>Type:</em>
-null or string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

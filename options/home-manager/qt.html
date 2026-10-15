@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-2515975e.js";
+            window.path_to_searchindex_js = "../../searchindex-f0a514b0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-c599a4a0.js"></script>
@@ -340,9 +340,9 @@ list of package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt/kvantum.nix">&lt;home-manager/modules/misc/qt/kvantum.nix&gt;</a></li>
 </ul>
 <h2 id="opt-qt.platformTheme"><a class="header" href="#opt-qt.platformTheme">qt.platformTheme</a></h2>
-<p>Deprecated. Use <code>qt.platformTheme.name</code> instead.</p>
+<p>Platform theme configuration for Qt applications.</p>
 <p><em>Type:</em>
-null or one of “gtk”, “gtk3”, “gnome”, “adwaita”, “lxqt”, “qtct”, “kde”, “kde6” or (submodule)</p>
+null or (submodule)</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">null
 </code></pre>
@@ -362,6 +362,10 @@ null or package or list of package</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">[pkgs.adwaita-qt pkgs.adwaita-qt6]
 </code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt">&lt;home-manager/modules/misc/qt&gt;</a></li>
+</ul>
 <h2 id="opt-qt.platformTheme.name"><a class="header" href="#opt-qt.platformTheme.name">qt.platformTheme.name</a></h2>
 <p>Platform theme to use for Qt applications.</p>
 <p>Some examples are</p>
@@ -385,12 +389,6 @@ for file picker dialogs, font and theme configuration</p>
 <p><em>‌<code>adwaita</code>‌</em></p>
 <p>Use Adwaita theme with
 <a href="https://github.com/FedoraQt/QAdwaitaDecorations"><code>qadwaitadecorations</code></a></p>
-</li>
-<li>
-<p><em>‌<code>gnome</code> (deprecated)‌</em></p>
-<p>Use GNOME theme with
-<a href="https://github.com/FedoraQt/QGnomePlatform"><code>qgnomeplatform</code></a>.
-Is no longer maintained so prefer <code>adwaita</code>.</p>
 </li>
 <li>
 <p><em>‌<code>lxqt</code>‌</em></p>
@@ -420,8 +418,6 @@ null or string</p>
 </code></pre>
 <p><em>Related packages:</em></p>
 <ul>
-<li><a href="https://search.nixos.org/packages?show=qgnomeplatform&amp;sort=relevance&amp;query=qgnomeplatform"><code>pkgs.qgnomeplatform</code></a></li>
-<li><a href="https://search.nixos.org/packages?show=qgnomeplatform-qt6&amp;sort=relevance&amp;query=qgnomeplatform-qt6"><code>pkgs.qgnomeplatform-qt6</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qadwaitadecorations&amp;sort=relevance&amp;query=qadwaitadecorations"><code>pkgs.qadwaitadecorations</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qadwaitadecorations-qt6&amp;sort=relevance&amp;query=qadwaitadecorations-qt6"><code>pkgs.qadwaitadecorations-qt6</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=libsForQt5.plasma-integration&amp;sort=relevance&amp;query=libsForQt5.plasma-integration"><code>pkgs.libsForQt5.plasma-integration</code></a></li>
@@ -434,6 +430,10 @@ null or string</p>
 <li><a href="https://search.nixos.org/packages?show=lxqt.lxqt-qtplugin&amp;sort=relevance&amp;query=lxqt.lxqt-qtplugin"><code>pkgs.lxqt.lxqt-qtplugin</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qt6Packages.qt6ct&amp;sort=relevance&amp;query=qt6Packages.qt6ct"><code>pkgs.qt6Packages.qt6ct</code></a></li>
 <li><a href="https://search.nixos.org/packages?show=qt6Packages.qt6gtk2&amp;sort=relevance&amp;query=qt6Packages.qt6gtk2"><code>pkgs.qt6Packages.qt6gtk2</code></a></li>
+</ul>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/misc/qt">&lt;home-manager/modules/misc/qt&gt;</a></li>
 </ul>
 <h2 id="opt-qt.qt5ctSettings"><a class="header" href="#opt-qt.qt5ctSettings">qt.qt5ctSettings</a></h2>
 <p>Qtct configuration. Writes settings to <code>qt5ct/qt5ct.conf</code>
