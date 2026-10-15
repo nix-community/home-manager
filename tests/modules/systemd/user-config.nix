@@ -18,6 +18,7 @@
       DefaultCPUAccounting=true
       DefaultEnvironment=PATH='/bin:/sbin:/some where' TEST=abc
       LogLevel=debug
+      ManagerEnvironment=SYSTEMD_ENVIRONMENT_GENERATOR_PATH=%h/.config/systemd/user-environment-generators:/run/systemd/user-environment-generators:/etc/systemd/user-environment-generators:/usr/local/lib/systemd/user-environment-generators:/usr/lib/systemd/user-environment-generators
     ''}
   '';
 }
