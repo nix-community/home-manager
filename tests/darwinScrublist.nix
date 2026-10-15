@@ -156,6 +156,7 @@ let
     "oh-my-posh"
     "ollama"
     "onlyoffice-desktopeditors"
+    "opam"
     "opencode"
     "openssh"
     "openstackclient"
