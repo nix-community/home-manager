@@ -86,6 +86,27 @@ in
               '';
             };
 
+            incAppendHistory = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                New history lines are appended to the history list immediately
+                when the command is run instead of waiting until the shell
+                closes.
+              '';
+            };
+
+            incAppendHistoryTime = mkOption {
+              type = types.bool;
+              default = false;
+              description = ''
+                New history lines are appended to the history list after the
+                command is finished instead of immediately when the command is
+                run or waiting until the shell closes. This allowes correctly
+                recording the time taken by the command.
+              '';
+            };
+
             saveNoDups = mkOption {
               type = types.bool;
               default = false;
@@ -193,6 +214,8 @@ in
       let
         historyOptions = {
           APPEND_HISTORY = cfg.history.append;
+          INC_APPEND_HISTORY = cfg.history.incAppendHistory;
+          INC_APPEND_HISTORY_TIME = cfg.history.incAppendHistoryTime;
           HIST_IGNORE_DUPS = cfg.history.ignoreDups;
           HIST_IGNORE_ALL_DUPS = cfg.history.ignoreAllDups;
           HIST_SAVE_NO_DUPS = cfg.history.saveNoDups;
