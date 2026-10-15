@@ -4,4 +4,5 @@
   t3code-immutable-ownership = ./immutable-ownership.nix;
   t3code-immutable-disabled = ./immutable-disabled.nix;
   t3code-settings-empty = ./settings-empty.nix;
+  t3code-server = ./server.nix;
 }
