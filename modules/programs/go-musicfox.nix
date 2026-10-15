@@ -38,6 +38,11 @@ in
       description = ''
         go-musicfox configuration.
         For available settings see <https://github.com/go-musicfox/go-musicfox/blob/master/utils/filex/embed/config.toml>.
+
+        go-musicfox rewrites this file when the theme is switched from the
+        interface, which replaces the Home Manager link and can make the next
+        activation fail with a file collision. Set `theme.activeTheme` here
+        to choose a theme instead.
       '';
     };
   };
