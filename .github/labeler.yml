@@ -7,16 +7,50 @@
           - modules/programs/aiac.nix
           - modules/programs/aichat.nix
           - modules/programs/aider-chat.nix
-          - modules/programs/claude-code/**/*
-          - modules/programs/codex.nix
-          - modules/programs/fabric-ai.nix
           - modules/programs/antigravity-cli.nix
+          - modules/programs/antigravity.nix
+          - modules/programs/claude-code/**/*
+          - modules/programs/codex/**/*
+          - modules/programs/crush.nix
+          - modules/programs/cursor.nix
+          - modules/programs/fabric-ai.nix
+          - modules/programs/herdr.nix
+          - modules/programs/kiro-cli.nix
+          - modules/programs/kiro.nix
           - modules/programs/mcp.nix
           - modules/programs/mistral-vibe.nix
           - modules/programs/mods.nix
           - modules/programs/opencode.nix
+          - modules/programs/pi-coding-agent.nix
+          - modules/programs/t3code.nix
+          - modules/programs/windsurf.nix
+          - modules/services/exo.nix
           - modules/services/local-ai.nix
           - modules/services/ollama.nix
+          - tests/modules/programs/aiac/**/*
+          - tests/modules/programs/aichat/**/*
+          - tests/modules/programs/aider-chat/**/*
+          - tests/modules/programs/antigravity-cli-legacy/**/*
+          - tests/modules/programs/antigravity-cli/**/*
+          - tests/modules/programs/antigravity/**/*
+          - tests/modules/programs/claude-code/**/*
+          - tests/modules/programs/codex/**/*
+          - tests/modules/programs/crush/**/*
+          - tests/modules/programs/cursor/**/*
+          - tests/modules/programs/fabric-ai/**/*
+          - tests/modules/programs/herdr/**/*
+          - tests/modules/programs/kiro-cli/**/*
+          - tests/modules/programs/kiro/**/*
+          - tests/modules/programs/mcp/**/*
+          - tests/modules/programs/mistral-vibe/**/*
+          - tests/modules/programs/mods/**/*
+          - tests/modules/programs/opencode/**/*
+          - tests/modules/programs/pi-coding-agent/**/*
+          - tests/modules/programs/t3code/**/*
+          - tests/modules/programs/windsurf/**/*
+          - tests/modules/services/exo/**/*
+          - tests/modules/services/local-ai/**/*
+          - tests/modules/services/ollama/**/*
 "audio":
   - changed-files:
       - any-glob-to-any-file:
@@ -33,6 +67,7 @@
           - modules/programs/rmpc.nix
           - modules/programs/spotify-player.nix
           - modules/programs/timidity.nix
+          - modules/programs/wiremix.nix
           - modules/services/amberol.nix
           - modules/services/easyeffects.nix
           - modules/services/fluidsynth.nix
@@ -47,21 +82,57 @@
           - modules/services/mpdscribble.nix
           - modules/services/mpris-proxy.nix
           - modules/services/pasystray.nix
+          - modules/services/pipewire.nix
           - modules/services/playerctld.nix
           - modules/services/pulseeffects.nix
           - modules/services/rescrobbled.nix
           - modules/services/spotifyd.nix
+          - tests/modules/programs/beets/**/*
+          - tests/modules/programs/cava/**/*
+          - tests/modules/programs/cavalier/**/*
+          - tests/modules/programs/cmus/**/*
+          - tests/modules/programs/ncmpcpp-linux/**/*
+          - tests/modules/programs/ncmpcpp/**/*
+          - tests/modules/programs/pianobar/**/*
+          - tests/modules/programs/pyradio/**/*
+          - tests/modules/programs/radio-active/**/*
+          - tests/modules/programs/radio-cli/**/*
+          - tests/modules/programs/rmpc/**/*
+          - tests/modules/programs/spotify-player/**/*
+          - tests/modules/programs/wiremix/**/*
+          - tests/modules/services/easyeffects/**/*
+          - tests/modules/services/fluidsynth/**/*
+          - tests/modules/services/mopidy/**/*
+          - tests/modules/services/mpd-mpris/**/*
           - tests/modules/services/mpd/**/*
+          - tests/modules/services/mpdris2-rs/**/*
+          - tests/modules/services/mpdris2/**/*
+          - tests/modules/services/mpdscribble/**/*
+          - tests/modules/services/pasystray/**/*
+          - tests/modules/services/pipewire/**/*
+          - tests/modules/services/playerctld/**/*
+          - tests/modules/services/rescrobbled/**/*
 "automation":
   - changed-files:
       - any-glob-to-any-file:
+          - modules/programs/wlr-which-key.nix
           - modules/services/autotiling.nix
           - modules/services/caffeine.nix
           - modules/services/darkman.nix
           - modules/services/devilspie2.nix
           - modules/services/espanso.nix
+          - modules/services/hyprscratch.nix
           - modules/services/keynav.nix
           - modules/services/skhd.nix
+          - tests/modules/programs/wlr-which-key/**/*
+          - tests/modules/services/autotiling/**/*
+          - tests/modules/services/caffeine/**/*
+          - tests/modules/services/darkman/**/*
+          - tests/modules/services/devilspie2/**/*
+          - tests/modules/services/espanso/**/*
+          - tests/modules/services/hyprscratch/**/*
+          - tests/modules/services/keynav/**/*
+          - tests/modules/services/skhd/**/*
 "backup":
   - changed-files:
       - any-glob-to-any-file:
@@ -70,14 +141,17 @@
           - modules/services/borgmatic.nix
           - modules/services/restic.nix
           - tests/modules/programs/borgmatic/**/*
+          - tests/modules/programs/rclone/**/*
           - tests/modules/services/borgmatic/**/*
+          - tests/modules/services/restic/**/*
 "bars":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/ashell.nix
           - modules/programs/eww.nix
-          - modules/programs/hyprpanel/default.nix
+          - modules/programs/hyprpanel/**/*
           - modules/programs/i3bar-river.nix
+          - modules/programs/noctalia/**/*
           - modules/programs/sketchybar.nix
           - modules/programs/tray-tui.nix
           - modules/programs/waybar.nix
@@ -85,10 +159,19 @@
           - modules/programs/yambar.nix
           - modules/services/polybar.nix
           - modules/services/taffybar.nix
+          - modules/services/wayle.nix
           - tests/modules/programs/ashell/**/*
+          - tests/modules/programs/eww/**/*
+          - tests/modules/programs/hyprpanel/**/*
           - tests/modules/programs/i3bar-river/**/*
+          - tests/modules/programs/noctalia/**/*
+          - tests/modules/programs/sketchybar/**/*
+          - tests/modules/programs/tray-tui/**/*
           - tests/modules/programs/waybar/**/*
+          - tests/modules/programs/xmobar/**/*
+          - tests/modules/programs/yambar/**/*
           - tests/modules/services/polybar/**/*
+          - tests/modules/services/wayle/**/*
 "browsers":
   - changed-files:
       - any-glob-to-any-file:
@@ -103,9 +186,13 @@
           - modules/programs/nyxt.nix
           - modules/programs/qutebrowser.nix
           - modules/programs/w3m.nix
+          - tests/modules/programs/amfora/**/*
           - tests/modules/programs/chromium/**/*
           - tests/modules/programs/firefox/**/*
+          - tests/modules/programs/firefoxpwa/**/*
+          - tests/modules/programs/nyxt/**/*
           - tests/modules/programs/qutebrowser/**/*
+          - tests/modules/programs/w3m/**/*
 "calendar":
   - changed-files:
       - any-glob-to-any-file:
@@ -117,6 +204,10 @@
           - modules/programs/vdirsyncer/**/*
           - modules/services/pimsync.nix
           - tests/modules/programs/khal/**/*
+          - tests/modules/programs/pimsync/**/*
+          - tests/modules/programs/qcal/**/*
+          - tests/modules/programs/vdirsyncer/**/*
+          - tests/modules/services/vdirsyncer/**/*
 "clipboard":
   - changed-files:
       - any-glob-to-any-file:
@@ -129,8 +220,13 @@
           - modules/services/parcellite.nix
           - modules/services/pbgopy.nix
           - modules/services/wl-clip-persist.nix
+          - tests/modules/services/clipcat/**/*
+          - tests/modules/services/cliphist/**/*
           - tests/modules/services/clipman/**/*
+          - tests/modules/services/clipse/**/*
           - tests/modules/services/copyq/**/*
+          - tests/modules/services/parcellite/**/*
+          - tests/modules/services/pbgopy/**/*
           - tests/modules/services/wl-clip-persist/**/*
 "cli-tools":
   - changed-files:
@@ -172,9 +268,10 @@
           - modules/programs/less.nix
           - modules/programs/lesspipe.nix
           - modules/programs/lsd.nix
-          - modules/programs/man.nix
+          - modules/programs/man/**/*
           - modules/programs/mc.nix
           - modules/programs/mcfly.nix
+          - modules/programs/moor.nix
           - modules/programs/navi.nix
           - modules/programs/nix-your-shell.nix
           - modules/programs/nom.nix
@@ -199,6 +296,7 @@
           - modules/programs/television.nix
           - modules/programs/tmate.nix
           - modules/programs/tmux.nix
+          - modules/programs/tmuxinator.nix
           - modules/programs/topgrade.nix
           - modules/programs/translate-shell.nix
           - modules/programs/ty.nix
@@ -210,8 +308,72 @@
           - modules/programs/zk.nix
           - modules/programs/zoxide.nix
           - modules/programs/zplug.nix
+          - tests/modules/programs/aliae/**/*
+          - tests/modules/programs/amoco/**/*
+          - tests/modules/programs/antidote/**/*
+          - tests/modules/programs/atool/**/*
+          - tests/modules/programs/atuin/**/*
+          - tests/modules/programs/autojump/**/*
+          - tests/modules/programs/bat/**/*
+          - tests/modules/programs/bottom/**/*
+          - tests/modules/programs/boxxy/**/*
+          - tests/modules/programs/broot/**/*
+          - tests/modules/programs/btop/**/*
+          - tests/modules/programs/carapace/**/*
+          - tests/modules/programs/clock-rs/**/*
+          - tests/modules/programs/delta/**/*
+          - tests/modules/programs/diff-highlight/**/*
+          - tests/modules/programs/diff-so-fancy/**/*
+          - tests/modules/programs/difftastic/**/*
+          - tests/modules/programs/dircolors/**/*
+          - tests/modules/programs/direnv/**/*
+          - tests/modules/programs/eza/**/*
+          - tests/modules/programs/fastfetch/**/*
           - tests/modules/programs/fzf/**/*
+          - tests/modules/programs/goto/**/*
+          - tests/modules/programs/grep/**/*
+          - tests/modules/programs/htop/**/*
+          - tests/modules/programs/hwatch/**/*
+          - tests/modules/programs/hyfetch/**/*
+          - tests/modules/programs/infat/**/*
+          - tests/modules/programs/inori/**/*
+          - tests/modules/programs/jqp/**/*
+          - tests/modules/programs/less/**/*
+          - tests/modules/programs/lesspipe/**/*
+          - tests/modules/programs/lsd/**/*
+          - tests/modules/programs/man/**/*
+          - tests/modules/programs/mc/**/*
+          - tests/modules/programs/moor/**/*
+          - tests/modules/programs/nix-your-shell/**/*
+          - tests/modules/programs/nom/**/*
+          - tests/modules/programs/parallel/**/*
+          - tests/modules/programs/patdiff/**/*
+          - tests/modules/programs/pay-respects/**/*
+          - tests/modules/programs/pet/**/*
+          - tests/modules/programs/pistol/**/*
+          - tests/modules/programs/pls/**/*
+          - tests/modules/programs/readline/**/*
+          - tests/modules/programs/riff/**/*
+          - tests/modules/programs/ripgrep-all/**/*
+          - tests/modules/programs/ripgrep/**/*
+          - tests/modules/programs/scmpuff/**/*
+          - tests/modules/programs/screen/**/*
+          - tests/modules/programs/sesh/**/*
+          - tests/modules/programs/sherlock/**/*
+          - tests/modules/programs/superfile/**/*
+          - tests/modules/programs/tealdeer/**/*
+          - tests/modules/programs/television/**/*
+          - tests/modules/programs/tmate/**/*
           - tests/modules/programs/tmux/**/*
+          - tests/modules/programs/topgrade/**/*
+          - tests/modules/programs/translate-shell/**/*
+          - tests/modules/programs/ty/**/*
+          - tests/modules/programs/uv/**/*
+          - tests/modules/programs/vivid/**/*
+          - tests/modules/programs/watson/**/*
+          - tests/modules/programs/zellij/**/*
+          - tests/modules/programs/zk/**/*
+          - tests/modules/programs/zplug/**/*
 "contacts":
   - changed-files:
       - any-glob-to-any-file:
@@ -228,12 +390,19 @@
           - modules/services/colima.nix
           - modules/services/podman/**/*
           - modules/services/podman/linux/**/*
+          - tests/modules/programs/distrobox/**/*
+          - tests/modules/programs/docker-cli/**/*
+          - tests/modules/services/colima/**/*
+          - tests/modules/services/podman/**/*
 "desktop-ui":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/desktoppr.nix
           - modules/programs/gnome-shell.nix
+          - modules/programs/hyprland-qt-support.nix
           - modules/programs/hyprshot.nix
+          - modules/programs/hyprtoolkit.nix
+          - modules/programs/noctalia/**/*
           - modules/programs/quickshell.nix
           - modules/programs/satty.nix
           - modules/programs/swappy.nix
@@ -244,19 +413,44 @@
           - modules/services/linux-wallpaperengine.nix
           - modules/services/picom.nix
           - modules/services/random-background.nix
+          - modules/services/syshud.nix
           - modules/services/volnoti.nix
+          - modules/services/wayle.nix
+          - modules/services/wbg.nix
           - modules/services/wob.nix
           - modules/services/wpaperd.nix
+          - tests/modules/programs/gnome-shell/**/*
+          - tests/modules/programs/hyprland-qt-support/**/*
+          - tests/modules/programs/hyprshot/**/*
+          - tests/modules/programs/hyprtoolkit/**/*
+          - tests/modules/programs/noctalia/**/*
+          - tests/modules/programs/satty/**/*
+          - tests/modules/programs/swappy/**/*
+          - tests/modules/services/avizo/**/*
+          - tests/modules/services/blanket/**/*
+          - tests/modules/services/flameshot/**/*
+          - tests/modules/services/gromit-mpx/**/*
+          - tests/modules/services/linux-wallpaperengine/**/*
+          - tests/modules/services/picom/**/*
+          - tests/modules/services/syshud/**/*
+          - tests/modules/services/volnoti/**/*
+          - tests/modules/services/wayle/**/*
+          - tests/modules/services/wbg/**/*
+          - tests/modules/services/wob/**/*
+          - tests/modules/services/wpaperd/**/*
 "desktop-utilities":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/autorandr.nix
           - modules/programs/bluetuith.nix
+          - modules/programs/impala.nix
           - modules/services/autorandr.nix
           - modules/services/blueman-applet.nix
+          - modules/services/elephant.nix
           - modules/services/gnome-keyring.nix
           - modules/services/lxqt-policykit-agent.nix
           - modules/services/network-manager-applet.nix
+          - modules/services/nvibrant.nix
           - modules/services/polkit-gnome.nix
           - modules/services/redshift-gammastep/**/*
           - modules/services/sctd.nix
@@ -268,17 +462,35 @@
           - modules/services/udiskie.nix
           - modules/services/unclutter.nix
           - modules/services/xembed-sni-proxy.nix
+          - tests/modules/programs/autorandr/**/*
+          - tests/modules/programs/bluetuith/**/*
+          - tests/modules/programs/impala/**/*
+          - tests/modules/services/elephant/**/*
+          - tests/modules/services/gnome-keyring/**/*
+          - tests/modules/services/lxqt-policykit-agent/**/*
+          - tests/modules/services/nvibrant/**/*
+          - tests/modules/services/polkit-gnome/**/*
+          - tests/modules/services/redshift-gammastep/**/*
+          - tests/modules/services/snixembed/**/*
+          - tests/modules/services/tailscale-systray/**/*
+          - tests/modules/services/trayscale/**/*
+          - tests/modules/services/udiskie/**/*
 "dev-tools":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/amber.nix
+          - modules/programs/attic-client.nix
           - modules/programs/awscli.nix
           - modules/programs/bacon.nix
           - modules/programs/bun.nix
           - modules/programs/cargo.nix
           - modules/programs/darcs.nix
+          - modules/programs/dbeaver.nix
+          - modules/programs/devenv.nix
+          - modules/programs/dprint.nix
           - modules/programs/earthly.nix
           - modules/programs/eclipse.nix
+          - modules/programs/flake-edit.nix
           - modules/programs/gcc.nix
           - modules/programs/go.nix
           - modules/programs/gradle.nix
@@ -309,7 +521,9 @@
           - modules/programs/openstackclient.nix
           - modules/programs/pgcli.nix
           - modules/programs/piston-cli.nix
+          - modules/programs/pnpm.nix
           - modules/programs/poetry.nix
+          - modules/programs/posting.nix
           - modules/programs/pyenv.nix
           - modules/programs/pylint.nix
           - modules/programs/pywal.nix
@@ -321,41 +535,118 @@
           - modules/programs/sftpman.nix
           - modules/programs/smug.nix
           - modules/programs/sqls.nix
+          - modules/programs/stylua.nix
           - modules/programs/tex-fmt.nix
           - modules/programs/texlive.nix
           - modules/programs/tirith.nix
           - modules/programs/vim-vint.nix
           - modules/programs/visidata.nix
-          - modules/programs/yarn/default.nix
+          - modules/programs/yarn/**/*
           - modules/services/lorri.nix
+          - tests/modules/programs/amber/**/*
+          - tests/modules/programs/attic-client/**/*
+          - tests/modules/programs/awscli/**/*
+          - tests/modules/programs/bacon/**/*
+          - tests/modules/programs/cargo/**/*
+          - tests/modules/programs/darcs/**/*
+          - tests/modules/programs/dbeaver/**/*
+          - tests/modules/programs/devenv/**/*
+          - tests/modules/programs/dprint/**/*
+          - tests/modules/programs/earthly/**/*
+          - tests/modules/programs/flake-edit/**/*
+          - tests/modules/programs/gcc/**/*
           - tests/modules/programs/go/**/*
-          - tests/modules/programs/java/**/*
+          - tests/modules/programs/gradle/**/*
+          - tests/modules/programs/granted/**/*
+          - tests/modules/programs/grype/**/*
+          - tests/modules/programs/k9s/**/*
+          - tests/modules/programs/kraftkit/**/*
+          - tests/modules/programs/kubecolor/**/*
+          - tests/modules/programs/kubeswitch/**/*
+          - tests/modules/programs/lazydocker/**/*
+          - tests/modules/programs/lazysql/**/*
+          - tests/modules/programs/mergiraf/**/*
+          - tests/modules/programs/mise/**/*
+          - tests/modules/programs/mypy/**/*
+          - tests/modules/programs/nh/**/*
+          - tests/modules/programs/nix-index/**/*
+          - tests/modules/programs/nix-init/**/*
+          - tests/modules/programs/nix-search-tv/**/*
+          - tests/modules/programs/npm/**/*
+          - tests/modules/programs/numbat/**/*
+          - tests/modules/programs/nvchecker/**/*
+          - tests/modules/programs/openstackclient/**/*
+          - tests/modules/programs/pgcli/**/*
+          - tests/modules/programs/pnpm/**/*
+          - tests/modules/programs/poetry/**/*
+          - tests/modules/programs/posting/**/*
+          - tests/modules/programs/pyenv/**/*
+          - tests/modules/programs/rizin/**/*
+          - tests/modules/programs/ruff/**/*
+          - tests/modules/programs/sagemath/**/*
+          - tests/modules/programs/sbt/**/*
+          - tests/modules/programs/sftpman/**/*
+          - tests/modules/programs/smug/**/*
+          - tests/modules/programs/stylua/**/*
+          - tests/modules/programs/tex-fmt/**/*
+          - tests/modules/programs/texlive/**/*
+          - tests/modules/programs/tirith/**/*
+          - tests/modules/programs/vim-vint/**/*
+          - tests/modules/programs/visidata/**/*
+          - tests/modules/programs/yarn/**/*
+          - tests/modules/services/lorri/**/*
 "editors":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/amp.nix
+          - modules/programs/antigravity.nix
           - modules/programs/anvil-editor.nix
           - modules/programs/cudatext.nix
+          - modules/programs/cursor.nix
           - modules/programs/emacs.nix
           - modules/programs/formiko.nix
           - modules/programs/fresh-editor.nix
           - modules/programs/gram.nix
           - modules/programs/helix.nix
           - modules/programs/kakoune.nix
+          - modules/programs/kiro.nix
           - modules/programs/lapce.nix
           - modules/programs/micro.nix
           - modules/programs/ne.nix
           - modules/programs/neovide.nix
-          - modules/programs/neovim.nix
+          - modules/programs/neovim/**/*
+          - modules/programs/positron.nix
           - modules/programs/retext.nix
           - modules/programs/vim.nix
           - modules/programs/vscode/**/*
+          - modules/programs/vscodium.nix
+          - modules/programs/windsurf.nix
           - modules/programs/zed-editor.nix
           - modules/services/emacs.nix
+          - tests/modules/programs/amp/**/*
+          - tests/modules/programs/antigravity/**/*
+          - tests/modules/programs/anvil-editor/**/*
+          - tests/modules/programs/cudatext/**/*
+          - tests/modules/programs/cursor/**/*
           - tests/modules/programs/emacs/**/*
+          - tests/modules/programs/formiko/**/*
+          - tests/modules/programs/fresh-editor/**/*
+          - tests/modules/programs/gram/**/*
           - tests/modules/programs/helix/**/*
+          - tests/modules/programs/kakoune/**/*
+          - tests/modules/programs/kiro/**/*
+          - tests/modules/programs/lapce/**/*
+          - tests/modules/programs/micro/**/*
+          - tests/modules/programs/ne/**/*
+          - tests/modules/programs/neovide/**/*
           - tests/modules/programs/neovim/**/*
-          - tests/modules/programs/vim/**/*
+          - tests/modules/programs/positron/**/*
+          - tests/modules/programs/retext/**/*
+          - tests/modules/programs/vscode/**/*
+          - tests/modules/programs/vscodium/**/*
+          - tests/modules/programs/windsurf/**/*
+          - tests/modules/programs/zed-editor/**/*
+          - tests/modules/services/emacs/**/*
 "file-manager":
   - changed-files:
       - any-glob-to-any-file:
@@ -369,6 +660,7 @@
           - tests/modules/programs/lf/**/*
           - tests/modules/programs/nnn/**/*
           - tests/modules/programs/ranger/**/*
+          - tests/modules/programs/vifm/**/*
           - tests/modules/programs/yazi/**/*
 "gaming":
   - changed-files:
@@ -377,17 +669,31 @@
           - modules/programs/kodi.nix
           - modules/programs/lutris.nix
           - modules/programs/mangohud.nix
+          - modules/programs/ninjabrain-bot.nix
           - modules/programs/prismlauncher.nix
           - modules/programs/retroarch.nix
           - modules/programs/sm64ex.nix
           - modules/programs/ttyper.nix
           - modules/programs/vinegar.nix
           - modules/services/ludusavi.nix
+          - tests/modules/programs/am2rlauncher/**/*
+          - tests/modules/programs/kodi/**/*
+          - tests/modules/programs/lutris/**/*
+          - tests/modules/programs/mangohud/**/*
+          - tests/modules/programs/ninjabrain-bot/**/*
+          - tests/modules/programs/prismlauncher/**/*
+          - tests/modules/programs/retroarch/**/*
+          - tests/modules/programs/sm64ex/**/*
+          - tests/modules/programs/ttyper/**/*
+          - tests/modules/programs/vinegar/**/*
+          - tests/modules/services/ludusavi/**/*
 "git":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/programs/gh.nix
+          - modules/programs/b4.nix
+          - modules/programs/ec.nix
           - modules/programs/gh-dash.nix
+          - modules/programs/gh.nix
           - modules/programs/git*.nix
           - modules/programs/jjui.nix
           - modules/programs/jujutsu.nix
@@ -395,31 +701,45 @@
           - modules/programs/lazyworktree.nix
           - modules/programs/radicle.nix
           - modules/programs/sapling.nix
+          - modules/programs/worktrunk.nix
           - modules/services/git-sync.nix
           - modules/services/radicle.nix
-          - tests/modules/programs/gh/**/*
+          - tests/modules/programs/b4/**/*
+          - tests/modules/programs/ec/**/*
           - tests/modules/programs/gh-dash/**/*
+          - tests/modules/programs/gh/**/*
+          - tests/modules/programs/git-cliff/**/*
+          - tests/modules/programs/git-credential-keepassxc/**/*
+          - tests/modules/programs/git-credential-oauth/**/*
+          - tests/modules/programs/git-worktree-switcher/**/*
           - tests/modules/programs/git/**/*
+          - tests/modules/programs/github-copilot-cli/**/*
+          - tests/modules/programs/jjui/**/*
+          - tests/modules/programs/jujutsu/**/*
+          - tests/modules/programs/lazygit/**/*
+          - tests/modules/programs/lazyworktree/**/*
+          - tests/modules/programs/radicle/**/*
+          - tests/modules/programs/sapling/**/*
+          - tests/modules/programs/worktrunk/**/*
+          - tests/modules/services/git-sync/**/*
 "mail":
   - changed-files:
       - any-glob-to-any-file:
           - modules/*/mbsync*
+          - modules/accounts/email.nix
           - modules/programs/aerc/**/*
           - modules/programs/afew.nix
           - modules/programs/alot/**/*
           - modules/programs/astroid/**/*
-          - modules/programs/getmail*
           - modules/programs/getmail/**/*
-          - modules/programs/himalaya.nix
+          - modules/programs/himalaya/**/*
           - modules/programs/lieer.nix
           - modules/programs/mblaze/*
           - modules/programs/mbsync/**/*
           - modules/programs/meli.nix
-          - modules/programs/msmtp*
           - modules/programs/msmtp/**/*
           - modules/programs/mu.nix
           - modules/programs/mujmap.nix
-          - modules/programs/neomutt*
           - modules/programs/neomutt/**/*
           - modules/programs/notmuch/**/*
           - modules/programs/offlineimap/**/*
@@ -429,38 +749,60 @@
           - modules/services/lieer.nix
           - modules/services/muchsync.nix
           - modules/services/protonmail-bridge.nix
-          - tests/modules/programs/aerc/*
-          - tests/modules/programs/alot/*
-          - tests/modules/programs/mblaze/*
-          - tests/modules/programs/himalaya/*
-          - tests/modules/programs/mbsync/*
-          - tests/modules/programs/mujmap/*
-          - tests/modules/programs/neomutt/*
-          - tests/modules/programs/thunderbird/*
+          - tests/modules/programs/aerc/**/*
+          - tests/modules/programs/alot/**/*
+          - tests/modules/programs/astroid/**/*
+          - tests/modules/programs/getmail/**/*
+          - tests/modules/programs/himalaya/**/*
+          - tests/modules/programs/lieer/**/*
+          - tests/modules/programs/mblaze/**/*
+          - tests/modules/programs/mbsync/**/*
+          - tests/modules/programs/meli/**/*
+          - tests/modules/programs/mu/**/*
+          - tests/modules/programs/mujmap/**/*
+          - tests/modules/programs/neomutt/**/*
+          - tests/modules/programs/notmuch/**/*
+          - tests/modules/programs/thunderbird/**/*
+          - tests/modules/services/imapnotify/**/*
+          - tests/modules/services/lieer/**/*
+          - tests/modules/services/protonmail-bridge/**/*
 "messaging":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/abaddon.nix
           - modules/programs/algia.nix
+          - modules/programs/concord.nix
           - modules/programs/discocss.nix
           - modules/programs/discord.nix
           - modules/programs/element-desktop.nix
+          - modules/programs/equibop.nix
           - modules/programs/gurk-rs.nix
           - modules/programs/halloy.nix
           - modules/programs/havoc.nix
-          - modules/programs/hexchat.nix
           - modules/programs/iamb.nix
           - modules/programs/irssi.nix
           - modules/programs/nheko.nix
           - modules/programs/pidgin.nix
           - modules/programs/senpai.nix
           - modules/programs/tiny.nix
-          - modules/programs/vesktop.nix
+          - modules/programs/vesktop/**/*
           - modules/programs/zapzap.nix
           - modules/services/pantalaimon.nix
+          - tests/modules/programs/abaddon/**/*
+          - tests/modules/programs/algia/**/*
+          - tests/modules/programs/concord/**/*
+          - tests/modules/programs/discocss/**/*
+          - tests/modules/programs/discord/**/*
+          - tests/modules/programs/element-desktop/**/*
+          - tests/modules/programs/equibop/**/*
           - tests/modules/programs/gurk-rs/**/*
+          - tests/modules/programs/halloy/**/*
           - tests/modules/programs/irssi/**/*
           - tests/modules/programs/nheko/**/*
+          - tests/modules/programs/senpai/**/*
+          - tests/modules/programs/vesktop/**/*
+          - tests/modules/programs/zapzap/**/*
+          - tests/modules/services/pantalaimon/**/*
 "monitoring":
   - changed-files:
       - any-glob-to-any-file:
@@ -470,6 +812,10 @@
           - modules/services/conky.nix
           - modules/services/glance.nix
           - modules/services/poweralertd.nix
+          - tests/modules/services/activitywatch/**/*
+          - tests/modules/services/conky/**/*
+          - tests/modules/services/glance/**/*
+          - tests/modules/services/poweralertd/**/*
 "notification":
   - changed-files:
       - any-glob-to-any-file:
@@ -481,7 +827,10 @@
           - modules/services/swaync.nix
           - modules/services/twmn.nix
           - tests/modules/services/dunst/**/*
+          - tests/modules/services/fnott/**/*
           - tests/modules/services/mako/**/*
+          - tests/modules/services/swaync/**/*
+          - tests/modules/services/twmn/**/*
 "productivity":
   - changed-files:
       - any-glob-to-any-file:
@@ -489,17 +838,23 @@
           - modules/programs/aphorme.nix
           - modules/programs/calibre.nix
           - modules/programs/comodoro.nix
+          - modules/programs/eilmeldung.nix
+          - modules/programs/feedr.nix
           - modules/programs/foliate.nix
           - modules/programs/info.nix
           - modules/programs/joplin-desktop.nix
           - modules/programs/jrnl.nix
           - modules/programs/ledger.nix
+          - modules/programs/libreoffice.nix
           - modules/programs/newsboat.nix
           - modules/programs/obsidian.nix
           - modules/programs/onlyoffice.nix
           - modules/programs/pandoc.nix
           - modules/programs/papis.nix
+          - modules/programs/pomo.nix
           - modules/programs/pubs.nix
+          - modules/programs/qalculate.nix
+          - modules/programs/readest.nix
           - modules/programs/sioyek.nix
           - modules/programs/taskwarrior.nix
           - modules/programs/todoman.nix
@@ -509,6 +864,32 @@
           - modules/services/safeeyes.nix
           - modules/services/taskwarrior-sync.nix
           - modules/services/tomat.nix
+          - modules/services/voxtype.nix
+          - tests/modules/programs/anki/**/*
+          - tests/modules/programs/aphorme/**/*
+          - tests/modules/programs/calibre/**/*
+          - tests/modules/programs/comodoro/**/*
+          - tests/modules/programs/eilmeldung/**/*
+          - tests/modules/programs/feedr/**/*
+          - tests/modules/programs/foliate/**/*
+          - tests/modules/programs/joplin-desktop/**/*
+          - tests/modules/programs/jrnl/**/*
+          - tests/modules/programs/ledger/**/*
+          - tests/modules/programs/libreoffice/**/*
+          - tests/modules/programs/newsboat/**/*
+          - tests/modules/programs/onlyoffice/**/*
+          - tests/modules/programs/pandoc/**/*
+          - tests/modules/programs/papis/**/*
+          - tests/modules/programs/pomo/**/*
+          - tests/modules/programs/pubs/**/*
+          - tests/modules/programs/qalculate/**/*
+          - tests/modules/programs/readest/**/*
+          - tests/modules/programs/sioyek/**/*
+          - tests/modules/programs/taskwarrior/**/*
+          - tests/modules/programs/todoman/**/*
+          - tests/modules/services/comodoro/**/*
+          - tests/modules/services/tomat/**/*
+          - tests/modules/services/voxtype/**/*
 "password-manager":
   - changed-files:
       - any-glob-to-any-file:
@@ -516,12 +897,16 @@
           - modules/programs/keepassxc.nix
           - modules/programs/password-store.nix
           - modules/programs/rbw.nix
-          - modules/programs/rofi-pass.nix
+          - modules/programs/ripasso.nix
           - modules/services/pass-secret-service.nix
           - modules/services/proton-pass-agent.nix
+          - tests/modules/programs/browserpass/**/*
           - tests/modules/programs/keepassxc/**/*
           - tests/modules/programs/password-store/**/*
-          - tests/modules/programs/rofi-pass/**/*
+          - tests/modules/programs/rbw/**/*
+          - tests/modules/programs/ripasso/**/*
+          - tests/modules/services/pass-secret-service/**/*
+          - tests/modules/services/proton-pass-agent/**/*
 "photo":
   - changed-files:
       - any-glob-to-any-file:
@@ -532,6 +917,22 @@
           - modules/programs/pqiv.nix
           - modules/programs/swayimg.nix
           - modules/programs/wallust.nix
+          - tests/modules/programs/ahoviewer/**/*
+          - tests/modules/programs/feh/**/*
+          - tests/modules/programs/gallery-dl/**/*
+          - tests/modules/programs/imv/**/*
+          - tests/modules/programs/pqiv/**/*
+          - tests/modules/programs/swayimg/**/*
+          - tests/modules/programs/wallust/**/*
+"secrets":
+  - changed-files:
+      - any-glob-to-any-file:
+          - modules/programs/fnox.nix
+          - modules/programs/secretspec.nix
+          - modules/programs/yopass.nix
+          - tests/modules/programs/fnox/**/*
+          - tests/modules/programs/secretspec/**/*
+          - tests/modules/programs/yopass/**/*
 "shell":
   - changed-files:
       - any-glob-to-any-file:
@@ -548,7 +949,12 @@
           - modules/programs/zsh/**/*
           - tests/modules/programs/bash/**/*
           - tests/modules/programs/fish/**/*
+          - tests/modules/programs/intelli-shell/**/*
           - tests/modules/programs/nushell/**/*
+          - tests/modules/programs/oh-my-posh/**/*
+          - tests/modules/programs/powerline-go/**/*
+          - tests/modules/programs/sheldon/**/*
+          - tests/modules/programs/starship/**/*
           - tests/modules/programs/zsh/**/*
 "sync":
   - changed-files:
@@ -568,7 +974,13 @@
           - modules/services/pizauth.nix
           - modules/services/syncthing.nix
           - modules/services/unison.nix
+          - tests/modules/programs/acd-cli/**/*
+          - tests/modules/programs/airlift/**/*
+          - tests/modules/programs/alistral/**/*
+          - tests/modules/programs/onedrive/**/*
+          - tests/modules/services/davmail/**/*
           - tests/modules/services/dropbox/**/*
+          - tests/modules/services/pizauth/**/*
           - tests/modules/services/syncthing/**/*
 "system":
   - changed-files:
@@ -589,7 +1001,20 @@
           - modules/services/ssh-agent.nix
           - modules/services/ssh-tpm-agent.nix
           - modules/services/yubikey-agent.nix
+          - tests/modules/programs/anup/**/*
+          - tests/modules/programs/gpg/**/*
+          - tests/modules/programs/mullvad-vpn/**/*
+          - tests/modules/programs/opkssh/**/*
+          - tests/modules/programs/ssh/**/*
+          - tests/modules/services/gpg-agent/**/*
           - tests/modules/services/home-manager*/**/*
+          - tests/modules/services/home-manager-auto-expire/**/*
+          - tests/modules/services/home-manager-auto-upgrade/**/*
+          - tests/modules/services/macos-remap-keys/**/*
+          - tests/modules/services/nix-gc/**/*
+          - tests/modules/services/ssh-agent/**/*
+          - tests/modules/services/ssh-tpm-agent/**/*
+          - tests/modules/services/yubikey-agent/**/*
 "system-tools":
   - changed-files:
       - any-glob-to-any-file:
@@ -603,6 +1028,7 @@
           - modules/services/grobi.nix
           - modules/services/hound.nix
           - modules/services/jankyborders.nix
+          - modules/services/openlinkhub.nix
           - modules/services/opensnitch-ui.nix
           - modules/services/osmscout-server.nix
           - modules/services/plan9port.nix
@@ -612,6 +1038,21 @@
           - modules/services/signaturepdf.nix
           - modules/services/tahoe-lafs.nix
           - modules/services/tldr-update.nix
+          - tests/modules/programs/andcli/**/*
+          - tests/modules/programs/aria2/**/*
+          - tests/modules/programs/aria2p/**/*
+          - tests/modules/programs/trippy/**/*
+          - tests/modules/services/arrpc/**/*
+          - tests/modules/services/cachix-agent/**/*
+          - tests/modules/services/fusuma/**/*
+          - tests/modules/services/grobi/**/*
+          - tests/modules/services/jankyborders/**/*
+          - tests/modules/services/openlinkhub/**/*
+          - tests/modules/services/osmscout-server/**/*
+          - tests/modules/services/recoll/**/*
+          - tests/modules/services/signaturepdf/**/*
+          - tests/modules/services/tahoe-lafs/**/*
+          - tests/modules/services/tldr-update/**/*
 "terminal":
   - changed-files:
       - any-glob-to-any-file:
@@ -621,6 +1062,7 @@
           - modules/programs/gnome-terminal.nix
           - modules/programs/kitty.nix
           - modules/programs/macchina/**/*
+          - modules/programs/macos-terminal.nix
           - modules/programs/ptyxis.nix
           - modules/programs/rio.nix
           - modules/programs/terminator.nix
@@ -632,7 +1074,15 @@
           - tests/modules/programs/alacritty/**/*
           - tests/modules/programs/foot/**/*
           - tests/modules/programs/ghostty/**/*
+          - tests/modules/programs/gnome-terminal/**/*
           - tests/modules/programs/kitty/**/*
+          - tests/modules/programs/macchina/**/*
+          - tests/modules/programs/macos-terminal/**/*
+          - tests/modules/programs/ptyxis/**/*
+          - tests/modules/programs/rio/**/*
+          - tests/modules/programs/terminator/**/*
+          - tests/modules/programs/waveterm/**/*
+          - tests/modules/programs/wezterm/**/*
 "video":
   - changed-files:
       - any-glob-to-any-file:
@@ -648,43 +1098,61 @@
           - modules/programs/yt-dlp.nix
           - modules/services/jellyfin-mpv-shim.nix
           - modules/services/plex-mpv-shim.nix
+          - tests/modules/programs/anime-downloader/**/*
+          - tests/modules/programs/aperture/**/*
+          - tests/modules/programs/asciinema/**/*
+          - tests/modules/programs/freetube/**/*
           - tests/modules/programs/mpv/**/*
+          - tests/modules/programs/mpvpaper/**/*
+          - tests/modules/programs/streamlink/**/*
+          - tests/modules/programs/twitch-tui/**/*
+          - tests/modules/programs/yt-dlp/**/*
+          - tests/modules/services/jellyfin-mpv-shim/**/*
+          - tests/modules/services/plex-mpv-shim/**/*
 "remote-desktop":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/looking-glass-client.nix
           - modules/services/remmina.nix
           - modules/services/wayvnc.nix
+          - tests/modules/programs/looking-glass-client/**/*
+          - tests/modules/services/remmina/**/*
+          - tests/modules/services/wayvnc/**/*
 "wayland":
   - changed-files:
       - any-glob-to-any-file:
-          - modules/programs/ashell.nix
           - modules/programs/anyrun.nix
-          - modules/services/awww.nix
+          - modules/programs/ashell.nix
           - modules/programs/bemenu.nix
           - modules/programs/fuzzel.nix
+          - modules/programs/hyprland-qt-support.nix
           - modules/programs/hyprlock.nix
+          - modules/programs/hyprtoolkit.nix
+          - modules/programs/i3bar-river.nix
           - modules/programs/kickoff.nix
+          - modules/programs/noctalia/**/*
           - modules/programs/onagre.nix
           - modules/programs/sway-easyfocus.nix
           - modules/programs/swaylock.nix
           - modules/programs/swayr.nix
           - modules/programs/tofi.nix
+          - modules/programs/vicinae/**/*
           - modules/programs/waybar.nix
           - modules/programs/waylogout.nix
           - modules/programs/wayprompt.nix
           - modules/programs/wleave.nix
           - modules/programs/wlogout.nix
+          - modules/programs/wlr-which-key.nix
           - modules/programs/wofi.nix
           - modules/programs/workstyle.nix
           - modules/programs/yofi.nix
-          - modules/programs/vicinae/**/*
-          - modules/programs/i3bar-river.nix
+          - modules/services/awww.nix
           - modules/services/fnott.nix
           - modules/services/hypridle.nix
           - modules/services/hyprlauncher.nix
           - modules/services/hyprpaper.nix
           - modules/services/hyprpolkitagent.nix
+          - modules/services/hyprscratch.nix
           - modules/services/hyprshell.nix
           - modules/services/hyprsunset.nix
           - modules/services/kanshi.nix
@@ -693,25 +1161,90 @@
           - modules/services/swayidle.nix
           - modules/services/swaync.nix
           - modules/services/swayosd.nix
+          - modules/services/syshud.nix
           - modules/services/walker.nix
           - modules/services/way-displays.nix
+          - modules/services/wayle.nix
+          - modules/services/wbg.nix
           - modules/services/wlsunset.nix
           - modules/services/wluma.nix
           - modules/services/wpaperd.nix
+          - tests/modules/programs/anyrun/**/*
           - tests/modules/programs/ashell/**/*
+          - tests/modules/programs/bemenu/**/*
+          - tests/modules/programs/fuzzel/**/*
+          - tests/modules/programs/hyprland-qt-support/**/*
+          - tests/modules/programs/hyprlock/**/*
+          - tests/modules/programs/hyprtoolkit/**/*
           - tests/modules/programs/i3bar-river/**/*
+          - tests/modules/programs/kickoff/**/*
+          - tests/modules/programs/noctalia/**/*
+          - tests/modules/programs/onagre/**/*
+          - tests/modules/programs/sway-easyfocus/**/*
           - tests/modules/programs/swaylock/**/*
+          - tests/modules/programs/swayr/**/*
+          - tests/modules/programs/tofi/**/*
           - tests/modules/programs/vicinae/**/*
           - tests/modules/programs/waybar/**/*
+          - tests/modules/programs/wayprompt/**/*
+          - tests/modules/programs/wleave/**/*
+          - tests/modules/programs/wlogout/**/*
+          - tests/modules/programs/wlr-which-key/**/*
+          - tests/modules/programs/wofi/**/*
+          - tests/modules/programs/workstyle/**/*
+          - tests/modules/programs/yofi/**/*
+          - tests/modules/services/awww/**/*
+          - tests/modules/services/fnott/**/*
+          - tests/modules/services/hypridle/**/*
+          - tests/modules/services/hyprlauncher/**/*
+          - tests/modules/services/hyprpaper/**/*
+          - tests/modules/services/hyprpolkitagent/**/*
+          - tests/modules/services/hyprscratch/**/*
+          - tests/modules/services/hyprshell/**/*
+          - tests/modules/services/hyprsunset/**/*
+          - tests/modules/services/kanshi/**/*
+          - tests/modules/services/mako/**/*
+          - tests/modules/services/shikane/**/*
+          - tests/modules/services/swayidle/**/*
+          - tests/modules/services/swaync/**/*
+          - tests/modules/services/swayosd/**/*
+          - tests/modules/services/syshud/**/*
+          - tests/modules/services/walker/**/*
+          - tests/modules/services/way-displays/**/*
+          - tests/modules/services/wayle/**/*
+          - tests/modules/services/wbg/**/*
+          - tests/modules/services/wlsunset/**/*
+          - tests/modules/services/wpaperd/**/*
 "window-managers":
   - changed-files:
       - any-glob-to-any-file:
           - modules/programs/aerospace.nix
+          - modules/programs/flashspace.nix
           - modules/programs/i3bar-river.nix
           - modules/programs/i3blocks.nix
           - modules/programs/i3status-rust.nix
           - modules/programs/i3status.nix
+          - modules/programs/omniwm.nix
+          - modules/programs/rectangle.nix
           - modules/services/window-managers/**/*
+          - tests/modules/programs/aerospace/**/*
+          - tests/modules/programs/flashspace/**/*
+          - tests/modules/programs/i3bar-river/**/*
+          - tests/modules/programs/i3blocks/**/*
+          - tests/modules/programs/i3status-rust/**/*
+          - tests/modules/programs/i3status/**/*
+          - tests/modules/programs/omniwm/**/*
+          - tests/modules/programs/rectangle/**/*
+          - tests/modules/services/bspwm/**/*
+          - tests/modules/services/herbstluftwm/**/*
+          - tests/modules/services/hyprland/**/*
+          - tests/modules/services/i3/**/*
+          - tests/modules/services/labwc/**/*
+          - tests/modules/services/niri/**/*
+          - tests/modules/services/river/**/*
+          - tests/modules/services/spectrwm/**/*
+          - tests/modules/services/sway/**/*
+          - tests/modules/services/wayfire/**/*
 "x11":
   - changed-files:
       - any-glob-to-any-file:
@@ -742,5 +1275,13 @@
           - tests/modules/programs/i3status-rust/**/*
           - tests/modules/programs/i3status/**/*
           - tests/modules/programs/rofi/**/*
+          - tests/modules/programs/xmobar/**/*
+          - tests/modules/programs/yambar/**/*
+          - tests/modules/services/dunst/**/*
           - tests/modules/services/picom/**/*
           - tests/modules/services/polybar/**/*
+          - tests/modules/services/screen-locker/**/*
+          - tests/modules/services/sxhkd/**/*
+          - tests/modules/services/trayer/**/*
+          - tests/modules/services/xsettingsd/**/*
+          - tests/modules/services/xsuspender/**/*
