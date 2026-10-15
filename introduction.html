@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f0a514b0.js";
+            window.path_to_searchindex_js = "searchindex-e1eb87bb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -184,8 +184,8 @@ This includes programs, configuration files, environment variables and, well… 
 The following example snippet of Nix code:</p>
 <pre><code class="language-nix">programs.git = {
   enable = true;
-  userEmail = "joe@example.org";
-  userName = "joe";
+  settings.user.email = "joe@example.org";
+  settings.user.name = "joe";
 };
 </code></pre>
 <p>would make available to a user the <code>git</code> executable and man pages and a configuration file <code>~/.config/git/config</code>:</p>

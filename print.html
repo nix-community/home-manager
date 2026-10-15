@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f0a514b0.js";
+            window.path_to_searchindex_js = "searchindex-e1eb87bb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -204,8 +204,8 @@ This includes programs, configuration files, environment variables and, well… 
 The following example snippet of Nix code:</p>
 <pre><code class="language-nix">programs.git = {
   enable = true;
-  userEmail = "joe@example.org";
-  userName = "joe";
+  settings.user.email = "joe@example.org";
+  settings.user.name = "joe";
 };
 </code></pre>
 <p>would make available to a user the <code>git</code> executable and man pages and a configuration file <code>~/.config/git/config</code>:</p>
@@ -776,8 +776,8 @@ anything on your computer.</p>
 
   programs.git = {
     enable = true;
-    userName = "Jane Doe";
-    userEmail = "jane.doe@example.org";
+    settings.user.name = "Jane Doe";
+    settings.user.email = "jane.doe@example.org";
   };
 
   # …
@@ -28938,49 +28938,6 @@ open submodule of (YAML 1.1 value)</p>
   };
 };
 
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix">&lt;home-manager/modules/programs/gh.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.gh.settings.aliases"><a class="header" href="#opt-programs.gh.settings.aliases">programs.gh.settings.aliases</a></h2>
-<p>Aliases that allow you to create nicknames for gh commands.</p>
-<p><em>Type:</em>
-attribute set of string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  co = "pr checkout";
-  pv = "pr view";
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix">&lt;home-manager/modules/programs/gh.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.gh.settings.editor"><a class="header" href="#opt-programs.gh.settings.editor">programs.gh.settings.editor</a></h2>
-<p>The editor that gh should run when creating issues, pull requests, etc.
-If blank, will refer to environment.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">""
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gh.nix">&lt;home-manager/modules/programs/gh.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.gh.settings.git_protocol"><a class="header" href="#opt-programs.gh.settings.git_protocol">programs.gh.settings.git_protocol</a></h2>
-<p>The protocol to use when performing Git operations.</p>
-<p><em>Type:</em>
-string</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">"https"
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">"ssh"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
