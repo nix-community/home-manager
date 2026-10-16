@@ -1,0 +1,9 @@
+[editor]
+auto_suggestions = "cwd"
+
+[editor.key_map]
+alt-a = " <- "
+alt-l = '\(x) '
+alt-p = """
+ |>
+"""
