@@ -547,6 +547,11 @@
     github = "rszamszur";
     githubId = 10353018;
   };
+  sand4rt = {
+    name = "sand4rt";
+    github = "sand4rt";
+    githubId = 17591696;
+  };
   silmarp = {
     name = "Silmar Pereira da Silva Junior";
     email = "silmarjr2@gmail.com";
