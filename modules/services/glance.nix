@@ -83,17 +83,18 @@ in
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."glance/glance.yml" = {
-      source = settingsFile;
-      onChange = mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.package != null) ''
-        domain="${config.launchd.agents.glance.domain}/$(id -u)"
-        /bin/launchctl kickstart -k "$domain/org.nix-community.home.glance" \
-          2>/dev/null || true
-      '';
-    };
+    xdg.configFile."glance/glance.yml".source = settingsFile;
 
     launchd.agents.glance = mkIf (cfg.package != null) {
       enable = true;
+      # Track whichever enabled file finally lands where Glance reads its
+      # configuration, so source, target, and enable overrides are respected.
+      restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+        lib.filterAttrs (
+          _: file:
+          file.enable && file.target == lib.removePrefix "${config.home.homeDirectory}/" configFilePath
+        ) config.home.file
+      );
       config = {
         ProgramArguments = [
           (getExe cfg.package)
