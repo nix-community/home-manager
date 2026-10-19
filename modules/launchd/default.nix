@@ -327,7 +327,7 @@ in
               local domain="$1"
               local agentName="$2"
 
-              run /bin/launchctl print "$domain/$agentName" >/dev/null 2>&1
+              /bin/launchctl print "$domain/$agentName" >/dev/null 2>&1
             }
 
             # Stop an agent if it's running
