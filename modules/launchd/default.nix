@@ -281,7 +281,7 @@ in
       # NOTE: Launch Agent configurations can't be symlinked from the Nix store
       # because it needs to be owned by the user running it.
       home.activation.setupLaunchAgents =
-        lib.hm.dag.entryAfter [ "writeBoundary" ] # Bash
+        lib.hm.dag.entryAfter [ "writeBoundary" "linkGeneration" "onFilesChange" ] # Bash
           ''
             # Get the OS version to see if we can use --wait
             version="$(/usr/bin/sw_vers --productVersion | cut -d. -f 1)"
