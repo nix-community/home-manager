@@ -156,6 +156,9 @@ in
       )
     ];
 
+    # File consumers must use the same source identity as the generated link.
+    lib.file.sourceStorePath = sourceStorePath;
+
     #  Using this function it is possible to make `home.file` create a
     #  symlink to a path outside the Nix store. For example, a Home Manager
     #  configuration containing
