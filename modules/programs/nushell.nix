@@ -211,6 +211,18 @@ in
         Inline values can be set with `lib.hm.nushell.mkNushellInline`.
       '';
     };
+
+    completions = lib.mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [
+        "git"
+        "gh"
+      ];
+      description = ''
+        List of nushell completions to preload. For full list of available completions consult https://github.com/nushell/nu_scripts/tree/main/custom-completions
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -232,7 +244,8 @@ in
             || cfg.extraConfig != ""
             || aliasesStr != ""
             || cfg.settings != { }
-            || cfg.environmentVariables != { };
+            || cfg.environmentVariables != { }
+            || cfg.completions != [ ];
 
           aliasesStr = lib.concatLines (
             lib.mapAttrsToList (k: v: "alias ${toNushell { } k} = ${v}") cfg.shellAliases
@@ -248,6 +261,22 @@ in
                 '';
               in
               lib.mkIf hasEnvVars envVarsStr
+            )
+            (
+              let
+                completionsFile = pkgs.runCommand "nushell-completions.nu" { } ''
+                  dir=${pkgs.nu_scripts}/share/nu_scripts/custom-completions
+                  for name in ${lib.escapeShellArgs cfg.completions}; do
+                    file="$dir/$name/$name-completions.nu"
+                    if [ ! -f "$file" ]; then
+                      echo "nu_scripts has no completions named '$name'" >&2
+                      exit 1
+                    fi
+                    echo "use $file *" >> "$out"
+                  done
+                '';
+              in
+              lib.mkIf (cfg.completions != [ ]) "source ${completionsFile}"
             )
             (
               let
