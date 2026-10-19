@@ -553,6 +553,7 @@ in
           * {env}`WAYLAND_DISPLAY`
           * {env}`SWAYSOCK`
           * {env}`XDG_CURRENT_DESKTOP`
+          * {env}`XDG_SESSION_ID`
           * {env}`XDG_SESSION_TYPE`
           * {env}`NIXOS_OZONE_WL`
           * {env}`XCURSOR_THEME`
@@ -568,6 +569,7 @@ in
           "WAYLAND_DISPLAY"
           "SWAYSOCK"
           "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_ID"
           "XDG_SESSION_TYPE"
           "NIXOS_OZONE_WL"
           "XCURSOR_THEME"
