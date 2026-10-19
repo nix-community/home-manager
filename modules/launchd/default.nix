@@ -34,6 +34,37 @@ let
             services that do not require a graphical login session.
           '';
         };
+        restartTriggers = lib.mkOption {
+          type = lib.types.listOf (
+            lib.types.oneOf [
+              lib.types.str
+              lib.types.path
+              lib.types.package
+            ]
+          );
+          default = [ ];
+          apply = map (value: if builtins.isPath value then "${value}" else toString value);
+          example = lib.literalExpression ''[ config.xdg.configFile."example/config".source ]'';
+          description = ''
+            Dependencies whose changed identities restart an already running
+            agent during activation. These do not watch files for changes.
+            Stopped agents are not started. Adding the first trigger or removing
+            the last trigger also counts as a change. Applied state is kept in
+            {file}`$XDG_STATE_HOME/home-manager/launchd`.
+
+            Changes to the plist or domain still use the normal agent replacement
+            behavior. Switching to or from a generation built before this option
+            was available can require a manual restart for configuration-only
+            changes, because those activation scripts do not maintain trigger
+            state.
+
+            Running state is read from launchctl's diagnostic output, which is
+            not a stable API. An unrecognized state fails activation. The job
+            can stop between this check and kickstart, which may then start it.
+            An interruption after restarting but before saving state can cause
+            a retry.
+          '';
+        };
         waitForNixStore = lib.mkOption {
           type = lib.types.bool;
           default = true;
@@ -173,6 +204,16 @@ let
     )
   ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
 
+  agentTriggersDrv = pkgs.linkFarm "home-manager-agent-restart-triggers" (
+    lib.mapAttrs' (
+      _: v:
+      lib.nameValuePair "${v.config.Label}.json" (
+        pkgs.writeText "launchd-restart-triggers.json" (builtins.toJSON v.restartTriggers)
+      )
+    ) (lib.filterAttrs (_: v: v.enable && v.restartTriggers != [ ]) cfg.agents)
+  );
+  emptyTriggers = pkgs.writeText "launchd-empty-restart-triggers.json" "[]";
+
   agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"
 
@@ -276,6 +317,7 @@ in
       home.extraBuilderCommands = ''
         ln -s "${agentsDrv}" $out/LaunchAgents
         ln -s "${agentDomainsDrv}" $out/LaunchAgentDomains
+        ln -s "${agentTriggersDrv}" $out/LaunchAgentRestartTriggers
       '';
 
       # NOTE: Launch Agent configurations can't be symlinked from the Nix store
@@ -416,7 +458,61 @@ in
                 && bootstrapAgent "$oldDomain" "$dstPath" "$agentName"
             }
 
+            restartRunningAgent() {
+              local output state pid
+              if ! output=$(/bin/launchctl print "$1/$2"); then
+                errorEcho "Cannot inspect running state of '$1/$2'"
+                return 1
+              fi
+              # Only read the service's top-level fields, not nested jobs.
+              state=$(printf '%s\n' "$output" | sed -n 's/^	state = //p')
+              pid=$(printf '%s\n' "$output" | sed -n 's/^	pid = //p')
+              if [[ "$pid" =~ ^[1-9][0-9]*$ ]]; then
+                # launchctl offers no atomic check-and-restart operation.
+                run /bin/launchctl kickstart -k "$1/$2"
+              elif [[ -z "$pid" && ( "$state" == "not running" || "$state" == "spawn scheduled" ) ]]; then
+                # A throttled job reads the new files on its next scheduled start.
+                return 0
+              else
+                errorEcho "Cannot determine running state of '$1/$2': state=$state pid=$pid"
+                return 1
+              fi
+            }
+
+            agentRestartStateDir() {
+              local key
+              key=$(printf '%s' "$1" | sha256sum) || return 1
+              printf '%s/%s\n' ${lib.escapeShellArg "${config.xdg.stateHome}/home-manager/launchd"} "''${key%% *}"
+            }
+
             processAgent() {
+              local name="''${1##*/}"
+              name="''${name%.plist}"
+              local stateDir desired triggerChanged=0
+              stateDir="$(agentRestartStateDir "$name")" || return 1
+              desired="$newGenPath/LaunchAgentRestartTriggers/$name.json"
+              if [[ ! -f "$desired" ]]; then
+                desired=${emptyTriggers}
+              fi
+
+              if [[ "$desired" != ${emptyTriggers} || -d "$stateDir" ]]; then
+                if [[ -d "$stateDir/pending" ]] || ! cmp -s "$desired" "$stateDir/applied.json"; then
+                  triggerChanged=1
+                  # Persist intent before any launchctl mutation, including first
+                  # adoption and removal of the final trigger. Never clear it on failure.
+                  run mkdir -p "$stateDir/pending" || return 1
+                fi
+              fi
+
+              processAgentImpl "$@" || return 1
+              if [[ "$triggerChanged" -eq 1 ]]; then
+                run cp "$desired" "$stateDir/applied.json.new" || return 1
+                run mv -f "$stateDir/applied.json.new" "$stateDir/applied.json" || return 1
+                run rmdir "$stateDir/pending" || return 1
+              fi
+            }
+
+            processAgentImpl() {
               local srcPath="$1"
               local dstDir="$2"
               local oldDir="$3"
@@ -444,6 +540,9 @@ in
               # Skip if unchanged
               if cmp -s "$srcPath" "$dstPath" && [[ "$oldDomainName" == "$newDomainName" ]]; then
                 if agentIsLoaded "$newDomain" "$agentName"; then
+                  if [[ "$triggerChanged" -eq 1 ]]; then
+                    restartRunningAgent "$newDomain" "$agentName" || return 1
+                  fi
                   verboseEcho "Agent '$newDomain/$agentName' is already up-to-date"
                   return 0
                 else
@@ -542,6 +641,11 @@ in
 
               verboseEcho "Removing agent file '$dstPath'"
               if run rm -f $VERBOSE_ARG "$dstPath"; then
+                local stateDir
+                stateDir="$(agentRestartStateDir "$agentName")" || return 1
+                if [[ -d "$stateDir" ]]; then
+                  run rm -rf -- "$stateDir" || return 1
+                fi
                 verboseEcho "Successfully removed agent file for '$agentName'"
               else
                 warnEcho "Failed to remove agent file '$dstPath'"
