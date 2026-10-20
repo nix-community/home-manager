@@ -3,6 +3,8 @@
   ...
 }:
 {
+  test.stubs.t3code = { };
+
   programs.t3code = {
     enable = true;
 

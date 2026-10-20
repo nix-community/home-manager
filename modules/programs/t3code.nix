@@ -296,7 +296,9 @@ in
           ProgramArguments =
             let
               launchdWrapper = pkgs.writeShellScriptBin "t3code-launchd-wrapper" ''
-                source ${toString serverCfg.environmentFile}
+                set -a
+                source ${lib.escapeShellArg (toString serverCfg.environmentFile)} || exit 1
+                set +a
                 exec ${serverExe} ${lib.escapeShellArgs serverArgs}
               '';
             in
