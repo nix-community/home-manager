@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-87627581.js";
+            window.path_to_searchindex_js = "searchindex-2ce426fb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -19902,14 +19902,21 @@ null or absolute path</p>
 <h2 id="opt-programs.claude-code.configDir"><a class="header" href="#opt-programs.claude-code.configDir">programs.claude-code.configDir</a></h2>
 <p>Directory holding Claude Code’s configuration files.</p>
 <p>Defaults to <code>~/.claude</code>, matching the upstream
-<code>claude</code> CLI default. The <code>CLAUDE_CONFIG_DIR</code>
-environment variable is exported automatically whenever the
-directory differs from this default so the CLI reads
-configuration from the same location.</p>
+<code>claude</code> CLI default, or
+<code>${config.xdg.configHome}/claude</code> when
+<code>home.preferXdgDirectories</code> is enabled and
+<code>home.stateVersion</code> is at least 26.11. The
+<code>CLAUDE_CONFIG_DIR</code> environment variable is exported
+automatically whenever the directory differs from the upstream
+default so the CLI reads configuration from the same location.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">"${config.home.homeDirectory}/.claude"
+<pre><code class="language-nix">if config.home.preferXdgDirectories &amp;&amp; lib.versionAtLeast config.home.stateVersion "26.11" then
+  "${config.xdg.configHome}/claude"
+else
+  "${config.home.homeDirectory}/.claude"
+
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">"${config.xdg.configHome}/claude"
@@ -95072,6 +95079,14 @@ options are affected:</p>
 <li><code>programs.zellij.themes</code></li>
 <li><code>programs.zellij.layouts</code></li>
 </ul>
+</li>
+<li>
+<p>The default value of <a href="#opt-programs.claude-code.configDir">programs.claude-code.configDir</a> changes
+from <code>~/.claude</code> to <code>${config.xdg.configHome}/claude</code> when
+<a href="#opt-home.preferXdgDirectories">home.preferXdgDirectories</a> is enabled. Existing Claude Code data in
+<code>~/.claude</code> is not migrated automatically. Move it to the new directory
+before upgrading, or preserve the previous location by setting
+<code>programs.claude-code.configDir = "${config.home.homeDirectory}/.claude"</code>.</p>
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>

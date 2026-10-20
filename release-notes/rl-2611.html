@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-87627581.js";
+            window.path_to_searchindex_js = "../searchindex-2ce426fb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-c599a4a0.js"></script>
@@ -574,6 +574,14 @@ options are affected:</p>
 <li><code>programs.zellij.themes</code></li>
 <li><code>programs.zellij.layouts</code></li>
 </ul>
+</li>
+<li>
+<p>The default value of <a href="../options/home-manager/programs/claude-code.html#opt-programs.claude-code.configDir">programs.claude-code.configDir</a> changes
+from <code>~/.claude</code> to <code>${config.xdg.configHome}/claude</code> when
+<a href="../options/home-manager/home.html#opt-home.preferXdgDirectories">home.preferXdgDirectories</a> is enabled. Existing Claude Code data in
+<code>~/.claude</code> is not migrated automatically. Move it to the new directory
+before upgrading, or preserve the previous location by setting
+<code>programs.claude-code.configDir = "${config.home.homeDirectory}/.claude"</code>.</p>
 </li>
 </ul>
 
