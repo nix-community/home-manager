@@ -1,3 +1,5 @@
+{ lib, pkgs, ... }:
+
 {
   atuin-bash = ./bash.nix;
   atuin-empty-settings = ./empty-settings.nix;
@@ -9,4 +11,7 @@
   atuin-theme = ./theme.nix;
   atuin-nushell = ./nushell.nix;
   atuin-nushell-fzf-order = ./nushell-fzf-order.nix;
+}
+// lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+  atuin-daemon = ./daemon.nix;
 }
