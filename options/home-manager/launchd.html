@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-d434ff4a.js";
+            window.path_to_searchindex_js = "../../searchindex-53c10535.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-c599a4a0.js"></script>
@@ -1412,6 +1412,34 @@ string</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">lib.getExe pkgs.bash
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix">&lt;home-manager/modules/launchd/default.nix&gt;</a></li>
+</ul>
+<h2 id="opt-launchd.agents._name_.restartTriggers"><a class="header" href="#opt-launchd.agents._name_.restartTriggers">launchd.agents.&lt;name&gt;.restartTriggers</a></h2>
+<p>Dependencies whose changed identities restart an already running
+agent during activation. These do not watch files for changes.
+Stopped agents are not started. Adding the first trigger or removing
+the last trigger also counts as a change. Applied state is kept in
+<code>$XDG_STATE_HOME/home-manager/launchd</code>.</p>
+<p>Changes to the plist or domain still use the normal agent replacement
+behavior. Switching to or from a generation built before this option
+was available can require a manual restart for configuration-only
+changes, because those activation scripts do not maintain trigger
+state.</p>
+<p>Running state is read from launchctl’s diagnostic output, which is
+not a stable API. An unrecognized state fails activation. The job
+can stop between this check and kickstart, which may then start it.
+An interruption after restarting but before saving state can cause
+a retry.</p>
+<p><em>Type:</em>
+list of (string or absolute path or package)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[ config.xdg.configFile."example/config".source ]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
