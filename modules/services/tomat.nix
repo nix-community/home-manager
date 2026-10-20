@@ -58,6 +58,15 @@ in
 
     launchd.agents.tomat = {
       enable = true;
+      # Track the final file at Tomat's native configuration path, including
+      # source replacements, rather than only the generated settings.
+      restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+        lib.filterAttrs (
+          _: file:
+          file.enable
+          && file.target == lib.removePrefix "${config.home.homeDirectory}/" "${configDir}/tomat/config.toml"
+        ) config.home.file
+      );
       config = {
         ProgramArguments = [
           (lib.getExe cfg.package)

@@ -27,5 +27,8 @@
 
       assertFileContent "$(normalizeStorePaths "${agentFile}")" ${./expected-agent.plist}
       assertFileContent "${configFile}" ${./expected-config.toml}
+      assertFileContent \
+        "$(normalizeStorePaths LaunchAgentRestartTriggers/org.nix-community.home.tomat.json)" \
+        ${./expected-restart-triggers.json}
     '';
 }
