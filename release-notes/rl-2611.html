@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-2ce426fb.js";
+            window.path_to_searchindex_js = "../searchindex-01d358a4.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-c599a4a0.js"></script>
@@ -185,6 +185,13 @@ section is therefore not final.</p>
 <h2 id="highlights"><a class="header" href="#highlights">Highlights</a></h2>
 <p>This release has the following notable changes:</p>
 <ul>
+<li>
+<p>fzf shell integrations now source packaged scripts instead of running fzf
+to generate them. Custom <a href="../options/home-manager/programs/fzf.html#opt-programs.fzf.package">programs.fzf.package</a> values must include
+the integration scripts under <code>share/fzf</code> for the enabled shells. Wrappers
+must preserve that directory alongside the executable, or use the default
+package, which already includes these files.</p>
+</li>
 <li>
 <p>The <a href="../options/home-manager/programs/uv.html">programs.uv</a> module can now install uv-managed Python
 versions and tools through the new <code>programs.uv.python.versions</code>,
