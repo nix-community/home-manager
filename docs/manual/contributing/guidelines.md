@@ -53,16 +53,50 @@ the software to function correctly. It follows that a module for
 software that provides sensible default values for all settings would
 require no explicit options at all.
 
-If the software uses a structured configuration format like a JSON,
-YAML, INI, TOML, or even a plain list of key/value pairs then consider
-using a `settings` option as described in [Nix RFC
-42](https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md).
+For structured configuration, as described in [Nix RFC
+42](https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md),
+prefer an upstream-shaped `settings` option using the matching `pkgs.formats`
+type and generator where available. Preserve
+upstream setting names and allow fields that the module does not explicitly
+model. For a single configuration file, name the option `settings`. When
+managing multiple configuration files, prefix each settings option with a
+file-specific name, such as `appSettings` or `keymapSettings`.
+
+Model a separate option when it adds useful Home Manager integration,
+validation, or behavior rather than merely translating an upstream setting.
+Keep settings empty by default where the application supplies its own
+defaults. Add module-provided defaults only when needed for the module's
+behavior, and explain that requirement. Keep a raw-text escape hatch when the
+structured generator cannot express valid configuration, and document how
+generated settings and raw text are ordered.
+
+Reuse an existing format generator or Home Manager helper before writing a
+serializer. Check that it preserves the application's required syntax and
+ordering. A custom serializer is appropriate when the existing generators
+cannot express those semantics; explain the limitation and test its output.
 
 These guidelines describe the minimum option design requirements. Before
 submitting a module, compare it against the upstream documentation or
 source code and verify that the generated files, services, environment
 variables, and command line arguments all match the upstream behavior
 you intend to expose.
+
+Check where the application actually reads its configuration on each
+supported platform. Do not assume Darwin uses XDG paths when XDG is disabled.
+Wrappers and environment variables should preserve upstream project-local
+configuration lookup and explicit user overrides unless the module
+deliberately documents a different behavior.
+
+Check whether the application writes the managed file during normal use. A
+store symlink may fail writes or be replaced by a regular file, causing later
+activation collisions. Prefer a supported upstream configuration layer when
+available. An authoritative declarative file with documented resets on
+activation can also be appropriate. If writable merging is necessary,
+reuse `lib.hm.generators.mkImpureConfigMerger` when its supported formats and
+preservation semantics fit, rather than adding a module-local lifecycle.
+Check its documented limitations, including loss of comments and formatting.
+Document the ownership of saved settings. Do not make all settings mutable
+merely because the application has an editor.
 
 If a module installs a package, try to make the package option nullable,
 for example
@@ -77,8 +111,24 @@ module for configuration. Keeping the package non-nullable is fine when
 the enabled behavior structurally requires the executable or when
 package-less support would make the module significantly more complex.
 
-Avoid generating files for empty settings, null packages, or optional
-features that are not configured.
+Avoid generating configuration files for empty settings or optional features
+that are not configured, unless the application requires the file. When a
+package option is nullable, `package = null` should omit installation without
+disabling configuration that can work independently of that package. Guard
+package-derived values and executable consumers as well as `home.packages`.
+If an optional service requires the configured executable, explain the
+invalid combination with an assertion and guard the service's generation.
+
+Use the configured package consistently. If a null package intentionally means
+using an externally installed executable, document and test that behavior.
+Do not assume a command exists on `PATH` merely because the package is null.
+
+Keep integrations under the user's control. Follow existing
+`enableXIntegration` conventions and use the corresponding `lib.hm.shell`
+option helpers for shell integrations, so they respect Home Manager's shared
+defaults. Do not silently enable another module to satisfy a prerequisite;
+document it and use a warning or assertion as appropriate. An assertion should
+reject an invalid configuration, not a case with a working fallback.
 
 If upstream does not use XDG paths by default but supports changing the
 configuration location with an environment variable, for example
