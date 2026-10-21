@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-53c10535.js";
+            window.path_to_searchindex_js = "searchindex-28df4d98.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -57045,10 +57045,12 @@ package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tealdeer.nix">&lt;home-manager/modules/programs/tealdeer.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.tealdeer.settings"><a class="header" href="#opt-programs.tealdeer.settings">programs.tealdeer.settings</a></h2>
-<p>Configuration written to
-<code>$XDG_CONFIG_HOME/tealdeer/config.toml</code> on Linux or
-<code>$HOME/Library/Application Support/tealdeer/config.toml</code> on Darwin.
-See <a href="https://tealdeer-rs.github.io/tealdeer/config.html">https://tealdeer-rs.github.io/tealdeer/config.html</a> for more information.</p>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/tealdeer/config.toml</code>.
+See <a href="https://docs.tealdeer.org/stable/config.html">https://docs.tealdeer.org/stable/config.html</a> for more information.</p>
+<p><strong>Note:</strong> <code>tealdeeer</code> versions before <code>1.9.0</code> on Darwin used to read the config from
+<code>$HOME/Library/Application Support/tealdeer/config.toml</code>.
+In newer versions it respects the XDG directories and
+uses <code>Library/Application Support</code> only as fallback.</p>
 <p><em>Type:</em>
 null or (open submodule of (TOML value))</p>
 <p><em>Default:</em></p>
