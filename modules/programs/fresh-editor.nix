@@ -16,12 +16,38 @@ let
 
   cfg = config.programs.fresh-editor;
   jsonFormat = pkgs.formats.json { };
+  settingsFile =
+    if cfg.mutableSettings then
+      "config_${if pkgs.stdenv.hostPlatform.isDarwin then "macos" else "linux"}.json"
+    else
+      "config.json";
 in
 {
   meta.maintainers = with lib.maintainers; [ drupol ];
   options.programs.fresh-editor = {
     enable = mkEnableOption "fresh-editor";
     package = mkPackageOption pkgs "fresh-editor" { nullable = true; };
+    mutableSettings = mkOption {
+      type = types.bool;
+      default = false;
+      example = true;
+      description = ''
+        Whether to put declarative settings in Fresh's platform configuration
+        file, leaving {file}`fresh/config.json` writable by Fresh. Declarative
+        settings override the same keys in the user file. Project and session
+        settings take precedence over the declarative settings.
+
+        The declarative file is
+        {file}`$XDG_CONFIG_HOME/fresh/config_linux.json` on Linux and
+        {file}`~/.config/fresh/config_macos.json` on macOS. Fresh ignores
+        {env}`XDG_CONFIG_HOME` on macOS.
+
+        Before disabling this option while
+        {option}`programs.fresh-editor.settings` is non-empty, remove or back up
+        the Fresh-owned {file}`fresh/config.json`. Home Manager otherwise
+        treats it as a file collision.
+      '';
+    };
     extraPackages = mkOption {
       type = with types; listOf package;
       default = [ ];
@@ -78,7 +104,11 @@ in
       VISUAL = "fresh";
     };
 
-    xdg.configFile."fresh/config.json" = mkIf (cfg.settings != { }) {
+    xdg.configFile."fresh/${settingsFile}" = mkIf (cfg.settings != { }) {
+      # Fresh uses ~/.config on macOS even when XDG_CONFIG_HOME is set.
+      target = mkIf (
+        cfg.mutableSettings && pkgs.stdenv.hostPlatform.isDarwin
+      ) "${config.home.homeDirectory}/.config/fresh/${settingsFile}";
       source = jsonFormat.generate "config.json" cfg.settings;
     };
   };
