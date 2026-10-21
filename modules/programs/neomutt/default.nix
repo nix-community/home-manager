@@ -333,7 +333,7 @@ let
   macroSection = concatMapStringsSep "\n" (
     macro:
     ''macro ${concatStringsSep "," macro.map} ${macro.key} "${macro.action}"''
-    + optionalString (macro.description != null) " \"${lib.escape [ ''"'' ] macro.description}\""
+    + optionalString (macro.description != null) " \"${lib.escape [ "\\" ''"'' ] macro.description}\""
   ) cfg.macros;
 
   mailCheckSection = ''
