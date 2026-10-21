@@ -61,6 +61,7 @@ let
     "feh"
     "flameshot"
     "freetube"
+    "fresh-editor"
     "fzf"
     "gallery-dl"
     "getconf"
