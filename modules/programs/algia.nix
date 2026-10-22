@@ -51,7 +51,7 @@ in
       default = { };
       example = {
         relays = {
-          "wss =//relay-jp.nostr.wirednet.jp" = {
+          "wss://relay-jp.nostr.wirednet.jp" = {
             read = true;
             write = true;
             search = false;
