@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-28df4d98.js";
+            window.path_to_searchindex_js = "../../../searchindex-da2c5c4f.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -193,10 +193,21 @@ boolean</p>
 </ul>
 <h2 id="opt-programs.t3code.package"><a class="header" href="#opt-programs.t3code.package">programs.t3code.package</a></h2>
 <p>The t3code package to install.</p>
+<p>The package puts <code>git</code>, <code>gh</code> and <code>codex</code> on
+t3code’s <code>PATH</code> by default. Override it to enable other CLIs,
+such as Claude Code or OpenCode, for both the desktop app and the
+server.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.t3code
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">pkgs.t3code.override {
+  enableClaude = true;
+  enableOpencode = true;
+}
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -293,6 +304,57 @@ boolean</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/t3code.nix">&lt;home-manager/modules/programs/t3code.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.t3code.server.enable"><a class="header" href="#opt-programs.t3code.server.enable">programs.t3code.server.enable</a></h2>
+<p>Whether to enable the t3code headless server as a user service.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/t3code.nix">&lt;home-manager/modules/programs/t3code.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.t3code.server.environmentFile"><a class="header" href="#opt-programs.t3code.server.environmentFile">programs.t3code.server.environmentFile</a></h2>
+<p>Path to an environment file (see <a href="https://www.freedesktop.org/software/systemd/man/systemd.exec.html"><code>systemd.exec(5)</code></a>) loaded by
+the service. The recommended way to pass secrets without exposing them
+in the Nix store.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"/run/secrets/t3code"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/t3code.nix">&lt;home-manager/modules/programs/t3code.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.t3code.server.extraArgs"><a class="header" href="#opt-programs.t3code.server.extraArgs">programs.t3code.server.extraArgs</a></h2>
+<p>Extra arguments passed to <code>t3 serve</code>, for example
+<code>--host</code> and <code>--port</code>. Run <code>t3 serve --help</code> for the
+full list.</p>
+<p><em>Type:</em>
+list of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">[
+  "--host"
+  "0.0.0.0"
+  "--port"
+  "3773"
+]
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
