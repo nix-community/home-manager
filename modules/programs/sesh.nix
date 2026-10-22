@@ -24,7 +24,13 @@ in
   options.programs.sesh = {
     enable = mkEnableOption "the sesh terminal session manager";
 
-    package = mkPackageOption pkgs "sesh" { };
+    package = mkPackageOption pkgs "sesh" {
+      nullable = true;
+      extraDescription = ''
+        When set to `null`, sesh must be available on PATH for the shell alias
+        and Tmux integration.
+      '';
+    };
     fzfPackage = mkPackageOption pkgs "fzf" { nullable = true; };
     zoxidePackage = mkPackageOption pkgs "zoxide" { nullable = true; };
 
@@ -72,7 +78,7 @@ in
     in
     mkIf cfg.enable (mkMerge [
       {
-        home.packages = [ cfg.package ];
+        home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
         home.file.".config/sesh/sesh.toml".source = tomlFormat.generate "sesh.toml" cfg.settings;
       }
 
