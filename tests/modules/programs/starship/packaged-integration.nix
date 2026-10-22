@@ -43,9 +43,11 @@
     assertFileContains home-files/.zshrc '/starship.zsh'
     assertFileContains home-files/.config/fish/config.fish '/starship.fish'
     assertFileContains home-files/.config/fish/config.fish 'enable_transience'
-    assertFileRegex home-files/.config/nushell/config.nu 'use .*/starship.nu'
+    assertFileContent \
+      "$(normalizeStorePaths home-files/.config/nushell/config.nu)" \
+      ${./nushell-config-expected.nu}
 
-    integrationDir=$(sed -n 's|^use \(.*\)/starship.nu$|\1|p' "$TESTED/home-files/.config/nushell/config.nu")
+    integrationDir=$(sed -n 's|^ *use \(.*\)/starship.nu$|\1|p' "$TESTED/home-files/.config/nushell/config.nu")
     for shell in bash zsh fish nu; do
       assertFileContent "$(normalizeStorePaths "$integrationDir/starship.$shell")" \
         ${./shell-integration/expected-executable}

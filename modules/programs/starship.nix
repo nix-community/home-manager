@@ -255,18 +255,16 @@ in
       '';
 
       nushell = mkIf cfg.enableNushellIntegration {
-        # Unfortunately nushell doesn't allow conditionally sourcing nor
-        # conditionally setting (global) environment variables, which is why the
-        # check for terminal compatibility (as seen above for the other shells) is
-        # not done here.
         extraConfig = ''
-          use ${
-            if hasShellIntegration then
-              "${shellIntegration}/starship.nu"
-            else
-              pkgs.runCommand "starship-nushell-config.nu" { } ''
-                ${lib.getExe cfg.package} init nu >> "$out"
-              ''
+          if $env.TERM? != "dumb" {
+            use ${
+              if hasShellIntegration then
+                "${shellIntegration}/starship.nu"
+              else
+                pkgs.runCommand "starship-nushell-config.nu" { } ''
+                  ${lib.getExe cfg.package} init nu >> "$out"
+                ''
+            }
           }
         '';
       };
