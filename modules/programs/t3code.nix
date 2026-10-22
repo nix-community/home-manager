@@ -104,7 +104,7 @@ in
       inherit (jsonFormat) type;
       default = { };
       example = {
-        enableAssistantStreaming = true;
+        enableProviderUpdateChecks = false;
         providerInstances = {
           codex = {
             driver = "codex";
@@ -152,16 +152,14 @@ in
       inherit (jsonFormat) type;
       default = { };
       example = {
-        settings = {
-          favorites = [
-            {
-              provider = "codex";
-              model = "gpt-5.5";
-            }
-          ];
-          sidebarProjectGroupingMode = "repository";
-          timestampFormat = "locale";
-        };
+        favorites = [
+          {
+            provider = "codex";
+            model = "gpt-5.5";
+          }
+        ];
+        sidebarProjectGroupingMode = "repository";
+        timestampFormat = "locale";
       };
       description = ''
         Configuration written to t3code's {file}`client-settings.json`.
