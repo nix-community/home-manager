@@ -50,8 +50,11 @@ in
       default = { };
       example = {
         default_user = "spanish_inquisition";
-        listenbrainz_url = "https://api.listenbrainz.org/1/";
-        musicbrainz_url = "http://musicbrainz.org/ws/2";
+        listenbrainz_domain = "api.listenbrainz.org";
+        musicbrainz_server = {
+          use_https = true;
+          authority = "musicbrainz.org";
+        };
       };
       description = ''
         Configuration settings for alistral. You can see the details here:
