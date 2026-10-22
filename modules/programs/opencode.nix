@@ -19,7 +19,7 @@ let
   hasCli = cfg.cli != { };
   settingsPath = "opencode/${if cfg.mutableSettings then "home-manager.json" else "opencode.json"}";
   tuiPath = "opencode/${if cfg.mutableSettings then "home-manager-tui.json" else "tui.json"}";
-  cliPath = "opencode/cli.json";
+  cliPath = "opencode/${if cfg.mutableSettings then "home-manager-cli.json" else "cli.json"}";
   effectiveFile = path: config.home.file."${config.xdg.configHome}/${path}";
   absoluteTarget =
     path:
@@ -34,6 +34,9 @@ let
     // lib.optionalAttrs (cfg.tui != { } && (effectiveFile tuiPath).enable) {
       OPENCODE_TUI_CONFIG = absoluteTarget tuiPath;
     }
+    // lib.optionalAttrs (hasCli && (effectiveFile cliPath).enable) {
+      OPENCODE_CLI_CONFIG_CONTENT = cliJson;
+    }
   );
 
   jsonFormat = pkgs.formats.json { };
@@ -41,6 +44,7 @@ let
     "$schema" = "https://opencode.ai/v2/cli.json";
   }
   // cfg.cli;
+  cliJson = builtins.toJSON cliConfig;
 
   packageSchema =
     name: if cfg.package == null then null else cfg.package.passthru.jsonschema.${name} or null;
@@ -159,15 +163,23 @@ in
       default = false;
       example = true;
       description = ''
-        Whether to leave {file}`$XDG_CONFIG_HOME/opencode/opencode.json` and
+        Whether to leave {file}`$XDG_CONFIG_HOME/opencode/opencode.json`,
+        {file}`$XDG_CONFIG_HOME/opencode/cli.json`, and
         {file}`$XDG_CONFIG_HOME/opencode/tui.json` writable by OpenCode.
 
-        When enabled, declarative settings and TUI settings are written to
-        {file}`$XDG_CONFIG_HOME/opencode/home-manager.json` and
-        {file}`$XDG_CONFIG_HOME/opencode/home-manager-tui.json` and loaded through
-        {env}`OPENCODE_CONFIG` and {env}`OPENCODE_TUI_CONFIG`. Declarative settings
-        override global user settings; project settings can still override them.
+        When enabled, declarative settings, CLI settings, and TUI settings are
+        written to {file}`$XDG_CONFIG_HOME/opencode/home-manager.json`,
+        {file}`$XDG_CONFIG_HOME/opencode/home-manager-cli.json`, and
+        {file}`$XDG_CONFIG_HOME/opencode/home-manager-tui.json`. Declarative
+        settings and TUI settings are loaded through {env}`OPENCODE_CONFIG` and
+        {env}`OPENCODE_TUI_CONFIG`. CLI settings are loaded through
+        {env}`OPENCODE_CLI_CONFIG_CONTENT` because OpenCode 2 does not provide a
+        path selector for {file}`cli.json`; the generated
+        {file}`home-manager-cli.json` layer contains the same content for
+        inspection and validation. Declarative settings override global user
+        settings; project settings can still override them.
         {env}`OPENCODE_TUI_CONFIG` requires OpenCode 1.2.15 or later.
+        {env}`OPENCODE_CLI_CONFIG_CONTENT` requires OpenCode 2.
 
         These variables are set through {option}`home.sessionVariables` and must
         reach OpenCode launches outside the web service for declarative settings
@@ -275,6 +287,12 @@ in
 
         Note that `"$schema": "https://opencode.ai/v2/cli.json"` is automatically
         added.
+
+        OpenCode 2 reads this file and rewrites it when settings are changed
+        from the TUI. If OpenCode has already created {file}`cli.json`, back up
+        or move the app-owned file before enabling this option, or enable
+        {option}`programs.opencode.mutableSettings` to keep declarative
+        settings in a separate layer.
       '';
     };
 

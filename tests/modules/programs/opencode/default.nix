@@ -43,4 +43,5 @@
 
   opencode-cli-settings = ./cli-settings.nix;
   opencode-cli-empty = ./cli-empty.nix;
+  opencode-layer-cli = ./layer-cli.nix;
 }
