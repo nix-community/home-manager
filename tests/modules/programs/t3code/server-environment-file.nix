@@ -7,14 +7,16 @@ let
   environmentFile = pkgs.writeText "t3code-env" ''
     T3CODE_PORT=4567
   '';
+  # Runnable stand-in for the @t3code@ stub when exercising the launcher.
   testT3code = pkgs.writeShellScriptBin "t3" ''
     [ "$T3CODE_PORT" = 4567 ] || exit 1
   '';
 in
 {
+  test.stubs.t3code = { };
+
   programs.t3code = {
     enable = true;
-    package = testT3code;
 
     server = {
       enable = true;
@@ -40,12 +42,14 @@ in
         assertFileContent "$launcherNormalized" "$launcherExpectedNormalized"
 
         substitute "${serviceLauncher}" "$TMPDIR/t3code-launcher" \
-          --replace-fail '/run/secrets/t3code' '${environmentFile}'
+          --replace-fail '/run/secrets/t3code' '${environmentFile}' \
+          --replace-fail '@t3code@' '${testT3code}'
         ${pkgs.runtimeShell} "$TMPDIR/t3code-launcher" \
           || fail "t3code's launcher must export the environment file's variables to the server"
 
         substitute "${serviceLauncher}" "$TMPDIR/t3code-launcher-missing" \
-          --replace-fail '/run/secrets/t3code' "$TMPDIR/missing"
+          --replace-fail '/run/secrets/t3code' "$TMPDIR/missing" \
+          --replace-fail '@t3code@' '${testT3code}'
         ! T3CODE_PORT=4567 ${pkgs.runtimeShell} "$TMPDIR/t3code-launcher-missing" 2>/dev/null \
           || fail "t3code's launcher must not start the server when the environment file fails to load"
       ''
@@ -53,7 +57,6 @@ in
       ''
         serviceFile=home-files/.config/systemd/user/t3code.service
         assertFileExists "$serviceFile"
-        serviceFileNormalized="$(normalizeStorePaths "$serviceFile")"
-        assertFileContent "$serviceFileNormalized" ${./server-environment-file.service}
+        assertFileContent "$serviceFile" ${./server-environment-file.service}
       '';
 }

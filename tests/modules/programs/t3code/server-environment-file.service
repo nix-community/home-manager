@@ -3,7 +3,7 @@ WantedBy=default.target
 
 [Service]
 EnvironmentFile=/run/secrets/t3code
-ExecStart=/nix/store/00000000000000000000000000000000-t3/bin/t3 serve
+ExecStart=@t3code@/bin/t3 serve
 Restart=on-failure
 RestartSec=5
 
