@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-da2c5c4f.js";
+            window.path_to_searchindex_js = "../../../searchindex-67d9e3f1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -359,6 +359,25 @@ strings concatenated with “\n”</p>
 strings concatenated with “\n”</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix">&lt;home-manager/modules/programs/nushell.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.nushell.loadSessionVariables"><a class="header" href="#opt-programs.nushell.loadSessionVariables">programs.nushell.loadSessionVariables</a></h2>
+<p>Whether to load the Home Manager session environment, such as
+<code>home.sessionVariables</code> and <code>home.sessionPath</code>, in
+<code>env.nu</code> when Nushell starts without it, for example as a login
+shell. When Home Manager is used as a NixOS or nix-darwin module, the
+system environment is loaded too.</p>
+<p>Enabling this makes Home Manager manage <code>env.nu</code>. Put other
+environment configuration in <code>programs.nushell.envFile</code> or
+<code>programs.nushell.extraEnv</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if lib.versionAtLeast config.home.stateVersion "26.11" then true else false
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-da2c5c4f.js";
+            window.path_to_searchindex_js = "../searchindex-67d9e3f1.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-c599a4a0.js"></script>
@@ -538,6 +538,16 @@ contents directly under <code>programs.hyprpanel.settings.theme</code>.</li>
 changes are only active if the <code>home.stateVersion</code> option is set to
 “26.11” or later.</p>
 <ul>
+<li>
+<p><a href="../options/home-manager/programs/nushell.html#opt-programs.nushell.loadSessionVariables">programs.nushell.loadSessionVariables</a> defaults to <code>true</code> from
+<code>home.stateVersion = "26.11"</code>. Nushell loads the Home Manager session
+environment at startup and, when used as a NixOS or nix-darwin module,
+the system environment too. This makes Home Manager manage <code>env.nu</code>;
+migrate independently managed contents to <a href="../options/home-manager/programs/nushell.html#opt-programs.nushell.envFile">programs.nushell.envFile</a>
+or <a href="../options/home-manager/programs/nushell.html#opt-programs.nushell.extraEnv">programs.nushell.extraEnv</a>, or disable the option.
+Earlier state versions retain the old behavior and emit an evaluation
+warning until <code>programs.nushell.loadSessionVariables</code> is explicitly set.</p>
+</li>
 <li>
 <p>On Darwin, the default value of
 <a href="../options/home-manager/programs/firefox.html#opt-programs.firefox.configPath">programs.firefox.configPath</a> changes from
