@@ -44,7 +44,7 @@ let
   '';
 
   gpgNushellInitStr = ''
-    $env.GPG_TTY = (tty)
+    $env.GPG_TTY = (try { tty } catch { "" })
   ''
   + optionalString cfg.enableSshSupport ''
     ${gpgSshSupportStr} | ignore

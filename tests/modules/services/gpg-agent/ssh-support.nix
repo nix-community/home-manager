@@ -20,6 +20,9 @@
       home-files/.config/nushell/config.nu \
       '$env.SSH_AUTH_SOCK = $"(@gnupg@/bin/gpgconf --list-dirs agent-ssh-socket)"'
     assertFileContains \
+      home-files/.config/nushell/config.nu \
+      '$env.GPG_TTY = (try { tty } catch { "" })'
+    assertFileContains \
       home-files/.zshenv \
       'export SSH_AUTH_SOCK="$(@gnupg@/bin/gpgconf --list-dirs agent-ssh-socket)"'
 
