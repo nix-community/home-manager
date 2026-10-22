@@ -1,5 +1,7 @@
 { config, lib, ... }:
 {
+  imports = [ ./opencode-stubs.nix ];
+
   xdg.configFile."opencode/home-manager.json" = {
     target = "${config.home.homeDirectory}/layers/opencode.json";
     enable = false;
@@ -11,7 +13,6 @@
   programs.opencode = {
     enable = true;
     mutableSettings = true;
-    package = null;
     settings.permission.bash = {
       "aa *" = lib.hm.dag.entryAfter [ "zz *" ] "allow";
       "zz *" = "ask";

@@ -46,6 +46,8 @@ let
   // cfg.cli;
   cliJson = builtins.toJSON cliConfig;
 
+  packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
+  isOpenCode2 = packageVersion == null || lib.versionAtLeast packageVersion "2.0.0";
   packageSchema =
     name: if cfg.package == null then null else cfg.package.passthru.jsonschema.${name} or null;
   configSchema = packageSchema "config";
@@ -178,8 +180,9 @@ in
         {file}`home-manager-cli.json` layer contains the same content for
         inspection and validation. Declarative settings override global user
         settings; project settings can still override them.
-        {env}`OPENCODE_TUI_CONFIG` requires OpenCode 1.2.15 or later.
-        {env}`OPENCODE_CLI_CONFIG_CONTENT` requires OpenCode 2.
+        {env}`OPENCODE_TUI_CONFIG` requires OpenCode 1.2.15 or later and is
+        ignored by OpenCode 2. {env}`OPENCODE_CLI_CONFIG_CONTENT` requires
+        OpenCode 2.
 
         These variables are set through {option}`home.sessionVariables` and must
         reach OpenCode launches outside the web service for declarative settings
@@ -263,6 +266,10 @@ in
         Since OpenCode v1.2.15, TUI settings must be in a separate tui.json file.
         Settings like `theme`, `keybinds`, and `tui` in {option}`programs.opencode.settings`
         are deprecated and should be moved here.
+
+        OpenCode 2 no longer reads {file}`tui.json` and uses a single global
+        {file}`cli.json` instead. Use {option}`programs.opencode.cli` with
+        OpenCode 2; this option remains for OpenCode 1.
       '';
     };
 
@@ -293,6 +300,9 @@ in
         or move the app-owned file before enabling this option, or enable
         {option}`programs.opencode.mutableSettings` to keep declarative
         settings in a separate layer.
+
+        OpenCode 1 reads {file}`tui.json` instead; use
+        {option}`programs.opencode.tui` for OpenCode 1.
       '';
     };
 
@@ -590,14 +600,15 @@ in
             ({file}`$XDG_CONFIG_HOME/opencode/tui.json`, or
             {file}`home-manager-tui.json` when mutable configuration is enabled) against the
             corresponding OpenCode JSON schema of the configured package using
-            {command}`check-jsonschema`.
+            {command}`check-jsonschema`. This requires an OpenCode 1 package;
+            OpenCode 2 no longer ships a {file}`tui.json` schema.
           '';
           cli = lib.mkEnableOption ''
             the validation of the generated configuration file
             ({file}`$XDG_CONFIG_HOME/opencode/cli.json`, or
             {file}`home-manager-cli.json` when mutable configuration is enabled) against the
             corresponding OpenCode JSON schema of the configured package using
-            {command}`check-jsonschema`.
+            {command}`check-jsonschema`. This requires an OpenCode 2 package.
           '';
         };
       };
@@ -627,8 +638,16 @@ in
         message = "`programs.opencode.validateFiles` requires `programs.opencode.package` to be set";
       }
       {
+        assertion = !cfg.validateFiles.config || cfg.package == null || configSchema != null;
+        message = "`programs.opencode.validateFiles.config` requires `programs.opencode.package` to provide `passthru.jsonschema.config`";
+      }
+      {
         assertion = !cfg.validateFiles.cli || cfg.package == null || cliSchema != null;
         message = "`programs.opencode.validateFiles.cli` requires `programs.opencode.package` to provide `passthru.jsonschema.cli` (OpenCode 2 or later)";
+      }
+      {
+        assertion = !cfg.validateFiles.tui || cfg.package == null || tuiSchema != null;
+        message = "`programs.opencode.validateFiles.tui` requires `programs.opencode.package` to provide `passthru.jsonschema.tui` (OpenCode 1); OpenCode 2 moved TUI settings to `programs.opencode.cli`";
       }
       {
         assertion = !lib.isPath cfg.commands || lib.pathIsDirectory cfg.commands;
@@ -663,19 +682,52 @@ in
           ]
         ) (lib.attrNames cfg.settings);
 
-        packageVersion = if cfg.package != null then lib.getVersion cfg.package else null;
-        hasTuiConfig = packageVersion == null || lib.versionAtLeast packageVersion "1.2.15";
+        showDeprecatedKeysWarning =
+          deprecatedConfigKeys != [ ]
+          && (packageVersion == null || lib.versionAtLeast packageVersion "1.2.15");
+        terminalOption = if isOpenCode2 then "programs.opencode.cli" else "programs.opencode.tui";
+        terminalFile = if isOpenCode2 then "cli.json" else "tui.json";
+        terminalDocs =
+          if isOpenCode2 then
+            "https://opencode.ai/v2/docs/cli/config"
+          else
+            "https://opencode.ai/docs/config#tui";
       in
-      lib.optionals (hasTuiConfig && deprecatedConfigKeys != [ ]) [
+      lib.optionals showDeprecatedKeysWarning [
         ''
           programs.opencode.settings contains deprecated TUI-specific keys: ${lib.concatStringsSep ", " deprecatedConfigKeys}
 
-          These settings should be moved to programs.opencode.tui instead.
+          These settings should be moved to ${terminalOption} instead.
 
-          OpenCode v1.2.15+ requires TUI settings in a separate tui.json file.
-          See: https://opencode.ai/docs/config#tui
+          OpenCode requires terminal client settings in ${terminalFile}.
+          See: ${terminalDocs}
         ''
-      ];
+      ]
+      ++ lib.optionals (cfg.tui != { } && isOpenCode2) [
+        ''
+          programs.opencode.tui is ignored by OpenCode 2.
+
+          OpenCode 2 replaced tui.json with a single global cli.json. Move
+          terminal client settings to programs.opencode.cli. When
+          programs.opencode.mutableSettings is enabled, OPENCODE_TUI_CONFIG is
+          ignored as well.
+
+          OpenCode 2 only migrates an existing tui.json when cli.json does not
+          exist. See: https://opencode.ai/v2/docs/cli/config
+        ''
+      ]
+      ++
+        lib.optionals
+          (cfg.cli != { } && packageVersion != null && !lib.versionAtLeast packageVersion "2.0.0")
+          [
+            ''
+              programs.opencode.cli requires OpenCode 2 or later, but the configured
+              package is version ${packageVersion}.
+
+              Use programs.opencode.tui for OpenCode 1, or update
+              programs.opencode.package.
+            ''
+          ];
 
     home = {
       packages = mkIf (packageWithExtraPackages != null) [ packageWithExtraPackages ];
