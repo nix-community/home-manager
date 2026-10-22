@@ -4,6 +4,7 @@
   codex-settings-yaml = ./settings-yaml.nix;
   codex-empty-settings = ./empty-settings.nix;
   codex-mutable-settings = ./mutable-settings.nix;
+  codex-mutable-mcp-transport = ./mutable-mcp-transport.nix;
   codex-mutable-transition = ./mutable-transition.nix;
   codex-immutable-transition = ./immutable-transition.nix;
   codex-legacy-custom-instructions = ./legacy-custom-instructions.nix;

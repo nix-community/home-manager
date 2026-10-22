@@ -167,7 +167,22 @@ in
         inherit pkgs;
         format = "toml";
         empty = "{}";
-        jqOperation = "$dynamic * $static";
+        # Codex refuses to start when an MCP server mixes stdio and HTTP keys,
+        # so a declared transport drops the keys of the other one.
+        jqOperation = ''
+          ($dynamic * $static)
+          | reduce (($static.mcp_servers // {}) | to_entries[]) as $server (.;
+              if $server.value | has("url") then
+                .mcp_servers[$server.key] |= del(.command, .args, .env, .env_vars, .cwd)
+              elif $server.value | has("command") then
+                .mcp_servers[$server.key] |= del(
+                  .url, .bearer_token, .bearer_token_env_var, .http_headers,
+                  .env_http_headers, .http_headers_helper, .oauth, .oauth_resource, .auth
+                )
+              else
+                .
+              end)
+        '';
         path = settingsPath;
         staticSettings = settingsSource;
         mode = "600";
