@@ -50,13 +50,6 @@ in
         {
           model = "gemma3:latest";
           model_provider = "ollama";
-          model_providers = {
-            ollama = {
-              name = "Ollama";
-              base_url = "http://localhost:11434/v1";
-              env_key = "OLLAMA_API_KEY";
-            };
-          };
           mcp_servers = {
             context7 = {
               command = "npx";
