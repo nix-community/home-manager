@@ -35,27 +35,8 @@ let
 
   # t3code's headless server binary. pkgs.t3code's mainProgram is the Electron
   # desktop app (t3code-desktop); the server run as a service is `t3`.
-  serverBinName = "t3";
-
-  # Wrap the package so the coding-agent and VCS CLIs the user configures are
-  # on PATH for the server's subprocesses (git, gh, claude-code, opencode, ...).
-  serverPackage =
-    if cfg.package != null && serverCfg.extraPackages != [ ] then
-      pkgs.symlinkJoin {
-        inherit (cfg.package) meta;
-        name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
-        paths = [ cfg.package ];
-        preferLocalBuild = true;
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/${serverBinName} \
-            --suffix PATH : ${lib.makeBinPath serverCfg.extraPackages}
-        '';
-      }
-    else
-      cfg.package;
-
-  serverExe = lib.getExe' serverPackage serverBinName;
+  # The package wraps `t3` with the coding-agent and VCS CLIs it drives.
+  serverExe = lib.getExe' cfg.package "t3";
 
   serverArgs = [
     "serve"
@@ -75,8 +56,19 @@ in
       type = types.nullOr types.package;
       default = pkgs.t3code or null;
       defaultText = literalExpression "pkgs.t3code";
+      example = literalExpression ''
+        pkgs.t3code.override {
+          enableClaude = true;
+          enableOpencode = true;
+        }
+      '';
       description = ''
         The t3code package to install.
+
+        The package puts {command}`git`, {command}`gh` and {command}`codex` on
+        t3code's {env}`PATH` by default. Override it to enable other CLIs,
+        such as Claude Code or OpenCode, for both the desktop app and the
+        server.
       '';
     };
 
@@ -177,16 +169,6 @@ in
 
     server = {
       enable = lib.mkEnableOption "the t3code headless server as a user service";
-
-      extraPackages = mkOption {
-        type = types.listOf types.package;
-        default = [ ];
-        example = literalExpression "[ pkgs.git pkgs.gh pkgs.claude-code pkgs.opencode ]";
-        description = ''
-          Extra packages placed on the server's {env}`PATH` so t3code can shell
-          out to the coding-agent and version-control CLIs it drives.
-        '';
-      };
 
       extraArgs = mkOption {
         type = types.listOf types.str;

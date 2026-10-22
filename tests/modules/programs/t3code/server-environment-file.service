@@ -1,0 +1,13 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+EnvironmentFile=/run/secrets/t3code
+ExecStart=/nix/store/00000000000000000000000000000000-t3/bin/t3 serve
+Restart=on-failure
+RestartSec=5
+
+[Unit]
+After=network.target
+Description=t3code headless server
+Documentation=https://t3.codes
