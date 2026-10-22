@@ -1,0 +1,57 @@
+[mcp_servers.to_http]
+url = "https://new.example.com/mcp"
+http_headers = { X-New = "2" }
+startup_timeout_sec = 30
+tool_timeout_sec = 90
+enabled = false
+scopes = ["read"]
+future_setting = "http-value"
+
+[mcp_servers.to_http.tools.search]
+approval_mode = "approve"
+
+[mcp_servers.to_stdio]
+command = "new-mcp"
+args = ["--new"]
+env = { NEW_TOKEN = "new-token" }
+startup_timeout_sec = 45
+tool_timeout_sec = 120
+enabled = true
+scopes = ["write"]
+future_setting = "stdio-value"
+
+[mcp_servers.to_stdio.tools.search]
+approval_mode = "approve"
+
+[mcp_servers.unchanged_stdio]
+command = "unchanged-mcp"
+args = ["--unchanged"]
+env = { KEEP = "yes" }
+env_vars = ["KEEP_TOKEN"]
+cwd = "/unchanged-directory"
+
+[mcp_servers.unchanged_http]
+url = "https://unchanged.example.com/mcp"
+bearer_token_env_var = "KEEP_TOKEN"
+http_headers = { X-Keep = "yes" }
+env_http_headers = { X-Token = "KEEP_TOKEN" }
+http_headers_helper = "keep-headers-helper"
+oauth = { client_id = "keep-client" }
+oauth_resource = "https://unchanged.example.com"
+auth = "oauth"
+
+[mcp_servers.undeclared]
+command = "user-mcp"
+args = ["--user"]
+env = { KEEP = "yes" }
+future_setting = "undeclared-value"
+
+[mcp_servers.undeclared.tools.search]
+approval_mode = "approve"
+
+[mcp_servers.partial]
+url = "https://partial.example.com/mcp"
+bearer_token_env_var = "PARTIAL_TOKEN"
+http_headers = { X-Partial = "yes" }
+startup_timeout_sec = 60
+future_setting = "partial-value"
