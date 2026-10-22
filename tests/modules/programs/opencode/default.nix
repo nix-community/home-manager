@@ -40,4 +40,7 @@
   opencode-tui-settings = ./tui-settings.nix;
   opencode-tui-empty = ./tui-empty.nix;
   opencode-tui-with-settings = ./tui-with-settings.nix;
+
+  opencode-cli-settings = ./cli-settings.nix;
+  opencode-cli-empty = ./cli-empty.nix;
 }

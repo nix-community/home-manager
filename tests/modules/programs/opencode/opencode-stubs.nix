@@ -1,15 +1,5 @@
-{ realPkgs, ... }:
-
 {
-  nixpkgs.overlays = [
-    (_: super: {
-      buildPackages = super.buildPackages.extend (
-        _: _: {
-          inherit (realPkgs) check-jsonschema;
-        }
-      );
-    })
-  ];
+  imports = [ ./opencode-check-jsonschema.nix ];
 
   test.stubs.opencode = {
     extraAttrs.passthru.jsonschema = {

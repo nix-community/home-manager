@@ -16,8 +16,10 @@ let
   cfg = config.programs.opencode;
   webCfg = cfg.web;
   hasSettings = cfg.settings != { } || transformedMcpServers != { };
+  hasCli = cfg.cli != { };
   settingsPath = "opencode/${if cfg.mutableSettings then "home-manager.json" else "opencode.json"}";
   tuiPath = "opencode/${if cfg.mutableSettings then "home-manager-tui.json" else "tui.json"}";
+  cliPath = "opencode/cli.json";
   effectiveFile = path: config.home.file."${config.xdg.configHome}/${path}";
   absoluteTarget =
     path:
@@ -35,6 +37,16 @@ let
   );
 
   jsonFormat = pkgs.formats.json { };
+  cliConfig = {
+    "$schema" = "https://opencode.ai/v2/cli.json";
+  }
+  // cfg.cli;
+
+  packageSchema =
+    name: if cfg.package == null then null else cfg.package.passthru.jsonschema.${name} or null;
+  configSchema = packageSchema "config";
+  tuiSchema = packageSchema "tui";
+  cliSchema = packageSchema "cli";
 
   toOpencodeShape =
     s:
@@ -239,6 +251,30 @@ in
         Since OpenCode v1.2.15, TUI settings must be in a separate tui.json file.
         Settings like `theme`, `keybinds`, and `tui` in {option}`programs.opencode.settings`
         are deprecated and should be moved here.
+      '';
+    };
+
+    cli = mkOption {
+      inherit (jsonFormat) type;
+      default = { };
+      example = {
+        theme = {
+          name = "system";
+          mode = "system";
+        };
+        tabs.mode = "auto";
+      };
+
+      description = ''
+        CLI-specific configuration written to
+        {file}`$XDG_CONFIG_HOME/opencode/cli.json`.
+
+        This includes theme, tabs, diffs, sessions, keybinds, and other
+        terminal-client settings. See
+        <https://opencode.ai/v2/docs/cli/config> for the documentation.
+
+        Note that `"$schema": "https://opencode.ai/v2/cli.json"` is automatically
+        added.
       '';
     };
 
@@ -538,19 +574,29 @@ in
             corresponding OpenCode JSON schema of the configured package using
             {command}`check-jsonschema`.
           '';
+          cli = lib.mkEnableOption ''
+            the validation of the generated configuration file
+            ({file}`$XDG_CONFIG_HOME/opencode/cli.json`, or
+            {file}`home-manager-cli.json` when mutable configuration is enabled) against the
+            corresponding OpenCode JSON schema of the configured package using
+            {command}`check-jsonschema`.
+          '';
         };
       };
       default = { };
       description = ''
         Whether to validate the generated configuration files
-        ({file}`$XDG_CONFIG_HOME/opencode/opencode.json` and
+        ({file}`$XDG_CONFIG_HOME/opencode/opencode.json`,
+        {file}`$XDG_CONFIG_HOME/opencode/cli.json`, and
         {file}`$XDG_CONFIG_HOME/opencode/tui.json`) against the
         corresponding OpenCode JSON schemas of the configured package
-        ({option}`programs.opencode.package`, `config.json` and `tui.json`
-        from `passthru.jsonschema`) using {command}`check-jsonschema`.
-        When {option}`programs.opencode.mutableSettings` is enabled,
-        validation applies to the generated {file}`home-manager.json` and
-        {file}`home-manager-tui.json` layers instead of the writable user files.
+        ({option}`programs.opencode.package`, `config.json`, `cli.json`, and
+        `tui.json` from `passthru.jsonschema`) using
+        {command}`check-jsonschema`. When
+        {option}`programs.opencode.mutableSettings` is enabled, validation
+        applies to the generated {file}`home-manager.json`,
+        {file}`home-manager-cli.json`, and {file}`home-manager-tui.json` layers
+        instead of the writable user files.
       '';
     };
   };
@@ -558,8 +604,13 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = (cfg.validateFiles.config || cfg.validateFiles.tui) -> cfg.package != null;
+        assertion =
+          (cfg.validateFiles.config || cfg.validateFiles.cli || cfg.validateFiles.tui) -> cfg.package != null;
         message = "`programs.opencode.validateFiles` requires `programs.opencode.package` to be set";
+      }
+      {
+        assertion = !cfg.validateFiles.cli || cfg.package == null || cliSchema != null;
+        message = "`programs.opencode.validateFiles.cli` requires `programs.opencode.package` to provide `passthru.jsonschema.cli` (OpenCode 2 or later)";
       }
       {
         assertion = !lib.isPath cfg.commands || lib.pathIsDirectory cfg.commands;
@@ -627,7 +678,7 @@ in
               cfg.settings // (lib.optionalAttrs (mergedMcpServers != { }) { mcp = mergedMcpServers; });
             orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
               inherit pkgs jsonFormat;
-              schema = if cfg.validateFiles.config then cfg.package.passthru.jsonschema.config else null;
+              schema = if cfg.validateFiles.config then configSchema else null;
             };
           in
           orderedJsonFormat.generate "opencode.json" (
@@ -642,7 +693,7 @@ in
         let
           orderedJsonFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
             inherit pkgs jsonFormat;
-            schema = if cfg.validateFiles.tui then cfg.package.passthru.jsonschema.tui else null;
+            schema = if cfg.validateFiles.tui then tuiSchema else null;
           };
         in
         {
@@ -652,6 +703,18 @@ in
             }
             // cfg.tui
           );
+        }
+      );
+
+      "${cliPath}" = mkIf hasCli (
+        let
+          cliFormat = lib.hm.generators.mkDAGOrderedJsonFormat {
+            inherit pkgs jsonFormat;
+            schema = if cfg.validateFiles.cli then cliSchema else null;
+          };
+        in
+        {
+          source = cliFormat.generate "opencode-cli.json" cliConfig;
         }
       );
 
