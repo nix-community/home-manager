@@ -77,6 +77,7 @@ in
           Unit = {
             Description = "quickshell";
             Documentation = "https://quickshell.outfoxxed.me/docs/";
+            Wants = [ cfg.systemd.target ];
             After = [ cfg.systemd.target ];
           };
 
