@@ -40,4 +40,12 @@
   opencode-tui-settings = ./tui-settings.nix;
   opencode-tui-empty = ./tui-empty.nix;
   opencode-tui-with-settings = ./tui-with-settings.nix;
+  opencode-tui-v2-warning = ./tui-v2-warning.nix;
+
+  opencode-cli-settings = ./cli-settings.nix;
+  opencode-cli-empty = ./cli-empty.nix;
+  opencode-cli-v1-warning = ./cli-v1-warning.nix;
+  opencode-layer-cli = ./layer-cli.nix;
+  opencode-settings-tui-key-v2-warning = ./settings-tui-key-v2-warning.nix;
+  opencode-validate-tui-v2 = ./validate-tui-v2.nix;
 }

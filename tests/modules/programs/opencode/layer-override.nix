@@ -5,6 +5,8 @@
   ...
 }:
 {
+  imports = [ ./opencode-stubs.nix ];
+
   xdg.configFile."opencode/home-manager.json" = {
     target = "${config.home.homeDirectory}/layers/my % $hm_layer_probe \"quoted\" back\\$hm_layer_probe `printf altered` settings.json";
     enable = true;
@@ -16,7 +18,6 @@
   programs.opencode = {
     enable = true;
     mutableSettings = true;
-    package = null;
     settings.permission.bash = {
       "aa *" = lib.hm.dag.entryAfter [ "zz *" ] "allow";
       "zz *" = "ask";

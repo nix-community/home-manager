@@ -1,9 +1,10 @@
 { config, lib, ... }:
 {
+  imports = [ ./opencode-stubs.nix ];
+
   programs.opencode = {
     enable = true;
     mutableSettings = true;
-    package = null;
     settings.permission.bash = {
       "aa *" = lib.hm.dag.entryAfter [ "zz *" ] "allow";
       "zz *" = "ask";
