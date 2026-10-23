@@ -716,18 +716,15 @@ in
           exist. See: https://opencode.ai/v2/docs/cli/config
         ''
       ]
-      ++
-        lib.optionals
-          (hasCli && !isOpenCode2)
-          [
-            ''
-              programs.opencode.cli requires OpenCode 2 or later, but the configured
-              package is version ${packageVersion}.
+      ++ lib.optionals (hasCli && !isOpenCode2) [
+        ''
+          programs.opencode.cli requires OpenCode 2 or later, but the configured
+          package is version ${packageVersion}.
 
-              Use programs.opencode.tui for OpenCode 1, or update
-              programs.opencode.package.
-            ''
-          ];
+          Use programs.opencode.tui for OpenCode 1, or update
+          programs.opencode.package.
+        ''
+      ];
 
     home = {
       packages = mkIf (packageWithExtraPackages != null) [ packageWithExtraPackages ];
