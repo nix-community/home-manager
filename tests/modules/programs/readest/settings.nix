@@ -67,7 +67,11 @@
         }
       '';
 
-      settingsPath = ".config/com.bilingify.readest/settings.json";
+      settingsPath =
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          "Library/Application Support/com.bilingify.readest/settings.json"
+        else
+          ".config/com.bilingify.readest/settings.json";
       activationScript = pkgs.writeScript "readest-settings-activation" (
         config.home.activation.readestSettings.data
       );
