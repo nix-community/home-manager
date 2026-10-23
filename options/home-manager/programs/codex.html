@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-ba4fb47d.js";
+            window.path_to_searchindex_js = "../../../searchindex-14310253.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -458,13 +458,6 @@ null or TOML value</p>
 <pre><code class="language-nix">{
   model = "gemma3:latest";
   model_provider = "ollama";
-  model_providers = {
-    ollama = {
-      name = "Ollama";
-      base_url = "http://localhost:11434/v1";
-      env_key = "OLLAMA_API_KEY";
-    };
-  };
   mcp_servers = {
     context7 = {
       command = "npx";

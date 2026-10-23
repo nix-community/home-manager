@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-ba4fb47d.js";
+            window.path_to_searchindex_js = "../../../searchindex-14310253.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -230,8 +230,11 @@ JSON value</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
   default_user = "spanish_inquisition";
-  listenbrainz_url = "https://api.listenbrainz.org/1/";
-  musicbrainz_url = "http://musicbrainz.org/ws/2";
+  listenbrainz_domain = "api.listenbrainz.org";
+  musicbrainz_server = {
+    authority = "musicbrainz.org";
+    use_https = true;
+  };
 }
 </code></pre>
 <p><em>Declared by:</em></p>

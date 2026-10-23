@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-ba4fb47d.js";
+            window.path_to_searchindex_js = "searchindex-14310253.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-c599a4a0.js"></script>
@@ -13718,7 +13718,7 @@ JSON value</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
   relays = {
-    "wss =//relay-jp.nostr.wirednet.jp" = {
+    "wss://relay-jp.nostr.wirednet.jp" = {
       read = true;
       search = false;
       write = true;
@@ -13914,8 +13914,11 @@ JSON value</p>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
   default_user = "spanish_inquisition";
-  listenbrainz_url = "https://api.listenbrainz.org/1/";
-  musicbrainz_url = "http://musicbrainz.org/ws/2";
+  listenbrainz_domain = "api.listenbrainz.org";
+  musicbrainz_server = {
+    authority = "musicbrainz.org";
+    use_https = true;
+  };
 }
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -20871,13 +20874,6 @@ null or TOML value</p>
 <pre><code class="language-nix">{
   model = "gemma3:latest";
   model_provider = "ollama";
-  model_providers = {
-    ollama = {
-      name = "Ollama";
-      base_url = "http://localhost:11434/v1";
-      env_key = "OLLAMA_API_KEY";
-    };
-  };
   mcp_servers = {
     context7 = {
       command = "npx";
@@ -56823,16 +56819,14 @@ JSON value</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  settings = {
-    favorites = [
-      {
-        model = "gpt-5.5";
-        provider = "codex";
-      }
-    ];
-    sidebarProjectGroupingMode = "repository";
-    timestampFormat = "locale";
-  };
+  favorites = [
+    {
+      model = "gpt-5.5";
+      provider = "codex";
+    }
+  ];
+  sidebarProjectGroupingMode = "repository";
+  timestampFormat = "locale";
 }
 </code></pre>
 <p><em>Declared by:</em></p>
@@ -56970,7 +56964,7 @@ JSON value</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">{
-  enableAssistantStreaming = true;
+  enableProviderUpdateChecks = false;
   providerInstances = {
     codex = {
       config = {
