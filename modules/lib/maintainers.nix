@@ -325,6 +325,12 @@
     github = "kalhauge";
     githubId = 1182166;
   };
+  kallisti-dev = {
+    name = "Adam Curtis";
+    email = "kallisti.dev@gmail.com";
+    github = "kallisti-dev";
+    githubId = 1530244;
+  };
   kayskayskays = {
     name = "Kays";
     email = "115312476+kayskayskays@users.noreply.github.com";
