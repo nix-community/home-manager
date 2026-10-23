@@ -24,7 +24,10 @@ in
   meta.maintainers = [ lib.maintainers.nyxar77 ];
   options.programs.readest = {
     enable = mkEnableOption "Readest";
-    package = mkPackageOption pkgs "readest" { nullable = true; };
+    package = mkPackageOption pkgs "readest" {
+      nullable = true;
+      extraDescription = "Set programs.readest.package to null on platforms where readest is not available";
+    };
 
     settings = mkOption {
       inherit (jsonFormat) type;
