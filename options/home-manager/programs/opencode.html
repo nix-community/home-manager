@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-14310253.js";
+            window.path_to_searchindex_js = "../../../searchindex-23da8740.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -260,6 +260,41 @@ The directory is symlinked to <code>$XDG_CONFIG_HOME/opencode/agents/</code>.</p
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.opencode.cli"><a class="header" href="#opt-programs.opencode.cli">programs.opencode.cli</a></h2>
+<p>CLI-specific configuration written to
+<code>$XDG_CONFIG_HOME/opencode/cli.json</code>.</p>
+<p>This includes theme, tabs, diffs, sessions, keybinds, and other
+terminal-client settings. See
+<a href="https://opencode.ai/v2/docs/cli/config">https://opencode.ai/v2/docs/cli/config</a> for the documentation.</p>
+<p>Note that <code>"$schema": "https://opencode.ai/v2/cli.json"</code> is automatically
+added.</p>
+<p>OpenCode 2 reads this file and rewrites it when settings are changed
+from the TUI. If OpenCode has already created <code>cli.json</code>, back up
+or move the app-owned file before enabling this option, or enable
+<code>programs.opencode.mutableSettings</code> to keep declarative
+settings in a separate layer.</p>
+<p>OpenCode 1 reads <code>tui.json</code> instead; use
+<code>programs.opencode.tui</code> for OpenCode 1.</p>
+<p><em>Type:</em>
+JSON value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  tabs = {
+    mode = "auto";
+  };
+  theme = {
+    mode = "system";
+    name = "system";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.opencode.commands"><a class="header" href="#opt-programs.opencode.commands">programs.opencode.commands</a></h2>
 <p>Custom commands for opencode.</p>
 <p>This option can either be:</p>
@@ -362,14 +397,23 @@ list of package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.opencode.mutableSettings"><a class="header" href="#opt-programs.opencode.mutableSettings">programs.opencode.mutableSettings</a></h2>
-<p>Whether to leave <code>$XDG_CONFIG_HOME/opencode/opencode.json</code> and
+<p>Whether to leave <code>$XDG_CONFIG_HOME/opencode/opencode.json</code>,
+<code>$XDG_CONFIG_HOME/opencode/cli.json</code>, and
 <code>$XDG_CONFIG_HOME/opencode/tui.json</code> writable by OpenCode.</p>
-<p>When enabled, declarative settings and TUI settings are written to
-<code>$XDG_CONFIG_HOME/opencode/home-manager.json</code> and
-<code>$XDG_CONFIG_HOME/opencode/home-manager-tui.json</code> and loaded through
-<code>OPENCODE_CONFIG</code> and <code>OPENCODE_TUI_CONFIG</code>. Declarative settings
-override global user settings; project settings can still override them.
-<code>OPENCODE_TUI_CONFIG</code> requires OpenCode 1.2.15 or later.</p>
+<p>When enabled, declarative settings, CLI settings, and TUI settings are
+written to <code>$XDG_CONFIG_HOME/opencode/home-manager.json</code>,
+<code>$XDG_CONFIG_HOME/opencode/home-manager-cli.json</code>, and
+<code>$XDG_CONFIG_HOME/opencode/home-manager-tui.json</code>. Declarative
+settings and TUI settings are loaded through <code>OPENCODE_CONFIG</code> and
+<code>OPENCODE_TUI_CONFIG</code>. CLI settings are loaded through
+<code>OPENCODE_CLI_CONFIG_CONTENT</code> because OpenCode 2 does not provide a
+path selector for <code>cli.json</code>; the generated
+<code>home-manager-cli.json</code> layer contains the same content for
+inspection and validation. Declarative settings override global user
+settings; project settings can still override them.
+<code>OPENCODE_TUI_CONFIG</code> requires OpenCode 1.2.15 or later and is
+ignored by OpenCode 2. <code>OPENCODE_CLI_CONFIG_CONTENT</code> requires
+OpenCode 2.</p>
 <p>These variables are set through <code>home.sessionVariables</code> and must
 reach OpenCode launches outside the web service for declarative settings
 to be loaded. The web service receives them automatically.</p>
@@ -553,6 +597,9 @@ See <a href="https://opencode.ai/docs/tui#configure">https://opencode.ai/docs/tu
 <p>Since OpenCode v1.2.15, TUI settings must be in a separate tui.json file.
 Settings like <code>theme</code>, <code>keybinds</code>, and <code>tui</code> in <code>programs.opencode.settings</code>
 are deprecated and should be moved here.</p>
+<p>OpenCode 2 no longer reads <code>tui.json</code> and uses a single global
+<code>cli.json</code> instead. Use <code>programs.opencode.cli</code> with
+OpenCode 2; this option remains for OpenCode 1.</p>
 <p><em>Type:</em>
 JSON value</p>
 <p><em>Default:</em></p>
@@ -572,18 +619,40 @@ JSON value</p>
 </ul>
 <h2 id="opt-programs.opencode.validateFiles"><a class="header" href="#opt-programs.opencode.validateFiles">programs.opencode.validateFiles</a></h2>
 <p>Whether to validate the generated configuration files
-(<code>$XDG_CONFIG_HOME/opencode/opencode.json</code> and
+(<code>$XDG_CONFIG_HOME/opencode/opencode.json</code>,
+<code>$XDG_CONFIG_HOME/opencode/cli.json</code>, and
 <code>$XDG_CONFIG_HOME/opencode/tui.json</code>) against the
 corresponding OpenCode JSON schemas of the configured package
-(<code>programs.opencode.package</code>, <code>config.json</code> and <code>tui.json</code>
-from <code>passthru.jsonschema</code>) using <code>check-jsonschema</code>.
-When <code>programs.opencode.mutableSettings</code> is enabled,
-validation applies to the generated <code>home-manager.json</code> and
-<code>home-manager-tui.json</code> layers instead of the writable user files.</p>
+(<code>programs.opencode.package</code>, <code>config.json</code>, <code>cli.json</code>, and
+<code>tui.json</code> from <code>passthru.jsonschema</code>) using
+<code>check-jsonschema</code>. When
+<code>programs.opencode.mutableSettings</code> is enabled, validation
+applies to the generated <code>home-manager.json</code>,
+<code>home-manager-cli.json</code>, and <code>home-manager-tui.json</code> layers
+instead of the writable user files.</p>
 <p><em>Type:</em>
 submodule</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opencode.nix">&lt;home-manager/modules/programs/opencode.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.opencode.validateFiles.cli"><a class="header" href="#opt-programs.opencode.validateFiles.cli">programs.opencode.validateFiles.cli</a></h2>
+<p>Whether to enable the validation of the generated configuration file
+(<code>$XDG_CONFIG_HOME/opencode/cli.json</code>, or
+<code>home-manager-cli.json</code> when mutable configuration is enabled) against the
+corresponding OpenCode JSON schema of the configured package using
+<code>check-jsonschema</code>. This requires an OpenCode 2 package.
+.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -613,7 +682,8 @@ boolean</p>
 (<code>$XDG_CONFIG_HOME/opencode/tui.json</code>, or
 <code>home-manager-tui.json</code> when mutable configuration is enabled) against the
 corresponding OpenCode JSON schema of the configured package using
-<code>check-jsonschema</code>.
+<code>check-jsonschema</code>. This requires an OpenCode 1 package;
+OpenCode 2 no longer ships a <code>tui.json</code> schema.
 .</p>
 <p><em>Type:</em>
 boolean</p>
