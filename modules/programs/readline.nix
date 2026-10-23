@@ -36,6 +36,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.hm.maintainers.kallisti-dev ];
+
   options.programs.readline = {
     enable = lib.mkEnableOption "readline";
 
