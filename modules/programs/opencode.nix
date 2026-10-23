@@ -718,7 +718,7 @@ in
       ]
       ++
         lib.optionals
-          (cfg.cli != { } && packageVersion != null && !lib.versionAtLeast packageVersion "2.0.0")
+          (hasCli && !isOpenCode2)
           [
             ''
               programs.opencode.cli requires OpenCode 2 or later, but the configured
