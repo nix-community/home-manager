@@ -1509,6 +1509,13 @@
     name = "Johan Larsson";
     source = "nixpkgs";
   };
+  jonocodes = {
+    email = "jono@foodnotblogs.com";
+    github = "jonocodes";
+    githubId = 1310468;
+    name = "Jono Finger";
+    source = "nixpkgs";
+  };
   jonringer = {
     email = "jonringer117@gmail.com";
     github = "jonringer";
@@ -1576,6 +1583,13 @@
     github = "kalhauge";
     githubId = 1182166;
     name = "Christian Gram Kalhauge";
+    source = "home-manager";
+  };
+  kallisti-dev = {
+    email = "kallisti.dev@gmail.com";
+    github = "kallisti-dev";
+    githubId = 1530244;
+    name = "Adam Curtis";
     source = "home-manager";
   };
   kamadorueda = {
