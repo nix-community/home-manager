@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-67d9e3f1.js";
+            window.path_to_searchindex_js = "../../../searchindex-ba4fb47d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -192,7 +192,7 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/readest.nix">&lt;home-manager/modules/programs/readest.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.readest.package"><a class="header" href="#opt-programs.readest.package">programs.readest.package</a></h2>
-<p>The readest package to use.</p>
+<p>The readest package to use. Set programs.readest.package to null on platforms where readest is not available</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
@@ -203,8 +203,11 @@ null or package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/readest.nix">&lt;home-manager/modules/programs/readest.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.readest.settings"><a class="header" href="#opt-programs.readest.settings">programs.readest.settings</a></h2>
-<p>Readest preferences to merge into
-<code>$XDG_CONFIG_HOME/com.bilingify.readest/settings.json</code>.</p>
+<p>Readest preferences to merge into its settings file in the app config
+directory:
+<code>$XDG_CONFIG_HOME/com.bilingify.readest/settings.json</code> on Linux
+or <code>~/Library/Application Support/com.bilingify.readest/settings.json</code>
+on Darwin.</p>
 <p>Readest owns this file and may add or update values while it is
 running. Values declared here take precedence on Home Manager
 activation, while values not declared here are preserved.</p>
