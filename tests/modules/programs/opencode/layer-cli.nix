@@ -10,12 +10,7 @@ let
     tabs.mode = "off";
     plugins = [ "plugin-$HOME-\"quoted\"-`cmd`" ];
   };
-  expectedCli = builtins.toJSON (
-    {
-      "$schema" = "https://opencode.ai/v2/cli.json";
-    }
-    // cli
-  );
+  expectedCli = builtins.toJSON (lib.importJSON ./cli-layer.json);
 in
 {
   imports = [ ./opencode-v2-stubs.nix ];
