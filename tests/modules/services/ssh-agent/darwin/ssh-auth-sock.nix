@@ -7,7 +7,7 @@
 
   nmt.script = ''
     assertFileContains \
-      home-files/.profile \
+      home-files/.bash_profile \
       'export SSH_AUTH_SOCK="$(@system_cmds@/bin/getconf DARWIN_USER_TEMP_DIR)/ssh-agent"'
     assertFileContains \
       home-files/.config/fish/config.fish \

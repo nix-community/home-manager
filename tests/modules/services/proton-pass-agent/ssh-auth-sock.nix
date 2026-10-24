@@ -27,7 +27,7 @@
     in
     ''
       assertFileContains \
-        home-files/.profile \
+        home-files/.bash_profile \
         'export SSH_AUTH_SOCK="${bashDir}/proton-pass-agent"'
       assertFileContains \
         home-files/.config/fish/config.fish \
