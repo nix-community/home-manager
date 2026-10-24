@@ -11,7 +11,7 @@
         plistFile=LaunchAgents/org.nix-community.home.proton-pass-agent.plist
 
         assertFileExists $plistFile
-        assertFileContent $plistFile ${./basic-service-expected.plist}
+        assertFileContent "$(normalizeStorePaths "$plistFile")" ${./basic-service-expected.plist}
       ''
     else
       ''

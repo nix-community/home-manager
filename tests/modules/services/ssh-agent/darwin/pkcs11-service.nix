@@ -15,7 +15,7 @@
 
   nmt.script = ''
     assertFileContent \
-      LaunchAgents/org.nix-community.home.ssh-agent.plist \
+      "$(normalizeStorePaths LaunchAgents/org.nix-community.home.ssh-agent.plist)" \
       ${./pkcs11-service-expected.plist}
   '';
 }
