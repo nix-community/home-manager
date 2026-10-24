@@ -13,5 +13,6 @@
     ./spectrwm.nix
     ./wayfire.nix
     ./xmonad.nix
+    ./pinnacle.nix
   ];
 }
