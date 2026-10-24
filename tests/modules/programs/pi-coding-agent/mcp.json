@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "disabled": {
+      "command": "disabled-server",
+      "enabled": false
+    },
+    "docs": {
+      "exposure": "deferred",
+      "headers": {
+        "Authorization": "Bearer ${DOCS_TOKEN}"
+      },
+      "oauth": {
+        "clientId": "pi-client"
+      },
+      "toolExposure": {
+        "search": "direct"
+      },
+      "url": "https://example.com/mcp"
+    },
+    "filesystem": {
+      "args": [
+        "@modelcontextprotocol/server-filesystem"
+      ],
+      "command": "npx",
+      "cwd": "~/projects",
+      "env": {
+        "API_KEY": "${API_KEY}"
+      }
+    }
+  }
+}

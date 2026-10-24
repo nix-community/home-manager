@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "disabled": {
+      "command": "disabled-server",
+      "enabled": false
+    },
+    "docs": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "url": "https://example.com/mcp"
+    },
+    "everything": {
+      "args": [
+        "@modelcontextprotocol/server-everything"
+      ],
+      "command": "npx"
+    }
+  }
+}
