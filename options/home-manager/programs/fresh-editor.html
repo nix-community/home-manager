@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-23da8740.js";
+            window.path_to_searchindex_js = "../../../searchindex-4a0c9321.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -224,6 +224,31 @@ list of package</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">[ pkgs.rust-analyzer ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/fresh-editor.nix">&lt;home-manager/modules/programs/fresh-editor.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.fresh-editor.mutableSettings"><a class="header" href="#opt-programs.fresh-editor.mutableSettings">programs.fresh-editor.mutableSettings</a></h2>
+<p>Whether to put declarative settings in Fresh’s platform configuration
+file, leaving <code>fresh/config.json</code> writable by Fresh. Declarative
+settings override the same keys in the user file. Project and session
+settings take precedence over the declarative settings.</p>
+<p>The declarative file is
+<code>$XDG_CONFIG_HOME/fresh/config_linux.json</code> on Linux and
+<code>~/.config/fresh/config_macos.json</code> on macOS. Fresh ignores
+<code>XDG_CONFIG_HOME</code> on macOS.</p>
+<p>Before disabling this option while
+<code>programs.fresh-editor.settings</code> is non-empty, remove or back up
+the Fresh-owned <code>fresh/config.json</code>. Home Manager otherwise
+treats it as a file collision.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

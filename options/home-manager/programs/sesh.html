@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-23da8740.js";
+            window.path_to_searchindex_js = "../../../searchindex-4a0c9321.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -214,9 +214,10 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/sesh.nix">&lt;home-manager/modules/programs/sesh.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.sesh.package"><a class="header" href="#opt-programs.sesh.package">programs.sesh.package</a></h2>
-<p>The sesh package to use.</p>
+<p>The sesh package to use. When set to <code>null</code>, sesh must be available on PATH for the shell alias
+and Tmux integration.</p>
 <p><em>Type:</em>
-package</p>
+null or package</p>
 <p><em>Default:</em></p>
 <pre><code class="language-nix">pkgs.sesh
 </code></pre>
