@@ -1,0 +1,7 @@
+'e asm.describe=false
+'e cmd.cprompt=trailing\
+'e cmd.prompt=px;s+1
+'e cmd.vprompt=?e "quoted";?e \path\;?e `s+1` $(s+1) @ 1 | s+1 ~ x # x
+'e scr.color=2
+'e scr.utf8=true
+eco bobcrawl
