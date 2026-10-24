@@ -31,6 +31,14 @@ in
     (lib.mkRemovedOptionModule [ "programs" "vicinae" "useLayerShell" ] ''
       Set programs.vicinae.settings.launcher_window.layer_shell.enabled instead.
     '')
+    (lib.mkRenamedOptionModule
+      [ "programs" "vicinae" "systemd" "enable" ]
+      [ "programs" "vicinae" "service" "enable" ]
+    )
+    (lib.mkRenamedOptionModule
+      [ "programs" "vicinae" "systemd" "autoStart" ]
+      [ "programs" "vicinae" "service" "autoStart" ]
+    )
   ];
 
   options.programs.vicinae = {
@@ -66,15 +74,17 @@ in
       '';
     };
 
-    systemd = {
-      enable = lib.mkEnableOption "vicinae systemd integration";
+    service = {
+      enable = lib.mkEnableOption "vicinae user service";
 
       autoStart = lib.mkOption {
         type = lib.types.bool;
         default = true;
         description = "If the vicinae daemon should be started automatically";
       };
+    };
 
+    systemd = {
       target = lib.mkOption {
         type = lib.types.str;
         default = "graphical-session.target";
@@ -205,16 +215,27 @@ in
 
   config =
     let
+      restartLaunchdAgent =
+        lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.service.enable && cfg.package != null)
+          ''
+            domain="${config.launchd.agents.vicinae.domain}/$(id -u)"
+            /bin/launchctl kickstart -k "$domain/org.nix-community.home.vicinae" \
+              2>/dev/null || true
+          '';
+
       themeFiles = lib.mapAttrs' (
         name: theme:
         lib.nameValuePair "vicinae/themes/${name}.toml" {
           source = tomlFormat.generate "vicinae-${name}-theme" theme;
+          onChange = restartLaunchdAgent;
         }
       ) cfg.themes;
     in
     lib.mkIf cfg.enable {
       assertions = [
-        (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs lib.platforms.linux)
+        (lib.hm.assertions.assertPlatform "programs.vicinae" pkgs (
+          lib.platforms.linux ++ lib.platforms.darwin
+        ))
         {
           assertion = packageVersion == null || lib.versionAtLeast packageVersion "0.17.0";
           message = "programs.vicinae requires Vicinae 0.17.0 or later. Upgrade programs.vicinae.package to a supported version.";
@@ -231,8 +252,8 @@ in
           message = "programs.vicinae.mutableSettings cannot use a configuration path containing ':' because VICINAE_OVERRIDES is a colon-separated list.";
         }
         {
-          assertion = cfg.systemd.enable -> cfg.package != null;
-          message = "{option}programs.vicinae.systemd.enable requires non null {option}programs.vicinae.package";
+          assertion = cfg.service.enable -> cfg.package != null;
+          message = "{option}programs.vicinae.service.enable requires non null {option}programs.vicinae.package";
         }
       ];
 
@@ -257,6 +278,7 @@ in
         configFile = {
           "${settingsPath}" = lib.mkIf (cfg.settings != { }) {
             source = jsonFormat.generate "vicinae-settings" cfg.settings;
+            onChange = restartLaunchdAgent;
           };
         };
 
@@ -264,7 +286,10 @@ in
           builtins.listToAttrs (
             map (item: {
               name = "vicinae/extensions/${item.name}";
-              value.source = item;
+              value = {
+                source = item;
+                onChange = restartLaunchdAgent;
+              };
             }) cfg.extensions
           )
           // themeFiles;
@@ -290,30 +315,49 @@ in
         }
       );
 
-      systemd.user.services.vicinae = lib.mkIf (cfg.systemd.enable && cfg.package != null) {
-        Unit = {
-          Description = "Vicinae server daemon";
-          Documentation = [ "https://docs.vicinae.com" ];
-          After = [ cfg.systemd.target ];
-          PartOf = [ cfg.systemd.target ];
-          X-Restart-Triggers =
-            lib.optional (cfg.settings != { }) config.xdg.configFile.${settingsPath}.source
-            ++ map (themeFile: themeFile.source) (lib.attrValues themeFiles)
-            ++ cfg.extensions;
-        };
-        Service = {
-          Environment = lib.mapAttrsToList (
-            name: value: lib.replaceStrings [ "%" ] [ "%%" ] (builtins.toJSON "${name}=${value}")
-          ) mutableEnvironment;
-          Type = "simple";
-          ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
-          Restart = "always";
-          RestartSec = 5;
-          KillMode = "process";
-        };
-        Install = lib.mkIf cfg.systemd.autoStart {
-          WantedBy = [ cfg.systemd.target ];
-        };
-      };
+      systemd.user.services.vicinae =
+        lib.mkIf (pkgs.stdenv.hostPlatform.isLinux && cfg.service.enable && cfg.package != null)
+          {
+            Unit = {
+              Description = "Vicinae server daemon";
+              Documentation = [ "https://docs.vicinae.com" ];
+              After = [ cfg.systemd.target ];
+              PartOf = [ cfg.systemd.target ];
+              X-Restart-Triggers =
+                lib.optional (cfg.settings != { }) config.xdg.configFile.${settingsPath}.source
+                ++ map (themeFile: themeFile.source) (lib.attrValues themeFiles)
+                ++ cfg.extensions;
+            };
+            Service = {
+              Environment = lib.mapAttrsToList (
+                name: value: lib.replaceStrings [ "%" ] [ "%%" ] (builtins.toJSON "${name}=${value}")
+              ) mutableEnvironment;
+              Type = "simple";
+              ExecStart = "${lib.getExe' cfg.package "vicinae"} server";
+              Restart = "always";
+              RestartSec = 5;
+              KillMode = "process";
+            };
+            Install = lib.mkIf cfg.service.autoStart {
+              WantedBy = [ cfg.systemd.target ];
+            };
+          };
+
+      launchd.agents.vicinae =
+        lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.service.enable && cfg.package != null)
+          {
+            enable = true;
+            config = {
+              ProgramArguments = [
+                (lib.getExe' cfg.package "vicinae")
+                "server"
+              ];
+              EnvironmentVariables = lib.mkIf (mutableEnvironment != { }) mutableEnvironment;
+              KeepAlive = cfg.service.autoStart;
+              RunAtLoad = cfg.service.autoStart;
+              ThrottleInterval = 5;
+              ProcessType = "Interactive";
+            };
+          };
     };
 }
