@@ -42,7 +42,17 @@ in
   options.programs.worktrunk = {
     enable = lib.mkEnableOption "worktrunk";
 
-    package = lib.mkPackageOption pkgs "worktrunk" { nullable = true; };
+    package = lib.mkPackageOption pkgs "worktrunk" {
+      nullable = true;
+      extraDescription = ''
+        When `null`, Home Manager still generates configuration from
+        [`programs.worktrunk.settings`](#opt-programs.worktrunk.settings),
+        but generates neither the shell integrations nor the Claude Code
+        integration ([`programs.worktrunk.claudeCodeIntegration.enable`](#opt-programs.worktrunk.claudeCodeIntegration.enable)),
+        even when their enable options are set. The integrations call this
+        package directly rather than a `wt` found on {env}`PATH`.
+      '';
+    };
 
     settings = lib.mkOption {
       inherit (tomlFormat) type;
@@ -58,14 +68,34 @@ in
       '';
     };
 
-    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
-    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
-    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
-    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+    enableBashIntegration = lib.hm.shell.mkBashIntegrationOption {
+      inherit config;
+      extraDescription = "Has no effect when [`programs.worktrunk.package`](#opt-programs.worktrunk.package) is `null`.";
+    };
+    enableZshIntegration = lib.hm.shell.mkZshIntegrationOption {
+      inherit config;
+      extraDescription = "Has no effect when [`programs.worktrunk.package`](#opt-programs.worktrunk.package) is `null`.";
+    };
+    enableFishIntegration = lib.hm.shell.mkFishIntegrationOption {
+      inherit config;
+      extraDescription = "Has no effect when [`programs.worktrunk.package`](#opt-programs.worktrunk.package) is `null`.";
+    };
+    enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption {
+      inherit config;
+      extraDescription = "Has no effect when [`programs.worktrunk.package`](#opt-programs.worktrunk.package) is `null`.";
+    };
 
     # Claude Code integration.
     claudeCodeIntegration = {
-      enable = lib.mkEnableOption "Integrate worktrunk with Claude Code's statusLine, worktree isolation, and skills";
+      enable =
+        lib.mkEnableOption "Integrate worktrunk with Claude Code's statusLine, worktree isolation, and skills"
+        // {
+          description = ''
+            Whether to integrate worktrunk with Claude Code's statusLine,
+            worktree isolation, and skills. Has no effect when
+            [`programs.worktrunk.package`](#opt-programs.worktrunk.package) is `null`.
+          '';
+        };
 
       # Route Claude Code worktree isolation (`isolation: "worktree"`) through `wt`
       # instead of `git worktree add`, so agent-created worktrees get worktrunk's
