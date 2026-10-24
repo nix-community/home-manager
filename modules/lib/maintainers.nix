@@ -67,6 +67,12 @@
     github = "Avimitin";
     githubId = 30021675;
   };
+  awa2333 = {
+    name = "Yaoheng He/luke";
+    email = "62987171+awa2333@users.noreply.github.com";
+    github = "awa2333";
+    githubId = 62987171;
+  };
   bamhm182 = {
     name = "bamhm182";
     email = "bamhm182@gmail.com";
