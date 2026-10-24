@@ -19,8 +19,14 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.pi/agent";
 
-  packageWithExtraPackages =
-    if cfg.package != null && cfg.extraPackages != [ ] then
+  wrapperArgs =
+    lib.optional (cfg.extraPackages != [ ]) "--suffix PATH : ${lib.makeBinPath cfg.extraPackages}"
+    ++ lib.optional (
+      cfg.configDir != upstreamConfigDir
+    ) "--set PI_CODING_AGENT_DIR ${lib.escapeShellArg cfg.configDir}";
+
+  wrappedPackage =
+    if cfg.package != null && wrapperArgs != [ ] then
       pkgs.symlinkJoin {
         inherit (cfg.package) meta;
         name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
@@ -28,8 +34,7 @@ let
         preferLocalBuild = true;
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
-          wrapProgram $out/bin/pi \
-            --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+          wrapProgram $out/bin/pi ${lib.concatStringsSep " " wrapperArgs}
         '';
       }
     else
@@ -67,8 +72,8 @@ in
 
         Defaults to {file}`~/.pi/agent`, matching the upstream
         {command}`pi` CLI default. The {env}`PI_CODING_AGENT_DIR`
-        environment variable is exported automatically whenever the
-        directory differs from this default so the CLI reads
+        environment variable is set in the wrapped {command}`pi` binary
+        whenever the directory differs from this default so the CLI reads
         configuration from the same location.
       '';
     };
@@ -200,13 +205,9 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages = mkIf (packageWithExtraPackages != null) [
-        packageWithExtraPackages
+      packages = mkIf (wrappedPackage != null) [
+        wrappedPackage
       ];
-
-      sessionVariables = lib.mkIf (cfg.configDir != upstreamConfigDir) {
-        PI_CODING_AGENT_DIR = cfg.configDir;
-      };
 
       file = lib.mkMerge [
         (mkIf (cfg.settings != { }) {
