@@ -24,7 +24,7 @@
       ''
         serviceFile=LaunchAgents/org.nix-community.home.t3code.plist
         assertFileExists "$serviceFile"
-        assertFileContent "$serviceFile" ${./server.plist}
+        assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./server.plist}
       ''
     else
       ''

@@ -29,7 +29,8 @@
         "$(_abs $serviceFile)")
       # The configured shell is the launcher's interpreter, and the command is exec'd.
       assertFileRegex "$launcher" '^#!.*/bin/bash$'
-      assertFileContains "$launcher" 'exec /some/command --flag'
+      assertFileContains "$(normalizeStorePaths "$launcher")" \
+        'exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment /some/command --flag'
     '';
   };
 }
