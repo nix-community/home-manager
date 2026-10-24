@@ -1,5 +1,6 @@
 {
   config,
+  darwinConfig,
   lib,
   pkgs,
   ...
@@ -12,6 +13,16 @@ let
   cfg = config.launchd;
   labelPrefix = "org.nix-community.home.";
   dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
+
+  caBundle =
+    darwinConfig.security.pki.environment.NIX_SSL_CERT_FILE
+      or (darwinConfig.environment.variables.NIX_SSL_CERT_FILE or null);
+  certificateWrapper = pkgs.writeText "launchd-certificate-environment" ''
+    if [ "''${NIX_SSL_CERT_FILE+x}" != x ] && [ "''${SSL_CERT_FILE+x}" != x ]; then
+      export NIX_SSL_CERT_FILE=${lib.escapeShellArg caBundle}
+    fi
+    exec "$@"
+  '';
 
   launchdConfig =
     { name, config, ... }:
@@ -164,7 +175,11 @@ let
     let
       cnf = v.config;
       args =
-        lib.optional (cnf.Program != null) cnf.Program
+        lib.optionals (caBundle != null) [
+          "/bin/sh"
+          certificateWrapper
+        ]
+        ++ lib.optional (cnf.Program != null) cnf.Program
         ++ lib.optionals (cnf.ProgramArguments != null) cnf.ProgramArguments;
       launcherName =
         if v.launcher.name != null then v.launcher.name else lib.strings.sanitizeDerivationName name;
@@ -290,6 +305,11 @@ in
         the configuration are unloaded and their plist files are removed.
         Home Manager skips removal if a plist file was modified outside
         Home Manager.
+
+        When used with nix-darwin, agents default to its selected CA bundle,
+        including its filtered fallback when available, if neither
+        `NIX_SSL_CERT_FILE` nor `SSL_CERT_FILE` is set in the agent's
+        environment. Explicit values, including empty values, are preserved. Standalone Home Manager does not add a default.
 
         Each agent's `config` contains the job properties described in
         {manpage}`launchd.plist(5)`. Unless overridden with `config.Label`,
