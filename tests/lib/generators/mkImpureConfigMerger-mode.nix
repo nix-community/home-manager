@@ -36,6 +36,15 @@ let
         "u=rw"
         600
       ];
+  missingStaticRejected =
+    !(builtins.tryEval (mkMerger {
+      staticSettings = null;
+    })).success;
+  bothStaticSourcesRejected =
+    !(builtins.tryEval (mkMerger {
+      staticSettings = builtins.toFile "settings.json" ''{"managed":true}'';
+      staticSettingsCommand = "echo '{}'";
+    })).success;
 in
 {
   nmt.script = ''
@@ -60,6 +69,12 @@ in
 
     ${lib.optionalString (!invalidModeRejected) ''
       fail "A non-octal mode must be rejected during evaluation"
+    ''}
+    ${lib.optionalString (!missingStaticRejected) ''
+      fail "A missing static settings source must be rejected during evaluation"
+    ''}
+    ${lib.optionalString (!bothStaticSourcesRejected) ''
+      fail "Both static settings sources must be rejected during evaluation"
     ''}
   '';
 }
