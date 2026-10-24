@@ -9,6 +9,7 @@ let
 
   cfg = config.programs.gradle;
   defaultHomeDirectory = ".gradle";
+  xdgHomeDirectory = lib.removePrefix "${config.home.homeDirectory}/" "${config.xdg.dataHome}/gradle";
   settingsFormat = pkgs.formats.javaProperties { };
 
   initScript = types.submodule (
@@ -53,12 +54,45 @@ in
 
     home = mkOption {
       type = types.str;
-      default = defaultHomeDirectory;
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.11";
+          optionPath = [
+            "programs"
+            "gradle"
+            "home"
+          ];
+          legacy.value = defaultHomeDirectory;
+          current = {
+            value = if config.home.preferXdgDirectories then xdgHomeDirectory else defaultHomeDirectory;
+            text = ''lib.removePrefix "''${config.home.homeDirectory}/" "''${config.xdg.dataHome}/gradle"'';
+          };
+          extraWarning = ''
+            To keep existing Gradle data, move `~/.gradle` to
+            `$XDG_DATA_HOME/gradle` before adopting the new default.
+          '';
+        })
+        default
+        ;
+      defaultText = lib.literalExpression ''
+        if config.home.preferXdgDirectories && lib.versionAtLeast config.home.stateVersion "26.11" then
+          lib.removePrefix
+            "''${config.home.homeDirectory}/"
+            "''${config.xdg.dataHome}/gradle"
+        else
+          ".gradle"
+      '';
       description = ''
-        The Gradle home directory, relative to [](#opt-home.homeDirectory).
+        The Gradle home directory, relative to [](#opt-home.homeDirectory)
+        unless it is an absolute path.
 
         If set, the {env}`GRADLE_USER_HOME` environment variable will be
-        set accordingly. Defaults to {file}`.gradle`.
+        set accordingly. This defaults to
+        {file}`''${config.xdg.dataHome}/gradle` when
+        [](#opt-home.preferXdgDirectories) is enabled and
+        [](#opt-home.stateVersion) is at least 26.11. Otherwise, it defaults
+        to {file}`.gradle`.
       '';
     };
 
@@ -110,7 +144,8 @@ in
 
   config =
     let
-      gradleHome = "${config.home.homeDirectory}/${cfg.home}";
+      gradleHome =
+        if lib.hasPrefix "/" cfg.home then cfg.home else "${config.home.homeDirectory}/${cfg.home}";
     in
     mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
