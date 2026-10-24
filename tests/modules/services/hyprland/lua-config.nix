@@ -11,6 +11,7 @@ in
     package = hyprland // {
       override = _: hyprland;
     };
+    checkConfig = false;
     portalPackage = null;
 
     plugins = [
