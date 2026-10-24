@@ -15,14 +15,41 @@ let
   dstDir = "${config.home.homeDirectory}/Library/LaunchAgents";
 
   caBundle =
-    darwinConfig.security.pki.environment.NIX_SSL_CERT_FILE
-      or (darwinConfig.environment.variables.NIX_SSL_CERT_FILE or null);
-  certificateWrapper = pkgs.writeText "launchd-certificate-environment" ''
-    if [ "''${NIX_SSL_CERT_FILE+x}" != x ] && [ "''${SSL_CERT_FILE+x}" != x ]; then
-      export NIX_SSL_CERT_FILE=${lib.escapeShellArg caBundle}
-    fi
-    exec "$@"
+    if darwinConfig == null then
+      "/etc/ssl/certs/ca-certificates.crt"
+    else
+      darwinConfig.security.pki.environment.NIX_SSL_CERT_FILE
+        or (darwinConfig.environment.variables.NIX_SSL_CERT_FILE or null);
+  # Shell existence checks also fail for inaccessible paths. Only ENOENT may
+  # replace the system trust policy with Home Manager's certificate bundle.
+  caBundleMissing = pkgs.runCommandCC "launchd-ca-bundle-missing" { } ''
+    $CC -x c -o "$out" - <<'EOF'
+    #include <errno.h>
+    #include <sys/stat.h>
+
+    int main(int argc, char **argv) {
+      struct stat st;
+      return !(argc == 2 && stat(argv[1], &st) < 0 && errno == ENOENT);
+    }
+    EOF
   '';
+  certificateWrapper = pkgs.writeText "launchd-certificate-environment" (
+    lib.concatLines (
+      [
+        ''if [ "''${NIX_SSL_CERT_FILE+x}" != x ] && [ "''${SSL_CERT_FILE+x}" != x ]; then''
+        "  export NIX_SSL_CERT_FILE=${lib.escapeShellArg caBundle}"
+      ]
+      ++ lib.optionals (darwinConfig == null) [
+        "  if ${caBundleMissing} \"$NIX_SSL_CERT_FILE\"; then"
+        "    export NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+        "  fi"
+      ]
+      ++ [
+        "fi"
+        ''exec "$@"''
+      ]
+    )
+  );
 
   launchdConfig =
     { name, config, ... }:
@@ -309,7 +336,13 @@ in
         When used with nix-darwin, agents default to its selected CA bundle,
         including its filtered fallback when available, if neither
         `NIX_SSL_CERT_FILE` nor `SSL_CERT_FILE` is set in the agent's
-        environment. Explicit values, including empty values, are preserved. Standalone Home Manager does not add a default.
+        environment. Explicit values, including empty values, are preserved.
+
+        Standalone Home Manager uses {file}`/etc/ssl/certs/ca-certificates.crt`
+        if present, falling back to the `cacert` package from its Nixpkgs input
+        only when the system bundle is missing. An inaccessible or invalid
+        system bundle does not trigger a fallback. This only sets the agents'
+        environment; it does not install or modify system certificates.
 
         Each agent's `config` contains the job properties described in
         {manpage}`launchd.plist(5)`. Unless overridden with `config.Label`,
