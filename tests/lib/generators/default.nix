@@ -5,6 +5,7 @@
   generators-toscfg-empty = ./toscfg-empty.nix;
   generators-toscfg-example = ./toscfg-example.nix;
   generators-mkimpureconfigmerger = ./mkImpureConfigMerger.nix;
+  generators-mkimpureconfigmerger-command = ./mkImpureConfigMerger-command.nix;
   generators-mkimpureconfigmerger-mode = ./mkImpureConfigMerger-mode.nix;
   generators-mkimpureconfigmerger-write = ./mkImpureConfigMerger-write.nix;
   generators-mkimpureconfigcleanup = ./mkImpureConfigCleanup.nix;

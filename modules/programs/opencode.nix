@@ -15,7 +15,14 @@ let
 
   cfg = config.programs.opencode;
   webCfg = cfg.web;
+  serviceCfg = cfg.service;
   hasSettings = cfg.settings != { } || transformedMcpServers != { };
+  hasServiceConfig =
+    serviceCfg.settings != { } || serviceCfg.environmentFile != null || serviceCfg.passwordFile != null;
+  servicePath = "${config.xdg.configHome}/opencode/service.json";
+  serviceDisabled = serviceCfg.settings.disabled or false;
+  isStorePath = path: path != null && lib.hasPrefix "${builtins.storeDir}/" (toString path);
+
   hasCli = cfg.cli != { };
   settingsPath = "opencode/${if cfg.mutableSettings then "home-manager.json" else "opencode.json"}";
   tuiPath = "opencode/${if cfg.mutableSettings then "home-manager-tui.json" else "tui.json"}";
@@ -106,6 +113,9 @@ let
     else
       cfg.package;
 
+  serviceOpencodeBin =
+    if packageWithExtraPackages == null then "opencode" else lib.getExe packageWithExtraPackages;
+
   normalizeDirectory =
     name: source:
     if lib.isPath source then
@@ -134,6 +144,10 @@ let
       fi
     '';
 
+  mutableEnvironmentExports = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (name: value: "export ${name}=${lib.escapeShellArg value}") mutableEnvironment
+  );
+
   webProgramArguments = [
     (lib.getExe packageWithExtraPackages)
     "serve"
@@ -141,11 +155,188 @@ let
   ++ webCfg.extraArgs;
 
   opencodeWebLauncher = pkgs.writeShellScriptBin "opencode-web-launcher" ''
-    ${lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (name: value: "export ${name}=${lib.escapeShellArg value}") mutableEnvironment
-    )}
+    ${mutableEnvironmentExports}
     export PATH="${config.home.profileDirectory}/bin''${PATH:+:$PATH}"
     exec ${lib.escapeShellArgs webProgramArguments}
+  '';
+
+  serviceBaseFile = jsonFormat.generate "opencode-service-settings.json" serviceCfg.settings;
+
+  serviceEnvFilter = pkgs.writeText "opencode-service-env.jq" ''
+    # Parse the strict KEY=VALUE subset documented in
+    # programs.opencode.service.environmentFile.
+    reduce inputs as $line (
+      { n: 0, env: { } };
+      .n += 1
+      | ($line | sub("\r$"; "")) as $line
+      | if ($line | test("^[[:space:]]*(#|$)")) then
+          .
+        elif ($line | test("^[[:space:]]*(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$")) then
+          ($line | capture("^[[:space:]]*(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$")) as $m
+          | .env[$m.k] = (
+              $m.v
+              | if length > 1 and ((startswith("\"") and endswith("\"")) or (startswith("'") and endswith("'"))) then
+                  .[1:-1]
+                else
+                  .
+                end
+            )
+        else
+          error("invalid environment file line \(.n): \($line)")
+        end
+    )
+    | .env
+  '';
+
+  # This command runs during activation, not during Nix evaluation. It emits
+  # the static side of the merge as one JSON document.
+  serviceStaticCommand =
+    let
+      jaq = lib.getExe pkgs.jaq;
+      inherit (serviceCfg) environmentFile passwordFile;
+
+      environmentRead = lib.optionalString (environmentFile != null) ''
+        environment_file=${lib.escapeShellArg (toString environmentFile)}
+        if [[ ! -f "$environment_file" || ! -r "$environment_file" ]]; then
+          echo "programs.opencode.service.environmentFile is not readable: $environment_file" >&2
+          exit 1
+        fi
+        env_json="$(${jaq} -Rn -f ${lib.escapeShellArg (toString serviceEnvFilter)} "$environment_file")" || {
+          echo "programs.opencode.service.environmentFile could not be parsed: $environment_file" >&2
+          exit 1
+        }
+      '';
+
+      passwordCheck = lib.optionalString (passwordFile != null) ''
+        password_file=${lib.escapeShellArg (toString passwordFile)}
+        if [[ ! -f "$password_file" || ! -r "$password_file" ]]; then
+          echo "programs.opencode.service.passwordFile is not readable: $password_file" >&2
+          exit 1
+        fi
+      '';
+
+      # Pass secrets through files or process substitution, never through argv.
+      jaqArgs = [
+        "--slurpfile base \"$base_file\""
+      ]
+      ++ lib.optional (environmentFile != null) "--slurpfile env <(printf '%s' \"$env_json\")"
+      ++ lib.optional (passwordFile != null) "--rawfile password \"$password_file\"";
+
+      # Start from the Nix settings, then add the environment and password if
+      # declared.
+      jaqFilter =
+        "$base[0]"
+        + lib.optionalString (environmentFile != null) ''
+          | .env = ($env[0] * (.env // { }))
+        ''
+        + lib.optionalString (passwordFile != null) ''
+          | ($password | sub("\r?\n+$"; "")) as $pw
+          | if $pw == "" then
+              error("programs.opencode.service.passwordFile is empty")
+            else
+              .password = $pw
+            end
+        '';
+    in
+    ''
+      base_file=${lib.escapeShellArg (toString serviceBaseFile)}
+      ${environmentRead}
+      ${passwordCheck}
+      ${jaq} -n ${lib.concatStringsSep " " jaqArgs} ${lib.escapeShellArg jaqFilter}
+    '';
+
+  # OpenCode treats env as a complete object, so replace it when the static
+  # side declares it.
+  serviceMerger = lib.hm.generators.mkImpureConfigMerger {
+    inherit pkgs;
+    format = "json";
+    empty = "{}";
+    jqOperation = ''
+      $dynamic * $static
+      | if ($static | has("env")) then .env = $static.env else . end
+    '';
+    path = servicePath;
+    staticSettingsCommand = serviceStaticCommand;
+    mode = "600";
+    verboseMsg = "Merging OpenCode service configuration into ${servicePath}";
+  };
+
+  # Activation owns merging because OpenCode rewrites service.json itself.
+  serviceActivation = ''
+    (
+      export XDG_CONFIG_HOME=${lib.escapeShellArg config.xdg.configHome}
+      export XDG_STATE_HOME=${lib.escapeShellArg config.xdg.stateHome}
+      export XDG_DATA_HOME=${lib.escapeShellArg config.xdg.dataHome}
+      export XDG_CACHE_HOME=${lib.escapeShellArg config.xdg.cacheHome}
+      export OPENCODE_CONFIG_DIR=${lib.escapeShellArg "${config.xdg.configHome}/opencode"}
+      export PATH=${lib.escapeShellArg "${config.home.profileDirectory}/bin"}''${PATH:+:$PATH}
+      unset OPENCODE_CONFIG OPENCODE_TUI_CONFIG OPENCODE_CLI_CONFIG_CONTENT
+      ${mutableEnvironmentExports}
+
+      service_path=${lib.escapeShellArg servicePath}
+      service_opencode_bin=${lib.escapeShellArg serviceOpencodeBin}
+      jaq_bin=${lib.escapeShellArg (lib.getExe pkgs.jaq)}
+
+      service_config_json() {
+        "$jaq_bin" -S -c '.' "$service_path"
+      }
+
+      service_action_if_running() {
+        local action="$1"
+        local message="$2"
+        local status
+
+        if ! status="$("$service_opencode_bin" service status 2>/dev/null)"; then
+          echo "programs.opencode.service: could not query the background service; skipping $action." >&2
+        elif [[ -n "$status" && "$status" != "stopped" ]]; then
+          verboseEcho "$message"
+          run "$service_opencode_bin" service "$action"
+        fi
+      }
+
+      # Read the current configuration before merging. A failed merge leaves
+      # the file untouched.
+      before_json=
+      if [[ -e "$service_path" ]]; then
+        if ! before_json="$(service_config_json)"; then
+          errorEcho "Could not parse OpenCode service configuration at '$service_path'."
+          exit 1
+        fi
+        if [[ "$("$jaq_bin" -r 'type' <<<"$before_json")" != "object" ]]; then
+          errorEcho "OpenCode service configuration at '$service_path' must be a JSON object."
+          exit 1
+        fi
+      else
+        before_json='{}'
+      fi
+
+      ${serviceMerger}
+
+      if [[ ! -v DRY_RUN && -e "$service_path" ]]; then
+        run chmod 600 -- "$service_path"
+      fi
+
+      ${lib.optionalString (serviceDisabled == true) ''
+        if [[ -v DRY_RUN ]]; then
+          verboseEcho "Would stop the OpenCode background service because settings.disabled is true."
+        else
+          service_action_if_running stop "Stopping the OpenCode background service because settings.disabled is true."
+        fi
+      ''}
+      ${lib.optionalString (serviceDisabled != true && serviceCfg.restartOnChange) ''
+        if [[ -v DRY_RUN ]]; then
+          verboseEcho "Would restart the OpenCode background service if its configuration changed."
+        else
+          if ! after_json="$(service_config_json)"; then
+            errorEcho "Could not parse OpenCode service configuration at '$service_path'."
+            exit 1
+          fi
+          if [[ "$before_json" != "$after_json" ]]; then
+            service_action_if_running restart "Restarting the OpenCode background service after a configuration change."
+          fi
+        fi
+      ''}
+    )
   '';
 in
 {
@@ -345,6 +536,146 @@ in
 
           This is the recommended way to set `OPENCODE_SERVER_PASSWORD` without
           exposing the secret value in the Nix store.
+        '';
+      };
+    };
+
+    service = {
+      enable = mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to manage the shared OpenCode background service
+          configuration at {file}`$XDG_CONFIG_HOME/opencode/service.json`
+          during activation.
+
+          OpenCode owns this file and rewrites it when it generates a
+          password, changes remote access, or runs
+          {command}`opencode service set` or {command}`opencode service
+          unset`. Declared values are therefore merged during activation
+          instead of linked. Values not declared here are preserved, while
+          imperative changes to declared values last until the next
+          activation.
+
+          This option does not start the service; OpenCode starts it on
+          demand. Set {option}`programs.opencode.service.settings.disabled`
+          to `true` to stop a running service and make the OpenCode CLI run
+          standalone.
+
+          When `settings`, `passwordFile`, and `environmentFile` are all
+          empty, this option does nothing.
+        '';
+      };
+
+      restartOnChange = mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Whether to restart a running OpenCode background service when
+          activation changes {file}`service.json`.
+
+          The service is never started when it is stopped. Restarting also
+          closes persistent terminals owned by the service. Setting
+          {option}`programs.opencode.service.settings.disabled` to `true`
+          stops a running service regardless of this option.
+        '';
+      };
+
+      passwordFile = mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        example = "/run/secrets/opencode-service-password";
+        description = ''
+          Path to a file containing the shared service password. The file is
+          read during activation and written to
+          {file}`$XDG_CONFIG_HOME/opencode/service.json` with mode `0600`.
+          Trailing newlines are ignored.
+
+          Use a path managed by a secret manager, such as
+          `config.sops.secrets."opencode/password".path`. Do not point this at
+          a path in the Nix store. When unset, OpenCode generates and stores a
+          password on first start. Removing this option leaves the last
+          password in {file}`service.json`.
+
+          This is separate from
+          {option}`programs.opencode.web.environmentFile`: OpenCode service
+          mode reads the password from {file}`service.json`, not from
+          `OPENCODE_SERVER_PASSWORD`.
+        '';
+      };
+
+      environmentFile = mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        example = "/run/secrets/opencode-service-env";
+        description = ''
+          Path to a file read during activation and used as the shared
+          service environment ({file}`service.json`'s `env` object).
+
+          The file uses a strict subset of the
+          {manpage}`systemd.exec(5)` environment file syntax: `KEY=VALUE`
+          pairs, one per line. Blank lines and lines starting with `#` are
+          ignored. Keys must match `[A-Za-z_][A-Za-z0-9_]*`. One pair of
+          matching single or double quotes around the value is removed.
+          Variable expansion, escape sequences, multiline values, `export`,
+          and trailing comments are not supported. Duplicate keys use the
+          last value.
+
+          Values in {option}`programs.opencode.service.settings.env` take
+          precedence. When `env` is declared by either source, it replaces the
+          whole `env` object, so removing a value removes it from
+          {file}`service.json`. Removing this option leaves the last
+          environment in {file}`service.json`.
+
+          The file must be readable by the user during activation. Use a
+          path managed by a secret manager; do not use a path in the Nix
+          store.
+
+          This is not the same as
+          {option}`programs.opencode.web.environmentFile`, which configures
+          the process environment of the standalone web service.
+        '';
+      };
+
+      settings = mkOption {
+        inherit (jsonFormat) type;
+        default = { };
+        example = literalExpression ''
+          {
+            hostname = "0.0.0.0";
+            port = 4096;
+            cors = [ "https://example.com" ];
+            env = {
+              OPENCODE_LOG_LEVEL = "debug";
+            };
+          }
+        '';
+        description = ''
+          Settings merged into the shared OpenCode background service
+          configuration at {file}`$XDG_CONFIG_HOME/opencode/service.json`.
+
+          OpenCode owns this file and rewrites it when it generates a
+          password, changes remote access, or runs
+          {command}`opencode service set` or {command}`opencode service
+          unset`. Declared settings are therefore merged during activation
+          instead of linked. Values not declared here are preserved, while
+          imperative changes to declared values last until the next
+          activation. Removing a declaration does not remove the value from
+          the file; use {command}`opencode service unset` for that.
+
+          The `password`, `remote`, and `remoteAccepted` keys are not
+          supported. Use {option}`programs.opencode.service.passwordFile` for
+          the password. Remote access and its consent record are managed by
+          {command}`opencode service set remote` and
+          {command}`opencode pair --remote`.
+
+          Set `disabled = true` to stop a running service and make the
+          OpenCode CLI run standalone; `false` lets OpenCode start the service
+          on demand.
+
+          When `env` is present, it replaces the whole environment object.
+          See {option}`programs.opencode.service.environmentFile` for loading
+          values from a file without putting them in the Nix store.
         '';
       };
     };
@@ -669,6 +1000,54 @@ in
         assertion = !lib.isPath cfg.themes || lib.pathIsDirectory cfg.themes;
         message = "`programs.opencode.themes` must be a directory when set to a path";
       }
+      {
+        assertion = !serviceCfg.enable || isOpenCode2;
+        message = "`programs.opencode.service` requires OpenCode 2 or later";
+      }
+      {
+        assertion = !(serviceCfg.settings ? password);
+        message = "`programs.opencode.service.settings.password` is not supported; use `programs.opencode.service.passwordFile` to keep the password out of the Nix store";
+      }
+      {
+        assertion = !(serviceCfg.settings ? remote);
+        message = "`programs.opencode.service.settings.remote` is managed by OpenCode; use `opencode service set remote`";
+      }
+      {
+        assertion = !(serviceCfg.settings ? remoteAccepted);
+        message = "`programs.opencode.service.settings.remoteAccepted` is managed by OpenCode; use `opencode pair --remote`";
+      }
+      {
+        assertion =
+          !(serviceCfg.settings ? port)
+          || (
+            lib.isInt serviceCfg.settings.port
+            && serviceCfg.settings.port >= 1
+            && serviceCfg.settings.port <= 65535
+          );
+        message = "`programs.opencode.service.settings.port` must be an integer between 1 and 65535";
+      }
+      {
+        assertion = !(serviceCfg.settings ? hostname) || lib.isString serviceCfg.settings.hostname;
+        message = "`programs.opencode.service.settings.hostname` must be a string";
+      }
+      {
+        assertion = !(serviceCfg.settings ? disabled) || lib.isBool serviceCfg.settings.disabled;
+        message = "`programs.opencode.service.settings.disabled` must be a boolean";
+      }
+      {
+        assertion =
+          !(serviceCfg.settings ? cors)
+          || (lib.isList serviceCfg.settings.cors && lib.all lib.isString serviceCfg.settings.cors);
+        message = "`programs.opencode.service.settings.cors` must be a list of strings";
+      }
+      {
+        assertion =
+          !(serviceCfg.settings ? env)
+          || (
+            lib.isAttrs serviceCfg.settings.env && lib.all lib.isString (lib.attrValues serviceCfg.settings.env)
+          );
+        message = "`programs.opencode.service.settings.env` must be an attribute set of strings";
+      }
     ];
 
     warnings =
@@ -724,6 +1103,20 @@ in
           Use programs.opencode.tui for OpenCode 1, or update
           programs.opencode.package.
         ''
+      ]
+      ++ lib.optionals (serviceCfg.enable && isStorePath serviceCfg.passwordFile) [
+        ''
+          programs.opencode.service.passwordFile points into the Nix store.
+          The password is world-readable there; use a secret manager path
+          instead.
+        ''
+      ]
+      ++ lib.optionals (serviceCfg.enable && isStorePath serviceCfg.environmentFile) [
+        ''
+          programs.opencode.service.environmentFile points into the Nix store.
+          Its values are world-readable there; use a secret manager path
+          instead.
+        ''
       ];
 
     home = {
@@ -732,6 +1125,10 @@ in
       sessionVariables = lib.mapAttrs (
         _: value: lib.escape [ "\\" "\"" "$" "`" ] value
       ) mutableEnvironment;
+
+      activation.opencodeServiceSettings = mkIf (serviceCfg.enable && hasServiceConfig) (
+        lib.hm.dag.entryAfter [ "linkGeneration" ] serviceActivation
+      );
     };
 
     xdg.configFile = {
