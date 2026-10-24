@@ -1,8 +1,11 @@
 {
   services.comodoro = {
     enable = true;
-    preset = "preset";
-    protocols = [ "tcp" ];
+    account = "pomodoro";
+    transports = [
+      "socket"
+      "tcp"
+    ];
   };
 
   nmt.script = ''
