@@ -8,7 +8,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @nh@/bin/nh clean user</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment @nh@/bin/nh clean user</string>
 	</array>
 	<key>StartCalendarInterval</key>
 	<array>

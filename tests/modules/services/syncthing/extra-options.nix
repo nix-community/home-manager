@@ -30,7 +30,7 @@ lib.mkMerge [
       serviceFile=LaunchAgents/org.nix-community.home.syncthing.plist
       assertFileExists "$serviceFile"
       assertPathNotExists LaunchAgents/org.nix-community.home.syncthing-init.plist
-      assertFileContent "$serviceFile" ${./expected-agent.plist}
+      assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent.plist}
     '';
   })
 ]

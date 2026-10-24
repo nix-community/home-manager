@@ -25,7 +25,8 @@
 
       launcher=$(sed -n 's|.*<string>\(/nix/store/[^<]*/bin/launcher-service\)</string>.*|\1|p' \
         "$(_abs $serviceFile)")
-      assertFileContains "$launcher" 'exec /some/command --with-arguments foo'
+      assertFileContains "$(normalizeStorePaths "$launcher")" \
+        'exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment /some/command --with-arguments foo'
     '';
   };
 }

@@ -23,7 +23,8 @@
         assertFileRegex "$plistFile" '<string>hm-test</string>'
         assertFileRegex "$plistFile" '<key>EXO_OFFLINE</key>'
         assertFileRegex "$plistFile" '<string>true</string>'
-        assertFileRegex "$plistFile" '<string>/bin/wait4path /nix/store &amp;&amp; exec @exo@/bin/exo --no-worker</string>'
+        assertFileContains "$(normalizeStorePaths "$plistFile")" \
+          '<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment @exo@/bin/exo --no-worker</string>'
       ''
     else
       ''
