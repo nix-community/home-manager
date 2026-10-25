@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-4a0c9321.js";
+            window.path_to_searchindex_js = "../../../searchindex-817d29ff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-c599a4a0.js"></script>
@@ -345,6 +345,29 @@ JSON value</p>
     };
   };
 }
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/pi-coding-agent.nix">&lt;home-manager/modules/programs/pi-coding-agent.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.pi-coding-agent.mutableSettings"><a class="header" href="#opt-programs.pi-coding-agent.mutableSettings">programs.pi-coding-agent.mutableSettings</a></h2>
+<p>Keep settings.json writable. Packages are matched by npm name or Git
+repository, ignoring versions and refs. Declared entries replace matching
+entries in place; other entries keep their relative order. Local paths
+are resolved lexically against the configuration directory, without following
+symlinks. Home-relative paths and local file URLs are also supported.
+Unsupported Git source forms cause activation to fail rather than leave
+a stale pin. The enabledModels list is replaced as a whole when declared.
+Other configuration files remain immutable.</p>
+<p>Declared values take precedence on activation. Removing a declaration does
+not remove it from the existing file. Stop the application before activation
+to avoid concurrent writes. Comments and formatting are not preserved.
+Switching back to immutable configuration uses Home Manager’s normal
+file collision handling.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
