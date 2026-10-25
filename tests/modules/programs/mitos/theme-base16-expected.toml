@@ -1,0 +1,74 @@
+attributes = "#fabd2f"
+constant = "#fe8019"
+"constant.character.escape" = "#8ec07c"
+"constant.numeric" = "#fe8019"
+constructor = "#83a598"
+debug = "#3c3836"
+"diff.delta" = "#fabd2f"
+"diff.minus" = "#fb4934"
+"diff.plus" = "#b8bb26"
+error = "#fb4934"
+function = "#83a598"
+hint = "#3c3836"
+info = "#83a598"
+keyword = "#d3869b"
+label = "#d3869b"
+namespace = "#83a598"
+special = "#83a598"
+string = "#b8bb26"
+type = "#fabd2f"
+"ui.menu" = "none"
+variable = "#fb4934"
+"variable.builtin" = "#fe8019"
+"variable.other.member" = "#fb4934"
+warning = "#fabd2f"
+
+[comment]
+fg = "#665c54"
+
+[diagnostic]
+modifiers = ["underlined"]
+
+["ui.cursor"]
+modifiers = ["reversed"]
+
+["ui.cursor.match"]
+fg = "#fabd2f"
+modifiers = ["underlined"]
+
+["ui.gutter"]
+bg = "#282828"
+
+["ui.help"]
+bg = "#fbf1c7"
+fg = "#3c3836"
+
+["ui.linenr"]
+bg = "#3c3836"
+fg = "#665c54"
+
+["ui.linenr.selected"]
+bg = "#282828"
+fg = "#fbf1c7"
+modifiers = ["bold"]
+
+["ui.menu.selected"]
+modifiers = ["reversed"]
+
+["ui.popup"]
+modifiers = ["reversed"]
+
+["ui.selection"]
+bg = "#83a598"
+fg = "#282828"
+
+["ui.selection.primary"]
+modifiers = ["reversed"]
+
+["ui.statusline"]
+bg = "#3c3836"
+fg = "#fbf1c7"
+
+["ui.statusline.inactive"]
+bg = "#fbf1c7"
+fg = "#3c3836"
