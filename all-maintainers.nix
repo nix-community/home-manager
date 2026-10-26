@@ -688,6 +688,13 @@
     name = "Lorenzo Manacorda";
     source = "nixpkgs";
   };
+  awa2333 = {
+    email = "62987171+awa2333@users.noreply.github.com";
+    github = "awa2333";
+    githubId = 62987171;
+    name = "Yaoheng He/luke";
+    source = "home-manager";
+  };
   b1kku = {
     email = "bikku+dev@slmail.me";
     github = "b1kku";
