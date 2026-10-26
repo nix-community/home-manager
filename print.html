@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-16914730.js";
+            window.path_to_searchindex_js = "searchindex-8556f6c5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-c599a4a0.js"></script>
+        <script src="toc-8040a0af.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12556,6 +12556,7 @@ string</p>
 <li><a href="#qcal">qcal</a></li>
 <li><a href="#quickshell">quickshell</a></li>
 <li><a href="#qutebrowser">qutebrowser</a></li>
+<li><a href="#radare2">radare2</a></li>
 <li><a href="#radicle">radicle</a></li>
 <li><a href="#radio-active">radio-active</a></li>
 <li><a href="#radio-cli">radio-cli</a></li>
@@ -51272,6 +51273,87 @@ attribute set of anything</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/qutebrowser.nix">&lt;home-manager/modules/programs/qutebrowser.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="radare2"><a href="#radare2" class="header">radare2</a></h1>
+<h2 id="opt-programs.radare2.enable"><a class="header" href="#opt-programs.radare2.enable">programs.radare2.enable</a></h2>
+<p>Whether to enable radare2.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/radare2.nix">&lt;home-manager/modules/programs/radare2.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.radare2.package"><a class="header" href="#opt-programs.radare2.package">programs.radare2.package</a></h2>
+<p>The radare2 package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.radare2
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/radare2.nix">&lt;home-manager/modules/programs/radare2.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.radare2.extraConfig"><a class="header" href="#opt-programs.radare2.extraConfig">programs.radare2.extraConfig</a></h2>
+<p>Extra commands appended to the radare2 startup script after
+<a href="#opt-programs.radare2.settings"></a>.</p>
+<p><em>Type:</em>
+strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">''
+  eco bobcrawl
+''
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/radare2.nix">&lt;home-manager/modules/programs/radare2.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.radare2.plugins"><a class="header" href="#opt-programs.radare2.plugins">programs.radare2.plugins</a></h2>
+<p>radare2 plugin packages. Each package must provide its plugins in
+<code>lib/radare2/plugins</code>. They are linked into radare2’s user
+plugin directory, <code>$XDG_DATA_HOME/radare2/plugins</code>.</p>
+<p><em>Type:</em>
+list of package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">[ ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/radare2.nix">&lt;home-manager/modules/programs/radare2.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.radare2.settings"><a class="header" href="#opt-programs.radare2.settings">programs.radare2.settings</a></h2>
+<p>Evaluation variables written to the radare2 startup script as
+raw <code>'e key=value</code> commands, so special characters in values are
+not interpreted as commands. Boolean values are written as <code>true</code>
+or <code>false</code>.</p>
+<p>See <a href="https://book.rada.re/first_steps/configuration.html">https://book.rada.re/first_steps/configuration.html</a> for more
+information, and use <a href="#opt-programs.radare2.extraConfig"></a> to add
+arbitrary commands.</p>
+<p><em>Type:</em>
+attribute set of (boolean or signed integer or floating point number or (optionally newline-terminated) single-line string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "asm.describe" = true;
+  "scr.color" = 2;
+  "scr.utf8" = true;
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/radare2.nix">&lt;home-manager/modules/programs/radare2.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="radicle"><a href="#radicle" class="header">radicle</a></h1>
