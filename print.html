@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-8556f6c5.js";
+            window.path_to_searchindex_js = "searchindex-920bbba6.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-8040a0af.js"></script>
+        <script src="toc-8c25ab25.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12381,6 +12381,7 @@ string</p>
 <li><a href="#gnome-shell">gnome-shell</a></li>
 <li><a href="#gnome-terminal">gnome-terminal</a></li>
 <li><a href="#go">go</a></li>
+<li><a href="#go-musicfox">go-musicfox</a></li>
 <li><a href="#google-chrome">google-chrome</a></li>
 <li><a href="#google-chrome-beta">google-chrome-beta</a></li>
 <li><a href="#google-chrome-dev">google-chrome-dev</a></li>
@@ -30959,6 +30960,60 @@ null or one of “off”, “local”, “on”</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/go.nix">&lt;home-manager/modules/programs/go.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="go-musicfox"><a href="#go-musicfox" class="header">go-musicfox</a></h1>
+<h2 id="opt-programs.go-musicfox.enable"><a class="header" href="#opt-programs.go-musicfox.enable">programs.go-musicfox.enable</a></h2>
+<p>Whether to enable Terminal netease cloud music client written in Go.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/go-musicfox.nix">&lt;home-manager/modules/programs/go-musicfox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.go-musicfox.package"><a class="header" href="#opt-programs.go-musicfox.package">programs.go-musicfox.package</a></h2>
+<p>The go-musicfox package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.go-musicfox
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/go-musicfox.nix">&lt;home-manager/modules/programs/go-musicfox.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.go-musicfox.settings"><a class="header" href="#opt-programs.go-musicfox.settings">programs.go-musicfox.settings</a></h2>
+<p>go-musicfox configuration.
+For available settings see <a href="https://github.com/go-musicfox/go-musicfox/blob/master/utils/filex/embed/config.toml">https://github.com/go-musicfox/go-musicfox/blob/master/utils/filex/embed/config.toml</a>.</p>
+<p>go-musicfox rewrites this file when the theme is switched from the
+interface, which replaces the Home Manager link and can make the next
+activation fail with a file collision. Set <code>theme.activeTheme</code> here
+to choose a theme instead.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  startup = {
+    checkUpdate = true;
+    enable = true;
+    loadingSeconds = 2;
+    progressOutBounce = true;
+    welcome = "musicfox";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/go-musicfox.nix">&lt;home-manager/modules/programs/go-musicfox.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="google-chrome"><a href="#google-chrome" class="header">google-chrome</a></h1>
