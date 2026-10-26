@@ -2344,6 +2344,12 @@
     name = "soracat";
     source = "home-manager";
   };
+  sand4rt = {
+    github = "sand4rt";
+    githubId = 17591696;
+    name = "sand4rt";
+    source = "home-manager";
+  };
   sei40kr = {
     email = "sei40kr@gmail.com";
     github = "sei40kr";
