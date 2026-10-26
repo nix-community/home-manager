@@ -17,5 +17,7 @@
     Use `programs.opencode.service.passwordFile` to provide the service
     password from a secret manager and
     `programs.opencode.service.environmentFile` for environment variables.
+    If either file is missing during activation, the service configuration is
+    left unchanged and activation warns; create the file and switch again.
   '';
 }

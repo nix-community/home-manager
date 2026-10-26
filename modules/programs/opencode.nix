@@ -162,30 +162,46 @@ let
 
   serviceBaseFile = jsonFormat.generate "opencode-service-settings.json" serviceCfg.settings;
 
-  serviceEnvFilter = pkgs.writeText "opencode-service-env.jq" ''
+  serviceStaticFilter = pkgs.writeText "opencode-service-static.jq" ''
     # Parse the strict KEY=VALUE subset documented in
     # programs.opencode.service.environmentFile.
-    reduce inputs as $line (
-      { n: 0, env: { } };
-      .n += 1
-      | ($line | sub("\r$"; "")) as $line
-      | if ($line | test("^[[:space:]]*(#|$)")) then
-          .
-        elif ($line | test("^[[:space:]]*(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$")) then
-          ($line | capture("^[[:space:]]*(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$")) as $m
-          | .env[$m.k] = (
-              $m.v
-              | if length > 1 and ((startswith("\"") and endswith("\"")) or (startswith("'") and endswith("'"))) then
-                  .[1:-1]
-                else
-                  .
-                end
-            )
+    def parse_env:
+      split("\n")
+      | to_entries
+      | reduce .[] as $entry (
+          { n: 0, env: { } };
+          .n = ($entry.key + 1)
+          | ($entry.value | sub("\r$"; "")) as $line
+          | if ($line | test("^[[:space:]]*(#|$)")) then
+              .
+            elif ($line | test("^[[:space:]]*(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$")) then
+              ($line | capture("^[[:space:]]*(?<k>[A-Za-z_][A-Za-z0-9_]*)=(?<v>.*)$")) as $m
+              | .env[$m.k] = (
+                  $m.v
+                  | if length > 1 and ((startswith("\"") and endswith("\"")) or (startswith("'") and endswith("'"))) then
+                      .[1:-1]
+                    else
+                      .
+                    end
+                )
+            else
+              error("invalid environment file line \(.n): expected KEY=VALUE")
+            end
+        )
+      | .env;
+
+    $base[0]
+    ${lib.optionalString (serviceCfg.environmentFile != null) ''
+      | .env = (($environment | parse_env) * (.env // { }))
+    ''}
+    ${lib.optionalString (serviceCfg.passwordFile != null) ''
+      | ($password | sub("\r?\n+$"; "")) as $pw
+      | if $pw == "" then
+          error("programs.opencode.service.passwordFile is empty")
         else
-          error("invalid environment file line \(.n): \($line)")
+          .password = $pw
         end
-    )
-    | .env
+    ''}
   '';
 
   # This command runs during activation, not during Nix evaluation. It emits
@@ -194,55 +210,20 @@ let
     let
       jaq = lib.getExe pkgs.jaq;
       inherit (serviceCfg) environmentFile passwordFile;
-
-      environmentRead = lib.optionalString (environmentFile != null) ''
-        environment_file=${lib.escapeShellArg (toString environmentFile)}
-        if [[ ! -f "$environment_file" || ! -r "$environment_file" ]]; then
-          echo "programs.opencode.service.environmentFile is not readable: $environment_file" >&2
-          exit 1
-        fi
-        env_json="$(${jaq} -Rn -f ${lib.escapeShellArg (toString serviceEnvFilter)} "$environment_file")" || {
-          echo "programs.opencode.service.environmentFile could not be parsed: $environment_file" >&2
-          exit 1
-        }
-      '';
-
-      passwordCheck = lib.optionalString (passwordFile != null) ''
-        password_file=${lib.escapeShellArg (toString passwordFile)}
-        if [[ ! -f "$password_file" || ! -r "$password_file" ]]; then
-          echo "programs.opencode.service.passwordFile is not readable: $password_file" >&2
-          exit 1
-        fi
-      '';
-
-      # Pass secrets through files or process substitution, never through argv.
-      jaqArgs = [
-        "--slurpfile base \"$base_file\""
-      ]
-      ++ lib.optional (environmentFile != null) "--slurpfile env <(printf '%s' \"$env_json\")"
-      ++ lib.optional (passwordFile != null) "--rawfile password \"$password_file\"";
-
-      # Start from the Nix settings, then add the environment and password if
-      # declared.
-      jaqFilter =
-        "$base[0]"
-        + lib.optionalString (environmentFile != null) ''
-          | .env = ($env[0] * (.env // { }))
-        ''
-        + lib.optionalString (passwordFile != null) ''
-          | ($password | sub("\r?\n+$"; "")) as $pw
-          | if $pw == "" then
-              error("programs.opencode.service.passwordFile is empty")
-            else
-              .password = $pw
-            end
-        '';
     in
     ''
       base_file=${lib.escapeShellArg (toString serviceBaseFile)}
-      ${environmentRead}
-      ${passwordCheck}
-      ${jaq} -n ${lib.concatStringsSep " " jaqArgs} ${lib.escapeShellArg jaqFilter}
+      static_filter=${lib.escapeShellArg (toString serviceStaticFilter)}
+      jaq_args=(--slurpfile base "$base_file")
+      ${lib.optionalString (environmentFile != null) ''
+        environment_file=${lib.escapeShellArg (toString environmentFile)}
+        jaq_args+=(--rawfile environment "$environment_file")
+      ''}
+      ${lib.optionalString (passwordFile != null) ''
+        password_file=${lib.escapeShellArg (toString passwordFile)}
+        jaq_args+=(--rawfile password "$password_file")
+      ''}
+      ${jaq} -n "''${jaq_args[@]}" -f "$static_filter"
     '';
 
   # OpenCode treats env as a complete object, so replace it when the static
@@ -252,8 +233,12 @@ let
     format = "json";
     empty = "{}";
     jqOperation = ''
-      $dynamic * $static
-      | if ($static | has("env")) then .env = $static.env else . end
+      if ($dynamic | type) != "object" then
+        error("service configuration must be a JSON object")
+      else
+        $dynamic * $static
+        | if ($static | has("env")) then .env = $static.env else . end
+      end
     '';
     path = servicePath;
     staticSettingsCommand = serviceStaticCommand;
@@ -275,10 +260,16 @@ let
 
       service_path=${lib.escapeShellArg servicePath}
       service_opencode_bin=${lib.escapeShellArg serviceOpencodeBin}
-      jaq_bin=${lib.escapeShellArg (lib.getExe pkgs.jaq)}
+      sha256sum=${lib.escapeShellArg (lib.getExe' pkgs.coreutils "sha256sum")}
 
-      service_config_json() {
-        "$jaq_bin" -S -c '.' "$service_path"
+      service_file_hash() {
+        local hash
+        if [[ -e "$service_path" ]]; then
+          "$sha256sum" -- "$service_path" | {
+            read -r hash _
+            printf '%s' "$hash"
+          }
+        fi
       }
 
       service_action_if_running() {
@@ -287,28 +278,38 @@ let
         local status
 
         if ! status="$("$service_opencode_bin" service status 2>/dev/null)"; then
-          echo "programs.opencode.service: could not query the background service; skipping $action." >&2
+          warnEcho "programs.opencode.service: could not query the background service; skipping $action."
         elif [[ -n "$status" && "$status" != "stopped" ]]; then
           verboseEcho "$message"
           run "$service_opencode_bin" service "$action"
         fi
       }
 
-      # Read the current configuration before merging. A failed merge leaves
-      # the file untouched.
-      before_json=
-      if [[ -e "$service_path" ]]; then
-        if ! before_json="$(service_config_json)"; then
-          errorEcho "Could not parse OpenCode service configuration at '$service_path'."
-          exit 1
+      missing_secret=
+      ${lib.optionalString (serviceCfg.passwordFile != null) ''
+        password_file=${lib.escapeShellArg (toString serviceCfg.passwordFile)}
+        if [[ ! -f "$password_file" || ! -r "$password_file" ]]; then
+          warnEcho "programs.opencode.service.passwordFile is not readable: $password_file"
+          missing_secret=1
         fi
-        if [[ "$("$jaq_bin" -r 'type' <<<"$before_json")" != "object" ]]; then
-          errorEcho "OpenCode service configuration at '$service_path' must be a JSON object."
-          exit 1
+      ''}
+      ${lib.optionalString (serviceCfg.environmentFile != null) ''
+        environment_file=${lib.escapeShellArg (toString serviceCfg.environmentFile)}
+        if [[ ! -f "$environment_file" || ! -r "$environment_file" ]]; then
+          warnEcho "programs.opencode.service.environmentFile is not readable: $environment_file"
+          missing_secret=1
         fi
-      else
-        before_json='{}'
+      ''}
+      if [[ -n "$missing_secret" ]]; then
+        warnEcho "Skipping the OpenCode service configuration. Create the missing files and run home-manager switch again."
+        exit 0
       fi
+
+      ${lib.optionalString (serviceDisabled != true && serviceCfg.restartOnChange) ''
+        if [[ ! -v DRY_RUN ]]; then
+          service_before_hash="$(service_file_hash)"
+        fi
+      ''}
 
       ${serviceMerger}
 
@@ -327,11 +328,7 @@ let
         if [[ -v DRY_RUN ]]; then
           verboseEcho "Would restart the OpenCode background service if its configuration changed."
         else
-          if ! after_json="$(service_config_json)"; then
-            errorEcho "Could not parse OpenCode service configuration at '$service_path'."
-            exit 1
-          fi
-          if [[ "$before_json" != "$after_json" ]]; then
+          if [[ "$service_before_hash" != "$(service_file_hash)" ]]; then
             service_action_if_running restart "Restarting the OpenCode background service after a configuration change."
           fi
         fi
@@ -564,6 +561,9 @@ in
 
           When `settings`, `passwordFile`, and `environmentFile` are all
           empty, this option does nothing.
+
+          If a declared secret file is missing or unreadable, activation warns
+          and leaves {file}`service.json` unchanged; create it and switch again.
         '';
       };
 
@@ -582,7 +582,7 @@ in
       };
 
       passwordFile = mkOption {
-        type = lib.types.nullOr lib.types.path;
+        type = lib.types.nullOr lib.types.str;
         default = null;
         example = "/run/secrets/opencode-service-password";
         description = ''
@@ -591,11 +591,16 @@ in
           {file}`$XDG_CONFIG_HOME/opencode/service.json` with mode `0600`.
           Trailing newlines are ignored.
 
-          Use a path managed by a secret manager, such as
+          Use a string path managed by a secret manager, such as
           `config.sops.secrets."opencode/password".path`. Do not point this at
-          a path in the Nix store. When unset, OpenCode generates and stores a
+          a path in the Nix store or use a Nix path literal, which may be
+          copied into the store. When unset, OpenCode generates and stores a
           password on first start. Removing this option leaves the last
           password in {file}`service.json`.
+
+          If the file is missing or unreadable during activation, the service
+          configuration is left unchanged and a warning is printed. Create the
+          file and run {command}`home-manager switch` again.
 
           This is separate from
           {option}`programs.opencode.web.environmentFile`: OpenCode service
@@ -605,7 +610,7 @@ in
       };
 
       environmentFile = mkOption {
-        type = lib.types.nullOr lib.types.path;
+        type = lib.types.nullOr lib.types.str;
         default = null;
         example = "/run/secrets/opencode-service-env";
         description = ''
@@ -628,8 +633,11 @@ in
           environment in {file}`service.json`.
 
           The file must be readable by the user during activation. Use a
-          path managed by a secret manager; do not use a path in the Nix
-          store.
+          string path managed by a secret manager; do not use a path in the
+          Nix store or a Nix path literal. If the file is missing or
+          unreadable, the service configuration is left unchanged and a
+          warning is printed. Create the file and run
+          {command}`home-manager switch` again.
 
           This is not the same as
           {option}`programs.opencode.web.environmentFile`, which configures
@@ -667,7 +675,8 @@ in
           supported. Use {option}`programs.opencode.service.passwordFile` for
           the password. Remote access and its consent record are managed by
           {command}`opencode service set remote` and
-          {command}`opencode pair --remote`.
+          {command}`opencode pair --remote`. OpenCode's `{file:...}`
+          substitution does not apply to {file}`service.json`.
 
           Set `disabled = true` to stop a running service and make the
           OpenCode CLI run standalone; `false` lets OpenCode start the service
