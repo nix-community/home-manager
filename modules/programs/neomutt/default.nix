@@ -126,7 +126,7 @@ let
     "to"
   ];
 
-  bindModule = types.submodule {
+  bindOptionsModule = {
     options = {
       map = mkOption {
         type =
@@ -170,6 +170,20 @@ let
       };
     };
   };
+
+  bindModule = types.submodule bindOptionsModule;
+
+  macroModule = types.submodule [
+    bindOptionsModule
+    {
+      options.description = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "Go to the archive";
+        description = "Description of the macro, shown in the help screen.";
+      };
+    }
+  ];
 
   mkNotmuchVirtualboxes =
     virtualMailboxes:
@@ -316,7 +330,11 @@ let
 
   bindSection = (genBindMapper "bind") cfg.binds;
 
-  macroSection = (genBindMapper "macro") cfg.macros;
+  macroSection = concatMapStringsSep "\n" (
+    macro:
+    ''macro ${concatStringsSep "," macro.map} ${macro.key} "${macro.action}"''
+    + optionalString (macro.description != null) " \"${lib.escape [ "\\" ''"'' ] macro.description}\""
+  ) cfg.macros;
 
   mailCheckSection = ''
     set mail_check_stats
@@ -406,7 +424,7 @@ in
       };
 
       macros = mkOption {
-        type = types.listOf bindModule;
+        type = types.listOf macroModule;
         default = [ ];
         description = "List of macros.";
       };
