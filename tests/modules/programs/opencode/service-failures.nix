@@ -60,6 +60,7 @@ in
     set -eu
     function run() { "$@"; }
     function verboseEcho() { printf 'VERBOSE: %s\n' "$*"; }
+    function warnEcho() { printf 'WARNING: %s\n' "$*" >&2; }
     function errorEcho() { printf 'ERROR: %s\n' "$*" >&2; }
     source "$TMPDIR/opencode-service-activate"
     EOF
@@ -67,9 +68,22 @@ in
 
     function assertUntouched() {
       cmp -s "$fixtures/original.json" "$HOME/.config/opencode/service.json" \
-        || fail "A failed activation must not change the service configuration"
+        || fail "Activation must not change the service configuration"
       [[ "$(stat -c '%a' "$HOME/.config/opencode/service.json")" == 644 ]] \
-        || fail "A failed activation must not change the service configuration mode"
+        || fail "Activation must not change the service configuration mode"
+    }
+    function assertNoServiceQuery() {
+      [[ ! -s "$OPENCODE_TEST_LOG" ]] \
+        || fail "Activation must not query or restart the service"
+    }
+    function assertActivationSkips() {
+      : > "$OPENCODE_TEST_LOG"
+      if ! "$BASH" $TMPDIR/activate-wrapper 2> "$fixtures/error"; then
+        cat "$fixtures/error" >&2
+        fail "Activation should have skipped the service configuration"
+      fi
+      assertUntouched
+      assertNoServiceQuery
     }
     function assertActivationFails() {
       : > "$OPENCODE_TEST_LOG"
@@ -77,49 +91,47 @@ in
         fail "Activation should have failed"
       fi
       assertUntouched
-      [[ ! -s "$OPENCODE_TEST_LOG" ]] \
-        || fail "A failed activation must not query or restart the service"
+      assertNoServiceQuery
     }
 
-    # A missing password file is an error.
     rm "$TMPDIR/secrets/password"
-    assertActivationFails
+    assertActivationSkips
     grep -q 'programs.opencode.service.passwordFile is not readable' "$fixtures/error" \
-      || fail "The missing password file error was not reported"
+      || fail "The missing password file warning was not reported"
+    grep -q 'Skipping the OpenCode service configuration' "$fixtures/error" \
+      || fail "The skipped service configuration warning was not reported"
 
-    # An empty password file is an error.
     : > "$TMPDIR/secrets/password"
     assertActivationFails
     grep -q 'programs.opencode.service.passwordFile is empty' "$fixtures/error" \
       || fail "The empty password file error was not reported"
 
-    # A missing environment file is an error.
     printf 's3cret\n' > "$TMPDIR/secrets/password"
     rm "$TMPDIR/secrets/environment"
-    assertActivationFails
+    assertActivationSkips
     grep -q 'programs.opencode.service.environmentFile is not readable' "$fixtures/error" \
-      || fail "The missing environment file error was not reported"
+      || fail "The missing environment file warning was not reported"
 
-    # An invalid environment file is an error with a line number.
-    printf '# comment\nGOOD=value\nBAD LINE\n' > "$TMPDIR/secrets/environment"
+    printf '# comment\nGOOD=value\nOPENAI_API_KEY sk-do-not-log\n' > "$TMPDIR/secrets/environment"
     assertActivationFails
-    grep -q 'invalid environment file line 3: BAD LINE' "$fixtures/error" \
+    grep -q 'invalid environment file line 3: expected KEY=VALUE' "$fixtures/error" \
       || fail "The invalid environment file error was not reported"
+    ! grep -q 'sk-do-not-log' "$fixtures/error" \
+      || fail "The invalid environment file error leaked the line contents"
 
     # An unparsable existing configuration is not replaced.
-    printf 's3cret\n' > "$TMPDIR/secrets/password"
     printf 'GOOD=value\n' > "$TMPDIR/secrets/environment"
     printf '{not json}\n' > "$HOME/.config/opencode/service.json"
     cat "$HOME/.config/opencode/service.json" > "$fixtures/original.json"
     assertActivationFails
-    grep -q 'Could not parse OpenCode service configuration' "$fixtures/error" \
+    grep -q 'Could not parse config at' "$fixtures/error" \
       || fail "The unparsable service configuration error was not reported"
 
     # A non-object existing configuration is not replaced.
     printf '[]\n' > "$HOME/.config/opencode/service.json"
     cat "$HOME/.config/opencode/service.json" > "$fixtures/original.json"
     assertActivationFails
-    grep -q 'must be a JSON object' "$fixtures/error" \
+    grep -q 'service configuration must be a JSON object' "$fixtures/error" \
       || fail "The non-object service configuration error was not reported"
   '';
 }
