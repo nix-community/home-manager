@@ -303,7 +303,7 @@ _home-manager_completions ()
               "-L" "--print-build-logs" "--log-format" \
               "--show-trace" "--flake" "--substitute" "--builders" "--version" \
               "--update-input" "--override-input" "--experimental-features" \
-              "--extra-experimental-features" "--refresh")
+              "--extra-experimental-features" "--reference-lock-file"  "--refresh")
 
     # ^ « home-manager »'s options.
 
