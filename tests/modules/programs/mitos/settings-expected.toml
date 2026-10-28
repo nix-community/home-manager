@@ -1,0 +1,24 @@
+[commands]
+":wq" = [":write", ":quit"]
+
+[editor]
+line-number = "relative"
+
+[editor.lsp.messages]
+enable = true
+
+[keys.normal]
+esc = ["collapse_selection", "keep_primary_selection"]
+
+[keys.normal.space]
+q = ":q"
+space = "file_picker"
+w = ":w"
+
+[theme]
+dark = "base16"
+light = "modus_operandi"
+
+[keys.normal.G]
+G = "goto_file_end"
+g = "goto_file_start"
