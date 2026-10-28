@@ -218,7 +218,7 @@ in
           cfg.history.ignorePatterns != [ ]
         ) "HISTORY_IGNORE=${lib.escapeShellArg "(${lib.concatStringsSep "|" cfg.history.ignorePatterns})"}"}
         HISTFILE="${mkShellVarPathStr cfg.history.path}"
-        mkdir -p "$(dirname "$HISTFILE")"
+        [[ -d ''${HISTFILE:h} ]] || mkdir -p "''${HISTFILE:h}"
       '')
 
       (lib.mkIf (cfg.historySubstringSearch.enable or false) (

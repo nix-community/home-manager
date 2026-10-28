@@ -29,7 +29,7 @@
       SAVEHIST="10000"
 
       HISTFILE="/home/hm-user/.zsh_history"
-      mkdir -p "$(dirname "$HISTFILE")"
+      [[ -d ''${HISTFILE:h} ]] || mkdir -p "''${HISTFILE:h}"
 
       # Set shell options
       set_opts=(
