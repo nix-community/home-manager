@@ -9,6 +9,6 @@
 
     assertFileExists "$serviceFile"
 
-    assertFileContent "$serviceFile" ${./expected-agent.plist}
+    assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent.plist}
   '';
 }

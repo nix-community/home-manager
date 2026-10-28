@@ -8,7 +8,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @git@/bin/git for-each-repo --keep-going &apos;--config=maintenance.repo&apos; maintenance run &apos;--schedule=hourly&apos;</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment @git@/bin/git for-each-repo --keep-going &apos;--config=maintenance.repo&apos; maintenance run &apos;--schedule=hourly&apos;</string>
 	</array>
 	<key>StartCalendarInterval</key>
 	<array>

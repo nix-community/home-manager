@@ -17,7 +17,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @syncthing-wrapper@</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment @syncthing-wrapper@</string>
 	</array>
 	<key>StandardErrorPath</key>
 	<string>/home/hm-user/Library/Logs/Syncthing/syncthing-stderr.log</string>

@@ -12,15 +12,15 @@ lib.mkMerge [
     nmt.script = ''
       serviceFile=LaunchAgents/org.nix-community.home.git-maintenance-hourly.plist
       assertFileExists "$serviceFile"
-      assertFileContent "$serviceFile" ${./expected-agent-hourly.plist}
+      assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent-hourly.plist}
 
       serviceFile=LaunchAgents/org.nix-community.home.git-maintenance-daily.plist
       assertFileExists "$serviceFile"
-      assertFileContent "$serviceFile" ${./expected-agent-daily.plist}
+      assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent-daily.plist}
 
       serviceFile=LaunchAgents/org.nix-community.home.git-maintenance-weekly.plist
       assertFileExists "$serviceFile"
-      assertFileContent "$serviceFile" ${./expected-agent-weekly.plist}
+      assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent-weekly.plist}
     '';
   })
 ]
