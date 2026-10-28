@@ -22,6 +22,7 @@ builtins.mapAttrs
     "${name}-null-package" = ./null-package.nix;
     "${name}-final-package" = ./final-package.nix;
     "${name}-global-extensions-assertions" = ./global-extensions-assertions.nix;
+    "${name}-desktop-entry-assertions" = ./desktop-entry-assertions.nix;
     "${name}-policies" = ./policies.nix;
     "${name}-profiles-bookmarks" = ./profiles/bookmarks;
     "${name}-profiles-bookmarks-attrset" = ./profiles/bookmarks/attrset.nix;
@@ -29,6 +30,7 @@ builtins.mapAttrs
     "${name}-profiles-containers-duplicate-ids" = ./profiles/containers/duplicate-ids.nix;
     "${name}-profiles-containers-id-out-of-range" = ./profiles/containers/id-out-of-range.nix;
     "${name}-profiles-containers-id-zero" = ./profiles/containers/id-zero.nix;
+    "${name}-profiles-desktop-entry" = ./profiles/desktop-entry;
     "${name}-profiles-duplicate-ids" = ./profiles/duplicate-ids.nix;
     "${name}-profiles-extensions" = ./profiles/extensions;
     "${name}-profiles-extensions-assertions" = ./profiles/extensions/assertions.nix;
