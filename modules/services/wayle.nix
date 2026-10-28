@@ -88,6 +88,10 @@ in
         wallpaper.engine-enabled = false;
         styling.theme-provider = "wayle";
       } cfg.settings;
+
+      # Determine if wayle is being configured via nix, or if the user will be
+      # using wayle's builtin settings dialog.
+      nix_configured = cfg.settings != { };
     in
     {
       assertions = [
@@ -96,7 +100,7 @@ in
 
       home.packages = (
         [ cfg.package ]
-        # Install the appropriate theme-provider, if set.
+        # Install only the dependencies wayle needs based on the nix configuration.
         ++ (lists.optional (
           cfg.autoInstallDependencies
           && elem settings_with_fallbacks.styling.theme-provider [
@@ -108,7 +112,7 @@ in
       );
 
       # Main config file.
-      xdg.configFile."wayle/config.toml" = mkIf (cfg.settings != { }) {
+      xdg.configFile."wayle/config.toml" = mkIf nix_configured {
         source = tomlFormat.generate "wayle-config" cfg.settings;
       };
 
