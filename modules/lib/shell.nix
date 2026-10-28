@@ -58,9 +58,118 @@ let
       } items;
     in
     foldResult.finishedLines ++ lib.optional (foldResult.currentLine != "") foldResult.currentLine;
+  # Preserve parameter, command, and arithmetic expansion inside a double-quoted
+  # shell word. Existing escapes keep their shell meaning; other backslashes stay
+  # literal.
+  escapeDoubleQuoted =
+    let
+      escapeLiteral = lib.replaceStrings [ "\\" ] [ "\\\\" ];
+      handlePart =
+        part:
+        if lib.isString part then
+          escapeLiteral part
+        else
+          let
+            c = lib.head part;
+          in
+          # These four escapes already have double-quoted shell semantics. Escape
+          # every other backslash, including line continuations, as literal data.
+          if c == "$" || c == "\\" || c == "\"" || c == "`" then "\\${c}" else escapeLiteral "\\${c}";
+    in
+    value: lib.concatMapStrings handlePart (builtins.split ''\\(.)'' value);
+
+  # POSIX sh does not define local variables, so remove every scratch name after
+  # all calls.
+  mergeScratchVariables = [
+    "__hm_mode"
+    "__hm_name"
+    "__hm_sep"
+    "__hm_cur"
+    "__hm_add"
+    "__hm_entry"
+    "__hm_reposition"
+    "__hm_work"
+    "__hm_pre"
+    "__hm_post"
+  ];
+
+  # Double-quote entry values so expansions run when the block is sourced.
+  mkMergeCall =
+    mode: sep: name: values:
+    lib.concatStringsSep " " (
+      [
+        "__hm_merge"
+        mode
+        name
+        ''"${escapeDoubleQuoted sep}"''
+      ]
+      ++ map (value: ''"${escapeDoubleQuoted value}"'') values
+    );
+
+  mergeSearchVariables =
+    {
+      prepend ? { },
+      append ? { },
+    }:
+    let
+      mkCalls =
+        mode: variables:
+        lib.concatStringsSep "\n" (
+          map (name: mkMergeCall mode ":" name variables.${name}) (lib.attrNames variables)
+        );
+      calls = lib.concatStringsSep "\n" (
+        lib.filter (value: value != "") [
+          (mkCalls "prepend" prepend)
+          (mkCalls "append" append)
+        ]
+      );
+    in
+    if prepend == { } && append == { } then
+      ""
+    else
+      ''
+        ${builtins.readFile ./session-search-merge.sh}
+        ${calls}
+        export __HM_SESS_VARS_MERGED=1
+        unset -f __hm_merge
+        unset ${lib.concatStringsSep " " mergeScratchVariables}
+      '';
+
 in
 {
   inherit export wrapLines;
+
+  /**
+    Generate a complete POSIX shell block that merges entries into
+    colon-delimited search variables.
+
+    Prepends run before appends. The generated block exports a process marker
+    so later blocks preserve inherited entry positions.
+
+    Entries are evaluated in a double-quoted shell context. Parameter and
+    arithmetic expansions and both command-substitution forms stay active.
+    Write `\"` for a literal `"`. Plain glob and tilde characters remain
+    literal while the surrounding double-quoted context is intact.
+
+    Returns an empty string when both attribute sets are empty.
+
+    # Inputs
+
+    `prepend`
+
+    : Attribute set that maps variable names to entries added at the front
+
+    `append`
+
+    : Attribute set that maps variable names to entries added at the end
+
+    # Type
+
+    ```
+    mergeSearchVariables :: { prepend ? AttrSet [ String ], append ? AttrSet [ String ] } -> String
+    ```
+  */
+  inherit mergeSearchVariables;
 
   # Produces a Bourne shell-like statement that prepends new values to
   # a possibly existing variable, using sep(arator).
