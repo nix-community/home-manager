@@ -17,6 +17,33 @@ let
   tomlFormat = pkgs.formats.toml { };
   hasGeneratedConfig = cfg.settings != { } || cfg.presets != [ ];
 
+  effectivePackage =
+    if cfg.extraPackages != [ ] then
+      pkgs.symlinkJoin {
+        name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+        paths = [ cfg.package ];
+        preferLocalBuild = true;
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/starship \
+            --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+        '';
+      }
+    else
+      cfg.package;
+
+  # Templates come from the configured package's patched source. Render them
+  # here so runtime calls retain the extraPackages wrapper.
+  hasShellIntegration = cfg.package ? shellIntegration;
+  shellIntegration = pkgs.runCommand "starship-shell-integration" { } ''
+    mkdir -p "$out"
+    for shell in bash zsh fish nu; do
+      substitute "${cfg.package.shellIntegration}/starship.$shell.in" \
+        "$out/starship.$shell" \
+        --replace-fail '::STARSHIP::' '${effectivePackage}/bin/starship'
+    done
+  '';
+
   initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in
 {
@@ -137,22 +164,7 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages =
-        if cfg.extraPackages != [ ] then
-          [
-            (pkgs.symlinkJoin {
-              name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
-              paths = [ cfg.package ];
-              preferLocalBuild = true;
-              nativeBuildInputs = [ pkgs.makeWrapper ];
-              postBuild = ''
-                wrapProgram $out/bin/starship \
-                  --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
-              '';
-            })
-          ]
-        else
-          [ cfg.package ];
+      packages = [ effectivePackage ];
 
       sessionVariables.STARSHIP_CONFIG = cfg.configPath;
 
@@ -203,20 +215,35 @@ in
       bash.initExtra = mkIf cfg.enableBashIntegration (
         lib.mkOrder 1900 ''
           if [[ $TERM != "dumb" ]]; then
-            eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
+            ${
+              if hasShellIntegration then
+                "source ${shellIntegration}/starship.bash"
+              else
+                ''eval "$(${lib.getExe cfg.package} init bash --print-full-init)"''
+            }
           fi
         ''
       );
 
       zsh.initContent = mkIf cfg.enableZshIntegration ''
         if [[ $TERM != "dumb" ]]; then
-          eval "$(${lib.getExe cfg.package} init zsh)"
+          ${
+            if hasShellIntegration then
+              "source ${shellIntegration}/starship.zsh"
+            else
+              ''eval "$(${lib.getExe cfg.package} init zsh)"''
+          }
         fi
       '';
 
       fish.${initFish} = mkIf cfg.enableFishIntegration ''
         if test "$TERM" != "dumb"
-          ${lib.getExe cfg.package} init fish | source
+          ${
+            if hasShellIntegration then
+              "source ${shellIntegration}/starship.fish"
+            else
+              "${lib.getExe cfg.package} init fish | source"
+          }
           ${lib.optionalString cfg.enableTransience "enable_transience"}
         end
       '';
@@ -228,15 +255,16 @@ in
       '';
 
       nushell = mkIf cfg.enableNushellIntegration {
-        # Unfortunately nushell doesn't allow conditionally sourcing nor
-        # conditionally setting (global) environment variables, which is why the
-        # check for terminal compatibility (as seen above for the other shells) is
-        # not done here.
         extraConfig = ''
-          use ${
-            pkgs.runCommand "starship-nushell-config.nu" { } ''
-              ${lib.getExe cfg.package} init nu >> "$out"
-            ''
+          if $env.TERM? != "dumb" {
+            use ${
+              if hasShellIntegration then
+                "${shellIntegration}/starship.nu"
+              else
+                pkgs.runCommand "starship-nushell-config.nu" { } ''
+                  ${lib.getExe cfg.package} init nu >> "$out"
+                ''
+            }
           }
         '';
       };
