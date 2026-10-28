@@ -499,6 +499,12 @@
     github = "pedorich-n";
     githubId = 15573098;
   };
+  pedromiguelvc = {
+    name = "Pedro Miguel";
+    email = "108361383+pedromiguelvc@users.noreply.github.com";
+    github = "pedromiguelvc";
+    githubId = 108361383;
+  };
   philip-730 = {
     name = "Philip Amendolia";
     email = "philip.amendolia@gmail.com";
