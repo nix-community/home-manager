@@ -192,8 +192,12 @@
       configDir = if isDarwin then "Library/Thunderbird" else ".thunderbird";
       profilesDir = if isDarwin then "${configDir}/Profiles" else "${configDir}";
       platform = if isDarwin then "darwin" else "linux";
+      nativeHostsDir =
+        if isDarwin then "Library/Mozilla/NativeMessagingHosts" else ".mozilla/native-messaging-hosts";
     in
     ''
+      assertDirectoryEmpty home-files/${nativeHostsDir}
+
       assertFileExists home-files/${configDir}/profiles.ini
       assertFileContent home-files/${configDir}/profiles.ini \
         ${./thunderbird-expected-profiles-${platform}.ini}
