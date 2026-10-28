@@ -1071,6 +1071,7 @@
           - modules/programs/terminator.nix
           - modules/programs/termite.nix
           - modules/programs/urxvt.nix
+          - modules/programs/warp-terminal.nix
           - modules/programs/waveterm.nix
           - modules/programs/wezterm.nix
           - modules/services/shpool.nix
@@ -1084,6 +1085,7 @@
           - tests/modules/programs/ptyxis/**/*
           - tests/modules/programs/rio/**/*
           - tests/modules/programs/terminator/**/*
+          - tests/modules/programs/warp-terminal/**/*
           - tests/modules/programs/waveterm/**/*
           - tests/modules/programs/wezterm/**/*
 "video":

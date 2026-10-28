@@ -1,0 +1,6 @@
+[appearance.text]
+font_name = "JetBrains Mono"
+font_size = 14.0
+
+[text_editing]
+vim_mode_enabled = true

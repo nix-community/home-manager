@@ -343,6 +343,12 @@
     github = "kayskayskays";
     githubId = 115312476;
   };
+  kimhappy = {
+    name = "Hwanhee Kim";
+    email = "babtul21@gmail.com";
+    github = "kimhappy";
+    githubId = 50399467;
+  };
   kmaasrud = {
     name = "Knut Magnus Aasrud";
     email = "km@aasrud.com";

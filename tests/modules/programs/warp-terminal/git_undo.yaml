@@ -1,0 +1,6 @@
+%YAML 1.1
+---
+command: git reset --soft HEAD~1
+name: Undo the last commit
+tags:
+- git
