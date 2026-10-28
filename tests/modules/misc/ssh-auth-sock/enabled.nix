@@ -18,7 +18,7 @@
 
   nmt.script = ''
     assertFileContains \
-      home-files/.profile \
+      home-files/.bash_profile \
       'if [ -z "$SSH_AUTH_SOCK" -o -z "$SSH_CONNECTION" ]; then'
     assertFileContains \
       home-files/.config/fish/config.fish \
