@@ -239,6 +239,12 @@
     github = "glmlm";
     githubId = 91877885;
   };
+  gordon01 = {
+    name = "Alexander Sergeev";
+    email = "etc9053@gmail.com";
+    github = "Gordon01";
+    githubId = 4996834;
+  };
   hectorgray = {
     name = "Hector Gray";
     email = "nix.giant993@passmail.net";
