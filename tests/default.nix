@@ -193,6 +193,7 @@ import nmtSrc {
           ./lib/mcp
           ./lib/strings
           ./lib/types
+          ./modules/agents/skills
           ./modules/files
           ./modules/home-environment
           ./modules/misc/fontconfig
