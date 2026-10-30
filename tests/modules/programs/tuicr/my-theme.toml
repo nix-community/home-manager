@@ -1,0 +1,54 @@
+# copied from https://github.com/agavra/tuicr/blob/main/examples/tuicr-teal.toml
+
+panel_bg = "#062832"
+bg_highlight = "#12435f"
+fg_primary = "#d7e7ff"
+fg_secondary = "#9eb8d4"
+fg_dim = "#617c99"
+
+diff_add = "#39d0b3"
+diff_add_bg = "#123f3d"
+diff_del = "#ff6b8a"
+diff_del_bg = "#4a2434"
+diff_context = "#d7e7ff"
+diff_hunk_header = "#79b8ff"
+expanded_context_fg = "#617c99"
+
+syntax_add_bg = "#123f3d"
+syntax_del_bg = "#4a2434"
+
+# syntax_theme is not supported by the module: .tmTheme files aren't linked
+# syntax_theme = "tuicr-teal-syntax.tmTheme"
+
+file_added = "#39d0b3"
+file_modified = "#f2c36b"
+file_deleted = "#ff6b8a"
+file_renamed = "#b18cff"
+
+reviewed = "#39d0b3"
+pending = "#f2c36b"
+
+comment_note = "#79b8ff"
+comment_suggestion = "#4ee3ff"
+comment_issue = "#ff6b8a"
+comment_praise = "#55d68b"
+
+border_focused = "#4ee3ff"
+border_unfocused = "#23415f"
+status_bar_bg = "#0b2d3f"
+cursor_color = "#f2c36b"
+cursor_line_bg = "#0d3248"
+branch_name = "#b18cff"
+help_indicator = "#7a96b3"
+
+message_info_fg = "#061827"
+message_info_bg = "#79b8ff"
+message_warning_fg = "#061827"
+message_warning_bg = "#f2c36b"
+message_error_fg = "#061827"
+message_error_bg = "#ff6b8a"
+update_badge_fg = "#061827"
+update_badge_bg = "#f2c36b"
+
+mode_fg = "#061827"
+mode_bg = "#4ee3ff"
