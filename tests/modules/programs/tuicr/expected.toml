@@ -1,0 +1,25 @@
+comment_vim = false
+diff_view = "unified"
+leader = ";"
+q_quits = true
+scroll_offset = 5
+theme = "catppuccin-mocha"
+
+[[comment_types]]
+color = "yellow"
+definition = "ask for clarification"
+id = "note"
+label = "question"
+
+[[comment_types]]
+color = "#d19a66"
+definition = "small optional tweaks"
+id = "nit"
+label = "nitpick"
+
+[export]
+intro = "Please address these comments."
+scope_line = false
+
+[forge]
+comment_type_prefix = false
