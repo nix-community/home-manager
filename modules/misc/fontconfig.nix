@@ -436,6 +436,9 @@ in
       _name: config:
       lib.nameValuePair "fontconfig/conf.d/${config.target}" {
         inherit (config) enable source;
+        # KDE's font installer can replace a managed symlink with a regular file.
+        # Keep collision checks for targets outside the default naming scheme.
+        force = lib.mkDefault (config.target == "${toString config.priority}-hm-${config.label}.conf");
       }
     ) cfg.configFile;
   };
