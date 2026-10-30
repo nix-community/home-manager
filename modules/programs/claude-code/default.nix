@@ -55,6 +55,8 @@ let
     lib.filterAttrs (_: server: !(isMcpServerEnabled server)) (sharedMcpServers // cfg.mcpServers)
   );
 
+  sharedSkills = if cfg.enableSkillsIntegration then config.agents.skills.directory else null;
+
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -251,6 +253,39 @@ in
         ln -s "$source" "$out"
       '';
 
+      reservedSkillNames =
+        lib.optionals skillsAreAttrs skillNames ++ lib.optionals supportsPersonalPlugins pluginNames;
+
+      mergedSkillsDirectory = pkgs.runCommandLocal "claude-code-skills" { } ''
+        shopt -s dotglob nullglob
+        mkdir "$out"
+        declare -A reserved=(${
+          lib.concatMapStrings (name: "[${lib.escapeShellArg name}]=1 ") reservedSkillNames
+        })
+        ${lib.optionalString skillsArePath ''
+          source=${lib.escapeShellArg "${cfg.skills}"}
+          if [[ ! -d "$source" ]]; then
+            echo "programs.claude-code.skills must be a directory when set to a path" >&2
+            exit 1
+          fi
+          for entry in "$source"/*; do
+            name="$(basename "$entry")"
+            if [[ -n "''${reserved[$name]-}" ]]; then
+              echo "programs.claude-code.skills and managed plugins must have unique directory names" >&2
+              exit 1
+            fi
+            ln -s "$entry" "$out/$name"
+          done
+        ''}
+        for skill in ${sharedSkills}/*; do
+          name="$(basename "$skill")"
+          if [[ -n "''${reserved[$name]-}" || -e "$out/$name" || -L "$out/$name" ]]; then
+            continue
+          fi
+          cp -P "$skill" "$out/$name"
+        done
+      '';
+
       # Each plugin is linked as a single directory symlink rather than
       # recursively. Claude Code discovers a plugin's `agents/` and `commands/`
       # entries with a `readdir` that only accepts regular files, so recursive
@@ -384,9 +419,15 @@ in
           (mkRecursiveDirAttrs "commands" cfg.commandsDir)
           (mkRecursiveDirAttrs "hooks" cfg.hooksDir)
           (mkRecursiveDirAttrs "rules" cfg.rulesDir)
-          (lib.mkIf skillsArePath {
+          (lib.mkIf (skillsArePath || sharedSkills != null) {
             "${cfg.configDir}/skills" = {
-              source = if lib.isPath cfg.skills then cfg.skills else checkedSkillsDirectory;
+              source =
+                if sharedSkills != null then
+                  mergedSkillsDirectory
+                else if lib.isPath cfg.skills then
+                  cfg.skills
+                else
+                  checkedSkillsDirectory;
               recursive = true;
             };
           })
