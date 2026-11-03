@@ -15,7 +15,7 @@ let
     mkRemovedOptionModule
     ;
 
-  cfg = config.programs.dank-material-shell;
+  cfg = config.programs.dux-shell;
 
   jsonFormat = pkgs.formats.json { };
 
@@ -27,15 +27,16 @@ let
   );
 
   common = {
-    packages = lib.optional (cfg.package != null) cfg.package
-    ++ lib.optional cfg.enableSystemMonitoring cfg.dgop.package
-    ++ lib.optionals cfg.enableVPN [
-      pkgs.glib
-      pkgs.networkmanager
-    ]
-    ++ lib.optional cfg.enableDynamicTheming pkgs.matugen
-    ++ lib.optional cfg.enableAudioWavelength pkgs.cava
-    ++ lib.optional cfg.enableCalendarEvents pkgs.khal;
+    packages =
+      lib.optional (cfg.package != null) cfg.package
+      ++ lib.optional cfg.enableSystemMonitoring cfg.dgop.package
+      ++ lib.optionals cfg.enableVPN [
+        pkgs.glib
+        pkgs.networkmanager
+      ]
+      ++ lib.optional cfg.enableDynamicTheming pkgs.matugen
+      ++ lib.optional cfg.enableAudioWavelength pkgs.cava
+      ++ lib.optional cfg.enableCalendarEvents pkgs.khal;
 
     plugins = lib.mapAttrs (_name: plugin: {
       source = plugin.src;
@@ -44,10 +45,10 @@ let
 
   path = [
     "programs"
-    "dank-material-shell"
+    "dux-shell"
   ];
 
-  builtInRemovedMsg = "This is now built-in in DMS and doesn't need additional dependencies.";
+  builtInRemovedMsg = "This is now built-in in dux-shell and doesn't need additional dependencies.";
 
 in
 {
@@ -57,11 +58,11 @@ in
     (mkRenamedOptionModule
       [
         "programs"
-        "dankMaterialShell"
+        "DuxShell"
       ]
       [
         "programs"
-        "dank-material-shell"
+        "dux-shell"
       ]
     )
 
@@ -71,39 +72,39 @@ in
     (mkRemovedOptionModule (path ++ [ "enableNightMode" ]) "Night mode is now always available")
     (mkRemovedOptionModule (
       path ++ [ "enableSystemSound" ]
-    ) "qtmultimedia is now included on dms-shell package.")
+    ) "qtmultimedia is now included on dux-shell package.")
     (mkRemovedOptionModule (
       path
       ++ [
         "default"
         "settings"
       ]
-    ) "Default settings have been removed and been replaced with programs.dank-material-shell.settings")
+    ) "Default settings have been removed and been replaced with programs.dux-shell.settings")
     (mkRemovedOptionModule (
       path
       ++ [
         "default"
         "session"
       ]
-    ) "Default session has been removed and been replaced with programs.dank-material-shell.session")
+    ) "Default session has been removed and been replaced with programs.dux-shell.session")
     (mkRenamedOptionModule
-      [ "programs" "dank-material-shell" "enableSystemd" ]
-      [ "programs" "dank-material-shell" "systemd" "enable" ]
+      [ "programs" "dux-shell" "enableSystemd" ]
+      [ "programs" "dux-shell" "systemd" "enable" ]
     )
   ];
 
-  options.programs.dank-material-shell = {
+  options.programs.dux-shell = {
 
-    enable = mkEnableOption "DankMaterialShell";
+    enable = mkEnableOption "DuxShell";
 
-    package = mkPackageOption pkgs "dms-shell" { nullable = true; };
+    package = mkPackageOption pkgs "dux-shell" { nullable = true; };
 
     settings = mkOption {
       inherit (jsonFormat) type;
       default = { };
       description = ''
-        DankMaterialShell configuration settings as an attribute set, to be written to ~/.config/DankMaterialShell/settings.json.
-        Full up-to-date list of available settings can be found at https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js.
+        DuxShell configuration settings as an attribute set, to be written to ~/.config/DuxShell/settings.json.
+        Full up-to-date list of available settings can be found at https://raw.githubusercontent.com/AvengeMedia/DuxShell/refs/heads/master/quickshell/Common/settings/SettingsSpec.js.
       '';
     };
 
@@ -144,7 +145,7 @@ in
     enableClipboardPaste = mkOption {
       type = types.bool;
       default = true;
-      description = "Deprecated: paste is built into dms; no extra dependencies needed. Kept as a no-op for compatibility.";
+      description = "Deprecated: paste is built into dux-shell; no extra dependencies needed. Kept as a no-op for compatibility.";
     };
 
     quickshell = {
@@ -197,15 +198,15 @@ in
     clipboardSettings = mkOption {
       inherit (jsonFormat) type;
       default = { };
-      description = "DankMaterialShell clipboard settings as an attribute set, to be written to ~/.config/DankMaterialShell/clsettings.json.";
+      description = "DuxShell clipboard settings as an attribute set, to be written to ~/.config/DuxShell/clsettings.json.";
     };
 
     session = mkOption {
       inherit (jsonFormat) type;
       default = { };
       description = ''
-        DankMaterialShell session settings as an attribute set, to be written to ~/.local/state/DankMaterialShell/session.json.
-          Full up-to-date list of available settings can be found at https://raw.githubusercontent.com/AvengeMedia/DankMaterialShell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
+        DuxShell session settings as an attribute set, to be written to ~/.local/state/DuxShell/session.json.
+          Full up-to-date list of available settings can be found at https://raw.githubusercontent.com/AvengeMedia/DuxShell/refs/heads/master/quickshell/Common/settings/SessionSpec.js
 
       '';
     };
@@ -220,7 +221,7 @@ in
     };
 
     systemd = {
-      enable = lib.mkEnableOption "DankMaterialShell systemd startup";
+      enable = lib.mkEnableOption "DuxShell systemd startup";
     };
 
     systemd.target = mkOption {
@@ -232,18 +233,20 @@ in
   };
 
   config = mkIf cfg.enable {
-    assertions = [{
-      assertion = cfg.systemd.enable -> cfg.package != null;
-      message = "programs.dank-material-shell.systemd.enable requires a non-null package.";
-    }];
+    assertions = [
+      {
+        assertion = cfg.systemd.enable -> cfg.package != null;
+        message = "programs.dux-shell.systemd.enable requires a non-null package.";
+      }
+    ];
     programs.quickshell = {
       enable = true;
       inherit (cfg.quickshell) package;
     };
 
-    systemd.user.services.dms = mkIf (cfg.systemd.enable && cfg.package != null) {
+    systemd.user.services.dux-shell = mkIf (cfg.systemd.enable && cfg.package != null) {
       Unit = {
-        Description = "DankMaterialShell";
+        Description = "DuxShell";
         PartOf = [ cfg.systemd.target ];
         After = [ cfg.systemd.target ];
       };
@@ -256,23 +259,23 @@ in
       Install.WantedBy = [ cfg.systemd.target ];
     };
 
-    xdg.stateFile."DankMaterialShell/session.json" = mkIf (cfg.session != { }) {
+    xdg.stateFile."DuxShell/session.json" = mkIf (cfg.session != { }) {
       source = jsonFormat.generate "session.json" cfg.session;
     };
 
     xdg.configFile = {
-      "DankMaterialShell/settings.json" = mkIf (cfg.settings != { }) {
+      "DuxShell/settings.json" = mkIf (cfg.settings != { }) {
         source = jsonFormat.generate "settings.json" cfg.settings;
       };
-      "DankMaterialShell/clsettings.json" = mkIf (cfg.clipboardSettings != { }) {
+      "DuxShell/clsettings.json" = mkIf (cfg.clipboardSettings != { }) {
         source = jsonFormat.generate "clsettings.json" cfg.clipboardSettings;
       };
-      "DankMaterialShell/plugin_settings.json" = mkIf cfg.managePluginSettings {
+      "DuxShell/plugin_settings.json" = mkIf cfg.managePluginSettings {
         source = jsonFormat.generate "plugin_settings.json" pluginSettings;
       };
     }
     // (lib.mapAttrs' (name: value: {
-      name = "DankMaterialShell/plugins/${name}";
+      name = "DuxShell/plugins/${name}";
       inherit value;
     }) common.plugins);
     warnings =
