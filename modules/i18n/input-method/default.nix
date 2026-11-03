@@ -15,6 +15,8 @@ let
     "kime"
   ];
 
+  hasGtk2 = (pkgs ? gtk2) && !(pkgs.gtk2.meta.broken or false);
+
   gtk2Cache =
     pkgs.runCommandLocal "gtk2-immodule.cache"
       {
@@ -117,8 +119,8 @@ in
 
     home.packages = [
       cfg.package
-      gtk2Cache
       gtk3Cache
-    ];
+    ]
+    ++ lib.optional hasGtk2 gtk2Cache;
   };
 }
