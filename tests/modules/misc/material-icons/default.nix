@@ -2,7 +2,6 @@
   material-icons =
     {
       config,
-      lib,
       pkgs,
       ...
     }:

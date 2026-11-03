@@ -25,17 +25,17 @@ let
       }
     else
       {
-        path = value.path;
+        inherit (value) path;
         color = value.color or null;
       };
 
-  individualIconEntrys = mapAttrs (_: iconCfg: normalizeIconEntry iconCfg) cfg.icons;
+  individualIconEntrys = mapAttrs (_: normalizeIconEntry) cfg.icons;
 
   groupedIconEntrys = concatMapAttrs (
     _: iconGroupCfg:
-    mapAttrs (destinationPath: sourcePath: {
+    mapAttrs (_destinationPath: sourcePath: {
       path = sourcePath;
-      color = iconGroupCfg.color;
+      inherit (iconGroupCfg) color;
     }) iconGroupCfg.icons
   ) cfg.groups;
 

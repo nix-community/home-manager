@@ -2,20 +2,26 @@
   lib,
   stdenvNoCC,
   fetchFromGitHub,
-  iconEntries,
   rev,
   hash,
   rootIconPath,
+  iconEntries,
 }:
+let
+  sparseCheckout = lib.unique (lib.mapAttrsToList (_: iconCfg: iconCfg.path) iconEntries);
+  sparseHash = builtins.substring 0 8 (
+    builtins.hashString "sha256" (lib.concatStringsSep "\n" ([ rev ] ++ sparseCheckout))
+  );
+in
 stdenvNoCC.mkDerivation {
   pname = "material-icons-subset";
   version = "4.0.0-unstable-2026-01-29";
 
   src = fetchFromGitHub {
+    name = "material-design-icons-${sparseHash}";
     owner = "google";
     repo = "material-design-icons";
-    inherit rev hash;
-    sparseCheckout = lib.unique (lib.mapAttrsToList (_: iconCfg: iconCfg.path) iconEntries);
+    inherit rev hash sparseCheckout;
   };
 
   dontConfigure = true;
