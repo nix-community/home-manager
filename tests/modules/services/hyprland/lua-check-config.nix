@@ -13,9 +13,15 @@ lib.mkIf config.test.enableBig {
     checkConfig = true;
     portalPackage = null;
     settings.config.decoration.rounding = 4;
+
+    extraLuaFiles."nested/example" = {
+      content = "hl.config({ decoration = { rounding = 5 } })";
+      autoLoad = true;
+    };
   };
 
   nmt.script = ''
     assertFileExists "home-files/.config/hypr/hyprland.lua"
+    assertFileExists "home-files/.config/hypr/nested/example.lua"
   '';
 }
