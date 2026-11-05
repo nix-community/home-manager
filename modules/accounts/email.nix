@@ -418,6 +418,7 @@ let
             "outlook.office365.com"
             "plain"
             "posteo.de"
+            "purelymail.com"
             "runbox.com"
             "yandex.com"
           ];
@@ -726,6 +727,20 @@ let
             };
           }
         )
+
+        (mkIf (config.flavor == "purelymail.com") {
+          userName = mkDefault config.address;
+
+          imap = {
+            host = "imap.purelymail.com";
+            port = 993;
+          };
+
+          smtp = {
+            host = "smtp.purelymail.com";
+            port = if config.smtp.tls.useStartTls then 587 else 465;
+          };
+        })
 
         (mkIf (config.flavor == "runbox.com") {
           imap = {
