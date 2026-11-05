@@ -53,7 +53,6 @@ let
   hasNonStringValue = values: lib.any (value: !isString value) values;
   mkCheckPhase = package: ''
     export XDG_RUNTIME_DIR=$(mktemp -d)
-    trap "rm -rf $XDG_RUNTIME_DIR" EXIT
     ${lib.getExe package} --verify-config --config "$target"
   '';
 in

@@ -255,7 +255,6 @@ in
     checkConfig = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      defaultText = lib.literalExpression "wayland.windowManager.hyprland.package != null";
       description = "If enabled, validates the generated config file.";
     };
 
