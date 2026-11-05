@@ -21,4 +21,5 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   hyprland-lua-config = ./lua-config.nix;
   hyprland-lua-files-assertions = ./lua-files-assertions.nix;
   hyprland-lua-files-config = ./lua-files-config.nix;
+  hyprland-hyprlang-out-of-config-sourced-file = ./hyprlang-out-of-config-sourced-file.nix;
 }
