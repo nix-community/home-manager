@@ -1036,9 +1036,19 @@ in
       `path` (string)
       : Absolute path to the config file on disk.
 
-      `staticSettings` (path or derivation)
+      `staticSettings` (path or derivation; optional)
       : Path to the Nix-generated static config file, typically produced by
-        `format.generate`.
+        `format.generate`. The file is read through `reader`.
+
+      `staticSettingsCommand` (string; optional)
+      : Shell snippet that prints the static settings as one JSON document to
+        stdout. Use this when the static settings must be assembled at
+        activation time, for example from a secret file. The snippet is not
+        run in a dry run and must exit unsuccessfully if it cannot produce the
+        settings. The output is parsed as JSON even when the target format is
+        YAML or TOML.
+
+        Mutually exclusive with `staticSettings`; one of the two is required.
 
       `mode` (string or null; optional)
       : Octal permissions for a newly created file. When `null` (the default),
@@ -1062,7 +1072,7 @@ in
     # Type
 
     ```
-    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; mode ? NullOr String; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
+    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings ? NullOr Path; staticSettingsCommand ? NullOr String; mode ? NullOr String; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
     ```
 
     # Examples
@@ -1092,7 +1102,8 @@ in
       empty,
       jqOperation,
       path,
-      staticSettings,
+      staticSettings ? null,
+      staticSettingsCommand ? null,
       mode ? null,
       reader ? null,
       verboseMsg ? null,
@@ -1108,6 +1119,11 @@ in
           "${jaqBin} -c '.'"
         else
           "${jaqBin} --from ${format} -c '.'";
+      staticCmd =
+        if staticSettingsCommand != null then
+          staticSettingsCommand
+        else
+          "${readerCmd} ${lib.escapeShellArg staticSettings}";
       # Write the merge result to a temporary file and move it into place only
       # after the merge has succeeded, so a failing merge never clobbers the
       # existing config.
@@ -1135,6 +1151,12 @@ in
     assert lib.assertMsg
       (mode == null || (builtins.isString mode && builtins.match "[0-7]{3,4}" mode != null))
       "mkImpureConfigMerger: mode must be an octal string such as \"600\", got ${builtins.toJSON mode}.";
+    assert lib.assertMsg (
+      staticSettings != null || staticSettingsCommand != null
+    ) "mkImpureConfigMerger: either staticSettings or staticSettingsCommand is required.";
+    assert lib.assertMsg (
+      staticSettings == null || staticSettingsCommand == null
+    ) "mkImpureConfigMerger: staticSettings and staticSettingsCommand are mutually exclusive.";
     ''
       if [[ -v VERBOSE ]]; then
         echo ${lib.escapeShellArg verboseMsg'}
@@ -1192,7 +1214,12 @@ in
             errorEcho "Could not parse config at '$display_path'; refusing to merge."
             exit 1
           fi
-          static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
+          if ! static="$(
+            ${staticCmd}
+          )" || [[ -z "$static" ]]; then
+            errorEcho "Could not read Nix-generated config for '$display_path'; refusing to merge."
+            exit 1
+          fi
           if ! config="$(${jaqBin} -n ${lib.escapeShellArg mergeFilter} --slurpfile dynamic <(printf '%s' "$dynamic") --slurpfile static <(printf '%s' "$static"))"; then
             errorEcho "Could not merge Nix-generated config into '$display_path'."
             exit 1
