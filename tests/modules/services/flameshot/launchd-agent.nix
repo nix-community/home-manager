@@ -6,7 +6,7 @@
   nmt.script = ''
     serviceFile="LaunchAgents/org.nix-community.home.flameshot.plist"
     assertFileExists "$serviceFile"
-    assertFileContent "$serviceFile" ${builtins.toFile "expected-agent.plist" ''
+    assertFileContent "$(normalizeStorePaths "$serviceFile")" ${builtins.toFile "expected-agent.plist" ''
       <?xml version="1.0" encoding="UTF-8"?>
       <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
       <plist version="1.0">
@@ -26,7 +26,7 @@
       	<array>
       		<string>/bin/sh</string>
       		<string>-c</string>
-      		<string>/bin/wait4path /nix/store &amp;&amp; exec @flameshot@/bin/flameshot</string>
+      		<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment @flameshot@/bin/flameshot</string>
       	</array>
       	<key>RunAtLoad</key>
       	<true/>

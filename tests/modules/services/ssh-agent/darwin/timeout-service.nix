@@ -9,7 +9,7 @@
 
   nmt.script = ''
     assertFileContent \
-      LaunchAgents/org.nix-community.home.ssh-agent.plist \
+      "$(normalizeStorePaths LaunchAgents/org.nix-community.home.ssh-agent.plist)" \
       ${./timeout-service-expected.plist}
   '';
 }
