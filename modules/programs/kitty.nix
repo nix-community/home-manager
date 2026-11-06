@@ -33,7 +33,13 @@ let
     mkKeyValue =
       key: value:
       let
-        value' = (if lib.isBool value then lib.hm.booleans.yesNo else toString) value;
+        value' =
+          if lib.isBool value then
+            lib.hm.booleans.yesNo value
+          else if lib.isString value then
+            ''"${value}"''
+          else
+            toString value;
       in
       "${key} ${value'}";
   };
