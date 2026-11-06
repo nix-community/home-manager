@@ -629,6 +629,64 @@ in
                 description = "Whether this is a default profile.";
               };
 
+              desktopEntry = mkOption {
+                type = types.submodule {
+                  options = {
+                    enable = mkOption {
+                      type = types.bool;
+                      default = false;
+                      example = true;
+                      description = ''
+                        Whether to generate a desktop entry that launches
+                        ${appName} directly into this profile, bypassing the
+                        profile selector and any already-running instance.
+
+                        Only supported on Linux.
+                      '';
+                    };
+
+                    name = mkOption {
+                      type = types.str;
+                      default = "${appName} (${name})";
+                      defaultText = literalExpression ''"${appName} (<profile name>)"'';
+                      description = "Name shown on the desktop entry.";
+                    };
+
+                    genericName = mkOption {
+                      type = types.nullOr types.str;
+                      default = null;
+                      example = "Web Browser";
+                      description = "Generic name shown on the desktop entry.";
+                    };
+
+                    icon = mkOption {
+                      type = types.nullOr (types.either types.str types.path);
+                      default = null;
+                      description = "Icon shown on the desktop entry.";
+                    };
+
+                    settings = mkOption {
+                      type = types.attrsOf types.str;
+                      default = { };
+                      example = {
+                        Keywords = "internet;www;browser;web;explorer";
+                      };
+                      description = ''
+                        Extra key-value pairs to add to the desktop entry's
+                        `[Desktop Entry]` section. See
+                        [](#opt-xdg.desktopEntries._name_.settings).
+                      '';
+                    };
+                  };
+                };
+                default = { };
+                description = ''
+                  Desktop entry that launches ${appName} directly into this
+                  profile. See [](#opt-xdg.desktopEntries) for the resulting
+                  option.
+                '';
+              };
+
               search = mkOption {
                 type = types.submodule (
                   args:
@@ -1137,6 +1195,30 @@ in
           message = "${moduleName}.globalExtensions requires each package to expose addonId in passthru.";
         }
 
+        (
+          let
+            desktopEntriesEnabled = builtins.any (profile: profile.desktopEntry.enable) (
+              attrValues cfg.profiles
+            );
+          in
+          {
+            assertion = !desktopEntriesEnabled || !isDarwin;
+            message = "'${moduleName}.profiles.<profile>.desktopEntry.enable' is not supported on Darwin.";
+          }
+        )
+
+        (
+          let
+            desktopEntriesEnabled = builtins.any (profile: profile.desktopEntry.enable) (
+              attrValues cfg.profiles
+            );
+          in
+          {
+            assertion = !desktopEntriesEnabled || cfg.finalPackage != null;
+            message = "'${moduleName}.profiles.<profile>.desktopEntry.enable' requires '${moduleName}.package' to be set to a non-null value.";
+          }
+        )
+
         (mkNoDuplicateAssertion cfg.profiles "profile")
 
         (
@@ -1262,6 +1344,35 @@ in
               ) profile.extensions.settings
             ))
           ]
+        )
+      );
+
+      xdg.desktopEntries = mkMerge (
+        lib.flip mapAttrsToList cfg.profiles (
+          _: profile:
+          mkIf (profile.desktopEntry.enable && cfg.finalPackage != null) {
+            "${lib.toLower appName}-${profile.name}" = {
+              inherit (profile.desktopEntry)
+                name
+                genericName
+                icon
+                settings
+                ;
+              exec = "${lib.getExe cfg.finalPackage} --no-remote -P ${profile.name} %U";
+              terminal = false;
+              categories = [
+                "Network"
+                "WebBrowser"
+              ];
+              mimeType = [
+                "text/html"
+                "text/xml"
+                "application/xhtml+xml"
+                "x-scheme-handler/http"
+                "x-scheme-handler/https"
+              ];
+            };
+          }
         )
       );
     }
