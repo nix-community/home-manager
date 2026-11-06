@@ -184,6 +184,7 @@ let
     "ranger"
     "retext"
     "retroarch-bare"
+    "rift-wm"
     "rio"
     "ripgrep"
     "ruff"
