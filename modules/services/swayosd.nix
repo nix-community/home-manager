@@ -68,7 +68,6 @@ in
           Description = "Volume/backlight OSD indicator";
           PartOf = [ config.wayland.systemd.target ];
           After = [ config.wayland.systemd.target ];
-          ConditionEnvironment = "WAYLAND_DISPLAY";
           Documentation = "man:swayosd(1)";
           StartLimitBurst = 5;
           StartLimitIntervalSec = 10;
