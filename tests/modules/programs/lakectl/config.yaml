@@ -1,0 +1,5 @@
+credentials:
+  access_key_id: AKIAIOSFODNN7EXAMPLE
+  secret_access_key: secret
+server:
+  endpoint_url: http://127.0.0.1:8000
