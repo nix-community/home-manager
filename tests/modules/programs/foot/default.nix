@@ -5,4 +5,6 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   foot-empty-settings = ./empty-settings.nix;
   foot-systemd-user-service = ./systemd-user-service.nix;
   foot-regex-modes = ./regex-modes.nix;
+  foot-null-package = ./null-package.nix;
+  foot-null-package-server-assertion = ./null-package-server-assertion.nix;
 }
