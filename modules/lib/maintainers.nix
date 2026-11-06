@@ -133,6 +133,12 @@
     github = "danjujan";
     githubId = 44864658;
   };
+  deephack1982 = {
+    name = "Mark Dickie";
+    email = "mark.dickie@hey.com";
+    github = "deephack1982";
+    githubId = 6213936;
+  };
   Dines97 = {
     name = "Denis Kaynar";
     email = "19364873+Dines97@users.noreply.github.com";
