@@ -1,0 +1,9 @@
+[appearance]
+theme = "catppuccin_mocha"
+
+[keybindings]
+preset = "tmux"
+
+[startup]
+start_in_terminal_mode = true
+tiled = true
