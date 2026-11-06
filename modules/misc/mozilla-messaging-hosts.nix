@@ -10,11 +10,6 @@ let
 
   cfg = config.mozilla;
 
-  defaultPaths = [
-    # Link a .keep file to keep the directory around
-    (pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/.keep" "")
-  ];
-
   thunderbirdNativeMessagingHostsPath =
     if isDarwin then "Library/Mozilla/NativeMessagingHosts" else ".mozilla/native-messaging-hosts";
 
@@ -81,12 +76,11 @@ in
               let
                 packageJoin = pkgs.symlinkJoin {
                   inherit name;
-                  paths = lib.flatten (
-                    lib.concatLists [
-                      defaultPaths
-                      nativeMessagingHosts
-                    ]
-                  );
+                  # Join whole packages rather than using stripPrefix so that
+                  # relative manifest links, such as passff-host's
+                  # ../../../share/..., still resolve inside the join.
+                  paths = lib.flatten nativeMessagingHosts;
+                  postBuild = "mkdir -p $out/lib/mozilla/native-messaging-hosts";
                 };
               in
               lib.mkIf (nativeMessagingHosts != [ ]) {
