@@ -3,6 +3,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    checkConfig = false;
     plugins = [
       "/path/to/plugin1"
       (config.lib.test.mkStubPackage { name = "foo"; })

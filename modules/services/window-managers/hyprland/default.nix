@@ -252,6 +252,12 @@ in
       '';
     };
 
+    checkConfig = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "If enabled, validates the generated config file.";
+    };
+
     systemd = {
       enable = lib.mkEnableOption null // {
         default = true;
@@ -611,7 +617,10 @@ in
 
       hyprlangConfigFile = {
         "hypr/hyprland.conf" = lib.mkIf (cfg.configType == "hyprlang") (
-          hyprlandLib.hyprlangConfig { inherit reloadConfig; }
+          hyprlandLib.hyprlangConfig {
+            inherit reloadConfig;
+            inherit (cfg) checkConfig finalPackage;
+          }
         );
       };
 
@@ -619,6 +628,7 @@ in
         "hypr/hyprland.lua" = lib.mkIf (cfg.configType == "lua") (
           hyprlandLib.luaConfig {
             inherit reloadConfig;
+            inherit (cfg) checkConfig finalPackage;
             xdgConfigHome = config.xdg.configHome;
           }
         );
@@ -645,6 +655,10 @@ in
             in
             lib.length targets == lib.length (lib.unique targets);
           message = "wayland.windowManager.hyprland.extraLuaFiles contains entries that resolve to the same Lua file path.";
+        }
+        {
+          assertion = cfg.checkConfig -> cfg.package != null;
+          message = "wayland.windowManager.hyprland.checkConfig requires non-null wayland.windowManager.hyprland.package";
         }
       ];
 
