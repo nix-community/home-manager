@@ -1,0 +1,24 @@
+{
+  "amp.anthropic.thinking.enabled": true,
+  "amp.git.commit.ampThread.enabled": false,
+  "amp.git.commit.coauthor.enabled": true,
+  "amp.notifications.enabled": true,
+  "amp.permissions": [
+    {
+      "allow": true,
+      "command": "git *",
+      "tool": "Bash"
+    },
+    {
+      "allow": false,
+      "command": "curl *",
+      "tool": "Bash"
+    }
+  ],
+  "amp.showCosts": false,
+  "amp.terminal.theme": "catppuccin-mocha",
+  "amp.tools.disable": [
+    "browser_navigate",
+    "builtin:edit_file"
+  ]
+}
