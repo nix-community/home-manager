@@ -22,6 +22,6 @@ in
     assertFileContains $hmSessVars \
       'export PNPM_HOME="${expectedPnpmHome}"'
     assertFileContains $hmSessVars \
-      'export PATH="${expectedPnpmHome}/bin''${PATH:+:}$PATH"'
+      'export PATH="${expectedPnpmHome}/bin''${PATH:+:}''${PATH-}"'
   '';
 }
