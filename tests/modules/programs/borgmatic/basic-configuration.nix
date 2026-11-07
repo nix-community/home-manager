@@ -14,6 +14,8 @@ in
 {
   programs.borgmatic = {
     enable = true;
+    checkConfig = true;
+    package = realPkgs.borgmatic;
     backups = {
       main = {
         location = {

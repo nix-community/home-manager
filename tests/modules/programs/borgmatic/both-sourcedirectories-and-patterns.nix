@@ -2,6 +2,7 @@
 {
   programs.borgmatic = {
     enable = true;
+    checkConfig = false;
     backups.main.location = {
       sourceDirectories = [ "/my-stuff-to-backup" ];
       extraConfig.patterns = [ "- **/.cache" ];

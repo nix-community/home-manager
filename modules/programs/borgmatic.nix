@@ -294,6 +294,13 @@ in
 
       package = lib.mkPackageOption pkgs "borgmatic" { nullable = true; };
 
+      checkConfig = lib.mkOption {
+        type = lib.types.bool;
+        default = cfg.package != null;
+        defaultText = lib.literalExpression "programs.borgmatic.package != null";
+        description = "If enabled and package is not null, validates the generated config file.";
+      };
+
       backups = mkOption {
         type = types.attrsOf configModule;
         description = ''
@@ -324,12 +331,19 @@ in
       ) cfg.backups
     );
 
-    assertions = lib.mapAttrsToList (backup: opts: {
-      assertion = (opts.settings.repositories or null) != null;
-      message = ''
-        Borgmatic backup configuration "${backup}" must specify 'settings.repositories' (or the deprecated 'location.repositories').
-      '';
-    }) cfg.backups;
+    assertions =
+      (lib.mapAttrsToList (backup: opts: {
+        assertion = (opts.settings.repositories or null) != null;
+        message = ''
+          Borgmatic backup configuration "${backup}" must specify 'settings.repositories' (or the deprecated 'location.repositories').
+        '';
+      }) cfg.backups)
+      ++ [
+        {
+          assertion = cfg.checkConfig -> cfg.package != null;
+          message = "programs.borgmatic.checkConfig requires a non-null package";
+        }
+      ];
 
     xdg.configFile =
       with lib.attrsets;
@@ -341,6 +355,7 @@ in
         nameValuePair ("borgmatic.d/" + filename) {
           source = pkgs.writeTextFile {
             name = filename;
+            checkPhase = lib.optional cfg.checkConfig "${lib.getExe cfg.package} --config $target config validate";
             text = lib.generators.toYAML { } (removeNullValues config.settings);
           };
         }

@@ -2,6 +2,7 @@
 {
   programs.borgmatic = {
     enable = true;
+    checkConfig = false;
     backups.databaseOnly.settings = {
       repositories = [ { path = "/mnt/disk1"; } ];
       postgresql_databases = [ { name = "app"; } ];
