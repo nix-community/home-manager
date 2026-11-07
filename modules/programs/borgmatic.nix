@@ -335,8 +335,14 @@ in
       with lib.attrsets;
       mapAttrs' (
         configName: config:
-        nameValuePair ("borgmatic.d/" + configName + ".yaml") {
-          text = lib.generators.toYAML { } (removeNullValues config.settings);
+        let
+          filename = configName + ".yaml";
+        in
+        nameValuePair ("borgmatic.d/" + filename) {
+          source = pkgs.writeTextFile {
+            name = filename;
+            text = lib.generators.toYAML { } (removeNullValues config.settings);
+          };
         }
       ) cfg.backups;
 
