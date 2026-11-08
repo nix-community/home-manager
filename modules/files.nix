@@ -391,6 +391,8 @@ in
             targetPath="$HOME/$relativePath"
             if [[ -e "$newGenFiles/$relativePath" ]] ; then
               verboseEcho "Checking $targetPath: exists"
+            elif [[ ! -e "$targetPath" && ! -L "$targetPath" ]] ; then
+              verboseEcho "Checking $targetPath: already gone"
             elif [[ ! "$(readlink "$targetPath")" == $homeFilePattern ]] ; then
               warnEcho "Path '$targetPath' does not link into a Home Manager generation. Skipping delete."
             else
