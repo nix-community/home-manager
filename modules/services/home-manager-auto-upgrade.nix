@@ -27,7 +27,9 @@ let
     legacy.value = [ "nix flake update" ];
     current.value = [ ];
     deferWarningToConfig = true;
-    shouldWarn = { optionUsesDefaultPriority, ... }: cfg.useFlake && optionUsesDefaultPriority;
+    shouldWarn =
+      { optionUsesDefaultPriority, ... }:
+      cfg.useFlake && cfg.flakeUrl == "." && optionUsesDefaultPriority;
   };
 
   hmExtraArgs = lib.escapeShellArgs cfg.flags;
@@ -57,18 +59,20 @@ let
         ''
           set -euo pipefail
 
-          if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
-            echo "No flake.nix found in $FLAKE_DIR." >&2
-            exit 1
-          fi
+          if [[ "$FLAKE_URL" == "." ]]; then
+            if [[ ! -f "$FLAKE_DIR/flake.nix" ]]; then
+              echo "No flake.nix found in $FLAKE_DIR." >&2
+              exit 1
+            fi
 
-          echo "Changing to flake directory $FLAKE_DIR"
-          cd "$FLAKE_DIR"
+            echo "Changing to flake directory $FLAKE_DIR"
+            cd "$FLAKE_DIR"
+          fi
 
           ${preSwitchScript}
 
           echo "Upgrade Home Manager"
-          home-manager switch --flake . ${hmExtraArgs}
+          home-manager switch --flake "$FLAKE_URL" ${hmExtraArgs}
         ''
       else
         ''
@@ -128,6 +132,19 @@ in
         '';
       };
 
+      flakeUrl = lib.mkOption {
+        type = lib.types.str;
+        default = ".";
+        example = "github:your-user/dotfiles";
+        description = ''
+          Flake reference passed to `home-manager switch --flake`.
+          When set to `"."`, the service changes to
+          {option}`services.home-manager.autoUpgrade.flakeDir` before running
+          pre-switch commands. Otherwise, it keeps its working directory
+          (your home by default).
+        '';
+      };
+
       flags = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
@@ -147,6 +164,7 @@ in
         defaultText = lib.literalExpression ''
           if lib.versionAtLeast config.home.stateVersion "26.05"
              || !config.services.home-manager.autoUpgrade.useFlake
+             || !config.services.home-manager.autoUpgrade.flakeUrl == "."
           then
             [ ]
           else
@@ -172,9 +190,9 @@ in
       (lib.hm.assertions.assertPlatform "services.home-manager.autoUpgrade" pkgs lib.platforms.linux)
     ];
 
-    services.home-manager.autoUpgrade.preSwitchCommands = lib.mkIf cfg.useFlake (
-      lib.mkOptionDefault preSwitchCommandsStateVersion.effectiveDefault
-    );
+    services.home-manager.autoUpgrade.preSwitchCommands = lib.mkIf (
+      cfg.useFlake && cfg.flakeUrl == "."
+    ) (lib.mkOptionDefault preSwitchCommandsStateVersion.effectiveDefault);
 
     systemd.user = {
       timers.home-manager-auto-upgrade = {
@@ -200,6 +218,7 @@ in
 
           Environment = lib.mkIf cfg.useFlake [
             "FLAKE_DIR=${cfg.flakeDir}"
+            "FLAKE_URL=${lib.replaceStrings [ "%" ] [ "%%" ] cfg.flakeUrl}"
           ];
         };
       };
