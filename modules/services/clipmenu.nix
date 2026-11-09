@@ -12,18 +12,24 @@ in
 {
   meta.maintainers = [ lib.maintainers.DamienCassou ];
 
+  imports = [
+    (lib.mkRenamedOptionModule
+      [ "services" "clipmenu" "launcher" ]
+      [ "services" "clipmenu" "environmentVariables" "CM_LAUNCHER" ]
+    )
+  ];
+
   options.services.clipmenu = {
     enable = lib.mkEnableOption "clipmenu, the clipboard management daemon";
 
     package = lib.mkPackageOption pkgs "clipmenu" { };
 
-    launcher = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      example = "rofi";
+    environmentVariables = mkOption {
+      type = types.attrsOf types.str;
+      default = { };
+      example = "{ CM_LAUNCHER = \"rofi\"; }";
       description = ''
-        Launcher command, if not set, {command}`dmenu`
-        will be used by default.
+        Environment variables to pass to the clipmenu daemon.
       '';
     };
   };
@@ -34,8 +40,6 @@ in
     ];
 
     home.packages = [ cfg.package ];
-
-    home.sessionVariables = lib.mkIf (cfg.launcher != null) { CM_LAUNCHER = cfg.launcher; };
 
     systemd.user.services.clipmenu = {
       Unit = {
@@ -58,7 +62,8 @@ in
               ]
             )
           }"
-        ];
+        ]
+        ++ (lib.mapAttrsToList (name: value: "${name}=${value}") cfg.environmentVariables);
       };
 
       Install = {
