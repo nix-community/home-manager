@@ -1,0 +1,23 @@
+{
+  "attribution": {
+    "attributeCommitsToAgent": false,
+    "attributePRsToAgent": false
+  },
+  "editor": {
+    "vimMode": false
+  },
+  "network": {
+    "useHttp1ForAgent": false
+  },
+  "permissions": {
+    "allow": [
+      "Shell(git diff:*)",
+      "Shell(git log:*)"
+    ],
+    "deny": [
+      "Shell(rm:*)",
+      "Read(.env*)"
+    ]
+  },
+  "version": 1
+}
