@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-9ece5ed0.js";
+            window.path_to_searchindex_js = "searchindex-881bd0ad.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-92531992.js"></script>
@@ -31390,13 +31390,24 @@ null or package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gradle.nix">&lt;home-manager/modules/programs/gradle.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.gradle.home"><a class="header" href="#opt-programs.gradle.home">programs.gradle.home</a></h2>
-<p>The Gradle home directory, relative to <a href="#opt-home.homeDirectory"></a>.</p>
+<p>The Gradle home directory, relative to <a href="#opt-home.homeDirectory"></a>
+unless it is an absolute path.</p>
 <p>If set, the <code>GRADLE_USER_HOME</code> environment variable will be
-set accordingly. Defaults to <code>.gradle</code>.</p>
+set accordingly. This defaults to
+<code>${config.xdg.dataHome}/gradle</code> when
+<a href="#opt-home.preferXdgDirectories"></a> is enabled and
+<a href="#opt-home.stateVersion"></a> is at least 26.11. Otherwise, it defaults
+to <code>.gradle</code>.</p>
 <p><em>Type:</em>
 string</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">".gradle"
+<pre><code class="language-nix">if config.home.preferXdgDirectories &amp;&amp; lib.versionAtLeast config.home.stateVersion "26.11" then
+  lib.removePrefix
+    "${config.home.homeDirectory}/"
+    "${config.xdg.dataHome}/gradle"
+else
+  ".gradle"
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -95659,6 +95670,14 @@ from <code>~/.claude</code> to <code>${config.xdg.configHome}/claude</code> when
 <code>~/.claude</code> is not migrated automatically. Move it to the new directory
 before upgrading, or preserve the previous location by setting
 <code>programs.claude-code.configDir = "${config.home.homeDirectory}/.claude"</code>.</p>
+</li>
+<li>
+<p>The default value of <a href="#opt-programs.gradle.home">programs.gradle.home</a> changes from <code>.gradle</code>
+to <code>${config.xdg.dataHome}/gradle</code> when
+<a href="#opt-home.preferXdgDirectories">home.preferXdgDirectories</a> is enabled. Existing Gradle data in
+<code>~/.gradle</code> is not migrated automatically. Move it to the new directory
+before upgrading, or preserve the previous location by setting
+<code>programs.gradle.home = ".gradle"</code>.</p>
 </li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>

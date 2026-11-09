@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9ece5ed0.js";
+            window.path_to_searchindex_js = "../searchindex-881bd0ad.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-92531992.js"></script>
@@ -610,6 +610,14 @@ from <code>~/.claude</code> to <code>${config.xdg.configHome}/claude</code> when
 <code>~/.claude</code> is not migrated automatically. Move it to the new directory
 before upgrading, or preserve the previous location by setting
 <code>programs.claude-code.configDir = "${config.home.homeDirectory}/.claude"</code>.</p>
+</li>
+<li>
+<p>The default value of <a href="../options/home-manager/programs/gradle.html#opt-programs.gradle.home">programs.gradle.home</a> changes from <code>.gradle</code>
+to <code>${config.xdg.dataHome}/gradle</code> when
+<a href="../options/home-manager/home.html#opt-home.preferXdgDirectories">home.preferXdgDirectories</a> is enabled. Existing Gradle data in
+<code>~/.gradle</code> is not migrated automatically. Move it to the new directory
+before upgrading, or preserve the previous location by setting
+<code>programs.gradle.home = ".gradle"</code>.</p>
 </li>
 </ul>
 
