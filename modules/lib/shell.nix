@@ -62,14 +62,14 @@ in
 {
   inherit export wrapLines;
 
-  # Produces a Bourne shell like statement that prepend new values to
-  # an possibly existing variable, using sep(arator).
+  # Produces a Bourne shell-like statement that prepends new values to
+  # a possibly existing variable, using sep(arator).
   # Example:
   #   prependToVar ":" "PATH" [ "$HOME/bin" "$HOME/.local/bin" ]
-  #   => "$HOME/bin:$HOME/.local/bin:${PATH:+:}\$PATH"
+  #   => "$HOME/bin:$HOME/.local/bin:${PATH:+:}${PATH-}"
   prependToVar =
     sep: n: v:
-    "${lib.concatStringsSep sep v}\${${n}:+${sep}}\$${n}";
+    "${lib.concatStringsSep sep v}\${${n}:+${sep}}\${${n}-}";
 
   # Given an attribute set containing shell variable names and their
   # assignment, this function produces a string containing an export
