@@ -20,7 +20,7 @@ let
   initFish = if cfg.enableInteractive then "interactiveShellInit" else "shellInitLast";
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.kallisti-dev ];
+  meta.maintainers = [ lib.maintainers.kallisti-dev ];
 
   options.programs.starship = {
     enable = lib.mkEnableOption "starship";

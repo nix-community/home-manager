@@ -85,12 +85,6 @@
     github = "b1kku";
     githubId = 77858854;
   };
-  bittner = {
-    name = "Peter Bittner";
-    email = "peter@painless.software";
-    github = "bittner";
-    githubId = 665072;
-  };
   bjpbakker = {
     email = "bart@thesoftwarecraft.com";
     github = "bjpbakker";
@@ -239,12 +233,6 @@
     github = "glmlm";
     githubId = 91877885;
   };
-  hectorgray = {
-    name = "Hector Gray";
-    email = "nix.giant993@passmail.net";
-    github = "hectorgray";
-    githubId = 194114763;
-  };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
     github = "henrisota";
@@ -262,12 +250,6 @@
         fingerprint = "AD32 73D4 5E0E 9478 E826  543F EDB2 C634 166A E6AD";
       }
     ];
-  };
-  ilovelinux = {
-    name = "Antonio Spadaro";
-    email = "nix+home-manager@ilovelinux.dev";
-    github = "ilovelinux";
-    githubId = 9268789;
   };
   isaacST08 = {
     name = "Isaac Shiells Thomas";
@@ -330,12 +312,6 @@
     email = "kalhauge@users.noreply.github.com";
     github = "kalhauge";
     githubId = 1182166;
-  };
-  kallisti-dev = {
-    name = "Adam Curtis";
-    email = "kallisti.dev@gmail.com";
-    github = "kallisti-dev";
-    githubId = 1530244;
   };
   kayskayskays = {
     name = "Kays";
