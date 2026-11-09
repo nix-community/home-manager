@@ -1,4 +1,6 @@
 {
+  imports = [ ./fish-package.nix ];
+
   programs = {
     fish.enable = true;
 
