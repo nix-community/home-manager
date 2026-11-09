@@ -1,14 +1,14 @@
-{ config, lib, ... }:
+{ config, ... }:
 {
-  home.file."${config.xdg.configHome}/vicinae/home-manager.json" = {
-    target = lib.mkForce "${config.home.homeDirectory}/layers/vicinae:personal.json";
-    enable = lib.mkForce false;
+  xdg.configFile."vicinae/home-manager.json" = {
+    target = "${config.home.homeDirectory}/layers/vicinae:personal.json";
+    enable = false;
   };
   programs.vicinae = {
     enable = true;
     mutableSettings = true;
     settings.font.normal.size = 12;
-    systemd.enable = true;
+    service.enable = true;
     enableFirefoxIntegration = false;
   };
   assertions = [
@@ -19,6 +19,10 @@
     {
       assertion = !(config.home.sessionVariables ? VICINAE_OVERRIDES);
       message = "Empty or disabled Vicinae override files must not export a session selector.";
+    }
+    {
+      assertion = config.systemd.user.services.vicinae.Unit.X-Restart-Triggers == [ ];
+      message = "Disabled Vicinae override files must not restart the service.";
     }
   ];
   nmt.script = ''

@@ -1,14 +1,14 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
-  xdg.configFile."vicinae/home-manager.json" = {
-    target = "${config.home.homeDirectory}/layers/vicinae:personal.json";
-    enable = false;
+  home.file."${config.xdg.configHome}/vicinae/home-manager.json" = {
+    target = lib.mkForce "${config.home.homeDirectory}/layers/vicinae:personal.json";
+    enable = lib.mkForce false;
   };
   programs.vicinae = {
     enable = true;
     mutableSettings = true;
     settings.font.normal.size = 12;
-    systemd.enable = true;
+    service.enable = true;
     enableFirefoxIntegration = false;
   };
   assertions = [

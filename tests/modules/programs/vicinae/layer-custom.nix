@@ -6,7 +6,7 @@
     mutableSettings = true;
     package = null;
     settings.font.normal.size = 12;
-    systemd.enable = false;
+    service.enable = false;
     enableFirefoxIntegration = false;
   };
   nmt.script = ''
