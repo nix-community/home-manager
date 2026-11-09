@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-23fcbedd.js";
+            window.path_to_searchindex_js = "../../../searchindex-c9dcc073.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-8c25ab25.js"></script>
@@ -207,8 +207,9 @@ null or package</p>
 </ul>
 <h2 id="opt-programs.poetry.settings"><a class="header" href="#opt-programs.poetry.settings">programs.poetry.settings</a></h2>
 <p>Configuration written to
-<code>$XDG_CONFIG_HOME/pypoetry/config.toml</code> on Linux or
-<code>$HOME/Library/Application Support/pypoetry/config.toml</code> on Darwin.
+<code>$XDG_CONFIG_HOME/pypoetry/config.toml</code> on Linux or on Darwin
+if <a href="#opt-xdg.enable"></a> is set, otherwise
+<code>$HOME/Library/Application Support/pypoetry/config.toml</code>.
 See
 <a href="https://python-poetry.org/docs/configuration/">https://python-poetry.org/docs/configuration/</a>
 for more information.</p>
