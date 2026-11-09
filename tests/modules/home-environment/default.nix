@@ -1,4 +1,5 @@
 {
+  home-activation-files-only = ./activation-files-only.nix;
   home-backup-command = ./backup-command.nix;
   home-backup-file-extension = ./backup-file-extension.nix;
   home-backup-overwrite = ./backup-overwrite.nix;

@@ -38,3 +38,33 @@ the {file}`gen-version` file in the configuration build output root.
 If the file is missing then the activation script does not support
 `--driver-version`. If the file exists and contains the integer 1 or
 higher, then `--driver-version 1` is supported.
+
+The activation script also accepts the command line option
+`--files-only`. It then runs only the activation script blocks named
+in [home.activationFilesOnly](#opt-home.activationFilesOnly), in their
+usual order. By default these are the blocks that place
+[home.file](#opt-home.file): `checkFilesChanged`, `checkLinkTargets`,
+`linkGeneration` and `onFilesChange`, and every block that must run
+before `linkGeneration`, since such blocks prepare the files' targets.
+Such a run makes no Nix calls and uses no Nix profile: it does not
+check the Nix store, look up or manage a profile or create a garbage
+collection root, so it also works on an account that never had a full
+activation. It leaves packages, services and every other block alone,
+and it does not record the generation as activated.
+
+A files-only run is meant to be followed by a full activation of the
+same generation, which then finds the files in place, runs no
+`onChange` hook again, except those of recursive entries, which always
+run, and completes the switch. A driver can use this to apply a change
+quickly, for example when switching between specialisations that
+differ in their files, and run the rest of the activation afterwards.
+Until then, the packages and services of the previous generation
+remain, and the caller has to keep the generation from being garbage
+collected. No other activation may run in between: every activation
+compares against the generation of the last full one, so the files
+that only the files-only run placed would stay behind.
+
+Pass `--files-only` only to generations built by a Home Manager that
+supports it. Generations without a {file}`gen-version` file ignore the
+option and run a full activation, and later ones built before the
+option existed reject it as unknown.

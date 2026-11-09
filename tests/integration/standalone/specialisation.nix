@@ -50,6 +50,25 @@
       f"ln -s {home_manager} /home/alice/.nix-defexpr/channels/home-manager"
     ]))
 
+    with subtest("Home Manager files-only activation on a new account"):
+      # Build the configuration without installing it, so that the account
+      # has no Nix profile directory and no Home Manager state yet.
+      succeed_as_alice(
+        "nix-build \"<home-manager/home-manager/home-manager.nix>\""
+        " --argstr confPath ${./alice-home-specialisation.nix}"
+        " -A activationPackage -o /home/alice/prebuilt"
+      )
+      profiles = "/home/alice/.local/state/nix/profiles /nix/var/nix/profiles/per-user/alice"
+      machine.succeed(f"for p in {profiles}; do test ! -e $p; done")
+
+      # The files are placed with no profile, and the generation is not
+      # recorded; the installation below completes the activation.
+      succeed_as_alice("/home/alice/prebuilt/activate --driver-version 1 --files-only")
+      machine.succeed("grep -qx test /home/alice/test")
+      machine.succeed(f"for p in {profiles}; do test ! -e $p; done")
+      machine.succeed("test ! -e /home/alice/.local/state/home-manager/gcroots/current-home")
+      machine.succeed("rm /home/alice/prebuilt")
+
     with subtest("Home Manager installation"):
       # Install the configuration with included specialisation.
       succeed_as_alice("mkdir -p /home/alice/.config/home-manager")
@@ -58,8 +77,10 @@
       # Install Home Manager with the unspecialised configuration.
       succeed_as_alice("nix-shell \"<home-manager>\" -A install")
 
-      # Ensure we are activated.
+      # Ensure we are activated. The files-only run above placed the files
+      # already, but only a full activation records the generation.
       machine.succeed("test -L /home/alice/.cache/.keep")
+      machine.succeed("test -e /home/alice/.local/state/home-manager/gcroots/current-home")
 
     with subtest("Home Manager switch to missing specialisation"):
       actual = fail_as_alice("home-manager switch --specialisation no-such-specialisation")
@@ -85,6 +106,48 @@
         f"expected home-manager switch to contain {expected}, but got {actual}"
 
       fail_as_alice("pueue status")
+
+    with subtest("Home Manager files-only activation of specialisation"):
+      gcroot = "/home/alice/.local/state/home-manager/gcroots/current-home"
+      generation = machine.succeed(f"readlink -e {gcroot}").strip()
+      activate = f"{generation}/specialisation/pueue/activate --driver-version 1"
+      machine.succeed("rm -f /home/alice/test-changes")
+      machine.succeed("test -L /home/alice/base-only")
+
+      # Only the file blocks run: the files are placed and the hook runs.
+      # The run succeeds although the hook ends in a failed condition.
+      actual = succeed_as_alice(f"{activate} --files-only")
+      blocks = sorted(
+        line.removeprefix("Activating ")
+        for line in actual.splitlines()
+        if line.startswith("Activating ")
+      )
+      expected = [
+        "checkFilesChanged", "checkLinkTargets", "linkGeneration", "onFilesChange"
+      ]
+      assert blocks == expected, \
+        f"expected the files-only run to activate {expected}, but got {blocks}"
+      machine.succeed("grep -qx pueue /home/alice/test")
+      machine.succeed("test ! -e /home/alice/base-only")
+      actual = machine.succeed("cat /home/alice/test-changes")
+      assert actual == "changed\n", f"expected the hook to run once, but got {actual}"
+
+      # The service is not started and the generation is not recorded.
+      fail_as_alice("systemctl --user is-active pueued.service")
+      actual = machine.succeed(f"readlink -e {gcroot}").strip()
+      assert actual == generation, \
+        f"expected {gcroot} to stay {generation}, but got {actual}"
+
+      # The full activation completes the switch without running the hook again.
+      actual = succeed_as_alice(activate)
+      expected = "Starting units: pueued.service"
+      assert expected in actual, \
+        f"expected the activation to contain {expected}, but got {actual}"
+      unexpected = "does not link into a Home Manager generation"
+      assert unexpected not in actual, \
+        f"expected the activation not to contain {unexpected}, but got {actual}"
+      actual = machine.succeed("cat /home/alice/test-changes")
+      assert actual == "changed\n", f"expected the hook to run once, but got {actual}"
 
     logout_alice()
   '';

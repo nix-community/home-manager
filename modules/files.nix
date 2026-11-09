@@ -175,6 +175,21 @@ in
       in
       pkgs.runCommandLocal name { } "ln -s ${lib.escapeShellArg pathStr} $out";
 
+    # A files-only activation runs the blocks below, which place the files,
+    # and the blocks that modules order before linkGeneration to prepare
+    # its targets, such as a directory that needs a mode.
+    home.activationFilesOnly = lib.unique (
+      [
+        "checkFilesChanged"
+        "checkLinkTargets"
+        "linkGeneration"
+        "onFilesChange"
+      ]
+      ++ lib.attrNames (
+        lib.filterAttrs (_: entry: lib.elem "linkGeneration" entry.before) config.home.activation
+      )
+    );
+
     # This verifies that the links we are about to create will not
     # overwrite an existing file.
     home.activation.checkLinkTargets = lib.hm.dag.entryBefore [ "writeBoundary" ] (
