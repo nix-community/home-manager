@@ -12,10 +12,10 @@ let
 
   jsonFormat = pkgs.formats.json { };
   generatedSettings = jsonFormat.generate "herdr-app-settings.json" cfg.settings;
-  # Match the merger's JSON serialization so unchanged mutable files can be
+  # Match the merger's pretty-printed JSON so unchanged mutable files can be
   # replaced by a store link when mutableSettings is disabled.
   settingsSource = pkgs.runCommand "herdr-app-settings.json" { } ''
-    ${lib.getExe pkgs.jaq} -c '.' ${generatedSettings} > "$out"
+    ${lib.getExe pkgs.jaq} '.' ${generatedSettings} > "$out"
   '';
   settingsPath = "${config.xdg.configHome}/herdr-app/settings.json";
 
