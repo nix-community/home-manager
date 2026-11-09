@@ -86,9 +86,25 @@ in
     };
 
     enableFirefoxIntegration = lib.mkOption {
-      default = true;
+      type = lib.types.bool;
+      default = config.programs.firefox.enable;
+      defaultText = lib.literalExpression "config.programs.firefox.enable";
       description = ''
-        Whether to install the messaging host so that the firefox extension <https://addons.mozilla.org/en-US/firefox/addon/vicinae/> works.
+        Whether to install the native messaging host for the
+        [Vicinae Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/vicinae/).
+        Enable this explicitly if Firefox is installed outside Home Manager.
+      '';
+    };
+
+    enableLibrewolfIntegration = lib.mkOption {
+      type = lib.types.bool;
+      default = config.programs.librewolf.enable;
+      defaultText = lib.literalExpression "config.programs.librewolf.enable";
+      description = ''
+        Whether to install the native messaging host for the
+        [Vicinae Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/vicinae/)
+        in LibreWolf.
+        Enable this explicitly if LibreWolf is installed outside Home Manager.
       '';
     };
 
@@ -270,7 +286,7 @@ in
           // themeFiles;
       };
 
-      mozilla = lib.mkIf (cfg.enableFirefoxIntegration && cfg.package != null) (
+      mozilla = lib.mkIf (cfg.package != null) (
         let
           vicinaeNativeMessagingHost =
             pkgs.writeTextDir "lib/mozilla/native-messaging-hosts/com.vicinae.vicinae.json"
@@ -285,8 +301,10 @@ in
               );
         in
         {
-          firefoxNativeMessagingHosts = [ vicinaeNativeMessagingHost ];
-          librewolfNativeMessagingHosts = [ vicinaeNativeMessagingHost ];
+          firefoxNativeMessagingHosts = lib.mkIf cfg.enableFirefoxIntegration [ vicinaeNativeMessagingHost ];
+          librewolfNativeMessagingHosts = lib.mkIf cfg.enableLibrewolfIntegration [
+            vicinaeNativeMessagingHost
+          ];
         }
       );
 
