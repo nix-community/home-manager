@@ -13,6 +13,7 @@ load-env {
     "PROMPT_COMMAND": ({|| "> "})
 }
 
+source /nix/store/00000000000000000000000000000000-nushell-completions.nu
 $env.config.abbreviations.gs = "git status"
 $env.config.abbreviations.ll = "ls -l"
 $env.config.display_errors.exit_code = false
