@@ -117,6 +117,10 @@
       thunderbird = {
         enable = true;
         profiles = [ "first" ];
+        settings = id: {
+          "ldap_2.servers.contact_${id}.carddav.syncinterval" = 15;
+          "ldap_2.servers.contact_${id}.description" = "Family contacts";
+        };
       };
     };
     work = {
