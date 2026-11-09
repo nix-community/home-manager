@@ -16,9 +16,9 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.profile
+    assertFileExists home-files/.bash_profile
     assertFileContent \
-      "$(normalizeStorePaths home-files/.profile)" \
+      "$(normalizeStorePaths home-files/.bash_profile)" \
       ${builtins.toFile "session-variables-expected" ''
         . "/nix/store/00000000000000000000000000000000-hm-session-vars.sh/etc/profile.d/hm-session-vars.sh"
 
