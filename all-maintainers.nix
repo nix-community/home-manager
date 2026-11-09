@@ -548,6 +548,18 @@
     name = "XYenon";
     source = "nixpkgs";
   };
+  Zocker1999NET = {
+    email = "felix.stupp@banananet.work";
+    github = "Zocker1999NET";
+    githubId = 1645646;
+    keys = [
+      {
+        fingerprint = "73D0 9948 B239 2D68 8A45  DC83 93E1 BD26 F6B0 2FB7";
+      }
+    ];
+    name = "Felix Stupp";
+    source = "nixpkgs";
+  };
   aabccd021 = {
     email = "aabccd021@gmail.com";
     github = "aabccd021";
@@ -745,7 +757,7 @@
     github = "bittner";
     githubId = 665072;
     name = "Peter Bittner";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   bjpbakker = {
     email = "bart@thesoftwarecraft.com";
@@ -1339,7 +1351,7 @@
     github = "hectorgray";
     githubId = 194114763;
     name = "Hector Gray";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   henrisota = {
     email = "henrisota@users.noreply.github.com";
@@ -1395,11 +1407,11 @@
     source = "nixpkgs";
   };
   ilovelinux = {
-    email = "nix+home-manager@ilovelinux.dev";
+    email = "nix+nixpkgs@ilovelinux.dev";
     github = "ilovelinux";
     githubId = 9268789;
     name = "Antonio Spadaro";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   iniw = {
     email = "dev@vini.cat";
@@ -1597,7 +1609,7 @@
     github = "kallisti-dev";
     githubId = 1530244;
     name = "Adam Curtis";
-    source = "home-manager";
+    source = "nixpkgs";
   };
   kamadorueda = {
     email = "kamadorueda@gmail.com";
@@ -2127,6 +2139,13 @@
     github = "pedorich-n";
     githubId = 15573098;
     name = "Mykyta Pedorich";
+    source = "home-manager";
+  };
+  pedromiguelvc = {
+    email = "108361383+pedromiguelvc@users.noreply.github.com";
+    github = "pedromiguelvc";
+    githubId = 108361383;
+    name = "Pedro Miguel";
     source = "home-manager";
   };
   phanirithvij = {
