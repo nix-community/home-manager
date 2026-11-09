@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c61a398a.js";
+            window.path_to_searchindex_js = "searchindex-7fccde47.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-92531992.js"></script>
@@ -4431,6 +4431,25 @@ list of string</p>
   "profile1"
   "profile2"
 ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.contact.accounts._name_.thunderbird.settings"><a class="header" href="#opt-accounts.contact.accounts._name_.thunderbird.settings">accounts.contact.accounts.&lt;name&gt;.thunderbird.settings</a></h2>
+<p>Extra settings to add to this Thunderbird address book configuration.
+The <code>id</code> given as argument is an automatically generated account identifier.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) attribute set of (boolean or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">_: { }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">id: {
+  "ldap_2.servers.contact_${id}.carddav.url" =
+    "https://example.com/addressbook/";
+};
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
