@@ -46,6 +46,7 @@
       [Service]
       Environment=PATH=@bash-interactive@/bin
       ExecStart=@swayidle@/bin/dummy -w after-resume 'notify-send resumed' before-sleep 'swaylock -fF' lock 'swaylock -fF'
+      KillMode=process
       Restart=always
       Type=simple
 
