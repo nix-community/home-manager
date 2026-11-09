@@ -1,0 +1,12 @@
+(defcfg
+  macos-dev-names-include ("Example Keyboard")
+)
+
+(defsrc
+  caps
+  a
+)
+
+(deflayer base
+  esc a
+)

@@ -1,0 +1,35 @@
+[Install]
+WantedBy=default.target
+
+[Service]
+CapabilityBoundingSet=
+DeviceAllow=/dev/uinput rw
+DeviceAllow=char-input r
+DevicePolicy=closed
+ExecStart=@kanata@/bin/kanata --cfg @home-manager-files@/.config/kanata/main.kbd --nodelay --no-wait --symlink-path @home-manager-files@/.local/state/kanata/main
+IPAddressDeny=any
+LockPersonality=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+PrivateNetwork=true
+PrivateTmp=true
+ProcSubset=pid
+ProtectClock=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectProc=invisible
+Restart=on-failure
+RestartSec=3
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged
+SystemCallFilter=~@resources
+UMask=0077
+
+[Unit]
+Description=kanata keyboard remapper — main
+Documentation=https://github.com/jtroo/kanata
