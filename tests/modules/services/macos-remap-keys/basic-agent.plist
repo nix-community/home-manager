@@ -13,7 +13,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec /usr/bin/hidutil property --set &apos;{ &quot;UserKeyMapping&quot;: [ { &quot;HIDKeyboardModifierMappingSrc&quot;: 0x700000039, &quot;HIDKeyboardModifierMappingDst&quot;: 0x70000002A } ] }&apos;</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment /usr/bin/hidutil property --set &apos;{ &quot;UserKeyMapping&quot;: [ { &quot;HIDKeyboardModifierMappingSrc&quot;: 0x700000039, &quot;HIDKeyboardModifierMappingDst&quot;: 0x70000002A } ] }&apos;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
