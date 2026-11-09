@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-9da87a9c.js";
+            window.path_to_searchindex_js = "../../../searchindex-c61a398a.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-92531992.js"></script>
@@ -192,11 +192,12 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waveterm.nix">&lt;home-manager/modules/programs/waveterm.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.waveterm.package"><a class="header" href="#opt-programs.waveterm.package">programs.waveterm.package</a></h2>
-<p>The waveterm package to use.</p>
+<p>The waveterm package to use. Nixpkgs no longer provides Wave Terminal, so Home Manager installs a
+package only when this option is set.</p>
 <p><em>Type:</em>
 null or package</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">pkgs.waveterm
+<pre><code class="language-nix">null
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
