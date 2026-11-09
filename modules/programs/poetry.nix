@@ -16,7 +16,10 @@ let
   tomlFormat = pkgs.formats.toml { };
 
   configDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+    if pkgs.stdenv.hostPlatform.isDarwin && !config.xdg.enable then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 
   cfg = config.programs.poetry;
 
@@ -42,8 +45,9 @@ in
       };
       description = ''
         Configuration written to
-        {file}`$XDG_CONFIG_HOME/pypoetry/config.toml` on Linux or
-        {file}`$HOME/Library/Application Support/pypoetry/config.toml` on Darwin.
+        {file}`$XDG_CONFIG_HOME/pypoetry/config.toml` on Linux or on Darwin
+        if [](#opt-xdg.enable) is set, otherwise
+        {file}`$HOME/Library/Application Support/pypoetry/config.toml`.
         See
         <https://python-poetry.org/docs/configuration/>
         for more information.
