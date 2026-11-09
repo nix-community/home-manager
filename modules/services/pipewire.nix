@@ -450,6 +450,10 @@ in
         ) "${ladspaPlugins}/lib/ladspa\${LADSPA_PATH:+:$LADSPA_PATH}";
       };
 
+    # The configuration's onChange hook only records the change, and the
+    # full activation that follows a files-only one finds nothing changed.
+    home.activationFilesOnly = [ "reloadPipewire" ];
+
     home.activation.reloadPipewire =
       let
         pipewireUnits = escapeShellArgs (
