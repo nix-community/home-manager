@@ -233,11 +233,8 @@ in
         # check for terminal compatibility (as seen above for the other shells) is
         # not done here.
         extraConfig = ''
-          use ${
-            pkgs.runCommand "starship-nushell-config.nu" { } ''
-              ${lib.getExe cfg.package} init nu >> "$out"
-            ''
-          }
+          mkdir ($nu.data-dir | path join "vendor/autoload")
+          ${lib.getExe cfg.package} init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
         '';
       };
     };
