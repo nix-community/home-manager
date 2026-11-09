@@ -11,6 +11,10 @@
 let
   unsupported = lib.versionAtLeast miseVersion "2026.9.0" && lib.versionOlder miseVersion "2026.9.2";
   runtimeActivation = lib.versionAtLeast miseVersion "2026.9.0";
+  # The locked mise embeds the generating PATH in its activation script, so
+  # build-time output cannot pass the session PATH checks. Only start Nushell
+  # for the runtime-activation branch.
+  runNushell = config.test.enableBig && runtimeActivation && !unsupported;
   stubMise = config.lib.test.mkStubPackage {
     name = "mise";
     buildScript = ''
@@ -62,7 +66,7 @@ in
   test.asserts.assertions.expected = lib.optional unsupported "programs.mise: Nushell integration with mise 2026.9.0 or 2026.9.1 has a broken PATH prelude; upgrade mise to 2026.9.2 or newer.";
 
   nmt.script =
-    lib.optionalString (config.test.enableBig && !unsupported) ''
+    lib.optionalString runNushell ''
       export HOME=$TMPDIR/hm-user
       export XDG_CONFIG_HOME=$HOME/.config
       export XDG_CACHE_HOME="$HOME/custom cache"
@@ -73,9 +77,6 @@ in
       export HM_MISE_TEST_BIN=$TMPDIR/runtime-bin
       mkdir -p "$HOME/.config/custom-nushell" "$HM_MISE_TEST_BIN"
       ln -s "$TESTED"/home-files/.config/custom-nushell/*.nu "$HOME/.config/custom-nushell/"
-      ${lib.optionalString (!runtimeActivation) ''
-        touch "$HOME/.config/custom-nushell/env.nu"
-      ''}
       cp ${pathTest} "$HM_MISE_TEST_BIN/hm-mise-path-test"
       export PATH="$HM_MISE_TEST_BIN:$PATH"
 
@@ -93,10 +94,8 @@ in
           }
 
           assert not ($nu.default-config-dir | path exists)
-          ${lib.optionalString runtimeActivation ''
-            assert ($nu.cache-dir | path join "home-manager-mise" | path exists)
-            assert not ($nu.cache-dir | path join "home-manager-mise" $"mise-($nu.pid).nu" | path exists)
-          ''}
+          assert ($nu.cache-dir | path join "home-manager-mise" | path exists)
+          assert not ($nu.cache-dir | path join "home-manager-mise" $"mise-($nu.pid).nu" | path exists)
           assert (($env.config.hooks.pre_prompt | length) > 0)
           check-path
           for hook in $env.config.hooks.pre_prompt {
