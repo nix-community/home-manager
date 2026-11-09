@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.programs.vicinae;
+  legacyBrowserIntegration = lib.versionOlder config.home.stateVersion "26.11";
   vicinaeLib = import ./lib.nix { inherit pkgs; };
 
   jsonFormat = pkgs.formats.json { };
@@ -87,24 +88,38 @@ in
 
     enableFirefoxIntegration = lib.mkOption {
       type = lib.types.bool;
-      default = config.programs.firefox.enable;
-      defaultText = lib.literalExpression "config.programs.firefox.enable";
+      default = legacyBrowserIntegration || (config.programs.firefox.enable or false);
+      defaultText = lib.literalExpression ''
+        lib.versionOlder config.home.stateVersion "26.11" || (config.programs.firefox.enable or false)
+      '';
       description = ''
         Whether to install the native messaging host for the
         [Vicinae Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/vicinae/).
         Enable this explicitly if Firefox is installed outside Home Manager.
+        For {option}`home.stateVersion` before 26.11, this defaults to true.
       '';
     };
 
     enableLibrewolfIntegration = lib.mkOption {
       type = lib.types.bool;
-      default = config.programs.librewolf.enable;
-      defaultText = lib.literalExpression "config.programs.librewolf.enable";
+      default =
+        if legacyBrowserIntegration then
+          cfg.enableFirefoxIntegration
+        else
+          config.programs.librewolf.enable or false;
+      defaultText = lib.literalExpression ''
+        if lib.versionOlder config.home.stateVersion "26.11" then
+          config.programs.vicinae.enableFirefoxIntegration
+        else
+          config.programs.librewolf.enable or false
+      '';
       description = ''
         Whether to install the native messaging host for the
         [Vicinae Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/vicinae/)
         in LibreWolf.
         Enable this explicitly if LibreWolf is installed outside Home Manager.
+        For {option}`home.stateVersion` before 26.11, this defaults to
+        {option}`programs.vicinae.enableFirefoxIntegration`.
       '';
     };
 
