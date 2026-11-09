@@ -386,6 +386,11 @@ in
       ];
     }
     (mkIf cfg.enable (mkMerge [
+      # ensure the nix the user's PATH is nix.package
+      (mkIf (cfg.package != null) {
+        home.packages = [ cfg.package ];
+      })
+
       (mkIf (cfg.nixPath != [ ] && !cfg.keepOldNixPath) {
         home.sessionVariables.NIX_PATH = "${nixPath}";
       })
