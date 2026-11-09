@@ -73,6 +73,22 @@ in
       '';
     };
 
+    enableSkillsIntegration = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to integrate the skills from {option}`agents.skills` into
+        Claude Code, which does not read {file}`~/.agents/skills`. The
+        skills are installed under the {file}`skills` subdirectory of
+        {option}`programs.claude-code.configDir`.
+
+        Note: Skills from {option}`agents.skills` are merged with
+        {option}`programs.claude-code.skills` and
+        {option}`programs.claude-code.plugins`, with Claude Code skills and
+        plugins taking precedence.
+      '';
+    };
+
     configDir = mkOption {
       type = lib.types.str;
       inherit
