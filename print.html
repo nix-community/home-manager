@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c9dcc073.js";
+            window.path_to_searchindex_js = "searchindex-6375bc43.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-8c25ab25.js"></script>
@@ -60786,11 +60786,35 @@ boolean</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
 </ul>
 <h2 id="opt-programs.vicinae.enableFirefoxIntegration"><a class="header" href="#opt-programs.vicinae.enableFirefoxIntegration">programs.vicinae.enableFirefoxIntegration</a></h2>
-<p>Whether to install the messaging host so that the firefox extension <a href="https://addons.mozilla.org/en-US/firefox/addon/vicinae/">https://addons.mozilla.org/en-US/firefox/addon/vicinae/</a> works.</p>
+<p>Whether to install the native messaging host for the
+<a href="https://addons.mozilla.org/en-US/firefox/addon/vicinae/">Vicinae Firefox extension</a>.
+Enable this explicitly if Firefox is installed outside Home Manager.
+For <code>home.stateVersion</code> before 26.11, this defaults to true.</p>
 <p><em>Type:</em>
-unspecified value</p>
+boolean</p>
 <p><em>Default:</em></p>
-<pre><code class="language-nix">true
+<pre><code class="language-nix">lib.versionOlder config.home.stateVersion "26.11" || (config.programs.firefox.enable or false)
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/vicinae">&lt;home-manager/modules/programs/vicinae&gt;</a></li>
+</ul>
+<h2 id="opt-programs.vicinae.enableLibrewolfIntegration"><a class="header" href="#opt-programs.vicinae.enableLibrewolfIntegration">programs.vicinae.enableLibrewolfIntegration</a></h2>
+<p>Whether to install the native messaging host for the
+<a href="https://addons.mozilla.org/en-US/firefox/addon/vicinae/">Vicinae Firefox extension</a>
+in LibreWolf.
+Enable this explicitly if LibreWolf is installed outside Home Manager.
+For <code>home.stateVersion</code> before 26.11, this defaults to
+<code>programs.vicinae.enableFirefoxIntegration</code>.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if lib.versionOlder config.home.stateVersion "26.11" then
+  config.programs.vicinae.enableFirefoxIntegration
+else
+  config.programs.librewolf.enable or false
+
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -95125,6 +95149,17 @@ section is therefore not final.</p>
 <h2 id="highlights"><a class="header" href="#highlights">Highlights</a></h2>
 <p>This release has the following notable changes:</p>
 <ul>
+<li>
+<p>With <code>home.stateVersion</code> of 26.11 or later, Vicinae’s native messaging
+integration now follows each browser’s enable
+option. <code>programs.vicinae.enableFirefoxIntegration</code> defaults to
+<code>programs.firefox.enable</code>. The new
+<code>programs.vicinae.enableLibrewolfIntegration</code> defaults to
+<code>programs.librewolf.enable</code>. For browsers installed outside Home Manager,
+enable the corresponding integration explicitly. The Firefox option no
+longer controls LibreWolf integration for these state versions. Earlier
+state versions retain the previous defaults.</p>
+</li>
 <li>
 <p>fzf shell integrations now source packaged scripts instead of running fzf
 to generate them. Custom <a href="#opt-programs.fzf.package">programs.fzf.package</a> values must include
