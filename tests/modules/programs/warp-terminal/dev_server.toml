@@ -1,0 +1,7 @@
+name = "Dev Server"
+
+[[panes]]
+commands = ["npm run dev"]
+directory = "~/code/my-app"
+id = "main"
+type = "terminal"

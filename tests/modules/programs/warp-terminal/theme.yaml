@@ -1,0 +1,16 @@
+name: From File
+accent: "#ff79c6"
+background: "#282a36"
+foreground: "#f8f8f2"
+details: darker
+terminal_colors:
+  normal: &colors
+    black: "#21222c"
+    red: "#ff5555"
+    green: "#50fa7b"
+    yellow: "#f1fa8c"
+    blue: "#bd93f9"
+    magenta: "#ff79c6"
+    cyan: "#8be9fd"
+    white: "#f8f8f2"
+  bright: *colors

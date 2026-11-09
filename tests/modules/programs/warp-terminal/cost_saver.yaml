@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+default: glm-5.3-fireworks
+name: Cost saver
+routing:
+  hard: deepseek-v4.1-flash-fireworks
+type: complexity
