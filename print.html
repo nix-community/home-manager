@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-5020a551.js";
+            window.path_to_searchindex_js = "searchindex-9ece5ed0.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-8c25ab25.js"></script>
+        <script src="toc-92531992.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12632,6 +12632,7 @@ string</p>
 <li><a href="#tray-tui">tray-tui</a></li>
 <li><a href="#trippy">trippy</a></li>
 <li><a href="#ttyper">ttyper</a></li>
+<li><a href="#tuicr">tuicr</a></li>
 <li><a href="#twitch-tui">twitch-tui</a></li>
 <li><a href="#ty">ty</a></li>
 <li><a href="#urxvt">urxvt</a></li>
@@ -60071,6 +60072,89 @@ TOML value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/ttyper.nix">&lt;home-manager/modules/programs/ttyper.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="tuicr"><a href="#tuicr" class="header">tuicr</a></h1>
+<h2 id="opt-programs.tuicr.enable"><a class="header" href="#opt-programs.tuicr.enable">programs.tuicr.enable</a></h2>
+<p>Whether to enable tuicr, a tui for code review with vim keybindings.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tuicr.nix">&lt;home-manager/modules/programs/tuicr.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.tuicr.package"><a class="header" href="#opt-programs.tuicr.package">programs.tuicr.package</a></h2>
+<p>The tuicr package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.tuicr
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tuicr.nix">&lt;home-manager/modules/programs/tuicr.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.tuicr.settings"><a class="header" href="#opt-programs.tuicr.settings">programs.tuicr.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/tuicr/config.toml</code>.
+For available settings see
+<a href="https://github.com/agavra/tuicr/blob/main/docs/CONFIG.md">https://github.com/agavra/tuicr/blob/main/docs/CONFIG.md</a></p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  appearance = "system";
+  comment_types = [
+    {
+      color = "red";
+      definition = "must fix before merge";
+      id = "issue";
+    }
+  ];
+  comment_vim = false;
+  diff_view = "side-by-side";
+  editor = "nvim";
+  ignore_whitespace = false;
+  leader = ";";
+  mouse = true;
+  relative_line_numbers = false;
+  theme = "catppuccin-mocha";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tuicr.nix">&lt;home-manager/modules/programs/tuicr.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.tuicr.themes"><a class="header" href="#opt-programs.tuicr.themes">programs.tuicr.themes</a></h2>
+<p>Local tuicr themes. Each attribute name is the theme name and each value
+is a path to a flat TOML theme file. Files are linked to
+<code>$XDG_CONFIG_HOME/tuicr/themes/&lt;name&gt;.toml</code>. Select one with
+<code>settings.theme = "&lt;name&gt;"</code>.</p>
+<p>Bundled theme names take precedence over local files with the same name.
+For the list of palette keys and bundled themes, see
+<a href="https://github.com/agavra/tuicr/blob/main/docs/CONFIG.md#themes">https://github.com/agavra/tuicr/blob/main/docs/CONFIG.md#themes</a>.</p>
+<p><em>Type:</em>
+attribute set of absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  my-theme = ./my-theme.toml;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/tuicr.nix">&lt;home-manager/modules/programs/tuicr.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="twitch-tui"><a href="#twitch-tui" class="header">twitch-tui</a></h1>
