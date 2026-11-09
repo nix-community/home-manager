@@ -12,6 +12,10 @@ let
       builtins.head config.systemd.user.services.opencode-web.Service.ExecStart;
 in
 {
+  imports = [ ./opencode-stubs.nix ];
+
+  test.stubs.opencode.name = "opencode";
+
   home.file."${config.xdg.configHome}/opencode/home-manager.json" = {
     enable = lib.mkForce false;
     target = lib.mkForce "${config.home.homeDirectory}/layers/config.json";
