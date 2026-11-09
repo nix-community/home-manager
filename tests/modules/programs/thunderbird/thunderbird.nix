@@ -11,6 +11,7 @@
   accounts.email.accounts = {
     "hm@example.com" = {
       thunderbird = {
+        directory = "example-ldap";
         enable = true;
         profiles = [ "first" ];
         messageFilters = [
@@ -163,6 +164,17 @@
           "imperative_cal"
           "holidays"
         ];
+
+        directories = {
+          "example-ldap" = {
+            hostname = "ldap.home.com";
+            baseDN = "dc=home,dc=com";
+            ssl = true;
+            settings = id: {
+              "ldap_2.servers.ldap_${id}.maxHits" = 100;
+            };
+          };
+        };
       };
 
       second = {
