@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "local-server": {
+      "args": [
+        "/path/to/server.js"
+      ],
+      "autoApprove": [],
+      "command": "node",
+      "disabled": false,
+      "env": {
+        "API_KEY": "your_api_key"
+      }
+    },
+    "remote-server": {
+      "autoApprove": [],
+      "headers": {
+        "Authorization": "Bearer your-token"
+      },
+      "type": "streamableHttp",
+      "url": "https://example.com/mcp"
+    }
+  }
+}

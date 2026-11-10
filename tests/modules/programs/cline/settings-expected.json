@@ -1,0 +1,8 @@
+{
+  "autoUpdateEnabled": false,
+  "tools": {
+    "web_search": {
+      "enabled": true
+    }
+  }
+}

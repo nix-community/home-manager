@@ -1,0 +1,11 @@
+{
+  "providers": {
+    "claude-code": {
+      "settings": {
+        "provider": "claude-code"
+      },
+      "tokenSource": "manual"
+    }
+  },
+  "version": 1
+}
