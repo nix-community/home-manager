@@ -159,7 +159,9 @@ in
               | default []
               | append {||
                   let direnv = (
-                      ${getExe cfg.package} export json
+                      ${getExe cfg.package} export json e> /dev/stderr
+                      | complete
+                      | get stdout
                       | from json --strict
                       | default {}
                   )

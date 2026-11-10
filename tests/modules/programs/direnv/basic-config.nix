@@ -99,6 +99,12 @@ in
         'direnv export json'
       assertFileRegex "${nushellConfigFile}" \
         'load-env'
+      # direnv exits non-zero on e.g. a blocked .envrc, but its output must
+      # still be loaded, as the other shells do. `complete` keeps pipefail
+      # from aborting the later pre_prompt hooks, and stderr goes straight
+      # through.
+      assertFileRegex "${nushellConfigFile}" \
+        '[|] complete'
       # Variables direnv marks for removal (null values) must be unset via
       # hide-env; load-env alone cannot remove them and leaves empty ghosts.
       assertFileRegex "${nushellConfigFile}" \
