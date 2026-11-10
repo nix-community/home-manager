@@ -31,15 +31,11 @@ function migrateProfile() {
     fi
 }
 
-function setupVars() {
-    declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
-    declare -r userNixStateDir="$stateHome/nix"
-    declare -gr hmStatePath="$stateHome/home-manager"
-    declare -r hmGcrootsDir="$hmStatePath/gcroots"
-
-    declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
-    declare -r globalProfilesDir="$globalNixStateDir/profiles/per-user/$USER"
-    declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
+# Sets genProfilePath, the Home Manager profile, which only a full
+# activation uses.
+function setupProfileVars() {
+    declare -r userNixStateDir="${XDG_STATE_HOME:-$HOME/.local/state}/nix"
+    declare -r globalProfilesDir="${NIX_STATE_DIR:-/nix/var/nix}/profiles/per-user/$USER"
 
     # If the user Nix profiles path exists, then place the HM profile there.
     # Otherwise, if the global Nix per-user state directory exists then use
@@ -56,8 +52,18 @@ function setupVars() {
         exit 1
     fi
 
-    declare -gr hmDataPath="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
     declare -gr genProfilePath="$profilesDir/home-manager"
+}
+
+function setupVars() {
+    declare -r stateHome="${XDG_STATE_HOME:-$HOME/.local/state}"
+    declare -gr hmStatePath="$stateHome/home-manager"
+    declare -r hmGcrootsDir="$hmStatePath/gcroots"
+
+    declare -r globalNixStateDir="${NIX_STATE_DIR:-/nix/var/nix}"
+    declare -r globalGcrootsDir="$globalNixStateDir/gcroots/per-user/$USER"
+
+    declare -gr hmDataPath="${XDG_DATA_HOME:-$HOME/.local/share}/home-manager"
     declare -gr newGenPath="@GENERATION_DIR@";
     declare -gr newGenGcPath="$hmGcrootsDir/new-home"
     declare -gr currentGenGcPath="$hmGcrootsDir/current-home"
@@ -137,15 +143,20 @@ fi
 
 _i "Starting Home Manager activation"
 
-# Verify that we can connect to the Nix store and/or daemon. This will
-# also create the necessary directories in profiles and gcroots.
-_iVerbose "Sanity checking Nix"
-nix-build --quiet --expr '{}' --no-out-link
+# A files-only run makes no Nix calls and uses no profile, so it also
+# works on an account that has no profile directory yet.
+if [[ ! -v hmFilesOnly ]]; then
+    # Verify that we can connect to the Nix store and/or daemon. This will
+    # also create the necessary directories in profiles and gcroots.
+    _iVerbose "Sanity checking Nix"
+    nix-build --quiet --expr '{}' --no-out-link
 
-# Also make sure that the Nix profiles path is created.
-nix-env -q > /dev/null 2>&1 || true
+    # Also make sure that the Nix profiles path is created.
+    nix-env -q > /dev/null 2>&1 || true
 
-migrateProfile
+    migrateProfile
+    setupProfileVars
+fi
 setupVars
 
 # Note, the DRY_RUN_CMD and DRY_RUN_NULL variables are deprecated and should not
@@ -161,7 +172,7 @@ else
     export DRY_RUN_NULL=/dev/null
 fi
 
-if [[ -v VERBOSE ]]; then
+if [[ -v VERBOSE && ! -v hmFilesOnly ]]; then
     _i 'Using Nix version: %s' "$(nix-env --version)"
 fi
 
@@ -172,7 +183,9 @@ else
     verboseEcho "  oldGenPath undefined (first run?)"
 fi
 verboseEcho "  newGenPath=$newGenPath"
-verboseEcho "  genProfilePath=$genProfilePath"
+if [[ -v genProfilePath ]] ; then
+    verboseEcho "  genProfilePath=$genProfilePath"
+fi
 verboseEcho "  newGenGcPath=$newGenGcPath"
 verboseEcho "  currentGenGcPath=$currentGenGcPath"
 verboseEcho "  legacyGenGcPath=$legacyGenGcPath"
