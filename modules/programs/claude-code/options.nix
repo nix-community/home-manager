@@ -29,6 +29,35 @@ in
   options.programs.claude-code = {
     enable = lib.mkEnableOption "Claude Code, Anthropic's official CLI";
 
+    accounts = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options.home = lib.mkOption {
+            type = lib.types.addCheck lib.types.str (
+              home:
+              home != "" && lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" home)
+            );
+            description = "Account directory relative to the user's home directory.";
+          };
+        }
+      );
+      default = { };
+      description = ''
+        Independent account homes receiving the same declared configuration.
+        The `default` account is always included and uses `configDir`.
+        Authentication, sessions and other runtime state are not copied.
+        Select an additional account by setting CLAUDE_CONFIG_DIR
+        when launching the agent. Global environment variables select only the
+        default account. Do not enroll homes whose state is managed by another
+        account-sharing tool.
+      '';
+      example = lib.literalExpression ''
+        {
+          work.home = ".claude-work";
+        }
+      '';
+    };
+
     package = lib.mkPackageOption pkgs "claude-code" { nullable = true; };
 
     mutableSettings = mkOption {

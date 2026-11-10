@@ -1,4 +1,7 @@
 {
+  pi-coding-agent-accounts = ./accounts.nix;
+  pi-coding-agent-accounts-duplicate = ./accounts-duplicate.nix;
+  pi-coding-agent-accounts-mutable = ./accounts-mutable.nix;
   pi-coding-agent-settings = ./settings.nix;
   pi-coding-agent-empty-settings = ./empty-settings.nix;
   pi-coding-agent-keybindings = ./keybindings.nix;

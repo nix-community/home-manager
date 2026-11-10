@@ -1,4 +1,9 @@
 {
+  codex-accounts = ./accounts.nix;
+  codex-accounts-disabled = ./accounts-disabled.nix;
+  codex-accounts-duplicate = ./accounts-duplicate.nix;
+  codex-accounts-plugins = ./accounts-plugins.nix;
+  codex-accounts-mutable = ./accounts-mutable.nix;
   codex-settings-toml = ./settings-toml.nix;
   codex-settings-toml-prefer-xdg-directories = ./settings-toml-prefer-xdg-directories.nix;
   codex-settings-yaml = ./settings-yaml.nix;

@@ -41,6 +41,35 @@ in
   options.programs.pi-coding-agent = {
     enable = mkEnableOption "pi-coding-agent";
 
+    accounts = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options.home = lib.mkOption {
+            type = lib.types.addCheck lib.types.str (
+              home:
+              home != "" && lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" home)
+            );
+            description = "Account directory relative to the user's home directory.";
+          };
+        }
+      );
+      default = { };
+      description = ''
+        Independent account homes receiving the same declared configuration.
+        The `default` account is always included and uses `configDir`.
+        Authentication, sessions and other runtime state are not copied.
+        Select an additional account by setting PI_CODING_AGENT_DIR
+        when launching the agent. Global environment variables select only the
+        default account. Do not enroll homes whose state is managed by another
+        account-sharing tool.
+      '';
+      example = lib.literalExpression ''
+        {
+          work.home = ".pi/work";
+        }
+      '';
+    };
+
     package = mkPackageOption pkgs "pi-coding-agent" { nullable = true; };
 
     extraPackages = mkOption {
@@ -220,68 +249,93 @@ in
   };
 
   config = mkIf cfg.enable {
-    home = {
-      activation.piCodingAgentMutableSettings = lib.mkIf (cfg.mutableSettings && cfg.settings != { }) (
-        lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          lib.hm.generators.mkImpureConfigMerger {
-            inherit pkgs;
-            format = "json";
-            empty = "{}";
-            mode = "600";
-            path = "${cfg.configDir}/settings.json";
-            staticSettings = jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
-
-            jqOperation = ''
-              ${builtins.toJSON config.home.homeDirectory} as $homeDirectory
-              | ${builtins.toJSON cfg.configDir} as $configDir
-              | ${builtins.readFile ./pi-coding-agent-settings-filter.jq}
-            '';
-          }
-        )
-      );
-
-      packages = mkIf (packageWithExtraPackages != null) [
-        packageWithExtraPackages
+    programs.pi-coding-agent.accounts.default.home = lib.mkDefault (
+      lib.removePrefix "${config.home.homeDirectory}/" cfg.configDir
+    );
+    assertions =
+      let
+        homes = map (account: account.home) (lib.attrValues cfg.accounts);
+      in
+      [
+        {
+          assertion = lib.length homes == lib.length (lib.unique homes);
+          message = "programs.pi-coding-agent.accounts must use distinct home directories.";
+        }
       ];
+    home = lib.mkMerge (
+      lib.mapAttrsToList (
+        name: account:
+        let
+          cfg = config.programs.pi-coding-agent // {
+            configDir = "${config.home.homeDirectory}/${account.home}";
+          };
+        in
+        {
+          activation."piCodingAgentMutableSettings${lib.optionalString (name != "default") "-${name}"}" =
+            lib.mkIf (cfg.mutableSettings && cfg.settings != { })
+              (
+                lib.hm.dag.entryAfter [ "linkGeneration" ] (
+                  lib.hm.generators.mkImpureConfigMerger {
+                    inherit pkgs;
+                    format = "json";
+                    empty = "{}";
+                    mode = "600";
+                    path = "${cfg.configDir}/settings.json";
+                    staticSettings = jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
 
-      sessionVariables = lib.mkIf (cfg.configDir != upstreamConfigDir) {
-        PI_CODING_AGENT_DIR = cfg.configDir;
-      };
+                    jqOperation = ''
+                      ${builtins.toJSON config.home.homeDirectory} as $homeDirectory
+                      | ${builtins.toJSON cfg.configDir} as $configDir
+                      | ${builtins.readFile ./pi-coding-agent-settings-filter.jq}
+                    '';
+                  }
+                )
+              );
 
-      file = lib.mkMerge [
-        (mkIf (!cfg.mutableSettings && cfg.settings != { }) {
-          "${cfg.configDir}/settings.json".source =
-            jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
-        })
+          packages = mkIf (packageWithExtraPackages != null) [
+            packageWithExtraPackages
+          ];
 
-        (mkIf (cfg.keybindings != { }) {
-          "${cfg.configDir}/keybindings.json".source =
-            jsonFormat.generate "pi-coding-agent-keybindings.json" cfg.keybindings;
-        })
+          sessionVariables = lib.mkIf (name == "default" && cfg.configDir != upstreamConfigDir) {
+            PI_CODING_AGENT_DIR = cfg.configDir;
+          };
 
-        (mkIf (cfg.models != { }) {
-          "${cfg.configDir}/models.json".source =
-            jsonFormat.generate "pi-coding-agent-models.json" cfg.models;
-        })
-
-        (
-          if lib.hm.strings.isPathLike cfg.context then
-            { "${cfg.configDir}/AGENTS.md".source = cfg.context; }
-          else
-            (mkIf (cfg.context != "") {
-              "${cfg.configDir}/AGENTS.md".text = cfg.context;
+          file = lib.mkMerge [
+            (mkIf (!cfg.mutableSettings && cfg.settings != { }) {
+              "${cfg.configDir}/settings.json".source =
+                jsonFormat.generate "pi-coding-agent-settings.json" cfg.settings;
             })
-        )
 
-        (
-          if lib.hm.strings.isPathLike cfg.appendSystem then
-            { "${cfg.configDir}/APPEND_SYSTEM.md".source = cfg.appendSystem; }
-          else
-            (mkIf (cfg.appendSystem != "") {
-              "${cfg.configDir}/APPEND_SYSTEM.md".text = cfg.appendSystem;
+            (mkIf (cfg.keybindings != { }) {
+              "${cfg.configDir}/keybindings.json".source =
+                jsonFormat.generate "pi-coding-agent-keybindings.json" cfg.keybindings;
             })
-        )
-      ];
-    };
+
+            (mkIf (cfg.models != { }) {
+              "${cfg.configDir}/models.json".source =
+                jsonFormat.generate "pi-coding-agent-models.json" cfg.models;
+            })
+
+            (
+              if lib.hm.strings.isPathLike cfg.context then
+                { "${cfg.configDir}/AGENTS.md".source = cfg.context; }
+              else
+                (mkIf (cfg.context != "") {
+                  "${cfg.configDir}/AGENTS.md".text = cfg.context;
+                })
+            )
+
+            (
+              if lib.hm.strings.isPathLike cfg.appendSystem then
+                { "${cfg.configDir}/APPEND_SYSTEM.md".source = cfg.appendSystem; }
+              else
+                (mkIf (cfg.appendSystem != "") {
+                  "${cfg.configDir}/APPEND_SYSTEM.md".text = cfg.appendSystem;
+                })
+            )
+          ];
+        }
+      ) cfg.accounts
+    );
   };
 }

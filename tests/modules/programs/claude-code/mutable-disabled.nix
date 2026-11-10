@@ -2,6 +2,7 @@
 {
   programs.claude-code = {
     enable = false;
+    accounts.work.home = ".disabled-account";
     package = null;
     mutableSettings = true;
     settings.theme = "dark";
@@ -19,6 +20,7 @@
   ];
 
   nmt.script = ''
+    assertPathNotExists "home-files/.disabled-account"
     assertPathNotExists "home-files/.claude/settings.json"
     assertPathNotExists "home-files/.claude/plugins/known_marketplaces.json"
   '';

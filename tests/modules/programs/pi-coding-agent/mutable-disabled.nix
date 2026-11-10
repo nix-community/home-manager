@@ -13,6 +13,7 @@ in
     mutableSettings = true;
     configDir = "${config.home.homeDirectory}/custom pi";
     enable = false;
+    accounts.work.home = ".disabled-account";
     settings = {
       packages = [ "npm:plain@2" ];
       enabledModels = [ "managed" ];
@@ -31,6 +32,7 @@ in
     }
   ];
   nmt.script = ''
+    assertPathNotExists "home-files/.disabled-account"
     assertPathNotExists "home-files/${target}"
   '';
 }

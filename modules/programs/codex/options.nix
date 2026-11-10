@@ -7,6 +7,36 @@ in
   options.programs.codex = {
     enable = lib.mkEnableOption "Lightweight coding agent that runs in your terminal";
 
+    accounts = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options.home = lib.mkOption {
+            type = lib.types.addCheck lib.types.str (
+              home:
+              home != "" && lib.all (part: part != "" && part != "." && part != "..") (lib.splitString "/" home)
+            );
+            description = "Account directory relative to the user's home directory.";
+          };
+        }
+      );
+      default = { };
+      description = ''
+        Independent account homes receiving the same declared configuration.
+        The `default` account is always included and uses the usual Codex home.
+        Authentication, sessions and other runtime state are not copied.
+        Select an additional account by setting CODEX_HOME
+        when launching the agent. Global environment variables select only the
+        default account. Do not enroll homes whose state is managed by another
+        account-sharing tool. User-level files under {file}`~/.agents` remain
+        shared and are generated once from the default account.
+      '';
+      example = lib.literalExpression ''
+        {
+          work.home = ".codex-work";
+        }
+      '';
+    };
+
     package = lib.mkPackageOption pkgs "codex" { nullable = true; };
 
     enableMcpIntegration = lib.mkOption {

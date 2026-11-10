@@ -1,4 +1,7 @@
 {
+  claude-code-accounts = ./accounts.nix;
+  claude-code-accounts-duplicate = ./accounts-duplicate.nix;
+  claude-code-accounts-mutable = ./accounts-mutable.nix;
   claude-code-mutable-empty = ./mutable-empty.nix;
   claude-code-mutable-disabled = ./mutable-disabled.nix;
   claude-code-mutable-settings = ./mutable-settings.nix;
