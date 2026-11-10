@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7fccde47.js";
+            window.path_to_searchindex_js = "searchindex-865a0648.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-92531992.js"></script>
+        <script src="toc-46105e62.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12297,6 +12297,7 @@ string</p>
 <li><a href="#anyrun">anyrun</a></li>
 <li><a href="#aperture">aperture</a></li>
 <li><a href="#aphorme">aphorme</a></li>
+<li><a href="#arf">arf</a></li>
 <li><a href="#aria2">aria2</a></li>
 <li><a href="#aria2p">aria2p</a></li>
 <li><a href="#asciinema">asciinema</a></li>
@@ -16383,6 +16384,61 @@ TOML value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/aphorme.nix">&lt;home-manager/modules/programs/aphorme.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="arf"><a href="#arf" class="header">arf</a></h1>
+<h2 id="opt-programs.arf.enable"><a class="header" href="#opt-programs.arf.enable">programs.arf.enable</a></h2>
+<p>Whether to enable arf, a modern R console.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/arf.nix">&lt;home-manager/modules/programs/arf.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.arf.package"><a class="header" href="#opt-programs.arf.package">programs.arf.package</a></h2>
+<p>The arf package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.arf
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/arf.nix">&lt;home-manager/modules/programs/arf.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.arf.settings"><a class="header" href="#opt-programs.arf.settings">programs.arf.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/arf/arf.toml</code> on Linux
+or <code>$HOME/Library/Application Support/arf/arf.toml</code> on Darwin.
+See <a href="https://github.com/eitsupi/arf/blob/main/docs/configuration.md">https://github.com/eitsupi/arf/blob/main/docs/configuration.md</a>
+for all available options.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  editor = {
+    auto_suggestions = "cwd";
+    key_map = {
+      alt-a = " &lt;- ";
+      alt-l = "\\(x) ";
+      alt-p = ''
+         |&gt;
+      '';
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/arf.nix">&lt;home-manager/modules/programs/arf.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="aria2"><a href="#aria2" class="header">aria2</a></h1>
