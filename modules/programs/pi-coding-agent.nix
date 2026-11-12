@@ -19,6 +19,68 @@ let
 
   upstreamConfigDir = "${config.home.homeDirectory}/.pi/agent";
 
+  skillsDir = "${cfg.configDir}/skills";
+  skillsArePath = lib.hm.strings.isPathLike cfg.skills;
+  skillsNeedNormalization = skillsArePath && !lib.isPath cfg.skills;
+
+  skillSources =
+    if !skillsArePath && builtins.isAttrs cfg.skills then
+      cfg.skills
+    else if lib.isPath cfg.skills && lib.pathIsDirectory cfg.skills then
+      lib.mapAttrs (name: _type: cfg.skills + "/${name}") (builtins.readDir cfg.skills)
+    else
+      { };
+
+  mkSkillDir =
+    content:
+    if lib.isPath content then
+      pkgs.writeTextDir "SKILL.md" (builtins.readFile content)
+    else if lib.hm.strings.isPathLike content then
+      pkgs.runCommandLocal "pi-coding-agent-skill" { } ''
+        source=${lib.escapeShellArg "${content}"}
+        if [[ -d "$source" ]]; then
+          ln -s "$source" "$out"
+        elif [[ -f "$source" ]]; then
+          mkdir -p "$out"
+          cp "$source" "$out/SKILL.md"
+        else
+          echo "Pi skill source '$source' is neither a file nor a directory" >&2
+          exit 1
+        fi
+      ''
+    else
+      pkgs.writeTextDir "SKILL.md" content;
+
+  mkSkillEntry =
+    name: content:
+    lib.nameValuePair "${skillsDir}/${name}" {
+      source = if lib.isPath content && lib.pathIsDirectory content then content else mkSkillDir content;
+    };
+
+  normalizedSkills = pkgs.runCommandLocal "pi-coding-agent-skills" { } ''
+    source=${lib.escapeShellArg "${cfg.skills}"}
+    if [[ ! -d "$source" ]]; then
+      echo "programs.pi-coding-agent.skills must be a directory when set to a path" >&2
+      exit 1
+    fi
+
+    mkdir -p "$out/stage" "$out/normalized"
+    shopt -s dotglob nullglob
+    for skill in "$source"/*; do
+      name="''${skill##*/}"
+      if [[ -d "$skill" ]]; then
+        ln -s "$skill" "$out/stage/$name"
+      elif [[ -f "$skill" ]]; then
+        mkdir -p "$out/normalized/$name"
+        cp "$skill" "$out/normalized/$name/SKILL.md"
+        ln -s "$out/normalized/$name" "$out/stage/$name"
+      else
+        echo "Pi skill source '$skill' is neither a file nor a directory" >&2
+        exit 1
+      fi
+    done
+  '';
+
   packageWithExtraPackages =
     if cfg.package != null && cfg.extraPackages != [ ] then
       pkgs.symlinkJoin {
@@ -217,9 +279,71 @@ in
       '';
       example = literalExpression "./pi-append-system.md";
     };
+
+    skills = mkOption {
+      type = with lib.types; either (attrsOf (either lines path)) path;
+      default = { };
+      description = ''
+        Custom skills for Pi Coding Agent.
+
+        This option can be either:
+        - An attribute set defining skills
+        - A path to a directory containing skill folders
+
+        If an attribute set is used, the attribute name becomes the
+        skill directory name, and the value is either:
+        - Inline content as a string (creates {file}`skills/<name>/SKILL.md`)
+        - A path to a file (creates {file}`skills/<name>/SKILL.md`)
+        - A path to a directory (creates {file}`skills/<name>/` with all files)
+
+        This also accepts Nix store paths, for example a skill directory
+        from a package.
+
+        If a path is used, it is expected to contain one folder per
+        skill name, each containing a {file}`SKILL.md`. The directory is
+        symlinked into the {file}`skills/` subdirectory of
+        {option}`programs.pi-coding-agent.configDir`.
+      '';
+      example = literalExpression ''
+        {
+          xlsx = ./skills/xlsx/SKILL.md;
+          data-analysis = ./skills/data-analysis;
+          pdf-processing = '''
+            ---
+            name: pdf-processing
+            description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+            ---
+
+            # PDF Processing
+
+            ## Quick start
+
+            Use pdfplumber to extract text from PDFs:
+
+            ```python
+            import pdfplumber
+
+            with pdfplumber.open("document.pdf") as pdf:
+                text = pdf.pages[0].extract_text()
+            ```
+          ''';
+
+          # A skill can also be a subdirectory within a package source (store path)
+          beads = "''${pkgs.beads.src}/claude-plugin/skills/beads";
+        }
+      '';
+    };
+
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
+        message = "`programs.pi-coding-agent.skills` must be a directory when set to a path";
+      }
+    ];
+
     home = {
       activation.piCodingAgentMutableSettings = lib.mkIf (cfg.mutableSettings && cfg.settings != { }) (
         lib.hm.dag.entryAfter [ "linkGeneration" ] (
@@ -281,7 +405,18 @@ in
               "${cfg.configDir}/APPEND_SYSTEM.md".text = cfg.appendSystem;
             })
         )
+
+        (lib.mapAttrs' mkSkillEntry skillSources)
+
+        (mkIf skillsNeedNormalization {
+          "${skillsDir}" = {
+            source = normalizedSkills + "/stage";
+            recursive = true;
+            ignorelinks = true;
+          };
+        })
       ];
     };
   };
+
 }
