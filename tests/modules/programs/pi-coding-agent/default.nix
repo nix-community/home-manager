@@ -13,4 +13,9 @@
   pi-coding-agent-mutable = ./mutable-settings.nix;
   pi-coding-agent-empty = ./mutable-empty.nix;
   pi-coding-agent-disabled = ./mutable-disabled.nix;
+  pi-coding-agent-skills-inline = ./skills-inline.nix;
+  pi-coding-agent-skills-dir = ./skills-dir.nix;
+  pi-coding-agent-skills-store-path = ./skills-store-path.nix;
+  pi-coding-agent-skills-store-path-dir = ./skills-store-path-dir.nix;
+  pi-coding-agent-skills-path-not-directory = ./skills-path-not-directory.nix;
 }
