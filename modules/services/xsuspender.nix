@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -12,107 +13,56 @@ let
 
   iniFormat = pkgs.formats.ini { };
 
-  xsuspenderOptions = types.submodule {
-    options = {
-      matchWmClassContains = mkOption {
-        description = "Match windows that wm class contains string.";
-        type = types.nullOr types.str;
-        default = null;
-      };
-
-      matchWmClassGroupContains = mkOption {
-        description = "Match windows where wm class group contains string.";
-        type = types.nullOr types.str;
-        default = null;
-      };
-
-      matchWmNameContains = mkOption {
-        description = "Match windows where wm name contains string.";
-        type = types.nullOr types.str;
-        default = null;
-      };
-
-      suspendDelay = mkOption {
-        description = "Initial suspend delay in seconds.";
-        type = types.int;
-        default = 5;
-      };
-
-      resumeEvery = mkOption {
-        description = "Resume interval in seconds.";
-        type = types.int;
-        default = 50;
-      };
-
-      resumeFor = mkOption {
-        description = "Resume duration in seconds.";
-        type = types.int;
-        default = 5;
-      };
-
-      execSuspend = mkOption {
-        description = ''
-          Before suspending, execute this shell script. If it fails,
-          abort suspension.
-        '';
-        type = types.nullOr types.str;
-        default = null;
-        example = ''echo "suspending window $XID of process $PID"'';
-      };
-
-      execResume = mkOption {
-        description = ''
-          Before resuming, execute this shell script. Resume the
-          process regardless script failure.
-        '';
-        type = types.nullOr types.str;
-        default = null;
-        example = "echo resuming ...";
-      };
-
-      sendSignals = mkOption {
-        description = ''
-          Whether to send SIGSTOP / SIGCONT signals or not.
-          If false just the exec scripts are run.
-        '';
-        type = types.bool;
-        default = true;
-      };
-
-      suspendSubtreePattern = mkOption {
-        description = "Also suspend descendant processes that match this regex.";
-        type = types.nullOr types.str;
-        default = null;
-      };
-
-      onlyOnBattery = mkOption {
-        description = "Whether to enable process suspend only on battery.";
-        type = types.bool;
-        default = false;
-      };
-
-      autoSuspendOnBattery = mkOption {
-        description = ''
-          Whether to auto-apply rules when switching to battery
-          power even if the window(s) didn't just lose focus.
-        '';
-        type = types.bool;
-        default = true;
-      };
-
-      downclockOnBattery = mkOption {
-        description = ''
-          Limit CPU consumption for this factor when on battery power.
-          Value 1 means 50% decrease, 2 means 66%, 3 means 75% etc.
-        '';
-        type = types.int;
-        default = 0;
-      };
-    };
-  };
+  renamedSettings = [
+    "matchWmClassContains"
+    "matchWmClassGroupContains"
+    "matchWmNameContains"
+    "suspendDelay"
+    "resumeEvery"
+    "resumeFor"
+    "execSuspend"
+    "execResume"
+    "sendSignals"
+    "suspendSubtreePattern"
+    "onlyOnBattery"
+    "autoSuspendOnBattery"
+    "downclockOnBattery"
+  ];
 
 in
 {
+  imports = [
+    (lib.doRename {
+      from = [
+        "services"
+        "xsuspender"
+        "defaults"
+      ];
+      to = [
+        "services"
+        "xsuspender"
+        "settings"
+        "Default"
+      ];
+      visible = false;
+      warn = true;
+      use = lib.id;
+      # Do not create a Default section when the old option is unused.
+      condition = options.services.xsuspender.defaults.isDefined;
+    })
+  ]
+  ++
+    lib.hm.deprecations.mkSettingsRenamedOptionModules
+      [ "services" "xsuspender" ]
+      [ "services" "xsuspender" ]
+      { }
+      [
+        {
+          old = "rules";
+          new = "settings";
+        }
+      ];
+
   meta.maintainers = [ ];
 
   options = {
@@ -121,23 +71,34 @@ in
 
       package = lib.mkPackageOption pkgs "xsuspender" { };
 
-      defaults = mkOption {
-        description = "XSuspender defaults.";
-        type = xsuspenderOptions;
-        default = { };
-      };
-
-      rules = mkOption {
-        description = "Attribute set of XSuspender rules.";
-        type = types.attrsOf xsuspenderOptions;
+      settings = mkOption {
+        type = types.attrsOf (
+          types.submodule {
+            # Legacy rule functions can read sibling options through their aliases.
+            freeformType = types.lazyAttrsOf iniFormat.lib.types.atom;
+            imports = lib.hm.deprecations.mkSettingsRenamedOptionModules [ ] [ ] { } renamedSettings;
+          }
+        );
         default = { };
         example = {
+          Default = {
+            suspend_delay = 10;
+            resume_every = 60;
+          };
           Chromium = {
-            suspendDelay = 10;
-            matchWmClassContains = "chromium-browser";
-            suspendSubtreePattern = "chromium";
+            match_wm_class_contains = "chromium-browser";
           };
         };
+        description = ''
+          Configuration settings for XSuspender. No configuration file is
+          managed when this is empty. The old `defaults` and `rules` options
+          are aliases that retain their historical defaults at option-default
+          priority. Ordinary settings assignments override those defaults.
+          Sections configured only through settings use native defaults for
+          omitted or null keys.
+
+          See <https://kernc.github.io/xsuspender/> for available settings.
+        '';
       };
 
       debug = mkOption {
@@ -146,64 +107,83 @@ in
         default = false;
       };
 
-      iniContent = mkOption {
-        inherit (iniFormat) type;
-        internal = true;
-      };
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      (lib.hm.assertions.assertPlatform "services.xsuspender" pkgs lib.platforms.linux)
-    ];
+  config = lib.mkMerge [
+    {
+      services.xsuspender.settings =
+        let
+          inherit (lib.modules) mapDefinitionValue mkAliasAndWrapDefsWithPriority;
 
-    services.xsuspender.iniContent =
-      let
-        mkSection =
-          values:
-          lib.filterAttrs (_: v: v != null) {
-            match_wm_class_contains = values.matchWmClassContains;
-            match_wm_class_group_contains = values.matchWmClassGroupContains;
-            match_wm_name_contains = values.matchWmNameContains;
-            suspend_delay = values.suspendDelay;
-            resume_every = values.resumeEvery;
-            resume_for = values.resumeFor;
-            exec_suspend = values.execSuspend;
-            exec_resume = values.execResume;
-            send_signals = values.sendSignals;
-            suspend_subtree_pattern = values.suspendSubtreePattern;
-            only_on_battery = values.onlyOnBattery;
-            auto_suspend_on_battery = values.autoSuspendOnBattery;
-            downclock_on_battery = values.downclockOnBattery;
+          legacyDefaults = lib.mapAttrs (_: lib.mkOptionDefault) {
+            suspend_delay = 5;
+            resume_every = 50;
+            resume_for = 5;
+            send_signals = true;
+            only_on_battery = false;
+            auto_suspend_on_battery = true;
+            downclock_on_battery = 0;
           };
-      in
-      {
-        Default = mkSection cfg.defaults;
-      }
-      // lib.mapAttrs (_: mkSection) cfg.rules;
 
-    # To make the xsuspender tool available.
-    home.packages = [ cfg.package ];
+          # Preserve conditions and priorities without evaluating recursive alias values.
+          sectionDefaults = mapDefinitionValue (_: legacyDefaults);
 
-    xdg.configFile."xsuspender.conf".source = iniFormat.generate "xsuspender.conf" cfg.iniContent;
+          defaultsFromRules =
+            definitions:
+            let
+              # Seed Default independently: a disabled rule named Default must not erase it.
+              defaultSection = mapDefinitionValue (_: { Default = legacyDefaults; }) definitions;
+              ruleSections = mapDefinitionValue (lib.mapAttrs (_: sectionDefaults)) definitions;
+            in
+            lib.mkMerge [
+              defaultSection
+              ruleSections
+            ];
+        in
+        lib.mkMerge [
+          (mkAliasAndWrapDefsWithPriority (definitions: {
+            Default = sectionDefaults definitions;
+          }) options.services.xsuspender.defaults)
+          (mkAliasAndWrapDefsWithPriority defaultsFromRules options.services.xsuspender.rules)
+        ];
+    }
+    (lib.mkIf cfg.enable {
+      assertions = [
+        (lib.hm.assertions.assertPlatform "services.xsuspender" pkgs lib.platforms.linux)
+      ];
 
-    systemd.user.services.xsuspender = {
-      Unit = {
-        Description = "XSuspender";
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
-        X-Restart-Triggers = [ "${config.xdg.configFile."xsuspender.conf".source}" ];
+      # To make the xsuspender tool available.
+      home.packages = [ cfg.package ];
+
+      xdg.configFile."xsuspender.conf" = lib.mkIf (cfg.settings != { }) {
+        # Keep aliases readable in config; omit them and unset values only in the INI.
+        source = iniFormat.generate "xsuspender.conf" (
+          lib.mapAttrs (
+            _: section: lib.filterAttrs (_: value: value != null) (removeAttrs section renamedSettings)
+          ) cfg.settings
+        );
       };
 
-      Service = {
-        ExecStart = lib.getExe cfg.package;
-        Environment = lib.mkIf cfg.debug [ "G_MESSAGES_DEBUG=all" ];
-      };
+      systemd.user.services.xsuspender = {
+        Unit = {
+          Description = "XSuspender";
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
+          X-Restart-Triggers = lib.optional (
+            cfg.settings != { }
+          ) "${config.xdg.configFile."xsuspender.conf".source}";
+        };
 
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
+        Service = {
+          ExecStart = lib.getExe cfg.package;
+          Environment = lib.mkIf cfg.debug [ "G_MESSAGES_DEBUG=all" ];
+        };
+
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
       };
-    };
-  };
+    })
+  ];
 }

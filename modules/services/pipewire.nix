@@ -200,7 +200,7 @@ in
     extraLadspaPackages = mkOption {
       type = with types; listOf package;
       default = [ ];
-      example = literalExpression "[ pkgs.noisetorch-ladspa ]";
+      example = literalExpression "[ pkgs.rnnoise-plugin ]";
       description = ''
         List of packages that provide LADSPA plugins, in the form of
         {file}`lib/ladspa/*` files.

@@ -1,7 +1,27 @@
+{ lib, ... }:
 {
+  imports = [
+    { programs.openstackclient.cloudsSettings.cache.expiration_time = 300; }
+  ];
+
   programs.openstackclient = {
     enable = true;
-    clouds = {
+    package = null;
+    cloudsSettings.cache.auth = true;
+    cloudsSettings.client.force_ipv4 = true;
+    cloudsSettings.custom = {
+      credentials = [
+        "application"
+        42
+        null
+      ];
+      enabled = true;
+      optional = null;
+      retries = 3;
+      timeout = 1.5;
+      "yaml-1.1-string" = "yes";
+    };
+    cloudsSettings.clouds = {
       my-infra = {
         cloud = "example-cloud";
         auth = {
@@ -12,10 +32,12 @@
         interface = "internal";
       };
     };
-    publicClouds = {
-      example-cloud = {
-        auth = {
-          auth_url = "https://identity.cloud.example.com/v2.0";
+    cloudsPublicSettings = lib.mkDefault {
+      public-clouds = {
+        example-cloud = {
+          auth = {
+            auth_url = "https://identity.cloud.example.com/v2.0";
+          };
         };
       };
     };

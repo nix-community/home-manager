@@ -21,8 +21,10 @@
 
       domainFile=LaunchAgentDomains/org.nix-community.home.glance.domain
       assertFileContent "$domainFile" ${builtins.toFile "expected-domain" "gui\n"}
-      assertFileContains activate 'domain="gui/$(id -u)"'
-      assertFileContains activate 'launchctl kickstart -k "$domain/org.nix-community.home.glance"'
+
+      triggersFile=LaunchAgentRestartTriggers/org.nix-community.home.glance.json
+      triggersFile=$(normalizeStorePaths $triggersFile)
+      assertFileContent "$triggersFile" ${./glance-restart-triggers.json}
     '')
   ];
 }

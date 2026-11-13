@@ -1,9 +1,23 @@
 # Tests {#sec-tests}
 
-Home Manager includes a basic test suite and it is highly recommended to
-include at least one test when adding a module. Tests are typically in
-the form of \"golden tests\" where, for example, a generated
-configuration file is compared to a known correct file.
+A new module should include a focused test that enables it and checks an
+observable result, such as generated configuration, service definitions,
+package installation, or integration wiring. Successful evaluation alone does
+not show that settings reach the application. For stable generated files,
+compare the complete output with a handwritten expected file using
+`assertFileContent`.
+
+Exercise the meaningful branches introduced by the module. These can include
+disabled behavior, empty settings, a null package, and supported platform or
+configuration-location choices. A null-package case should check that
+independently supported configuration remains available. Use the existing
+NMT harness and its package stubbing; only use real packages when the behavior
+being checked needs their contents. Do not add separate evaluations or run
+activation merely to inspect generated output.
+
+NMT checks generated artifacts; it does not start services or run activation.
+When correctness depends on runtime behavior, identify that verification gap
+and use the appropriate existing integration tests or a bounded reproduction.
 
 It is relatively easy to create tests by modeling the existing tests,
 found in the `tests` project directory.

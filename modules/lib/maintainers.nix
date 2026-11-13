@@ -67,6 +67,12 @@
     github = "Avimitin";
     githubId = 30021675;
   };
+  awa2333 = {
+    name = "Yaoheng He/luke";
+    email = "62987171+awa2333@users.noreply.github.com";
+    github = "awa2333";
+    githubId = 62987171;
+  };
   bamhm182 = {
     name = "bamhm182";
     email = "bamhm182@gmail.com";
@@ -78,12 +84,6 @@
     email = "bikku+dev@slmail.me";
     github = "b1kku";
     githubId = 77858854;
-  };
-  bittner = {
-    name = "Peter Bittner";
-    email = "peter@painless.software";
-    github = "bittner";
-    githubId = 665072;
   };
   bjpbakker = {
     email = "bart@thesoftwarecraft.com";
@@ -156,6 +156,12 @@
     github = "dwagenk";
     githubId = 32838899;
     name = "Daniel Wagenknecht";
+  };
+  ekhh = {
+    name = "EKHH";
+    email = "90589480+ekhh@users.noreply.github.com";
+    github = "ekhh";
+    githubId = 90589480;
   };
   elanora96 = {
     name = "Elanora Manson";
@@ -337,11 +343,6 @@
     github = "lheckemann";
     githubId = 341954;
   };
-  libewa = {
-    email = "libewa-git@icloud.com";
-    github = "libewa";
-    githubId = 67926131;
-  };
   lilyinstarlight = {
     email = "lily@lily.flowers";
     matrix = "@lily:lily.flowers";
@@ -445,6 +446,12 @@
     github = "NitroSniper";
     githubId = 44097331;
   };
+  o-az = {
+    name = "Omar Aziz";
+    email = "23618431+o-az@users.noreply.github.com";
+    github = "o-az";
+    githubId = 23618431;
+  };
   olmokramer = {
     name = "Olmo Kramer";
     email = "olmokramer@users.noreply.github.com";
@@ -467,6 +474,12 @@
     email = "pedorich.n@gmail.com";
     github = "pedorich-n";
     githubId = 15573098;
+  };
+  pedromiguelvc = {
+    name = "Pedro Miguel";
+    email = "108361383+pedromiguelvc@users.noreply.github.com";
+    github = "pedromiguelvc";
+    githubId = 108361383;
   };
   philip-730 = {
     name = "Philip Amendolia";
@@ -528,6 +541,11 @@
     github = "rszamszur";
     githubId = 10353018;
   };
+  sand4rt = {
+    name = "sand4rt";
+    github = "sand4rt";
+    githubId = 17591696;
+  };
   silmarp = {
     name = "Silmar Pereira da Silva Junior";
     email = "silmarjr2@gmail.com";
@@ -550,6 +568,11 @@
     email = "saymon.nicho@pucp.edu.pe";
     github = "superflash41";
     githubId = 102434258;
+  };
+  typeparameter = {
+    name = "Drew Davis";
+    github = "typeparameter";
+    githubId = 9686215;
   };
   vidhanio = {
     name = "Vidhan Bhatt";

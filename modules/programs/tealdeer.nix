@@ -5,24 +5,26 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkOption types;
-
   cfg = config.programs.tealdeer;
 
+  packageVersion = lib.getVersion cfg.package;
   configDir =
-    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
+    if (pkgs.stdenv.hostPlatform.isDarwin && lib.versionOlder packageVersion "1.9.0") then
+      "Library/Application Support"
+    else
+      config.xdg.configHome;
 
   tomlFormat = pkgs.formats.toml { };
 
   settingsFormat =
     let
-      updatesSection = types.submodule {
+      updatesSection = lib.types.submodule {
         freeformType = tomlFormat.type;
         options = {
           auto_update = lib.mkEnableOption "auto-update";
 
-          auto_update_interval_hours = mkOption {
-            type = types.ints.positive;
+          auto_update_interval_hours = lib.mkOption {
+            type = lib.types.ints.positive;
             default = 720;
             example = 24;
             description = ''
@@ -33,10 +35,10 @@ let
         };
       };
     in
-    types.submodule {
+    lib.types.submodule {
       freeformType = tomlFormat.type;
       options = {
-        updates = mkOption {
+        updates = lib.mkOption {
           type = updatesSection;
           default = { };
           description = ''
@@ -68,8 +70,8 @@ in
 
     package = lib.mkPackageOption pkgs "tealdeer" { };
 
-    settings = mkOption {
-      type = types.nullOr settingsFormat;
+    settings = lib.mkOption {
+      type = lib.types.nullOr settingsFormat;
       default = null;
       example = lib.literalExpression ''
         {
@@ -83,10 +85,15 @@ in
         };
       '';
       description = ''
-        Configuration written to
-        {file}`$XDG_CONFIG_HOME/tealdeer/config.toml` on Linux or
-        {file}`$HOME/Library/Application Support/tealdeer/config.toml` on Darwin.
-        See <https://tealdeer-rs.github.io/tealdeer/config.html> for more information.
+        Configuration written to {file}`$XDG_CONFIG_HOME/tealdeer/config.toml`.
+        See <https://docs.tealdeer.org/stable/config.html> for more information.
+
+        ::: {.note}
+        `tealdeeer` versions before `1.9.0` on Darwin used to read the config from
+        {file}`$HOME/Library/Application Support/tealdeer/config.toml`.
+        In newer versions it respects the XDG directories and
+        uses `Library/Application Support` only as fallback.
+        :::
       '';
     };
 
@@ -96,14 +103,16 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = lib.mkIf cfg.enable {
+    home = {
+      packages = [ cfg.package ];
 
-    home.file."${configDir}/tealdeer/config.toml" = mkIf (cfg.settings != null && cfg.settings != { }) {
-      source = tomlFormat.generate "tealdeer-config" cfg.settings;
+      file."${configDir}/tealdeer/config.toml" = lib.mkIf (cfg.settings != null && cfg.settings != { }) {
+        source = tomlFormat.generate "tealdeer-config" cfg.settings;
+      };
     };
 
-    services.tldr-update = mkIf cfg.enableAutoUpdates {
+    services.tldr-update = lib.mkIf cfg.enableAutoUpdates {
       enable = true;
       inherit (cfg) package;
     };

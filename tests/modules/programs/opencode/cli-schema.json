@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "keybinds": {
+      "type": "object",
+      "properties": {
+        "leader": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scroll": {
+      "type": "object",
+      "properties": {
+        "acceleration": {
+          "type": "boolean"
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0.001
+        }
+      },
+      "additionalProperties": false
+    },
+    "tabs": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "auto",
+            "on",
+            "off"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "system",
+            "dark",
+            "light"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "required": []
+}

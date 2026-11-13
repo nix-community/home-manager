@@ -5,14 +5,22 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf types;
+  inherit (lib) mkIf mkOption;
 
   cfg = config.services.grobi;
-
-  eitherStrBoolIntList = with types; either str (either bool (either int (listOf str)));
-
+  jsonFormat = pkgs.formats.json { };
 in
 {
+  imports =
+    lib.hm.deprecations.mkSettingsRenamedOptionModules
+      [ "services" "grobi" ]
+      [ "services" "grobi" "settings" ]
+      { preserveOrder = true; }
+      [
+        "executeAfter"
+        "rules"
+      ];
+
   meta.maintainers = [ lib.maintainers.mbrgm ];
 
   options = {
@@ -21,55 +29,41 @@ in
 
       package = lib.mkPackageOption pkgs "grobi" { };
 
-      executeAfter = mkOption {
-        type = with types; listOf str;
-        default = [ ];
-        example = [ "setxkbmap dvorak" ];
-        description = ''
-          Commands to be run after an output configuration was
-          changed. The Nix value declared here will be translated to
-          JSON and written to the {option}`execute_after` key
-          in {file}`$XDG_CONFIG_HOME/grobi.conf`.
-        '';
-      };
-
-      rules = mkOption {
-        type = with types; listOf (attrsOf eitherStrBoolIntList);
-        default = [ ];
+      settings = mkOption {
+        type = lib.types.submodule {
+          freeformType = jsonFormat.type;
+          config = {
+            execute_after = lib.mkOptionDefault [ ];
+            rules = lib.mkOptionDefault [ ];
+          };
+        };
+        default = { };
         example = lib.literalExpression ''
-          [
-            {
-              name = "Home";
-              outputs_connected = [ "DP-2" ];
-              configure_single = "DP-2";
-              primary = true;
-              atomic = true;
-              execute_after = [
-                "''${lib.getExe pkgs.xrandr} --dpi 96"
-                "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
-              ];
-            }
-            {
-              name = "Mobile";
-              outputs_disconnected = [ "DP-2" ];
-              configure_single = "eDP-1";
-              primary = true;
-              atomic = true;
-              execute_after = [
-                "''${lib.getExe pkgs.xrandr} --dpi 120"
-                "''${pkgs.xmonad-with-packages}/bin/xmonad --restart";
-              ];
-            }
-          ]
+          {
+            execute_after = [ "setxkbmap dvorak" ];
+            on_failure = [ "notify-send 'Grobi failed'" ];
+            rules = [
+              {
+                name = "Home";
+                outputs_connected = [ "DP-2" ];
+                configure_single = "DP-2";
+                primary = "DP-2";
+                atomic = true;
+                execute_after = [
+                  "''${lib.getExe pkgs.xrandr} --dpi 96"
+                  "''${pkgs.xmonad-with-packages}/bin/xmonad --restart"
+                ];
+              }
+            ];
+          }
         '';
         description = ''
-          These are the rules grobi tries to match to the current
-          output configuration. The rules are evaluated top to bottom,
-          the first matching rule is applied and processing stops. See
-          <https://github.com/fd0/grobi/blob/master/doc/grobi.conf>
-          for more information. The Nix value declared here will be
-          translated to JSON and written to the {option}`rules`
-          key in {file}`$XDG_CONFIG_HOME/grobi.conf`.
+          Configuration written to {file}`$XDG_CONFIG_HOME/grobi.conf`.
+          The `rules` list is evaluated from top to bottom, and processing
+          stops after the first matching rule.
+
+          See <https://github.com/fd0/grobi/blob/master/doc/grobi.conf> for
+          available settings.
         '';
       };
     };
@@ -100,9 +94,6 @@ in
       };
     };
 
-    xdg.configFile."grobi.conf".text = builtins.toJSON {
-      execute_after = cfg.executeAfter;
-      inherit (cfg) rules;
-    };
+    xdg.configFile."grobi.conf".source = jsonFormat.generate "grobi.conf" cfg.settings;
   };
 }

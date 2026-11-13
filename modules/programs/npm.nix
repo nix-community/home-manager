@@ -8,8 +8,11 @@
 let
   cfg = config.programs.npm;
 
-  xdgConfigHome = lib.removePrefix config.home.homeDirectory config.xdg.configHome;
-  configFile = if config.home.preferXdgDirectories then "${xdgConfigHome}/npm/npmrc" else ".npmrc";
+  configFile =
+    if config.home.preferXdgDirectories then
+      "${config.xdg.configHome}/npm/npmrc"
+    else
+      "${config.home.homeDirectory}/.npmrc";
 
   iniFormat = pkgs.formats.ini {
     listsAsDuplicateKeys = true;
@@ -67,7 +70,7 @@ in
         text = toNpmrc cfg.settings;
       };
       sessionVariables = lib.mkIf (cfg.settings != { }) {
-        NPM_CONFIG_USERCONFIG = "${config.home.homeDirectory}/${configFile}";
+        NPM_CONFIG_USERCONFIG = configFile;
       };
     };
   };

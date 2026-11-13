@@ -1,0 +1,30 @@
+{
+  "accounts": {
+    "hm@example.com": {
+      "additional_sent_tags": "",
+      "always_gpg_sign": "true",
+      "default": "true",
+      "email": "hm@example.com",
+      "gpgkey": "test-key",
+      "name": "H. M. Test",
+      "save_drafts_to": "/home/hm-user/Mail/hm@example.com/Drafts/cur/",
+      "save_sent": "true",
+      "save_sent_to": "/home/hm-user/Mail/hm@example.com/Sent/cur/",
+      "select_query": "tag:inbox",
+      "sendmail": "msmtpq --read-envelope-from --read-recipients",
+      "signature_attach": "true",
+      "signature_default_on": "true",
+      "signature_file": "/nix/store/00000000000000000000000000000000-signature.txt",
+      "signature_file_markdown": "false",
+      "signature_separate": "true"
+    }
+  },
+  "astroid": {
+    "notmuch_config": "/home/hm-user/.config/notmuch/default/config"
+  },
+  "crypto": {
+    "gpg": {
+      "path": "@gnupg@/bin/gpg"
+    }
+  }
+}

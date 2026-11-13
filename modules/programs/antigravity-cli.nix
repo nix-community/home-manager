@@ -8,6 +8,9 @@
 let
   cfg = config.programs.antigravity-cli;
 
+  useGeminiConfig =
+    cfg.useLegacyGeminiConfig || (cfg.package != null && lib.getName cfg.package == "gemini-cli");
+
   renamedGeminiOptions = [
     "commands"
     "context"
@@ -59,11 +62,13 @@ let
         // lib.optionalAttrs (server ? url) {
           serverUrl = server.url;
         }
-        // lib.optionalAttrs isDisabled {
-          disabled = true;
-        };
+        //
+          lib.optionalAttrs (isDisabled || (cfg.mutableSettings && lib.hm.mcp.resolveEnabled server != null))
+            {
+              disabled = isDisabled;
+            };
     in
-    lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) transformed;
+    lib.filterAttrs (_: v: v != null && (cfg.mutableSettings || v != [ ]) && v != { }) transformed;
 
   transformMcpServers = lib.mapAttrs (_name: transformMcpServer);
 
@@ -152,6 +157,27 @@ in
 
     package = lib.mkPackageOption pkgs "antigravity-cli" {
       nullable = true;
+    };
+
+    mutableSettings = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to merge native Antigravity settings and MCP servers into
+        writable files during activation. This does not support the legacy
+        Gemini CLI configuration or a Gemini CLI package. Gemini CLI supports
+        a separate read-only system settings layer via
+        {env}`GEMINI_CLI_SYSTEM_SETTINGS_PATH` instead.
+
+        Declared values, including permission arrays, take precedence over
+        existing values. Unset permission lists preserve saved grants; an
+        explicit list replaces the saved list, including an empty list.
+        MCP files accept comments and trailing commas, but
+        are written as JSON without comments or original formatting. Removing
+        a declaration does not remove it from the file. Switching back to
+        immutable settings only removes byte-identical files; changed files
+        require backup or removal.
+      '';
     };
 
     useLegacyGeminiConfig = lib.mkOption {
@@ -275,24 +301,27 @@ in
         lib.types.submodule {
           options = {
             allow = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ ];
+              type = lib.types.nullOr (lib.types.listOf lib.types.str);
+              default = if cfg.mutableSettings && !useGeminiConfig then null else [ ];
+              defaultText = lib.literalMD "`null` in mutable native mode, otherwise `[ ]`.";
               description = ''
                 Permissions to allow without prompting.
               '';
             };
 
             deny = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ ];
+              type = lib.types.nullOr (lib.types.listOf lib.types.str);
+              default = if cfg.mutableSettings && !useGeminiConfig then null else [ ];
+              defaultText = lib.literalMD "`null` in mutable native mode, otherwise `[ ]`.";
               description = ''
                 Permissions to deny without prompting.
               '';
             };
 
             ask = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ ];
+              type = lib.types.nullOr (lib.types.listOf lib.types.str);
+              default = if cfg.mutableSettings && !useGeminiConfig then null else [ ];
+              defaultText = lib.literalMD "`null` in mutable native mode, otherwise `[ ]`.";
               description = ''
                 Permissions to ask before using.
               '';
@@ -304,6 +333,10 @@ in
       description = ''
         Antigravity CLI fine-grained permissions written to
         {option}`programs.antigravity-cli.settings.permissions`.
+        Unspecified lists default to empty lists in immutable and legacy mode.
+        In mutable native mode, unspecified lists default to null instead.
+        Null lists are omitted from the file, preserving saved values in mutable
+        mode; an explicit empty list clears the saved list.
       '';
       example = lib.literalExpression ''
         {
@@ -448,19 +481,31 @@ in
 
   config =
     let
-      useGeminiConfig =
-        cfg.useLegacyGeminiConfig || (cfg.package != null && lib.getName cfg.package == "gemini-cli");
       antigravitySkillsDir = ".gemini/antigravity-cli/skills";
       geminiSkillsDir = ".gemini/skills";
-      antigravitySettings = lib.recursiveUpdate (lib.optionalAttrs (cfg.permissions != null) {
-        inherit (cfg) permissions;
+      permissions = lib.optionalAttrs (cfg.permissions != null) (
+        lib.filterAttrs (_: value: value != null) cfg.permissions
+      );
+      antigravitySettings = lib.recursiveUpdate (lib.optionalAttrs (permissions != { }) {
+        inherit permissions;
       }) (removeAttrs cfg.settings [ "mcpServers" ]);
       legacyMcpServers = lib.optionalAttrs (cfg.settings ? mcpServers) cfg.settings.mcpServers;
       mcpServers = lib.recursiveUpdate legacyMcpServers cfg.mcpServers;
+      json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
+      nativeSettingsFiles =
+        lib.optionalAttrs (antigravitySettings != { }) {
+          ".gemini/antigravity-cli/settings.json" =
+            jsonFormat.generate "antigravity-cli-settings.json" antigravitySettings;
+        }
+        // lib.optionalAttrs (mcpServers != { }) {
+          ".gemini/config/mcp_config.json" = jsonFormat.generate "antigravity-cli-mcp-config.json" {
+            mcpServers = transformMcpServers mcpServers;
+          };
+        };
       geminiSettings =
         lib.recursiveUpdate
-          (lib.optionalAttrs (cfg.permissions != null) {
-            inherit (cfg) permissions;
+          (lib.optionalAttrs (permissions != { }) {
+            inherit permissions;
           })
           (lib.recursiveUpdate cfg.settings (lib.optionalAttrs (mcpServers != { }) { inherit mcpServers; }));
     in
@@ -486,6 +531,12 @@ in
           ) cfg.context;
         }
         (lib.mkIf useGeminiConfig {
+          assertions = [
+            {
+              assertion = !cfg.mutableSettings;
+              message = "programs.antigravity-cli.mutableSettings only supports native Antigravity CLI configuration, not legacy Gemini CLI configuration.";
+            }
+          ];
           programs.antigravity-cli.settings.mcpServers =
             lib.mkIf (cfg.enableMcpIntegration && config.programs.mcp.enable)
               (
@@ -553,33 +604,60 @@ in
             }
           ];
 
-          home.file =
-            lib.optionalAttrs (antigravitySettings != { }) {
-              ".gemini/antigravity-cli/settings.json".source =
-                jsonFormat.generate "antigravity-cli-settings.json" antigravitySettings;
-            }
-            // lib.optionalAttrs (mcpServers != { }) {
-              ".gemini/config/mcp_config.json".source = jsonFormat.generate "antigravity-cli-mcp-config.json" {
-                mcpServers = transformMcpServers mcpServers;
-              };
-            }
-            // lib.mapAttrs' (
-              n: v:
-              let
-                skillName = commandSkillName n;
-              in
-              lib.nameValuePair "${antigravitySkillsDir}/${skillName}/SKILL.md" {
-                text = ''
-                  ---
-                  name: ${skillName}
-                  description: ${v.description}
-                  ---
+          home = {
+            activation = {
+              antigravitySettings = lib.mkIf (cfg.mutableSettings && nativeSettingsFiles != { }) (
+                lib.hm.dag.entryAfter [ "linkGeneration" ] (
+                  lib.concatStringsSep "\n" (
+                    lib.mapAttrsToList (
+                      name: source:
+                      lib.hm.generators.mkImpureConfigMerger {
+                        inherit pkgs;
+                        format = "json";
+                        empty = "{}";
+                        jqOperation = "$dynamic * $static";
+                        path = "${config.home.homeDirectory}/${name}";
+                        staticSettings = source;
+                        mode = "600";
+                        reader = if name == ".gemini/config/mcp_config.json" then "${lib.getExe json5} --as-json" else null;
+                      }
+                    ) nativeSettingsFiles
+                  )
+                )
+              );
+              antigravityImmutableSettings = lib.mkIf (!cfg.mutableSettings && nativeSettingsFiles != { }) (
+                lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ] (
+                  lib.concatStringsSep "\n" (
+                    lib.mapAttrsToList (
+                      name: _: lib.hm.generators.mkImpureConfigCleanup { file = config.home.file.${name}; }
+                    ) nativeSettingsFiles
+                  )
+                )
+              );
+            };
 
-                  ${v.prompt}
-                '';
-              }
-            ) cfg.commands
-            // skillFiles antigravitySkillsDir;
+            file =
+              lib.optionalAttrs (!cfg.mutableSettings) (
+                lib.mapAttrs (_: source: { inherit source; }) nativeSettingsFiles
+              )
+              // lib.mapAttrs' (
+                n: v:
+                let
+                  skillName = commandSkillName n;
+                in
+                lib.nameValuePair "${antigravitySkillsDir}/${skillName}/SKILL.md" {
+                  text = ''
+                    ---
+                    name: ${skillName}
+                    description: ${v.description}
+                    ---
+
+                    ${v.prompt}
+                  '';
+                }
+              ) cfg.commands
+              // skillFiles antigravitySkillsDir;
+          };
         })
         {
           assertions = [

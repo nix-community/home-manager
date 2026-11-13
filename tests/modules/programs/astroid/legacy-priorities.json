@@ -1,0 +1,14 @@
+{
+  "custom": {
+    "list": [
+      "before",
+      "after"
+    ]
+  },
+  "editor": {
+    "cmd": "forced"
+  },
+  "poll": {
+    "interval": 0
+  }
+}

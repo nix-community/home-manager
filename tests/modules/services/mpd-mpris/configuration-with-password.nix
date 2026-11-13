@@ -1,11 +1,11 @@
 {
   services.mpd-mpris = {
     enable = true;
-    mpd = {
+    settings = {
       network = "tcp";
       host = "example.com";
       port = 1234;
-      password = "my_password";
+      pwd-file = "/path/to/my_password";
     };
   };
 

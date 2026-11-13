@@ -1,0 +1,10 @@
+{
+  "execute_after": [
+    "canonical"
+  ],
+  "rules": [
+    {
+      "name": "Legacy forced"
+    }
+  ]
+}

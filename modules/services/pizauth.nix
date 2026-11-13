@@ -64,6 +64,10 @@ in
               default = null;
               description = ''
                 The OAuth2 client secret.
+
+                This value is written verbatim to {file}`pizauth.conf` in the
+                world-readable Nix store, and there is no runtime file or
+                command lookup. Do not use it for a confidential secret.
               '';
             };
 

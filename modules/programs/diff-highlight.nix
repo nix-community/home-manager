@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -18,16 +17,13 @@ in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-highlight" "enable" ]
-      [ "programs" "diff-highlight" "enable" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "diff-highlight" "pagerOpts" ]
-      [ "programs" "diff-highlight" "pagerOpts" ]
-    )
-  ];
+  imports =
+    lib.mapAttrsToList
+      (name: message: lib.mkRemovedOptionModule [ "programs" "git" "diff-highlight" name ] message)
+      {
+        enable = "Use `programs.diff-highlight.enable` and `programs.diff-highlight.enableGitIntegration` instead.";
+        pagerOpts = "Use `programs.diff-highlight.pagerOpts` instead.";
+      };
 
   options.programs.diff-highlight = {
     enable = mkEnableOption "" // {
@@ -62,49 +58,33 @@ in
     };
   };
 
-  config =
-    let
-      oldOption = lib.attrByPath [ "programs" "git" "diff-highlight" "enable" ] null options;
-      oldOptionEnabled =
-        oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
-    in
-    lib.mkMerge [
-      (mkIf cfg.enable {
-        assertions = [
-          {
-            assertion = !cfg.enableGitIntegration || config.programs.git.package != null;
-            message = ''
-              programs.diff-highlight.enableGitIntegration requires programs.git.package to be set.
-              Please set programs.git.package to a valid git package.
-            '';
-          }
-        ];
+  config = lib.mkMerge [
+    (mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = !cfg.enableGitIntegration || config.programs.git.package != null;
+          message = ''
+            programs.diff-highlight.enableGitIntegration requires programs.git.package to be set.
+            Please set programs.git.package to a valid git package.
+          '';
+        }
+      ];
+    })
 
-        warnings =
-          lib.optional
-            (
-              cfg.enableGitIntegration && options.programs.diff-highlight.enableGitIntegration.highestPrio == 1490
-            )
-            "`programs.diff-highlight.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.diff-highlight.enableGitIntegration = true`.";
-
-        # Auto-enable git integration if programs.git.diff-highlight.enable was set to true
-        programs.diff-highlight.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
-      })
-
-      (mkIf (cfg.enable && cfg.enableGitIntegration && config.programs.git.package != null) {
-        programs.git = {
-          enable = lib.mkDefault true;
-          iniContent =
-            let
-              gitPackage = config.programs.git.package;
-              dhCommand = "${gitPackage}/share/git/contrib/diff-highlight/diff-highlight";
-              pagerCommand = "${dhCommand} | ${lib.getExe pkgs.less} ${lib.escapeShellArgs cfg.pagerOpts}";
-            in
-            lib.hm.git.diffPagerConfig pagerCommand
-            // {
-              interactive.diffFilter = dhCommand;
-            };
-        };
-      })
-    ];
+    (mkIf (cfg.enable && cfg.enableGitIntegration && config.programs.git.package != null) {
+      programs.git = {
+        enable = lib.mkDefault true;
+        iniContent =
+          let
+            gitPackage = config.programs.git.package;
+            dhCommand = "${gitPackage}/share/git/contrib/diff-highlight/diff-highlight";
+            pagerCommand = "${dhCommand} | ${lib.getExe pkgs.less} ${lib.escapeShellArgs cfg.pagerOpts}";
+          in
+          lib.hm.git.diffPagerConfig pagerCommand
+          // {
+            interactive.diffFilter = dhCommand;
+          };
+      };
+    })
+  ];
 }

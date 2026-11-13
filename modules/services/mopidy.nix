@@ -105,18 +105,16 @@ in
               ".png"
             ];
           };
-
-          # Please don't put your mopidy-spotify configuration in the public. :)
-          # Think of your Spotify Premium subscription!
-          spotify = {
-            client_id = "CLIENT_ID";
-            client_secret = "CLIENT_SECRET";
-          };
         }
       '';
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/mopidy/mopidy.conf`.
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting passwords or client secrets here. You can keep them in a
+        separately managed file outside the Nix store and add its absolute
+        path, as a string, to [](#opt-services.mopidy.extraConfigFiles).
 
         See <https://docs.mopidy.com/en/latest/config/> for
         more details.

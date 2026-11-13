@@ -309,6 +309,10 @@
             };
           };
         };
+        q_notmuch = basics // {
+          notmuch.enable = true;
+          maildir.path = "custom-notmuch";
+        };
       };
   };
 }

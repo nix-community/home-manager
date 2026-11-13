@@ -59,7 +59,7 @@ in
         `lib.generators.mkLuaInline` are rendered as raw Lua
         expressions, which allows embedding wezterm API calls such as
         `wezterm.font`. See
-        <https://wezfurlong.org/wezterm/config/files.html> for
+        <https://wezterm.org/config/files.html> for
         available options.
 
         When this option is set, {option}`extraConfig` is still
@@ -90,7 +90,7 @@ in
       description = ''
         Extra configuration written to
         {file}`$XDG_CONFIG_HOME/wezterm/wezterm.lua`. See
-        <https://wezfurlong.org/wezterm/config/files.html>
+        <https://wezterm.org/config/files.html>
         how to configure.
 
         When used together with {option}`settings`, any table returned
@@ -130,7 +130,7 @@ in
         Attribute set of additional color schemes to be written to
         {file}`$XDG_CONFIG_HOME/wezterm/colors`, where each key is
         taken as the name of the corresponding color scheme. See
-        <https://wezfurlong.org/wezterm/config/appearance.html#defining-a-color-scheme-in-a-separate-file>
+        <https://wezterm.org/config/appearance.html#defining-a-color-scheme-in-a-separate-file>
         for more details of the TOML color scheme format.
       '';
     };

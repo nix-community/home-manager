@@ -12,7 +12,8 @@
         mkdir -p $out/bin $out/share/fzf
         cat > $out/bin/fzf << 'EOF'
         #!/bin/sh
-        echo "Stub fzf"
+        echo "Unexpected fzf execution" >&2
+        exit 97
         EOF
       '';
     };
@@ -21,7 +22,8 @@
   programs.zsh.enable = true;
 
   nmt.script = ''
+    assertFileRegex home-files/.zshrc 'source.*fzf/share/fzf/completion.zsh'
     assertFileRegex home-files/.zshrc \
-      'source.*fzf.*zsh'
+      'source.*fzf/share/fzf/key-bindings.zsh'
   '';
 }

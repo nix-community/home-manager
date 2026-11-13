@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "args": [],
+      "command": "fs",
+      "disabled": false
+    }
+  }
+}

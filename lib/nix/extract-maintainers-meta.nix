@@ -6,7 +6,7 @@ let
   nixpkgsLocked = flakeLock.nodes.${nixpkgsNodeName}.locked;
 
   pkgs = import (fetchTarball {
-    url = "https://github.com/${nixpkgsLocked.owner}/${nixpkgsLocked.repo}/archive/${nixpkgsLocked.rev}.tar.gz";
+    inherit (nixpkgsLocked) url;
     sha256 = nixpkgsLocked.narHash;
   }) { };
   lib = import ../../modules/lib/stdlib-extended.nix pkgs.lib;

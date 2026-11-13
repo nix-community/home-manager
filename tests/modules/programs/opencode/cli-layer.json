@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "plugins": [
+    "plugin-$HOME-\"quoted\"-`cmd`"
+  ],
+  "tabs": {
+    "mode": "off"
+  },
+  "theme": {
+    "name": "system"
+  }
+}

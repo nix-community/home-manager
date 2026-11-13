@@ -32,7 +32,31 @@ in
 
   imports = [
     ./plugins
-    ./deprecated.nix
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "zsh"
+      "enableAutosuggestions"
+    ] "Use `programs.zsh.autosuggestion.enable` instead.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "zsh"
+      "enableSyntaxHighlighting"
+    ] "Use `programs.zsh.syntaxHighlighting.enable` instead.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "zsh"
+      "initExtra"
+    ] "Use `programs.zsh.initContent` instead.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "zsh"
+      "initExtraFirst"
+    ] "Use `programs.zsh.initContent` with `lib.mkBefore` instead.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "zsh"
+      "initExtraBeforeCompInit"
+    ] "Use `programs.zsh.initContent` with `lib.mkOrder 550` instead.")
     ./history.nix
   ];
   options =
@@ -161,9 +185,10 @@ in
           '';
           example = literalExpression ''"''${config.xdg.configHome}/zsh"'';
           description = ''
-            Directory where the zsh configuration and more should be located,
-            relative to the users home directory. The default is the home
-            directory.
+            Absolute path to the directory where the zsh configuration should
+            be located. Defaults to the XDG configuration directory when XDG
+            is enabled and `home.stateVersion` is at least "26.05", and to the
+            home directory otherwise.
           '';
           type = types.nullOr types.str;
         };
@@ -327,9 +352,9 @@ in
             To specify the order, use `lib.mkOrder`.
 
             Common order values:
-            - 500 (mkBefore): Early initialization (replaces initExtraFirst)
-            - 550: Before completion initialization (replaces initExtraBeforeCompInit)
-            - 1000 (default): General configuration (replaces initExtra)
+            - 500 (mkBefore): Early initialization
+            - 550: Before completion initialization
+            - 1000 (default): General configuration
             - 1500 (mkAfter): Last to run configuration
 
             To specify both content in Early initialization and General configuration, use `lib.mkMerge`.
@@ -457,6 +482,10 @@ in
         {
           assertions = [
             {
+              assertion = lib.hasPrefix "/" cfg.dotDir || lib.hasInfix "$" cfg.dotDir;
+              message = "programs.zsh.dotDir must be an absolute path. Use home-manager config options instead of relative paths.";
+            }
+            {
               assertion = !lib.hasInfix "$" cfg.dotDir;
               message = ''
                 programs.zsh.dotDir cannot contain shell variables as it is used for file creation at build time.
@@ -483,36 +512,21 @@ in
 
           warnings =
             lib.optionals
-              (cfg.dotDir != homeDir && !lib.hasPrefix "/" cfg.dotDir && !lib.hasInfix "$" cfg.dotDir)
+              (
+                config.xdg.enable
+                && !lib.versionAtLeast config.home.stateVersion "26.05"
+                && options.programs.zsh.dotDir.highestPrio >= 1500
+              )
               [
                 ''
-                  Using relative paths in programs.zsh.dotDir is deprecated and will be removed in a future release.
-                  Current dotDir: ${cfg.dotDir}
-                  Consider using absolute paths or home-manager config options instead.
-                  You can replace relative paths or environment variables with options like:
-                  - config.home.homeDirectory (user's home directory)
-                  - config.xdg.configHome (XDG config directory)
-                  - config.xdg.dataHome (XDG data directory)
-                  - config.xdg.cacheHome (XDG cache directory)
+                  The default value of `programs.zsh.dotDir` will change in future versions.
+                  You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
+                  To silence this warning and lock in the current behavior, set:
+                    programs.zsh.dotDir = config.home.homeDirectory;
+                  To adopt the new behavior (XDG config directory), set:
+                    programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
                 ''
-              ]
-            ++
-              lib.optionals
-                (
-                  config.xdg.enable
-                  && !lib.versionAtLeast config.home.stateVersion "26.05"
-                  && options.programs.zsh.dotDir.highestPrio >= 1500
-                )
-                [
-                  ''
-                    The default value of `programs.zsh.dotDir` will change in future versions.
-                    You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
-                    To silence this warning and lock in the current behavior, set:
-                      programs.zsh.dotDir = config.home.homeDirectory;
-                    To adopt the new behavior (XDG config directory), set:
-                      programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
-                  ''
-                ];
+              ];
         }
 
         (mkIf (cfg.envExtra != "") {

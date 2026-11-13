@@ -15,14 +15,11 @@ in
   meta.maintainers = with lib.maintainers; [ euxane ];
 
   imports = [
-    (lib.mkRenamedOptionModule
-      [ "xdg" "userDirs" "publishShare" ]
-      [
-        "xdg"
-        "userDirs"
-        "publicShare"
-      ]
-    )
+    (lib.mkRemovedOptionModule [
+      "xdg"
+      "userDirs"
+      "publishShare"
+    ] "Use `xdg.userDirs.publicShare` instead.")
   ];
 
   options.xdg.userDirs = {

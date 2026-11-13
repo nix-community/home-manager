@@ -126,7 +126,7 @@ let
     "to"
   ];
 
-  bindModule = types.submodule {
+  bindOptionsModule = {
     options = {
       map = mkOption {
         type =
@@ -148,7 +148,7 @@ let
             ];
           in
           with types;
-          either (enum menus) (listOf (enum menus));
+          listOf (enum menus);
         default = [ "index" ];
         description = "Select the menu to bind the command to.";
       };
@@ -170,6 +170,20 @@ let
       };
     };
   };
+
+  bindModule = types.submodule bindOptionsModule;
+
+  macroModule = types.submodule [
+    bindOptionsModule
+    {
+      options.description = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "Go to the archive";
+        description = "Description of the macro, shown in the help screen.";
+      };
+    }
+  ];
 
   mkNotmuchVirtualboxes =
     virtualMailboxes:
@@ -311,12 +325,16 @@ let
   genBindMapper =
     bindType:
     concatMapStringsSep "\n" (
-      bind: ''${bindType} ${concatStringsSep "," (lib.toList bind.map)} ${bind.key} "${bind.action}"''
+      bind: ''${bindType} ${concatStringsSep "," bind.map} ${bind.key} "${bind.action}"''
     );
 
   bindSection = (genBindMapper "bind") cfg.binds;
 
-  macroSection = (genBindMapper "macro") cfg.macros;
+  macroSection = concatMapStringsSep "\n" (
+    macro:
+    ''macro ${concatStringsSep "," macro.map} ${macro.key} "${macro.action}"''
+    + optionalString (macro.description != null) " \"${lib.escape [ "\\" ''"'' ] macro.description}\""
+  ) cfg.macros;
 
   mailCheckSection = ''
     set mail_check_stats
@@ -406,7 +424,7 @@ in
       };
 
       macros = mkOption {
-        type = types.listOf bindModule;
+        type = types.listOf macroModule;
         default = [ ];
         description = "List of macros.";
       };
@@ -486,7 +504,7 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = ((filter (b: (lib.length (lib.toList b.map)) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
+        assertion = ((filter (b: (lib.length b.map) == 0) (cfg.binds ++ cfg.macros)) == [ ]);
         message = "The 'programs.neomutt.(binds|macros).map' list must contain at least one element.";
       }
     ];
@@ -547,13 +565,5 @@ in
           ]
         );
     };
-
-    warnings =
-      let
-        hasOldBinds = binds: (filter (b: !(lib.isList b.map)) binds) != [ ];
-      in
-      mkIf (hasOldBinds (cfg.binds ++ cfg.macros)) [
-        "Specifying 'programs.neomutt.(binds|macros).map' as a string is deprecated, use a list of strings instead. See https://github.com/nix-community/home-manager/pull/1885."
-      ];
   };
 }

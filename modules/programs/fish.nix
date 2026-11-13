@@ -271,10 +271,9 @@ let
                   (listOf str)
                 ]);
             in
-            origin
+            types.addCheck origin (x: if !config.erase && isNull x then false else origin.check x)
             // {
               description = "string or list of string (optional when erase is set to true)";
-              check = x: if !config.erase && isNull x then false else origin.check x;
             };
           default = null;
         };
@@ -685,7 +684,7 @@ in
         in
         {
           # Support completion for `man` by building a cache for `apropos`.
-          programs.man.generateCaches = lib.mkDefault true;
+          programs.man.generateCaches = lib.mkIf (config.programs.man.package != null) (lib.mkDefault true);
 
           xdg.dataFile."fish/home-manager/generated_completions".source =
             let
@@ -707,11 +706,12 @@ in
                     // {
                       # pass the defaults
                       inherit preferLocalBuild allowSubstitutes;
+                      passAsFile = [ "paths" ];
                     };
                 in
                 pkgs.runCommand name args ''
                   mkdir -p $out
-                  for i in $paths; do
+                  for i in $(cat $pathsPath); do
                     if [ -z "$(find $i -prune -empty)" ]; then
                       cp -srf $i/* $out
                     fi

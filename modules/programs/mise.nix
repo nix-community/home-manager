@@ -8,7 +8,7 @@ let
   inherit (lib) getExe mkIf mkOption;
   cfg = config.programs.mise;
   globalConfigPath =
-    if cfg.enableMutableConfig then "mise/conf.d/50-home-manager.toml" else "mise/config.toml";
+    if cfg.mutableSettings then "mise/conf.d/50-home-manager.toml" else "mise/config.toml";
   mutableConfigDir = "${config.xdg.configHome}/mise";
   mutableConfigPath = "${mutableConfigDir}/config.toml";
   tomlFormat = pkgs.formats.toml { };
@@ -26,6 +26,10 @@ in
         '');
     in
     [
+      (lib.mkRenamedOptionModule
+        [ "programs" "mise" "enableMutableConfig" ]
+        [ "programs" "mise" "mutableSettings" ]
+      )
       (lib.mkRenamedOptionModule
         [ "programs" "mise" "settings" ]
         [ "programs" "mise" "globalConfig" "settings" ]
@@ -53,9 +57,19 @@ in
 
       enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
-      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
+      enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption {
+        inherit config;
+        extraDescription = ''
+          mise versions 2026.9.0 and 2026.9.1 have a broken Nushell PATH
+          prelude; upgrade to 2026.9.2 or newer when using these versions.
 
-      enableMutableConfig = mkOption {
+          With mise 2026.9.2 or newer, activation is generated at shell startup.
+          Restart Nushell to reload configuration; sourcing config.nu alone is
+          unsupported because the session's activation file is removed after loading.
+        '';
+      };
+
+      mutableSettings = mkOption {
         type = lib.types.bool;
         default = false;
         example = true;
@@ -109,7 +123,7 @@ in
           Global configuration written to
           {file}`$XDG_CONFIG_HOME/mise/config.toml`, or
           {file}`$XDG_CONFIG_HOME/mise/conf.d/50-home-manager.toml` when
-          {option}`programs.mise.enableMutableConfig` is enabled.
+          {option}`programs.mise.mutableSettings` is enabled.
 
           See <https://mise.jdx.dev/configuration.html> and
           <https://mise.jdx.dev/configuration/settings.html>
@@ -120,6 +134,17 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          !cfg.enableNushellIntegration
+          || cfg.package == null
+          || lib.versionOlder (lib.getVersion cfg.package) "2026.9.0"
+          || lib.versionAtLeast (lib.getVersion cfg.package) "2026.9.2";
+        message = "programs.mise: Nushell integration with mise 2026.9.0 or 2026.9.1 has a broken PATH prelude; upgrade mise to 2026.9.2 or newer.";
+      }
+    ];
+
     warnings =
       lib.optional
         (
@@ -143,7 +168,7 @@ in
       pkgs.usage
     ];
 
-    home.activation.miseMutableConfig = mkIf cfg.enableMutableConfig (
+    home.activation.miseMutableConfig = mkIf cfg.mutableSettings (
       lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         if [[ ! -e ${lib.escapeShellArg mutableConfigPath} && ! -L ${lib.escapeShellArg mutableConfigPath} ]]; then
           run mkdir -p ${lib.escapeShellArg mutableConfigDir}
@@ -179,15 +204,32 @@ in
         ${getExe cfg.package} activate fish | source
       '';
 
-      nushell = mkIf (cfg.enableNushellIntegration && cfg.package != null) {
-        extraConfig = ''
-          use ${
-            pkgs.runCommand "mise-nushell-config.nu" { } ''
-              ${lib.getExe cfg.package} activate nu > $out
-            ''
+      nushell = mkIf (cfg.enableNushellIntegration && cfg.package != null) (
+        if cfg.package != null && lib.versionAtLeast (lib.getVersion cfg.package) "2026.9.0" then
+          {
+            # Generate at startup so activation captures the user's PATH.
+            extraEnv = ''
+              mkdir ($nu.cache-dir | path join "home-manager-mise")
+              ${getExe cfg.package} activate nu | save ($nu.cache-dir | path join "home-manager-mise" $"mise-($nu.pid).nu") --force
+            '';
+            extraConfig = ''
+              # Keep each session's captured environment separate during concurrent startup.
+              use ($nu.cache-dir | path join "home-manager-mise" $"mise-($nu.pid).nu")
+              rm ($nu.cache-dir | path join "home-manager-mise" $"mise-($nu.pid).nu")
+            '';
           }
-        '';
-      };
+        else
+          {
+            # Older versions retain build-time activation; settings can still affect PATH capture.
+            extraConfig = ''
+              use ${
+                pkgs.runCommand "mise-nushell-config.nu" { } ''
+                  ${getExe cfg.package} activate nu > $out
+                ''
+              }
+            '';
+          }
+      );
     };
   };
 }

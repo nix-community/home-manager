@@ -44,7 +44,7 @@ in
 {
   imports =
     [
-      (import "${home-manager}/nixos")
+      "${home-manager}/nixos"
     ];
 
   users.users.eve.isNormalUser = true;

@@ -2,7 +2,7 @@
 WantedBy=graphical-session.target
 
 [Service]
-ExecStart=@vicinae@/bin/vicinae server
+ExecStart=/nix/store/00000000000000000000000000000000-vicinae/bin/vicinae server
 KillMode=process
 Restart=always
 RestartSec=5

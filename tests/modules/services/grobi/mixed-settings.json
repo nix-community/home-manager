@@ -1,0 +1,21 @@
+{
+  "execute_after": [
+    "legacy-before",
+    "canonical-middle",
+    "legacy-after"
+  ],
+  "on_failure": [
+    "recover"
+  ],
+  "rules": [
+    {
+      "name": "Legacy before"
+    },
+    {
+      "name": "Canonical middle"
+    },
+    {
+      "name": "Legacy after"
+    }
+  ]
+}

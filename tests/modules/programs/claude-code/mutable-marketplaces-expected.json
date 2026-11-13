@@ -1,0 +1,16 @@
+{
+  "existing": {
+    "installLocation": "@marketplace@",
+    "source": {
+      "path": "@marketplace@",
+      "source": "directory"
+    }
+  },
+  "new": {
+    "installLocation": "@marketplace@",
+    "source": {
+      "path": "@marketplace@",
+      "source": "directory"
+    }
+  }
+}

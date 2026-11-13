@@ -81,8 +81,8 @@ rec {
       toFontStr =
         {
           names,
-          style ? "",
-          size ? "",
+          style,
+          size,
         }:
         optionalString (names != [ ]) concatStringsSep " " (
           lib.remove "" [
@@ -94,13 +94,10 @@ rec {
         );
     in
     fontCfg:
-    if lib.isList fontCfg then
-      toFontStr { names = fontCfg; }
-    else
-      toFontStr {
-        inherit (fontCfg) names style;
-        size = toString fontCfg.size;
-      };
+    toFontStr {
+      inherit (fontCfg) names style;
+      size = toString fontCfg.size;
+    };
 
   barStr =
     {

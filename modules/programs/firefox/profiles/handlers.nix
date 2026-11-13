@@ -139,7 +139,7 @@ in
             handlers = [
               {
                 name = "Okular";
-                path = "''${pkgs.okular}/bin/okular";
+                path = "''${pkgs.kdePackages.okular}/bin/okular";
               }
             ];
             extensions = [ "pdf" ];

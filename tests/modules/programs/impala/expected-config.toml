@@ -1,0 +1,34 @@
+ascii = false
+esc_quit = false
+mode = "station"
+switch = "r"
+
+[access_point]
+start = "n"
+stop = "x"
+
+[device]
+infos = "i"
+toggle_power = "o"
+
+[station]
+toggle_scanning = "s"
+
+[station.known_network]
+remove = "d"
+share = "p"
+show_all = "a"
+toggle_autoconnect = "t"
+
+[station.new_network]
+connect_hidden = ""
+show_all = "a"
+
+[theme]
+background = "dark gray"
+border = "green"
+error_color = "red"
+hidden_color = "dark gray"
+info_color = "green"
+text_color = "white"
+warning_color = "yellow"

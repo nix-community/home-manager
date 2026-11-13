@@ -69,7 +69,7 @@ let
           List of command-line arguments to be passed to ${name}.
 
           For a list of common switches, see
-          [Chrome switches](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.cc).
+          [Chrome switches](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/chrome/common/chrome_switches.h).
 
           To search switches for other components, see
           [Chromium codesearch](https://source.chromium.org/search?q=file:switches.cc&ss=chromium%2Fchromium%2Fsrc).

@@ -1,0 +1,6 @@
+env = "exec"
+if_missing = "warn"
+prompt_auth = false
+
+[daemon]
+enabled = false

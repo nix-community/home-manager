@@ -11,10 +11,11 @@ in
   meta.maintainers = [ ];
 
   imports = [
-    (lib.mkRenamedOptionModule # \
-      [ "programs" "rtorrent" "settings" ] # \
-      [ "programs" "rtorrent" "extraConfig" ]
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "rtorrent"
+      "settings"
+    ] "Use `programs.rtorrent.extraConfig` instead.")
   ];
 
   options.programs.rtorrent = {

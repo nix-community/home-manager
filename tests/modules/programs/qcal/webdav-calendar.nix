@@ -1,8 +1,10 @@
 {
   programs.qcal = {
     enable = true;
-    defaultNumDays = 23;
-    timezone = "Europe/Berlin";
+    settings = {
+      DefaultNumDays = 23;
+      Timezone = "Europe/Berlin";
+    };
   };
   accounts.calendar.accounts.test = {
     qcal.enable = true;

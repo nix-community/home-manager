@@ -15,7 +15,6 @@
       aliases:
         co: pr checkout
       editor: vim
-      git_protocol: https
       version: '1'
     ''}
   '';

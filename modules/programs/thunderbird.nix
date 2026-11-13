@@ -323,6 +323,7 @@ let
         "ldap_2.servers.contact_${id}.carddav.username" = contact.remote.userName;
         "ldap_2.servers.contact_${id}.carddav.token" = contact.thunderbird.token;
       }
+      // contact.thunderbird.settings id
     );
 
   toThunderbirdFeed =
@@ -384,9 +385,18 @@ let
 
 in
 {
-  meta.maintainers = [
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "thunderbird"
+      "darwinSetupWarning"
+    ] "Thunderbird is supported on Darwin without additional setup.")
+  ];
+
+  meta.maintainers = with lib.maintainers; [
+    booxter
     lib.hm.maintainers.d-dervishi
-    lib.maintainers.jkarlson
+    jkarlson
   ];
 
   options = {
@@ -394,7 +404,7 @@ in
       enable = lib.mkEnableOption "Thunderbird";
 
       package = lib.mkPackageOption pkgs "thunderbird" {
-        example = "pkgs.thunderbird-91";
+        example = "pkgs.thunderbird-esr";
       };
 
       finalPackage = mkOption {
@@ -583,6 +593,23 @@ in
                   '';
                 };
 
+                unifiedFolders.enable = mkOption {
+                  type = types.bool;
+                  default = false;
+                  example = true;
+                  description = ''
+                    Whether to declare the hidden account that Thunderbird uses
+                    for the "Unified Folders" view of the folder pane.
+
+                    Thunderbird makes this account when you first use the view,
+                    and adds it to `mail.accountmanager.accounts`. This module
+                    sets that preference, so the account is removed from the
+                    list at each start. Thunderbird then makes a new account,
+                    and the settings of the unified folders (for example, their
+                    columns) are lost. Enable this option if you use the view.
+                  '';
+                };
+
                 withExternalGnupg = mkOption {
                   type = types.bool;
                   default = false;
@@ -691,17 +718,6 @@ in
         '';
       };
 
-      darwinSetupWarning = mkOption {
-        type = types.bool;
-        default = true;
-        example = false;
-        visible = false;
-        readOnly = !isDarwin;
-        description = ''
-          Using programs.thunderbird.darwinSetupWarning is deprecated. The
-          module is compatible with all Thunderbird installations.
-        '';
-      };
     };
 
     accounts.email.accounts = mkOption {
@@ -970,6 +986,30 @@ in
                 A token is generated when adding an address book manually to Thunderbird, this can be entered here.
               '';
             };
+
+            settings = mkOption {
+              type =
+                with types;
+                functionTo (
+                  attrsOf (oneOf [
+                    bool
+                    int
+                    str
+                  ])
+                );
+              default = _: { };
+              defaultText = literalExpression "_: { }";
+              example = literalExpression ''
+                id: {
+                  "ldap_2.servers.contact_''${id}.carddav.url" =
+                    "https://example.com/addressbook/";
+                };
+              '';
+              description = ''
+                Extra settings to add to this Thunderbird address book configuration.
+                The {var}`id` given as argument is an automatically generated account identifier.
+              '';
+            };
           };
         });
     };
@@ -1076,14 +1116,7 @@ in
       )
     ];
 
-    warnings =
-      lib.optionals (!cfg.darwinSetupWarning) [
-        ''
-          Using programs.thunderbird.darwinSetupWarning is deprecated and will be
-          removed in the future. Thunderbird is now supported on Darwin.
-        ''
-      ]
-      ++ lib.flatten (map unsupportedAuthMethodWarnings enabledEmailAccounts);
+    warnings = lib.flatten (map unsupportedAuthMethodWarnings enabledEmailAccounts);
 
     home.packages = [
       cfg.finalPackage
@@ -1148,9 +1181,10 @@ in
 
                   # Append the default local folder name "account1".
                   # See https://github.com/nix-community/home-manager/issues/5031.
-                  enabledAccountsIds = (lib.attrsets.mapAttrsToList (_name: value: value) accountNameToId) ++ [
-                    "account1"
-                  ];
+                  enabledAccountsIds =
+                    (lib.attrsets.mapAttrsToList (_name: value: value) accountNameToId)
+                    ++ [ "account1" ]
+                    ++ lib.optional profile.unifiedFolders.enable "account_unified_folders";
                 in
                 lib.optionals (accounts != [ ]) (
                   accountsOrderIds ++ (lib.lists.subtractLists accountsOrderIds enabledAccountsIds)
@@ -1193,6 +1227,19 @@ in
                   })
 
                   { "mail.openpgp.allow_external_gnupg" = profile.withExternalGnupg; }
+
+                  # Thunderbird finds this account by its user name, host name and type, so the
+                  # account and server keys can be any name. These are the values that Thunderbird
+                  # itself uses when it makes the account.
+                  (optionalAttrs profile.unifiedFolders.enable {
+                    "mail.account.account_unified_folders.server" = "server_unified_folders";
+                    "mail.server.server_unified_folders.type" = "none";
+                    "mail.server.server_unified_folders.hidden" = true;
+                    "mail.server.server_unified_folders.name" = "Unified Folders";
+                    "mail.server.server_unified_folders.hostname" = "smart mailboxes";
+                    "mail.server.server_unified_folders.userName" = "nobody";
+                    "mail.server.server_unified_folders.directory-rel" = "[ProfD]Mail/smart mailboxes";
+                  })
 
                   profile.settings
                 ]

@@ -22,7 +22,8 @@ user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c
 user_pref("ldap_2.servers.contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.filename", "contact_a4d26868017c0ccffe2efe50944ef4211834660cca834c6e9f86dec6a88246fa.sqlite");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.identities", "id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
 user_pref("mail.account.account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.server", "server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
-user_pref("mail.accountmanager.accounts", "account1,account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc");
+user_pref("mail.account.account_unified_folders.server", "server_unified_folders");
+user_pref("mail.accountmanager.accounts", "account1,account_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc,account_unified_folders");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.autoEncryptDrafts", false);
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.fullName", "H. M. Test Jr.");
 user_pref("mail.identity.id_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.htmlSigText", "");
@@ -39,6 +40,12 @@ user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da50
 user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.socketType", 3);
 user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.type", "imap");
 user_pref("mail.server.server_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.userName", "home.manager.jr");
+user_pref("mail.server.server_unified_folders.directory-rel", "[ProfD]Mail/smart mailboxes");
+user_pref("mail.server.server_unified_folders.hidden", true);
+user_pref("mail.server.server_unified_folders.hostname", "smart mailboxes");
+user_pref("mail.server.server_unified_folders.name", "Unified Folders");
+user_pref("mail.server.server_unified_folders.type", "none");
+user_pref("mail.server.server_unified_folders.userName", "nobody");
 user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.authMethod", 3);
 user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.hostname", "smtp.example.org");
 user_pref("mail.smtpserver.smtp_bcd3ace52bed41febb6cdc2fb1303aebaa573e0d993872da503950901bb6c6fc.port", 587);

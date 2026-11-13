@@ -8,6 +8,8 @@
 let
   cfg = config.services.tomat;
   tomlFormat = pkgs.formats.toml { };
+  configDir =
+    if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else config.xdg.configHome;
 in
 {
   meta.maintainers = with lib.maintainers; [ jolars ];
@@ -39,8 +41,10 @@ in
       };
 
       description = ''
-        Tomat configuration.
-        See <https://github.com/jolars/tomat/blob/main/docs/configuration.md> for supported values.
+        Tomat configuration written to
+        {file}`$XDG_CONFIG_HOME/tomat/config.toml` on Linux, or
+        {file}`~/Library/Application Support/tomat/config.toml` on Darwin.
+        See <https://jolars.github.io/tomat/configuration/> for supported values.
       '';
     };
   };
@@ -48,9 +52,32 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
-    xdg.configFile = {
-      "tomat/config.toml" = lib.mkIf (cfg.settings != { }) {
-        source = tomlFormat.generate "tomat-config.toml" cfg.settings;
+    home.file."${configDir}/tomat/config.toml" = lib.mkIf (cfg.settings != { }) {
+      source = tomlFormat.generate "tomat-config.toml" cfg.settings;
+    };
+
+    launchd.agents.tomat = {
+      enable = true;
+      # Track the final file at Tomat's native configuration path, including
+      # source replacements, rather than only the generated settings.
+      restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+        lib.filterAttrs (
+          _: file:
+          file.enable
+          && file.target == lib.removePrefix "${config.home.homeDirectory}/" "${configDir}/tomat/config.toml"
+        ) config.home.file
+      );
+      config = {
+        ProgramArguments = [
+          (lib.getExe cfg.package)
+          "daemon"
+          "run"
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+        ThrottleInterval = 5;
+        EnvironmentVariables.PATH = "${config.home.profileDirectory}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+        StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/tomat.log";
       };
     };
 

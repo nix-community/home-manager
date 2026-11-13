@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -19,16 +18,13 @@ in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "patdiff" "enable" ]
-      [ "programs" "patdiff" "enable" ]
-    )
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "patdiff" "package" ]
-      [ "programs" "patdiff" "package" ]
-    )
-  ];
+  imports =
+    lib.mapAttrsToList
+      (name: message: lib.mkRemovedOptionModule [ "programs" "git" "patdiff" name ] message)
+      {
+        enable = "Use `programs.patdiff.enable` and `programs.patdiff.enableGitIntegration` instead.";
+        package = "Use `programs.patdiff.package` instead.";
+      };
 
   options.programs.patdiff = {
     enable = mkEnableOption "" // {
@@ -51,36 +47,22 @@ in
     };
   };
 
-  config =
-    let
-      oldOption = lib.attrByPath [ "programs" "git" "patdiff" "enable" ] null options;
-      oldOptionEnabled =
-        oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
-    in
-    lib.mkMerge [
-      (mkIf cfg.enable {
-        home.packages = [ cfg.package ];
+  config = lib.mkMerge [
+    (mkIf cfg.enable {
+      home.packages = [ cfg.package ];
+    })
 
-        # Auto-enable git integration if programs.git.patdiff.enable was set to true
-        programs.patdiff.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
-
-        warnings =
-          lib.optional
-            (cfg.enableGitIntegration && options.programs.patdiff.enableGitIntegration.highestPrio == 1490)
-            "`programs.patdiff.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.patdiff.enableGitIntegration = true`.";
-      })
-
-      (mkIf (cfg.enable && cfg.enableGitIntegration) {
-        programs.git = {
-          enable = lib.mkDefault true;
-          iniContent =
-            let
-              patdiffCommand = "${lib.getExe' cfg.package "patdiff-git-wrapper"}";
-            in
-            {
-              diff.external = patdiffCommand;
-            };
-        };
-      })
-    ];
+    (mkIf (cfg.enable && cfg.enableGitIntegration) {
+      programs.git = {
+        enable = lib.mkDefault true;
+        iniContent =
+          let
+            patdiffCommand = "${lib.getExe' cfg.package "patdiff-git-wrapper"}";
+          in
+          {
+            diff.external = patdiffCommand;
+          };
+      };
+    })
+  ];
 }

@@ -35,7 +35,7 @@ in
       };
       description = ''
         Configuration to use for wluma. See
-        <https://github.com/maximbaz/wluma/blob/main/config.toml>
+        <https://github.com/max-baz/wluma#configuration>
         for available options.
       '';
     };

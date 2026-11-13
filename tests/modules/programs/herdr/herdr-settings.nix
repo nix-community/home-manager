@@ -1,4 +1,14 @@
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  settings = config.xdg.configFile."herdr/config.toml";
+  cleanup = config.home.activation.herdrImmutableSettings;
+in
+{
   xdg.enable = true;
 
   programs.herdr = {
@@ -102,6 +112,36 @@
       session.resume_agents_on_restore = true;
     };
   };
+
+  assertions = [
+    {
+      assertion = !config.programs.herdr.mutableSettings;
+      message = "Herdr settings must be immutable by default.";
+    }
+    {
+      assertion = !(config.home.activation ? herdrMutableSettings);
+      message = "Immutable Herdr settings must not register mutable activation.";
+    }
+    {
+      assertion = cleanup.after == [ "writeBoundary" ] && cleanup.before == [ "linkGeneration" ];
+      message = "Herdr cleanup must run between writeBoundary and linkGeneration.";
+    }
+    {
+      assertion =
+        lib.hasInfix ''"$HOME"/.config/herdr/config.toml'' cleanup.data
+        && lib.hasInfix (builtins.unsafeDiscardStringContext (toString settings.source)) cleanup.data;
+      message = "Herdr cleanup must use the configured settings target and source.";
+    }
+    {
+      assertion =
+        settings.onChange == "${lib.escapeShellArg (lib.getExe pkgs.herdr)} server reload-config || true";
+      message = "Immutable Herdr settings must reload using the configured package.";
+    }
+    {
+      assertion = lib.elem pkgs.herdr config.home.packages;
+      message = "Herdr must install the configured package.";
+    }
+  ];
 
   test.asserts.warnings.expected = [ ];
 

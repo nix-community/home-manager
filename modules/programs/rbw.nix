@@ -53,7 +53,7 @@ let
           systems. You can fix it by adding the following to your
           system configuration:
           ```nix
-          services.dbus.packages = [ pkgs.gcr ];
+          services.dbus.packages = [ pkgs.gcr_3 ];
           ```
         '';
         # we want the program in the config

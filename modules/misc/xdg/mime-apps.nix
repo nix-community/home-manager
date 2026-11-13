@@ -40,11 +40,17 @@ in
           "foo3.desktop"
         ];
         "mimetype2" = "foo4.desktop";
+        "image/*" = "foo5.desktop";
       };
       description = ''
         Defines additional associations of applications with
         mimetypes, as if the .desktop file was listing this mimetype
         in the first place.
+
+        Keys ending in `*` are treated as prefix globs. They are expanded
+        against all MIME types known to the shared-mime-info database before
+        being written to `mimeapps.list`. Exact keys take precedence over glob
+        matches, e.g., `"text/html"` overrides `"text/*"`.
       '';
     };
 
@@ -53,11 +59,16 @@ in
       default = { };
       example = {
         "mimetype1" = "foo5.desktop";
+        "text/*" = "foo6.desktop";
       };
       description = ''
         Removes associations of applications with mimetypes, as if the
         .desktop file was *not* listing this
         mimetype in the first place.
+
+        Keys ending in `*` are treated as prefix globs. They are expanded
+        against all MIME types known to the shared-mime-info database before
+        being written to `mimeapps.list`.
       '';
     };
 
@@ -69,6 +80,8 @@ in
           "default1.desktop"
           "default2.desktop"
         ];
+        "text/*" = "default3.desktop";
+        "text/html" = "default4.desktop";
       };
       description = ''
         The default application to be used for a given mimetype. This
@@ -76,6 +89,12 @@ in
         double-clicking on a file in a file manager. If the
         application is no longer installed, the next application in
         the list is attempted, and so on.
+
+        Keys ending in `*` are treated as prefix globs. They are
+        expanded against all MIME types known to the shared-mime-info
+        database before being written to `mimeapps.list`. Exact keys
+        take precedence over glob matches, e.g., `"text/html"`
+        overrides `"text/*"`.
       '';
     };
 
@@ -106,42 +125,6 @@ in
   };
 
   config = lib.mkMerge [
-    {
-      # Given a package that installs .desktop files in the usual location,
-      # return a mapping from mime types to lists of desktop file names. This is
-      # suitable for use with `xdg.mimeApps.defaultApplications`.
-      lib.xdg.mimeAssociations =
-        let
-          processLines =
-            str: lib.zipAttrs (lib.filter (e: e != null) (map processLine (lib.splitString "\n" str)));
-
-          processLine =
-            str:
-            let
-              entry = lib.splitString ";" str;
-              k = lib.elemAt entry 0;
-              v = lib.elemAt entry 1;
-            in
-            if lib.length entry == 2 then { ${k} = v; } else null;
-
-          associations =
-            ps:
-            pkgs.runCommand "mime-assoc" { inherit ps; } ''
-              for p in $ps ; do
-                for path in "$p"/share/applications/*.desktop ; do
-                  name="''${path##*/}"
-                  sed -n -E "/^MimeType=/ { s/.*=//; s/;?$|;/;$name\n/g; p; }" "$path"
-                done
-              done > "$out"
-            '';
-
-          processAll = p: processLines (builtins.readFile (associations p));
-
-          warning = "The Home Manager `lib.xdg.mimeAssociations` function is deprecated, you can now instead use the option `xdg.mimeApps.defaultApplicationPackages` to achieve the same without import from derivation";
-        in
-        lib.warn warning processAll;
-    }
-
     (lib.mkIf cfg.enable {
       assertions = [
         (lib.hm.assertions.assertPlatform "xdg.mimeApps" pkgs lib.platforms.linux)
@@ -154,11 +137,58 @@ in
         let
           joinValues = lib.mapAttrs (_n: lib.concatStringsSep ";");
 
-          baseFile = (pkgs.formats.ini { }).generate "mimeapps.list" {
+          associations = {
             "Added Associations" = joinValues cfg.associations.added;
             "Removed Associations" = joinValues cfg.associations.removed;
             "Default Applications" = joinValues cfg.defaultApplications;
           };
+
+          generateSection =
+            title: attrs:
+            let
+              globs = lib.filterAttrs (key: _: lib.hasSuffix "*" key) attrs;
+              exact = lib.filterAttrs (key: _: !(lib.hasSuffix "*" key)) attrs;
+
+              generateItems = lib.mapAttrsToList (
+                key: value:
+                "generateMimeItem ${
+                  lib.escapeShellArgs [
+                    key
+                    value
+                  ]
+                }"
+              );
+            in
+            /* bash */ ''
+              declare -A entries=()
+              ${lib.concatStringsSep "\n" (generateItems globs ++ generateItems exact)}
+              if [[ -s "$out" ]]; then printf '\n' >> "$out"; fi
+              printf '%s\n' ${lib.escapeShellArg "[${title}]"} >> "$out"
+
+              for mime in "''${!entries[@]}"; do
+                printf '%s=%s\n' "$mime" "''${entries[$mime]}"
+              done | sort >> "$out"
+            '';
+
+          baseFile = pkgs.runCommand "mimeapps.list" { } ''
+            generateMimeItem() {
+              local mime="$1" app="$2" type prefix
+
+              if [[ $mime == *\* ]]; then
+                prefix="''${mime%\*}"
+
+                while IFS= read -r type; do
+                  if [[ -n $type && $type == "$prefix"* ]]; then
+                    entries["$type"]="$app"
+                  fi
+                done < ${pkgs.shared-mime-info}/share/mime/types
+              else
+                entries["$mime"]="$app"
+              fi
+            }
+
+            ${lib.concatStringsSep "\n" (lib.mapAttrsToList generateSection associations)}
+          '';
 
           # With default application packages merged into the generated base file.
           mergedFile = pkgs.runCommand "mimeapps.list" { ps = cfg.defaultApplicationPackages; } ''

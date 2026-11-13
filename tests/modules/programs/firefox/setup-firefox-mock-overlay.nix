@@ -48,13 +48,6 @@ in
               chmod 755 "$out/bin/${binaryName}"
             '';
       };
-
-      chrome-gnome-shell = {
-        buildScript = ''
-          mkdir -p $out/lib/mozilla/native-messaging-hosts
-          touch $out/lib/mozilla/native-messaging-hosts/dummy
-        '';
-      };
     };
 
   nixpkgs.overlays = [

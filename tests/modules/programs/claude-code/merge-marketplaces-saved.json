@@ -1,0 +1,19 @@
+{
+  "existing": {
+    "autoUpdate": true,
+    "installLocation": "/saved/old",
+    "lastUpdated": "2026-09-30T12:00:00Z",
+    "source": { "source": "github", "repo": "saved/old", "ref": "saved-branch" },
+    "metadata": { "tags": ["second", "first"] }
+  },
+  "removed": {
+    "autoUpdate": true,
+    "installLocation": "/saved/removed",
+    "lastUpdated": "2025-01-01T00:00:00Z",
+    "source": { "source": "directory", "path": "/saved/removed" }
+  },
+  "same-source": {
+    "source": { "source": "github", "repo": "saved/old" },
+    "metadata": { "tags": ["foreign"] }
+  }
+}

@@ -20,22 +20,13 @@ in
         Note, the default for these options is 'true' so if you want to enable the
         aliases you can simply remove 'programs.eza.enableAliases' from your
         configuration.'';
-      mkRenamed =
-        opt:
-        lib.mkRenamedOptionModule
-          [ "programs" "exa" opt ]
-          [
-            "programs"
-            "eza"
-            opt
-          ];
     in
-    (map mkRenamed [
-      "enable"
-      "extraOptions"
-      "icons"
-      "git"
-    ])
+    (lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "exa" name ] message) {
+      enable = "Use `programs.eza.enable` instead.";
+      extraOptions = "Use `programs.eza.extraOptions` instead.";
+      git = "Use `programs.eza.git` instead.";
+      icons = "Use `programs.eza.icons` instead.";
+    })
     ++ [ (lib.mkRemovedOptionModule [ "programs" "eza" "enableAliases" ] msg) ];
   options.programs.eza = {
     enable = lib.mkEnableOption "eza, a modern replacement for {command}`ls`";
@@ -68,8 +59,6 @@ in
     icons = mkOption {
       type = types.enum [
         null
-        true
-        false
         "auto"
         "always"
         "never"
@@ -77,9 +66,6 @@ in
       default = null;
       description = ''
         Display icons next to file names ({option}`--icons` argument).
-
-        Note, the support for Boolean values is deprecated.
-        Setting this option to `true` corresponds to `--icons=auto`.
       '';
     };
 
@@ -121,14 +107,10 @@ in
     let
       cfg = config.programs.eza;
 
-      iconsOption =
-        let
-          v = if lib.isBool cfg.icons then (if cfg.icons then "auto" else null) else cfg.icons;
-        in
-        lib.optionals (v != null) [
-          "--icons"
-          v
-        ];
+      iconsOption = lib.optionals (cfg.icons != null) [
+        "--icons"
+        cfg.icons
+      ];
 
       args = lib.escapeShellArgs (
         iconsOption
@@ -151,12 +133,6 @@ in
       };
     in
     lib.mkIf cfg.enable {
-      warnings = lib.optional (lib.isBool cfg.icons) ''
-        Setting programs.eza.icons to a Boolean is deprecated.
-        Please update your configuration so that
-
-          programs.eza.icons = ${if cfg.icons then ''"auto"'' else "null"}'';
-
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
       xdg.configFile."eza/theme.yml" = lib.mkIf (cfg.theme != { }) {

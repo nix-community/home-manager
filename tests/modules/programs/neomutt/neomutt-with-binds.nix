@@ -39,6 +39,7 @@
         action = "<save-message>?<tab>";
         key = "s";
         map = [ "index" ];
+        description = "Save \"message\" to a folder";
       }
       {
         action = "<change-folder>?<change-dir><home>^K=<enter><tab>";

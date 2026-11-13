@@ -8,6 +8,10 @@
 let
   inherit (lib) literalExpression mkOption types;
 
+  legacyNotmuch =
+    config.programs.aerc.package != null
+    && lib.versionOlder (lib.getVersion config.programs.aerc.package) "0.22.0";
+
   mapAttrNames =
     f: attr:
     lib.listToAttrs (
@@ -39,7 +43,17 @@ let
           client_secret = mkOption {
             type = nullOr str;
             default = null;
-            description = "The OAuth2 client secret.";
+            description = ''
+              The OAuth2 client secret. When the matching `imapAuth` or
+              `smtpAuth` is `oauthbearer` or `xoauth2`, it is URL-encoded
+              into the IMAP `source` or SMTP `outgoing` URL in
+              {file}`accounts.conf`, which is written to the world-readable
+              Nix store, so avoid using a client secret that needs to stay
+              private. Aerc uses the output of
+              [](#opt-accounts.email.accounts._name_.passwordCommand) as the
+              access token, or as the refresh token when `token_endpoint` is
+              set, so the token can stay out of the Nix store.
+            '';
           };
           scope = mkOption {
             type = nullOr str;
@@ -74,8 +88,9 @@ in
             };
             description = ''
               Extra config added to the configuration section for this account in
-              {file}`$HOME/.config/aerc/accounts.conf`.
-              See {manpage}`aerc-accounts(5)`.
+              {file}`accounts.conf`. See [](#opt-programs.aerc.extraConfig)
+              for the configuration directory and required permission setting,
+              and {manpage}`aerc-accounts(5)` for the syntax.
             '';
           };
 
@@ -85,7 +100,8 @@ in
             example = literalExpression ''{ messages = { d = ":move ''${folder.trash}<Enter>"; }; }'';
             description = ''
               Extra bindings specific to this account, added to
-              {file}`$HOME/.config/aerc/binds.conf`.
+              {file}`binds.conf` in aerc's configuration directory
+              (see [](#opt-programs.aerc.extraConfig)).
               See {manpage}`aerc-binds(5)`.
             '';
           };
@@ -99,10 +115,10 @@ in
               };
             };
             description = ''
-              Config specific to this account, added to {file}`$HOME/.config/aerc/aerc.conf`.
+              Config specific to this account, added to {file}`aerc.conf`.
               Aerc only supports per-account UI configuration.
-              For other sections of {file}`$HOME/.config/aerc/aerc.conf`,
-              use `programs.aerc.extraConfig`.
+              For other sections and the configuration directory location,
+              see [](#opt-programs.aerc.extraConfig).
               See {manpage}`aerc-config(5)`.
             '';
           };
@@ -181,11 +197,15 @@ in
           "";
 
       mkConfig = {
-        notmuch = cfg: {
-          source = "notmuch://${config.accounts.email.maildirBasePath}";
-          maildir-store = "${config.accounts.email.maildirBasePath}";
-          maildir-account-path = "${cfg.maildir.path}";
-        };
+        notmuch =
+          cfg:
+          {
+            source = "notmuch://${lib.optionalString legacyNotmuch config.accounts.email.maildirBasePath}";
+            maildir-account-path = cfg.maildir.path;
+          }
+          // lib.optionalAttrs legacyNotmuch {
+            maildir-store = config.accounts.email.maildirBasePath;
+          };
         maildir = cfg: {
           source = "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };

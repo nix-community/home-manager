@@ -48,9 +48,12 @@
   };
 
   nmt.script = ''
+    serviceFile=home-files/.config/systemd/user/clipcat.service
+
     assertFileExists home-files/.config/clipcat/clipcatd.toml
     assertFileExists home-files/.config/clipcat/clipcatctl.toml
     assertFileExists home-files/.config/clipcat/clipcat-menu.toml
+    assertFileExists "$serviceFile"
 
     assertFileContent home-files/.config/clipcat/clipcatd.toml \
     ${./cfg/daemon.toml}
@@ -61,5 +64,10 @@
     assertFileContent home-files/.config/clipcat/clipcat-menu.toml \
     ${./cfg/menu.toml}
 
+    assertFileRegex "$serviceFile" \
+      '^ExecStartPre=/nix/store/.*-coreutils-.*/bin/rm -f %t/clipcat/grpc.sock$'
+    assertFileRegex "$serviceFile" \
+      '^ExecStart=@clipcat@/bin/clipcatd --no-daemon --replace$'
+    assertFileNotRegex "$serviceFile" '/run/current-system/sw/bin'
   '';
 }

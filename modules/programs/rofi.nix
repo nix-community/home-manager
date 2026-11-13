@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -15,6 +16,20 @@ let
     ;
 
   cfg = config.programs.rofi;
+
+  extraConfigOverlay = lib.hm.deprecations.mkSettingsOverlay {
+    inherit options;
+    from = [
+      "programs"
+      "rofi"
+      "extraConfig"
+    ];
+    to = [
+      "programs"
+      "rofi"
+      "settings"
+    ];
+  };
 
   mkValueString =
     value:
@@ -76,18 +91,6 @@ let
       ]
     );
 
-  locationsMap = {
-    center = 0;
-    top-left = 1;
-    top = 2;
-    top-right = 3;
-    right = 4;
-    bottom-right = 5;
-    bottom = 6;
-    bottom-left = 7;
-    left = 8;
-  };
-
   configValueType =
     with types;
     (oneOf [
@@ -99,12 +102,9 @@ let
 
   sectionType = with types; attrsOf (either configValueType (listOf configValueType));
 
-  # Either a `section { foo: "bar"; }` or a `@import/@theme "some-text"`
-  configType = with types; either sectionType str;
-
-  extraConfigType =
+  settingsType =
     with types;
-    attrsOf (either sectionType (either configValueType (listOf configValueType)));
+    lazyAttrsOf (nullOr (either sectionType (either configValueType (listOf configValueType))));
 
   rasiLiteral =
     types.submodule {
@@ -124,8 +124,6 @@ let
       description = "Rasi literal string";
     };
 
-  themeType = with types; attrsOf configType;
-
   themeName =
     if (cfg.theme == null) then
       null
@@ -144,7 +142,6 @@ let
     else
       cfg.theme;
 
-  modes = map (mode: if isString mode then mode else "${mode.name}:${mode.path}") cfg.modes;
 in
 {
   meta.maintainers = [ ];
@@ -173,50 +170,6 @@ in
       example = literalExpression "[ pkgs.rofi-calc ]";
     };
 
-    font = mkOption {
-      default = null;
-      type = types.nullOr types.str;
-      example = "Droid Sans Mono 14";
-      description = "Font to use.";
-    };
-
-    terminal = mkOption {
-      default = null;
-      type = types.nullOr types.str;
-      description = ''
-        Path to the terminal which will be used to run console applications
-      '';
-      example = "\${pkgs.gnome.gnome_terminal}/bin/gnome-terminal";
-    };
-
-    cycle = mkOption {
-      default = null;
-      type = types.nullOr types.bool;
-      description = "Whether to cycle through the results list.";
-    };
-
-    location = mkOption {
-      default = "center";
-      type = types.enum (lib.attrNames locationsMap);
-      description = "The location rofi appears on the screen.";
-    };
-
-    xoffset = mkOption {
-      default = 0;
-      type = types.int;
-      description = ''
-        Offset in the x-axis in pixels relative to the chosen location.
-      '';
-    };
-
-    yoffset = mkOption {
-      default = 0;
-      type = types.int;
-      description = ''
-        Offset in the y-axis in pixels relative to the chosen location.
-      '';
-    };
-
     theme = mkOption {
       default = null;
       type =
@@ -224,7 +177,7 @@ in
         nullOr (oneOf [
           str
           path
-          themeType
+          (attrsOf (either sectionType str))
         ]);
       example = literalExpression ''
         let
@@ -269,39 +222,7 @@ in
       description = "Path where to put generated configuration file.";
     };
 
-    modes = mkOption {
-      default = [ ];
-      example = literalExpression ''
-        [
-          "drun"
-          "emoji"
-          "ssh"
-          {
-            name = "whatnot";
-            path = lib.getExe pkgs.rofi-whatnot;
-          }
-        ]
-      '';
-      type =
-        with types;
-        listOf (
-          either str (submodule {
-            options = {
-              name = mkOption {
-                type = str;
-                description = "Name used to reference the custom mode in the mode list.";
-              };
-              path = mkOption {
-                type = str;
-                description = "Executable path for the custom rofi script mode.";
-              };
-            };
-          })
-        );
-      description = "Modes to enable. For custom modes see `man 5 rofi-script`.";
-    };
-
-    extraConfig = mkOption {
+    settings = mkOption {
       default = { };
       example = {
         kb-primary-paste = "Control+V,Shift+Insert";
@@ -310,28 +231,129 @@ in
           display-name = "open:";
         };
       };
-      type = extraConfigType;
-      description = "Additional configuration to add.";
+      type = settingsType;
+      description = ''
+        Settings for the Rasi `configuration` block. See {manpage}`rofi(1)`.
+        Unset options use Rofi's defaults. No configuration file is generated
+        unless non-null settings or a theme are configured.
+        Use native names and values, including numeric locations and
+        `"name:path"` strings for script modes. Use
+        `config.lib.formats.rasi.mkLiteral` for unquoted Rasi values.
+
+        Ordinary and per-setting `lib.mkDefault` assignments override values
+        supplied through the former modeled options. The deprecated
+        `programs.rofi.extraConfig` alias retains its precedence over those
+        options.
+      '';
     };
 
   };
 
   imports =
     let
-      mkRemovedOptionRofi =
-        option: (lib.mkRemovedOptionModule [ "programs" "rofi" option ] "Please use a Rofi theme instead.");
+      rofiPath = [
+        "programs"
+        "rofi"
+      ];
+      settingsPath = rofiPath ++ [ "settings" ];
+
+      convertSetting =
+        name: oldOption: convert:
+        lib.hm.deprecations.mkSettingsChangedOptionModule {
+          from = rofiPath ++ [ name ];
+          to = settingsPath;
+          key = name;
+          inherit oldOption convert;
+          priority = 1400;
+          shadowed = lib.elem name extraConfigOverlay.keys;
+          applyDefault = value: name == "modes" && value != [ ];
+        };
     in
-    map mkRemovedOptionRofi [
-      "width"
-      "lines"
-      "borderWidth"
-      "rowHeight"
-      "padding"
-      "separator"
-      "scrollbar"
-      "fullscreen"
-      "colors"
-    ];
+    [ extraConfigOverlay.module ]
+    ++ lib.hm.deprecations.mkSettingsRenamedOptionModules rofiPath settingsPath { priority = 1400; } (
+      map
+        (name: {
+          old = name;
+          new = name;
+          shadowed = lib.elem name extraConfigOverlay.keys;
+          fallback =
+            if
+              lib.elem name [
+                "xoffset"
+                "yoffset"
+              ]
+            then
+              0
+            else
+              null;
+        })
+        [
+          "font"
+          "terminal"
+          "cycle"
+          "xoffset"
+          "yoffset"
+        ]
+    )
+    ++ [
+      (convertSetting "location" { default = "center"; } (
+        location:
+        {
+          center = 0;
+          top-left = 1;
+          top = 2;
+          top-right = 3;
+          right = 4;
+          bottom-right = 5;
+          bottom = 6;
+          bottom-left = 7;
+          left = 8;
+        }
+        .${location}
+      ))
+      (convertSetting "modes"
+        {
+          default = [ ];
+          type =
+            with types;
+            listOf (
+              either str (submodule {
+                options = {
+                  name = mkOption {
+                    type = str;
+                    description = "Name used to reference the custom mode in the mode list.";
+                  };
+                  path = mkOption {
+                    type = str;
+                    description = "Executable path for the custom rofi script mode.";
+                  };
+                };
+              })
+            );
+        }
+        (
+          modes:
+          if modes == [ ] then
+            null
+          else
+            map (mode: if isString mode then mode else "${mode.name}:${mode.path}") modes
+        )
+      )
+    ]
+    ++
+      map
+        (option: lib.mkRemovedOptionModule [ "programs" "rofi" option ] "Please use a Rofi theme instead.")
+        [
+          "width"
+          "lines"
+          "borderWidth"
+          "rowHeight"
+          "padding"
+          "separator"
+          "scrollbar"
+          "fullscreen"
+          "colors"
+        ];
 
   config = lib.mkIf cfg.enable {
     assertions = [
@@ -344,40 +366,29 @@ in
     };
 
     programs.rofi.finalPackage =
-      let
-        rofiWithPlugins = cfg.package.override (old: {
-          plugins = (old.plugins or [ ]) ++ cfg.plugins;
-        });
-      in
       if builtins.hasAttr "override" cfg.package && cfg.plugins != [ ] then
-        rofiWithPlugins
+        cfg.package.override (old: {
+          plugins = (old.plugins or [ ]) ++ cfg.plugins;
+        })
       else
         cfg.package;
 
     home.packages = [ cfg.finalPackage ];
 
-    home.file."${cfg.configPath}".text =
-      toRasi {
-        configuration = (
-          {
-            inherit (cfg)
-              cycle
-              font
-              terminal
-              xoffset
-              yoffset
-              ;
-            location = (lib.getAttr cfg.location locationsMap);
-          }
-          // lib.optionalAttrs (modes != [ ]) { inherit modes; }
-          // cfg.extraConfig
-        );
-      }
-      # @theme must go after configuration but attrs are output in alphabetical order ('@' first)
-
-      + (lib.optionalString (themeName != null) (toRasi {
-        "@theme" = themeName;
-      }));
+    home.file =
+      let
+        settings = filterAttrs (_: value: value != null) cfg.settings;
+      in
+      lib.mkIf (settings != { } || themeName != null) {
+        "${cfg.configPath}".text =
+          lib.optionalString (settings != { }) (toRasi {
+            configuration = settings;
+          })
+          # Rofi requires @theme after the configuration block.
+          + lib.optionalString (themeName != null) (toRasi {
+            "@theme" = themeName;
+          });
+      };
 
     xdg.dataFile = lib.mkIf (themePath != null) (
       if themePath == "custom" then

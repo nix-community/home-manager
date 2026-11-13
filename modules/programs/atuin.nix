@@ -303,6 +303,17 @@ in
 
           launchd.agents.atuin-daemon = {
             enable = true;
+            # Track the final managed configuration, not themes or files moved
+            # away from the path Atuin reads.
+            restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+              lib.filterAttrs (
+                _: file:
+                file.enable
+                &&
+                  file.target
+                  == lib.removePrefix "${config.home.homeDirectory}/" "${config.xdg.configHome}/atuin/config.toml"
+              ) config.home.file
+            );
             config = {
               ProgramArguments = [ (lib.getExe cfg.package) ] ++ daemonArgs;
               EnvironmentVariables = lib.optionalAttrs (daemonCfg.logLevel != null) {

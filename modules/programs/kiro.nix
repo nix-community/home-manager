@@ -17,6 +17,7 @@ in
       packageName = "kiro";
       nameShort = "Kiro";
       dataFolderName = ".kiro";
+      skipVersionCheck = true;
     })
   ];
 }

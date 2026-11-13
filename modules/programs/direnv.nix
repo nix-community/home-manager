@@ -7,7 +7,6 @@
 let
   inherit (lib)
     mkOption
-    mkRenamedOptionModule
     mkRemovedOptionModule
     mkEnableOption
     types
@@ -30,14 +29,11 @@ in
   ];
 
   imports = [
-    (mkRenamedOptionModule
-      [
-        "programs"
-        "direnv"
-        "enableNixDirenvIntegration"
-      ]
-      [ "programs" "direnv" "nix-direnv" "enable" ]
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "direnv"
+      "enableNixDirenvIntegration"
+    ] "Use `programs.direnv.nix-direnv.enable` instead.")
     (mkRemovedOptionModule [
       "programs"
       "direnv"
@@ -76,6 +72,12 @@ in
     enableBashIntegration = lib.hm.shell.mkBashIntegrationOption { inherit config; };
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
+
+    enableGitIntegration = mkEnableOption "Git integration" // {
+      description = ''
+        Whether to configure Git to globally ignore {file}`.direnv/`.
+      '';
+    };
 
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
@@ -120,6 +122,10 @@ in
             log_filter = "^$";
           };
         };
+
+        git.ignores = mkIf cfg.enableGitIntegration [
+          ".direnv/"
+        ];
 
         bash.initExtra = mkIf cfg.enableBashIntegration (
           # Using `mkAfter` to make it more likely to appear after other

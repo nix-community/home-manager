@@ -27,7 +27,7 @@ in
         backends = {
           official_openai = {
             type = "openai";
-            api_key = "API KEY";
+            api_key = "$OPENAI_API_KEY";
             default_model = "gpt-4o";
           };
 
@@ -40,6 +40,10 @@ in
       description = ''
         Configuration settings for aiac. All the available options can be found here:
         <https://github.com/gofireflyio/aiac/?tab=readme-ov-file#configuration>.
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting a literal API key here. aiac expands environment variables
+        in `api_key`, so you can reference one instead, as in the example.
       '';
     };
   };

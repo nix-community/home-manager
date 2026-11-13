@@ -23,19 +23,13 @@ in
     lib.hm.maintainers.LucasWagler
   ];
 
-  imports = [
-    (lib.mkRenamedOptionModule
-      [ "programs" "k9s" "skin" ]
-      [
-        "programs"
-        "k9s"
-        "skins"
-        "skin"
-      ]
-    )
-    (lib.mkRenamedOptionModule [ "programs" "k9s" "hotkey" ] [ "programs" "k9s" "hotKeys" ])
-    (lib.mkRenamedOptionModule [ "programs" "k9s" "plugin" ] [ "programs" "k9s" "plugins" ])
-  ];
+  imports =
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "k9s" name ] message)
+      {
+        hotkey = "Use `programs.k9s.hotKeys` instead.";
+        plugin = "Use `programs.k9s.plugins` instead.";
+        skin = "Use `programs.k9s.skins.skin` instead.";
+      };
 
   options.programs.k9s = {
     enable = lib.mkEnableOption "k9s - Kubernetes CLI To Manage Your Clusters In Style";
@@ -144,6 +138,22 @@ in
       '';
     };
 
+    jumps = mkOption {
+      inherit (yamlFormat) type;
+      default = { };
+      description = ''
+        Resource jumps written to {file}`$XDG_CONFIG_HOME/k9s/jumps.yaml` (linux)
+        or {file}`Library/Application Support/k9s/jumps.yaml` (darwin).
+        See <https://github.com/derailed/k9s#resource-jumps> for supported values.
+      '';
+      example = {
+        "argoproj.io/v1alpha1/applications" = {
+          targetGVR = "apps/v1/deployments";
+          labelSelector = "app.kubernetes.io/instance={{.metadata.name}}";
+        };
+      };
+    };
+
     views = mkOption {
       inherit (yamlFormat) type;
       default = { };
@@ -199,17 +209,6 @@ in
     in
     mkIf cfg.enable {
       home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-      warnings =
-        (lib.optional (cfg.aliases ? alias)
-          "Nested 'alias' key in programs.k9s.aliases is deprecated, move the contents directly under programs.k9s.aliases"
-        )
-        ++ (lib.optional (cfg.plugins ? plugin)
-          "Nested 'plugin' key in programs.k9s.plugins is deprecated, move the contents directly under programs.k9s.plugins"
-        )
-        ++ (lib.optional (cfg.views ? k9s.views)
-          "Nested 'k9s.views' structure in programs.k9s.views is deprecated, move the contents directly under programs.k9s.views"
-        );
-
       xdg.configFile = mkIf enableXdgConfig (
         {
           "k9s/config.yaml" = mkIf (cfg.settings != { }) {
@@ -226,6 +225,10 @@ in
 
           "k9s/plugins.yaml" = mkIf (cfg.plugins != { }) {
             source = yamlFormat.generate "k9s-plugins" { inherit (cfg) plugins; };
+          };
+
+          "k9s/jumps.yaml" = mkIf (cfg.jumps != { }) {
+            source = yamlFormat.generate "k9s-jumps" { inherit (cfg) jumps; };
           };
 
           "k9s/views.yaml" = mkIf (cfg.views != { }) {
@@ -251,6 +254,10 @@ in
 
           "Library/Application Support/k9s/plugins.yaml" = mkIf (cfg.plugins != { }) {
             source = yamlFormat.generate "k9s-plugins" { inherit (cfg) plugins; };
+          };
+
+          "Library/Application Support/k9s/jumps.yaml" = mkIf (cfg.jumps != { }) {
+            source = yamlFormat.generate "k9s-jumps" { inherit (cfg) jumps; };
           };
 
           "Library/Application Support/k9s/views.yaml" = mkIf (cfg.views != { }) {

@@ -1,0 +1,29 @@
+[[appRules]]
+bundleId = "com.apple.Safari"
+id = "81426D13-C1A5-475E-AFBC-00BBA05042D0"
+minHeight = 220.0
+minWidth = 574.0
+
+[appearance]
+mode = "dark"
+
+[borders]
+enabled = true
+width = 2.0
+
+[borders.color]
+alpha = 1.0
+blue = 0.69
+green = 0.7
+red = 0.7
+
+[gaps]
+size = 8.0
+
+[general]
+defaultLayoutType = "niri"
+updateChecksEnabled = false
+
+[[hotkeys]]
+binding = "Control+1"
+id = "switchWorkspace.0"

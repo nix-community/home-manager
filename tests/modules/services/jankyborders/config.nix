@@ -11,6 +11,8 @@
     };
   };
 
+  home.file.".bordersrc".text = "# Unused fallback";
+
   nmt.script = ''
     configFile=home-files/.config/borders/bordersrc
     assertFileExists $configFile
@@ -20,5 +22,8 @@
 
     serviceFile=LaunchAgents/org.nix-community.home.jankyborders.plist
     assertFileExists "$serviceFile"
+    assertFileContent \
+      "$(normalizeStorePaths LaunchAgentRestartTriggers/org.nix-community.home.jankyborders.json)" \
+      ${./expected-restart-triggers.json}
   '';
 }

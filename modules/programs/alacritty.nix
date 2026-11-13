@@ -51,9 +51,7 @@ in
         };
         description = ''
           Configuration written to
-          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.yml` or
-          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.toml`
-          (the latter being used for alacritty 0.13 and later).
+          {file}`$XDG_CONFIG_HOME/alacritty/alacritty.toml`.
           See <https://github.com/alacritty/alacritty/tree/master#configuration>
           for more info.
         '';

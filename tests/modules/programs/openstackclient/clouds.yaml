@@ -1,5 +1,10 @@
 %YAML 1.1
 ---
+cache:
+  auth: true
+  expiration_time: 300
+client:
+  force_ipv4: true
 clouds:
   my-infra:
     auth:
@@ -8,3 +13,13 @@ clouds:
     cloud: example-cloud
     interface: internal
     region_name: XXX
+custom:
+  credentials:
+  - application
+  - 42
+  - null
+  enabled: true
+  optional: null
+  retries: 3
+  timeout: 1.5
+  yaml-1.1-string: 'yes'

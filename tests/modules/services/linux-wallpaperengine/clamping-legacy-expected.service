@@ -1,0 +1,11 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@linux-wallpaperengine@/bin/linux-wallpaperengine --screen-root "HDMI-1" --clamp clamp --bg "12345678" --screen-root "DP-1" --clamp border --bg "87654321"
+Restart=on-failure
+
+[Unit]
+After=graphical-session.target
+Description=Implementation of Wallpaper Engine on Linux
+PartOf=graphical-session.target

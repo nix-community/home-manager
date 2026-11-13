@@ -50,7 +50,29 @@
     let
       legacy = "${nodes.machine.system.build.toplevel}/specialisation/legacy";
       modern = "${nodes.machine.system.build.toplevel}/specialisation/modern";
+      userServiceDropIn =
+        enableLegacyProfileManagement:
+        let
+          nixosEval = import "${pkgs.path}/nixos/lib/eval-config.nix" {
+            system = pkgs.stdenv.hostPlatform.system;
+            modules = [
+              ../../../nixos
+              {
+                system.stateVersion = "24.11";
+                users.users.alice.isNormalUser = true;
+                home-manager = {
+                  startAsUserService = true;
+                  inherit enableLegacyProfileManagement;
+                  users.alice.home.stateVersion = "24.11";
+                };
+              }
+            ];
+          };
+        in
+        (builtins.head nixosEval.config.users.users.alice.packages).text;
     in
+    assert pkgs.lib.hasInfix " --driver-version 0\n" (userServiceDropIn true);
+    assert pkgs.lib.hasInfix " --driver-version 1\n" (userServiceDropIn false);
     ''
       start_all()
 

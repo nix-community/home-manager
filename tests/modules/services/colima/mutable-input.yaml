@@ -1,0 +1,5 @@
+%YAML 1.1
+---
+cpu: 4
+env:
+  TEST_TOKEN: test-only

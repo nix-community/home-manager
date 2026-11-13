@@ -22,6 +22,14 @@ let
       description = "Whether to enable ${name}.";
     };
 
+  # Keep native dictionaries distinct from shorthand tags during type merging.
+  rawDockTileType = types.addCheck (types.attrsOf types.anything) (
+    tile:
+    tile ? tile-data
+    || tile ? tile-type
+    || !(tile ? app || tile ? file || tile ? folder || tile ? spacer)
+  );
+
   safari = config."com.apple.Safari";
 in
 {
@@ -134,6 +142,200 @@ in
         type = types.int;
         example = 64;
         description = "Sets the size of the dock.";
+      };
+      persistent-apps = mkNullableOption {
+        description = ''
+          Persistent applications, spacers, files, and folders in the Dock.
+          Strings and paths are shorthand for applications. Native Dock tile
+          dictionaries are passed through unchanged and can be mixed with
+          shorthand entries.
+
+          Set to `null` to leave the setting unchanged or `[ ]` to clear it.
+          Restart the Dock or log out and back in for changes to take effect.
+        '';
+        type =
+          let
+            taggedType = types.attrTag {
+              app = lib.mkOption {
+                description = "An application to be added to the dock.";
+                type = types.str;
+              };
+              file = lib.mkOption {
+                description = "A file to be added to the dock.";
+                type = types.str;
+              };
+              folder = lib.mkOption {
+                description = "A folder to be added to the dock.";
+                type = types.str;
+              };
+              spacer = lib.mkOption {
+                description = "A spacer to be added to the dock. Can be small or regular size.";
+                type = types.submodule {
+                  options.small = lib.mkOption {
+                    type = types.bool;
+                    default = false;
+                    description = "Whether the spacer is small.";
+                  };
+                };
+              };
+            };
+
+            simpleType = types.either types.str types.path;
+            toTagged = path: { app = toString path; };
+          in
+          types.listOf (types.coercedTo simpleType toTagged (types.either rawDockTileType taggedType));
+        apply =
+          let
+            toTile =
+              item:
+              if rawDockTileType.check item then
+                item
+              else if item ? app then
+                {
+                  tile-data.file-data = {
+                    _CFURLString = item.app;
+                    _CFURLStringType = 0;
+                  };
+                }
+              else if item ? spacer then
+                {
+                  tile-data = { };
+                  tile-type = if item.spacer.small then "small-spacer-tile" else "spacer-tile";
+                }
+              else if item ? folder then
+                {
+                  tile-data.file-data = {
+                    _CFURLString = "file://" + item.folder;
+                    _CFURLStringType = 15;
+                  };
+                  tile-type = "directory-tile";
+                }
+              else if item ? file then
+                {
+                  tile-data.file-data = {
+                    _CFURLString = "file://" + item.file;
+                    _CFURLStringType = 15;
+                  };
+                  tile-type = "file-tile";
+                }
+              else
+                item;
+          in
+          value: if value == null then null else map toTile value;
+      };
+
+      persistent-others = mkNullableOption {
+        description = ''
+          Persistent files and folders in the Dock.
+          Strings and paths are shorthand for folders. Native Dock tile
+          dictionaries are passed through unchanged and can be mixed with
+          shorthand entries.
+
+          Set to `null` to leave the setting unchanged or `[ ]` to clear it.
+          Restart the Dock or log out and back in for changes to take effect.
+        '';
+        type =
+          let
+            folderType = types.submodule {
+              options.path = lib.mkOption {
+                description = "Path to a folder to be added to the dock.";
+                type = types.str;
+              };
+              options.arrangement = lib.mkOption {
+                description = "Sort order for files in folder when clicked.";
+                type = types.enum [
+                  "name"
+                  "date-added"
+                  "date-modified"
+                  "date-created"
+                  "kind"
+                ];
+                default = "name";
+              };
+              options.displayas = lib.mkOption {
+                description = "How to display the folder before clicked. stack: Stack of file previews. folder: A folder icon";
+                type = types.enum [
+                  "stack"
+                  "folder"
+                ];
+                default = "stack";
+              };
+              options.showas = lib.mkOption {
+                description = "Effect to show files when clicked. fan: fan-out effect, grid: box, list: list";
+                type = types.enum [
+                  "automatic"
+                  "fan"
+                  "grid"
+                  "list"
+                ];
+                default = "automatic";
+              };
+            };
+            taggedType = types.attrTag {
+              file = lib.mkOption {
+                description = "A file to be added to the dock.";
+                type = types.str;
+              };
+              folder = lib.mkOption {
+                description = "A folder to be added to the dock.";
+                type = types.coercedTo types.str (str: { path = str; }) folderType;
+              };
+            };
+            simpleType = types.either types.str types.path;
+            toTagged = path: { folder = toString path; };
+          in
+          types.listOf (types.coercedTo simpleType toTagged (types.either rawDockTileType taggedType));
+        apply =
+          let
+            arrangementMap = {
+              name = 1;
+              date-added = 2;
+              date-modified = 3;
+              date-created = 4;
+              kind = 5;
+            };
+            displayasMap = {
+              stack = 0;
+              folder = 1;
+            };
+            showasMap = {
+              automatic = 0;
+              fan = 1;
+              grid = 2;
+              list = 3;
+            };
+            parseFolder =
+              folder:
+              builtins.mapAttrs (
+                name: val:
+                if name == "arrangement" then
+                  arrangementMap.${val}
+                else if name == "displayas" then
+                  displayasMap.${val}
+                else if name == "showas" then
+                  showasMap.${val}
+                else
+                  val
+              ) folder;
+            toTile =
+              item:
+              if rawDockTileType.check item then
+                item
+              else
+                {
+                  tile-data = {
+                    file-data = {
+                      _CFURLString = "file://" + (if item ? folder then item.folder.path else item.file);
+                      _CFURLStringType = 15;
+                    };
+                  }
+                  // (
+                    if item ? folder then { inherit (parseFolder item.folder) arrangement displayas showas; } else { }
+                  );
+                  tile-type = if item ? folder then "directory-tile" else "file-tile";
+                };
+          in
+          value: if value == null then null else map toTile value;
       };
     };
 

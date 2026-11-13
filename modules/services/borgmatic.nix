@@ -13,7 +13,24 @@ in
 
   options = {
     services.borgmatic = {
-      enable = lib.mkEnableOption "Borgmatic service";
+      enable = lib.mkEnableOption "Borgmatic service" // {
+        description = ''
+          Whether to run scheduled borgmatic backups as a user service.
+          Set the schedule with [](#opt-services.borgmatic.frequency).
+
+          On Linux, this creates a systemd user service and timer. The
+          service only runs on AC power and waits three minutes before
+          starting borgmatic. It runs with reduced CPU and I/O priority and
+          inhibits sleep and shutdown while the backup runs. The persistent
+          timer catches up on missed runs and adds a randomized delay of up
+          to ten minutes.
+
+          On Darwin, this creates a LaunchAgent with the configured schedule.
+          The Linux power check, startup delay, scheduling priorities, sleep
+          inhibition, randomized delay, and timer catch-up behavior are not
+          configured for it.
+        '';
+      };
 
       frequency = lib.mkOption {
         type = lib.types.str;

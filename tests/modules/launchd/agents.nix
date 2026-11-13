@@ -1,3 +1,5 @@
+{ config, lib, ... }:
+
 {
   config = {
     launchd.agents."test-service" = {
@@ -17,6 +19,17 @@
         "\"Special\" characters" = "<should be escaped>";
       };
     };
+
+    assertions = [
+      {
+        assertion = lib.all (name: lib.elem name config.home.activation.setupLaunchAgents.after) [
+          "writeBoundary"
+          "linkGeneration"
+          "onFilesChange"
+        ];
+        message = "Launch agents must observe newly linked files and onChange hooks.";
+      }
+    ];
 
     nmt.script = ''
       serviceFile=LaunchAgents/org.nix-community.home.test-service.plist

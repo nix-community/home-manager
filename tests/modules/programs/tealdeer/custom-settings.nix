@@ -1,8 +1,15 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 {
   config = {
     programs.tealdeer = {
-      package = config.lib.test.mkStubPackage { name = "tldr"; };
+      package = config.lib.test.mkStubPackage {
+        name = "tldr";
+        version = "1.9.0";
+      };
       enable = true;
       settings = {
         updates = {
@@ -17,9 +24,7 @@
 
     nmt.script =
       let
-        expectedConfDir =
-          if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".config";
-        expectedConfigPath = "home-files/${expectedConfDir}/tealdeer/config.toml";
+        expectedConfigPath = "home-files/.config/tealdeer/config.toml";
       in
       ''
         assertFileExists "${expectedConfigPath}"

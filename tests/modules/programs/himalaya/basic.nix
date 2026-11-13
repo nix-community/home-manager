@@ -4,7 +4,9 @@
   accounts.email.accounts = {
     "hm@example.com" = {
       imap.port = 993;
+      imap.authentication = "login";
       smtp.port = 465;
+      smtp.authentication = "login";
       himalaya.enable = true;
     };
   };

@@ -1,0 +1,6 @@
+%YAML 1.1
+---
+jumps:
+  argoproj.io/v1alpha1/applications:
+    labelSelector: app.kubernetes.io/instance={{.metadata.name}}
+    targetGVR: apps/v1/deployments

@@ -8,6 +8,7 @@
 {
   programs.andcli = {
     enable = true;
+    package = null;
     settings = {
       options = {
         show_usernames = false;
@@ -15,6 +16,19 @@
       };
     };
   };
+
+  xdg.configHome = "${config.home.homeDirectory}/custom-config";
+
+  assertions = [
+    {
+      assertion = !config.programs.andcli.mutableSettings;
+      message = "andcli settings must default to immutable settings.";
+    }
+    {
+      assertion = !(config.home.activation ? andcliMutableSettings);
+      message = "andcli settings must not create mutable activation.";
+    }
+  ];
 
   nmt.script =
     let
@@ -25,7 +39,6 @@
           "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/andcli";
     in
     ''
-      assertFileExists "home-files/${configPath}/config.yaml"
       assertFileContent "home-files/${configPath}/config.yaml" \
         ${./config.yaml}
     '';

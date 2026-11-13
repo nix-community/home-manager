@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib)
-    getExe
     literalExpression
     mkAfter
     mkIf
@@ -134,7 +133,11 @@ in
     {
       enable = lib.mkEnableOption "fzf - a command-line fuzzy finder";
 
-      package = lib.mkPackageOption pkgs "fzf" { };
+      package = lib.mkPackageOption pkgs "fzf" {
+        extraDescription = ''
+          Shell integration requires the package's scripts under {file}`share/fzf`.
+        '';
+      };
 
       defaultCommand = mkOption {
         type = types.nullOr types.str;
@@ -405,7 +408,8 @@ in
               ''
               + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
               + ''
-                  eval "$(${getExe cfg.package} --bash)"
+                  source ${cfg.package}/share/fzf/key-bindings.bash
+                  source ${cfg.package}/share/fzf/completion.bash
                 fi
               ''
             )
@@ -424,7 +428,8 @@ in
               ''
               + lib.optionalString (vars != { }) "${config.lib.shell.exportAll vars}\n"
               + ''
-                  source <(${getExe cfg.package} --zsh)
+                  source ${cfg.package}/share/fzf/key-bindings.zsh
+                  source ${cfg.package}/share/fzf/completion.zsh
                 fi
               ''
             )
@@ -441,7 +446,17 @@ in
             mkOrder 200 (
               lib.optionalString (vars != { }) "${exports}\n"
               + ''
-                ${getExe cfg.package} --fish | source
+                source ${cfg.package}/share/fzf/key-bindings.fish
+              ''
+              # Before 0.68, the shipped script only defines the setup function.
+              + lib.optionalString (lib.versionOlder cfg.package.version "0.68.0") ''
+                fzf_key_bindings
+              ''
+              + ''
+                # Older and custom packages may not ship fish completions.
+                if test -f ${cfg.package}/share/fzf/completion.fish
+                  source ${cfg.package}/share/fzf/completion.fish
+                end
               ''
             )
           );
@@ -464,11 +479,8 @@ in
             mkAfter (
               lib.optionalString (vars != { }) "${assignments}\n"
               + ''
-                source ${
-                  pkgs.runCommand "nushell-fzf-integration.nu" { } ''
-                    ${getExe cfg.package} --nushell > $out
-                  ''
-                }
+                source ${cfg.package}/share/fzf/key-bindings.nu
+                source ${cfg.package}/share/fzf/completion.nu
               ''
             );
         };

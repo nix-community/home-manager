@@ -26,11 +26,12 @@ let
     mkOption
     mkOptionDefault
     optionalString
-    optional
     setAttrByPath
     types
     ;
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
+  defaultConfigPath = with platforms; if isDarwin then darwin.configPath else linux.configPath;
 
   appName = name;
 
@@ -187,40 +188,71 @@ let
   wrapPackage =
     package:
     let
-      # The configuration expected by the Firefox wrapper.
-      fcfg = {
-        inherit (cfg) enableGnomeExtensions;
-      };
-
-      # A bit of hackery to force a config into the wrapper.
       browserName = package.browserName or (builtins.parseDrvName package.name).name;
 
-      # The configuration expected by the Firefox wrapper builder.
-      bcfg = setAttrByPath [ browserName ] fcfg;
+      configureAppDataDir = cfg.configPath != defaultConfigPath;
+
+      absoluteConfigPath =
+        if lib.hasPrefix "/" cfg.configPath then
+          cfg.configPath
+        else
+          "${config.home.homeDirectory}/${cfg.configPath}";
+
+      callWithAppDataDir =
+        wrapper: args:
+        let
+          wrapperArgs = lib.functionArgs wrapper;
+          supportsAppDataDir = wrapperArgs ? appDataDir;
+          # Gracefully handle wrappers that don't, yet, support appDataDir.
+          appDataDirArgs = lib.optionalAttrs (configureAppDataDir && supportsAppDataDir) {
+            appDataDir = absoluteConfigPath;
+          };
+          argsWithAppDataDir =
+            if lib.isFunction args then
+              # Modern wrapped packages pass an override function.
+              old: args old // appDataDirArgs
+            else
+              # Legacy wrapFirefox passes an attribute set.
+              args // appDataDirArgs;
+        in
+        lib.warnIf (configureAppDataDir && !supportsAppDataDir)
+          "${moduleName}: '${browserName}' does not support the 'appDataDir' wrapper argument; 'configPath' will not be applied to the package wrapper."
+          (wrapper argsWithAppDataDir);
     in
     if package == null then
       null
     else if isWrapped then
       if lib.functionArgs package.override ? cfg then
-        package.override (old: {
-          cfg = old.cfg or { } // fcfg;
+        callWithAppDataDir package.override (old: {
+          # An explicit cfg keeps the wrapper from reading nixpkgs config.<browser>.
+          cfg = old.cfg or { };
           extraPolicies = (old.extraPolicies or { }) // cfg.policies;
           pkcs11Modules = (old.pkcs11Modules or [ ]) ++ cfg.pkcs11Modules;
         })
       else
         let
           droppedPolicies = cfg.policies != { } && (!isDarwin || cfg.darwinDefaultsId == null);
-          droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || cfg.enableGnomeExtensions;
+          droppedOptions = droppedPolicies || cfg.pkcs11Modules != [ ] || configureAppDataDir;
         in
         lib.warnIf droppedOptions
-          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'enableGnomeExtensions' will not be applied."
+          "${moduleName}: '${browserName}' cannot be reconfigured; 'policies', 'pkcs11Modules', and 'configPath' will not be applied."
           package
     else
-      (pkgs.wrapFirefox.override { config = bcfg; }) package { };
+      # The wrapper reads browser features from the nixpkgs config; keep them at
+      # the wrapper's defaults instead of the user's nixpkgs settings.
+      callWithAppDataDir ((pkgs.wrapFirefox.override { config = { }; }) package) { };
 
-  bookmarkTypes = import ./profiles/bookmark-types.nix { inherit lib; };
 in
 {
+  imports = [
+    (lib.mkRemovedOptionModule (
+      modulePath ++ [ "enableGnomeExtensions" ]
+    ) "Add `pkgs.gnome-browser-connector` to `${moduleName}.nativeMessagingHosts` instead.")
+    (lib.mkRemovedOptionModule (
+      modulePath ++ [ "vendorPath" ]
+    ) "Native messaging hosts work without specifying a vendor path.")
+  ];
+
   options = setAttrByPath modulePath {
     enable = mkOption {
       type = types.bool;
@@ -251,6 +283,14 @@ in
         this should be a wrapped ${appName} package. For earlier state
         versions it should be an unwrapped ${appName} package.
         Set to `null` to disable installing ${appName}.
+
+        Note that by default ${appName} will attempt to update the `profiles.ini`
+        configuration file on startup which will fail if Home Manager is managing
+        it. If you wish to use an unwrapped ${appName} (e.g. from outside Nix),
+        consider setting the environment variable `MOZ_LEGACY_PROFILES=1` to
+        disable attempts to write to the file. For macOS specifically, this
+        should be done via `/bin/launchctl setenv MOZ_LEGACY_PROFILES 1` to
+        ensure it is set when ${appName} is launched through the Finder or Dock.
       '';
     };
 
@@ -367,21 +407,20 @@ in
       description = "Path to profiles.";
     };
 
-    vendorPath = mkOption {
-      internal = true;
-      type = with types; nullOr str;
-      default = null;
-      defaultText = literalExpression "platform specific vendor path";
-      example = ".mozilla";
-      description = "Directory containing the native messaging hosts directory.";
-    };
-
     configPath = mkOption {
-      internal = true;
       type = types.str;
-      default = with platforms; if isDarwin then darwin.configPath else linux.configPath;
+      default = defaultConfigPath;
+      defaultText = literalExpression "platform specific default config path";
       example = ".mozilla/firefox";
-      description = "Directory containing the ${appName} configuration files.";
+      description = ''
+        Directory containing the ${appName} configuration files. A relative
+        path is interpreted relative to the user's home directory.
+
+        Setting this to a non-default path also configures the package wrapper
+        to use it as the application data directory. This can be useful on
+        macOS 27 and later, where wrapped applications may be denied access to
+        the traditional application data directory.
+      '';
     };
 
     nativeMessagingHosts = mkOption {
@@ -561,32 +600,16 @@ in
               };
 
               bookmarks = mkOption {
-                type = (
-                  types.coercedTo bookmarkTypes.settingsType
-                    (
-                      bookmarks:
-                      if bookmarks != { } then
-                        {
-                          force = true;
-                          _legacySettings = if builtins.isList bookmarks then "a list" else "an attribute set";
-                          settings = bookmarks;
-                        }
-                      else
-                        { }
-                    )
-                    (
-                      types.submodule (
-                        { config, ... }:
-                        import ./profiles/bookmarks.nix {
-                          inherit config lib pkgs;
-                          modulePath = modulePath ++ [
-                            "profiles"
-                            name
-                            "bookmarks"
-                          ];
-                        }
-                      )
-                    )
+                type = types.submodule (
+                  { config, ... }:
+                  import ./profiles/bookmarks.nix {
+                    inherit config lib pkgs;
+                    modulePath = modulePath ++ [
+                      "profiles"
+                      name
+                      "bookmarks"
+                    ];
+                  }
                 );
                 default = { };
                 internal = !enableBookmarks;
@@ -1044,17 +1067,6 @@ in
       '';
     };
 
-    enableGnomeExtensions = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable the GNOME Shell native host connector. Note, you
-        also need to set the NixOS option
-        `services.gnome.gnome-browser-connector.enable` to
-        `true`.
-      '';
-    };
-
     pkcs11Modules = mkOption {
       type = types.listOf types.package;
       default = [ ];
@@ -1153,69 +1165,6 @@ in
       ]
       ++ (lib.concatMap (profile: profile.assertions) (attrValues cfg.profiles));
 
-      warnings =
-        optional (cfg.enableGnomeExtensions or false) ''
-          Using '${moduleName}.enableGnomeExtensions' has been deprecated and
-          will be removed in the future. Please change to overriding the package
-          configuration using '${moduleName}.package' instead. You can refer to
-          its example for how to do this.
-        ''
-        ++ optional (cfg.vendorPath != null) ''
-          Using '${moduleName}.vendorPath' has been deprecated and
-          will be removed in the future. Native messaging hosts will function normally without specifying this path.
-        ''
-        ++ lib.flatten (
-          lib.mapAttrsToList (
-            name: profile:
-            lib.optional (profile.bookmarks._legacySettings != null) (
-              let
-                legacySettingsExample =
-                  if profile.bookmarks._legacySettings == "a list" then "[ ... ]" else "{ ... }";
-              in
-              lib.hm.deprecations.mkDeprecatedOptionValueWarning {
-                option = modulePath ++ [
-                  "profiles"
-                  name
-                  "bookmarks"
-                ];
-                old = profile.bookmarks._legacySettings;
-                replacement = "`${
-                  lib.showOption (
-                    modulePath
-                    ++ [
-                      "profiles"
-                      name
-                      "bookmarks"
-                      "settings"
-                    ]
-                  )
-                }` with `${
-                  lib.showOption (
-                    modulePath
-                    ++ [
-                      "profiles"
-                      name
-                      "bookmarks"
-                      "force"
-                    ]
-                  )
-                } = true`";
-                details = ''
-                  Set `force = true` to acknowledge replacing existing custom bookmarks.
-
-                  Replace:
-                    ${moduleName}.profiles.${name}.bookmarks = ${legacySettingsExample};
-
-                  With:
-                    ${moduleName}.profiles.${name}.bookmarks = {
-                      force = true;
-                      settings = ${legacySettingsExample};
-                    };
-                '';
-              }
-            )
-          ) cfg.profiles
-        );
       targets.darwin.defaults = (
         mkIf (cfg.darwinDefaultsId != null && isDarwin) {
           ${cfg.darwinDefaultsId} = {

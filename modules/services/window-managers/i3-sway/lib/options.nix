@@ -72,18 +72,7 @@ let
           See {option}`--no-startup-id` option description in the i3 user guide.
         '';
       };
-
-      workspace = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = ''
-          Launch application on a particular workspace. DEPRECATED:
-          Use [](#opt-xsession.windowManager.i3.config.assigns)
-          instead. See <https://github.com/nix-community/home-manager/issues/265>.
-        '';
-      };
     };
-
   };
 
   barModule = types.submodule {
@@ -105,7 +94,7 @@ let
       in
       {
         fonts = mkOption {
-          type = with types; either (listOf str) fontOptions;
+          type = fontOptions;
           default = { };
           example = {
             names = [
@@ -405,7 +394,7 @@ let
 in
 {
   fonts = mkOption {
-    type = with types; either (listOf str) fontOptions;
+    type = fontOptions;
     default = { };
     example = {
       names = [
@@ -578,35 +567,11 @@ in
             "force"
             "workspace"
           ];
-          default =
-            {
-              i3 = if cfg.config.focus.forceWrapping then "force" else "yes";
-              # the sway module's logic was inverted and incorrect,
-              # so preserve it for backwards compatibility purposes
-              sway = if cfg.config.focus.forceWrapping then "yes" else "no";
-            }
-            .${moduleName};
-          defaultText =
-            literalExpression
-              {
-                i3 = ''if focus.forceWrapping then "force" else "yes"'';
-                sway = ''if focus.forceWrapping then "yes" else "no"'';
-              }
-              .${moduleName};
+          default = if isI3 then "yes" else "no";
           description = ''
             Whether the window focus commands automatically wrap around the edge of containers.
 
             See <https://i3wm.org/docs/userguide.html#_focus_wrapping>
-          '';
-        };
-
-        forceWrapping = mkOption {
-          type = types.bool;
-          default = false;
-          description = ''
-            Whether to force focus wrapping in tabbed or stacked containers.
-
-            This option is deprecated, use {option}`focus.wrapping` instead.
           '';
         };
 

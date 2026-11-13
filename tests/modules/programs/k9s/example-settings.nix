@@ -78,6 +78,12 @@
         ];
       };
     };
+    jumps = {
+      "argoproj.io/v1alpha1/applications" = {
+        targetGVR = "apps/v1/deployments";
+        labelSelector = "app.kubernetes.io/instance={{.metadata.name}}";
+      };
+    };
     views = {
       "v1/pods" = {
         columns = [
@@ -125,6 +131,9 @@
       assertFileContent \
         "home-files/${configDir}/plugins.yaml" \
         ${./example-plugins-expected.yaml}
+      assertFileContent \
+        "home-files/${configDir}/jumps.yaml" \
+        ${./example-jumps-expected.yaml}
       assertFileExists "home-files/${configDir}/views.yaml"
       assertFileContent \
         "home-files/${configDir}/views.yaml" \

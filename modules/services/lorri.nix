@@ -34,7 +34,7 @@ in
       type = lib.types.package;
       default = pkgs.nix;
       defaultText = lib.literalExpression "pkgs.nix";
-      example = lib.literalExpression "pkgs.nixVersions.unstable";
+      example = lib.literalExpression "pkgs.nixVersions.latest";
       description = "Which nix package to use.";
     };
 

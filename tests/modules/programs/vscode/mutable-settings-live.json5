@@ -1,0 +1,14 @@
+{
+  // Interactive settings use JSON5.
+  "editor.fontSize": 12,
+  "arraySetting": ["live",],
+  "nested": {
+    "declared": "live",
+    "keep": true,
+    "deeper": {
+      "declared": "live",
+      "keep": "nested-live",
+    },
+  },
+  "unrelated": "survives",
+}

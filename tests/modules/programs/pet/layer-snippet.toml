@@ -1,0 +1,5 @@
+[[snippets]]
+command = "echo declarative"
+description = "declarative"
+output = ""
+tag = []

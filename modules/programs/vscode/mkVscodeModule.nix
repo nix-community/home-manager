@@ -72,6 +72,52 @@ let
         "extensions.autoCheckUpdates" = false;
       };
 
+  effectiveUserSettings =
+    profile:
+    mergedUserSettings profile.userSettings profile.enableUpdateCheck
+      profile.enableExtensionUpdateCheck;
+
+  declaredUserSettingsSource =
+    profile:
+    let
+      settings = effectiveUserSettings profile;
+    in
+    if isPathLike settings then
+      let
+        settingsPath = toString settings;
+      in
+      if builtins.hasContext settingsPath then
+        settings
+      else
+        builtins.path {
+          path = settings;
+          name = "vscode-user-settings-json5";
+        }
+    else
+      jsonFormat.generate "vscode-user-settings" settings;
+
+  mutableUserSettingsProfiles = lib.filterAttrs (
+    _name: profile: profile.mutableUserSettings && effectiveUserSettings profile != { }
+  ) cfg.profiles;
+
+  immutableUserSettingsProfiles = lib.filterAttrs (
+    profileName: profile:
+    !profile.mutableUserSettings
+    && effectiveUserSettings profile != { }
+    && config.home.file.${configFilePath profileName}.enable
+  ) cfg.profiles;
+
+  mutableUserSettingsOperation = profileName: profile: ''
+    ${import ./mutableSettings.nix { inherit lib pkgs name; }}
+    vscodeMutableSettings ${lib.escapeShellArg (configFilePath profileName)} ${lib.escapeShellArg (declaredUserSettingsSource profile)} || exit 1
+  '';
+
+  immutableUserSettingsOperation =
+    profileName: _profile:
+    lib.hm.generators.mkImpureConfigCleanup {
+      file = config.home.file.${configFilePath profileName};
+    };
+
   transformMcpServerForVscode = name: server: {
     inherit name;
     value = lib.hm.mcp.transformMcpServer {
@@ -85,6 +131,8 @@ let
 
   profileType = types.submodule {
     options = {
+      mutableUserSettings = lib.mkEnableOption "mutable user settings for ${name}";
+
       userSettings = mkOption {
         type = types.either types.path jsonFormat.type;
         default = { };
@@ -259,6 +307,9 @@ let
   allProfilesExceptDefault = removeAttrs cfg.profiles [ "default" ];
 in
 {
+
+  # meta.maintainers (also) declared per fork
+
   options = lib.setAttrByPath modulePath {
     enable = lib.mkEnableOption name;
 
@@ -319,191 +370,217 @@ in
       )
     ];
 
-    home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
+    home = {
+      packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    # The file `${userDir}/globalStorage/storage.json` needs to be writable by VSCode,
-    # since it contains other data, such as theme backgrounds, recently opened folders, etc.
+      # The file `${userDir}/globalStorage/storage.json` needs to be writable by VSCode,
+      # since it contains other data, such as theme backgrounds, recently opened folders, etc.
 
-    # A caveat of adding profiles this way is, VSCode has to be closed
-    # when this file is being written, since the file is loaded into RAM
-    # and overwritten on closing VSCode.
-    home.activation = {
-      "${lib.last modulePath}Profiles" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
-        let
-          modifyGlobalStorage = pkgs.writeShellScript "${lib.last modulePath}-global-storage-modify" ''
-            PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
-            file="${userDir}/globalStorage/storage.json"
-            file_write=""
-            profiles=(${lib.escapeShellArgs (flatten (mapAttrsToList (n: _v: n) allProfilesExceptDefault))})
-
-            if [ -f "$file" ]; then
-              existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
-
-              for profile in "''${profiles[@]}"; do
-                if [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile "$profile" '.[$profile]')" != "\"$profile\"" ]]; then
-                  file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
-                fi
-              done
-            else
-              for profile in "''${profiles[@]}"; do
-                file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
-              done
-
-              mkdir -p "$(dirname "$file")"
-              echo "{}" > "$file"
-            fi
-
-            if [ "$file_write" != "" ]; then
-              userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" "$file")
-              echo $userDataProfiles > "$file"
-            fi
-          '';
-        in
-        modifyGlobalStorage.outPath
-      );
-    };
-
-    home.file = lib.mkMerge (flatten [
-      (mkIf (cfg.argvSettings != { }) {
-        "${argvPath}".source =
-          if isPathLike cfg.argvSettings then
-            cfg.argvSettings
-          else
-            jsonFormat.generate "vscode-argv" cfg.argvSettings;
-      })
-
-      (mapAttrsToList (n: v: [
-        (
+      # A caveat of adding profiles this way is, VSCode has to be closed
+      # when this file is being written, since the file is loaded into RAM
+      # and overwritten on closing VSCode.
+      activation = {
+        "${lib.last modulePath}Profiles" = lib.hm.dag.entryAfter [ "writeBoundary" ] (
           let
-            merged = mergedUserSettings v.userSettings v.enableUpdateCheck v.enableExtensionUpdateCheck;
-          in
-          mkIf (merged != { }) {
-            "${configFilePath n}".source =
-              if isPathLike merged then merged else jsonFormat.generate "vscode-user-settings" merged;
-          }
-        )
+            modifyGlobalStorage = pkgs.writeShellScript "${lib.last modulePath}-global-storage-modify" ''
+              ${config.lib.bash.initHomeManagerLib}
+              PATH=${lib.makeBinPath [ pkgs.jq ]}''${PATH:+:}$PATH
+              file="${userDir}/globalStorage/storage.json"
+              file_write=""
+              profiles=(${lib.escapeShellArgs (flatten (mapAttrsToList (n: _v: n) allProfilesExceptDefault))})
 
-        (mkIf (v.userTasks != { }) {
-          "${tasksFilePath n}".source =
-            if isPathLike v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
-        })
+              if [ -f "$file" ]; then
+                existing_profiles=$(jq '.userDataProfiles // [] | map({ (.name): .location }) | add // {}' "$file")
 
-        (mkIf
-          (
-            v.userMcp != { }
-            || (v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { })
-          )
-          {
-            "${mcpFilePath n}".source =
-              if isPathLike v.userMcp then
-                v.userMcp
+                for profile in "''${profiles[@]}"; do
+                  if [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" != "true" ]] || [[ "$(echo $existing_profiles | jq --arg profile "$profile" 'has ($profile)')" == "true" && "$(echo $existing_profiles | jq --arg profile "$profile" '.[$profile]')" != "\"$profile\"" ]]; then
+                    file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+                  fi
+                done
               else
-                let
-                  transformedMcpServers =
-                    if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
-                      lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
-                    else
-                      { };
-                  # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
-                  mergedServers = transformedMcpServers // (v.userMcp.servers or { });
-                  # Merge all MCP config
-                  mergedMcpConfig =
-                    v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });
-                in
-                jsonFormat.generate "vscode-user-mcp" mergedMcpConfig;
-          }
-        )
+                for profile in "''${profiles[@]}"; do
+                  file_write="$file_write$([ "$file_write" != "" ] && echo "...")$profile"
+                done
 
-        (mkIf (v.keybindings != [ ]) {
-          "${keybindingsFilePath n}".source =
-            if isPathLike v.keybindings then
-              v.keybindings
+                mkdir -p "$(dirname "$file")"
+                echo "{}" > "$file"
+              fi
+
+              if [ "$file_write" != "" ]; then
+                userDataProfiles=$(jq ".userDataProfiles += $(echo $file_write | jq -R 'split("...") | map({ name: ., location: . })')" "$file")
+                echo $userDataProfiles > "$file"
+              fi
+
+              # Create globalStorage for profiles, if it doesn't exist.
+              # Required to store state.vscdb file.
+              # VSCode doesn't create this folder itself.
+              for profile in "''${profiles[@]}"; do
+                run mkdir -p "${userDir}/profiles/$profile/globalStorage"
+              done
+            '';
+          in
+          modifyGlobalStorage.outPath
+        );
+      }
+      // lib.optionalAttrs (mutableUserSettingsProfiles != { }) {
+        "${lib.last modulePath}MutableUserSettings" = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+          lib.concatStrings (lib.mapAttrsToList mutableUserSettingsOperation mutableUserSettingsProfiles)
+        );
+      }
+      // lib.optionalAttrs (immutableUserSettingsProfiles != { }) {
+        "${lib.last modulePath}ImmutableUserSettings" =
+          lib.hm.dag.entryBetween
+            [ "linkGeneration" ]
+            [
+              "writeBoundary"
+            ]
+            (
+              lib.concatStrings (lib.mapAttrsToList immutableUserSettingsOperation immutableUserSettingsProfiles)
+            );
+      };
+
+      file = lib.mkMerge (flatten [
+        (mkIf (cfg.argvSettings != { }) {
+          "${argvPath}".source =
+            if isPathLike cfg.argvSettings then
+              cfg.argvSettings
             else
-              jsonFormat.generate "vscode-keybindings" (map (lib.filterAttrs (_: v: v != null)) v.keybindings);
+              jsonFormat.generate "vscode-argv" cfg.argvSettings;
         })
 
-        (mkIf (v.languageSnippets != { }) (
-          lib.mapAttrs' (
-            language: snippet:
-            lib.nameValuePair "${snippetDir n}/${language}.json" {
-              source = jsonFormat.generate "user-snippet-${language}.json" snippet;
+        (mapAttrsToList (n: v: [
+          (
+            let
+              merged = effectiveUserSettings v;
+            in
+            mkIf (!v.mutableUserSettings && merged != { }) {
+              "${configFilePath n}".source = declaredUserSettingsSource v;
             }
-          ) v.languageSnippets
+          )
+
+          (mkIf (v.userTasks != { }) {
+            "${tasksFilePath n}".source =
+              if isPathLike v.userTasks then v.userTasks else jsonFormat.generate "vscode-user-tasks" v.userTasks;
+          })
+
+          (mkIf
+            (
+              v.userMcp != { }
+              || (v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { })
+            )
+            {
+              "${mcpFilePath n}".source =
+                if isPathLike v.userMcp then
+                  v.userMcp
+                else
+                  let
+                    transformedMcpServers =
+                      if v.enableMcpIntegration && config.programs.mcp.enable && config.programs.mcp.servers != { } then
+                        lib.listToAttrs (lib.mapAttrsToList transformMcpServerForVscode config.programs.mcp.servers)
+                      else
+                        { };
+                    # Merge MCP servers: transformed servers + user servers, with user servers taking precedence
+                    mergedServers = transformedMcpServers // (v.userMcp.servers or { });
+                    # Merge all MCP config
+                    mergedMcpConfig =
+                      v.userMcp // (lib.optionalAttrs (mergedServers != { }) { servers = mergedServers; });
+                  in
+                  jsonFormat.generate "vscode-user-mcp" mergedMcpConfig;
+            }
+          )
+
+          (mkIf (v.keybindings != [ ]) {
+            "${keybindingsFilePath n}".source =
+              if isPathLike v.keybindings then
+                v.keybindings
+              else
+                jsonFormat.generate "vscode-keybindings" (map (lib.filterAttrs (_: v: v != null)) v.keybindings);
+          })
+
+          (mkIf (v.languageSnippets != { }) (
+            lib.mapAttrs' (
+              language: snippet:
+              lib.nameValuePair "${snippetDir n}/${language}.json" {
+                source = jsonFormat.generate "user-snippet-${language}.json" snippet;
+              }
+            ) v.languageSnippets
+          ))
+
+          (mkIf (v.globalSnippets != { }) {
+            "${snippetDir n}/global.code-snippets".source =
+              jsonFormat.generate "user-snippet-global.code-snippets" v.globalSnippets;
+          })
+        ]) cfg.profiles)
+
+        # We write extensions.json for all profiles, except the default profile,
+        # since that is handled by code below.
+        (mkIf (allProfilesExceptDefault != { }) (
+          lib.mapAttrs' (
+            n: v:
+            lib.nameValuePair "${profileDir n}/extensions.json" {
+              source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
+            }
+          ) allProfilesExceptDefault
         ))
 
-        (mkIf (v.globalSnippets != { }) {
-          "${snippetDir n}/global.code-snippets".source =
-            jsonFormat.generate "user-snippet-global.code-snippets" v.globalSnippets;
-        })
-      ]) cfg.profiles)
-
-      # We write extensions.json for all profiles, except the default profile,
-      # since that is handled by code below.
-      (mkIf (allProfilesExceptDefault != { }) (
-        lib.mapAttrs' (
-          n: v:
-          lib.nameValuePair "${profileDir n}/extensions.json" {
-            source = "${extensionJsonFile n (extensionJson v.extensions)}/share/vscode/extensions/extensions.json";
-          }
-        ) allProfilesExceptDefault
-      ))
-
-      (mkIf (cfg.profiles != { }) (
-        let
-          # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
-          subDir = "share/vscode/extensions";
-          toPaths =
-            ext:
-            map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
-              if ext ? vscodeExtUniqueId then
-                [ ext.vscodeExtUniqueId ]
-              else
-                builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
-            );
-        in
-        if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
-          # Mutable extensions dir can only occur when only default profile is set.
-          # Force regenerating extensions.json using the below method,
-          # causes VSCode to create the extensions.json with all the extensions
-          # in the extension directory, which includes extensions from other profiles.
-          lib.mkMerge (
-            lib.concatMap toPaths (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
-            ++
-              lib.optional
-                (
-                  (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck)
-                  && defaultProfile != { }
-                  && cfg.package != null
-                )
-                {
-                  # Whenever our immutable extensions.json changes, force VSCode to regenerate
-                  # extensions.json with both mutable and immutable extensions.
-                  "${extensionPath}/.extensions-immutable.json" = {
-                    text = extensionJson defaultProfile.extensions;
-                    onChange = ''
-                      run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
-                      verboseEcho "Regenerating VSCode extensions.json"
-                      run ${lib.getExe cfg.package} --list-extensions > /dev/null
-                    '';
+        (mkIf (cfg.profiles != { }) (
+          let
+            # Adapted from https://discourse.nixos.org/t/vscode-extensions-setup/1801/2
+            subDir = "share/vscode/extensions";
+            toPaths =
+              ext:
+              map (k: { "${extensionPath}/${k}".source = "${ext}/${subDir}/${k}"; }) (
+                if ext ? vscodeExtUniqueId then
+                  [ ext.vscodeExtUniqueId ]
+                else
+                  builtins.attrNames (builtins.readDir (ext + "/${subDir}"))
+              );
+          in
+          if (cfg.mutableExtensionsDir && allProfilesExceptDefault == { }) then
+            # Mutable extensions dir can only occur when only default profile is set.
+            # Force regenerating extensions.json using the below method,
+            # causes VSCode to create the extensions.json with all the extensions
+            # in the extension directory, which includes extensions from other profiles.
+            lib.mkMerge (
+              lib.concatMap toPaths (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
+              ++
+                lib.optional
+                  (
+                    (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck)
+                    && defaultProfile != { }
+                    && cfg.package != null
+                  )
+                  {
+                    # Whenever our immutable extensions.json changes, force VSCode to regenerate
+                    # extensions.json with both mutable and immutable extensions.
+                    "${extensionPath}/.extensions-immutable.json" = {
+                      text = extensionJson defaultProfile.extensions;
+                      onChange = ''
+                        run rm $VERBOSE_ARG -f ${extensionPath}/{extensions.json,.init-default-profile-extensions}
+                        verboseEcho "Regenerating VSCode extensions.json"
+                        run ${lib.getExe cfg.package} --list-extensions > /dev/null
+                      '';
+                    };
+                  }
+            )
+          else
+            {
+              "${extensionPath}".source =
+                let
+                  combinedExtensionsDrv = pkgs.buildEnv {
+                    name = "vscode-extensions";
+                    paths =
+                      (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
+                      ++ lib.optional (
+                        (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck) && defaultProfile != { }
+                      ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
                   };
-                }
-          )
-        else
-          {
-            "${extensionPath}".source =
-              let
-                combinedExtensionsDrv = pkgs.buildEnv {
-                  name = "vscode-extensions";
-                  paths =
-                    (flatten (mapAttrsToList (_n: v: v.extensions) cfg.profiles))
-                    ++ lib.optional (
-                      (lib.versionAtLeast vscodeVersion "1.74.0" || skipVersionCheck) && defaultProfile != { }
-                    ) (extensionJsonFile "default" (extensionJson defaultProfile.extensions));
-                };
-              in
-              "${combinedExtensionsDrv}/${subDir}";
-          }
-      ))
-    ]);
+                in
+                "${combinedExtensionsDrv}/${subDir}";
+            }
+        ))
+      ]);
+    };
+
   };
 }

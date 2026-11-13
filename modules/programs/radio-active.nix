@@ -55,15 +55,15 @@ in
         ])
       );
       default = { };
-      example = {
-        loglevel = "debug";
-        limit = 41;
-        sort = "votes";
-        filter = "none";
-        volume = 68;
+      example.AppConfig = {
         filepath = "/home/{user}/recordings/radioactive/";
         filetype = "mp3";
+        filter = "none";
+        limit = 41;
+        loglevel = "debug";
         player = "ffplay";
+        sort = "votes";
+        volume = 68;
       };
       description = ''
         Declare-able configurations for radio-active written to
@@ -87,6 +87,23 @@ in
     let
       player = attrByPath [ "settings" "AppConfig" "player" ] "ffplay" cfg;
 
+      wrapPlayer =
+        package: playerName: playerPackage:
+        pkgs.symlinkJoin {
+          name = "${lib.getName package}-${playerName}";
+          paths = [ package ];
+          meta = package.meta or { };
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            for executable in "$out"/bin/*; do
+              if [ -f "$executable" ] && [ -x "$executable" ]; then
+                wrapProgram "$executable" \
+                  --prefix PATH : ${lib.makeBinPath [ playerPackage ]}
+              fi
+            done
+          '';
+        };
+
       knownPlayers = [
         "ffplay"
         "mpv"
@@ -95,49 +112,24 @@ in
     in
     mkIf cfg.enable {
       warnings = lib.optional (builtins.elem player knownPlayers == false) ''
-        Unknown player defined in `config.programs.radio-active.AppConfig.player`
+        Unknown player defined in `programs.radio-active.settings.AppConfig.player`
       '';
 
-      ## TODO: test that dependency `postPatch` modifications works at runtime
-      home.packages =
-        let
-          radio-active =
-            if player == "mpv" then
-              pkgs.radio-active.overrideAttrs (
-                _finalAttrs: previousAttrs: {
-                  postPatch = ''
-                    ${previousAttrs.postPatch}
+      home.packages = lib.optional (cfg.package != null) (
+        if
+          builtins.elem player [
+            "mpv"
+            "vlc"
+          ]
+        then
+          wrapPlayer cfg.package player pkgs.${player}
+        else
+          cfg.package
+      );
 
-                    substituteInPlace radioactive/mpv.py \
-                      --replace-fail 'self.exe_path = which(self.program_name)' \
-                      'self.exe_path = "${lib.getExe pkgs.mpv}"'
-                  '';
-                }
-              )
-            else if player == "vlc" then
-              pkgs.radio-active.overrideAttrs (
-                _finalAttrs: previousAttrs: {
-                  postPatch = ''
-                    ${previousAttrs.postPatch}
-
-                    substituteInPlace radioactive/vlc.py \
-                      --replace-fail 'self.exe_path = which(self.program_name)' \
-                      'self.exe_path = "${lib.getExe pkgs.vlc}"'
-                  '';
-                }
-              )
-            else
-              pkgs.radio-active;
-        in
-        mkIf (cfg.package != null) [
-          radio-active
-        ];
-
-      xdg.configFile."radio-active/configs.ini" =
-        lib.mkIf (cfg.settings != { } && cfg.settings.AppConfig != { })
-          {
-            source = iniFormat.generate "radio-active-config" cfg.settings;
-          };
+      xdg.configFile."radio-active/configs.ini" = lib.mkIf (cfg.settings != { }) {
+        source = iniFormat.generate "radio-active-config" cfg.settings;
+      };
 
       home.file.".radio-active-alias" = mkIf (cfg.aliases != { }) {
         text = ''

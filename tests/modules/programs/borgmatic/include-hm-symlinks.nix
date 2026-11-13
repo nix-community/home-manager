@@ -1,4 +1,4 @@
-{ realPkgs, ... }:
+{ lib, realPkgs, ... }:
 
 let
 
@@ -20,6 +20,22 @@ in
         };
       };
     };
+  };
+
+  test.asserts.warnings.expected = (import ./warnings.nix { inherit lib; }) {
+    file = ./include-hm-symlinks.nix;
+    entries = [
+      { from = "location.extraConfig"; }
+      {
+        from = "location.repositories";
+        to = "settings.repositories";
+        changed = true;
+      }
+      {
+        from = "location.sourceDirectories";
+        to = "settings.source_directories";
+      }
+    ];
   };
 
   nmt.script = ''
