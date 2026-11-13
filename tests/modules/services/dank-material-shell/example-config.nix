@@ -1,5 +1,5 @@
 {
-  programs.dank-material-shell = {
+  programs.dux-shell = {
     enable = true;
 
     settings = {
@@ -23,16 +23,16 @@
   };
 
   nmt.script = ''
-    assertFileExists home-files/.config/DankMaterialShell/settings.json
-    assertFileContent home-files/.config/DankMaterialShell/settings.json \
+    assertFileExists home-files/.config/DuxShell/settings.json
+    assertFileContent home-files/.config/DuxShell/settings.json \
     ${./settings.json}
 
-    assertFileExists home-files/.local/state/DankMaterialShell/session.json
-    assertFileContent home-files/.local/state/DankMaterialShell/session.json \
+    assertFileExists home-files/.local/state/DuxShell/session.json
+    assertFileContent home-files/.local/state/DuxShell/session.json \
     ${./session.json}
 
-    assertFileExists home-files/.config/DankMaterialShell/clsettings.json
-    assertFileContent home-files/.config/DankMaterialShell/clsettings.json \
+    assertFileExists home-files/.config/DuxShell/clsettings.json
+    assertFileContent home-files/.config/DuxShell/clsettings.json \
     ${./clsettings.json}
   '';
 }
