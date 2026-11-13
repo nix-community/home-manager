@@ -505,6 +505,12 @@
     github = "prescientmoon";
     githubId = 39400800;
   };
+  ps1ph3r = {
+    name = "ps1ph3r";
+    email = "81748286+ps1ph3r@users.noreply.github.com";
+    github = "ps1ph3r";
+    githubId = 81748286;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
