@@ -32,6 +32,72 @@ let
 
   userDataDir = "${config.home.homeDirectory}/.t3/userdata";
 
+  themesDir = "${userDataDir}/themes";
+
+  themeSources = lib.mapAttrs (
+    id: value:
+    if builtins.isAttrs value && !lib.isDerivation value then
+      jsonFormat.generate "t3code-theme-${id}" value
+    else
+      value
+  ) cfg.themes;
+
+  # t3code clients apply a default theme once per generation token, so the
+  # token has to change when the selected theme's content changes. For an
+  # attribute set the generated store path already depends on the content.
+  themeToken = id: builtins.hashString "sha256" "${id}:${toString themeSources.${id}}";
+
+  # Nix's regular expressions are POSIX ERE and have no negative lookahead, so
+  # the reserved ids are checked separately. These mirror upstream's
+  # RESERVED_THEME_IDS: appearance keywords, built-in themes, and legacy aliases.
+  reservedThemeIds = [
+    "system"
+    "light"
+    "dark"
+    "t3-chat"
+    "grove"
+    "ocean"
+    "ember"
+    "iris"
+    "t3-chat-dark"
+    "t3-grove"
+    "t3-ocean"
+    "t3-ember"
+    "t3-iris"
+    "t3-code"
+  ];
+
+  validThemeId =
+    id: builtins.match "^[a-z0-9][a-z0-9-]{0,47}$" id != null && !lib.elem id reservedThemeIds;
+
+  cmp = lib.getExe' pkgs.diffutils "cmp";
+  cp = lib.getExe' pkgs.coreutils "cp";
+  chmod = lib.getExe' pkgs.coreutils "chmod";
+  mkdir = lib.getExe' pkgs.coreutils "mkdir";
+  mktemp = lib.getExe' pkgs.coreutils "mktemp";
+  mv = lib.getExe' pkgs.coreutils "mv";
+
+  # t3code's loader opens theme files with O_NOFOLLOW, so a home.file symlink
+  # into the Nix store would be ignored. Materialize a regular file instead,
+  # writing to a temporary file in the same directory and renaming over the
+  # target so an existing symlink is replaced rather than followed.
+  materializeTheme =
+    id:
+    let
+      source = toString themeSources.${id};
+      target = "${themesDir}/${id}.json";
+    in
+    ''
+      theme_source=${lib.escapeShellArg source}
+      theme_target=${lib.escapeShellArg target}
+      if [ -L "$theme_target" ] || ! ${cmp} -s "$theme_source" "$theme_target"; then
+        theme_tmp=$(${mktemp} ${lib.escapeShellArg "${themesDir}/.${id}.json.XXXXXXXX"})
+        ${cp} "$theme_source" "$theme_tmp"
+        ${chmod} 0644 "$theme_tmp"
+        ${mv} -fT "$theme_tmp" "$theme_target"
+      fi
+    '';
+
   serverCfg = cfg.server;
 
   # t3code's headless server binary. pkgs.t3code's mainProgram is the Electron
@@ -166,6 +232,56 @@ in
       '';
     };
 
+    themes = mkOption {
+      type = types.attrsOf (types.either types.path jsonFormat.type);
+      default = { };
+      example = {
+        nightfall = {
+          name = "Nightfall";
+          appearance = "dark";
+          canvas = "#1a1b26";
+          accent = "#7aa2f7";
+          colors.terminalSelection = "#292e42";
+        };
+      };
+      description = ''
+        Environment themes published to {file}`~/.t3/userdata/themes`.
+
+        The attribute name is the theme id. It must be 1 to 48 characters of
+        lowercase letters, digits, and hyphens, and must not be a reserved id
+        (`system`, `light`, `dark`, a built-in theme such as `t3-chat` or
+        `grove`, or a legacy alias such as `t3-grove`). The value is either a
+        path to a JSON theme file or an attribute set that Home Manager
+        serializes to JSON. The accepted fields are described in the
+        [environment theme format](https://github.com/pingdotgg/t3code/blob/main/packages/contracts/src/server.ts).
+
+        t3code's theme loader opens each file with `O_NOFOLLOW`, so a
+        {option}`home.file` symlink into the Nix store would be ignored. Home
+        Manager therefore writes each theme as a regular file, replacing an
+        existing file or symlink. Other files in the themes directory are
+        left alone.
+
+        t3code ignores theme files larger than 32 KiB and stops reading after
+        32 theme files.
+      '';
+    };
+
+    defaultTheme = mkOption {
+      type = types.nullOr (types.strMatching "^[a-z0-9][a-z0-9-]{0,47}$");
+      default = null;
+      example = "nightfall";
+      description = ''
+        Theme id to make the default for web and desktop clients.
+
+        The id must name an entry in {option}`programs.t3code.themes`. Home
+        Manager writes it to {file}`settings.json` as `defaultTheme` and sets
+        `defaultThemeSetAt` from the theme's content, so connected clients
+        reapply the theme when its content changes. Set
+        {option}`programs.t3code.userSettings.defaultThemeSetAt` to override
+        the generated token.
+      '';
+    };
+
     server = {
       enable = lib.mkEnableOption "the t3code headless server as a user service";
 
@@ -200,6 +316,13 @@ in
 
   config = mkIf cfg.enable {
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
+
+    programs.t3code.userSettings = mkIf (cfg.defaultTheme != null) (
+      lib.mkDefault {
+        inherit (cfg) defaultTheme;
+        defaultThemeSetAt = themeToken cfg.defaultTheme;
+      }
+    );
 
     home.activation = mkMerge [
       (mkIf (immutableConfigCleanup != "") {
@@ -247,6 +370,13 @@ in
           }
         );
       })
+      (mkIf (cfg.themes != { }) {
+        t3codeThemes = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          theme_dir=${lib.escapeShellArg themesDir}
+          ${mkdir} -p "$theme_dir"
+          ${lib.concatMapStringsSep "\n" materializeTheme (lib.attrNames cfg.themes)}
+        '';
+      })
     ];
 
     home.file = mkMerge [
@@ -267,6 +397,14 @@ in
       {
         assertion = !serverCfg.enable || cfg.package != null;
         message = "programs.t3code.server.enable requires programs.t3code.package to be set (it is null).";
+      }
+      {
+        assertion = builtins.all validThemeId (lib.attrNames cfg.themes);
+        message = "programs.t3code.themes keys must be valid T3 environment theme ids: 1 to 48 characters of lowercase letters, digits, and hyphens, and not a reserved id (system, light, dark, a built-in theme, or a legacy alias).";
+      }
+      {
+        assertion = cfg.defaultTheme == null || lib.hasAttr cfg.defaultTheme cfg.themes;
+        message = "programs.t3code.defaultTheme \"${cfg.defaultTheme}\" does not match any programs.t3code.themes entry.";
       }
     ];
 
