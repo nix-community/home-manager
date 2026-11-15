@@ -1,0 +1,7 @@
+{
+  "notifications": {
+    "enabled": true,
+    "sound": false
+  },
+  "theme": "dark"
+}
