@@ -204,10 +204,19 @@ let
     # Set the directory as default for given accounts.
     // lib.optionalAttrs (accounts != [ ]) (
       lib.mergeAttrsList (
-        map (a: {
-          "mail.identity.id_${a.id}.directoryServer" = "ldap_2.servers.ldap_${directory.id}";
-          "mail.identity.id_${a.id}.overrideGlobal_Pref" = true;
-        }) accounts
+        lib.concatMap (
+          account:
+          map (
+            address:
+            let
+              id = getId account address;
+            in
+            {
+              "mail.identity.id_${id}.directoryServer" = "ldap_2.servers.ldap_${directory.id}";
+              "mail.identity.id_${id}.overrideGlobal_Pref" = true;
+            }
+          ) ([ account.address ] ++ account.aliases)
+        ) accounts
       )
     )
     // (directory.settings directory.id);

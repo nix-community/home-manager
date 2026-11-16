@@ -38,6 +38,7 @@ user_pref("mail.accountmanager.accounts", "account_cda3f13b64c1db7d4b58ce07a3130
 user_pref("mail.accountmanager.defaultaccount", "account_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f");
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.attachPgpKey", false);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.autoEncryptDrafts", true);
+user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.directoryServer", "ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49");
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.e2etechpref", 0);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.encryptionpolicy", 0);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.fullName", "H. M. Test");
@@ -46,6 +47,7 @@ user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ec
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.is_gnupg_key_id", true);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.last_entered_external_gnupg_key_id", "ABC");
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.openpgp_key_id", "ABC");
+user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.overrideGlobal_Pref", true);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.protectSubject", true);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.sign_mail", false);
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.smtpServer", "smtp_cda3f13b64c1db7d4b58ce07a31304a362d7dcaf14476bfabcca913ae41ada9f");
@@ -53,6 +55,7 @@ user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ec
 user_pref("mail.identity.id_8bbcff78f53202c0bfaa490a2068e3e5d6e36872144c659952ecc0ada47d7562.valid", true);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.attachPgpKey", false);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.autoEncryptDrafts", true);
+user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.directoryServer", "ldap_2.servers.ldap_6a6f60e9ecd9c84feeef4234fc53608f671673bde063fc832a1d4e05e8293f49");
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.e2etechpref", 0);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.encryptionpolicy", 0);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.fullName", "Home Manager");
@@ -60,6 +63,7 @@ user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.is_gnupg_key_id", true);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.last_entered_external_gnupg_key_id", "ABC");
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.openpgp_key_id", "ABC");
+user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.overrideGlobal_Pref", true);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.protectSubject", true);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.sign_mail", false);
 user_pref("mail.identity.id_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b.smtpServer", "smtp_b24ca86ede61ed219e6c87cfec261aae2c72785f812489ea943d114d1f39f55b");
