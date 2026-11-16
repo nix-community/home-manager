@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-865a0648.js";
+            window.path_to_searchindex_js = "searchindex-81b18327.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-46105e62.js"></script>
+        <script src="toc-fe5548c1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12671,6 +12671,7 @@ string</p>
 <li><a href="#vscodium">vscodium</a></li>
 <li><a href="#w3m">w3m</a></li>
 <li><a href="#wallust">wallust</a></li>
+<li><a href="#warp-terminal">warp-terminal</a></li>
 <li><a href="#watson">watson</a></li>
 <li><a href="#waveterm">waveterm</a></li>
 <li><a href="#waybar">waybar</a></li>
@@ -17664,8 +17665,32 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.awscli.configFile"><a class="header" href="#opt-programs.awscli.configFile">programs.awscli.configFile</a></h2>
+<p>Location of the configuration file. Defaults to
+<code>~/.aws/config</code>, matching the upstream <code>aws</code> CLI
+default, or to <code>$XDG_CONFIG_HOME/aws/config</code> when
+<code>home.preferXdgDirectories</code> is enabled. The
+<code>AWS_CONFIG_FILE</code> environment variable is exported automatically
+whenever this path differs from the upstream default so the AWS CLI
+reads configuration from the same location.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if config.home.preferXdgDirectories then
+  "${config.xdg.configHome}/aws/config"
+else
+  "${config.home.homeDirectory}/.aws/config"
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"${config.xdg.configHome}/aws/config"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.awscli.credentials"><a class="header" href="#opt-programs.awscli.credentials">programs.awscli.credentials</a></h2>
-<p>Configuration written to <code>$HOME/.aws/credentials</code>.</p>
+<p>Configuration written to <code>programs.awscli.credentialsFile</code>.</p>
 <p>For security reasons, never store cleartext passwords here.
 We recommend that you use <code>credential_process</code> option to retrieve
 the IAM credentials from your favorite password manager during runtime,
@@ -17688,8 +17713,34 @@ open submodule of attribute set of section of an INI file (attrs of INI atom (nu
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.awscli.credentialsFile"><a class="header" href="#opt-programs.awscli.credentialsFile">programs.awscli.credentialsFile</a></h2>
+<p>Location of the credentials file. Defaults to
+<code>~/.aws/credentials</code>, matching the upstream <code>aws</code> CLI
+default, or to <code>$XDG_CONFIG_HOME/aws/credentials</code> when
+<code>home.preferXdgDirectories</code> is enabled. The
+<code>AWS_SHARED_CREDENTIALS_FILE</code> environment variable is exported
+automatically whenever this path differs from the upstream default so
+the AWS CLI reads credentials from the same location.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if config.home.preferXdgDirectories then
+  "${config.xdg.configHome}/aws/credentials"
+else
+  "${config.home.homeDirectory}/.aws/credentials"
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/dotfiles/aws/credentials"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.awscli.settings"><a class="header" href="#opt-programs.awscli.settings">programs.awscli.settings</a></h2>
-<p>Configuration written to <code>$HOME/.aws/config</code>.</p>
+<p>Configuration written to <code>programs.awscli.configFile</code>.</p>
+<p>See <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html">https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html</a>
+for supported values.</p>
 <p><em>Type:</em>
 open submodule of attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
 <p><em>Default:</em></p>
@@ -62882,6 +62933,514 @@ TOML value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wallust.nix">&lt;home-manager/modules/programs/wallust.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="warp-terminal"><a href="#warp-terminal" class="header">warp-terminal</a></h1>
+<h2 id="opt-programs.warp-terminal.enable"><a class="header" href="#opt-programs.warp-terminal.enable">programs.warp-terminal.enable</a></h2>
+<p>Whether to enable Warp, the agentic development environment born out of the terminal.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.enableMcpIntegration"><a class="header" href="#opt-programs.warp-terminal.enableMcpIntegration">programs.warp-terminal.enableMcpIntegration</a></h2>
+<p>Whether to include the servers of <code>programs.mcp.servers</code> in
+<code>~/.warp/.mcp.json</code>. Disabled servers are left out, and servers
+with file-backed environment variables are wrapped in a script that
+reads them at startup.</p>
+<p><code>programs.warp-terminal.mcpServers</code> takes precedence on name
+conflicts.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.package"><a class="header" href="#opt-programs.warp-terminal.package">programs.warp-terminal.package</a></h2>
+<p>The warp-terminal package to use. Set to <code>null</code> to manage only the configuration, for example when Warp
+is installed with Homebrew on macOS.</p>
+<p>To run Warp natively on Wayland, override the package:
+<code>pkgs.warp-terminal.override { waylandSupport = true; }</code>.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.warp-terminal
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.customModelRouters"><a class="header" href="#opt-programs.warp-terminal.customModelRouters">programs.warp-terminal.customModelRouters</a></h2>
+<p>Custom model routers written to
+<code>$XDG_DATA_HOME/warp-terminal/custom_model_routers/&lt;name&gt;.yaml</code>
+on Linux and <code>~/.warp/custom_model_routers/&lt;name&gt;.yaml</code> on macOS.</p>
+<p>Each value is either a router or a path to an existing router file.
+The files are read-only once managed, so changes made to these routers
+in the Warp Settings panel are not persisted.</p>
+<p>See <a href="https://docs.warp.dev/agents/inference/custom-routers/">https://docs.warp.dev/agents/inference/custom-routers/</a> for the
+format and <a href="https://docs.warp.dev/agents/inference/model-choice/">https://docs.warp.dev/agents/inference/model-choice/</a> for
+the model IDs.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or YAML 1.1 value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  by_task = {
+    default = "claude-4-6-sonnet-high";
+    name = "By task";
+    routing = [
+      {
+        description = "debugging production incidents or fixing failing CI tests";
+        model = "claude-4-8-opus-high";
+      }
+    ];
+    type = "prompt";
+  };
+  cost_saver = {
+    default = "glm-5.3-fireworks";
+    name = "Cost saver";
+    routing = {
+      easy = "minimax-3-fireworks";
+      hard = "deepseek-v4.1-flash-fireworks";
+    };
+    type = "complexity";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.defaultTabConfigs"><a class="header" href="#opt-programs.warp-terminal.defaultTabConfigs">programs.warp-terminal.defaultTabConfigs</a></h2>
+<p>Default Tab Configs written to
+<code>$XDG_DATA_HOME/warp-terminal/default_tab_configs/&lt;name&gt;.toml</code>
+on Linux and <code>~/.warp/default_tab_configs/&lt;name&gt;.toml</code> on macOS.</p>
+<p>Each value is either a Tab Config or a path to an existing Tab Config
+file. Warp creates <code>worktree</code> from a built-in template when it is
+missing and uses it for new worktrees, so defining <code>worktree</code> replaces
+that template.</p>
+<p>See <a href="https://docs.warp.dev/terminal/windows/tab-configs/">https://docs.warp.dev/terminal/windows/tab-configs/</a> for the schema.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or TOML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  worktree = {
+    name = "Worktree";
+    panes = [
+      {
+        commands = [
+          "git worktree add -b {{autogenerated_branch_name}} \"{{worktree_path_prefix}}{{autogenerated_branch_name}}\""
+          "cd \"{{worktree_path_prefix}}{{autogenerated_branch_name}}\""
+          "nvim ."
+        ];
+        directory = "{{repo}}";
+        id = "main";
+        type = "{{pane_type}}";
+      }
+    ];
+    params = {
+      pane_type = {
+        default = "terminal";
+        type = "text";
+      };
+      repo = {
+        type = "repo";
+      };
+    };
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.keybindings"><a class="header" href="#opt-programs.warp-terminal.keybindings">programs.warp-terminal.keybindings</a></h2>
+<p>Keyboard shortcuts written to <code>$XDG_CONFIG_HOME/warp-terminal/keybindings.yaml</code>
+on Linux and <code>~/.warp/keybindings.yaml</code> on macOS.</p>
+<p>The file is read-only once managed, so shortcuts changed in the Warp
+Settings panel are not persisted.</p>
+<p>Each attribute maps an action name to a hyphen-separated list of
+modifiers ending with the key. The available modifiers are <code>ctrl</code>,
+<code>alt</code>, <code>meta</code>, <code>shift</code>, <code>cmd</code> on macOS, and <code>cmdorctrl</code>, which is <code>cmd</code>
+on macOS and <code>ctrl</code> elsewhere. A printable key must reflect the <code>shift</code>
+modifier, so <code>Ctrl+Shift+A</code> is <code>ctrl-shift-A</code>. Separate the keystrokes
+of a sequence with spaces, and use <code>none</code> to remove a default shortcut.</p>
+<p>See <a href="https://docs.warp.dev/getting-started/keyboard-shortcuts/">https://docs.warp.dev/getting-started/keyboard-shortcuts/</a> for the
+action names and <a href="https://github.com/warpdotdev/keysets">https://github.com/warpdotdev/keysets</a> for the format.</p>
+<p><em>Type:</em>
+attribute set of string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "pane_group:add_right" = "ctrl-shift-E";
+  "terminal:clear_blocks" = "ctrl-L";
+  "workspace:toggle_warp_drive" = "ctrl-shift-D";
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.launchConfigurations"><a class="header" href="#opt-programs.warp-terminal.launchConfigurations">programs.warp-terminal.launchConfigurations</a></h2>
+<p>Launch Configurations written to
+<code>$XDG_DATA_HOME/warp-terminal/launch_configurations/&lt;name&gt;.yaml</code>
+on Linux and <code>~/.warp/launch_configurations/&lt;name&gt;.yaml</code> on macOS.</p>
+<p>Launch Configurations are a legacy feature superseded by
+<code>programs.warp-terminal.tabConfigs</code>. Every <code>cwd</code> must be an
+absolute path or <code>""</code>.</p>
+<p>See <a href="https://docs.warp.dev/terminal/sessions/launch-configurations/">https://docs.warp.dev/terminal/sessions/launch-configurations/</a> for
+the format.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or YAML 1.1 value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  example_tabs = {
+    name = "Example Tabs";
+    windows = [
+      {
+        tabs = [
+          {
+            color = "blue";
+            layout = {
+              cwd = "/home/alice/Documents";
+            };
+            title = "Documents";
+          }
+          {
+            color = "green";
+            layout = {
+              cwd = "/home/alice";
+            };
+            title = "Home";
+          }
+        ];
+      }
+    ];
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.mcpServers"><a class="header" href="#opt-programs.warp-terminal.mcpServers">programs.warp-terminal.mcpServers</a></h2>
+<p>MCP servers written under <code>mcpServers</code> in <code>~/.warp/.mcp.json</code>.
+Warp spawns these global servers automatically.</p>
+<p>A local server sets <code>command</code>, <code>args</code>, and <code>env</code>. A remote server sets
+<code>url</code> and <code>headers</code>.</p>
+<p>See <a href="https://docs.warp.dev/agents/capabilities/mcp/">https://docs.warp.dev/agents/capabilities/mcp/</a> for the format.</p>
+<p><em>Type:</em>
+attribute set of (JSON value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  externalDocs = {
+    headers = {
+      my-header = "my-header-value";
+    };
+    url = "http://localhost:4000/mcp/stream";
+  };
+  filesystem = {
+    args = [
+      "-y"
+      "@modelcontextprotocol/server-filesystem"
+      "/path/to/allowed/files"
+    ];
+    command = "npx";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.settings"><a class="header" href="#opt-programs.warp-terminal.settings">programs.warp-terminal.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/warp-terminal/settings.toml</code>
+on Linux and <code>~/.warp/settings.toml</code> on macOS.</p>
+<p>The file is read-only once managed, so changes made in the Warp
+Settings panel are not persisted.</p>
+<p>To select a theme defined in <code>programs.warp-terminal.themes</code>,
+set <code>appearance.themes.theme.custom</code> to its <code>name</code> and the <code>path</code> of
+its file, for example
+<code>"${config.xdg.dataHome}/warp-terminal/themes/solarized_nix.yaml"</code> on Linux.</p>
+<p>See <a href="https://docs.warp.dev/terminal/settings/all-settings/">https://docs.warp.dev/terminal/settings/all-settings/</a> for the
+available settings.</p>
+<p><em>Type:</em>
+TOML value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  agents = {
+    profiles = {
+      agent_mode_command_execution_allowlist = [
+        "ls(\\s.*)?"
+        "cat(\\s.*)?"
+      ];
+      agent_mode_execute_readonly_commands = true;
+    };
+  };
+  appearance = {
+    text = {
+      font_name = "JetBrains Mono";
+      font_size = 14.0;
+      ligature_rendering_enabled = true;
+      line_height_ratio = 1.3;
+    };
+    themes = {
+      theme = "dracula";
+    };
+  };
+  terminal = {
+    input = {
+      honor_ps1 = false;
+      syntax_highlighting = true;
+    };
+  };
+  text_editing = {
+    vim_mode_enabled = true;
+    vim_status_bar = true;
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.skills"><a class="header" href="#opt-programs.warp-terminal.skills">programs.warp-terminal.skills</a></h2>
+<p>Global agent skills written to <code>~/.warp/skills/&lt;name&gt;</code>.</p>
+<p>Each value is either the content of <code>SKILL.md</code> or a path to a
+directory that contains <code>SKILL.md</code> and its supporting files.</p>
+<p>See <a href="https://docs.warp.dev/agents/capabilities/skills/">https://docs.warp.dev/agents/capabilities/skills/</a> for the format.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or strings concatenated with “\n”)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  git-workflow = ''
+    ---
+    name: git-workflow
+    description: Create atomic commits with lowercase imperative messages.
+    ---
+
+    Stage related changes together and commit each logical change separately.
+  '';
+  code-review = ./skills/code-review;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.tabConfigs"><a class="header" href="#opt-programs.warp-terminal.tabConfigs">programs.warp-terminal.tabConfigs</a></h2>
+<p>Tab Configs written to <code>$XDG_DATA_HOME/warp-terminal/tab_configs/&lt;name&gt;.toml</code>
+on Linux and <code>~/.warp/tab_configs/&lt;name&gt;.toml</code> on macOS.</p>
+<p>Each value is either a Tab Config or a path to an existing Tab Config
+file. The attribute name is the file stem used by
+<code>warp://tab_config/&lt;name&gt;</code>.</p>
+<p>See <a href="https://docs.warp.dev/terminal/windows/tab-configs/">https://docs.warp.dev/terminal/windows/tab-configs/</a> for the schema.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or TOML value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  editor_server = {
+    color = "green";
+    name = "Editor + Server";
+    panes = [
+      {
+        children = [
+          "editor"
+          "server"
+        ];
+        id = "root";
+        split = "horizontal";
+      }
+      {
+        commands = [
+          "nvim ."
+        ];
+        directory = "~/code/my-app";
+        id = "editor";
+        is_focused = true;
+        type = "terminal";
+      }
+      {
+        commands = [
+          "npm run dev"
+        ];
+        directory = "~/code/my-app";
+        id = "server";
+        type = "terminal";
+      }
+    ];
+  };
+  new_worktree = {
+    name = "New Worktree";
+    panes = [
+      {
+        commands = [
+          "git worktree add -b {{branch_name}} ../{{branch_name}} {{base_branch}}"
+        ];
+        directory = "{{repo}}";
+        id = "main";
+        type = "terminal";
+      }
+    ];
+    params = {
+      base_branch = {
+        type = "branch";
+      };
+      branch_name = {
+        default = "my-feature";
+        type = "text";
+      };
+      repo = {
+        type = "repo";
+      };
+    };
+    title = "{{branch_name}}";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.themes"><a class="header" href="#opt-programs.warp-terminal.themes">programs.warp-terminal.themes</a></h2>
+<p>Custom themes written to <code>$XDG_DATA_HOME/warp-terminal/themes/&lt;name&gt;.yaml</code>
+on Linux and <code>~/.warp/themes/&lt;name&gt;.yaml</code> on macOS.</p>
+<p>Each value is either a theme definition or a path to an existing
+theme file. The theme picker shows the <code>name</code> field of the theme, or a
+name derived from the attribute name when <code>name</code> is unset.</p>
+<p>See <a href="https://docs.warp.dev/terminal/appearance/custom-themes/">https://docs.warp.dev/terminal/appearance/custom-themes/</a> for the
+format and <a href="https://github.com/warpdotdev/themes">https://github.com/warpdotdev/themes</a> for ready-made themes.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or YAML 1.1 value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  solarized_nix = {
+    name = "Solarized Nix";
+    accent = "#268bd2";
+    cursor = "#95D886";
+    background = "#002b36";
+    foreground = "#839496";
+    details = "darker";
+    terminal_colors = {
+      normal = {
+        black = "#073642";
+        red = "#dc322f";
+        green = "#859900";
+        yellow = "#b58900";
+        blue = "#268bd2";
+        magenta = "#d33682";
+        cyan = "#2aa198";
+        white = "#eee8d5";
+      };
+      bright = {
+        black = "#002b36";
+        red = "#cb4b16";
+        green = "#586e75";
+        yellow = "#657b83";
+        blue = "#839496";
+        magenta = "#6c71c4";
+        cyan = "#93a1a1";
+        white = "#fdf6e3";
+      };
+    };
+  };
+  dracula = ./themes/dracula.yaml;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.validateSettings"><a class="header" href="#opt-programs.warp-terminal.validateSettings">programs.warp-terminal.validateSettings</a></h2>
+<p>Whether to validate <code>programs.warp-terminal.settings</code> at build
+time against the JSON schema bundled with
+<code>programs.warp-terminal.package</code>.</p>
+<p>Validation catches wrong value types and unknown enum values, such as
+<code>font_weight = "heavy"</code>. It does not reject unknown keys.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">config.programs.warp-terminal.package != null
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.warp-terminal.workflows"><a class="header" href="#opt-programs.warp-terminal.workflows">programs.warp-terminal.workflows</a></h2>
+<p>YAML Workflows written to <code>$XDG_DATA_HOME/warp-terminal/workflows/&lt;name&gt;.yaml</code>
+on Linux and <code>~/.warp/workflows/&lt;name&gt;.yaml</code> on macOS.</p>
+<p>Each value is either a workflow or a path to an existing workflow file.</p>
+<p>See <a href="https://docs.warp.dev/terminal/entry/yaml-workflows/">https://docs.warp.dev/terminal/entry/yaml-workflows/</a> for the format.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or YAML 1.1 value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  git_undo = {
+    arguments = [
+      {
+        default_value = "1";
+        description = "Number of commits to undo";
+        name = "count";
+      }
+    ];
+    command = "git reset --soft HEAD~{{count}}";
+    description = "Undo commits while keeping the changes staged.";
+    name = "Undo the last commit";
+    tags = [
+      "git"
+    ];
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/warp-terminal.nix">&lt;home-manager/modules/programs/warp-terminal.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="watson"><a href="#watson" class="header">watson</a></h1>

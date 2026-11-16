@@ -35,10 +35,10 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-865a0648.js";
+            window.path_to_searchindex_js = "../../../searchindex-81b18327.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../../toc-46105e62.js"></script>
+        <script src="../../../toc-fe5548c1.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -202,8 +202,32 @@ null or package</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.awscli.configFile"><a class="header" href="#opt-programs.awscli.configFile">programs.awscli.configFile</a></h2>
+<p>Location of the configuration file. Defaults to
+<code>~/.aws/config</code>, matching the upstream <code>aws</code> CLI
+default, or to <code>$XDG_CONFIG_HOME/aws/config</code> when
+<code>home.preferXdgDirectories</code> is enabled. The
+<code>AWS_CONFIG_FILE</code> environment variable is exported automatically
+whenever this path differs from the upstream default so the AWS CLI
+reads configuration from the same location.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if config.home.preferXdgDirectories then
+  "${config.xdg.configHome}/aws/config"
+else
+  "${config.home.homeDirectory}/.aws/config"
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"${config.xdg.configHome}/aws/config"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.awscli.credentials"><a class="header" href="#opt-programs.awscli.credentials">programs.awscli.credentials</a></h2>
-<p>Configuration written to <code>$HOME/.aws/credentials</code>.</p>
+<p>Configuration written to <code>programs.awscli.credentialsFile</code>.</p>
 <p>For security reasons, never store cleartext passwords here.
 We recommend that you use <code>credential_process</code> option to retrieve
 the IAM credentials from your favorite password manager during runtime,
@@ -226,8 +250,34 @@ open submodule of attribute set of section of an INI file (attrs of INI atom (nu
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.awscli.credentialsFile"><a class="header" href="#opt-programs.awscli.credentialsFile">programs.awscli.credentialsFile</a></h2>
+<p>Location of the credentials file. Defaults to
+<code>~/.aws/credentials</code>, matching the upstream <code>aws</code> CLI
+default, or to <code>$XDG_CONFIG_HOME/aws/credentials</code> when
+<code>home.preferXdgDirectories</code> is enabled. The
+<code>AWS_SHARED_CREDENTIALS_FILE</code> environment variable is exported
+automatically whenever this path differs from the upstream default so
+the AWS CLI reads credentials from the same location.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if config.home.preferXdgDirectories then
+  "${config.xdg.configHome}/aws/credentials"
+else
+  "${config.home.homeDirectory}/.aws/credentials"
+
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"${config.home.homeDirectory}/dotfiles/aws/credentials"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/awscli.nix">&lt;home-manager/modules/programs/awscli.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.awscli.settings"><a class="header" href="#opt-programs.awscli.settings">programs.awscli.settings</a></h2>
-<p>Configuration written to <code>$HOME/.aws/config</code>.</p>
+<p>Configuration written to <code>programs.awscli.configFile</code>.</p>
+<p>See <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html">https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html</a>
+for supported values.</p>
 <p><em>Type:</em>
 open submodule of attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
 <p><em>Default:</em></p>
