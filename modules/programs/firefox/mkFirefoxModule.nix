@@ -441,7 +441,7 @@ in
     policies = lib.optionalAttrs (wrappedPackageName != null) (mkOption {
       type = types.attrsOf jsonFormat.type;
       default = { };
-      description = "[See list of policies](https://mozilla.github.io/policy-templates/).";
+      description = "[See list of policies](https://firefox-admin-docs.mozilla.org/reference/policies/).";
       example = {
         DefaultDownloadDirectory = "\${home}/Downloads";
         BlockAboutConfig = true;
