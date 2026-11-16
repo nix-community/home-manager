@@ -1,0 +1,8 @@
+%YAML 1.1
+---
+shell:
+  prompt_prefix: false
+tui:
+  statusline:
+    enabled: false
+version: 1

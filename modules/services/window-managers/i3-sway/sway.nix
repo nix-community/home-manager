@@ -508,23 +508,14 @@ in
     sumnerevans
   ];
 
-  imports =
-    let
-      modulePath = [
-        "wayland"
-        "windowManager"
-        "sway"
-      ];
-    in
-    [
-      (lib.mkRenamedOptionModule (modulePath ++ [ "systemdIntegration" ]) (
-        modulePath
-        ++ [
-          "systemd"
-          "enable"
-        ]
-      ))
-    ];
+  imports = [
+    (lib.mkRemovedOptionModule [
+      "wayland"
+      "windowManager"
+      "sway"
+      "systemdIntegration"
+    ] "Use `wayland.windowManager.sway.systemd.enable` instead.")
+  ];
 
   options.wayland.windowManager.sway = {
     enable = lib.mkEnableOption "sway wayland compositor";
@@ -562,6 +553,7 @@ in
           * {env}`WAYLAND_DISPLAY`
           * {env}`SWAYSOCK`
           * {env}`XDG_CURRENT_DESKTOP`
+          * {env}`XDG_SESSION_ID`
           * {env}`XDG_SESSION_TYPE`
           * {env}`NIXOS_OZONE_WL`
           * {env}`XCURSOR_THEME`
@@ -577,6 +569,7 @@ in
           "WAYLAND_DISPLAY"
           "SWAYSOCK"
           "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_ID"
           "XDG_SESSION_TYPE"
           "NIXOS_OZONE_WL"
           "XCURSOR_THEME"
@@ -738,20 +731,6 @@ in
           };
         };
       }
-
-      (mkIf (cfg.config != null) {
-        warnings =
-          (optional (lib.isList cfg.config.fonts) "Specifying sway.config.fonts as a list is deprecated. Use the attrset version instead.")
-          ++ lib.flatten (
-            map (
-              b:
-              optional (lib.isList b.fonts) "Specifying sway.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-            ) cfg.config.bars
-          )
-          ++ [
-            (mkIf cfg.config.focus.forceWrapping "sway.config.focus.forceWrapping is deprecated, use focus.wrapping instead.")
-          ];
-      })
     ]
   );
 }

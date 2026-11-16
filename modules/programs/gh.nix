@@ -18,36 +18,6 @@ let
 
   settingsType = types.submodule {
     freeformType = yamlFormat.type;
-    # These options are only here for the `mkRenamedOptionModule` support
-    options = {
-      aliases = mkOption {
-        type = with types; attrsOf str;
-        default = { };
-        example = {
-          co = "pr checkout";
-          pv = "pr view";
-        };
-        description = ''
-          Aliases that allow you to create nicknames for gh commands.
-        '';
-      };
-      editor = mkOption {
-        type = types.str;
-        default = "";
-        description = ''
-          The editor that gh should run when creating issues, pull requests, etc.
-          If blank, will refer to environment.
-        '';
-      };
-      git_protocol = mkOption {
-        type = types.str;
-        default = "https";
-        example = "ssh";
-        description = ''
-          The protocol to use when performing Git operations.
-        '';
-      };
-    };
   };
 
 in
@@ -58,42 +28,13 @@ in
   ];
 
   imports =
-    (map
-      (
-        x:
-        lib.mkRenamedOptionModule
-          [ "programs" "gh" x ]
-          [
-            "programs"
-            "gh"
-            "settings"
-            x
-          ]
-      )
-      [
-        "aliases"
-        "editor"
-      ]
-    )
-    ++ [
-      (lib.mkRenamedOptionModule
-        [ "programs" "gh" "gitProtocol" ]
-        [
-          "programs"
-          "gh"
-          "settings"
-          "git_protocol"
-        ]
-      )
-      (lib.mkRenamedOptionModule
-        [
-          "programs"
-          "gh"
-          "enableGitCredentialHelper"
-        ]
-        [ "programs" "gh" "gitCredentialHelper" "enable" ]
-      )
-    ];
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "gh" name ] message)
+      {
+        aliases = "Use `programs.gh.settings.aliases` instead.";
+        editor = "Use `programs.gh.settings.editor` instead.";
+        gitProtocol = "Use `programs.gh.settings.git_protocol` instead.";
+        enableGitCredentialHelper = "Use `programs.gh.gitCredentialHelper.enable` instead.";
+      };
 
   options.programs.gh = {
     enable = lib.mkEnableOption "GitHub CLI tool";

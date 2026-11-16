@@ -1,0 +1,10 @@
+[audit]
+enabled = false
+
+[defaults]
+profile = "default"
+provider = "keyring"
+
+[defaults.providers]
+aws = "awssm://"
+dotenv = "dotenv://"

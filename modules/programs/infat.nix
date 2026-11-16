@@ -152,7 +152,7 @@ in
             && (cfg.settings != { } || lib.elem "--config" cfg.autoActivate.extraArgs)
           )
           {
-            infat = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            infat = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
               run ${lib.getExe cfg.package} ${lib.escapeShellArgs autoActivateExtraArgs} $VERBOSE_ARG
             '';
           };

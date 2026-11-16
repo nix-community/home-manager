@@ -1,3 +1,5 @@
+{ lib, pkgs, ... }:
+
 {
   services.flameshot = {
     enable = true;
@@ -18,5 +20,10 @@
         disabledTrayIcon=true
         showStartupLaunchMessage=false
       ''}
+  ''
+  + lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+    assertFileContent \
+      "$(normalizeStorePaths LaunchAgentRestartTriggers/org.nix-community.home.flameshot.json)" \
+      ${./expected-restart-triggers.json}
   '';
 }

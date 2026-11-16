@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   ...
 }:
@@ -15,23 +16,19 @@ in
   programs.vicinae = {
     enable = true;
     systemd.enable = true;
-    useLayerShell = false;
+    package = config.lib.test.mkStubPackage {
+      name = "vicinae";
+      version = "0.17.0";
+    };
     settings = {
-      faviconService = "twenty";
-      font = {
-        size = 10;
-      };
-      popToRootOnClose = false;
-      rootSearch = {
-        searchFiles = false;
-      };
+      favicon_service = "twenty";
+      font.normal.size = 10;
+      launcher_window.layer_shell.enabled = false;
+      pop_to_root_on_close = false;
+      search_files_in_root = false;
       theme = {
-        name = "vicinae-dark";
-      };
-      window = {
-        csd = true;
-        opacity = 0.95;
-        rounding = 10;
+        dark.name = "vicinae-dark";
+        light.name = "vicinae-light";
       };
     };
     themes = {
@@ -73,12 +70,9 @@ in
     ];
   };
 
-  test.asserts.assertions.expected = [
-    "After version 0.17, if you want to explicitly disable the use of layer shell, you need to set {option}.programs.vicinae.settings.launcher_window.layer_shell.enabled = false."
-  ];
-
   nmt.script = ''
-    assertFileExists      "home-files/.config/vicinae/settings.json"
+    assertFileContent "home-files/.config/vicinae/settings.json" ${./settings.json}
+    assertPathNotExists "home-files/.config/vicinae/vicinae.json"
     assertFileExists      "home-files/.config/systemd/user/vicinae.service"
     assertFileExists      "home-files/.local/share/vicinae/themes/catppuccin-mocha.toml"
     assertFileExists      "home-files/.local/share/vicinae/extensions/cdnjs/package.json"

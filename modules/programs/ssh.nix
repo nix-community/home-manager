@@ -567,45 +567,19 @@ in
   meta.maintainers = [ lib.maintainers.rycee ];
 
   imports =
-    let
-      oldPrefix = [
-        "programs"
-        "ssh"
-      ];
-      newPrefix = [
-        "programs"
-        "ssh"
-        "settings"
-        "*"
-      ];
-      renamedOptions = [
-        "forwardAgent"
-        "addKeysToAgent"
-        "compression"
-        "serverAliveInterval"
-        "serverAliveCountMax"
-        "hashKnownHosts"
-        "userKnownHostsFile"
-        "controlMaster"
-        "controlPath"
-        "controlPersist"
-      ];
-      oldOptionNameToSetting = {
-        forwardAgent = "ForwardAgent";
-        addKeysToAgent = "AddKeysToAgent";
-        compression = "Compression";
-        serverAliveInterval = "ServerAliveInterval";
-        serverAliveCountMax = "ServerAliveCountMax";
-        hashKnownHosts = "HashKnownHosts";
-        userKnownHostsFile = "UserKnownHostsFile";
-        controlMaster = "ControlMaster";
-        controlPath = "ControlPath";
-        controlPersist = "ControlPersist";
+    lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "ssh" name ] message)
+      {
+        addKeysToAgent = "Use `programs.ssh.settings.\"*\".AddKeysToAgent` instead.";
+        compression = "Use `programs.ssh.settings.\"*\".Compression` instead.";
+        controlMaster = "Use `programs.ssh.settings.\"*\".ControlMaster` instead.";
+        controlPath = "Use `programs.ssh.settings.\"*\".ControlPath` instead.";
+        controlPersist = "Use `programs.ssh.settings.\"*\".ControlPersist` instead.";
+        forwardAgent = "Use `programs.ssh.settings.\"*\".ForwardAgent` instead.";
+        hashKnownHosts = "Use `programs.ssh.settings.\"*\".HashKnownHosts` instead.";
+        serverAliveCountMax = "Use `programs.ssh.settings.\"*\".ServerAliveCountMax` instead.";
+        serverAliveInterval = "Use `programs.ssh.settings.\"*\".ServerAliveInterval` instead.";
+        userKnownHostsFile = "Use `programs.ssh.settings.\"*\".UserKnownHostsFile` instead.";
       };
-    in
-    lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix {
-      transform = x: oldOptionNameToSetting.${x};
-    } renamedOptions;
 
   options.programs.ssh = {
     enable = lib.mkEnableOption "SSH client configuration";

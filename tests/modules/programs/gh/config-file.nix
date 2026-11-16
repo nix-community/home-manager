@@ -10,10 +10,11 @@
   nmt.script = ''
     assertFileExists home-files/.config/gh/config.yml
     assertFileContent home-files/.config/gh/config.yml ${builtins.toFile "config-file.yml" ''
+      %YAML 1.1
+      ---
       aliases:
         co: pr checkout
       editor: vim
-      git_protocol: https
       version: '1'
     ''}
   '';

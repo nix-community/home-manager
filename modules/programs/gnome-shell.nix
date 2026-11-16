@@ -50,7 +50,7 @@ let
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
-        example = lib.literalExpression "pkgs.plata-theme";
+        example = lib.literalExpression "pkgs.orchis-theme";
         description = ''
           Package providing a GNOME Shell theme in
           `$out/share/themes/''${name}/gnome-shell`.
@@ -88,8 +88,8 @@ in
       default = null;
       example = lib.literalExpression ''
         {
-          name = "Plata-Noir";
-          package = pkgs.plata-theme;
+          name = "Orchis";
+          package = pkgs.orchis-theme;
         }
       '';
       description = ''
@@ -114,7 +114,7 @@ in
 
         programs.gnome-shell.extensions = [
           {
-            package = pkgs.gnomeExtensions.user-themes;
+            package = lib.lowPrio pkgs.gnomeExtensions.user-themes;
           }
         ];
 

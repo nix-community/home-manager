@@ -1,0 +1,7 @@
+onboarding = false
+
+[keys]
+next_tab = ["prefix+n"]
+
+[theme]
+name = "catppuccin"

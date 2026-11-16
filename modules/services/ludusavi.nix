@@ -127,7 +127,10 @@ in
       };
       timers.ludusavi = {
         Unit.Description = "Run a game save backup with Ludusavi";
-        Timer.OnCalendar = cfg.frequency;
+        Timer = {
+          OnCalendar = cfg.frequency;
+          Persistent = true;
+        };
         Install.WantedBy = [ "timers.target" ];
       };
     };

@@ -40,16 +40,22 @@ in
     let
       runnersDir = "home-files/.config/lutris/runners";
       expectedCemu = builtins.toFile "cemu.yml" ''
+        %YAML 1.1
+        ---
         cemu:
           runner_executable: '${lib.getExe pkgs.cemu}'
       '';
       expectedPcsx2 = builtins.toFile "pcsx2.yml" ''
+        %YAML 1.1
+        ---
         pcsx2:
           runner_executable: '${pkgs.pcsx2}/bin/pcsx2-qt'
         system:
           disable_screen_saver: true
       '';
       expectedRpcs3 = builtins.toFile "rpcs3.yml" ''
+        %YAML 1.1
+        ---
         rpcs3:
           nogui: true
           runner_executable: '${lib.getExe pkgs.rpcs3}'
@@ -57,6 +63,8 @@ in
           disable_screen_saver: true
       '';
       expectedWine = builtins.toFile "wine.yml" ''
+        %YAML 1.1
+        ---
         system:
           disable_runtime: true
         wine:

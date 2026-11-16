@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 rules:
 - context:
   - /home/test_user/your_project_repo

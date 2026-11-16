@@ -8,30 +8,27 @@
 let
   cfg = config.services.wpaperd;
   tomlFormat = pkgs.formats.toml { };
-  inherit (lib) mkRenamedOptionModule mkIf;
+  inherit (lib) mkIf;
 in
 {
   meta.maintainers = [ lib.hm.maintainers._3ulalia ];
 
   imports = [
-    (
-      # \
-      mkRenamedOptionModule
-        [ "programs" "wpaperd" "enable" ] # \
-        [ "services" "wpaperd" "enable" ]
-    )
-    (
-      # \
-      mkRenamedOptionModule
-        [ "programs" "wpaperd" "package" ] # \
-        [ "services" "wpaperd" "package" ]
-    )
-    (
-      # \
-      mkRenamedOptionModule
-        [ "programs" "wpaperd" "settings" ] # \
-        [ "services" "wpaperd" "settings" ]
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "wpaperd"
+      "enable"
+    ] "Use `services.wpaperd.enable` instead.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "wpaperd"
+      "package"
+    ] "Use `services.wpaperd.package` instead.")
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "wpaperd"
+      "settings"
+    ] "Use `services.wpaperd.settings` instead.")
   ];
 
   options.services.wpaperd = {

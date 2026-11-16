@@ -182,7 +182,7 @@ in
         }) cfg.themes;
 
       home = {
-        packages = lib.mkMerge ([ (mkIf (cfg.package != null) [ cfg.package ]) ] ++ cfg.extraPackages);
+        packages = (lib.optional (cfg.package != null) cfg.package) ++ cfg.extraPackages;
 
         activation = lib.mkIf (cfg.settings != { }) {
           prismlauncherConfigActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (

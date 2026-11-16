@@ -63,7 +63,7 @@ in
         Each set of channels are written to
         {file}`$XDG_CONFIG_HOME/television/cable/NAME.toml`
 
-        See <https://alexpasmantier.github.io/television/docs/Users/channels>
+        See <https://alexpasmantier.github.io/television/user-guide/channels/>
         for options
       '';
       example = {

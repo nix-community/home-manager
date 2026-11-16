@@ -17,23 +17,37 @@ let
   jsonFormat = pkgs.formats.json { };
   json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
 
-  impureConfigMerger = empty: jqOperation: path: staticSettings: ''
-    mkdir -p "$(dirname -- ${lib.escapeShellArg path})"
-    if [ ! -e ${lib.escapeShellArg path} ]; then
-      echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
-    fi
-    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path})"
-    static="$(cat ${lib.escapeShellArg staticSettings})"
-    config="$(${lib.getExe pkgs.jq} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
-    printf '%s\n' "$config" > ${lib.escapeShellArg path}
-    unset config
-  '';
+  immutableFiles = {
+    settings = !cfg.mutableUserSettings && cfg.userSettings != { };
+    keybindings = !cfg.mutableKeybindings && cfg.keybindings != [ ];
+    client-settings = !cfg.mutableClientSettings && cfg.clientSettings != { };
+  };
+
+  immutableConfigCleanup = lib.concatMapStrings (
+    name:
+    lib.hm.generators.mkImpureConfigCleanup {
+      file = config.home.file.".t3/userdata/${name}.json";
+    }
+  ) (lib.attrNames (lib.filterAttrs (_: lib.id) immutableFiles));
 
   userDataDir = "${config.home.homeDirectory}/.t3/userdata";
+
+  serverCfg = cfg.server;
+
+  # t3code's headless server binary. pkgs.t3code's mainProgram is the Electron
+  # desktop app (t3code-desktop); the server run as a service is `t3`.
+  # The package wraps `t3` with the coding-agent and VCS CLIs it drives.
+  serverExe = lib.getExe' cfg.package "t3";
+
+  serverArgs = [
+    "serve"
+  ]
+  ++ serverCfg.extraArgs;
 in
 {
   meta.maintainers = [
     lib.maintainers.iamanaws
+    lib.maintainers.jonocodes
   ];
 
   options.programs.t3code = {
@@ -43,8 +57,19 @@ in
       type = types.nullOr types.package;
       default = pkgs.t3code or null;
       defaultText = literalExpression "pkgs.t3code";
+      example = literalExpression ''
+        pkgs.t3code.override {
+          enableClaude = true;
+          enableOpencode = true;
+        }
+      '';
       description = ''
         The t3code package to install.
+
+        The package puts {command}`git`, {command}`gh` and {command}`codex` on
+        t3code's {env}`PATH` by default. Override it to enable other CLIs,
+        such as Claude Code or OpenCode, for both the desktop app and the
+        server.
       '';
     };
 
@@ -79,7 +104,7 @@ in
       inherit (jsonFormat) type;
       default = { };
       example = {
-        enableAssistantStreaming = true;
+        enableProviderUpdateChecks = false;
         providerInstances = {
           codex = {
             driver = "codex";
@@ -127,20 +152,49 @@ in
       inherit (jsonFormat) type;
       default = { };
       example = {
-        settings = {
-          favorites = [
-            {
-              provider = "codex";
-              model = "gpt-5.5";
-            }
-          ];
-          sidebarProjectGroupingMode = "repository";
-          timestampFormat = "locale";
-        };
+        favorites = [
+          {
+            provider = "codex";
+            model = "gpt-5.5";
+          }
+        ];
+        sidebarProjectGroupingMode = "repository";
+        timestampFormat = "locale";
       };
       description = ''
         Configuration written to t3code's {file}`client-settings.json`.
       '';
+    };
+
+    server = {
+      enable = lib.mkEnableOption "the t3code headless server as a user service";
+
+      extraArgs = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [
+          "--host"
+          "0.0.0.0"
+          "--port"
+          "3773"
+        ];
+        description = ''
+          Extra arguments passed to {command}`t3 serve`, for example
+          `--host` and `--port`. Run {command}`t3 serve --help` for the
+          full list.
+        '';
+      };
+
+      environmentFile = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        example = "/run/secrets/t3code";
+        description = ''
+          Path to an environment file (see {manpage}`systemd.exec(5)`) loaded by
+          the service. The recommended way to pass secrets without exposing them
+          in the Nix store.
+        '';
+      };
     };
   };
 
@@ -148,26 +202,49 @@ in
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
 
     home.activation = mkMerge [
+      (mkIf (immutableConfigCleanup != "") {
+        t3codeImmutableConfig =
+          lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+            immutableConfigCleanup;
+      })
       (mkIf (cfg.mutableUserSettings && cfg.userSettings != { }) {
         t3codeSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" "$dynamic * $static" "${userDataDir}/settings.json" (
-            jsonFormat.generate "t3code-user-settings" cfg.userSettings
-          )
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "{}";
+            jqOperation = "$dynamic * $static";
+            path = "${userDataDir}/settings.json";
+            mode = "600";
+            staticSettings = jsonFormat.generate "t3code-user-settings" cfg.userSettings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableKeybindings && cfg.keybindings != [ ]) {
         t3codeKeybindingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by([.key, .when]) | map(reduce .[] as $item ({}; . * $item))"
-            "${userDataDir}/keybindings.json"
-            (jsonFormat.generate "t3code-user-keybindings" cfg.keybindings)
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "[]";
+            jqOperation = "$dynamic + $static | group_by([.key, .when]) | map(reduce .[] as $item ({}; . * $item))";
+            path = "${userDataDir}/keybindings.json";
+            staticSettings = jsonFormat.generate "t3code-user-keybindings" cfg.keybindings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableClientSettings && cfg.clientSettings != { }) {
         t3codeClientSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" "$dynamic * $static" "${userDataDir}/client-settings.json" (
-            jsonFormat.generate "t3code-client-settings" cfg.clientSettings
-          )
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "{}";
+            jqOperation = "$dynamic * $static";
+            path = "${userDataDir}/client-settings.json";
+            staticSettings = jsonFormat.generate "t3code-client-settings" cfg.clientSettings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
     ];
@@ -185,5 +262,62 @@ in
           jsonFormat.generate "t3code-client-settings" cfg.clientSettings;
       })
     ];
+
+    assertions = [
+      {
+        assertion = !serverCfg.enable || cfg.package != null;
+        message = "programs.t3code.server.enable requires programs.t3code.package to be set (it is null).";
+      }
+    ];
+
+    systemd.user.services = mkIf serverCfg.enable {
+      t3code = {
+        Unit = {
+          Description = "t3code headless server";
+          Documentation = "https://t3.codes";
+          After = [ "network.target" ];
+        };
+
+        Service = {
+          ExecStart = "${serverExe} ${lib.escapeShellArgs serverArgs}";
+          Restart = "on-failure";
+          RestartSec = 5;
+        }
+        // lib.optionalAttrs (serverCfg.environmentFile != null) {
+          EnvironmentFile = serverCfg.environmentFile;
+        };
+
+        Install = {
+          WantedBy = [ "default.target" ];
+        };
+      };
+    };
+
+    launchd.agents = mkIf serverCfg.enable {
+      t3code = {
+        enable = true;
+        config = {
+          ProgramArguments =
+            let
+              launchdWrapper = pkgs.writeShellScriptBin "t3code-launchd-wrapper" ''
+                set -a
+                source ${lib.escapeShellArg (toString serverCfg.environmentFile)} || exit 1
+                set +a
+                exec ${serverExe} ${lib.escapeShellArgs serverArgs}
+              '';
+            in
+            if serverCfg.environmentFile == null then
+              [ serverExe ] ++ serverArgs
+            else
+              [ (lib.getExe launchdWrapper) ];
+          KeepAlive = {
+            Crashed = true;
+            SuccessfulExit = false;
+          };
+          ProcessType = "Background";
+          RunAtLoad = true;
+        };
+      };
+    };
   };
 }

@@ -10,6 +10,8 @@
   nmt.script = ''
     assertFileExists home-files/.config/gh/hosts.yml
     assertFileContent home-files/.config/gh/hosts.yml ${builtins.toFile "hosts.yml" ''
+      %YAML 1.1
+      ---
       github.com:
         git_protocol: ssh
         user: my_username

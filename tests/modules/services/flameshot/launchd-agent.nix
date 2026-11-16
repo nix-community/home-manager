@@ -32,5 +32,6 @@
       	<true/>
       </dict>
       </plist>''}
+    assertPathNotExists LaunchAgentRestartTriggers/org.nix-community.home.flameshot.json
   '';
 }

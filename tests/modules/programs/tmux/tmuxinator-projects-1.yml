@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 name: myproject
 root: ~/code/myproject
 windows:

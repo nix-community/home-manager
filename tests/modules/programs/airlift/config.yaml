@@ -1,3 +1,5 @@
+%YAML 1.1
+---
 cluster_config_file: /path/to/cluster/config.yaml
 dag_path: /path/to/dags
 extra_volume_mounts:

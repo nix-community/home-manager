@@ -1,0 +1,35 @@
+{
+  "arbitrary": {
+    "enabled": true,
+    "nested": [
+      1,
+      "two",
+      null
+    ]
+  },
+  "execute_after": [
+    "before",
+    "middle",
+    "after"
+  ],
+  "on_failure": [
+    "notify-send 'Grobi failed'"
+  ],
+  "rules": [
+    {
+      "configure_single": "eDP-1",
+      "name": "Before"
+    },
+    {
+      "arbitrary_rule": {
+        "nested": true
+      },
+      "configure_single": "DP-1",
+      "name": "Middle"
+    },
+    {
+      "configure_single": "HDMI-1",
+      "name": "After"
+    }
+  ]
+}

@@ -109,6 +109,9 @@ in
                 default = null;
                 description = ''
                   A file containing the repository password.
+
+                  Set exactly one of this option and
+                  [](#opt-services.restic.backups._name_.passwordCommand).
                 '';
                 example = "/etc/nixos/restic-password";
               };
@@ -120,6 +123,9 @@ in
                   Command which returns one of the repository's passwords. Since
                   {env}`PATH` is set in the systemd service you need to provide
                   the absolute path to the executable.
+
+                  Set exactly one of this option and
+                  [](#opt-services.restic.backups._name_.passwordFile).
                 '';
                 example = lib.literalExpression ''"''${lib.getExe pkgs.gopass} show backups"'';
               };
@@ -181,6 +187,9 @@ in
 
                   If your using the rclone backend, you can configure your remotes with
                   {option}`programs.rclone.remotes` then use them in your backend specification.
+
+                  Set exactly one of this option and
+                  [](#opt-services.restic.backups._name_.repositoryFile).
                 '';
                 example = "sftp:backup@192.168.1.100:/backups/${name}";
               };
@@ -191,6 +200,9 @@ in
                 description = ''
                   Path to a file containing the repository location to backup to. This should be
                   in the same form as the {option}`repository` option.
+
+                  Set exactly one of this option and
+                  [](#opt-services.restic.backups._name_.repository).
                 '';
               };
 

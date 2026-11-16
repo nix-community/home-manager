@@ -130,11 +130,11 @@ in
     };
 
     useVcard4 = mkOption {
-      type = types.bool;
-      default = false;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Specifies whether vdirsyncer should request vCards in version 4.0.
-        If set to `false` then vdirsyncer will default to version 3.0.
+        If unset or set to `false` then vdirsyncer will default to version 3.0.
       '';
     };
 

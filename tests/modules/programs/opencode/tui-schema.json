@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "keybinds": {
+      "type": "object",
+      "properties": {
+        "leader": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scroll_speed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "theme": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "required": []
+}

@@ -1,0 +1,4 @@
+[General]
+selectcmd = "fzf"
+snippetdirs = ["/home/hm-user/.custom/pet/home-manager-snippets", "/home/hm-user/.custom/pet/other-snippets"]
+snippetfile = "/home/hm-user/.custom/pet/writable.toml"

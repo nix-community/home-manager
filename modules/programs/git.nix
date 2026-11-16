@@ -36,6 +36,22 @@ in
     rycee
   ];
 
+  imports =
+    (lib.mapAttrsToList (name: message: lib.mkRemovedOptionModule [ "programs" "git" name ] message) {
+      aliases = "Use `programs.git.settings.alias` instead.";
+      extraConfig = "Use `programs.git.settings` instead.";
+      userEmail = "Use `programs.git.settings.user.email` instead.";
+      userName = "Use `programs.git.settings.user.name` instead.";
+    })
+    ++ [
+      (lib.mkRemovedOptionModule [
+        "programs"
+        "git"
+        "signing"
+        "gpgPath"
+      ] "Use `programs.git.signing.signer` instead.")
+    ];
+
   options =
     let
       gitIniType =
@@ -62,6 +78,22 @@ in
         };
 
         signing = {
+          allowedSigners = mkOption {
+            type = types.lines;
+            default = "";
+            example = ''
+              user@example.com namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...
+            '';
+            description = ''
+              SSH public keys trusted when verifying signed commits and tags.
+
+              Each line must follow the allowed signers format described in
+              {manpage}`ssh-keygen(1)`. When non-empty, the content is written
+              to {file}`$XDG_CONFIG_HOME/git/allowed_signers` and configured as
+              Git's `gpg.ssh.allowedSignersFile` setting.
+            '';
+          };
+
           key = mkOption {
             type = types.nullOr types.str;
             default = null;
@@ -293,56 +325,6 @@ in
       };
     };
 
-  imports =
-    let
-      oldPrefix = [
-        "programs"
-        "git"
-      ];
-      newPrefix = [
-        "programs"
-        "git"
-        "settings"
-      ];
-    in
-    [
-      (lib.mkRenamedOptionModule
-        [ "programs" "git" "signing" "gpgPath" ]
-        [
-          "programs"
-          "git"
-          "signing"
-          "signer"
-        ]
-      )
-      (lib.mkRenamedOptionModule [ "programs" "git" "extraConfig" ] [ "programs" "git" "settings" ])
-    ]
-    ++ (lib.hm.deprecations.mkSettingsRenamedOptionModules oldPrefix newPrefix
-      {
-        transform = x: x;
-      }
-      [
-        {
-          old = [ "userName" ];
-          new = [
-            "user"
-            "name"
-          ];
-        }
-        {
-          old = [ "userEmail" ];
-          new = [
-            "user"
-            "email"
-          ];
-        }
-        {
-          old = [ "aliases" ];
-          new = [ "alias" ];
-        }
-      ]
-    );
-
   config = mkIf cfg.enable (
     let
       settingsFragments = lib.filter (fragment: fragment != { }) (
@@ -482,6 +464,12 @@ in
             })
           ];
         };
+      })
+
+      (mkIf (cfg.signing.allowedSigners != "") {
+        xdg.configFile."git/allowed_signers".text = cfg.signing.allowedSigners;
+        programs.git.iniContent.gpg.ssh.allowedSignersFile =
+          mkDefault "${config.xdg.configHome}/git/allowed_signers";
       })
 
       (mkIf (cfg.hooks != { }) {

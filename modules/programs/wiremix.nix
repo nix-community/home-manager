@@ -18,7 +18,7 @@ let
   tomlFormat = pkgs.formats.toml { };
 in
 {
-  meta.maintainers = [ hm.maintainers.rachitvrma ];
+  meta.maintainers = [ lib.maintainers.rachitvrma ];
 
   options.programs.wiremix = {
     enable = mkEnableOption "wiremix";

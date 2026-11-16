@@ -25,7 +25,9 @@ in
           nixpkgs = "<nixpkgs>";
           commit = true;
           access-tokens = {
-            "github.com" = "ghp_blahblahblah...";
+            "github.com" = {
+              file = "/path/to/github/token";
+            };
             "gitlab.com" = {
               command = [
                 "secret-tool"
@@ -46,6 +48,12 @@ in
         {file}`$XDG_CONFIG_HOME/nix-init/config.toml`.
         See <https://github.com/nix-community/nix-init#configuration> for the full list
         of options.
+
+        These settings are stored in the world-readable Nix store. For
+        `access-tokens`, use a `command` or a `file` entry to retrieve the
+        token at runtime instead of putting a literal token in this option.
+        Specify token file paths as strings, as in the example, so Nix does
+        not copy the token file into the store.
       '';
     };
   };

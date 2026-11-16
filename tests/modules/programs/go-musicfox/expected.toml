@@ -1,0 +1,12 @@
+[main]
+altScreen = true
+debug = false
+enableMouseEvent = true
+
+[main.visualizer]
+enable = false
+
+[startup]
+enable = true
+loadingSeconds = 2
+progressOutBounce = true

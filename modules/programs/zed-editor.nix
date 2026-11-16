@@ -16,18 +16,6 @@ let
   cfg = config.programs.zed-editor;
   jsonFormat = pkgs.formats.json { };
   json5 = pkgs.python3Packages.toPythonApplication pkgs.python3Packages.json5;
-  impureConfigMerger = empty: jqOperation: path: staticSettings: ''
-    mkdir -p $(dirname ${lib.escapeShellArg path})
-    if [ ! -e ${lib.escapeShellArg path} ]; then
-      # No file? Create it
-      echo ${lib.escapeShellArg empty} > ${lib.escapeShellArg path}
-    fi
-    dynamic="$(${lib.getExe json5} --as-json ${lib.escapeShellArg path} 2>/dev/null || echo ${lib.escapeShellArg empty})"
-    static="$(cat ${lib.escapeShellArg staticSettings})"
-    config="$(${lib.getExe pkgs.jq} -n ${lib.escapeShellArg jqOperation} --argjson dynamic "$dynamic" --argjson static "$static")"
-    printf '%s\n' "$config" > ${lib.escapeShellArg path}
-    unset config
-  '';
 
   transformedMcpServers = lib.optionalAttrs (cfg.enableMcpIntegration && config.programs.mcp.enable) (
     lib.mapAttrs (
@@ -59,6 +47,22 @@ let
     // (lib.optionalAttrs (mergedMcpServers != { }) {
       context_servers = mergedMcpServers;
     });
+
+  # Files linked from the store instead of merged. The cleanup reads the
+  # matching file entries, so both must use these conditions.
+  immutableFiles = {
+    settings = !cfg.mutableUserSettings && mergedSettings != { };
+    keymap = !cfg.mutableUserKeymaps && cfg.userKeymaps != [ ];
+    tasks = !cfg.mutableUserTasks && cfg.userTasks != [ ];
+    debug = !cfg.mutableUserDebug && cfg.userDebug != [ ];
+  };
+
+  immutableConfigCleanup = lib.concatMapStrings (
+    name:
+    lib.hm.generators.mkImpureConfigCleanup {
+      file = config.home.file."${config.xdg.configHome}/zed/${name}.json";
+    }
+  ) (lib.attrNames (lib.filterAttrs (_: lib.id) immutableFiles));
 
   editorEnv = {
     EDITOR = "${cfg.package.meta.mainProgram} --wait";
@@ -310,35 +314,61 @@ in
     );
 
     home.activation = mkMerge [
+      (mkIf (immutableConfigCleanup != "") {
+        zedImmutableConfig =
+          lib.hm.dag.entryBetween [ "linkGeneration" ] [ "writeBoundary" ]
+            immutableConfigCleanup;
+      })
       (mkIf (cfg.mutableUserSettings && mergedSettings != { }) {
         zedSettingsActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "{}" "$dynamic * $static" "${config.xdg.configHome}/zed/settings.json" (
-            jsonFormat.generate "zed-user-settings" mergedSettings
-          )
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "{}";
+            jqOperation = "$dynamic * $static";
+            path = "${config.xdg.configHome}/zed/settings.json";
+            staticSettings = jsonFormat.generate "zed-user-settings" mergedSettings;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableUserKeymaps && cfg.userKeymaps != [ ]) {
         zedKeymapActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by(.context) | map(reduce .[] as $item ({}; . * $item))"
-            "${config.xdg.configHome}/zed/keymap.json"
-            (jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps)
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "[]";
+            jqOperation = "$dynamic + $static | group_by(.context) | map(reduce .[] as \$item ({}; . * \$item))";
+            path = "${config.xdg.configHome}/zed/keymap.json";
+            staticSettings = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableUserTasks && cfg.userTasks != [ ]) {
         zedTasksActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
-            "${config.xdg.configHome}/zed/tasks.json"
-            (jsonFormat.generate "zed-user-tasks" cfg.userTasks)
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "[]";
+            jqOperation = "$dynamic + $static | group_by(.label) | map(reduce .[] as \$item ({}; . * \$item))";
+            path = "${config.xdg.configHome}/zed/tasks.json";
+            staticSettings = jsonFormat.generate "zed-user-tasks" cfg.userTasks;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
       (mkIf (cfg.mutableUserDebug && cfg.userDebug != [ ]) {
         zedDebugActivation = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          impureConfigMerger "[]"
-            "$dynamic + $static | group_by(.label) | map(reduce .[] as $item ({}; . * $item))"
-            "${config.xdg.configHome}/zed/debug.json"
-            (jsonFormat.generate "zed-user-debug" cfg.userDebug)
+          lib.hm.generators.mkImpureConfigMerger {
+            inherit pkgs;
+            format = "json";
+            empty = "[]";
+            jqOperation = "$dynamic + $static | group_by(.label) | map(reduce .[] as \$item ({}; . * \$item))";
+            path = "${config.xdg.configHome}/zed/debug.json";
+            staticSettings = jsonFormat.generate "zed-user-debug" cfg.userDebug;
+            reader = "${lib.getExe json5} --as-json";
+          }
         );
       })
     ];
@@ -356,16 +386,16 @@ in
               jsonFormat.generate "zed-theme-${n}" v;
         }
       ) cfg.themes)
-      (mkIf (!cfg.mutableUserSettings && mergedSettings != { }) {
+      (mkIf immutableFiles.settings {
         "zed/settings.json".source = jsonFormat.generate "zed-user-settings" mergedSettings;
       })
-      (mkIf (!cfg.mutableUserKeymaps && cfg.userKeymaps != [ ]) {
+      (mkIf immutableFiles.keymap {
         "zed/keymap.json".source = jsonFormat.generate "zed-user-keymaps" cfg.userKeymaps;
       })
-      (mkIf (!cfg.mutableUserTasks && cfg.userTasks != [ ]) {
+      (mkIf immutableFiles.tasks {
         "zed/tasks.json".source = jsonFormat.generate "zed-user-tasks" cfg.userTasks;
       })
-      (mkIf (!cfg.mutableUserDebug && cfg.userDebug != [ ]) {
+      (mkIf immutableFiles.debug {
         "zed/debug.json".source = jsonFormat.generate "zed-user-debug" cfg.userDebug;
       })
     ];

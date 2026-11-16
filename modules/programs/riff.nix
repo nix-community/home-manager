@@ -1,6 +1,5 @@
 {
   config,
-  options,
   lib,
   pkgs,
   ...
@@ -19,14 +18,14 @@ in
 {
   meta.maintainers = with lib.maintainers; [ khaneliman ];
 
-  imports = [
-    (lib.mkRenamedOptionModule [ "programs" "git" "riff" "enable" ] [ "programs" "riff" "enable" ])
-    (lib.mkRenamedOptionModule [ "programs" "git" "riff" "package" ] [ "programs" "riff" "package" ])
-    (lib.mkRenamedOptionModule
-      [ "programs" "git" "riff" "commandLineOptions" ]
-      [ "programs" "riff" "commandLineOptions" ]
-    )
-  ];
+  imports =
+    lib.mapAttrsToList
+      (name: message: lib.mkRemovedOptionModule [ "programs" "git" "riff" name ] message)
+      {
+        enable = "Use `programs.riff.enable` and `programs.riff.enableGitIntegration` instead.";
+        package = "Use `programs.riff.package` instead.";
+        commandLineOptions = "Use `programs.riff.commandLineOptions` instead.";
+      };
 
   options.programs.riff = {
     enable = mkEnableOption "" // {
@@ -61,41 +60,27 @@ in
     };
   };
 
-  config =
-    let
-      oldOption = lib.attrByPath [ "programs" "git" "riff" "enable" ] null options;
-      oldOptionEnabled =
-        oldOption != null && oldOption.isDefined && (builtins.length oldOption.files) > 0;
-    in
-    lib.mkMerge [
-      (mkIf cfg.enable {
-        home.packages = [ cfg.package ];
+  config = lib.mkMerge [
+    (mkIf cfg.enable {
+      home.packages = [ cfg.package ];
 
-        home.sessionVariables = mkIf (cfg.commandLineOptions != "") {
-          RIFF = cfg.commandLineOptions;
-        };
+      home.sessionVariables = mkIf (cfg.commandLineOptions != "") {
+        RIFF = cfg.commandLineOptions;
+      };
+    })
 
-        # Auto-enable git integration if programs.git.riff.enable was set to true
-        programs.riff.enableGitIntegration = lib.mkIf oldOptionEnabled (lib.mkOverride 1490 true);
-
-        warnings =
-          lib.optional
-            (cfg.enableGitIntegration && options.programs.riff.enableGitIntegration.highestPrio == 1490)
-            "`programs.riff.enableGitIntegration` automatic enablement is deprecated. Please explicitly set `programs.riff.enableGitIntegration = true`.";
-      })
-
-      (mkIf (cfg.enable && cfg.enableGitIntegration) {
-        programs.git = {
-          enable = lib.mkDefault true;
-          iniContent =
-            let
-              riffExe = baseNameOf (lib.getExe cfg.package);
-            in
-            lib.hm.git.diffPagerConfig riffExe
-            // {
-              interactive.diffFilter = "${riffExe} --color=on";
-            };
-        };
-      })
-    ];
+    (mkIf (cfg.enable && cfg.enableGitIntegration) {
+      programs.git = {
+        enable = lib.mkDefault true;
+        iniContent =
+          let
+            riffExe = baseNameOf (lib.getExe cfg.package);
+          in
+          lib.hm.git.diffPagerConfig riffExe
+          // {
+            interactive.diffFilter = "${riffExe} --color=on";
+          };
+      };
+    })
+  ];
 }

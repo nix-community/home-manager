@@ -84,12 +84,6 @@ in
   ];
 
   options = {
-    _legacySettings = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      visible = false;
-    };
-
     enable = mkOption {
       type = with types; bool;
       default = config.settings != [ ];

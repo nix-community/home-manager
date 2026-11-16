@@ -37,7 +37,7 @@ in
       description = ''
         Configuration written to
         {file}`$XDG_CONFIG_HOME/oh-my-posh/config.json`. See
-        <https://ohmyposh.dev/docs/configuration/overview>
+        <https://ohmyposh.dev/docs/configuration/introduction>
         for details. The `useTheme` option is ignored when this
         option is used.
       '';

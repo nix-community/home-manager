@@ -239,7 +239,7 @@ in
             config = {
               seat = {
                 "*" = {
-                  xcursor_theme = "${cfg.name} ${toString cfg.sway.size}";
+                  xcursor_theme = ''"${lib.escape [ "\\" "\"" ] cfg.name}" ${toString cfg.sway.size}'';
                 };
               };
             };

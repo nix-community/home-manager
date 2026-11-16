@@ -1,9 +1,13 @@
+{ lib, ... }:
+
 {
   wayland.windowManager.niri = {
     enable = true;
     checkConfig = false;
-    extraConfigEarly = "// early config";
-    extraConfig = "// late config";
+    extraConfig = lib.mkMerge [
+      (lib.mkBefore "// early config")
+      "// late config"
+    ];
     settings = {
       # str/num/bool
       screenshot-path = "~/Screenshots/%Y-%m-%d %H-%M-%S.png";

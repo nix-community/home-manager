@@ -20,7 +20,7 @@ lib.mkIf config.test.enableBig {
   programs.mise = {
     package = config.lib.test.mkStubPackage { name = "mise"; };
     enable = true;
-    enableMutableConfig = true;
+    mutableSettings = true;
     globalConfig.env.HM_TEST = "home-manager";
   };
 

@@ -5,5 +5,6 @@
 local hm_xdg_config_home = os.getenv("XDG_CONFIG_HOME") or "/home/hm-user/.config"
 package.path = hm_xdg_config_home .. "/hypr/?.lua;" .. hm_xdg_config_home .. "/hypr/?/init.lua;" .. package.path
 require("00-vars")
+require("from-nested-store-path")
 require("from-path")
 require("ui.bindings")

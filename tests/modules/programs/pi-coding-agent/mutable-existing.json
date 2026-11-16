@@ -1,0 +1,29 @@
+{
+  "unrelated": true,
+  "enabledModels": ["user"],
+  "packages": [
+    "npm:plain@1",
+    "npm:@scope/pkg@1",
+    "https://github.com/Owner/Repo.git@old",
+    "git:git@github.com:Owner/Other.git@old",
+    "git:github:Owner/Third@old",
+    "git:Owner/Fourth@old",
+    "git:ssh://git@example.org/Owner/Fifth.git@old",
+    "git://github.com/Owner/Sixth@old",
+    " git://github.com/Owner/Seventh.git#old ",
+    "https://github.com/Owner/Eighth.git/",
+    "https://github.com/Owner/Ninth.git@old",
+    "https://github.com/Owner/Tenth/tree/old",
+    "https://github.com/Owner/Eleventh@old",
+    " ./nested/../local/ ",
+    "../parent",
+    "/home/hm-user/home-package",
+    "file://localhost/home/hm-user/custom%20pi/url%20package",
+    "file:///home/hm-user/custom%20pi/caf%C3%A9?ignored#fragment",
+    "/home/hm-user",
+    "https://github.com/Owner/UserOnly/tree/main",
+    "npm:keep-a",
+    "npm:keep-b",
+    "npm:Case@1"
+  ]
+}

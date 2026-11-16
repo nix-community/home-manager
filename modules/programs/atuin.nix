@@ -97,7 +97,7 @@ in
         Configuration written to
         {file}`$XDG_CONFIG_HOME/atuin/config.toml`.
 
-        See <https://docs.atuin.sh/configuration/config/> for the full list
+        See <https://docs.atuin.sh/latest/configuration/config/> for the full list
         of options.
       '';
     };
@@ -129,7 +129,7 @@ in
         {file}`$XDG_CONFIG_HOME/atuin/themes/theme-name.toml`
         where the name of each attribute is the theme-name
 
-        See <https://docs.atuin.sh/guide/theming/> for the full list
+        See <https://docs.atuin.sh/latest/guide/theming/> for the full list
         of options.
       '';
       default = { };
@@ -303,6 +303,17 @@ in
 
           launchd.agents.atuin-daemon = {
             enable = true;
+            # Track the final managed configuration, not themes or files moved
+            # away from the path Atuin reads.
+            restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+              lib.filterAttrs (
+                _: file:
+                file.enable
+                &&
+                  file.target
+                  == lib.removePrefix "${config.home.homeDirectory}/" "${config.xdg.configHome}/atuin/config.toml"
+              ) config.home.file
+            );
             config = {
               ProgramArguments = [ (lib.getExe cfg.package) ] ++ daemonArgs;
               EnvironmentVariables = lib.optionalAttrs (daemonCfg.logLevel != null) {

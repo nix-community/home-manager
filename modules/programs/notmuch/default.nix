@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  options,
   pkgs,
   ...
 }:
@@ -14,6 +15,8 @@ let
     ;
 
   cfg = config.programs.notmuch;
+
+  legacyDefaults = lib.versionOlder config.home.stateVersion "26.11";
 
   mkIniKeyValue =
     key: value:
@@ -31,86 +34,104 @@ let
     in
     "${key}=${tweakVal value}";
 
-  notmuchIni = lib.recursiveUpdate {
-    database = {
-      path = config.accounts.email.maildirBasePath;
-    };
-
-    maildir = {
-      synchronize_flags = cfg.maildir.synchronizeFlags;
-    };
-
-    new = {
-      inherit (cfg.new) ignore tags;
-    };
-
-    user =
-      let
-        accounts = filter (a: a.enable && a.notmuch.enable) (lib.attrValues config.accounts.email.accounts);
-        primary = filter (a: a.primary) accounts;
-        secondaries = filter (a: !a.primary) accounts;
-      in
-      {
-        name = catAttrs "realName" primary;
-        primary_email = catAttrs "address" primary;
-        other_email = map (email: email.address or email) (
-          lib.flatten (
-            catAttrs "aliases" primary ++ catAttrs "address" secondaries ++ catAttrs "aliases" secondaries
-          )
-        );
-      };
-
-    search = {
-      exclude_tags = cfg.search.excludeTags;
-    };
-  } cfg.extraConfig;
-
 in
 {
+  imports =
+    let
+      extraConfig = lib.hm.deprecations.mkSettingsOverlay {
+        inherit options;
+        from = [
+          "programs"
+          "notmuch"
+          "extraConfig"
+        ];
+        to = [
+          "programs"
+          "notmuch"
+          "settings"
+        ];
+      };
+    in
+    lib.hm.deprecations.mkSettingsRenamedOptionModules
+      [ "programs" "notmuch" ]
+      [ "programs" "notmuch" "settings" ]
+      { preserveOrder = true; }
+      [
+        [
+          "new"
+          "ignore"
+        ]
+        [
+          "new"
+          "tags"
+        ]
+        {
+          old = [
+            "maildir"
+            "synchronizeFlags"
+          ];
+          new = [
+            "maildir"
+            "synchronize_flags"
+          ];
+        }
+        {
+          old = [
+            "search"
+            "excludeTags"
+          ];
+          new = [
+            "search"
+            "exclude_tags"
+          ];
+        }
+      ]
+    ++ [ extraConfig.module ];
+
   options = {
     programs.notmuch = {
       enable = lib.mkEnableOption "Notmuch mail indexer";
 
       package = lib.mkPackageOption pkgs "notmuch" { };
 
-      new = mkOption {
-        type = types.submodule {
-          options = {
-            ignore = mkOption {
-              type = types.listOf types.str;
-              default = [ ];
-              description = ''
-                A list to specify files and directories that will not be
-                searched for messages by {command}`notmuch new`.
-              '';
-            };
-
-            tags = mkOption {
-              type = types.listOf types.str;
-              default = [
-                "unread"
-                "inbox"
-              ];
-              example = [ "new" ];
-              description = ''
-                A list of tags that will be added to all messages
-                incorporated by {command}`notmuch new`.
-              '';
-            };
-          };
+      settings = mkOption {
+        type =
+          let
+            atom = (pkgs.formats.ini { }).lib.types.atom;
+          in
+          types.attrsOf (types.attrsOf (types.either atom (types.listOf atom)));
+        default = { };
+        example = {
+          show.extra_headers = [
+            "List-Id"
+            "Mailing-List"
+          ];
+          new.tags = [ "inbox" ];
         };
-        default = { };
         description = ''
-          Options related to email processing performed by
-          {command}`notmuch new`.
-        '';
-      };
+          Native settings written to the notmuch configuration file. Lists are
+          serialized as semicolon-separated values, including empty lists.
+          Null settings and empty sections are omitted. Unset keys use notmuch's
+          own defaults. `database.path` defaults to
+          `accounts.email.maildirBasePath` when an email account is enabled,
+          and notmuch-enabled email accounts supply `user` values; any
+          definition of the same key replaces these. For `home.stateVersion`
+          below 26.11, `database.path` has this default even without email
+          accounts, and `search.exclude_tags` defaults to `deleted;spam`.
+          `new.ignore`, `new.tags`, `maildir.synchronizeFlags`,
+          `search.excludeTags`, and `extraConfig` under `programs.notmuch` are
+          deprecated aliases into settings. Alias definitions retain their
+          priorities and list ordering.
+          Definitions of the same list setting concatenate unless a stronger
+          priority replaces them. Unlike the old final `extraConfig` overlay,
+          conflicting ordinary scalar definitions must be resolved in settings.
+          Apply `lib.mkDefault` to individual settings, not to a whole section
+          or the whole attribute set; section-level priorities lose to definitions
+          Home Manager or the mbsync, lieer, and mujmap modules supply in
+          `database`, `new`, `search`, and `user`.
 
-      extraConfig = mkOption {
-        type = types.attrsOf (types.attrsOf types.str);
-        default = { };
-        description = ''
-          Options that should be appended to the notmuch configuration file.
+          See <https://notmuchmail.org/manpages/notmuch-config-1/> for
+          available settings.
         '';
       };
 
@@ -146,35 +167,6 @@ in
           '';
         };
       };
-
-      maildir = {
-        synchronizeFlags = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to synchronize Maildir flags.
-          '';
-        };
-      };
-
-      search = {
-        excludeTags = mkOption {
-          type = types.listOf types.str;
-          default = [
-            "deleted"
-            "spam"
-          ];
-          example = [
-            "trash"
-            "spam"
-          ];
-          description = ''
-            A  list  of  tags  that  will be excluded from search results by
-            default. Using an excluded tag in a  query  will  override  that
-            exclusion.
-          '';
-        };
-      };
     };
 
     accounts.email.accounts = mkOption {
@@ -187,16 +179,49 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = notmuchIni.user.name != [ ];
-        message = "notmuch: Must have a user name set.";
-      }
-      {
-        assertion = notmuchIni.user.primary_email != [ ];
-        message = "notmuch: Must have a user primary email address set.";
-      }
-    ];
+    programs.notmuch.settings = {
+      database.path = lib.mkIf (
+        legacyDefaults || lib.any (account: account.enable) (lib.attrValues config.accounts.email.accounts)
+      ) (lib.mkOptionDefault config.accounts.email.maildirBasePath);
+      search.exclude_tags = lib.mkIf legacyDefaults (
+        lib.mkOptionDefault [
+          "deleted"
+          "spam"
+        ]
+      );
+      user =
+        let
+          accounts = filter (a: a.enable && a.notmuch.enable) (lib.attrValues config.accounts.email.accounts);
+          primary = filter (a: a.primary) accounts;
+          secondaries = filter (a: !a.primary) accounts;
+        in
+        lib.mkIf (accounts != [ ]) {
+          name = lib.mkOptionDefault (catAttrs "realName" primary);
+          primary_email = lib.mkOptionDefault (catAttrs "address" primary);
+          other_email = lib.mkOptionDefault (
+            map (email: email.address or email) (
+              lib.flatten (
+                catAttrs "aliases" primary ++ catAttrs "address" secondaries ++ catAttrs "aliases" secondaries
+              )
+            )
+          );
+        };
+    };
+
+    assertions =
+      let
+        isSet = value: value != null && value != [ ];
+      in
+      [
+        {
+          assertion = isSet (cfg.settings.user.name or null);
+          message = "notmuch: Must have a user name set.";
+        }
+        {
+          assertion = isSet (cfg.settings.user.primary_email or null);
+          message = "notmuch: Must have a user primary email address set.";
+        }
+      ];
 
     home.packages = [ cfg.package ];
 
@@ -226,7 +251,11 @@ in
             # Generated by Home Manager.
 
           ''
-          + toIni notmuchIni;
+          + toIni (
+            lib.filterAttrs (_: section: section != { }) (
+              lib.mapAttrs (_: lib.filterAttrs (_: value: value != null)) cfg.settings
+            )
+          );
       }
       // optionalAttrs (cfg.hooks.preNew != "") (hook "pre-new" cfg.hooks.preNew)
       // optionalAttrs (cfg.hooks.postNew != "") (hook "post-new" cfg.hooks.postNew)

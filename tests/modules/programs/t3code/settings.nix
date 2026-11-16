@@ -184,8 +184,20 @@
       settingsActivation = pkgs.writeScript "settings-activation" config.home.activation.t3codeSettingsActivation.data;
       keybindingsActivation = pkgs.writeScript "keybindings-activation" config.home.activation.t3codeKeybindingsActivation.data;
       clientSettingsActivation = pkgs.writeScript "client-settings-activation" config.home.activation.t3codeClientSettingsActivation.data;
+      activations = [
+        config.home.activation.t3codeSettingsActivation
+        config.home.activation.t3codeKeybindingsActivation
+        config.home.activation.t3codeClientSettingsActivation
+      ];
     in
+    assert lib.all (activation: activation.after == [ "linkGeneration" ]) activations;
+    assert !(config.home.activation ? t3codeImmutableConfig);
+    assert lib.hasInfix "chmod 600" config.home.activation.t3codeSettingsActivation.data;
     ''
+      assertPathNotExists "home-files/${settingsPath}"
+      assertPathNotExists "home-files/${keybindingsPath}"
+      assertPathNotExists "home-files/${clientSettingsPath}"
+
       export HOME=$TMPDIR/hm-user
 
       mkdir -p $HOME/.t3/userdata

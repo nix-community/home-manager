@@ -1,0 +1,13 @@
+[Install]
+WantedBy=graphical-session.target
+
+[Service]
+ExecStart=@poweralertd@/bin/poweralertd "-s" "-S"
+Restart=always
+Type=simple
+
+[Unit]
+After=graphical-session.target
+Description=UPower-powered power alerter
+Documentation=man:poweralertd(1)
+PartOf=graphical-session.target

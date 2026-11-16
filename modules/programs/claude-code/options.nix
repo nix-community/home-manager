@@ -31,6 +31,21 @@ in
 
     package = lib.mkPackageOption pkgs "claude-code" { nullable = true; };
 
+    mutableSettings = mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Whether to merge declared settings and known marketplaces into
+        writable files during activation. Declared values, including
+        permission arrays, replace existing values; undeclared values and
+        application-owned marketplace timestamps and auto-update flags are
+        preserved. Comments and formatting are not preserved. Removing a
+        declaration does not remove it from the file. Switching back to
+        immutable settings requires backing up or removing the writable files.
+        This does not manage application state in {file}`~/.claude.json`.
+      '';
+    };
+
     finalPackage = mkOption {
       type = lib.types.package;
       readOnly = true;
@@ -60,17 +75,52 @@ in
 
     configDir = mkOption {
       type = lib.types.str;
-      default = "${config.home.homeDirectory}/.claude";
-      defaultText = literalExpression ''"''${config.home.homeDirectory}/.claude"'';
+      inherit
+        (lib.hm.deprecations.mkStateVersionOptionDefault {
+          inherit (config.home) stateVersion;
+          since = "26.11";
+          optionPath = [
+            "programs"
+            "claude-code"
+            "configDir"
+          ];
+          legacy = {
+            value = "${config.home.homeDirectory}/.claude";
+            text = ''"''${config.home.homeDirectory}/.claude"'';
+          };
+          current = {
+            value =
+              if config.home.preferXdgDirectories then
+                "${config.xdg.configHome}/claude"
+              else
+                "${config.home.homeDirectory}/.claude";
+            text = ''"''${config.xdg.configHome}/claude"'';
+          };
+          extraWarning = ''
+            To keep existing Claude Code data, move `~/.claude` to
+            `$XDG_CONFIG_HOME/claude` before adopting the new default.
+          '';
+        })
+        default
+        ;
+      defaultText = literalExpression ''
+        if config.home.preferXdgDirectories && lib.versionAtLeast config.home.stateVersion "26.11" then
+          "''${config.xdg.configHome}/claude"
+        else
+          "''${config.home.homeDirectory}/.claude"
+      '';
       example = literalExpression ''"''${config.xdg.configHome}/claude"'';
       description = ''
         Directory holding Claude Code's configuration files.
 
         Defaults to {file}`~/.claude`, matching the upstream
-        {command}`claude` CLI default. The {env}`CLAUDE_CONFIG_DIR`
-        environment variable is exported automatically whenever the
-        directory differs from this default so the CLI reads
-        configuration from the same location.
+        {command}`claude` CLI default, or
+        {file}`''${config.xdg.configHome}/claude` when
+        {option}`home.preferXdgDirectories` is enabled and
+        {option}`home.stateVersion` is at least 26.11. The
+        {env}`CLAUDE_CONFIG_DIR` environment variable is exported
+        automatically whenever the directory differs from the upstream
+        default so the CLI reads configuration from the same location.
       '';
     };
 
@@ -475,7 +525,21 @@ in
     mcpServers = mkOption {
       type = lib.types.attrsOf jsonFormat.type;
       default = { };
-      description = "MCP (Model Context Protocol) servers configuration";
+      description = ''
+        MCP (Model Context Protocol) servers configuration.
+
+        These values are written to the world-readable Nix store, so avoid
+        putting secrets in `env`, `headers`, `args`, or `url`.
+
+        For a local `command` server that takes a secret through an
+        environment variable, you can use [](#opt-programs.mcp.servers) with
+        `env.<NAME>.file = "/run/secrets/..."` and enable both
+        [](#opt-programs.mcp.enable) and
+        [](#opt-programs.claude-code.enableMcpIntegration). Home Manager then
+        wraps the command so it reads the file at startup. This covers
+        environment variables of local servers, not credentials in
+        arguments, URLs, or headers.
+      '';
       example = {
         github = {
           type = "http";
@@ -497,11 +561,8 @@ in
             "-y"
             "@bytebase/dbhub"
             "--dsn"
-            "postgresql://user:pass@localhost:5432/db"
+            "postgresql://localhost:5432/db"
           ];
-          env = {
-            DATABASE_URL = "postgresql://user:pass@localhost:5432/db";
-          };
         };
         customTransport = {
           type = "websocket";

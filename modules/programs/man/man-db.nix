@@ -59,6 +59,7 @@ in
               ''
                 # Generate a temporary man.conf so mandb knows where to
                 # write cache files.
+                mkdir -p $out
                 echo "MANDB_MAP ${manualPages}/share/man $out" > man.conf
                 # Run mandb to generate cache files:
                 mandb -C man.conf --no-straycats --create \

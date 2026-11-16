@@ -1,4 +1,4 @@
-{ realPkgs, ... }:
+{ lib, realPkgs, ... }:
 
 {
   programs.borgmatic = {
@@ -12,6 +12,21 @@
         };
       };
     };
+  };
+
+  test.asserts.warnings.expected = (import ./warnings.nix { inherit lib; }) {
+    file = ./exclude-hm-symlinks-nothing-else.nix;
+    entries = [
+      {
+        from = "location.repositories";
+        to = "settings.repositories";
+        changed = true;
+      }
+      {
+        from = "location.sourceDirectories";
+        to = "settings.source_directories";
+      }
+    ];
   };
 
   nmt.script = ''

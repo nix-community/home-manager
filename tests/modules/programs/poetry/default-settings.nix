@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+_:
 
 {
   programs.poetry = {
@@ -7,9 +7,7 @@
 
   nmt.script =
     let
-      expectedConfDir =
-        if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".config";
-      expectedConfigPath = "home-files/${expectedConfDir}/pypoetry/config.toml";
+      expectedConfigPath = "home-files/.config/pypoetry/config.toml";
     in
     ''
       assertPathNotExists "${expectedConfigPath}"

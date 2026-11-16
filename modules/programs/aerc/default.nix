@@ -78,7 +78,9 @@ in
         };
       };
       description = ''
-        Extra lines added to {file}`$HOME/.config/aerc/accounts.conf`.
+        Extra lines added to {file}`accounts.conf` in aerc's configuration
+        directory. See [](#opt-programs.aerc.extraConfig) for the directory
+        location and the permission check that must be disabled for this file.
 
         See {manpage}`aerc-config(5)`.
       '';
@@ -93,7 +95,8 @@ in
         };
       };
       description = ''
-        Extra lines added to {file}`$HOME/.config/aerc/binds.conf`.
+        Extra lines added to {file}`binds.conf` in aerc's configuration
+        directory (see [](#opt-programs.aerc.extraConfig)).
         Global keybindings can be set in the `global` section.
 
         See {manpage}`aerc-config(5)`.
@@ -109,7 +112,20 @@ in
         };
       };
       description = ''
-        Extra lines added to {file}`$HOME/.config/aerc/aerc.conf`.
+        Extra lines added to {file}`aerc.conf` in aerc's configuration
+        directory. This directory is {file}`$XDG_CONFIG_HOME/aerc`, except
+        on Darwin with [](#opt-xdg.enable) disabled, where it is
+        {file}`$HOME/Library/Preferences/aerc`.
+
+        When Home Manager generates {file}`accounts.conf`, set
+        `programs.aerc.extraConfig.general.unsafe-accounts-conf = true`.
+        Otherwise, aerc refuses to start because the store-backed file cannot
+        have the owner-only permissions that aerc requires by default.
+
+        Generated configuration files are world-readable in the Nix store.
+        Retrieve passwords at runtime with
+        [](#opt-accounts.email.accounts._name_.passwordCommand) rather than
+        putting credentials directly in the configuration.
 
         See {manpage}`aerc-config(5)`.
       '';
@@ -122,7 +138,8 @@ in
         { default = { ui = { "tab.selected.reverse" = "toggle"; }; }; };
       '';
       description = ''
-        Stylesets added to {file}`$HOME/.config/aerc/stylesets/`.
+        Stylesets added to {file}`stylesets/` in aerc's configuration
+        directory (see [](#opt-programs.aerc.extraConfig)).
 
         See {manpage}`aerc-stylesets(7)`.
       '';
@@ -135,7 +152,8 @@ in
         { new_message = "Hello!"; };
       '';
       description = ''
-        Templates added to {file}`$HOME/.config/aerc/templates/`.
+        Templates added to {file}`templates/` in aerc's configuration
+        directory (see [](#opt-programs.aerc.extraConfig)).
 
         See {manpage}`aerc-templates(7)`.
       '';

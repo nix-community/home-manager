@@ -1,0 +1,4 @@
+[General]
+editor = "nvim"
+selectcmd = "fzf"
+snippetfile = "/home/hm-user/.config/pet/snippet.toml"

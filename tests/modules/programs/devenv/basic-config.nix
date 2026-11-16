@@ -7,6 +7,10 @@
       enableNushellIntegration = true;
       enableZshIntegration = true;
       enableFishIntegration = true;
+      settings = {
+        shell.prompt_prefix = false;
+        tui.statusline.enabled = false;
+      };
 
       package = config.lib.test.mkStubPackage {
         name = "devenv";
@@ -50,6 +54,9 @@
       # Test nushell integration
       assertFileExists "${nushellConfigFile}"
       assertFileRegex "${nushellConfigFile}" 'source /nix/store.*devenv-nushell-config.nu'
+
+      assertFileExists home-files/.config/devenv/config.yaml
+      assertFileContent home-files/.config/devenv/config.yaml ${./expected.yaml}
 
     '';
 }

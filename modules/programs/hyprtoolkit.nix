@@ -8,7 +8,7 @@ let
   cfg = config.programs.hyprtoolkit;
 in
 {
-  meta.maintainers = [ lib.hm.maintainers.rachitvrma ];
+  meta.maintainers = [ lib.maintainers.rachitvrma ];
 
   options.programs.hyprtoolkit = {
     enable = lib.mkEnableOption ''

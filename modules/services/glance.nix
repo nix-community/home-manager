@@ -69,6 +69,13 @@ in
         Configuration written to a yaml file that is read by glance. See
         <https://github.com/glanceapp/glance/blob/main/docs/configuration.md>
         for more.
+
+        These settings are written to the world-readable Nix store, so avoid
+        putting passwords, API tokens, or authentication secret keys here.
+        Glance's
+        [runtime secret substitution](https://github.com/glanceapp/glance/blob/main/docs/configuration.md#other-ways-of-providing-tokenspasswordssecrets)
+        can read them from environment variables or secret files outside the
+        Nix store instead.
       '';
     };
   };
@@ -76,17 +83,18 @@ in
   config = mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
-    xdg.configFile."glance/glance.yml" = {
-      source = settingsFile;
-      onChange = mkIf (pkgs.stdenv.hostPlatform.isDarwin && cfg.package != null) ''
-        domain="${config.launchd.agents.glance.domain}/$(id -u)"
-        /bin/launchctl kickstart -k "$domain/org.nix-community.home.glance" \
-          2>/dev/null || true
-      '';
-    };
+    xdg.configFile."glance/glance.yml".source = settingsFile;
 
     launchd.agents.glance = mkIf (cfg.package != null) {
       enable = true;
+      # Track whichever enabled file finally lands where Glance reads its
+      # configuration, so source, target, and enable overrides are respected.
+      restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+        lib.filterAttrs (
+          _: file:
+          file.enable && file.target == lib.removePrefix "${config.home.homeDirectory}/" configFilePath
+        ) config.home.file
+      );
       config = {
         ProgramArguments = [
           (getExe cfg.package)

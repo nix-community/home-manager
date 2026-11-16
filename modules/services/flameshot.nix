@@ -12,6 +12,8 @@ let
 
   iniFile = iniFormat.generate "flameshot.ini" cfg.settings;
 
+  configFilePath = "${config.xdg.configHome}/flameshot/flameshot.ini";
+
 in
 {
   meta.maintainers = [ lib.maintainers.hamhut1066 ];
@@ -79,6 +81,13 @@ in
 
     launchd.agents.flameshot = {
       enable = true;
+      # Follow the final file at the configuration target, including overrides.
+      restartTriggers = lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) (
+        lib.filterAttrs (
+          _: file:
+          file.enable && file.target == lib.removePrefix "${config.home.homeDirectory}/" configFilePath
+        ) config.home.file
+      );
       config = {
         ProgramArguments = [ (lib.getExe cfg.package) ];
         KeepAlive = {

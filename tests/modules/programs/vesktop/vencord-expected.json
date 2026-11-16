@@ -1,0 +1,8 @@
+{
+  "enabledThemes": [],
+  "plugins": {
+    "FakeNitro": {
+      "enabled": true
+    }
+  }
+}

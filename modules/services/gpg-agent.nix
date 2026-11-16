@@ -44,7 +44,7 @@ let
   '';
 
   gpgNushellInitStr = ''
-    $env.GPG_TTY = (tty)
+    $env.GPG_TTY = (try { tty } catch { "" })
   ''
   + optionalString cfg.enableSshSupport ''
     ${gpgSshSupportStr} | ignore
@@ -164,22 +164,13 @@ in
     (lib.mkRemovedOptionModule [
       "services"
       "gpg-agent"
+      "pinentryPackage"
+    ] "Use `services.gpg-agent.pinentry.package` instead.")
+    (lib.mkRemovedOptionModule [
+      "services"
+      "gpg-agent"
       "pinentryFlavor"
-    ] "Use services.gpg-agent.pinentryPackage instead")
-
-    (lib.mkRenamedOptionModule
-      [
-        "services"
-        "gpg-agent"
-        "pinentryPackage"
-      ]
-      [
-        "services"
-        "gpg-agent"
-        "pinentry"
-        "package"
-      ]
-    )
+    ] "Use services.gpg-agent.pinentry.package instead")
   ];
 
   options = {
@@ -319,7 +310,7 @@ in
             `pinentry-gnome3` may not work on non-GNOME systems. You can fix it by
             adding the following to your configuration:
             ```nix
-            home.packages = [ pkgs.gcr ];
+            home.packages = [ pkgs.gcr_3 ];
             ```
           '';
         };

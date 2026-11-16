@@ -9,6 +9,7 @@
 let
   inherit (lib) mkIf;
   cfg = config.home-manager;
+  driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
 
   baseService = username: {
     Type = "oneshot";
@@ -75,7 +76,6 @@ in
         _: usercfg:
         let
           inherit (usercfg.home) username homeDirectory activationPackage;
-          driverVersion = if cfg.enableLegacyProfileManagement then "0" else "1";
         in
         lib.nameValuePair "home-manager-${utils.escapeSystemdPath username}" (
           lib.attrsets.recursiveUpdate (baseUnit username) {
@@ -145,7 +145,7 @@ in
           packages = [
             (pkgs.writeTextDir "${hmDropIn}/10-user-activation.conf" ''
               [Service]
-              ExecStart=${home.activationPackage}/activate
+              ExecStart=${home.activationPackage}/activate --driver-version ${driverVersion}
             '')
           ];
         }

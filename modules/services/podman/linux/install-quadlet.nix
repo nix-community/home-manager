@@ -8,7 +8,14 @@ let
   cfg = config.services.podman;
 
   podman-lib = import ./podman-lib.nix { inherit pkgs lib config; };
-  activation = import ./activation.nix { inherit config podman-lib; };
+  activation = import ./activation.nix {
+    inherit
+      pkgs
+      lib
+      config
+      podman-lib
+      ;
+  };
 
   activationCleanupScript = activation.cleanup;
 

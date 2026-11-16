@@ -9,7 +9,6 @@ let
     concatStringsSep
     mkIf
     mkOption
-    mkRenamedOptionModule
     types
     ;
 
@@ -182,49 +181,6 @@ let
   };
 
   lieerModule = types.submodule {
-    imports = [
-      (mkRenamedOptionModule
-        [ "lieer" "dropNonExistingLabels" ]
-        [
-          "lieer"
-          "settings"
-          "drop_non_existing_label"
-        ]
-      )
-      (mkRenamedOptionModule
-        [ "lieer" "ignoreTagsRemote" ]
-        [
-          "lieer"
-          "settings"
-          "ignore_remote_labels"
-        ]
-      )
-      (mkRenamedOptionModule
-        [ "lieer" "ignoreTagsLocal" ]
-        [
-          "lieer"
-          "settings"
-          "ignore_tags"
-        ]
-      )
-      (mkRenamedOptionModule
-        [ "lieer" "timeout" ]
-        [
-          "lieer"
-          "settings"
-          "timeout"
-        ]
-      )
-      (mkRenamedOptionModule
-        [ "lieer" "replaceSlashWithDot" ]
-        [
-          "lieer"
-          "settings"
-          "replace_slash_with_dot"
-        ]
-      )
-    ];
-
     options = {
       lieer = lieerOpts;
 
@@ -274,7 +230,7 @@ in
         home.packages = [ cfg.package ];
 
         # Notmuch should ignore non-mail files created by lieer.
-        programs.notmuch.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
+        programs.notmuch.settings.new.ignore = [ "/.*[.](json|lock|bak)$/" ];
 
         home.file = lib.listToAttrs (map configFile lieerAccounts);
       }

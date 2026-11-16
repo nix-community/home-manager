@@ -21,7 +21,6 @@ let
     literalExpression
     mapAttrsToList
     mkEnableOption
-    mkRenamedOptionModule
     mkRemovedOptionModule
     mkDefault
     mkIf
@@ -89,6 +88,11 @@ in
   meta.maintainers = with lib.maintainers; [ thiagokokada ];
 
   imports = [
+    (lib.mkRemovedOptionModule [
+      "services"
+      "picom"
+      "opacityRule"
+    ] "Use `services.picom.opacityRules` instead.")
     (mkRemovedOptionModule [
       "services"
       "picom"
@@ -104,14 +108,6 @@ in
       "picom"
       "extraOptions"
     ] "This option has been replaced by `services.picom.settings`.")
-    (mkRenamedOptionModule
-      [ "services" "picom" "opacityRule" ]
-      [
-        "services"
-        "picom"
-        "opacityRules"
-      ]
-    )
   ];
 
   options.services.picom = {

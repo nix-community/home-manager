@@ -14,7 +14,7 @@ in
   options.programs.foot = {
     enable = lib.mkEnableOption "Foot terminal";
 
-    package = lib.mkPackageOption pkgs "foot" { };
+    package = lib.mkPackageOption pkgs "foot" { nullable = true; };
 
     server = {
       enable = lib.mkEnableOption "Foot terminal server";
@@ -60,15 +60,19 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       (lib.hm.assertions.assertPlatform "programs.foot" pkgs lib.platforms.linux)
+      {
+        assertion = !cfg.server.enable || cfg.package != null;
+        message = "programs.foot.server.enable requires a non-null programs.foot.package";
+      }
     ];
 
-    home.packages = [ cfg.package ];
+    home.packages = lib.optional (cfg.package != null) cfg.package;
 
     xdg.configFile."foot/foot.ini" = lib.mkIf (cfg.settings != { }) {
       source = iniFormat.generate "foot.ini" cfg.settings;
     };
 
-    systemd.user.services = lib.mkIf cfg.server.enable {
+    systemd.user.services = lib.mkIf (cfg.server.enable && cfg.package != null) {
       foot = {
         Unit = {
           Description = "Fast, lightweight and minimalistic Wayland terminal emulator.";

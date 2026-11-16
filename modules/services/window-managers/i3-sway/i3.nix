@@ -172,13 +172,12 @@ let
       command,
       always,
       notification,
-      workspace,
       ...
     }:
     lib.concatStringsSep " " [
       (if always then "exec_always" else "exec")
-      (if (notification && workspace == null) then "" else "--no-startup-id")
-      (if (workspace == null) then command else "i3-msg 'workspace ${workspace}; exec ${command}'")
+      (if notification then "" else "--no-startup-id")
+      command
     ];
 
   configFile = pkgs.writeText "i3.conf" (
@@ -286,28 +285,6 @@ in
           '';
         };
       }
-
-      (mkIf (cfg.config != null) {
-        warnings =
-          (lib.optional (lib.isList cfg.config.fonts) "Specifying i3.config.fonts as a list is deprecated. Use the attrset version instead.")
-          ++ lib.flatten (
-            map (
-              b:
-              lib.optional (lib.isList b.fonts) "Specifying i3.config.bars[].fonts as a list is deprecated. Use the attrset version instead."
-            ) cfg.config.bars
-          )
-          ++ [
-            (mkIf (lib.any (s: s.workspace != null) cfg.config.startup) (
-              "'xsession.windowManager.i3.config.startup.*.workspace' is deprecated, "
-              + "use 'xsession.windowManager.i3.config.assigns' instead."
-              + "See https://github.com/nix-community/home-manager/issues/265."
-            ))
-            (mkIf cfg.config.focus.forceWrapping (
-              "'xsession.windowManager.i3.config.focus.forceWrapping' is deprecated, "
-              + "use 'xsession.windowManager.i3.config.focus.wrapping' instead."
-            ))
-          ];
-      })
     ]
   );
 }

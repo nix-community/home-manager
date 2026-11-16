@@ -7,7 +7,6 @@
 let
   inherit (lib)
     mkOption
-    mkRenamedOptionModule
     mkRemovedOptionModule
     mkEnableOption
     types
@@ -30,14 +29,11 @@ in
   ];
 
   imports = [
-    (mkRenamedOptionModule
-      [
-        "programs"
-        "direnv"
-        "enableNixDirenvIntegration"
-      ]
-      [ "programs" "direnv" "nix-direnv" "enable" ]
-    )
+    (lib.mkRemovedOptionModule [
+      "programs"
+      "direnv"
+      "enableNixDirenvIntegration"
+    ] "Use `programs.direnv.nix-direnv.enable` instead.")
     (mkRemovedOptionModule [
       "programs"
       "direnv"
@@ -77,14 +73,25 @@ in
 
     enableFishIntegration = lib.hm.shell.mkFishIntegrationOption { inherit config; };
 
+    enableGitIntegration = mkEnableOption "Git integration" // {
+      description = ''
+        Whether to configure Git to globally ignore {file}`.direnv/`.
+      '';
+    };
+
     enableNushellIntegration = lib.hm.shell.mkNushellIntegrationOption { inherit config; };
 
     enableZshIntegration = lib.hm.shell.mkZshIntegrationOption { inherit config; };
 
     nix-direnv = {
-      enable = mkEnableOption ''
-        [nix-direnv](https://github.com/nix-community/nix-direnv),
-        a fast, persistent use_nix implementation for direnv'';
+      enable =
+        mkEnableOption ''
+          [nix-direnv](https://github.com/nix-community/nix-direnv),
+          a fast, persistent use_nix implementation for direnv''
+        // {
+          default = true;
+          example = false;
+        };
 
       package = mkPackageOption pkgs "nix-direnv" { };
     };
@@ -94,7 +101,7 @@ in
         [mise](https://mise.jdx.dev/direnv.html),
         integration of use_mise for direnv'';
 
-      package = mkPackageOption pkgs "mise" { };
+      package = mkPackageOption pkgs "mise" { nullable = true; };
     };
 
     silent = mkEnableOption "silent mode, that is, disabling direnv logging";
@@ -115,6 +122,10 @@ in
             log_filter = "^$";
           };
         };
+
+        git.ignores = mkIf cfg.enableGitIntegration [
+          ".direnv/"
+        ];
 
         bash.initExtra = mkIf cfg.enableBashIntegration (
           # Using `mkAfter` to make it more likely to appear after other
@@ -148,7 +159,9 @@ in
               | default []
               | append {||
                   let direnv = (
-                      ${getExe cfg.package} export json
+                      ${getExe cfg.package} export json e> /dev/stderr
+                      | complete
+                      | get stdout
                       | from json --strict
                       | default {}
                   )
@@ -195,7 +208,7 @@ in
 
         "direnv/lib/hm-mise.sh" = mkIf cfg.mise.enable {
           text = ''
-            eval "$(${getExe cfg.mise.package} direnv activate)"
+            eval "$(${if cfg.mise.package != null then getExe cfg.mise.package else "mise"} direnv activate)"
           '';
         };
       };

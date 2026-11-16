@@ -20,7 +20,14 @@ in
 
   options.programs.waveterm = {
     enable = mkEnableOption "waveterm";
-    package = mkPackageOption pkgs "waveterm" { nullable = true; };
+    package = mkPackageOption pkgs "waveterm" {
+      nullable = true;
+      default = null;
+      extraDescription = ''
+        Nixpkgs no longer provides Wave Terminal, so Home Manager installs a
+        package only when this option is set.
+      '';
+    };
     settings = mkOption {
       inherit (formatter) type;
       default = { };

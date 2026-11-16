@@ -34,6 +34,37 @@ let
             services that do not require a graphical login session.
           '';
         };
+        restartTriggers = lib.mkOption {
+          type = lib.types.listOf (
+            lib.types.oneOf [
+              lib.types.str
+              lib.types.path
+              lib.types.package
+            ]
+          );
+          default = [ ];
+          apply = map (value: if builtins.isPath value then "${value}" else toString value);
+          example = lib.literalExpression ''[ config.xdg.configFile."example/config".source ]'';
+          description = ''
+            Dependencies whose changed identities restart an already running
+            agent during activation. These do not watch files for changes.
+            Stopped agents are not started. Adding the first trigger or removing
+            the last trigger also counts as a change. Applied state is kept in
+            {file}`$XDG_STATE_HOME/home-manager/launchd`.
+
+            Changes to the plist or domain still use the normal agent replacement
+            behavior. Switching to or from a generation built before this option
+            was available can require a manual restart for configuration-only
+            changes, because those activation scripts do not maintain trigger
+            state.
+
+            Running state is read from launchctl's diagnostic output, which is
+            not a stable API. An unrecognized state fails activation. The job
+            can stop between this check and kickstart, which may then start it.
+            An interruption after restarting but before saving state can cause
+            a retry.
+          '';
+        };
         waitForNixStore = lib.mkOption {
           type = lib.types.bool;
           default = true;
@@ -46,11 +77,47 @@ let
             when the store volume is encrypted.
 
             When disabled, the agent's command is run through a launcher
-            script named after the agent instead. This makes the agent appear
-            under its own name, rather than as "sh", in System Settings >
-            Login Items & Extensions, but the agent will fail to start if
-            launchd runs it before the Nix store is mounted.
+            script named after the agent instead (see
+            {option}`launchd.agents.<name>.launcher`). This makes the agent
+            appear under its own name, rather than as "sh", in System
+            Settings > Login Items & Extensions, but the agent will fail to
+            start if launchd runs it before the Nix store is mounted.
           '';
+        };
+        launcher = {
+          name = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
+            example = "nix-my-agent";
+            description = ''
+              Base name of the launcher script the agent is started through
+              when {option}`launchd.agents.<name>.waitForNixStore` is
+              disabled. This is the name macOS shows for the agent in
+              System Settings > Login Items & Extensions ("Allow in the
+              Background"), so a common prefix makes every Home Manager
+              agent recognisable at a glance.
+
+              Defaults to the agent's attribute name.
+            '';
+          };
+          shell = lib.mkOption {
+            type = lib.types.str;
+            default = "/bin/sh";
+            defaultText = lib.literalExpression ''"/bin/sh"'';
+            example = lib.literalExpression "lib.getExe pkgs.bash";
+            description = ''
+              Interpreter for the launcher script used when
+              {option}`launchd.agents.<name>.waitForNixStore` is disabled.
+
+              A launcher script lives in the Nix store either way, so a
+              store-resident interpreter adds no new failure mode. It does
+              change which binary macOS attributes the agent's process to
+              (for example for the privacy prompts that gate access to
+              `~/Desktop` and `~/Downloads`): with `/bin/sh` the
+              attribution follows Apple's shell, with a store-resident shell
+              it follows the launcher itself.
+            '';
+          };
         };
         config = lib.mkOption {
           type = lib.types.submodule (import ./launchd.nix);
@@ -88,18 +155,21 @@ let
   # before running the original command. This is intentional to fix the
   # issue where launchd starts the agent before /nix/store is ready (before
   # the Nix store is mounted.) When waitForNixStore is disabled, the command
-  # is run through a launcher script named after the agent instead, so that
-  # the agent is displayed under its own name (rather than "sh") in System
-  # Settings > Login Items & Extensions.
+  # is run through a launcher script instead — named after the agent unless
+  # `launcher.name` says otherwise, interpreted by `launcher.shell` — so
+  # that the agent is displayed under its own name (rather than "sh") in
+  # System Settings > Login Items & Extensions.
   mutateConfig =
-    name: waitForNixStore: cnf:
+    name: v:
     let
+      cnf = v.config;
       args =
         lib.optional (cnf.Program != null) cnf.Program
         ++ lib.optionals (cnf.ProgramArguments != null) cnf.ProgramArguments;
-      launcherName = lib.strings.sanitizeDerivationName name;
+      launcherName =
+        if v.launcher.name != null then v.launcher.name else lib.strings.sanitizeDerivationName name;
       launcher = pkgs.writeScriptBin launcherName ''
-        #!/bin/sh
+        #!${v.launcher.shell}
         exec ${lib.escapeShellArgs args}
       '';
     in
@@ -109,7 +179,7 @@ let
     ])
     // {
       ProgramArguments =
-        if waitForNixStore then
+        if v.waitForNixStore then
           [
             "/bin/sh"
             "-c"
@@ -121,9 +191,7 @@ let
 
   toAgent =
     name: v:
-    pkgs.writeText "${v.config.Label}.plist" (
-      toPlist { escape = true; } (mutateConfig name v.waitForNixStore v.config)
-    );
+    pkgs.writeText "${v.config.Label}.plist" (toPlist { escape = true; } (mutateConfig name v));
 
   agentPlists = lib.mapAttrs' (n: v: lib.nameValuePair "${v.config.Label}.plist" (toAgent n v)) (
     lib.filterAttrs (_n: v: v.enable) cfg.agents
@@ -135,6 +203,16 @@ let
       pkgs.writeText "${v.config.Label}.domain" "${v.domain}\n"
     )
   ) (lib.filterAttrs (_n: v: v.enable) cfg.agents);
+
+  agentTriggersDrv = pkgs.linkFarm "home-manager-agent-restart-triggers" (
+    lib.mapAttrs' (
+      _: v:
+      lib.nameValuePair "${v.config.Label}.json" (
+        pkgs.writeText "launchd-restart-triggers.json" (builtins.toJSON v.restartTriggers)
+      )
+    ) (lib.filterAttrs (_: v: v.enable && v.restartTriggers != [ ]) cfg.agents)
+  );
+  emptyTriggers = pkgs.writeText "launchd-empty-restart-triggers.json" "[]";
 
   agentsDrv = pkgs.runCommand "home-manager-agents" { } ''
     mkdir -p "$out"
@@ -184,7 +262,40 @@ in
     agents = lib.mkOption {
       type = with lib.types; attrsOf (submodule launchdConfig);
       default = { };
-      description = "Define LaunchAgents.";
+      example = {
+        greeting = {
+          enable = true;
+          config = {
+            ProgramArguments = [
+              "/usr/bin/say"
+              "Good afternoon"
+            ];
+            StartCalendarInterval = [
+              {
+                Hour = 12;
+                Minute = 0;
+              }
+            ];
+          };
+        };
+      };
+      description = ''
+        Per-user launchd agents on Darwin. Set each agent's `enable` option
+        to `true` to manage it with Home Manager.
+
+        During activation, Home Manager installs enabled agents as
+        user-owned plist files in {file}`~/Library/LaunchAgents` and loads
+        them into their configured [](#opt-launchd.agents._name_.domain).
+        Changed agents are unloaded and loaded again; agents removed from
+        the configuration are unloaded and their plist files are removed.
+        Home Manager skips removal if a plist file was modified outside
+        Home Manager.
+
+        Each agent's `config` contains the job properties described in
+        {manpage}`launchd.plist(5)`. Unless overridden with `config.Label`,
+        the job label is `org.nix-community.home.<name>`, where `<name>` is
+        the attribute name in this option.
+      '';
     };
   };
 
@@ -206,12 +317,13 @@ in
       home.extraBuilderCommands = ''
         ln -s "${agentsDrv}" $out/LaunchAgents
         ln -s "${agentDomainsDrv}" $out/LaunchAgentDomains
+        ln -s "${agentTriggersDrv}" $out/LaunchAgentRestartTriggers
       '';
 
       # NOTE: Launch Agent configurations can't be symlinked from the Nix store
       # because it needs to be owned by the user running it.
       home.activation.setupLaunchAgents =
-        lib.hm.dag.entryAfter [ "writeBoundary" ] # Bash
+        lib.hm.dag.entryAfter [ "writeBoundary" "linkGeneration" "onFilesChange" ] # Bash
           ''
             # Get the OS version to see if we can use --wait
             version="$(/usr/bin/sw_vers --productVersion | cut -d. -f 1)"
@@ -257,7 +369,7 @@ in
               local domain="$1"
               local agentName="$2"
 
-              run /bin/launchctl print "$domain/$agentName" >/dev/null 2>&1
+              /bin/launchctl print "$domain/$agentName" >/dev/null 2>&1
             }
 
             # Stop an agent if it's running
@@ -346,7 +458,61 @@ in
                 && bootstrapAgent "$oldDomain" "$dstPath" "$agentName"
             }
 
+            restartRunningAgent() {
+              local output state pid
+              if ! output=$(/bin/launchctl print "$1/$2"); then
+                errorEcho "Cannot inspect running state of '$1/$2'"
+                return 1
+              fi
+              # Only read the service's top-level fields, not nested jobs.
+              state=$(printf '%s\n' "$output" | sed -n 's/^	state = //p')
+              pid=$(printf '%s\n' "$output" | sed -n 's/^	pid = //p')
+              if [[ "$pid" =~ ^[1-9][0-9]*$ ]]; then
+                # launchctl offers no atomic check-and-restart operation.
+                run /bin/launchctl kickstart -k "$1/$2"
+              elif [[ -z "$pid" && ( "$state" == "not running" || "$state" == "spawn scheduled" ) ]]; then
+                # A throttled job reads the new files on its next scheduled start.
+                return 0
+              else
+                errorEcho "Cannot determine running state of '$1/$2': state=$state pid=$pid"
+                return 1
+              fi
+            }
+
+            agentRestartStateDir() {
+              local key
+              key=$(printf '%s' "$1" | sha256sum) || return 1
+              printf '%s/%s\n' ${lib.escapeShellArg "${config.xdg.stateHome}/home-manager/launchd"} "''${key%% *}"
+            }
+
             processAgent() {
+              local name="''${1##*/}"
+              name="''${name%.plist}"
+              local stateDir desired triggerChanged=0
+              stateDir="$(agentRestartStateDir "$name")" || return 1
+              desired="$newGenPath/LaunchAgentRestartTriggers/$name.json"
+              if [[ ! -f "$desired" ]]; then
+                desired=${emptyTriggers}
+              fi
+
+              if [[ "$desired" != ${emptyTriggers} || -d "$stateDir" ]]; then
+                if [[ -d "$stateDir/pending" ]] || ! cmp -s "$desired" "$stateDir/applied.json"; then
+                  triggerChanged=1
+                  # Persist intent before any launchctl mutation, including first
+                  # adoption and removal of the final trigger. Never clear it on failure.
+                  run mkdir -p "$stateDir/pending" || return 1
+                fi
+              fi
+
+              processAgentImpl "$@" || return 1
+              if [[ "$triggerChanged" -eq 1 ]]; then
+                run cp "$desired" "$stateDir/applied.json.new" || return 1
+                run mv -f "$stateDir/applied.json.new" "$stateDir/applied.json" || return 1
+                run rmdir "$stateDir/pending" || return 1
+              fi
+            }
+
+            processAgentImpl() {
               local srcPath="$1"
               local dstDir="$2"
               local oldDir="$3"
@@ -374,6 +540,9 @@ in
               # Skip if unchanged
               if cmp -s "$srcPath" "$dstPath" && [[ "$oldDomainName" == "$newDomainName" ]]; then
                 if agentIsLoaded "$newDomain" "$agentName"; then
+                  if [[ "$triggerChanged" -eq 1 ]]; then
+                    restartRunningAgent "$newDomain" "$agentName" || return 1
+                  fi
                   verboseEcho "Agent '$newDomain/$agentName' is already up-to-date"
                   return 0
                 else
@@ -472,6 +641,11 @@ in
 
               verboseEcho "Removing agent file '$dstPath'"
               if run rm -f $VERBOSE_ARG "$dstPath"; then
+                local stateDir
+                stateDir="$(agentRestartStateDir "$agentName")" || return 1
+                if [[ -d "$stateDir" ]]; then
+                  run rm -rf -- "$stateDir" || return 1
+                fi
                 verboseEcho "Successfully removed agent file for '$agentName'"
               else
                 warnEcho "Failed to remove agent file '$dstPath'"

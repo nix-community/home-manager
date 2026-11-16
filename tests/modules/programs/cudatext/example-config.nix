@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.cudatext = {
@@ -78,6 +83,46 @@
     };
   };
 
+  assertions =
+    let
+      settingsFilePath =
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          "Library/Application Support/CudaText/settings"
+        else
+          "${lib.removePrefix config.home.homeDirectory config.xdg.configHome}/cudatext/settings";
+      settingsFiles = lib.filterAttrs (
+        name: _: lib.hasPrefix "${settingsFilePath}/" name
+      ) config.home.file;
+      cleanup = config.home.activation.cudatextImmutableSettings;
+    in
+    [
+      {
+        assertion = !config.programs.cudatext.mutableSettings;
+        message = "cudatext example-config must default to immutable settings.";
+      }
+      {
+        assertion = !(config.home.activation ? cudatextSettings);
+        message = "cudatext example-config must not create mutable activation.";
+      }
+      {
+        assertion = cleanup.after == [ "writeBoundary" ];
+        message = "cudatext example-config cleanup must run after writeBoundary.";
+      }
+      {
+        assertion = cleanup.before == [ "linkGeneration" ];
+        message = "cudatext example-config cleanup must run before linkGeneration.";
+      }
+      {
+        assertion = lib.all (
+          file:
+          file.enable
+          && lib.hasInfix (lib.escapeShellArg file.target) cleanup.data
+          && lib.hasInfix (lib.escapeShellArg (builtins.unsafeDiscardStringContext (toString file.source))) cleanup.data
+        ) (builtins.attrValues settingsFiles);
+        message = "cudatext example-config cleanup must use the configured file source.";
+      }
+    ];
+
   nmt.script =
     let
       settingsPath =
@@ -87,18 +132,6 @@
           "home-files/.config/cudatext/settings";
     in
     ''
-      assertFileExists "${settingsPath}/user.json"
-      assertFileExists "${settingsPath}/keys.json"
-
-      assertFileExists "${settingsPath}/lexer C.json"
-      assertFileExists "${settingsPath}/lexer Python.json"
-      assertFileExists "${settingsPath}/lexer Rust.json"
-
-      assertFileExists "${settingsPath}/keys lexer C.json"
-      assertFileExists "${settingsPath}/keys lexer Python.json"
-
-
-
       assertFileContent "${settingsPath}/user.json" ${./user.json}
       assertFileContent "${settingsPath}/keys.json" ${./keys.json}
 

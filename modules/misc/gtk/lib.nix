@@ -76,8 +76,9 @@ in
       "gtk-cursor-theme-size" = cursorTheme.size;
     }
     // optionalAttrs (colorScheme == "dark") { "gtk-application-prefer-dark-theme" = true; }
-    // optionalAttrs (gtkVersion == 4 && colorScheme == "dark") { "gtk-interface-color-scheme" = 2; }
-    // optionalAttrs (gtkVersion == 4 && colorScheme == "light") { "gtk-interface-color-scheme" = 3; };
+    // optionalAttrs (gtkVersion == 4 && colorScheme != null) {
+      "gtk-interface-color-scheme" = colorScheme;
+    };
 
   # Package collection helper for all GTK versions
   collectGtkPackages =

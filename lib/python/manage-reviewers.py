@@ -125,11 +125,11 @@ def get_manual_reviewer_actions(
             if not node or not node.get("requestedReviewer") or not node.get("actor"):
                 continue
 
-            reviewer_login = node["requestedReviewer"]["login"]
+            reviewer_login = node["requestedReviewer"]["login"].casefold()
             actor_login = node["actor"].get("login")
 
             # Skip bot actions
-            if actor_login == bot_user_name:
+            if actor_login and actor_login.casefold() == bot_user_name.casefold():
                 continue
 
             # Check node type to determine if it's a request or removal
@@ -148,7 +148,11 @@ def get_users_from_gh(args: list[str], error_message: str) -> set[str]:
     """A generic helper to get a set of users from a 'gh' command."""
     try:
         result = run_gh_command(args)
-        return {user.strip() for user in result.stdout.split("\n") if user.strip()}
+        return {
+            user.strip().casefold()
+            for user in result.stdout.split("\n")
+            if user.strip()
+        }
     except GHError as e:
         logging.error("%s: %s", error_message, e)
         return set()
@@ -286,7 +290,7 @@ def main() -> None:
     no_changed_files = not args.changed_files.strip()
 
     # --- 1. Fetch current state from GitHub ---
-    maintainers: set[str] = set(args.current_maintainers.split())
+    maintainers = {user.casefold() for user in args.current_maintainers.split()}
     pending_reviewers = get_pending_reviewers(args.pr_number)
     past_reviewers = get_past_reviewers(args.owner, args.repo, args.pr_number)
     manually_requested, manually_removed = get_manual_reviewer_actions(
@@ -335,7 +339,10 @@ def main() -> None:
             )
         else:
             users_to_exclude = (
-                {args.pr_author} | past_reviewers | pending_reviewers | manually_removed
+                {args.pr_author.casefold()}
+                | past_reviewers
+                | pending_reviewers
+                | manually_removed
             )
             potential_reviewers = maintainers - users_to_exclude
 

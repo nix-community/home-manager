@@ -15,7 +15,7 @@ let
         n = lock.nodes.nixpkgs.locked;
       in
       fetchTarball {
-        url = "https://github.com/${n.owner}/${n.repo}/archive/${n.rev}.tar.gz";
+        inherit (n) url;
         sha256 = n.narHash;
       }
     ) { }

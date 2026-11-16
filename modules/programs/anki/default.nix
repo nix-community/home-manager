@@ -37,10 +37,12 @@ in
       ]
     )
     ++ [
-      (lib.mkRenamedOptionModule
-        [ "programs" "anki" "sync" "passwordFile" ]
-        [ "programs" "anki" "profiles" "User 1" "sync" "keyFile" ]
-      )
+      (lib.mkRemovedOptionModule [
+        "programs"
+        "anki"
+        "sync"
+        "passwordFile"
+      ] "Use `programs.anki.profiles.\"User 1\".sync.keyFile` instead.")
     ];
 
   options.programs.anki = {

@@ -1,0 +1,17 @@
+{
+  "composed": {
+    "list": [
+      "first",
+      "last"
+    ],
+    "retained": true,
+    "value": "canonical"
+  },
+  "editor": "kate",
+  "falseValue": false,
+  "modern": true,
+  "newNoteFocus": "title",
+  "sync.interval": 0,
+  "sync.target": 0,
+  "zeroValue": 0
+}

@@ -110,7 +110,7 @@ in
     configPackages = mkOption {
       type = types.listOf types.package;
       default = [ ];
-      example = lib.literalExpression "[ pkgs.gnome.gnome-session ]";
+      example = lib.literalExpression "[ pkgs.gnome-session ]";
       description = ''
         List of packages that provide XDG desktop portal configuration, usually in
         the form of `share/xdg-desktop-portal/$desktop-portals.conf`.

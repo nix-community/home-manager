@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "keybinds": {
+    "leader": "alt+b"
+  },
+  "scroll": {
+    "speed": 3
+  },
+  "tabs": {
+    "mode": "off"
+  },
+  "theme": {
+    "mode": "system",
+    "name": "tokyonight"
+  }
+}

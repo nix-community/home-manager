@@ -10,7 +10,7 @@ let
   cfg = config.services.local-ai;
 in
 {
-  meta.maintainers = [ lib.maintainers.ipsavitsky ];
+  meta.maintainers = [ ];
 
   options.services.local-ai = {
     enable = lib.mkEnableOption "LocalAI is the free, Open Source OpenAI alternative.";
@@ -21,9 +21,15 @@ in
       type = types.attrsOf types.str;
       default = { };
       description = ''
-        Additional environment passed to local-ai service. Used to configure local-ai
+        Additional environment variables for the local-ai service.
 
-        See <https://localai.io/basics> for available options.
+        These variables are written to the world-readable Nix store as
+        `Environment=` lines in the systemd unit, so avoid putting secrets
+        such as `LOCALAI_API_KEY` here. You can set
+        `systemd.user.services.local-ai.Service.EnvironmentFile` to a file
+        outside the store instead.
+
+        See <https://localai.io/docs/reference/cli-reference/> for available options.
       '';
     };
   };

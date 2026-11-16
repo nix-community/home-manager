@@ -25,33 +25,26 @@ in
     thiagokokada
   ];
 
-  imports =
-    let
-      mkRenamed =
-        old: new:
-        lib.mkRenamedOptionModule
-          (
-            [
-              "services"
-              moduleName
-            ]
-            ++ old
-          )
-          [
-            "services"
-            moduleName
-            "settings"
-            mainSection
-            new
-          ];
-    in
-    [
-      (lib.mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
-        "All ${programName} configuration is now available through services.${moduleName}.settings instead."
+  imports = [
+    (lib.mkRemovedOptionModule [ "services" moduleName "extraOptions" ]
+      "All ${programName} configuration is now available through services.${moduleName}.settings instead."
+    )
+  ]
+  ++
+    map
+      (
+        time:
+        lib.mkRemovedOptionModule [
+          "services"
+          moduleName
+          "brightness"
+          time
+        ] "Use `services.${moduleName}.settings.${mainSection}.brightness-${time}` instead."
       )
-      (mkRenamed [ "brightness" "day" ] "brightness-day")
-      (mkRenamed [ "brightness" "night" ] "brightness-night")
-    ];
+      [
+        "day"
+        "night"
+      ];
 
   options = {
     enable = lib.mkEnableOption programName;

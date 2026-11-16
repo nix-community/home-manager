@@ -151,19 +151,10 @@ in
 
     xdg.configFile."khard/khard.conf".text =
       let
-        makePath =
-          baseDir: subDir:
-          toString (
-            /.
-            + lib.concatStringsSep "/" [
-              baseDir
-              subDir
-            ]
-          );
         makeName = accName: abookName: accName + lib.optionalString (abookName != "") "-${abookName}";
         makeEntry = anAccount: anAbook: ''
           [[${makeName anAccount.name anAbook}]]
-          path = ${makePath anAccount.local.path anAbook}
+          path = ${anAccount.local.path}/${anAbook}
         '';
         makeDiscoverEntry = anAccount: ''
           [[${makeName anAccount.name ""}]]

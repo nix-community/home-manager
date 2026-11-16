@@ -6,7 +6,9 @@ on:
   workflow_dispatch:
 jobs:
   publish:
-    if: github.event_name != 'schedule' || github.repository_owner == 'nix-community'
+    if: github.repository_owner == 'nix-community'
+        || github.event_name == 'workflow_dispatch'
+        || vars.PUBLISH_GITHUB_PAGES_ON_PUSH == 'true'
     strategy:
       matrix:
         os: [ubuntu-latest]

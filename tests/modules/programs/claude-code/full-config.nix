@@ -129,30 +129,31 @@
         dirOf settingsSource != builtins.storeDir && baseNameOf settingsSource == "settings.json";
       message = "Claude Code settings source must be inside a dedicated store directory";
     }
+    {
+      assertion = !config.programs.claude-code.mutableSettings;
+      message = "claude-code full-config must default to immutable settings.";
+    }
+    {
+      assertion = !(config.home.activation ? claudeCodeSettings);
+      message = "claude-code full-config must not create mutable activation.";
+    }
   ];
 
   nmt.script = ''
-    assertFileExists home-files/.claude/settings.json
     assertFileContent home-files/.claude/settings.json ${./expected-settings.json}
 
-    assertFileExists home-files/.claude/agents/code-reviewer.md
     assertFileContent home-files/.claude/agents/code-reviewer.md ${./expected-code-reviewer.md}
 
-    assertFileExists home-files/.claude/agents/documentation.md
     assertFileContent home-files/.claude/agents/documentation.md ${./expected-documentation.md}
 
 
-    assertFileExists home-files/.claude/commands/changelog.md
     assertFileContent home-files/.claude/commands/changelog.md ${./expected-changelog}
 
-    assertFileExists home-files/.claude/commands/commit.md
     assertFileContent home-files/.claude/commands/commit.md ${./expected-commit}
 
-    assertFileExists home-files/.claude/hooks/pre-edit
     assertFileIsExecutable home-files/.claude/hooks/pre-edit
     assertFileRegex home-files/.claude/hooks/pre-edit "About to edit file"
 
-    assertFileExists home-files/.claude/hooks/post-commit
     assertFileIsExecutable home-files/.claude/hooks/post-commit
     assertFileRegex home-files/.claude/hooks/post-commit "Committed with message"
   '';

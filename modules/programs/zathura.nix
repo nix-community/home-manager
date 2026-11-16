@@ -27,7 +27,10 @@ in
       Zathura, a highly customizable and functional document viewer
       focused on keyboard interaction'';
 
-    package = lib.mkPackageOption pkgs "zathura" { };
+    package = lib.mkPackageOption pkgs "zathura" {
+      nullable = true;
+      extraDescription = "Set programs.zathura.package to null if package is already provided";
+    };
 
     options = mkOption {
       default = { };
@@ -81,7 +84,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.optionals (cfg.package != null) [ cfg.package ];
 
     xdg.configFile."zathura/zathurarc".text =
       lib.concatStringsSep "\n" (

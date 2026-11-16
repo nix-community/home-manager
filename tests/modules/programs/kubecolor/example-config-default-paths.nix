@@ -20,6 +20,8 @@
     assertFileExists 'home-files/.kube/color.yaml'
     assertFileContent 'home-files/.kube/color.yaml' \
       ${builtins.toFile "expected.yaml" ''
+        %YAML 1.1
+        ---
         kubectl: kubectl
         objFreshThreshold: 0
         pager: less

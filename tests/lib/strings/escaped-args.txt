@@ -1,0 +1,1 @@
+"plain" "" "two words" "1\nday" "tab\treturn\r" "quote\" apostrophe' backslash\\" "%%h" "$$HOME" "$${HOME}" ";" "café"

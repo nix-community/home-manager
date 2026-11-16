@@ -160,14 +160,11 @@ in
   ];
 
   imports = [
-    (lib.mkRenamedOptionModule
-      [ "fonts" "fontconfig" "enableProfileFonts" ]
-      [
-        "fonts"
-        "fontconfig"
-        "enable"
-      ]
-    )
+    (lib.mkRemovedOptionModule [
+      "fonts"
+      "fontconfig"
+      "enableProfileFonts"
+    ] "Use `fonts.fontconfig.enable` instead.")
   ];
 
   options = {

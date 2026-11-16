@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.services.jankyborders;
+  configFilePath = "${config.home.homeDirectory}/.config/borders/bordersrc";
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -59,6 +60,20 @@ in
 
     launchd.agents.jankyborders = {
       enable = true;
+      restartTriggers =
+        let
+          primaryFiles = lib.filterAttrs (
+            _: file:
+            file.enable && file.target == lib.removePrefix "${config.home.homeDirectory}/" configFilePath
+          ) config.home.file;
+          # An unmanaged primary cannot be detected at evaluation time.
+          configFiles =
+            if primaryFiles != { } then
+              primaryFiles
+            else
+              lib.filterAttrs (_: file: file.enable && file.target == ".bordersrc") config.home.file;
+        in
+        lib.mapAttrsToList (_: file: config.lib.file.sourceStorePath file) configFiles;
       config = {
         ProgramArguments = [ (lib.getExe cfg.package) ];
         ProcessType = "Interactive";

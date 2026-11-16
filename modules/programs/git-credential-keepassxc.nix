@@ -31,6 +31,27 @@ in
       example = [ "https://github.com" ];
       description = "Hosts for which {command}`git-credential-keepassxc` is enabled.";
     };
+    unlock = {
+      enable = lib.mkEnableOption "prompting KeePassXC to unlock a locked database";
+      retries = lib.mkOption {
+        type = lib.types.ints.unsigned;
+        default = 0;
+        example = 3;
+        description = ''
+          Number of times to check whether the database has been unlocked.
+          `0` keeps waiting until it is unlocked.
+        '';
+      };
+      interval = lib.mkOption {
+        type = with lib.types; nullOr ints.unsigned;
+        default = null;
+        example = 1000;
+        description = ''
+          Delay between unlock checks in milliseconds. If `null`,
+          {command}`git-credential-keepassxc` uses its default of 1000.
+        '';
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -46,7 +67,16 @@ in
                 lib.concatStringsSep " " (map (g: "--group ${g}") cfg.groups);
           in
           {
-            helper = "${cfg.package}/bin/git-credential-keepassxc ${groups}";
+            helper = lib.concatStringsSep " " (
+              [
+                "${cfg.package}/bin/git-credential-keepassxc"
+                groups
+              ]
+              ++ lib.optional cfg.unlock.enable (
+                "--unlock ${toString cfg.unlock.retries}"
+                + lib.optionalString (cfg.unlock.interval != null) ",${toString cfg.unlock.interval}"
+              )
+            );
           };
       in
       if cfg.hosts == [ ] then

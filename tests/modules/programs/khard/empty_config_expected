@@ -1,6 +1,6 @@
 [addressbooks]
 [[test]]
-path = /home/hm-user/.contacts/test
+path = /home/hm-user/.contacts/test/
 
 
 [general]

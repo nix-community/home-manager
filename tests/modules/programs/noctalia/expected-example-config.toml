@@ -1,0 +1,20 @@
+[audio]
+enable_sounds = true
+
+[bar.default]
+background_opacity = 0.8
+capsule = true
+capsule_border = "outline"
+font_family = "JetBrainsMono Nerd Font Mono"
+position = "top"
+
+[desktop_widgets]
+schema_version = 2
+widget_order = []
+
+[desktop_widgets.grid]
+cell_size = 16
+major_interval = 4
+visible = true
+
+[desktop_widgets.widget]

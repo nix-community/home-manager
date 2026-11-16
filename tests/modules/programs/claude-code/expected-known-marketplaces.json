@@ -1,5 +1,6 @@
 {
   "test-duplicate": {
+    "autoUpdate": false,
     "installLocation": "/nix/store/00000000000000000000000000000000-test-marketplace",
     "lastUpdated": "1970-01-01T00:00:00Z",
     "source": {
@@ -8,6 +9,7 @@
     }
   },
   "test-market": {
+    "autoUpdate": false,
     "installLocation": "/nix/store/00000000000000000000000000000000-test-marketplace",
     "lastUpdated": "1970-01-01T00:00:00Z",
     "source": {

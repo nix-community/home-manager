@@ -1,0 +1,17 @@
+{
+  "Calendars": [
+    {
+      "Name": "Local",
+      "Url": "https://local.example.com/events.ical"
+    },
+    {
+      "Name": "Work",
+      "PasswordCmd": "pass show work",
+      "Url": "https://cal.example.com/work",
+      "Username": "override"
+    }
+  ],
+  "Custom": true,
+  "DefaultNumDays": 7,
+  "Timezone": "Europe/Paris"
+}

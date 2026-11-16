@@ -149,6 +149,8 @@ let
 
 in
 {
+  meta.maintainers = [ lib.maintainers.kallisti-dev ];
+
   options = {
     programs.tmux = {
       aggressiveResize = mkOption {

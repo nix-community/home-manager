@@ -8,6 +8,7 @@ let
   inherit (builtins) typeOf stringLength;
   jsonFormat = pkgs.formats.json { };
   cfg = config.services.jellyfin-mpv-shim;
+  staticSettings = jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings;
 
   renderOption =
     option:
@@ -60,6 +61,13 @@ in
           {file}`$XDG_CONFIG_HOME/jellyfin-mpv-shim/conf.json`. See
           <https://github.com/jellyfin/jellyfin-mpv-shim#configuration>
           for the configuration documentation.
+
+          Changed settings trigger a service restart when automatic systemd
+          service switching is enabled. A running shim can write its old
+          in-memory settings back between the merge and restart. Stop it before
+          switching and start it afterward to avoid this window. If
+          {option}`systemd.user.startServices` is `false` or `"suggest"`, restart
+          the shim manually to load changed settings.
         '';
       };
 
@@ -118,6 +126,7 @@ in
         Documentation = "https://github.com/jellyfin/jellyfin-mpv-shim";
         After = [ "graphical-session.target" ];
         PartOf = [ "graphical-session.target" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [ staticSettings ];
       };
 
       Service = {
@@ -129,34 +138,19 @@ in
       };
     };
 
-    # Yoinked from programs/zed-editor.nix
     # jellyfin-mpv-shim can't load the configuration file if it's not
-    # writeable. So we merge the settings defined here in Nix with the existing
+    # writable. So we merge the settings defined here in Nix with the existing
     # configuration, if any.
-    home.activation.jellyfinMpvShimSettingsActivation =
-      let
-        path = lib.escapeShellArg "${config.xdg.configHome}/jellyfin-mpv-shim/conf.json";
-        staticSettings = lib.escapeShellArg (jsonFormat.generate "jellyfin-mpv-shim-conf" cfg.settings);
-        cmd = "${lib.getExe pkgs.jq} -s '.[0] * .[1]' ${path} ${staticSettings}";
-      in
-      lib.mkIf (cfg.settings != { }) (
-        lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-          run mkdir -p "$(dirname ${path})"
-          if [ ! -e ${path} ]; then
-            # Create the file
-            if [[ -v DRY_RUN ]]; then
-              run echo '{}' '>' ${path}
-            else
-              echo '{}' > ${path}
-            fi
-          fi
-          if [[ -v DRY_RUN ]]; then
-            run ${cmd} '>' ${path}
-          else
-            config="$(${cmd})"
-            printf '%s\n' "$config" > ${path}
-          fi
-        ''
-      );
+    home.activation.jellyfinMpvShimSettingsActivation = lib.mkIf (cfg.settings != { }) (
+      lib.hm.dag.entryBetween [ "reloadSystemd" ] [ "linkGeneration" ] (
+        lib.hm.generators.mkImpureConfigMerger {
+          inherit pkgs staticSettings;
+          format = "json";
+          empty = "{}";
+          jqOperation = "$dynamic * $static";
+          path = "${config.xdg.configHome}/jellyfin-mpv-shim/conf.json";
+        }
+      )
+    );
   };
 }

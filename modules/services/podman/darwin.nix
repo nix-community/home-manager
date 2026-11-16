@@ -166,6 +166,8 @@ in
       description = ''
         Whether to create and use the default podman machine.
 
+        Defaults to true on Darwin and false on other platforms.
+
         The default machine will be named `podman-machine-default` and configured with podmans default values.
       '';
       readOnly = pkgs.stdenv.hostPlatform.isLinux;
