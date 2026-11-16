@@ -1644,6 +1644,13 @@
     name = "Austin Horstman";
     source = "nixpkgs";
   };
+  kimhappy = {
+    email = "babtul21@gmail.com";
+    github = "kimhappy";
+    githubId = 50399467;
+    name = "Hwanhee Kim";
+    source = "home-manager";
+  };
   kirelagin = {
     email = "kirelagin@gmail.com";
     github = "kirelagin";
