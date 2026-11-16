@@ -8,7 +8,6 @@ let
   cfg = config.programs.worktrunk;
   tomlFormat = pkgs.formats.toml { };
   wt = lib.getExe cfg.package;
-  jq = lib.getExe pkgs.jq;
 
   mkClaudeCodeIntegrationEnableOption =
     msg:
@@ -18,11 +17,19 @@ let
       defaultText = lib.literalExpression "config.programs.worktrunk.claudeCodeIntegration.enable";
     };
 
-  # Best-effort `wt config state marker` hook entry. `|| true` ensures a failure
-  # (e.g. running outside a git worktree) never blocks Claude Code.
-  mkMarkerHook = op: {
+  # Every hook runs the command upstream's plugin registers for each event
+  # (https://github.com/max-sixty/worktrunk/blob/main/plugins/worktrunk/hooks/hooks.json).
+  # It reads the event from the hook payload on stdin and handles it as the
+  # plugin does, so the hooks' behavior follows the installed `wt`.
+  claudeHook = {
     type = "command";
-    command = "${wt} config state marker ${op} || true";
+    command = "${wt} config plugins claude hook";
+  };
+
+  # Activity markers are best-effort, as in upstream's plugin: `|| true` keeps a
+  # failure (e.g. running outside a git worktree) from blocking Claude Code.
+  claudeMarkerHook = claudeHook // {
+    command = "${claudeHook.command} || true";
   };
 
   skillsPackage = pkgs.runCommandLocal "worktrunk-skills" { } ''
@@ -135,73 +142,44 @@ in
       settings = {
         hooks = lib.mkMerge [
           # Route Claude Code worktree create/remove through `wt` (worktree isolation).
-          # Mirrors the upstream plugin's hooks, calling `wt`/`jq` by absolute nix path
-          # so nothing depends on $PATH or the plugin being installed.
+          # `wt` is called by absolute nix path, so nothing depends on $PATH or the
+          # plugin being installed.
           (lib.mkIf cfg.claudeCodeIntegration.worktreeHooks {
-            # stdin: {"name": "<branch>"} → creates a sibling worktree, prints its path.
-            WorktreeCreate = [
-              {
-                hooks = [
-                  {
-                    type = "command";
-                    command = "bash -c 'set -o pipefail; name=$(${jq} -er .name) || exit 1; cd \"\${CLAUDE_PROJECT_DIR:-.}\" || exit 1; ${wt} switch --create \"$name\" --no-cd --format=json | ${jq} -er .path'";
-                  }
-                ];
-              }
-            ];
-            # stdin: {"worktree_path": "<path>"} → removes the worktree.
-            WorktreeRemove = [
-              {
-                hooks = [
-                  {
-                    type = "command";
-                    command = "bash -c 'p=$(${jq} -er .worktree_path) || exit 1; [ -e \"$p/.git\" ] || exit 0; ${wt} -C \"$p\" remove --foreground \"$p\"'";
-                  }
-                ];
-              }
-            ];
+            # Creates the worktree, or switches to the branch's existing one, and
+            # prints its path.
+            WorktreeCreate = [ { hooks = [ claudeHook ]; } ];
+            WorktreeRemove = [ { hooks = [ claudeHook ]; } ];
           })
 
-          # Activity tracking — mirrors the upstream plugin's marker hooks
-          # (https://github.com/max-sixty/worktrunk/blob/main/plugins/worktrunk/hooks/hooks.json),
-          # calling `wt` by absolute nix path. The hook-list type merges with
+          # Activity tracking: 🤖 while the agent works, 💬 while it waits for the
+          # user, cleared when the session ends. The hook-list type merges with
           # claude-code.nix's own hooks (e.g. the GUI Notification) by concatenation.
           (lib.mkIf cfg.claudeCodeIntegration.activityTrackingHooks {
-            # 🤖 the user submitted a prompt → the agent is working.
-            UserPromptSubmit = [
-              {
-                hooks = [ (mkMarkerHook "set 🤖") ];
-              }
-            ];
-            # 💬 the agent paused and is waiting for the user.
+            UserPromptSubmit = [ { hooks = [ claudeMarkerHook ]; } ];
             Notification = [
               {
                 matcher = "";
-                hooks = [ (mkMarkerHook "set 💬") ];
+                hooks = [ claudeMarkerHook ];
               }
             ];
             PreToolUse = [
               {
                 matcher = "AskUserQuestion";
-                hooks = [ (mkMarkerHook "set 💬") ];
+                hooks = [ claudeMarkerHook ];
               }
             ];
+            # Also approves an EnterWorktree into a worktrunk-managed worktree.
             PermissionRequest = [
               {
                 matcher = "";
-                hooks = [ (mkMarkerHook "set 💬") ];
+                hooks = [ claudeMarkerHook ];
               }
             ];
-            Stop = [
-              {
-                hooks = [ (mkMarkerHook "set 💬") ];
-              }
-            ];
-            # Clear the marker when the session ends.
+            Stop = [ { hooks = [ claudeMarkerHook ]; } ];
             SessionEnd = [
               {
                 matcher = "";
-                hooks = [ (mkMarkerHook "clear") ];
+                hooks = [ claudeMarkerHook ];
               }
             ];
           })
