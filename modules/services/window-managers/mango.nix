@@ -8,7 +8,6 @@ let
   inherit (lib) mkEnableOption mkOption types;
 
   cfg = config.wayland.windowManager.mango;
-  mango = cfg.package;
   variables = lib.concatStringsSep " " cfg.systemd.variables;
   extraCommands = lib.concatStringsSep " && " cfg.systemd.extraCommands;
   systemdActivation = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}";
@@ -179,11 +178,11 @@ in
       cfgFile = pkgs.writeTextFile {
         name = "config.conf";
         text = cfgText;
-        checkPhase = "${cfg.package}/bin/mango -c $target -p || exit 1";
+        checkPhase = "${lib.getExe cfg.package} -c $target -p || exit 1";
       };
     in
     {
-      home.packages = [ mango ];
+      home.packages = [ cfg.package ];
       xdg.configFile."mango/config.conf" = lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
         source = cfgFile;
       };
