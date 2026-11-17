@@ -46,6 +46,12 @@ in
       package = lib.mkPackageOption pkgs "mango" {
         extraDescription = "package to use for mango";
       };
+      checkConfig = mkOption {
+        type = types.bool;
+        default = true;
+        example = false;
+        description = "Whether to validate the configuration or not.";
+      };
       systemd = {
         enable = mkOption {
           type = types.bool;
@@ -178,7 +184,7 @@ in
       cfgFile = pkgs.writeTextFile {
         name = "config.conf";
         text = cfgText;
-        checkPhase = "${lib.getExe cfg.package} -c $target -p || exit 1";
+        checkPhase = lib.optionalString (cfg.checkConfig) "${lib.getExe cfg.package} -c $target -p || exit 1";
       };
     in
     {

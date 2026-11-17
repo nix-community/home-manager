@@ -1,22 +1,25 @@
-_:
+{pkgs, config, ...}:
 
 {
   wayland.windowManager.mango = {
     enable = true;
     systemd.enable = false;
+    checkConfig = false;
     settings = {
       blur = 0;
       bind = [
         "SUPER,r,reload_config"
-        "SUPER,space,spawn,fuzzel"
         "SUPER,Return,spawn,footclient"
-        "SUPER,m,quit"
-        "SUPER,Tab,focusstack,next"
       ];
-      focus_color = "0xa2a2a2ee";
+      animation.type.open = "zoom";
     };
   };
   nmt.script = ''
-    assertFileExists home-files/.config/mango/config.conf
+    config=home-files/.config/mango/config.conf
+    assertFileExists $config
+    assertFileContains $config "blur = 0"
+    assertFileContains $config "bind = SUPER,r,reload_config"
+    assertFileContains $config "bind = SUPER,Return,spawn,footclient"
+    assertFileContains $config "animation_type_open = zoom"
   '';
 }
