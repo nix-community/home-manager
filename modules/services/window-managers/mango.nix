@@ -37,6 +37,9 @@ let
     mkConfig (flattenAttrs attrs);
 in
 {
+
+  meta.maintainers = [ lib.maintainers.cktiel ];
+
   options = {
     wayland.windowManager.mango = {
       enable = mkEnableOption "Mango wayland compositor";
