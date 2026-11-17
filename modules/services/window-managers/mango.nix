@@ -166,25 +166,26 @@ in
   config = lib.mkIf cfg.enable (
     let
       # mango has a 255 byte limit on configuration statements so i cant just put it all in one exec_once, i have to do it in a seperate file
-      systemdFile = pkgs.runCommand "systemd.sh" { } ''
-        cp ${pkgs.writeText "systemd.sh" systemdActivation} "$out"
-        chmod +x $out
-      '';
+      systemdFile = pkgs.writeTextFile {
+        name = "systemd";
+        text = systemdActivation;
+        executable = true;
+      };
       cfgText =
         toMango cfg.settings
         + lib.optionalString (cfg.systemd.enable) "exec_once = ${systemdFile}\n"
         + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
-      cfgFile = pkgs.runCommand "mango-config.conf" { } ''
-        cp ${pkgs.writeText "mango-config.conf" cfgText} "$out"
-        ${cfg.package}/bin/mango -c "$out" -p || exit 1
-      '';
+
+      cfgFile = pkgs.writeTextFile {
+        name = "config.conf";
+        text = cfgText;
+        checkPhase = "${cfg.package}/bin/mango -c $target -p || exit 1";
+      };
     in
     {
       home.packages = [ mango ];
-      xdg.configFile = {
-        "mango/config.conf" = lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-          source = cfgFile;
-        };
+      xdg.configFile."mango/config.conf" = lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+        source = cfgFile;
       };
       systemd.user.targets.mango-session = lib.mkIf cfg.systemd.enable {
         Unit = {
