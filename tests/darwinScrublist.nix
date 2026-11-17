@@ -44,6 +44,7 @@ let
     "comodoro"
     "concord-tui"
     "cudatext"
+    "cursor-cli"
     "darcs"
     "delta"
     "devenv"
