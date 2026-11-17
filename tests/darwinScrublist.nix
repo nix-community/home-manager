@@ -214,6 +214,7 @@ let
     "topgrade"
     "translate-shell"
     "tray-tui"
+    "tuios"
     "usage"
     "vesktop"
     "vifm"
