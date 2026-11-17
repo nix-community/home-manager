@@ -9,6 +9,6 @@ in
   };
 
   nmt.script = ''
-    assertPathNotExists home-files/${configDir}/oyui/config.rn
+    assertPathNotExists 'home-files/${configDir}/oyui/config.rn'
   '';
 }

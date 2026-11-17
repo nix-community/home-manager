@@ -1,7 +1,3 @@
-{ pkgs, ... }:
-let
-  configDir = if pkgs.stdenv.hostPlatform.isDarwin then "Library/Application Support" else ".config";
-in
 {
   programs = {
     jujutsu = {
@@ -16,9 +12,9 @@ in
   };
 
   nmt.script = ''
-    assertFileExists home-files/${configDir}/jj/config.toml
-    assertFileContains home-files/${configDir}/jj/config.toml 'diff-editor = "oyui"'
-    assertFileContains home-files/${configDir}/jj/config.toml '[merge-tools.oyui]'
-    assertFileContains home-files/${configDir}/jj/config.toml 'program = "oyui"'
+    assertFileExists home-files/.config/jj/config.toml
+    assertFileContains home-files/.config/jj/config.toml 'diff-editor = "oyui"'
+    assertFileContains home-files/.config/jj/config.toml '[merge-tools.oyui]'
+    assertFileContains home-files/.config/jj/config.toml 'program = "oyui"'
   '';
 }
