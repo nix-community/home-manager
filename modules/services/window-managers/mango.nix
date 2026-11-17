@@ -14,27 +14,27 @@ let
   systemdActivation = "${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables}; ${extraCommands}";
   toMango =
     attrs:
-      let
-        flattenAttrs =
-          set:
-            let
-              recurse =
-                path:
-                  lib.concatMapAttrs (
-                    name: value:
-                      if builtins.isAttrs value then
-                        recurse (path ++ [ name ]) value
-                      else
-                        {${builtins.concatStringsSep "_" (path ++ [ name ])} = value; }
-                  );
-            in
+    let
+      flattenAttrs =
+        set:
+        let
+          recurse =
+            path:
+            lib.concatMapAttrs (
+              name: value:
+              if builtins.isAttrs value then
+                recurse (path ++ [ name ]) value
+              else
+                { ${builtins.concatStringsSep "_" (path ++ [ name ])} = value; }
+            );
+        in
         recurse [ ] set;
-        mkConfig = lib.generators.toKeyValue {
-          listsAsDuplicateKeys = true;
-          mkKeyValue = lib.generators.mkKeyValueDefault {} " = ";
-        };
-      in
-      mkConfig (flattenAttrs attrs);
+      mkConfig = lib.generators.toKeyValue {
+        listsAsDuplicateKeys = true;
+        mkKeyValue = lib.generators.mkKeyValueDefault { } " = ";
+      };
+    in
+    mkConfig (flattenAttrs attrs);
 in
 {
   options = {
@@ -167,9 +167,10 @@ in
         cp ${pkgs.writeText "systemd.sh" systemdActivation} "$out"
         chmod +x $out
       '';
-      cfgText = toMango cfg.settings
-      + lib.optionalString (cfg.systemd.enable) "exec_once = ${systemdFile}\n"
-      + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
+      cfgText =
+        toMango cfg.settings
+        + lib.optionalString (cfg.systemd.enable) "exec_once = ${systemdFile}\n"
+        + lib.optionalString (cfg.extraConfig != "") cfg.extraConfig;
       cfgFile = pkgs.runCommand "mango-config.conf" { } ''
         cp ${pkgs.writeText "mango-config.conf" cfgText} "$out"
         ${cfg.package}/bin/mango -c "$out" -p || exit 1
@@ -178,10 +179,9 @@ in
     {
       home.packages = [ mango ];
       xdg.configFile = {
-        "mango/config.conf" =
-          lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
-              source = cfgFile;
-          };
+        "mango/config.conf" = lib.mkIf (cfg.settings != { } || cfg.extraConfig != "") {
+          source = cfgFile;
+        };
       };
       systemd.user.targets.mango-session = lib.mkIf cfg.systemd.enable {
         Unit = {
