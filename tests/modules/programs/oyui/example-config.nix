@@ -15,8 +15,8 @@ in
   };
 
   nmt.script = ''
-    assertFileExists home-files/${configDir}/oyui/config.rn
-    assertFileContent home-files/${configDir}/oyui/config.rn \
+    assertFileExists 'home-files/${configDir}/oyui/config.rn'
+    assertFileContent 'home-files/${configDir}/oyui/config.rn' \
       ${builtins.toFile "expected-config.rn" config}
   '';
 }
