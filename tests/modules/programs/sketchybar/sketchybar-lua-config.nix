@@ -74,8 +74,8 @@ in
       home-files/.config/sketchybar/sketchybarrc \
       ${./sketchybarrc.lua}
 
-    wrappedSketchybar=$(readlink "$TESTED/home-path/bin/sketchybar")
-    grep -F "/lua-5.5.0/bin" "$wrappedSketchybar" >/dev/null || \
+    wrappedSketchybar="$TESTED/home-path/bin/sketchybar"
+    grep -F "@lua@/bin" "$wrappedSketchybar" >/dev/null || \
       echo "$wrappedSketchybar should include the Lua 5.5 interpreter on PATH"
     grep -F "/share/lua/5.5" "$wrappedSketchybar" >/dev/null || \
       echo "$wrappedSketchybar should include Lua 5.5 module paths"
