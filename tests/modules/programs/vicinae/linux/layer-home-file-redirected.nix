@@ -13,7 +13,7 @@
     enable = true;
     mutableSettings = true;
     settings.font.normal.size = 12;
-    systemd.enable = true;
+    service.enable = true;
     enableFirefoxIntegration = false;
   };
   assertions = [
@@ -32,7 +32,7 @@
     }
   ];
   nmt.script = ''
-    assertFileContent 'home-files/layers/my % $hm_layer_probe "quoted" back\$hm_layer_probe `printf altered` settings.json' ${./read-only-layer.json}
+    assertFileContent 'home-files/layers/my % $hm_layer_probe "quoted" back\$hm_layer_probe `printf altered` settings.json' ${../read-only-layer.json}
     assertPathNotExists "home-files/.config/vicinae/home-manager.json"
     assertPathNotExists "home-files/.config/vicinae/settings.json"
     assertFileContains "home-files/.config/systemd/user/vicinae.service" 'Environment="VICINAE_OVERRIDES=/home/hm-user/layers/my %% $hm_layer_probe \"quoted\" back\\$hm_layer_probe `printf altered` settings.json"'
