@@ -51,58 +51,43 @@ let
   scrubDerivations = lib.mapAttrs scrubDerivation;
 
   # Globally unscrub a few selected packages that are used by a wide selection of tests.
-  whitelist =
-    let
-      inner = _self: super: {
-        inherit (pkgs)
-          coreutils
-          crudini
-          jaq
-          jq
-          desktop-file-utils
-          diffutils
-          findutils
-          glibcLocales
-          gettext
-          gnugrep
-          gnused
-          shared-mime-info
-          emptyDirectory
-          # Needed by pretty much all tests that have anything to do with fish.
-          babelfish
-          fish
-          lndir
-          ;
+  whitelist = _self: super: {
+    inherit (pkgs)
+      coreutils
+      crudini
+      jaq
+      jq
+      desktop-file-utils
+      diffutils
+      findutils
+      glibcLocales
+      gettext
+      gnugrep
+      gnused
+      shared-mime-info
+      emptyDirectory
+      # Needed by pretty much all tests that have anything to do with fish.
+      babelfish
+      fish
+      lndir
+      ;
 
-        python3Packages = super.python3Packages.overrideScope (
-          _self: _super: { inherit (pkgs.python3Packages) json5; }
-        );
-      };
+    python3Packages = super.python3Packages.overrideScope (
+      _self: _super: { inherit (pkgs.python3Packages) json5; }
+    );
 
-      outer =
-        self: super:
-        inner self super
-        // {
-          buildPackages = super.buildPackages.extend inner;
-        };
-    in
-    outer;
-
-  # TODO: figure out stdenv stubbing so we don't have to do this
-  darwinScrublist = import ./darwinScrublist.nix { inherit lib scrubDerivation; };
+    # Build tools run while a test builds, so they stay real. Take them from
+    # the package set that is already evaluated. Extending it instead would
+    # evaluate Nixpkgs again with the packages above injected into every stdenv
+    # bootstrap stage, which the Darwin stdenv rejects.
+    inherit (pkgs) buildPackages;
+  };
 
   scrubbedPkgs =
-    # TODO: fix darwin stdenv stubbing
-    if isDarwin then
-      let
-        rawPkgs = lib.makeExtensible (_final: pkgs);
-      in
-      builtins.traceVerbose "eval scrubbed darwin nixpkgs" (rawPkgs.extend darwinScrublist)
-    else
-      let
-        rawScrubbedPkgs = lib.makeExtensible (_final: scrubDerivations pkgs);
-      in
-      builtins.traceVerbose "eval scrubbed nixpkgs" (rawScrubbedPkgs.extend whitelist);
+    let
+      rawScrubbedPkgs = lib.makeExtensible (_final: scrubDerivations pkgs);
+    in
+    builtins.traceVerbose "eval scrubbed nixpkgs" (rawScrubbedPkgs.extend whitelist);
 
   modules =
     import ../modules/modules.nix {
