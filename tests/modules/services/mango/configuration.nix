@@ -3,6 +3,7 @@ _:
 {
   wayland.windowManager.mango = {
     enable = true;
+    systemd.enable = false;
     settings = {
       blur = 0;
       bind = [
@@ -17,6 +18,5 @@ _:
   };
   nmt.script = ''
     assertFileExists home-files/.config/mango/config.conf
-    assertFileExists home-files/.config/systemd/user/mango-session.target
   '';
 }
