@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-e82874e4.js";
+            window.path_to_searchindex_js = "../../../searchindex-f7dbd7ff.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-f47981ff.js"></script>
@@ -353,6 +353,34 @@ list of string</p>
   "--port"
   "3773"
 ]
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/t3code.nix">&lt;home-manager/modules/programs/t3code.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.t3code.themes"><a class="header" href="#opt-programs.t3code.themes">programs.t3code.themes</a></h2>
+<p>Environment themes in <code>~/.t3/userdata/themes</code>, keyed by theme id.</p>
+<p>Each value is a JSON attribute set or a path to a JSON file. Theme ids
+must contain 1 to 48 lowercase letters, digits or hyphens, start with
+a letter or digit, and must not conflict with T3’s built-in themes.</p>
+<p>T3 refuses symlinks, so Home Manager copies each theme into a regular
+file during activation. Unmanaged files are not removed.</p>
+<p>To select a default, set
+<code>programs.t3code.userSettings.defaultTheme</code>.</p>
+<p><em>Type:</em>
+attribute set of (absolute path or JSON value)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  nightfall = {
+    accent = "#7aa2f7";
+    appearance = "dark";
+    canvas = "#1a1b26";
+    name = "Nightfall";
+  };
+}
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
