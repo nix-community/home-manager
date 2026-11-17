@@ -41,8 +41,9 @@ let
       theme
     else
       # Copy a source path into the store. The activation has to read the
-      # theme from an absolute path, and a path literal is relative.
-      pkgs.runCommand "t3code-theme-${id}" { } "cp ${theme} $out"
+      # theme from an absolute path, and a path literal is relative. The
+      # path is escaped because it may contain spaces.
+      pkgs.runCommand "t3code-theme-${id}" { } "cp ${lib.escapeShellArg "${theme}"} $out"
   ) cfg.themes;
 
   reservedThemeIds = [
@@ -306,7 +307,9 @@ in
       })
       (mkIf (cfg.themes != { }) {
         t3codeThemes = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          ${lib.getExe' pkgs.coreutils "mkdir"} -p ${lib.escapeShellArg themesDir}
+          if [[ ! -v DRY_RUN ]]; then
+            ${lib.getExe' pkgs.coreutils "mkdir"} -p ${lib.escapeShellArg themesDir}
+          fi
           ${lib.concatStringsSep "\n" (
             lib.mapAttrsToList (
               id: source:
@@ -315,9 +318,13 @@ in
               in
               ''
                 if [ -L ${lib.escapeShellArg target} ] || ! ${lib.getExe' pkgs.diffutils "cmp"} -s ${lib.escapeShellArg (toString source)} ${lib.escapeShellArg target}; then
-                  tmp=$(${lib.getExe' pkgs.coreutils "mktemp"} ${lib.escapeShellArg "${themesDir}/.${id}.XXXXXXXX"})
-                  ${lib.getExe' pkgs.coreutils "install"} -m 0644 ${lib.escapeShellArg (toString source)} "$tmp"
-                  ${lib.getExe' pkgs.coreutils "mv"} -fT "$tmp" ${lib.escapeShellArg target}
+                  if [[ -v DRY_RUN ]]; then
+                    echo ${lib.escapeShellArg "Would install T3 Code theme ${target}"}
+                  else
+                    tmp=$(${lib.getExe' pkgs.coreutils "mktemp"} ${lib.escapeShellArg "${themesDir}/.${id}.XXXXXXXX"})
+                    ${lib.getExe' pkgs.coreutils "install"} -m 0644 ${lib.escapeShellArg (toString source)} "$tmp"
+                    ${lib.getExe' pkgs.coreutils "mv"} -fT "$tmp" ${lib.escapeShellArg target}
+                  fi
                 fi
               ''
             ) themeFiles
