@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-81b18327.js";
+            window.path_to_searchindex_js = "searchindex-e82874e4.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-fe5548c1.js"></script>
+        <script src="toc-f47981ff.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12543,6 +12543,7 @@ string</p>
 <li><a href="#opencode">opencode</a></li>
 <li><a href="#openstackclient">openstackclient</a></li>
 <li><a href="#opkssh">opkssh</a></li>
+<li><a href="#oyui">oyui</a></li>
 <li><a href="#pandoc">pandoc</a></li>
 <li><a href="#papis">papis</a></li>
 <li><a href="#parallel">parallel</a></li>
@@ -48300,6 +48301,72 @@ providers = [
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/opkssh.nix">&lt;home-manager/modules/programs/opkssh.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="oyui"><a href="#oyui" class="header">oyui</a></h1>
+<h2 id="opt-programs.oyui.enable"><a class="header" href="#opt-programs.oyui.enable">programs.oyui.enable</a></h2>
+<p>Whether to enable modern terminal diff editor.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/oyui.nix">&lt;home-manager/modules/programs/oyui.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.oyui.enableJujutsuIntegration"><a class="header" href="#opt-programs.oyui.enableJujutsuIntegration">programs.oyui.enableJujutsuIntegration</a></h2>
+<p>Whether to enable use oyui as the diff editor for jj.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/oyui.nix">&lt;home-manager/modules/programs/oyui.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.oyui.package"><a class="header" href="#opt-programs.oyui.package">programs.oyui.package</a></h2>
+<p>The oyui package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.oyui
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/oyui.nix">&lt;home-manager/modules/programs/oyui.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.oyui.config"><a class="header" href="#opt-programs.oyui.config">programs.oyui.config</a></h2>
+<p>Text written to <code>$XDG_CONFIG_HOME/oyui/config.rn</code>
+(<code>Library/Application Support/oyui/config.rn</code> on darwin).</p>
+<p><em>Type:</em>
+null or strings concatenated with “\n”</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/oyui.nix">&lt;home-manager/modules/programs/oyui.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.oyui.configFile"><a class="header" href="#opt-programs.oyui.configFile">programs.oyui.configFile</a></h2>
+<p>Path of the config file written to <code>$XDG_CONFIG_HOME/oyui/config.rn</code>
+(<code>Library/Application Support/oyui/config.rn</code> on darwin).
+Ignored when <code>programs.oyui.config.config</code> is set.</p>
+<p><em>Type:</em>
+null or absolute path</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">null
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/oyui.nix">&lt;home-manager/modules/programs/oyui.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="pandoc"><a href="#pandoc" class="header">pandoc</a></h1>
