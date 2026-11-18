@@ -20,8 +20,8 @@ in
     }
     // {
       test.asserts.assertions.expected =
-        lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
-          "'${lib.showOption modulePath}.profiles.<profile>.desktopEntry.enable' is not supported on Darwin."
+        lib.optionals (!pkgs.stdenv.hostPlatform.isLinux) [
+          "'${lib.showOption modulePath}.profiles.<profile>.desktopEntry.enable' is only supported on Linux."
         ]
         ++ [
           "'${lib.showOption modulePath}.profiles.<profile>.desktopEntry.enable' requires '${lib.showOption modulePath}.package' to be set to a non-null value."

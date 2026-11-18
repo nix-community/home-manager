@@ -29,7 +29,7 @@ let
     setAttrByPath
     types
     ;
-  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
 
   defaultConfigPath = with platforms; if isDarwin then darwin.configPath else linux.configPath;
 
@@ -661,8 +661,9 @@ in
 
                     icon = mkOption {
                       type = types.nullOr (types.either types.str types.path);
-                      default = null;
-                      description = "Icon shown on the desktop entry.";
+                      default = packageName;
+                      defaultText = literalExpression ''"${packageName}"'';
+                      description = "Icon shown on the desktop entry. Defaults to the ${appName} icon theme name.";
                     };
 
                     settings = mkOption {
@@ -1202,8 +1203,8 @@ in
             );
           in
           {
-            assertion = !desktopEntriesEnabled || !isDarwin;
-            message = "'${moduleName}.profiles.<profile>.desktopEntry.enable' is not supported on Darwin.";
+            assertion = isLinux || !desktopEntriesEnabled;
+            message = "'${moduleName}.profiles.<profile>.desktopEntry.enable' is only supported on Linux.";
           }
         )
 
