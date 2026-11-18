@@ -1,6 +1,4 @@
 {
-  imports = [ ./kodi-stubs.nix ];
-
   programs.kodi = {
     enable = true;
     sources = {
