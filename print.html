@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f7dbd7ff.js";
+            window.path_to_searchindex_js = "searchindex-7c697600.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-f47981ff.js"></script>
@@ -2747,14 +2747,13 @@ lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
   sketchybar-lua-config = ./lua-config.nix;
 }
 </code></pre>
-<p>For cross-platform modules that have packages which need to be stubbed on Darwin,
-add the package names to <code>tests/darwinScrublist.nix</code> to prevent build failures
-during cross-platform test runs.</p>
-<p>On Linux, packages are automatically scrubbed by the test infrastructure,
-so tests should normally use the module’s default package. Use
-<code>test.stubs</code> or <code>config.lib.test.mkStubPackage</code> only when the automatic
-scrubbing does not model the behavior that the test needs, such as a
-package with additional files or a non-default executable layout.</p>
+<p>Packages are automatically scrubbed by the test infrastructure on both
+Linux and Darwin, so tests should normally use the module’s default
+package. Use <code>test.stubs</code> or <code>config.lib.test.mkStubPackage</code> only when the
+automatic scrubbing does not model the behavior that the test needs, such
+as a package with additional files or a non-default executable layout.
+When a test needs the real contents of a package, restore that package
+with a narrow <code>test.unstubs</code> overlay or take it from <code>realPkgs</code>.</p>
 <p><a id="sec-tests-command"></a></p>
 <h2 id="using-the-tests-command"><a class="header" href="#using-the-tests-command">Using the tests command</a></h2>
 <p>Home Manager provides a convenient <code>tests</code> command for discovering and running tests:</p>
