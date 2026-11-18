@@ -21,7 +21,6 @@ let
     serviceCfg.settings != { } || serviceCfg.environmentFile != null || serviceCfg.passwordFile != null;
   servicePath = "${config.xdg.configHome}/opencode/service.json";
   serviceDisabled = serviceCfg.settings.disabled or false;
-  isStorePath = path: path != null && lib.hasPrefix "${builtins.storeDir}/" (toString path);
 
   hasCli = cfg.cli != { };
   settingsPath = "opencode/${if cfg.mutableSettings then "home-manager.json" else "opencode.json"}";
@@ -1108,14 +1107,14 @@ in
           programs.opencode.package.
         ''
       ]
-      ++ lib.optionals (serviceCfg.enable && isStorePath serviceCfg.passwordFile) [
+      ++ lib.optionals (serviceCfg.enable && lib.isStorePath serviceCfg.passwordFile) [
         ''
           programs.opencode.service.passwordFile points into the Nix store.
           The password is world-readable there; use a secret manager path
           instead.
         ''
       ]
-      ++ lib.optionals (serviceCfg.enable && isStorePath serviceCfg.environmentFile) [
+      ++ lib.optionals (serviceCfg.enable && lib.isStorePath serviceCfg.environmentFile) [
         ''
           programs.opencode.service.environmentFile points into the Nix store.
           Its values are world-readable there; use a secret manager path
