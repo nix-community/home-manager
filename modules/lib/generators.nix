@@ -983,16 +983,17 @@ in
     an existing user config file at activation time. This preserves any changes
     the user has made interactively while applying the Nix-declared settings on
     top. The result atomically replaces the resolved target, preserving symlinks
-    and existing file modes. A dangling symlink is written through, creating
-    its target; a target in the Nix store is rejected without changing the
-    link. If the content, mode, or target symlink changes while the merge runs,
-    activation fails rather than overwriting the newer file. This check is not
-    a lock: a write that lands between the final check and the replacement is
-    still lost, so applications that write the file should not be running
-    during activation. Ownership, ACLs, extended attributes, and hard links are
-    not preserved, and the directory containing the resolved target must be
-    writable. A target that cannot be replaced by renaming, such as a
-    bind-mounted file, is written in place instead, without the atomicity.
+    and, unless `mode` is set, existing file modes. A dangling symlink is
+    written through, creating its target; a target in the Nix store is rejected
+    without changing the link. If the content, mode, or target symlink changes
+    while the merge runs, activation fails rather than overwriting the newer
+    file. This check is not a lock: a write that lands between the final check
+    and the replacement is still lost, so applications that write the file
+    should not be running during activation. Ownership, ACLs, extended
+    attributes, and hard links are not preserved, and the directory containing
+    the resolved target must be writable. A target that cannot be replaced by
+    renaming, such as a bind-mounted file, is written in place instead, without
+    the atomicity.
 
     The merge uses `jaq` internally to read and write JSON, YAML, TOML, and
     CBOR via its `--from`/`--to` flags. Comments and formatting are not
@@ -1051,10 +1052,11 @@ in
         Mutually exclusive with `staticSettings`; one of the two is required.
 
       `mode` (string or null; optional)
-      : Octal permissions for a newly created file. When `null` (the default),
-        a new file gets the permissions shell redirection would give it under
-        the activation's umask, usually `644`. Existing files keep their mode.
-        Use `"600"` for files containing tokens, such as gh's `hosts.yml` or
+      : Octal permissions for the merged file. When `null` (the default), an
+        existing file keeps its mode and a new file gets the permissions shell
+        redirection would give it under the activation's umask, usually `644`.
+        When set, the mode is applied even when the file already exists. Use
+        `"600"` for files containing tokens, such as gh's `hosts.yml` or
         Docker's `config.json`.
 
       `reader` (string or null; optional)
@@ -1226,13 +1228,18 @@ in
           fi
           candidate_path="$(${coreutil "mktemp"} "$settings_path.candidate.XXXXXX")"
           ${writeCmd}
-          if [[ -n "$snapshot_path" ]]; then
-            ${coreutil "chmod"} --reference="$snapshot_path" -- "$candidate_path"
-          else
-            ${coreutil "chmod"} ${
-              if mode == null then ''"$(printf '%o' "$(( 0666 & ~$(umask) ))")"'' else lib.escapeShellArg mode
-            } -- "$candidate_path"
-          fi
+          ${
+            if mode == null then
+              ''
+                if [[ -n "$snapshot_path" ]]; then
+                  ${coreutil "chmod"} --reference="$snapshot_path" -- "$candidate_path"
+                else
+                  ${coreutil "chmod"} "$(printf '%o' "$(( 0666 & ~$(umask) ))")" -- "$candidate_path"
+                fi
+              ''
+            else
+              ''${coreutil "chmod"} ${lib.escapeShellArg mode} -- "$candidate_path"''
+          }
 
           conflict=
           if [[ -n "$was_symlink" ]]; then
@@ -1262,6 +1269,9 @@ in
           else
             # rename(2) fails with EBUSY when the target is a mount point, such
             # as a file bind-mounted by impermanence; write it in place instead.
+            ${lib.optionalString (mode != null) ''
+              ${coreutil "chmod"} ${lib.escapeShellArg mode} -- "$settings_path"
+            ''}
             ${coreutil "cat"} -- "$candidate_path" > "$settings_path"
           fi
         )

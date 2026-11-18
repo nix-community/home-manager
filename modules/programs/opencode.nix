@@ -313,10 +313,6 @@ let
 
       ${serviceMerger}
 
-      if [[ ! -v DRY_RUN && -e "$service_path" ]]; then
-        run chmod 600 -- "$service_path"
-      fi
-
       ${lib.optionalString (serviceDisabled == true) ''
         if [[ -v DRY_RUN ]]; then
           verboseEcho "Would stop the OpenCode background service because settings.disabled is true."

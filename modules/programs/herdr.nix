@@ -50,8 +50,7 @@ in
         file during activation, preserving settings added by Herdr or the user.
         Declared values, including arrays, take precedence. Removing a
         declaration does not remove it from the file. Comments and formatting
-        are not preserved. New files have mode 0600; existing files retain
-        their permissions.
+        are not preserved. The merged file has mode 0600.
 
         The default keeps the configuration file immutable. Switching back to
         immutable settings automatically replaces the writable file only when

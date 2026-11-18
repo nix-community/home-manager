@@ -63,8 +63,12 @@ in
     [[ "$(stat -c '%a' "$settings")" == 600 ]] || fail "Expected configured mode 600"
 
     chmod 640 "$settings"
+    "$TMPDIR/default-mode"
+    [[ "$(stat -c '%a' "$settings")" == 640 ]] || fail "Existing mode must be preserved without a configured mode"
+
+    chmod 640 "$settings"
     "$TMPDIR/private-mode"
-    [[ "$(stat -c '%a' "$settings")" == 640 ]] || fail "Existing mode must be preserved"
+    [[ "$(stat -c '%a' "$settings")" == 600 ]] || fail "A configured mode must apply to an existing file"
     ${lib.getExe pkgs.jaq} -e '.managed == true' "$settings" > /dev/null
 
     ${lib.optionalString (!invalidModeRejected) ''
