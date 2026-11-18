@@ -64,28 +64,31 @@ in
         || fail "JSON content mismatch"
     }
 
-    printf 'http://127.0.0.1:4096\n' > "$OPENCODE_TEST_STATUS"
+    # Status reports stopped when discovery fails its health check, but the
+    # registered service may still be running.
+    printf 'stopped\n' > "$OPENCODE_TEST_STATUS"
     : > "$OPENCODE_TEST_LOG"
 
     ( source $TMPDIR/opencode-service-activate )
     assertJsonEqual "$HOME/.config/opencode/service.json" ${expected}
     [[ "$(stat -c '%a' "$HOME/.config/opencode/service.json")" == 600 ]] \
       || fail "The service configuration must have mode 600"
-    grep -qx 'service status' "$OPENCODE_TEST_LOG" \
-      || fail "A disabled service must check whether it is running"
     grep -qx 'service stop' "$OPENCODE_TEST_LOG" \
       || fail "A disabled service must be stopped"
+    if grep -qx 'service status' "$OPENCODE_TEST_LOG"; then
+      fail "Stopping a disabled service must not depend on its health check"
+    fi
     if grep -qx 'service restart' "$OPENCODE_TEST_LOG"; then
       fail "A disabled service must not be restarted"
     fi
 
-    # A second activation leaves the already stopped service alone.
+    # Stopping is idempotent; a second activation still requests a stop.
     : > "$OPENCODE_TEST_LOG"
     ( source $TMPDIR/opencode-service-activate )
-    grep -qx 'service status' "$OPENCODE_TEST_LOG" \
-      || fail "A disabled service must check whether it is running"
-    if grep -qx 'service stop' "$OPENCODE_TEST_LOG"; then
-      fail "An already stopped service must not be stopped again"
+    grep -qx 'service stop' "$OPENCODE_TEST_LOG" \
+      || fail "A disabled service must still request a stop"
+    if grep -qx 'service status' "$OPENCODE_TEST_LOG"; then
+      fail "Stopping a disabled service must not depend on its health check"
     fi
     if grep -qx 'service restart' "$OPENCODE_TEST_LOG"; then
       fail "A disabled service must not be restarted"

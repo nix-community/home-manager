@@ -272,16 +272,14 @@ let
         fi
       }
 
-      service_action_if_running() {
-        local action="$1"
-        local message="$2"
+      service_restart_if_running() {
         local status
 
         if ! status="$("$service_opencode_bin" service status 2>/dev/null)"; then
-          warnEcho "programs.opencode.service: could not query the background service; skipping $action."
+          warnEcho "programs.opencode.service: could not query the background service; skipping restart."
         elif [[ -n "$status" && "$status" != "stopped" ]]; then
-          verboseEcho "$message"
-          run "$service_opencode_bin" service "$action"
+          verboseEcho "Restarting the OpenCode background service after a configuration change."
+          run "$service_opencode_bin" service restart
         fi
       }
 
@@ -317,7 +315,8 @@ let
         if [[ -v DRY_RUN ]]; then
           verboseEcho "Would stop the OpenCode background service because settings.disabled is true."
         else
-          service_action_if_running stop "Stopping the OpenCode background service because settings.disabled is true."
+          verboseEcho "Stopping the OpenCode background service because settings.disabled is true."
+          run "$service_opencode_bin" service stop
         fi
       ''}
       ${lib.optionalString (serviceDisabled != true && serviceCfg.restartOnChange) ''
@@ -325,7 +324,7 @@ let
           verboseEcho "Would restart the OpenCode background service if its configuration changed."
         else
           if [[ "$service_before_hash" != "$(service_file_hash)" ]]; then
-            service_action_if_running restart "Restarting the OpenCode background service after a configuration change."
+            service_restart_if_running
           fi
         fi
       ''}
