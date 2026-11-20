@@ -1,5 +1,6 @@
 {
   codex-settings-toml = ./settings-toml.nix;
+  codex-extra-packages = ./extra-packages.nix;
   codex-settings-toml-prefer-xdg-directories = ./settings-toml-prefer-xdg-directories.nix;
   codex-settings-yaml = ./settings-yaml.nix;
   codex-empty-settings = ./empty-settings.nix;

@@ -320,6 +320,10 @@ in
 
       assertions = [
         {
+          assertion = cfg.extraPackages == [ ] || cfg.package != null;
+          message = "`programs.codex.extraPackages` requires a non-null `programs.codex.package`";
+        }
+        {
           assertion = (cfg.plugins == [ ] && cfg.marketplaces == { }) || isTomlConfig;
           message = "`programs.codex.plugins` and `programs.codex.marketplaces` require Codex 0.2.0 or later";
         }
@@ -359,7 +363,20 @@ in
       ];
 
       home = {
-        packages = mkIf (cfg.package != null) [ cfg.package ];
+        packages = lib.optional (cfg.package != null) (
+          if cfg.extraPackages == [ ] then
+            cfg.package
+          else
+            pkgs.symlinkJoin {
+              name = "${lib.getName cfg.package}-wrapped";
+              paths = [ cfg.package ];
+              nativeBuildInputs = [ pkgs.makeWrapper ];
+              postBuild = ''
+                wrapProgram $out/bin/codex \
+                  --prefix PATH : ${lib.makeBinPath cfg.extraPackages}
+              '';
+            }
+        );
 
         activation.codexMutableSettings = lib.mkIf (cfg.mutableSettings && mergedSettings != { }) (
           lib.hm.dag.entryAfter [ "linkGeneration" ] mutableSettingsActivation
