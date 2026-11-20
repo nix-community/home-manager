@@ -6,6 +6,15 @@
 }:
 let
   cfg = config.services.ssh-agent;
+
+  # Pull graphical env from the user manager at prompt time (matches NixOS's
+  # programs.ssh.askPasswordWrapper).
+  askpassWrapper = pkgs.writeShellScript "ssh-askpass-wrapper" ''
+    set -eu
+    eval export $(${lib.getExe' pkgs.systemd "systemctl"} --user show-environment \
+      | ${lib.getExe pkgs.gnugrep} -E '^(DISPLAY|WAYLAND_DISPLAY|XAUTHORITY)=')
+    exec ${cfg.askpass} "$@"
+  '';
 in
 {
   meta.maintainers = [
@@ -56,9 +65,25 @@ in
         See {manpage}`ssh-agent(1)`.
       '';
     };
+
+    askpass = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      example = lib.literalExpression ''"''${pkgs.x11_ssh_askpass}/libexec/x11-ssh-askpass"'';
+      description = ''
+        Askpass binary for the agent to invoke when a passphrase or PIN is needed.
+        See {manpage}`ssh-add(1)` for `SSH_ASKPASS`.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+
+    # ssh client doesn't inherit ssh-agent.service env; export here so first-use prompts (FIDO2 PIN etc.) use askpass too
+    home.sessionVariables = lib.mkIf (cfg.askpass != null) {
+      SSH_ASKPASS = askpassWrapper;
+      SSH_ASKPASS_REQUIRE = "prefer";
+    };
 
     sshAuthSock = {
       enable = true;
@@ -100,6 +125,10 @@ in
           ) " -P '${lib.concatStringsSep "," cfg.pkcs11Whitelist}'"
         }";
         SuccessExitStatus = 2;
+        Environment = lib.mkIf (cfg.askpass != null) [
+          "SSH_ASKPASS=${askpassWrapper}"
+          "SSH_ASKPASS_REQUIRE=force"
+        ];
       };
     };
 
@@ -119,6 +148,10 @@ in
             ) " -P '${lib.concatStringsSep "," cfg.pkcs11Whitelist}'"
           }''
         ];
+        EnvironmentVariables = lib.mkIf (cfg.askpass != null) {
+          SSH_ASKPASS = cfg.askpass;
+          SSH_ASKPASS_REQUIRE = "force";
+        };
         KeepAlive = {
           Crashed = true;
           SuccessfulExit = false;
