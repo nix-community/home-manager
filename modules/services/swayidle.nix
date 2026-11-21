@@ -171,6 +171,9 @@ in
       Service = {
         Type = "simple";
         Restart = "always";
+        # Keep spawned commands alive when swayidle restarts (e.g. on activation):
+        # killing a running screen locker leaves the compositor stuck locked.
+        KillMode = "process";
         # swayidle executes commands using "sh -c", so the PATH needs to contain a shell.
         Environment = [ "PATH=${lib.makeBinPath [ pkgs.bash ]}" ];
         ExecStart =
