@@ -2,7 +2,9 @@
   programs.comodoro = {
     enable = true;
     settings = {
-      test-preset = {
+      accounts.example = {
+        default = true;
+
         cycles = [
           {
             name = "Work";
@@ -14,12 +16,17 @@
           }
         ];
 
-        tcp-host = "localhost";
-        tcp-port = 8080;
+        precision = "minute";
 
-        on-server-start = "echo server started";
-        on-timer-stop = "echo timer stopped";
-        on-work-begin = "echo work cycle began";
+        socket.default = true;
+        tcp.host = "localhost";
+        tcp.port = 8080;
+
+        hooks.on-timer-stop.command = "echo timer stopped";
+        hooks.on-work-begin.notify = {
+          summary = "Comodoro";
+          body = "Work started!";
+        };
       };
     };
   };
