@@ -10,6 +10,7 @@
     ./labwc
     ./niri.nix
     ./river-classic.nix
+    ./river.nix
     ./spectrwm.nix
     ./wayfire.nix
     ./xmonad.nix

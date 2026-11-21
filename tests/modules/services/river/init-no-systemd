@@ -1,0 +1,9 @@
+#!/nix/store/00000000000000000000000000000000-bash/bin/bash
+### This file was generated with Nix. Don't modify this file directly.
+
+### SHELL VARIABLES ###
+export XDG_CURRENT_DESKTOP="river"
+
+### EXTRA CONFIGURATION ###
+exec my-window-manager
+
