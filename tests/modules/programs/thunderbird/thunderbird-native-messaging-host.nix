@@ -41,6 +41,16 @@ lib.recursiveUpdate (import ./thunderbird.nix { inherit config lib pkgs; }) {
           echo test > $out/lib/mozilla/native-messaging-hosts/com.github.browserpass.native.json
         '';
       })
+      # Like passff-host, whose manifest link stdenv makes relative.
+      (config.lib.test.mkStubPackage {
+        name = "relative-host";
+        buildScript = ''
+          mkdir -p $out/share/relative-host $out/lib/mozilla/native-messaging-hosts
+          echo relative > $out/share/relative-host/com.example.relative.json
+          ln -s ../../../share/relative-host/com.example.relative.json \
+            $out/lib/mozilla/native-messaging-hosts/com.example.relative.json
+        '';
+      })
     ];
     policies.DisableTelemetry = true;
   };
@@ -48,5 +58,6 @@ lib.recursiveUpdate (import ./thunderbird.nix { inherit config lib pkgs; }) {
   nmt.script = ''
     assertFileExists home-files/${nativeHostsDir}/com.github.browserpass.native.json
     assertFileExists home-files/${nativeHostsDir}/com.example.thunderbird-wrapped.json
+    assertFileExists home-files/${nativeHostsDir}/com.example.relative.json
   '';
 }
