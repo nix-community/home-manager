@@ -1,0 +1,3 @@
+{
+  zapfast-settings = ./settings.nix;
+}
