@@ -3,10 +3,10 @@ WantedBy=default.target
 
 [Service]
 ExecSearchPath=/bin
-ExecStart=@comodoro@/bin/comodoro server start preset tcp
+ExecStart=@comodoro@/bin/comodoro --account pomodoro server start socket tcp
 Restart=always
 RestartSec=10
 
 [Unit]
 After=network.target
-Description=Comodoro server
+Description=Comodoro timer server
