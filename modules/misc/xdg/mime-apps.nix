@@ -190,31 +190,10 @@ in
             ${lib.concatStringsSep "\n" (lib.mapAttrsToList generateSection associations)}
           '';
 
-          # With default application packages merged into the generated base file.
-          mergedFile = pkgs.runCommand "mimeapps.list" { ps = cfg.defaultApplicationPackages; } ''
-            export PATH=$PATH:${pkgs.crudini}/bin
-
-            function mergeEntry() {
-              local mime="$1"
-              local name="$2"
-              local existing
-
-              existing="$(crudini --get $out 'Default Applications' "$mime" 2>/dev/null || true)"
-              local value="$existing''${existing:+;}''$name"
-              crudini --ini-options=nospace --inplace --set $out 'Default Applications' "$mime" "$value"
-            }
-
-            install -m644 ${baseFile} $out
-
-            for p in $ps ; do
-              for path in "$p"/share/applications/*.desktop ; do
-                name="''${path##*/}"
-                mimes=$(crudini --get "$path" 'Desktop Entry' MimeType 2>/dev/null || true)
-                for mime in ''${mimes//;/ }; do
-                  mergeEntry "$mime" "$name"
-                done
-              done
-            done
+          # defaultApplicationPackages extends entries in defaultApplications
+          mergedFile = pkgs.runCommand "mimeapps.list" { } ''
+            ${lib.getExe pkgs.python3} ${./merge-mime-defaults.py} \
+              ${lib.escapeShellArgs (map toString cfg.defaultApplicationPackages)} < "${baseFile}" > "$out"
           '';
         in
         if cfg.defaultApplicationPackages == [ ] then baseFile else mergedFile;

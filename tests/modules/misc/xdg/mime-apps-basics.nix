@@ -1,6 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, realPkgs, ... }:
 
 {
+  nixpkgs.overlays = [ (_: _: { inherit (realPkgs) python3; }) ];
+
   xdg.mimeApps = {
     enable = true;
     associations = {
@@ -32,6 +34,16 @@
           "image/svg+xml"
         ];
       })
+      (pkgs.runCommand "nested-desktop-entry" { } ''
+        mkdir -p "$out/share/applications/vendor"
+        cat > "$out/share/applications/vendor/viewer.desktop" <<'EOF'
+        [Desktop Entry]
+        Type=Application
+        Name=Viewer
+        Exec=true
+        MimeType=application/pdf;
+        EOF
+      '')
     ];
   };
 
