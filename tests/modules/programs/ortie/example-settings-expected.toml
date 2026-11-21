@@ -16,14 +16,11 @@ token = "https://oauth2.googleapis.com/token"
 [accounts.personal.extras]
 access_type = "offline"
 
-[accounts.personal.hooks.on-refresh.success]
-command = "logger 'ortie refreshed a token'"
-
 [accounts.personal.storage.read]
 command = ["pass", "show", "ortie/personal"]
 
 [accounts.personal.storage.write]
-command = "pass insert -m -f ortie/personal"
+command = "pass insert -m -f ortie/personal && logger 'ortie stored a token'"
 
 [accounts.work]
 client-id = "00000000-0000-0000-0000-000000000000"

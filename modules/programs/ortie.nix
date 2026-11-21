@@ -14,7 +14,7 @@ in
   meta.maintainers = with lib.maintainers; [ soywod ];
 
   options.programs.ortie = {
-    enable = lib.mkEnableOption "Ortie, a CLI to manage OAuth 2.0 tokens";
+    enable = lib.mkEnableOption "Ortie, a CLI to manage OAuth tokens";
 
     package = lib.mkPackageOption pkgs "ortie" { nullable = true; };
 
@@ -40,7 +40,7 @@ in
       description = ''
         Ortie configuration.
 
-        Every OAuth 2.0 account is declared as an attribute of `accounts`,
+        Every OAuth account is declared as an attribute of `accounts`,
         which is the only section the configuration file accepts. The account
         marked `default` is the one used when `--account <NAME>` is omitted.
 
@@ -49,7 +49,9 @@ in
         `client-secret.command` over `client-secret.raw`.
 
         See <https://github.com/pimalaya/ortie/blob/master/config.sample.toml>
-        for supported values.
+        for supported values, and
+        <https://github.com/pimalaya/ortie#configuration> for ready-made
+        Google, Microsoft and Fastmail accounts.
       '';
     };
   };

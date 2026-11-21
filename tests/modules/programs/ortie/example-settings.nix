@@ -21,8 +21,7 @@
           "show"
           "ortie/personal"
         ];
-        storage.write.command = "pass insert -m -f ortie/personal";
-        hooks.on-refresh.success.command = "logger 'ortie refreshed a token'";
+        storage.write.command = "pass insert -m -f ortie/personal && logger 'ortie stored a token'";
       };
 
       accounts.work = {
