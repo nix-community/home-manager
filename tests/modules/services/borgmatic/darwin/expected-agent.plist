@@ -10,7 +10,7 @@
 	<array>
 		<string>/bin/sh</string>
 		<string>-c</string>
-		<string>/bin/wait4path /nix/store &amp;&amp; exec @borgmatic@/bin/borgmatic --stats --list</string>
+		<string>/bin/wait4path /nix/store &amp;&amp; exec /bin/sh /nix/store/00000000000000000000000000000000-launchd-certificate-environment @borgmatic@/bin/borgmatic --stats --list</string>
 	</array>
 	<key>StandardErrorPath</key>
 	<string>/home/hm-user/Library/Logs/borgmatic/launchd-stderr.log</string>

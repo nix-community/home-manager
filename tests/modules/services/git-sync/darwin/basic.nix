@@ -13,6 +13,6 @@
   nmt.script = ''
     serviceFile=LaunchAgents/org.nix-community.home.git-sync-test.plist
     assertFileExists "$serviceFile"
-    assertFileContent "$serviceFile" ${./expected-agent.plist}
+    assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent.plist}
   '';
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>SSL_CERT_FILE</key>
+		<string>/agent/ssl.pem</string>
+	</dict>
+	<key>Label</key>
+	<string>org.nix-community.home.ca-explicit</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/nix/store/00000000000000000000000000000000-ca-explicit/bin/ca-explicit</string>
+	</array>
+</dict>
+</plist>
