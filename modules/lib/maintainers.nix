@@ -535,6 +535,12 @@
     github = "ReeSilva";
     githubId = 3605032;
   };
+  richardsouzza = {
+    name = "Richard Souza";
+    email = "souzza.richard25@gmail.com";
+    github = "RichardSouzza";
+    githubId = 121109210;
+  };
   rosuavio = {
     name = "Rosario Pulella";
     email = "RosarioPulella@gmail.com";
