@@ -25,7 +25,7 @@
 
       assertFileExists $hmSessVars
       assertFileContains $hmSessVars \
-        'export MANPATH="/home/hm-user/.local/share/mandoc/man''${MANPATH:+:}$MANPATH"'
+        'export MANPATH="/home/hm-user/.local/share/mandoc/man''${MANPATH:+:}''${MANPATH-}"'
     '';
   };
 }
