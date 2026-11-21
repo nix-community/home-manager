@@ -1,8 +1,6 @@
 { config, ... }:
 
 {
-  imports = [ ./kodi-stubs.nix ];
-
   programs.kodi = {
     enable = true;
     package = config.lib.test.mkStubPackage { };

@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  realPkgs,
   ...
 }:
 
@@ -43,16 +42,6 @@ let
   };
 in
 {
-  nixpkgs.overlays = [
-    (_: super: {
-      buildPackages = super.buildPackages.extend (
-        _: _: {
-          inherit (realPkgs) check-jsonschema remarshal;
-        }
-      );
-    })
-  ];
-
   home.file = {
     "dag-ordered-attrs.txt".text =
       lib.concatMapStringsSep "\n" (entry: "${entry.name}=${entry.value}") (
