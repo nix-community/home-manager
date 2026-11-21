@@ -9,6 +9,17 @@ in
 
     package = lib.mkPackageOption pkgs "codex" { nullable = true; };
 
+    extraPackages = lib.mkOption {
+      type = with lib.types; listOf package;
+      default = [ ];
+      example = lib.literalExpression "with pkgs; [ python3 nodejs ]";
+      description = ''
+        Extra packages available in the PATH of Codex and the processes it
+        starts. These packages are added to the Codex wrapper and are not
+        added separately to {option}`home.packages`.
+      '';
+    };
+
     enableMcpIntegration = lib.mkOption {
       type = lib.types.bool;
       default = false;
