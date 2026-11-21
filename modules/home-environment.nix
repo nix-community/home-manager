@@ -524,6 +524,30 @@ in
       '';
     };
 
+    home.activationFilesOnly = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "dconfSettings" ];
+      description = ''
+        Names of the [](#opt-home.activation) blocks that run when the
+        activation script is called with {option}`--files-only`. Home Manager
+        adds the blocks that place [](#opt-home.file): `checkFilesChanged`,
+        `checkLinkTargets`, `linkGeneration` and `onFilesChange`, and every
+        block that must run before `linkGeneration`, since such blocks
+        prepare the files' targets. Add blocks that, like these, only place
+        configuration, for example `dconfSettings`, or that act on what an
+        `onChange` hook records. Names that are not blocks of the
+        configuration are ignored.
+
+        A files-only run makes no Nix calls, uses no Nix profile, creates no
+        garbage collection root and does not record the generation as
+        activated. It is meant to be followed by a full activation of the
+        same generation, with no other activation in between. That
+        activation then finds the files in place and runs no `onChange`
+        hook again, except those of recursive entries, which always run.
+      '';
+    };
+
     home.activationPackage = mkOption {
       internal = true;
       type = types.package;
@@ -828,6 +852,20 @@ in
           else
             abort ("Dependency cycle in activation script: " + builtins.toJSON sortedCommands);
 
+        # The blocks of a files-only run, in their usual order. They are
+        # sourced, so that their text is only parsed in such a run.
+        filesOnlyCmds = pkgs.writeText "activation-files-only" (
+          lib.concatStringsSep "\n" (
+            map mkCmd (
+              lib.filter (res: lib.elem res.name cfg.activationFilesOnly) (sortedCommands.result or [ ])
+            )
+            # A trailing no-op, so that `source` returns success after a
+            # block ending in a failed condition, which a full activation
+            # also continues past.
+            ++ [ ":" ]
+          )
+        );
+
         # Programs that always should be available on the activation
         # script's PATH.
         activationBinPaths =
@@ -887,6 +925,9 @@ in
           # - 1 : the script will not attempt to update the Home Manager Nix profile.
           hmDriverVersion=0
 
+          # Only the --files-only option sets this, not the environment.
+          unset hmFilesOnly
+
           while (( $# > 0 )); do
             opt="$1"
             shift
@@ -904,6 +945,10 @@ in
                 fi
                 shift
                 ;;
+              --files-only)
+                # Run only the blocks named in home.activationFilesOnly.
+                hmFilesOnly=1
+                ;;
               *)
                 _iError "%s: unknown option '%s'" "$0" "$opt" >&2
                 exit 1
@@ -920,6 +965,14 @@ in
             ${lib.optionalString (config.home.uid != null) ''
               checkStringEq UID "$(id -u)" ${toString config.home.uid}
             ''}
+          fi
+
+          if [[ -v hmFilesOnly ]]; then
+            # No garbage collection roots: the generation is not recorded as
+            # activated, so that a full activation of it afterwards compares
+            # against the same old generation.
+            source ${filesOnlyCmds}
+            exit 0
           fi
 
           ${lib.optionalString config.home.activationGenerateGcRoot ''
