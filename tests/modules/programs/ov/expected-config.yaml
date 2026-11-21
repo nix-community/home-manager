@@ -1,0 +1,10 @@
+%YAML 1.1
+---
+KeyBind:
+  half_page_down:
+  - d
+  half_page_up:
+  - u
+Prompt:
+  Normal:
+    Prefix: ' '
