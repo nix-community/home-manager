@@ -202,27 +202,27 @@ in
     programs = {
       bash.initExtra = mkIf cfg.enableBashIntegration (
         lib.mkOrder 1900 ''
-          if [[ $TERM != "dumb" ]]; then
+          if [[ "$TERM" != "dumb" && "$TERM" != "linux" ]]; then
             eval "$(${lib.getExe cfg.package} init bash --print-full-init)"
           fi
         ''
       );
 
       zsh.initContent = mkIf cfg.enableZshIntegration ''
-        if [[ $TERM != "dumb" ]]; then
+        if [[ "$TERM" != "dumb" && "$TERM" != "linux" ]]; then
           eval "$(${lib.getExe cfg.package} init zsh)"
         fi
       '';
 
       fish.${initFish} = mkIf cfg.enableFishIntegration ''
-        if test "$TERM" != "dumb"
+        if test "$TERM" != "dumb" -a "$TERM" != "linux"
           ${lib.getExe cfg.package} init fish | source
           ${lib.optionalString cfg.enableTransience "enable_transience"}
         end
       '';
 
       ion.initExtra = mkIf cfg.enableIonIntegration ''
-        if test $TERM != "dumb"
+        if test "$TERM" != "dumb" && test "$TERM" != "linux"
           eval $(${lib.getExe cfg.package} init ion)
         end
       '';
