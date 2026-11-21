@@ -26,6 +26,15 @@ let
 
   zshLib = import ./lib.nix { inherit config lib; };
   inherit (zshLib) homeDir dotDirAbs dotDirRel;
+  renderSessionVariable =
+    value:
+    if lib.isString value then
+      let
+        rendered = config.lib.zsh.toZshValue value;
+      in
+      lib.removeSuffix ''"'' (lib.removePrefix ''"'' rendered)
+    else
+      value;
 in
 {
   meta.maintainers = [ lib.maintainers.khaneliman ];
@@ -511,22 +520,32 @@ in
           ];
 
           warnings =
-            lib.optionals
-              (
-                config.xdg.enable
-                && !lib.versionAtLeast config.home.stateVersion "26.05"
-                && options.programs.zsh.dotDir.highestPrio >= 1500
-              )
-              [
-                ''
-                  The default value of `programs.zsh.dotDir` will change in future versions.
-                  You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
-                  To silence this warning and lock in the current behavior, set:
-                    programs.zsh.dotDir = config.home.homeDirectory;
-                  To adopt the new behavior (XDG config directory), set:
-                    programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
-                ''
-              ];
+            config.lib.shell.selfReferenceWarnings {
+              option = options.programs.zsh.sessionVariables;
+              optionPath = "programs.zsh.sessionVariables";
+              renderValue = renderSessionVariable;
+              rationale = ''
+                Home Manager applies these values once per session today.
+                Applying them in each new Zsh process could change them again.
+              '';
+            }
+            ++
+              lib.optionals
+                (
+                  config.xdg.enable
+                  && !lib.versionAtLeast config.home.stateVersion "26.05"
+                  && options.programs.zsh.dotDir.highestPrio >= 1500
+                )
+                [
+                  ''
+                    The default value of `programs.zsh.dotDir` will change in future versions.
+                    You are currently using the legacy default (home directory) because `home.stateVersion` is less than "26.05".
+                    To silence this warning and lock in the current behavior, set:
+                      programs.zsh.dotDir = config.home.homeDirectory;
+                    To adopt the new behavior (XDG config directory), set:
+                      programs.zsh.dotDir = "''${config.xdg.configHome}/zsh";
+                  ''
+                ];
         }
 
         (mkIf (cfg.envExtra != "") {
