@@ -7,84 +7,40 @@
 let
   inherit (lib)
     concatStringsSep
+    filter
+    isBool
+    isList
     literalExpression
+    mapAttrsToList
+    mkEnableOption
+    mkIf
     mkOption
+    mkPackageOption
+    sort
     types
     ;
 
   cfg = config.programs.vim;
   defaultPlugins = [ pkgs.vimPlugins.vim-sensible ];
 
-  knownSettings = {
-    background = types.enum [
-      "dark"
-      "light"
-    ];
-    backupdir = types.listOf types.str;
-    copyindent = types.bool;
-    directory = types.listOf types.str;
-    expandtab = types.bool;
-    hidden = types.bool;
-    history = types.int;
-    ignorecase = types.bool;
-    modeline = types.bool;
-    mouse = types.enum [
-      "n"
-      "v"
-      "i"
-      "c"
-      "h"
-      "a"
-      "r"
-    ];
-    mousefocus = types.bool;
-    mousehide = types.bool;
-    mousemodel = types.enum [
-      "extend"
-      "popup"
-      "popup_setpos"
-    ];
-    number = types.bool;
-    relativenumber = types.bool;
-    shiftwidth = types.int;
-    smartcase = types.bool;
-    tabstop = types.int;
-    undodir = types.listOf types.str;
-    undofile = types.bool;
-  };
-
-  vimSettingsType = types.submodule {
-    options =
-      let
-        opt =
-          _name: type:
-          mkOption {
-            type = types.nullOr type;
-            default = null;
-            visible = false;
-          };
-      in
-      lib.mapAttrs opt knownSettings;
-  };
-
-  setExpr =
-    name: value:
-    let
-      v =
-        if lib.isBool value then
-          (if value then "" else "no") + name
-        else
-          "${name}=${if lib.isList value then concatStringsSep "," value else toString value}";
-    in
-    lib.optionalString (value != null) ("set " + v);
-
   inherit (cfg) plugins;
+
+  toVimSetting =
+    name: value:
+    if value == null then
+      ""
+    else if isBool value then
+      "set " + (if value then "" else "no") + name
+    else if isList value then
+      "set ${name}=${concatStringsSep "," (map toString value)}"
+    else
+      "set ${name}=${toString value}";
 
 in
 {
   options = {
     programs.vim = {
-      enable = lib.mkEnableOption "Vim";
+      enable = mkEnableOption "Vim";
 
       plugins = mkOption {
         type = types.listOf types.package;
@@ -97,28 +53,37 @@ in
       };
 
       settings = mkOption {
-        type = vimSettingsType;
+        type = types.attrsOf (
+          types.nullOr (
+            types.oneOf [
+              types.bool
+              types.int
+              types.str
+              (types.listOf (
+                types.oneOf [
+                  types.str
+                  types.int
+                ]
+              ))
+            ]
+          )
+        );
         default = { };
-        example = {
-          expandtab = true;
-          history = 1000;
-          background = "dark";
-        };
+        example = literalExpression ''
+          {
+            background = "dark";
+            expandtab = true;
+            history = 1000;
+            number = true;
+            shiftwidth = 4;
+            tabstop = 4;
+            wildignore = [ "*.o" "*~" "*.pyc" ];
+          }
+        '';
         description = ''
-          At attribute set of Vim settings. The attribute names and
-          corresponding values must be among the following supported
-          options.
-
-          ${concatStringsSep "\n" (
-            lib.mapAttrsToList (n: v: ''
-              {var}`${n}`
-              : ${v.description}
-            '') knownSettings
-          )}
-
-          See the Vim documentation for detailed descriptions of these
-          options. Use [](#opt-programs.vim.extraConfig) to manually
-          set any options not listed above.
+          An attribute set of Vim settings to be converted into {command}`set` commands.
+          Booleans are translated to {command}`set <option>` or {command}`set no<option>`.
+          Lists are translated to comma-separated strings.
         '';
       };
 
@@ -138,7 +103,7 @@ in
         readOnly = true;
       };
 
-      packageConfigurable = lib.mkPackageOption pkgs "vim-full" {
+      packageConfigurable = mkPackageOption pkgs "vim-full" {
         extraDescription = "Vim package to customize";
         example = "pkgs.vim";
       };
@@ -157,11 +122,18 @@ in
 
   config = (
     let
-      customRC = ''
-        ${concatStringsSep "\n" (
-          lib.remove "" (lib.mapAttrsToList setExpr (builtins.intersectAttrs knownSettings cfg.settings))
-        )}
+      settingsFormat =
+        let
+          lines = mapAttrsToList toVimSetting cfg.settings;
+          nonEmptyLines = filter (line: line != "") lines;
+        in
+        concatStringsSep "\n" (sort (a: b: a < b) nonEmptyLines);
 
+      customRC = ''
+        " Generated settings
+        ${settingsFormat}
+
+        " Extra configuration
         ${cfg.extraConfig}
       '';
 
@@ -169,15 +141,14 @@ in
         name = "vim";
         vimrcConfig = {
           inherit customRC;
-
           packages.home-manager.start = plugins;
         };
       };
     in
-    lib.mkIf cfg.enable {
+    mkIf cfg.enable {
       home.packages = [ cfg.package ];
 
-      home.sessionVariables = lib.mkIf cfg.defaultEditor {
+      home.sessionVariables = mkIf cfg.defaultEditor {
         EDITOR = "vim";
         VISUAL = "vim";
       };
