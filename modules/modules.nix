@@ -24,6 +24,7 @@ let
       ./accounts/calendar.nix
       ./accounts/contacts.nix
       ./accounts/email.nix
+      ./agents/skills.nix
       ./config/home-cursor.nix
       ./config/i18n.nix
       ./dbus.nix
