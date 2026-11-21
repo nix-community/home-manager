@@ -1,4 +1,5 @@
 {
+  starship-packaged-integration = ./packaged-integration.nix;
   starship-settings = ./settings.nix;
   starship-no-settings = ./no-settings.nix;
   starship-presets = ./presets.nix;
