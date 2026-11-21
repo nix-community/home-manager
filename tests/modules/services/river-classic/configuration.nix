@@ -1,5 +1,5 @@
 {
-  wayland.windowManager.river = {
+  wayland.windowManager.river-classic = {
     enable = true;
     xwayland.enable = true;
     extraSessionVariables = {

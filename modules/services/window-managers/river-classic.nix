@@ -7,7 +7,7 @@
 
 let
   inherit (lib) types;
-  cfg = config.wayland.windowManager.river;
+  cfg = config.wayland.windowManager.river-classic;
 
   # Systemd integration
   variables = builtins.concatStringsSep " " cfg.systemd.variables;
@@ -68,14 +68,14 @@ in
 {
   meta.maintainers = [ lib.maintainers.GaetanLepage ];
 
-  options.wayland.windowManager.river = {
-    enable = lib.mkEnableOption "the river window manager";
+  options.wayland.windowManager.river-classic = {
+    enable = lib.mkEnableOption "the river-classic window manager";
 
     package = lib.mkPackageOption pkgs "river-classic" {
       nullable = true;
       extraDescription = ''
-        Set to `null` to not add any river package to your path.
-        This should be done if you want to use the NixOS river module to install river.
+        Set to `null` to not add any river-classic package to your path.
+        This should be done if you want to use the NixOS river-classic module to install river-classic.
       '';
     };
 
@@ -197,7 +197,7 @@ in
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.hm.assertions.assertPlatform "wayland.windowManager.river" pkgs lib.platforms.linux)
+      (lib.hm.assertions.assertPlatform "wayland.windowManager.river-classic" pkgs lib.platforms.linux)
     ];
 
     home.packages =
