@@ -32,6 +32,11 @@ let
             Aqua session, such as window managers, hotkey daemons, and other
             graphical tools. The `user` domain is appropriate for background
             services that do not require a graphical login session.
+
+            When Home Manager is used as a nix-darwin module, agents in the
+            `user` domain are bootstrapped at boot by a system launchd daemon.
+            They therefore start without a login session, which `gui` domain
+            agents cannot do.
           '';
         };
         restartTriggers = lib.mkOption {
