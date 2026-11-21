@@ -89,6 +89,12 @@ in
       description = "Show the default mailbox (INBOX)";
     };
 
+    registerAccount = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Register this account in the generated neomuttrc.";
+    };
+
     mailboxName = mkOption {
       type = types.nullOr types.str;
       default = null;
