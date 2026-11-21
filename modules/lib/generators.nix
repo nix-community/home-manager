@@ -983,16 +983,17 @@ in
     an existing user config file at activation time. This preserves any changes
     the user has made interactively while applying the Nix-declared settings on
     top. The result atomically replaces the resolved target, preserving symlinks
-    and existing file modes. A dangling symlink is written through, creating
-    its target; a target in the Nix store is rejected without changing the
-    link. If the content, mode, or target symlink changes while the merge runs,
-    activation fails rather than overwriting the newer file. This check is not
-    a lock: a write that lands between the final check and the replacement is
-    still lost, so applications that write the file should not be running
-    during activation. Ownership, ACLs, extended attributes, and hard links are
-    not preserved, and the directory containing the resolved target must be
-    writable. A target that cannot be replaced by renaming, such as a
-    bind-mounted file, is written in place instead, without the atomicity.
+    and, unless `mode` is set, existing file modes. A dangling symlink is
+    written through, creating its target; a target in the Nix store is rejected
+    without changing the link. If the content, mode, or target symlink changes
+    while the merge runs, activation fails rather than overwriting the newer
+    file. This check is not a lock: a write that lands between the final check
+    and the replacement is still lost, so applications that write the file
+    should not be running during activation. Ownership, ACLs, extended
+    attributes, and hard links are not preserved, and the directory containing
+    the resolved target must be writable. A target that cannot be replaced by
+    renaming, such as a bind-mounted file, is written in place instead, without
+    the atomicity.
 
     The merge uses `jaq` internally to read and write JSON, YAML, TOML, and
     CBOR via its `--from`/`--to` flags. Comments and formatting are not
@@ -1036,15 +1037,26 @@ in
       `path` (string)
       : Absolute path to the config file on disk.
 
-      `staticSettings` (path or derivation)
+      `staticSettings` (path or derivation; optional)
       : Path to the Nix-generated static config file, typically produced by
-        `format.generate`.
+        `format.generate`. The file is read through `reader`.
+
+      `staticSettingsCommand` (string; optional)
+      : Shell snippet that prints the static settings as one JSON document to
+        stdout. Use this when the static settings must be assembled at
+        activation time, for example from a secret file. The snippet is not
+        run in a dry run and must exit unsuccessfully if it cannot produce the
+        settings. The output is parsed as JSON even when the target format is
+        YAML or TOML.
+
+        Mutually exclusive with `staticSettings`; one of the two is required.
 
       `mode` (string or null; optional)
-      : Octal permissions for a newly created file. When `null` (the default),
-        a new file gets the permissions shell redirection would give it under
-        the activation's umask, usually `644`. Existing files keep their mode.
-        Use `"600"` for files containing tokens, such as gh's `hosts.yml` or
+      : Octal permissions for the merged file. When `null` (the default), an
+        existing file keeps its mode and a new file gets the permissions shell
+        redirection would give it under the activation's umask, usually `644`.
+        When set, the mode is applied even when the file already exists. Use
+        `"600"` for files containing tokens, such as gh's `hosts.yml` or
         Docker's `config.json`.
 
       `reader` (string or null; optional)
@@ -1062,7 +1074,7 @@ in
     # Type
 
     ```
-    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings :: Path; mode ? NullOr String; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
+    mkImpureConfigMerger :: { pkgs :: AttrSet; format :: String; empty :: String; jqOperation :: String; path :: String; staticSettings ? NullOr Path; staticSettingsCommand ? NullOr String; mode ? NullOr String; reader ? NullOr String; verboseMsg ? NullOr String; } -> String
     ```
 
     # Examples
@@ -1092,7 +1104,8 @@ in
       empty,
       jqOperation,
       path,
-      staticSettings,
+      staticSettings ? null,
+      staticSettingsCommand ? null,
       mode ? null,
       reader ? null,
       verboseMsg ? null,
@@ -1108,6 +1121,11 @@ in
           "${jaqBin} -c '.'"
         else
           "${jaqBin} --from ${format} -c '.'";
+      staticCmd =
+        if staticSettingsCommand != null then
+          staticSettingsCommand
+        else
+          "${readerCmd} ${lib.escapeShellArg staticSettings}";
       # Write the merge result to a temporary file and move it into place only
       # after the merge has succeeded, so a failing merge never clobbers the
       # existing config.
@@ -1135,6 +1153,12 @@ in
     assert lib.assertMsg
       (mode == null || (builtins.isString mode && builtins.match "[0-7]{3,4}" mode != null))
       "mkImpureConfigMerger: mode must be an octal string such as \"600\", got ${builtins.toJSON mode}.";
+    assert lib.assertMsg (
+      staticSettings != null || staticSettingsCommand != null
+    ) "mkImpureConfigMerger: either staticSettings or staticSettingsCommand is required.";
+    assert lib.assertMsg (
+      staticSettings == null || staticSettingsCommand == null
+    ) "mkImpureConfigMerger: staticSettings and staticSettingsCommand are mutually exclusive.";
     ''
       if [[ -v VERBOSE ]]; then
         echo ${lib.escapeShellArg verboseMsg'}
@@ -1192,20 +1216,30 @@ in
             errorEcho "Could not parse config at '$display_path'; refusing to merge."
             exit 1
           fi
-          static="$(${readerCmd} ${lib.escapeShellArg staticSettings})"
+          if ! static="$(
+            ${staticCmd}
+          )" || [[ -z "$static" ]]; then
+            errorEcho "Could not read Nix-generated config for '$display_path'; refusing to merge."
+            exit 1
+          fi
           if ! config="$(${jaqBin} -n ${lib.escapeShellArg mergeFilter} --slurpfile dynamic <(printf '%s' "$dynamic") --slurpfile static <(printf '%s' "$static"))"; then
             errorEcho "Could not merge Nix-generated config into '$display_path'."
             exit 1
           fi
           candidate_path="$(${coreutil "mktemp"} "$settings_path.candidate.XXXXXX")"
           ${writeCmd}
-          if [[ -n "$snapshot_path" ]]; then
-            ${coreutil "chmod"} --reference="$snapshot_path" -- "$candidate_path"
-          else
-            ${coreutil "chmod"} ${
-              if mode == null then ''"$(printf '%o' "$(( 0666 & ~$(umask) ))")"'' else lib.escapeShellArg mode
-            } -- "$candidate_path"
-          fi
+          ${
+            if mode == null then
+              ''
+                if [[ -n "$snapshot_path" ]]; then
+                  ${coreutil "chmod"} --reference="$snapshot_path" -- "$candidate_path"
+                else
+                  ${coreutil "chmod"} "$(printf '%o' "$(( 0666 & ~$(umask) ))")" -- "$candidate_path"
+                fi
+              ''
+            else
+              ''${coreutil "chmod"} ${lib.escapeShellArg mode} -- "$candidate_path"''
+          }
 
           conflict=
           if [[ -n "$was_symlink" ]]; then
@@ -1235,6 +1269,9 @@ in
           else
             # rename(2) fails with EBUSY when the target is a mount point, such
             # as a file bind-mounted by impermanence; write it in place instead.
+            ${lib.optionalString (mode != null) ''
+              ${coreutil "chmod"} ${lib.escapeShellArg mode} -- "$settings_path"
+            ''}
             ${coreutil "cat"} -- "$candidate_path" > "$settings_path"
           fi
         )

@@ -36,6 +36,15 @@ let
         "u=rw"
         600
       ];
+  missingStaticRejected =
+    !(builtins.tryEval (mkMerger {
+      staticSettings = null;
+    })).success;
+  bothStaticSourcesRejected =
+    !(builtins.tryEval (mkMerger {
+      staticSettings = builtins.toFile "settings.json" ''{"managed":true}'';
+      staticSettingsCommand = "echo '{}'";
+    })).success;
 in
 {
   nmt.script = ''
@@ -54,12 +63,22 @@ in
     [[ "$(stat -c '%a' "$settings")" == 600 ]] || fail "Expected configured mode 600"
 
     chmod 640 "$settings"
+    "$TMPDIR/default-mode"
+    [[ "$(stat -c '%a' "$settings")" == 640 ]] || fail "Existing mode must be preserved without a configured mode"
+
+    chmod 640 "$settings"
     "$TMPDIR/private-mode"
-    [[ "$(stat -c '%a' "$settings")" == 640 ]] || fail "Existing mode must be preserved"
+    [[ "$(stat -c '%a' "$settings")" == 600 ]] || fail "A configured mode must apply to an existing file"
     ${lib.getExe pkgs.jaq} -e '.managed == true' "$settings" > /dev/null
 
     ${lib.optionalString (!invalidModeRejected) ''
       fail "A non-octal mode must be rejected during evaluation"
+    ''}
+    ${lib.optionalString (!missingStaticRejected) ''
+      fail "A missing static settings source must be rejected during evaluation"
+    ''}
+    ${lib.optionalString (!bothStaticSourcesRejected) ''
+      fail "Both static settings sources must be rejected during evaluation"
     ''}
   '';
 }

@@ -42,7 +42,7 @@ in
 
         Formatting is not preserved. Keep secrets out of {option}`settings`,
         since its values are still copied to the world-readable Nix store.
-        New files have mode 0600; existing files retain their permissions.
+        The merged file has mode 0600.
       '';
     };
 
