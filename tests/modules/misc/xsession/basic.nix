@@ -4,6 +4,7 @@
       enable = true;
       windowManager.command = "window manager command";
       importedVariables = [ "EXTRA_IMPORTED_VARIABLE" ];
+      sessionVariables.EXTRA_XSESSION_VARIABLE = "extra_xsession_variable_value";
       initExtra = "init extra commands";
       profileExtra = "profile extra commands";
     };
