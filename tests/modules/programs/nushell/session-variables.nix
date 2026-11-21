@@ -88,15 +88,16 @@ in
               --commands '
                 use std/assert
                 assert equal $env.SYSTEM_VALUE /runtime/home/runtime-user
-                assert equal $env.PATH [/system/bin /initial/bin]
-                assert ("EXPANDED_HOME" not-in $env)
+                assert equal $env.PATH [/runtime/home/.local/bin /system/bin /initial/bin]
+                assert equal $env.EXPANDED_HOME /runtime/home/.config
                 assert ("REMOVED_BY_SYSTEM" not-in $env)
               ' || fail "Nushell did not reload with an empty $marker."
         done
 
         # Reloading scripts that leave the environment unchanged is valid too.
         env -i \
-          HOME=/runtime/home USER=runtime-user PATH=/initial/bin \
+          HOME=/runtime/home USER=runtime-user PATH=/runtime/home/.local/bin:/initial/bin \
+          ALTERNATE_VALUE=home-is-set DEFAULT_VALUE=fallback EXPANDED_HOME=/runtime/home/.config \
           __HM_SESS_VARS_SOURCED=1 SKIP_SYSTEM=1 \
           SSH_CLIENT="$ssh_client" \
           ${lib.getExe realPkgs.nushell} \
@@ -104,7 +105,7 @@ in
             --env-config "$(_abs ${envFile})" \
             --commands '
               use std/assert
-              assert equal $env.PATH [/initial/bin]
+              assert equal $env.PATH [/runtime/home/.local/bin /initial/bin]
               assert equal $env.USER_ENV_FILE env-file-loaded
             ' || fail "Nushell failed with an unchanged session environment."
       done
