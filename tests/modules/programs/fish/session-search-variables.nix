@@ -24,6 +24,7 @@ let
     "RUNTIME_EMPTY"
     "RUNTIME_MIXED"
     "SEPARATOR"
+    "SHARED"
     "SUBSTRING"
     "TESTPATH"
     "TEST_DIRS"
@@ -42,6 +43,7 @@ let
         EMPTYPATH = "";
         LATER = "base";
         SEPARATOR = "x:a:b:y";
+        SHARED = "/inherited/shared";
         SUBSTRING = "/usr/share/ubuntu:/usr/share";
         TESTPATH = "/sys/two:/hm/two";
         TEST_DIRS = "/sys/dirs";
@@ -65,9 +67,10 @@ let
         RUNTIME_EMPTY = "";
         RUNTIME_MIXED = "kept";
         SEPARATOR = "a:b:x:y";
+        SHARED = "/inherited/shared:same";
         SUBSTRING = "/usr/share:/usr/share/ubuntu";
-        TESTPATH = "/hm/one:/hm/two:/sys/two";
-        TEST_DIRS = "/hm/dirs:/sys/dirs";
+        TESTPATH = "/hm/one:/hm/two:/sys/two:/hm/fallback";
+        TEST_DIRS = "/hm/dirs:/sys/dirs:/hm/dirs/fallback";
       };
     }
     {
@@ -82,6 +85,7 @@ let
         EMPTYPATH = "configured";
         LATER = "base";
         SEPARATOR = "x:a:b:y";
+        SHARED = "same:/inherited/shared";
         SUBSTRING = "/usr/share/ubuntu:/usr/share";
         TESTPATH = "/sys/two:/hm/two";
         TEST_DIRS = "/sys/dirs:/hm/dirs";
@@ -106,9 +110,10 @@ let
         RUNTIME_EMPTY = "";
         RUNTIME_MIXED = "kept";
         SEPARATOR = "x:a:b:y";
+        SHARED = "same:/inherited/shared";
         SUBSTRING = "/usr/share/ubuntu:/usr/share";
-        TESTPATH = "/hm/one:/sys/two:/hm/two";
-        TEST_DIRS = "/sys/dirs:/hm/dirs";
+        TESTPATH = "/hm/one:/sys/two:/hm/two:/hm/fallback";
+        TEST_DIRS = "/sys/dirs:/hm/dirs:/hm/dirs/fallback";
       };
     }
   ];
@@ -144,9 +149,9 @@ let
   fishProbe = realPkgs.writeText "session-search-variables-fish-probe.fish" ''
     source $argv[1]
 
-    test (count $TESTPATH) -eq 3
+    test (count $TESTPATH) -eq 4
     or begin
-        echo "TESTPATH is not a three-element Fish path list" >&2
+        echo "TESTPATH is not a four-element Fish path list" >&2
         exit 1
     end
     test (count $EMPTYPATH) -eq 1
@@ -227,6 +232,7 @@ in
       "$EMPTY_ENTRY"
     ];
     SEPARATOR = [ "a:b" ];
+    SHARED = [ "same" ];
     SUBSTRING = [ "/usr/share" ];
     TESTPATH = [
       "/hm/one"
@@ -237,12 +243,19 @@ in
 
   test.asserts.warnings.expected = [
     ''
-      `home.sessionPath` or `home.sessionSearchVariables` contains an empty
-      entry, which Home Manager ignores. Write `.` to include the current
-      directory. If the empty entry has tool-specific meaning, set the
-      complete value through `home.sessionVariables` instead.
+      `home.sessionPath`, `home.sessionSearchVariables`, or
+      `home.sessionSearchVariablesAppend` contains an empty entry, which Home
+      Manager ignores. Write `.` to include the current directory. If the
+      empty entry has tool-specific meaning, set the complete value through
+      `home.sessionVariables` instead.
     ''
   ];
+
+  home.sessionSearchVariablesAppend = {
+    SHARED = [ "same" ];
+    TESTPATH = [ "/hm/fallback" ];
+    TEST_DIRS = [ "/hm/dirs/fallback" ];
+  };
 
   nmt.script = ''
     posixSessionVars=home-path/etc/profile.d/hm-session-vars.sh
