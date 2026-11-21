@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "database": {
+      "command": "dbhub",
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost:5432/db"
+      },
+      "type": "stdio"
+    },
+    "disabled-server": {
+      "args": [
+        "test"
+      ],
+      "command": "echo",
+      "disabled": true,
+      "type": "stdio"
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/other-tmp"
+      ],
+      "command": "npx"
+    },
+    "github": {
+      "disabled": false,
+      "type": "streamableHttp",
+      "url": "https://api.githubcopilot.com/mcp/"
+    }
+  }
+}
