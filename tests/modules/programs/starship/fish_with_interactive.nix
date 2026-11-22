@@ -4,6 +4,8 @@
     starship.enable = true;
   };
 
+  test.stubs.starship.name = "starship";
+
   nmt.script = ''
     assertFileExists home-files/.config/fish/config.fish
 
