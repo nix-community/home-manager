@@ -53,5 +53,13 @@ in
     assertFileExists home-files/.config/activitywatch/another-custom-watcher/another-custom-watcher.toml
     assertPathNotExists home-files/.config/activitywatch/aw-watcher-afk/aw-watcher-afk.toml
     assertPathNotExists home-files/.config/activitywatch/aw-watcher-window/aw-watcher-window.toml
+
+    # A settings change restarts the process that reads the settings.
+    assertFileRegex home-files/.config/systemd/user/activitywatch.service \
+      '^X-Restart-Triggers=/nix/store/.*-activitywatch-server-rust-config.toml$'
+    assertFileRegex home-files/.config/systemd/user/activitywatch-watcher-custom-watcher.service \
+      '^X-Restart-Triggers=/nix/store/.*-activitywatch-watcher-custom-watcher-settings$'
+    assertFileNotRegex home-files/.config/systemd/user/activitywatch-watcher-aw-watcher-afk.service \
+      'X-Restart-Triggers'
   '';
 }
