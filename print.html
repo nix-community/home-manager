@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-d45a65f5.js";
+            window.path_to_searchindex_js = "searchindex-7a3539c6.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-56c6b167.js"></script>
@@ -11437,6 +11437,10 @@ null or boolean or string</p>
 Aqua session, such as window managers, hotkey daemons, and other
 graphical tools. The <code>user</code> domain is appropriate for background
 services that do not require a graphical login session.</p>
+<p>When Home Manager is used as a nix-darwin module, agents in the
+<code>user</code> domain are bootstrapped at boot by a system launchd daemon.
+They therefore start without a login session, which <code>gui</code> domain
+agents cannot do.</p>
 <p><em>Type:</em>
 one of “gui”, “user”</p>
 <p><em>Default:</em></p>
