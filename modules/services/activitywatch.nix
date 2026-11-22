@@ -20,6 +20,7 @@ let
         Description = "ActivityWatch watcher '${cfg.name}'";
         After = [ "activitywatch.service" ];
         BindsTo = [ "activitywatch.target" ];
+        X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [ "${watcherSettingsFile cfg}" ];
       };
 
       Service = {
@@ -39,6 +40,11 @@ let
   # us but watchers can load configuration in any location. We just hope
   # they're following it.
   watcherSettingsFormat = pkgs.formats.toml { };
+
+  watcherSettingsFile =
+    cfg: watcherSettingsFormat.generate "activitywatch-watcher-${cfg.name}-settings" cfg.settings;
+
+  serverSettingsFile = watcherSettingsFormat.generate "activitywatch-server-rust-config.toml" cfg.settings;
 
   # The module interface for the watchers.
   watcherType =
@@ -129,7 +135,7 @@ let
     in
     lib.nameValuePair filename (
       lib.mkIf (cfg.settings != { }) {
-        source = watcherSettingsFormat.generate "activitywatch-watcher-${cfg.name}-settings" cfg.settings;
+        source = watcherSettingsFile cfg;
       }
     );
 in
@@ -253,6 +259,7 @@ in
           Description = "ActivityWatch time tracker server";
           Documentation = [ "https://docs.activitywatch.net" ];
           BindsTo = [ "activitywatch.target" ];
+          X-Restart-Triggers = lib.mkIf (cfg.settings != { }) [ "${serverSettingsFile}" ];
         };
 
         Service = {
@@ -273,7 +280,7 @@ in
       lib.mapAttrs' generateWatchersConfig cfg.watchers
       // lib.optionalAttrs (cfg.settings != { }) {
         "activitywatch/aw-server-rust/config.toml" = {
-          source = watcherSettingsFormat.generate "activitywatch-server-rust-config.toml" cfg.settings;
+          source = serverSettingsFile;
         };
       };
   };
