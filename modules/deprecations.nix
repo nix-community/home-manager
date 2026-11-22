@@ -1,6 +1,11 @@
 { lib, ... }:
 {
   imports = [
+    (lib.mkRemovedOptionModule [ "programs" "wayprompt" ] ''
+      The wayprompt module has been removed because nixpkgs removed the package.
+      The wayprompt project is unmaintained upstream and failed to build.
+    '')
+
     (lib.mkRemovedOptionModule [ "programs" "rofi" "pass" ] ''
       The rofi-pass module has been removed because nixpkgs removed the package.
       The rofi-pass project is unmaintained upstream.
