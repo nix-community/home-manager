@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-66908b3b.js";
+            window.path_to_searchindex_js = "searchindex-d45a65f5.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-f47981ff.js"></script>
+        <script src="toc-56c6b167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12676,7 +12676,6 @@ string</p>
 <li><a href="#waveterm">waveterm</a></li>
 <li><a href="#waybar">waybar</a></li>
 <li><a href="#waylogout">waylogout</a></li>
-<li><a href="#wayprompt">wayprompt</a></li>
 <li><a href="#wezterm">wezterm</a></li>
 <li><a href="#windsurf">windsurf</a></li>
 <li><a href="#wiremix">wiremix</a></li>
@@ -63983,58 +63982,6 @@ attribute set of (boolean or floating point number or signed integer or absolute
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/waylogout.nix">&lt;home-manager/modules/programs/waylogout.nix&gt;</a></li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="wayprompt"><a href="#wayprompt" class="header">wayprompt</a></h1>
-<h2 id="opt-programs.wayprompt.enable"><a class="header" href="#opt-programs.wayprompt.enable">programs.wayprompt.enable</a></h2>
-<p>Whether to enable Wayprompt, a password-prompter for Wayland.</p>
-<p><em>Type:</em>
-boolean</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">false
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">true
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wayprompt.nix">&lt;home-manager/modules/programs/wayprompt.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.wayprompt.package"><a class="header" href="#opt-programs.wayprompt.package">programs.wayprompt.package</a></h2>
-<p>The wayprompt package to use.</p>
-<p><em>Type:</em>
-null or package</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">pkgs.wayprompt
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wayprompt.nix">&lt;home-manager/modules/programs/wayprompt.nix&gt;</a></li>
-</ul>
-<h2 id="opt-programs.wayprompt.settings"><a class="header" href="#opt-programs.wayprompt.settings">programs.wayprompt.settings</a></h2>
-<p>Configuration for wayprompt written to
-<code>$XDG_CONFIG_HOME/wayprompt/config.ini</code>.
-See <code>wayprompt(5)</code> for a list of available options.
-Note that colours can be either 6-hex-digit RGB or 8-hex-digit RGBA values.</p>
-<p><em>Type:</em>
-attribute set of section of an INI file (attrs of INI atom (null, bool, int, float or string))</p>
-<p><em>Default:</em></p>
-<pre><code class="language-nix">{ }
-</code></pre>
-<p><em>Example:</em></p>
-<pre><code class="language-nix">{
-  colours = {
-    background = "ffffffaa";
-  };
-  general = {
-    font-regular = "sans:size=14";
-    pin-square-amount = 32;
-  };
-}
-</code></pre>
-<p><em>Declared by:</em></p>
-<ul>
-<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/wayprompt.nix">&lt;home-manager/modules/programs/wayprompt.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="wezterm"><a href="#wezterm" class="header">wezterm</a></h1>
