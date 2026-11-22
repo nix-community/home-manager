@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-7a3539c6.js";
+            window.path_to_searchindex_js = "../../searchindex-a7ebab63.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-56c6b167.js"></script>
@@ -4137,6 +4137,21 @@ boolean</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.email.accounts._name_.thunderbird.directory"><a class="header" href="#opt-accounts.email.accounts._name_.thunderbird.directory">accounts.email.accounts.&lt;name&gt;.thunderbird.directory</a></h2>
+<p>The name of the LDAP directory to use on this account.</p>
+<p>The directory must be defined in <code>config.programs.thunderbird.profiles.&lt;name&gt;.directories</code>.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Company LDAP"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>

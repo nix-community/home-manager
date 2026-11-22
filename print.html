@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-7a3539c6.js";
+            window.path_to_searchindex_js = "searchindex-a7ebab63.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-56c6b167.js"></script>
@@ -7253,6 +7253,21 @@ boolean</p>
 </code></pre>
 <p><em>Example:</em></p>
 <pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-accounts.email.accounts._name_.thunderbird.directory"><a class="header" href="#opt-accounts.email.accounts._name_.thunderbird.directory">accounts.email.accounts.&lt;name&gt;.thunderbird.directory</a></h2>
+<p>The name of the LDAP directory to use on this account.</p>
+<p>The directory must be defined in <code>config.programs.thunderbird.profiles.&lt;name&gt;.directories</code>.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"Company LDAP"
 </code></pre>
 <p><em>Declared by:</em></p>
 <ul>
@@ -58831,6 +58846,156 @@ list of string</p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
 </ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories">programs.thunderbird.profiles.&lt;name&gt;.directories</a></h2>
+<p>Attribute set of LDAP directories.</p>
+<p><em>Type:</em>
+attribute set of (submodule)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  "Work LDAP" = {
+    baseDN = "ou=People,dc=company,dc=com";
+    hostname = "ldap.company.com";
+  };
+}
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.baseDN"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.baseDN">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.baseDN</a></h2>
+<p>The base distinguished name to search in. See
+<a href="https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html">ldapsearch</a>.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"ou=People,dc=example,dc=edu"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.bindDN"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.bindDN">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.bindDN</a></h2>
+<p>The distinguished name of the user account for
+authentication. See <a href="https://docs.ldap.com/ldap-sdk/docs/tool-usages/ldapsearch.html">ldapsearch</a>.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.hostname"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.hostname">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.hostname</a></h2>
+<p>Hostname of the directory server.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.isDefault"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.isDefault">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.isDefault</a></h2>
+<p>Whether LDAP directory server is the default. Only
+one default may be set.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.name"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.name">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.name</a></h2>
+<p>User-friendly name of the directory server.
+Defaults to the name of the attribute set.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">"‹name›"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.port"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.port">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.port</a></h2>
+<p>The port to connect to. Defaults to 389 if ssl is
+disabled, or 636 if ssl is enabled.</p>
+<p><em>Type:</em>
+16 bit unsigned integer; between 0 and 65535 (both inclusive)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">if config.ssl then 636 else 389
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">389
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.searchFilter"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.searchFilter">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.searchFilter</a></h2>
+<p>Additional filters to apply to LDAP searches.</p>
+<p><em>Type:</em>
+string</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">""
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">"(objectclass=person)"
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.settings"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.settings">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.settings</a></h2>
+<p>Attribute set of extra settings to add to this
+Thunderbird LDAP directory configuration. The
+<code>id</code> given as argument is an automatically
+generated directory identifier.</p>
+<p><em>Type:</em>
+function that evaluates to a(n) attribute set of (boolean or signed integer or string)</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">_: { }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">id: {
+  "ldap_2.servers.ldap_${id}.maxHits" = 1000;
+  "ldap_2.servers.ldap_${id}.auth.saslmech" = "GSSAPI";
+};
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.ssl"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.ssl">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.ssl</a></h2>
+<p>Whether to use SSL.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.thunderbird.profiles._name_.directories._name_.subtree"><a class="header" href="#opt-programs.thunderbird.profiles._name_.directories._name_.subtree">programs.thunderbird.profiles.&lt;name&gt;.directories.&lt;name&gt;.subtree</a></h2>
+<p>Set to false to use only a single level directory.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/thunderbird.nix">&lt;home-manager/modules/programs/thunderbird.nix&gt;</a></li>
+</ul>
 <h2 id="opt-programs.thunderbird.profiles._name_.extensions"><a class="header" href="#opt-programs.thunderbird.profiles._name_.extensions">programs.thunderbird.profiles.&lt;name&gt;.extensions</a></h2>
 <p>List of ‹name› add-on packages to install for this profile.</p>
 <p>Note that it is necessary to manually enable extensions
@@ -96090,6 +96255,10 @@ configuration. Move <code>services.grobi.executeAfter</code> to
 <code>services.grobi.settings.execute_after</code> and <code>services.grobi.rules</code> to
 <code>services.grobi.settings.rules</code>. The deprecated aliases preserve list order
 and definition priorities. The generated JSON is now pretty-printed.</p>
+</li>
+<li>
+<p>The <a href="#thunderbird">programs.thunderbird</a> module can now be used to configure Thunderbird LDAP directories with
+<code>programs.thunderbird.profiles.&lt;name&gt;.directories</code>.</p>
 </li>
 <li>
 <p>Borgmatic backups now use
