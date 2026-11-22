@@ -1,4 +1,6 @@
 {
+  granted-bash-integration-enabled = ./bash-integration-enabled.nix;
+  granted-bash-integration-disabled = ./bash-integration-disabled.nix;
   granted-zsh-integration-enabled = ./zsh-integration-enabled.nix;
   granted-zsh-integration-disabled = ./zsh-integration-disabled.nix;
   granted-fish-integration-enabled = ./fish-integration-enabled.nix;
