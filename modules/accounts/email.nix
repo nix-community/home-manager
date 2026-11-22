@@ -210,6 +210,15 @@ let
           session.
         '';
       };
+
+      useOauth = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to use OAUTHBEARER authentication method.
+        '';
+      };
     };
   };
 

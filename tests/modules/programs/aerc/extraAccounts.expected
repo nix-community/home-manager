@@ -96,3 +96,13 @@ source = smtp+plain://intentionallyWrong:PaSsWorD@smtp.host.invalid:1337
 from = Foo Bar <addr@mail.invalid>
 maildir-account-path = custom-notmuch
 source = notmuch://
+
+[r1_jmap]
+from = Foo Bar <addr@mail.invalid>
+outgoing = jmap://
+source = jmap://foobar@jmap.invalid
+
+[r2_jmap]
+from = Foo Bar <addr@mail.invalid>
+outgoing = jmap://
+source = jmap+oauthbearer://@jmap.invalid
