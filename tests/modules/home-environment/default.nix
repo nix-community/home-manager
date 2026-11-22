@@ -3,6 +3,8 @@
   home-backup-file-extension = ./backup-file-extension.nix;
   home-backup-overwrite = ./backup-overwrite.nix;
   home-backup-options-default = ./backup-options-default.nix;
+  home-quiet-login-default = ./quiet-login-default.nix;
+  home-quiet-login-enabled = ./quiet-login-enabled.nix;
   home-session-path = ./session-path.nix;
   home-session-search-variables = ./session-search-variables.nix;
   home-session-variables = ./session-variables.nix;

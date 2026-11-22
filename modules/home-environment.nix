@@ -624,6 +624,16 @@ in
       '';
     };
 
+    home.quietLogin = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Whether to suppress login messages by creating {file}`~/.hushlogin`.
+        This hides messages such as the last login time and message of the day
+        on systems that honor this file, including macOS.
+      '';
+    };
+
     home.preferXdgDirectories = lib.mkEnableOption "" // {
       description = ''
         Whether to make programs use XDG directories whenever supported.
@@ -672,6 +682,10 @@ in
     home.homeDirectory = lib.mkIf (lib.versionOlder config.home.stateVersion "20.09") (
       lib.mkDefault (builtins.getEnv "HOME")
     );
+
+    home.file.".hushlogin" = lib.mkIf cfg.quietLogin {
+      text = "";
+    };
 
     programs.bash.shellAliases = cfg.shellAliases;
     programs.zsh.shellAliases = cfg.shellAliases;
