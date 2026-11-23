@@ -154,13 +154,6 @@
     name = "Sara Johnsson";
     source = "home-manager";
   };
-  Flameopathic = {
-    email = "flameopathic@gmail.com";
-    github = "Flameopathic";
-    githubId = 64027365;
-    name = "Erin Pletches";
-    source = "nixpkgs";
-  };
   FredeHoey = {
     email = "frederikbraendstrup@gmail.com";
     github = "FredeHoey";
@@ -794,9 +787,9 @@
     name = "Ihar Hrachyshka";
     source = "nixpkgs";
   };
-  brckd = {
+  bricked-dev = {
     email = "hello@bricked.dev";
-    github = "brckd";
+    github = "bricked-dev";
     githubId = 92804487;
     keys = [
       {
@@ -1359,13 +1352,6 @@
     githubId = 56848082;
     name = "Henri Sota";
     source = "home-manager";
-  };
-  hesiod = {
-    email = "tobias@markus-regensburg.de";
-    github = "hesiod";
-    githubId = 3159881;
-    name = "Tobias Markus";
-    source = "nixpkgs";
   };
   hey2022 = {
     email = "yiheng.he@proton.me";
@@ -2121,19 +2107,6 @@
     name = "euxane";
     source = "nixpkgs";
   };
-  panchoh = {
-    email = "pancho@pancho.name";
-    github = "panchoh";
-    githubId = 471059;
-    keys = [
-      {
-        fingerprint = "4430 F502 8B19 FAF4 A40E  C4E8 11E0 447D 4ABB A7D0";
-      }
-    ];
-    matrix = "@panchoh:matrix.org";
-    name = "pancho horrillo";
-    source = "nixpkgs";
-  };
   pbar1 = {
     email = "piercebartine@gmail.com";
     github = "pbar1";
@@ -2588,6 +2561,13 @@
     github = "uncenter";
     githubId = 47499684;
     name = "uncenter";
+    source = "nixpkgs";
+  };
+  urocylus = {
+    email = "flameopathic@gmail.com";
+    github = "urocylus";
+    githubId = 64027365;
+    name = "Erin Pletches";
     source = "nixpkgs";
   };
   uvNikita = {
