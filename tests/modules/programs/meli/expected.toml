@@ -38,6 +38,7 @@ format = "jmap"
 identity = "hm@jmap.invalid"
 send_mail = "server_submission"
 server_url = "https://jmap.invalid"
+server_username = "home.manager.jr"
 subscribed_mailboxes = ["Inbox", "Sent", "Trash", "Drafts"]
 use_token = false
 

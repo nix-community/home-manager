@@ -45,6 +45,7 @@ let
           send_mail = "server_submission";
           server_url =
             if account.jmap.host != null then "https://${account.jmap.host}" else account.jmap.sessionUrl;
+          server_username = account.userName;
           server_password.command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
           use_token = account.jmap.useOauth;
         }
