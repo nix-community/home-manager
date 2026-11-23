@@ -32,6 +32,18 @@
           "image/svg+xml"
         ];
       })
+      (pkgs.runCommand "nested-desktop-entry" { } ''
+        mkdir -p "$out/share/applications" "$out/share/desktop-entries/nested"
+        ln -s ../desktop-entries "$out/share/applications/.vendor"
+        cat > "$out/share/desktop-entries/nested/viewer.desktop" <<'EOF'
+        [Desktop Entry]
+        Type=Application
+        Name=Viewer
+        Exec=true
+        mimetype=image/gif;
+        MimeType=application/pdf;image/PNG;
+        EOF
+      '')
     ];
   };
 
