@@ -511,6 +511,12 @@
     github = "prescientmoon";
     githubId = 39400800;
   };
+  qacow37 = {
+    name = "qacow37";
+    email = "daily.cow37@proton.me";
+    github = "qacow37";
+    githubId = 147836833;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
