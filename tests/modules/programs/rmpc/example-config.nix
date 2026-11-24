@@ -19,11 +19,36 @@
           browser_song_sort: [Disc, Track, Artist, Title],
       )
     '';
+
+    themes = {
+      "example-theme" = ''
+        (
+            default_album_art_path: None,
+            format_tag_separator: " | ",
+            browser_column_widths: [20, 38, 42],
+            background_color: None,
+            symbols: (
+                song: "S",
+                dir: "D",
+                playlist: "P",
+                marker: "M",
+                ellipsis: "...",
+                song_style: None,
+                dir_style: None,
+                playlist_style: None,
+            ),
+        )
+      '';
+    };
   };
 
   nmt.script = ''
     assertFileExists home-files/.config/rmpc/config.ron
     assertFileContent home-files/.config/rmpc/config.ron \
     ${./example-config.ron}
+
+    assertFileExists home-files/.config/rmpc/themes/example-theme.ron
+    assertFileContent home-files/.config/rmpc/themes/example-theme.ron \
+    ${./example-theme.ron}
   '';
 }
