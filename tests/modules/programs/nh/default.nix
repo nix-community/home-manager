@@ -5,6 +5,7 @@
   nh-clean-extra-args-spaces = ./darwin/clean-extra-args-spaces.nix;
   nh-clean-extra-args-string = ./darwin/clean-extra-args-string.nix;
   nh-clean-extra-args-empty = ./darwin/clean-extra-args-empty.nix;
+  nh-clean-nix-package = ./darwin/clean-nix-package.nix;
 })
 // (lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
   nh = ./linux/config.nix;
