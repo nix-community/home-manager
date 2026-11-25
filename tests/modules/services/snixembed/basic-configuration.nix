@@ -1,6 +1,12 @@
+{ config, ... }:
+
 {
   services.snixembed = {
     enable = true;
+    package = config.lib.test.mkStubPackage {
+      name = "snixembed";
+      outPath = "@custom-snixembed@";
+    };
     beforeUnits = [ "safeeyes.service" ];
   };
 
