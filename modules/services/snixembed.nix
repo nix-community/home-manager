@@ -50,7 +50,7 @@ in
       };
 
       Service = {
-        ExecStart = lib.getExe pkgs.snixembed;
+        ExecStart = lib.getExe cfg.package;
         Restart = "on-failure";
         RestartSec = 3;
       };
