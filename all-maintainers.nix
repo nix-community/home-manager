@@ -2210,6 +2210,13 @@
     name = "prescientmoon";
     source = "home-manager";
   };
+  qacow37 = {
+    email = "daily.cow37@proton.me";
+    github = "qacow37";
+    githubId = 147836833;
+    name = "qacow37";
+    source = "home-manager";
+  };
   rachitvrma = {
     email = "rachitverma1122+nixpkgs@gmail.com";
     github = "rachitvrma";
