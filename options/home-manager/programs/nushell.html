@@ -35,7 +35,7 @@
             const path_to_root = "../../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../../searchindex-8ec41a47.js";
+            window.path_to_searchindex_js = "../../../searchindex-c8866029.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../../toc-56c6b167.js"></script>
@@ -203,7 +203,11 @@ null or package</p>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/nushell.nix">&lt;home-manager/modules/programs/nushell.nix&gt;</a></li>
 </ul>
 <h2 id="opt-programs.nushell.completions"><a class="header" href="#opt-programs.nushell.completions">programs.nushell.completions</a></h2>
-<p>List of nushell completions to preload. For full list of available completions consult https://github.com/nushell/nu_scripts/tree/main/custom-completions</p>
+<p>Names of completion scripts from <code>pkgs.nu_scripts</code> to load in
+Nushell. Each name is a directory under <code>custom-completions</code> in that
+package, and an unknown name fails the build. The upstream list at
+<a href="https://github.com/nushell/nu_scripts/tree/main/custom-completions">https://github.com/nushell/nu_scripts/tree/main/custom-completions</a>
+can include completions newer than the packaged version.</p>
 <p><em>Type:</em>
 list of string</p>
 <p><em>Default:</em></p>
