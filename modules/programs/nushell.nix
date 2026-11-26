@@ -317,7 +317,11 @@ in
         "gh"
       ];
       description = ''
-        List of nushell completions to preload. For full list of available completions consult https://github.com/nushell/nu_scripts/tree/main/custom-completions
+        Names of completion scripts from `pkgs.nu_scripts` to load in
+        Nushell. Each name is a directory under `custom-completions` in that
+        package, and an unknown name fails the build. The upstream list at
+        <https://github.com/nushell/nu_scripts/tree/main/custom-completions>
+        can include completions newer than the packaged version.
       '';
     };
   };
