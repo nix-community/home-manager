@@ -263,6 +263,14 @@ in
           }
           // optPwCmd "source" passwordCommand;
 
+        fastmail =
+          { passwordCommand, ... }:
+          {
+            source = "jmap+oauthbearer://@api.fastmail.com/jmap/session";
+            outgoing = "jmap://";
+          }
+          // optPwCmd "source" passwordCommand;
+
         smtp =
           {
             userName,
@@ -309,7 +317,9 @@ in
 
       sourceCfg =
         account:
-        if account.notmuch.enable then
+        if account.flavor == "fastmail.com" then
+          mkConfig.fastmail account
+        else if account.notmuch.enable then
           mkConfig.notmuch account
         else if
           account.mbsync.enable && account.mbsync.flatten == null && account.mbsync.subFolders == "Maildir++"
@@ -326,11 +336,10 @@ in
 
       outgoingCfg =
         account:
-        # jmap doesn't need additional outgoing config generation
-        if account.jmap != null then
-          { }
-        else if account.msmtp.enable then
+        if account.msmtp.enable then
           mkConfig.msmtp account
+        else if account.jmap != null then
+          { }
         else if account.smtp != null then
           mkConfig.smtp account
         else
