@@ -427,7 +427,7 @@ in
         A list of paths that should be included in the home
         closure but generally not visible.
 
-        For built-time checks the `home.checks` option is more appropriate
+        For build-time checks the `home.checks` option is more appropriate
         for that purpose as checks should not leave a trace in the built
         home configuration.
       '';
