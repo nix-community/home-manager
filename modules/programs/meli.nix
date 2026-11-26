@@ -31,15 +31,16 @@ let
       subscribed_mailboxes = account.meli.mailboxes;
       mailboxes = account.meli.mailboxAliases;
     }
-    // lib.optionalAttrs (account.flavor == "fastmail.com") {
-      server_username = account.userName;
-      server_password.command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
-      format = "jmap";
-      server_url = "https://api.fastmail.com/jmap/session";
-      use_token = true;
-    }
     // (
-      if account.jmap != null then
+      if account.flavor == "fastmail.com" then
+        {
+          server_username = account.userName;
+          server_password.command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
+          format = "jmap";
+          server_url = "https://api.fastmail.com/jmap/session";
+          use_token = true;
+        }
+      else if account.jmap != null then
         {
           format = "jmap";
           send_mail = "server_submission";
