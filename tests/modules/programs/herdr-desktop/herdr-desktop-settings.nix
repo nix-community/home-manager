@@ -2,6 +2,9 @@
 {
   xdg.enable = true;
 
+  # Test the app's own settings serialization; the core pin has its own test.
+  programs.herdr.core.enable = false;
+
   programs.herdr.desktop = {
     enable = true;
     package = config.lib.test.mkStubPackage { name = "herdr-desktop"; };

@@ -38,6 +38,10 @@ in
   home.homeDirectory = lib.mkForce "/@TMPDIR@/hm-user";
   xdg.enable = true;
 
+  # Keep the fixture focused on the app's own settings; the core pin has its
+  # own test.
+  programs.herdr.core.enable = false;
+
   programs.herdr.desktop = {
     enable = true;
     package = null;

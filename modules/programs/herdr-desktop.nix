@@ -32,6 +32,8 @@ in
 {
   meta.maintainers = [ lib.maintainers.davsanchez ];
 
+  imports = [ ./herdr-core.nix ];
+
   options.programs.herdr.desktop = {
     enable = lib.mkEnableOption "the Herdr desktop app";
 
@@ -70,12 +72,27 @@ in
         {option}`programs.herdr.settings`, which configures the Herdr TUI at
         {file}`$XDG_CONFIG_HOME/herdr/config.toml`. See the app's built-in
         guide (`herdr-app --skill`) for the available keys.
+
+        When {option}`programs.herdr.core.enable` is on, `core` defaults to
+        the binary from {option}`programs.herdr.core.package`, so the app does
+        not fall back to an installer-managed core.
       '';
     };
   };
 
   config = mkIf cfg.enable {
+    # The app is only a client; herdr-core runs every terminal. Enable it by
+    # default and pin the app's `core` setting to that exact binary, so an
+    # installer-managed core in ~/.local/bin cannot win.
+    programs.herdr.core.enable = lib.mkDefault true;
+
     home.packages = mkIf (cfg.package != null) [ cfg.package ];
+
+    programs.herdr.desktop.settings =
+      lib.mkIf (config.programs.herdr.core.enable && config.programs.herdr.core.package != null)
+        {
+          core = lib.mkDefault (lib.getExe' config.programs.herdr.core.package "herdr-core");
+        };
 
     home.activation.herdrDesktopMutableSettings = lib.mkIf (
       cfg.mutableSettings && cfg.settings != { }
