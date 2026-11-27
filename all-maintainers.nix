@@ -418,6 +418,13 @@
     name = "Renato da Silva";
     source = "home-manager";
   };
+  RichardSouzza = {
+    email = "souzza.richard25@gmail.com";
+    github = "RichardSouzza";
+    githubId = 121109210;
+    name = "Richard Souza";
+    source = "home-manager";
+  };
   Rosuavio = {
     email = "RosarioPulella@gmail.com";
     github = "Rosuavio";
