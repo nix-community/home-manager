@@ -148,6 +148,14 @@ in
         f"expected diff -ur restore/basic/home/alice/files files to contain \
           {expected1} and {expected2}, but got {actual}"
 
+    with subtest("Does not re-initialize an existing repo on other errors"):
+      succeed_as_alice("mv password password.bak", "echo wrong > password")
+      systemctl_fail_as_alice("start restic-backups-basic.service")
+      succeed_as_alice("mv password.bak password")
+      actual = succeed_as_alice("journalctl --no-pager --user -u restic-backups-basic.service")
+      assert "config file already exists" not in actual, \
+        f"Expected no init attempt on an existing repo, but got {actual}"
+
     with subtest("Repository with spaces backup"):
       systemctl_succeed_as_alice("start restic-backups-repository-spaced.service")
       actual = succeed_as_alice("restic-repository-spaced ls latest")
