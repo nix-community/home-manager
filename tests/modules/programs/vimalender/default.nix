@@ -1,0 +1,3 @@
+{
+  vimalender-basic = ./basic.nix;
+}
