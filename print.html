@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-c8866029.js";
+            window.path_to_searchindex_js = "searchindex-eb96458d.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-56c6b167.js"></script>
+        <script src="toc-a37bcd56.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -12430,6 +12430,7 @@ string</p>
 <li><a href="#granted">granted</a></li>
 <li><a href="#grep">grep</a></li>
 <li><a href="#grype">grype</a></li>
+<li><a href="#gtt">gtt</a></li>
 <li><a href="#gurk-rs">gurk-rs</a></li>
 <li><a href="#halloy">halloy</a></li>
 <li><a href="#havoc">havoc</a></li>
@@ -32063,6 +32064,186 @@ YAML 1.1 value</p>
 <p><em>Declared by:</em></p>
 <ul>
 <li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/grype.nix">&lt;home-manager/modules/programs/grype.nix&gt;</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="gtt"><a href="#gtt" class="header">gtt</a></h1>
+<h2 id="opt-programs.gtt.enable"><a class="header" href="#opt-programs.gtt.enable">programs.gtt.enable</a></h2>
+<p>Whether to enable gtt, Google Translate TUI.</p>
+<p><em>Type:</em>
+boolean</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">false
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">true
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gtt.nix">&lt;home-manager/modules/programs/gtt.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gtt.package"><a class="header" href="#opt-programs.gtt.package">programs.gtt.package</a></h2>
+<p>The gtt package to use.</p>
+<p><em>Type:</em>
+null or package</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">pkgs.gtt
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gtt.nix">&lt;home-manager/modules/programs/gtt.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gtt.keymaps"><a class="header" href="#opt-programs.gtt.keymaps">programs.gtt.keymaps</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/gtt/keymap.yaml</code></p>
+<p>See <a href="https://github.com/eeeXun/gtt?tab=readme-ov-file#key-map">https://github.com/eeeXun/gtt?tab=readme-ov-file#key-map</a> for documentation.</p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  clear = "C-q";
+  copy_destination = "C-r";
+  copy_selected = "C-y";
+  copy_source = "C-g";
+  exit = "C-c";
+  stop_tts = "C-x";
+  swap_language = "C-s";
+  toggle_below = "C-\\";
+  toggle_transparent = "C-t";
+  translate = "C-j";
+  tts_destination = "C-p";
+  tts_source = "C-o";
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gtt.nix">&lt;home-manager/modules/programs/gtt.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gtt.servers"><a class="header" href="#opt-programs.gtt.servers">programs.gtt.servers</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/gtt/server.yaml</code></p>
+<p>Prefer <code>file</code> over <code>value</code> for API keys, since values set here end
+up in the world-readable Nix store.</p>
+<p>See <a href="https://github.com/eeeXun/gtt#%EF%B8%8F-note-for-deepl">https://github.com/eeeXun/gtt#️-note-for-deepl</a> for documentation.</p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  api_key = {
+    deepl = {
+      file = "$HOME/secrets/deepl.txt";
+    };
+    deeplx = {
+      file = "$HOME/secrets/deeplx.txt";
+    };
+    libre = {
+      file = "$HOME/secrets/libre.txt";
+    };
+  };
+  host = {
+    deeplx = "127.0.0.1:1188";
+    libre = "127.0.0.1:5000";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gtt.nix">&lt;home-manager/modules/programs/gtt.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gtt.settings"><a class="header" href="#opt-programs.gtt.settings">programs.gtt.settings</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/gtt/gtt.yaml</code></p>
+<p>The file is read-only, so changes made inside gtt
+(translator, languages, theme) are not saved and the
+declared settings always apply.</p>
+<p>See <a href="https://github.com/eeeXun/gtt/blob/75f8679186eac64a957160352fe3b529ac556a9e/config.go#L39-L62">https://github.com/eeeXun/gtt/blob/75f8679186eac64a957160352fe3b529ac556a9e/config.go#L39-L62</a> for documentation.</p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  destination = {
+    border_color = "red";
+    language = {
+      apertium = "English";
+      bing = "English";
+      deepl = "English";
+      deeplx = "English";
+      google = "English";
+      libre = "English";
+      reverso = "English";
+    };
+  };
+  hide_below = false;
+  osc52 = false;
+  source = {
+    border_color = "blue";
+    language = {
+      apertium = "Portuguese";
+      bing = "Portuguese (Brazil)";
+      deepl = "Portuguese";
+      deeplx = "Portuguese";
+      google = "Portuguese (Portugal, Brazil)";
+      libre = "Portuguese";
+      reverso = "Portuguese";
+    };
+  };
+  theme = "gruvbox";
+  translator = "Google";
+  transparent = false;
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gtt.nix">&lt;home-manager/modules/programs/gtt.nix&gt;</a></li>
+</ul>
+<h2 id="opt-programs.gtt.themes"><a class="header" href="#opt-programs.gtt.themes">programs.gtt.themes</a></h2>
+<p>Configuration written to <code>$XDG_CONFIG_HOME/gtt/theme.yaml</code></p>
+<p>See <a href="https://github.com/eeeXun/gtt?tab=readme-ov-file#customize-theme">https://github.com/eeeXun/gtt?tab=readme-ov-file#customize-theme</a> for documentation.</p>
+<p><em>Type:</em>
+YAML 1.1 value</p>
+<p><em>Default:</em></p>
+<pre><code class="language-nix">{ }
+</code></pre>
+<p><em>Example:</em></p>
+<pre><code class="language-nix">{
+  tokyonight = {
+    bg = "0x1A1B26";
+    fg = "0xC0CAF5";
+    gray = "0x414868";
+    red = "0xF7768E";
+    green = "0x9ECE6A";
+    yellow = "0xE0AF68";
+    blue = "0x7AA2F7";
+    purple = "0xBB9AF7";
+    cyan = "0x7DCFFF";
+    orange = "0xFF9E64";
+  };
+  catppuccin = {
+    bg = "0x24273A";
+    fg = "0xCAD3F5";
+    gray = "0x5B6078";
+    red = "0xED8796";
+    green = "0xA6DA95";
+    yellow = "0xEED49F";
+    blue = "0x8AADF4";
+    purple = "0xF5BDE6";
+    cyan = "0x8BD5CA";
+    orange = "0xF5A97F";
+  };
+}
+
+</code></pre>
+<p><em>Declared by:</em></p>
+<ul>
+<li><a href="https://github.com/nix-community/home-manager/blob/master/modules/programs/gtt.nix">&lt;home-manager/modules/programs/gtt.nix&gt;</a></li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="gurk-rs"><a href="#gurk-rs" class="header">gurk-rs</a></h1>
