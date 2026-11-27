@@ -531,12 +531,21 @@ in
                 ''}
 
                 ${lib.optionalString (backup.initialize) ''
+                  # Exit code 10 means the repository does not exist; anything else (lock, network) must not trigger init.
                   ${
                     mkResticCmd [
                       "cat"
                       "config"
+                      "--no-lock"
                     ]
-                  } 2>/dev/null || ${mkResticCmd "init"}
+                  } > /dev/null || {
+                    status=$?
+                    if [ "$status" -eq 10 ]; then
+                      ${mkResticCmd "init"}
+                    else
+                      exit "$status"
+                    fi
+                  }
                 ''}
 
                 ${lib.optionalString (backup.paths != null && backup.paths != [ ]) ''
