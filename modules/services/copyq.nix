@@ -87,23 +87,29 @@ in
         };
       };
 
-      home.activation.copyqConfig = lib.mkIf (cfg.settings != { }) (
-        lib.hm.dag.entryAfter [ "writeBoundary" ] (
-          lib.concatLines (
-            lib.mapAttrsToList (
-              k: v:
-              "run --quiet ${
-                lib.escapeShellArgs [
-                  executablePath
-                  "--start-server"
-                  "config"
-                  k
-                  (if lib.isBool v then lib.boolToString v else toString v)
-                ]
-              } 2> >(grep -v '^Warning: CopyQ server is already running' >&2)"
-            ) cfg.settings
-          )
-        )
-      );
+      # When Home Manager is used as a NixOs module, the activation runs at every boot,
+      # before the graphical session target. So a server left running there prevents
+      # the start of a server in the graphical session by the systemd service.
+      # To avoid this, we start the server only if needed, and stop it at the end.
+      home.activation.copyqConfig =
+        let
+          copyq = lib.escapeShellArg executablePath;
+          configArgs = lib.escapeShellArgs (
+            lib.concatLists (
+              lib.mapAttrsToList (k: v: [
+                k
+                (if lib.isBool v then lib.boolToString v else toString v)
+              ]) cfg.settings
+            )
+          );
+        in
+        lib.mkIf (cfg.settings != { }) (
+          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            copyqStartServer=
+            ${copyq} eval 0 >/dev/null 2>&1 || copyqStartServer=--start-server
+            run --quiet ${copyq} $copyqStartServer config ${configArgs}
+            [ -z "$copyqStartServer" ] || run --quiet ${copyq} exit || true
+          ''
+        );
     };
 }
