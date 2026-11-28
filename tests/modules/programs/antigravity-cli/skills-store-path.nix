@@ -17,9 +17,9 @@ in
   };
 
   nmt.script = ''
-    assertFileContent home-files/.gemini/antigravity-cli/skills/directory/SKILL.md \
+    assertFileContent home-files/.gemini/config/skills/directory/SKILL.md \
       "${src}/skills/external-skill/SKILL.md"
-    assertFileContent home-files/.gemini/antigravity-cli/skills/file/SKILL.md \
+    assertFileContent home-files/.gemini/config/skills/file/SKILL.md \
       "${src}/skills/external-skill/SKILL.md"
   '';
 }

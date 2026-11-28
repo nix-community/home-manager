@@ -468,20 +468,20 @@ in
 
         If an attribute set is used, the attribute name becomes the
         skill directory name, and the value is either:
-        - Inline content as a string (creates `~/.gemini/antigravity-cli/skills/<name>/SKILL.md`)
-        - A path to a file (creates `~/.gemini/antigravity-cli/skills/<name>/SKILL.md`)
-        - A path to a directory (symlinks `~/.gemini/antigravity-cli/skills/<name>/` to that directory)
+        - Inline content as a string (creates `~/.gemini/config/skills/<name>/SKILL.md`)
+        - A path to a file (creates `~/.gemini/config/skills/<name>/SKILL.md`)
+        - A path to a directory (symlinks `~/.gemini/config/skills/<name>/` to that directory)
 
         If a path is used, it is expected to contain one folder per
         skill name, each containing a {file}`SKILL.md`. The directory is
-        symlinked to {file}`~/.gemini/antigravity-cli/skills/`.
+        symlinked to {file}`~/.gemini/config/skills/`.
       '';
     };
   };
 
   config =
     let
-      antigravitySkillsDir = ".gemini/antigravity-cli/skills";
+      antigravitySkillsDir = ".gemini/config/skills";
       geminiSkillsDir = ".gemini/skills";
       permissions = lib.optionalAttrs (cfg.permissions != null) (
         lib.filterAttrs (_: value: value != null) cfg.permissions
