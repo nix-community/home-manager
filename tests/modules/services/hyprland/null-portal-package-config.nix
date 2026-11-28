@@ -2,6 +2,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
 
+    checkConfig = false;
     portalPackage = null;
 
     settings = {
