@@ -446,6 +446,12 @@
     github = "natecox";
     githubId = 2782695;
   };
+  NicoWeio = {
+    name = "Nicolai Weitkemper";
+    email = "kontakt@nicolaiweitkemper.de";
+    github = "NicoWeio";
+    githubId = 12870528;
+  };
   NitroSniper = {
     name = "Nitro Sniper";
     email = "nitro@ortin.dev";
