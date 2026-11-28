@@ -26,6 +26,8 @@
   claude-code-skills-store-path = ./skills-store-path.nix;
   claude-code-skills-store-path-dir = ./skills-store-path-dir.nix;
   claude-code-skills-subdir = ./skills-subdir.nix;
+  claude-code-skills-integration = ./skills-integration.nix;
+  claude-code-skills-integration-dir = ./skills-integration-dir.nix;
   claude-code-agents-path = ./agents-path.nix;
   claude-code-commands-path = ./commands-path.nix;
   claude-code-hooks-path = ./hooks-path.nix;

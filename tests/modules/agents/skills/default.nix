@@ -1,0 +1,3 @@
+{
+  agents-skills = ./skills.nix;
+}
