@@ -1,0 +1,6 @@
+draft_wait = 60
+history_mb = 5
+notes = true
+notes_quiet = 3
+restore_screen = true
+shell = ["nu", "-l"]
