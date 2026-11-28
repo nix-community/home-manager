@@ -13,6 +13,11 @@
   antigravity-cli-mutable-settings = ./mutable-settings.nix;
   antigravity-cli-settings = ./settings.nix;
   antigravity-cli-context = ./context.nix;
+  antigravity-cli-agents = ./agents.nix;
+  antigravity-cli-agents-dir = ./agents-dir.nix;
+  antigravity-cli-agents-store-path-dir = ./agents-store-path-dir.nix;
+  antigravity-cli-agents-path-not-directory = ./agents-path-not-directory.nix;
+  antigravity-cli-agents-legacy-gemini = ./agents-legacy-gemini.nix;
   antigravity-cli-skills = ./skills.nix;
   antigravity-cli-skills-dir = ./skills-dir.nix;
   antigravity-cli-skills-store-path = ./skills-store-path.nix;
