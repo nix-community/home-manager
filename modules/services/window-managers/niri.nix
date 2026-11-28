@@ -13,15 +13,6 @@ in
     glmlm
   ];
 
-  imports = [
-    (lib.mkRemovedOptionModule [ "wayland" "windowManager" "niri" "extraConfigEarly" ] ''
-      To replicate the old behavior, use `extraConfig` and `lib.mkBefore`:
-        wayland.windowManager.niri.extraConfig = lib.mkBefore '''
-          // your config here
-        ''';
-    '')
-  ];
-
   options.wayland.windowManager.niri = {
     enable = lib.mkEnableOption "niri";
 
