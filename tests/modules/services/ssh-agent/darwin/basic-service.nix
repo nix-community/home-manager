@@ -8,7 +8,7 @@
 
   nmt.script = ''
     assertFileContent \
-      LaunchAgents/org.nix-community.home.ssh-agent.plist \
+      "$(normalizeStorePaths LaunchAgents/org.nix-community.home.ssh-agent.plist)" \
       ${./basic-service-expected.plist}
   '';
 }

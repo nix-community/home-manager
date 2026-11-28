@@ -16,7 +16,7 @@ in
       ''
         serviceFile=LaunchAgents/org.nix-community.home.gpg-agent.plist
         assertFileExists "$serviceFile"
-        assertFileContent "$serviceFile" ${./expected-agent.plist}
+        assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./expected-agent.plist}
       ''
     else
       ''

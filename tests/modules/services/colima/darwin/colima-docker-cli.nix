@@ -70,7 +70,7 @@
 
       serviceFile=LaunchAgents/org.nix-community.home.colima-default.plist
       assertFileExists "$serviceFile"
-      assertFileContent "$serviceFile" ${./colima-docker-cli-expected.plist}
+      assertFileContent "$(normalizeStorePaths "$serviceFile")" ${./colima-docker-cli-expected.plist}
 
       assertFileExists "${pathDockerConfig}"
       assertFileContent "${pathDockerConfig}" ${./colima-docker-cli-expected.json}
