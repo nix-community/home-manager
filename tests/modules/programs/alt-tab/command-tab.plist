@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>holdShortcut</key>
+	<dict>
+		<key>secureData</key>
+		<data>
+		YnBsaXN0MDDUAQIDBAUGBxxZJGFyY2hpdmVyWCR2ZXJzaW9uWCRvYmplY3Rz
+		VCR0b3BfEA9OU0tleWVkQXJjaGl2ZXISAAGGoKUICRQaG1UkbnVsbNUKCwwN
+		Dg8QERITViRjbGFzc1drZXlDb2RlXW1vZGlmaWVyRmxhZ3NaY2hhcmFjdGVy
+		c18QG2NoYXJhY3RlcnNJZ25vcmluZ01vZGlmaWVyc4ACgAOABIAAgADSFRYX
+		GFokY2xhc3NuYW1lWCRjbGFzc2VzWlNSU2hvcnRjdXSiFxlYTlNPYmplY3QR
+		//8SABAAANEdHlRyb290gAEIERskLTJESU9VYGdvfYimqKqsrrC1wMnU1+Dj
+		6OvwAAAAAAAAAQEAAAAAAAAAHwAAAAAAAAAAAAAAAAAAAPI=
+		</data>
+		<key>string</key>
+		<string>⌘</string>
+	</dict>
+	<key>nextWindowShortcut</key>
+	<dict>
+		<key>secureData</key>
+		<data>
+		YnBsaXN0MDDUAQIDBAUGBx1ZJGFyY2hpdmVyWCR2ZXJzaW9uWCRvYmplY3Rz
+		VCR0b3BfEA9OU0tleWVkQXJjaGl2ZXISAAGGoKYICRQaGxxVJG51bGzVCgsM
+		DQ4PEBESE1YkY2xhc3NXa2V5Q29kZV1tb2RpZmllckZsYWdzWmNoYXJhY3Rl
+		cnNfEBtjaGFyYWN0ZXJzSWdub3JpbmdNb2RpZmllcnOAAoADgASABYAF0hUW
+		FxhaJGNsYXNzbmFtZVgkY2xhc3Nlc1pTUlNob3J0Y3V0ohcZWE5TT2JqZWN0
+		EDAQAFEJ0R4fVHJvb3SAAQgRGyQtMkRJUFZhaHB+iaepq62vsbbBytXY4ePl
+		5+rvAAAAAAAAAQEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAPE=
+		</data>
+		<key>string</key>
+		<string>Tab</string>
+	</dict>
+</dict>
+</plist>
