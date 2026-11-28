@@ -40,7 +40,6 @@ let
         workspaceLayout
         workspaceAutoBackAndForth
         modifier
-        keycodebindings
         colors
         bars
         startup
@@ -114,28 +113,6 @@ let
           "${cfg.config.modifier}+Shift+space" = "floating toggle";
           "${cfg.config.modifier}+space" = "focus mode_toggle";
 
-          "${cfg.config.modifier}+1" = "workspace number 1";
-          "${cfg.config.modifier}+2" = "workspace number 2";
-          "${cfg.config.modifier}+3" = "workspace number 3";
-          "${cfg.config.modifier}+4" = "workspace number 4";
-          "${cfg.config.modifier}+5" = "workspace number 5";
-          "${cfg.config.modifier}+6" = "workspace number 6";
-          "${cfg.config.modifier}+7" = "workspace number 7";
-          "${cfg.config.modifier}+8" = "workspace number 8";
-          "${cfg.config.modifier}+9" = "workspace number 9";
-          "${cfg.config.modifier}+0" = "workspace number 10";
-
-          "${cfg.config.modifier}+Shift+1" = "move container to workspace number 1";
-          "${cfg.config.modifier}+Shift+2" = "move container to workspace number 2";
-          "${cfg.config.modifier}+Shift+3" = "move container to workspace number 3";
-          "${cfg.config.modifier}+Shift+4" = "move container to workspace number 4";
-          "${cfg.config.modifier}+Shift+5" = "move container to workspace number 5";
-          "${cfg.config.modifier}+Shift+6" = "move container to workspace number 6";
-          "${cfg.config.modifier}+Shift+7" = "move container to workspace number 7";
-          "${cfg.config.modifier}+Shift+8" = "move container to workspace number 8";
-          "${cfg.config.modifier}+Shift+9" = "move container to workspace number 9";
-          "${cfg.config.modifier}+Shift+0" = "move container to workspace number 10";
-
           "${cfg.config.modifier}+Shift+minus" = "move scratchpad";
           "${cfg.config.modifier}+minus" = "scratchpad show";
 
@@ -160,6 +137,50 @@ let
             "''${modifier}+Return" = "exec ''${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
             "''${modifier}+d" = "exec ''${cfg.config.menu}";
+          }
+        '';
+      };
+
+      keycodebindings = mkOption {
+        type = types.attrsOf (types.nullOr types.str);
+        default = {
+          "${cfg.config.modifier}+10" = "workspace number 1";
+          "${cfg.config.modifier}+11" = "workspace number 2";
+          "${cfg.config.modifier}+12" = "workspace number 3";
+          "${cfg.config.modifier}+13" = "workspace number 4";
+          "${cfg.config.modifier}+14" = "workspace number 5";
+          "${cfg.config.modifier}+15" = "workspace number 6";
+          "${cfg.config.modifier}+16" = "workspace number 7";
+          "${cfg.config.modifier}+17" = "workspace number 8";
+          "${cfg.config.modifier}+18" = "workspace number 9";
+          "${cfg.config.modifier}+19" = "workspace number 0";
+
+          "${cfg.config.modifier}+Shift+10" = "move container to workspace number 1";
+          "${cfg.config.modifier}+Shift+11" = "move container to workspace number 2";
+          "${cfg.config.modifier}+Shift+12" = "move container to workspace number 3";
+          "${cfg.config.modifier}+Shift+13" = "move container to workspace number 4";
+          "${cfg.config.modifier}+Shift+14" = "move container to workspace number 5";
+          "${cfg.config.modifier}+Shift+15" = "move container to workspace number 6";
+          "${cfg.config.modifier}+Shift+16" = "move container to workspace number 7";
+          "${cfg.config.modifier}+Shift+17" = "move container to workspace number 8";
+          "${cfg.config.modifier}+Shift+18" = "move container to workspace number 9";
+          "${cfg.config.modifier}+Shift+19" = "move container to workspace number 0";
+        };
+        defaultText = "Default sway keycodebindings.";
+        description = ''
+          An attribute set that assigns a key press to an action using a key code.
+          See <https://i3wm.org/docs/userguide.html#keybindings>.
+
+          Consider to use `lib.mkOptionDefault` function to extend or override
+          default keybindings instead of specifying all of them from scratch.
+        '';
+        example = lib.literalExpression ''
+          let
+            modifier = config.wayland.windowManager.sway.config.modifier;
+          in lib.mkOptionDefault {
+            "''${modifier}+10" = "workspace number 1";
+            "''${modifier}+11" = "workspace number 2";
+            "''${modifier}+12" = "workspace number 3";
           }
         '';
       };
