@@ -11,3 +11,7 @@ chapter of the NixOS manual.
 ```{=include=} sections
 writing-modules/types.md
 ```
+
+```{=include=} sections
+writing-modules/idiomatic-options.md
+```
