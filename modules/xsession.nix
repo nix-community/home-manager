@@ -209,8 +209,8 @@ in
     home.file.${cfg.profilePath}.text = ''
       . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
 
-      if [ -e "$HOME/.profile" ]; then
-        . "$HOME/.profile"
+      if [ -e "$HOME/.bash_profile" ]; then
+        . "$HOME/.bash_profile"
       fi
 
       # If there are any running services from a previous session.

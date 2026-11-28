@@ -1,7 +1,7 @@
 . "/home/hm-user/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
-if [ -e "$HOME/.profile" ]; then
-  . "$HOME/.profile"
+if [ -e "$HOME/.bash_profile" ]; then
+  . "$HOME/.bash_profile"
 fi
 
 # If there are any running services from a previous session.
