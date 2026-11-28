@@ -292,6 +292,13 @@
     name = "Lucas Wagler";
     source = "home-manager";
   };
+  lukeaurio = {
+    email = "lukeaurio@proton.me";
+    github = "lukeaurio";
+    githubId = 16072348;
+    name = "Lukas Aurio";
+    source = "home-manager";
+  };
   M0NsTeRRR = {
     email = "nix@mail.adminafk.fr";
     github = "M0NsTeRRR";
