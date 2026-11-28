@@ -10,7 +10,12 @@
     assertFileExists $hmSessVars
     assertFileContains $hmSessVars \
       'export PNPM_HOME="/home/hm-user/.pnpm"'
-    assertFileContains $hmSessVars \
-      'export PATH="/home/hm-user/.pnpm/bin''${PATH:+:}''${PATH-}"'
+    (
+      export PATH=/inherited/bin
+      unset __HM_SESS_VARS_SOURCED __HM_SESS_VARS_MERGED
+      . "$TESTED/$hmSessVars"
+      [ "$PATH" = "/home/hm-user/.pnpm/bin:/inherited/bin" ] \
+        || { echo "PATH: $PATH"; exit 1; }
+    ) || fail "pnpm bin directory was not prepended to PATH"
   '';
 }
