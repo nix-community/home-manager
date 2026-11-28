@@ -1,0 +1,9 @@
+[appearance]
+border_width = 2
+outer_border_width = 0
+prefer_no_csd = true
+
+[keybinds]
+Mod = "spawn noctalia msg panel-toggle launcher"
+"Mod+Q" = "window-close"
+"Mod+Return" = "spawn kitty"
