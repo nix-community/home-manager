@@ -74,40 +74,58 @@ let
 
   commandSkillName = lib.replaceStrings [ "/" ] [ ":" ];
 
-  normalizeSkillsDirectory =
+  normalizeDirectory =
+    {
+      name,
+      optionName,
+    }:
     source:
     if lib.isPath source then
       source
     else
-      pkgs.runCommandLocal "antigravity-cli-skills" { } ''
+      pkgs.runCommandLocal name { } ''
         if [[ ! -d ${lib.escapeShellArg (toString source)} ]]; then
-          echo ${lib.escapeShellArg "programs.antigravity-cli.skills must be a directory"} >&2
+          echo ${lib.escapeShellArg "programs.antigravity-cli.${optionName} must be a directory"} >&2
           exit 1
         fi
         ln -s ${lib.escapeShellArg (toString source)} "$out"
       '';
 
-  normalizeSkill =
+  normalizeBundle =
+    {
+      name,
+      entryFile,
+      label,
+    }:
     source:
-    pkgs.runCommandLocal "antigravity-cli-skill" { } ''
+    pkgs.runCommandLocal name { } ''
       source=${lib.escapeShellArg (toString source)}
       if [[ -d "$source" ]]; then
         ln -s "$source" "$out"
       elif [[ -f "$source" ]]; then
         mkdir "$out"
-        ln -s "$source" "$out/SKILL.md"
+        ln -s "$source" "$out/${entryFile}"
       else
-        echo "Antigravity CLI skill source must be a file or directory: $source" >&2
+        echo "Antigravity CLI ${label} source must be a file or directory: $source" >&2
         exit 1
       fi
     '';
 
-  skillFiles =
-    skillsDir:
-    if lib.hm.strings.isPathLike cfg.skills then
+  bundleFiles =
+    {
+      dir,
+      entryFile,
+      label,
+      optionName,
+      value,
+    }:
+    if lib.hm.strings.isPathLike value then
       {
-        "${skillsDir}" = {
-          source = normalizeSkillsDirectory cfg.skills;
+        "${dir}" = {
+          source = normalizeDirectory {
+            name = "antigravity-cli-${optionName}";
+            inherit optionName;
+          } value;
           recursive = true;
         };
       }
@@ -115,20 +133,43 @@ let
       lib.mapAttrs' (
         name: source:
         if lib.isPath source && lib.pathIsDirectory source then
-          lib.nameValuePair "${skillsDir}/${name}" {
+          lib.nameValuePair "${dir}/${name}" {
             inherit source;
             recursive = true;
           }
         else if lib.hm.strings.isPathLike source && !lib.isPath source then
-          lib.nameValuePair "${skillsDir}/${name}" {
-            source = normalizeSkill source;
+          lib.nameValuePair "${dir}/${name}" {
+            source = normalizeBundle {
+              name = "antigravity-cli-${label}";
+              inherit entryFile label;
+            } source;
             recursive = true;
           }
         else
-          lib.nameValuePair "${skillsDir}/${name}/SKILL.md" (
+          lib.nameValuePair "${dir}/${name}/${entryFile}" (
             if lib.hm.strings.isPathLike source then { inherit source; } else { text = source; }
           )
-      ) cfg.skills;
+      ) value;
+
+  skillFiles =
+    skillsDir:
+    bundleFiles {
+      dir = skillsDir;
+      entryFile = "SKILL.md";
+      label = "skill";
+      optionName = "skills";
+      value = cfg.skills;
+    };
+
+  agentFiles =
+    agentsDir:
+    bundleFiles {
+      dir = agentsDir;
+      entryFile = "agent.md";
+      label = "agent";
+      optionName = "agents";
+      value = cfg.agents;
+    };
 
 in
 {
@@ -431,6 +472,45 @@ in
       '';
     };
 
+    agents = lib.mkOption {
+      type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
+      default = { };
+      example = lib.literalExpression ''
+        {
+          code-reviewer = ./agents/code-reviewer/agent.md;
+          security-auditor = ./agents/security-auditor;
+          refactorer = '''
+            ---
+            name: refactorer
+            description: Focused refactoring agent for simplifying complex functions.
+            ---
+
+            You are a refactoring specialist. Keep changes minimal and preserve behavior.
+          ''';
+        }
+      '';
+      description = ''
+        Custom agents for Antigravity CLI.
+
+        This option can be either:
+        - An attribute set defining custom agents
+        - A path to a directory containing agent definitions (`<name>.md` files
+          or `<name>/agent.md` folders)
+
+        If an attribute set is used, the attribute name becomes the
+        agent directory name, and the value is either:
+        - Inline content as a string (creates `~/.gemini/config/agents/<name>/agent.md`)
+        - A path to a file (creates `~/.gemini/config/agents/<name>/agent.md`)
+        - A path to a directory (symlinks `~/.gemini/config/agents/<name>/` to that directory)
+
+        If a path is used, the directory is recursively symlinked to
+        {file}`~/.gemini/config/agents/`.
+
+        Only supported with native Antigravity CLI configuration, not legacy
+        Gemini CLI configuration.
+      '';
+    };
+
     skills = lib.mkOption {
       type = lib.types.either (lib.types.attrsOf (lib.types.either lib.types.lines lib.types.path)) lib.types.path;
       default = { };
@@ -483,6 +563,7 @@ in
     let
       antigravitySkillsDir = ".gemini/antigravity-cli/skills";
       geminiSkillsDir = ".gemini/skills";
+      antigravityAgentsDir = ".gemini/config/agents";
       permissions = lib.optionalAttrs (cfg.permissions != null) (
         lib.filterAttrs (_: value: value != null) cfg.permissions
       );
@@ -535,6 +616,10 @@ in
             {
               assertion = !cfg.mutableSettings;
               message = "programs.antigravity-cli.mutableSettings only supports native Antigravity CLI configuration, not legacy Gemini CLI configuration.";
+            }
+            {
+              assertion = cfg.agents == { };
+              message = "programs.antigravity-cli.agents only supports native Antigravity CLI configuration, not legacy Gemini CLI configuration.";
             }
           ];
           programs.antigravity-cli.settings.mcpServers =
@@ -656,7 +741,8 @@ in
                   '';
                 }
               ) cfg.commands
-              // skillFiles antigravitySkillsDir;
+              // skillFiles antigravitySkillsDir
+              // agentFiles antigravityAgentsDir;
           };
         })
         {
@@ -664,6 +750,10 @@ in
             {
               assertion = !lib.isPath cfg.skills || lib.pathIsDirectory cfg.skills;
               message = "`programs.antigravity-cli.skills` must be a directory when set to a path";
+            }
+            {
+              assertion = !lib.isPath cfg.agents || lib.pathIsDirectory cfg.agents;
+              message = "`programs.antigravity-cli.agents` must be a directory when set to a path";
             }
           ];
         }
