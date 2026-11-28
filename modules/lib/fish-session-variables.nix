@@ -11,13 +11,20 @@ let
 
   sessionVarsFile = "etc/profile.d/hm-session-vars.fish";
 
-  merges = lib.mapAttrsToList (env: values: {
-    inherit env;
-    candidates = lib.imap0 (index: value: {
-      name = "__hm_candidate_${env}_${toString index}";
-      inherit value;
-    }) (lib.filter (value: value != "") values);
-  }) config.home.sessionSearchVariables;
+  mkMerges =
+    operation: attrs:
+    lib.mapAttrsToList (env: values: {
+      inherit env operation;
+      candidates = lib.imap0 (index: value: {
+        name = "__hm_candidate_${operation}_${env}_${toString index}";
+        inherit value;
+      }) (lib.filter (value: value != "") values);
+    }) attrs;
+
+  # Prepends first, then appends, matching the POSIX generator.
+  merges =
+    mkMerges "prepend" config.home.sessionSearchVariables
+    ++ mkMerges "append" config.home.sessionSearchVariablesAppend;
 
   candidateNames = lib.concatMap (merge: map (candidate: candidate.name) merge.candidates) merges;
 
@@ -41,7 +48,7 @@ let
             candidate: assignDoubleQuoted candidate.name candidate.value
           ) merge.candidates)
           (
-            "__hm_merge prepend ${merge.env} :"
+            "__hm_merge ${merge.operation} ${merge.env} :"
             + lib.optionalString (merge.candidates != [ ]) (
               " " + lib.concatMapStringsSep " " (candidate: "\"\$${candidate.name}\"") merge.candidates
             )
