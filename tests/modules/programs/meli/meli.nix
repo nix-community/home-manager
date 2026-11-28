@@ -1,8 +1,5 @@
 {
-
-  imports = [
-    ../../accounts/email-test-accounts.nix
-  ];
+  imports = [ ../../accounts/email-test-accounts.nix ];
   programs.meli = {
     enable = true;
     settings = {
@@ -23,6 +20,16 @@
         };
       };
       smtp.port = 1848;
+    };
+    jmap-account = {
+      address = "hm@jmap.invalid";
+      userName = "home.manager.jr";
+      realName = "H. M. Test Jr.";
+      passwordCommand = "password-command 2";
+      jmap.host = "jmap.invalid";
+      meli = {
+        enable = true;
+      };
     };
   };
 

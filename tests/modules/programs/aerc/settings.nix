@@ -313,6 +313,23 @@
           notmuch.enable = true;
           maildir.path = "custom-notmuch";
         };
+        r1_jmap = basics // {
+          jmap = {
+            host = "jmap.invalid";
+          };
+          aerc = {
+            enable = true;
+          };
+        };
+        r2_jmap = basics // {
+          jmap = {
+            host = "jmap.invalid";
+            useOauth = true;
+          };
+          aerc = {
+            enable = true;
+          };
+        };
       };
   };
 }

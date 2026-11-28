@@ -203,9 +203,7 @@ in
             source = "notmuch://${lib.optionalString legacyNotmuch config.accounts.email.maildirBasePath}";
             maildir-account-path = cfg.maildir.path;
           }
-          // lib.optionalAttrs legacyNotmuch {
-            maildir-store = config.accounts.email.maildirBasePath;
-          };
+          // lib.optionalAttrs legacyNotmuch { maildir-store = config.accounts.email.maildirBasePath; };
         maildir = cfg: {
           source = "maildir://${config.accounts.email.maildirBasePath}/${cfg.maildir.path}";
         };
@@ -244,6 +242,35 @@ in
           }
           // optPwCmd "source" passwordCommand;
 
+        jmap =
+          {
+            userName,
+            jmap,
+            passwordCommand,
+            ...
+          }:
+          let
+            userName' = if jmap.useOauth then "" else lib.strings.escapeURL userName;
+
+            protocol = if jmap.useOauth then "jmap+oauthbearer" else "jmap";
+
+            cleanSessionUrl = lib.removePrefix "https://" jmap.sessionUrl;
+            jmapHost' = if jmap.host != null then jmap.host else cleanSessionUrl;
+          in
+          {
+            source = "${protocol}://${userName'}@${jmapHost'}";
+            outgoing = "jmap://";
+          }
+          // optPwCmd "source" passwordCommand;
+
+        fastmail =
+          { passwordCommand, ... }:
+          {
+            source = "jmap+oauthbearer://@api.fastmail.com/jmap/session";
+            outgoing = "jmap://";
+          }
+          // optPwCmd "source" passwordCommand;
+
         smtp =
           {
             userName,
@@ -274,9 +301,7 @@ in
           }
           // optPwCmd "outgoing" passwordCommand;
 
-        msmtp = _cfg: {
-          outgoing = "msmtpq --read-envelope-from --read-recipients";
-        };
+        msmtp = _cfg: { outgoing = "msmtpq --read-envelope-from --read-recipients"; };
 
       };
 
@@ -292,7 +317,9 @@ in
 
       sourceCfg =
         account:
-        if account.notmuch.enable then
+        if account.flavor == "fastmail.com" then
+          mkConfig.fastmail account
+        else if account.notmuch.enable then
           mkConfig.notmuch account
         else if
           account.mbsync.enable && account.mbsync.flatten == null && account.mbsync.subFolders == "Maildir++"
@@ -300,6 +327,8 @@ in
           mkConfig.maildirpp account
         else if account.mbsync.enable || account.offlineimap.enable then
           mkConfig.maildir account
+        else if account.jmap != null then
+          mkConfig.jmap account
         else if account.imap != null then
           mkConfig.imap account
         else
@@ -309,6 +338,8 @@ in
         account:
         if account.msmtp.enable then
           mkConfig.msmtp account
+        else if account.jmap != null then
+          { }
         else if account.smtp != null then
           mkConfig.smtp account
         else

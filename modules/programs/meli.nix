@@ -26,21 +26,37 @@ let
   mkMeliAccounts = (
     _name: account:
     {
-      root_mailbox = "${config.accounts.email.maildirBasePath}/${account.maildir.path}";
-      format = "Maildir";
       identity = account.address;
       display_name = account.realName;
       subscribed_mailboxes = account.meli.mailboxes;
-      send_mail = mkSmtp account;
       mailboxes = account.meli.mailboxAliases;
     }
-    // lib.optionalAttrs (account.flavor == "fastmail.com") {
-      server_username = account.userName;
-      server_password_command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
-      format = "jmap";
-      server_url = "https://api.fastmail.com/jmap/session";
-      use_token = true;
-    }
+    // (
+      if account.flavor == "fastmail.com" then
+        {
+          server_username = account.userName;
+          server_password.command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
+          format = "jmap";
+          server_url = "https://api.fastmail.com/jmap/session";
+          use_token = true;
+        }
+      else if account.jmap != null then
+        {
+          format = "jmap";
+          send_mail = "server_submission";
+          server_url =
+            if account.jmap.host != null then "https://${account.jmap.host}" else account.jmap.sessionUrl;
+          server_username = account.userName;
+          server_password.command = lib.concatMapStringsSep " " lib.escapeShellArg account.passwordCommand;
+          use_token = account.jmap.useOauth;
+        }
+      else
+        {
+          root_mailbox = "${config.accounts.email.maildirBasePath}/${account.maildir.path}";
+          format = "Maildir";
+          send_mail = mkSmtp account;
+        }
+    )
     // account.meli.settings
   );
 
@@ -88,9 +104,7 @@ in
       };
 
       settings = mkOption {
-        type = types.submodule {
-          freeformType = tomlFormat.type;
-        };
+        type = types.submodule { freeformType = tomlFormat.type; };
         example = lib.literalExpression ''
           {
           shortcuts = {
@@ -126,8 +140,7 @@ in
     accounts.email.accounts = mkOption {
       type = types.attrsOf (
         types.submodule (
-          { config, ... }:
-          {
+          { config, ... }: {
             options.meli = {
               enable = mkEnableOption "the meli mail client for this account.\nRequires SMTP settings.";
               mailboxes = mkOption {
@@ -164,9 +177,7 @@ in
               };
 
               settings = mkOption {
-                type = types.submodule {
-                  freeformType = tomlFormat.type;
-                };
+                type = types.submodule { freeformType = tomlFormat.type; };
                 default = { };
                 description = "Account specific meli configuration";
               };
@@ -193,17 +204,12 @@ in
       let
 
         generatedToml = tomlFormat.generate "meli-config" (
-          {
-            accounts = meliAccounts;
-          }
-          // config.programs.meli.settings
+          { accounts = meliAccounts; } // config.programs.meli.settings
         );
 
       in
       if cfg.includes == [ ] then
-        {
-          source = generatedToml;
-        }
+        { source = generatedToml; }
       else
         {
           text = lib.concatStringsSep "\n" (

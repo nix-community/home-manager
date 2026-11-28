@@ -32,6 +32,21 @@ PRDR = true
 danger_accept_invalid_certs = false
 type = "tls"
 
+[accounts.jmap-account]
+display_name = "H. M. Test Jr."
+format = "jmap"
+identity = "hm@jmap.invalid"
+send_mail = "server_submission"
+server_url = "https://jmap.invalid"
+server_username = "home.manager.jr"
+subscribed_mailboxes = ["Inbox", "Sent", "Trash", "Drafts"]
+use_token = false
+
+[accounts.jmap-account.mailboxes]
+
+[accounts.jmap-account.server_password]
+command = "password-command 2"
+
 [shortcuts.general]
 scroll_down = "j"
 scroll_up = "k"
