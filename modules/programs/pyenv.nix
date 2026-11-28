@@ -11,7 +11,7 @@ let
 
 in
 {
-  meta.maintainers = with lib.maintainers; [ tmarkus ];
+  meta.maintainers = [ ];
 
   options.programs.pyenv = {
     enable = lib.mkEnableOption "pyenv";

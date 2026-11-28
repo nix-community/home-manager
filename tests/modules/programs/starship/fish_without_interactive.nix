@@ -13,7 +13,7 @@
 
     export GOT="$(tail -n 5 `_abs home-files/.config/fish/config.fish`)"
     export EXPECTED="
-    if test \"\$TERM\" != dumb
+    if test \"\$TERM\" != dumb -a \"\$TERM\" != linux
         @starship@/bin/starship init fish | source
 
     end"

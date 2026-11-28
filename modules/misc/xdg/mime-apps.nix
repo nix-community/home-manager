@@ -113,13 +113,6 @@ in
         [](#opt-xdg.mimeApps.defaultApplications). If multiple packages
         associate with the same mime type, then the priority among them is
         determined by their order in the list.
-
-        ::: {.note}
-        Passing a large number of packages (for example, the system
-        package set or all of {option}`home.packages`) will
-        significantly slow down builds. Prefer listing only the specific
-        packages whose MIME associations you want to set as defaults.
-        :::
       '';
     };
   };
@@ -193,28 +186,49 @@ in
           # With default application packages merged into the generated base file.
           mergedFile = pkgs.runCommand "mimeapps.list" { ps = cfg.defaultApplicationPackages; } ''
             export PATH=$PATH:${pkgs.crudini}/bin
+            export LC_ALL=C # to make ''${mime,,} behave as expected
 
-            function mergeEntry() {
-              local mime="$1"
-              local name="$2"
-              local existing
+            # Merge in memory and call crudini once: one call per MIME type
+            # takes minutes for packages that register hundreds of types.
+            declare -A defaults=()
+            while IFS= read -r line; do
+              line="''${line#*\] }"
+              if [[ $line == *' = '* ]]; then
+                mime="''${line%% = *}"
+                defaults["''${mime,,}"]="''${line#* = }"
+              fi
+            done < <(crudini --get --format=lines ${baseFile} 'Default Applications' 2>/dev/null || true)
 
-              existing="$(crudini --get $out 'Default Applications' "$mime" 2>/dev/null || true)"
-              local value="$existing''${existing:+;}''$name"
-              crudini --ini-options=nospace --inplace --set $out 'Default Applications' "$mime" "$value"
-            }
+            for p in $ps; do
+              apps="$p/share/applications"
+              [[ -d $apps ]] || continue
+              while IFS= read -r -d "" path; do
+                # The desktop file ID replaces "/" in the relative path with "-".
+                name="''${path#"$apps"/}"
+                name="''${name//\//-}"
+                mimes=$(awk '
+                  /^\[/ { inEntry = ($0 == "[Desktop Entry]") }
+                  inEntry && /^MimeType[ \t]*=/ { sub(/^[^=]*=[ \t]*/, ""); print; exit }
+                ' "$path" 2>/dev/null || true)
+                IFS=';' read -ra list <<< "$mimes"
+                for mime in "''${list[@]}"; do
+                  if [[ -n $mime ]]; then
+                    mime="''${mime,,}"
+                    defaults["$mime"]="''${defaults[$mime]:+''${defaults[$mime]};}$name"
+                  fi
+                done
+              done < <(find -L "$apps" -type f -name '*.desktop' -print0 | sort -z)
+            done
 
             install -m644 ${baseFile} $out
-
-            for p in $ps ; do
-              for path in "$p"/share/applications/*.desktop ; do
-                name="''${path##*/}"
-                mimes=$(crudini --get "$path" 'Desktop Entry' MimeType 2>/dev/null || true)
-                for mime in ''${mimes//;/ }; do
-                  mergeEntry "$mime" "$name"
-                done
-              done
-            done
+            if (( ''${#defaults[@]} )); then
+              {
+                echo '[Default Applications]'
+                for mime in "''${!defaults[@]}"; do
+                  printf '%s=%s\n' "$mime" "''${defaults[$mime]}"
+                done | sort
+              } | crudini --merge --ini-options=nospace $out
+            fi
           '';
         in
         if cfg.defaultApplicationPackages == [ ] then baseFile else mergedFile;

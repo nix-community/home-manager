@@ -6,6 +6,9 @@
 }:
 let
   cfg = config.programs.nh;
+
+  nixPackage =
+    if config.nix.enable && config.nix.package != null then config.nix.package else pkgs.nix;
 in
 {
   meta.maintainers = with lib.maintainers; [
@@ -183,6 +186,9 @@ in
             lib.optional (cfg.clean.extraArgs != "") cfg.clean.extraArgs
         );
         StartCalendarInterval = lib.hm.darwin.mkCalendarInterval cfg.clean.dates;
+        # launchd starts agents with a minimal PATH that has no `nix`, which
+        # nh needs to run `nix --version` and the garbage collection.
+        EnvironmentVariables.PATH = lib.mkDefault (lib.makeBinPath [ nixPackage ]);
       };
     };
   };

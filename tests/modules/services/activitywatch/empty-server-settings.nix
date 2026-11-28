@@ -6,5 +6,7 @@
     assertFileExists home-files/.config/systemd/user/activitywatch.target
 
     assertPathNotExists home-files/.config/activitywatch/aw-server-rust/config.toml
+    assertFileNotRegex home-files/.config/systemd/user/activitywatch.service \
+      'X-Restart-Triggers'
   '';
 }

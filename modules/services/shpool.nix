@@ -52,7 +52,7 @@ in
 
   config = mkIf cfg.enable {
 
-    systemd.user = {
+    systemd.user = mkIf cfg.systemd {
       services.shpool = {
         Unit = {
           Description = "Shpool - Shell Session Pool";

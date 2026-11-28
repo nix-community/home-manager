@@ -39,7 +39,7 @@ in
       };
 
       Service = {
-        ExecStart = lib.getExe pkgs.safeeyes;
+        ExecStart = lib.getExe cfg.package;
         Restart = "on-failure";
         RestartSec = 3;
       };

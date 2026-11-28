@@ -319,6 +319,12 @@
     github = "kayskayskays";
     githubId = 115312476;
   };
+  kimhappy = {
+    name = "Hwanhee Kim";
+    email = "babtul21@gmail.com";
+    github = "kimhappy";
+    githubId = 50399467;
+  };
   kmaasrud = {
     name = "Knut Magnus Aasrud";
     email = "km@aasrud.com";
@@ -511,6 +517,12 @@
     github = "ps1ph3r";
     githubId = 81748286;
   };
+  qacow37 = {
+    name = "qacow37";
+    email = "daily.cow37@proton.me";
+    github = "qacow37";
+    githubId = 147836833;
+  };
   rasmus-kirk = {
     name = "Rasmus Kirk";
     email = "mail@rasmuskirk.com";
@@ -534,6 +546,12 @@
     email = "reesilva@proton.me";
     github = "ReeSilva";
     githubId = 3605032;
+  };
+  richardsouzza = {
+    name = "Richard Souza";
+    email = "souzza.richard25@gmail.com";
+    github = "RichardSouzza";
+    githubId = 121109210;
   };
   rosuavio = {
     name = "Rosario Pulella";

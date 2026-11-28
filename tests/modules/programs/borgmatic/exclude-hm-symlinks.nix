@@ -8,6 +8,7 @@ in
 {
   programs.borgmatic = {
     enable = true;
+    checkConfig = false;
     backups = {
       main = {
         location = {

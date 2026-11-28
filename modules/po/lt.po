@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Home Manager Modules\n"
 "Report-Msgid-Bugs-To: https://github.com/nix-community/home-manager/issues\n"
 "POT-Creation-Date: 2026-01-21 09:53+0100\n"
-"PO-Revision-Date: 2026-03-31 16:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-11-16 20:51+0000\n"
+"Last-Translator: Rokas <370rokas@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/home-manager/"
 "modules/lt/>\n"
 "Language: lt\n"
@@ -18,24 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 
 #: modules/files.nix:214
 msgid "Creating home file links in %s"
 msgstr "Kuriamos home failų nuorodos adresu %s"
 
 #: modules/files.nix:227
-#, fuzzy
 msgid "Cleaning up orphan links from %s"
-msgstr "Valomos pamestos nuorodos iš %s"
+msgstr "Valomos nebereikalingos nuorodos iš %s"
 
 #: modules/home-environment.nix:680
 msgid "Creating new profile generation"
-msgstr ""
+msgstr "Kuriama naujo profilio generacija"
 
 #: modules/home-environment.nix:683
 msgid "No change so reusing latest profile generation"
-msgstr ""
+msgstr "Pakeitimų nėra, todėl naudojama naujausia profilio generacija"
 
 #: modules/home-environment.nix:732
 msgid ""
@@ -71,7 +70,7 @@ msgstr "Aktyvuojamas %s"
 
 #: modules/home-environment.nix:840
 msgid "%s: unknown option '%s'"
-msgstr ""
+msgstr "%s: nežinoma parinktis „%s“"
 
 #: modules/lib-bash/activation-init.sh:22
 msgid "Migrating profile from %s to %s"
@@ -85,11 +84,11 @@ msgstr "Nepavyko rasti tinkamo profilio katalogo, bandyta naudoti %s ir %s"
 #: modules/lib-bash/activation-init.sh:109
 #: modules/lib-bash/activation-init.sh:121
 msgid "%s is \"%s\", expected \"%s\""
-msgstr ""
+msgstr "%s yra „%s“, tikėtasi „%s“"
 
 #: modules/lib-bash/activation-init.sh:138
 msgid "Starting Home Manager activation"
-msgstr "Pradedamas Home Manager aktivavymas"
+msgstr "Pradedamas Home Manager aktyvinimas"
 
 #: modules/lib-bash/activation-init.sh:142
 msgid "Sanity checking Nix"

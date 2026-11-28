@@ -1,4 +1,9 @@
+{ realPkgs, ... }:
+
 {
+  # The default policy file is taken from the skopeo package.
+  test.unstubs = [ (_self: _super: { inherit (realPkgs) skopeo; }) ];
+
   services.podman = {
     enable = true;
     useDefaultMachine = false;

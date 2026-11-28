@@ -31,6 +31,40 @@ let
   ) (lib.attrNames (lib.filterAttrs (_: lib.id) immutableFiles));
 
   userDataDir = "${config.home.homeDirectory}/.t3/userdata";
+  themesDir = "${userDataDir}/themes";
+
+  themeFiles = lib.mapAttrs (
+    id: theme:
+    if builtins.isAttrs theme && !lib.isDerivation theme then
+      jsonFormat.generate "t3code-theme-${id}" theme
+    else if lib.isDerivation theme then
+      theme
+    else
+      # Copy a source path into the store. The activation has to read the
+      # theme from an absolute path, and a path literal is relative. The
+      # path is escaped because it may contain spaces.
+      pkgs.runCommand "t3code-theme-${id}" { } "cp ${lib.escapeShellArg "${theme}"} $out"
+  ) cfg.themes;
+
+  reservedThemeIds = [
+    "system"
+    "light"
+    "dark"
+    "t3-chat"
+    "grove"
+    "ocean"
+    "ember"
+    "iris"
+    "t3-chat-dark"
+    "t3-grove"
+    "t3-ocean"
+    "t3-ember"
+    "t3-iris"
+    "t3-code"
+  ];
+
+  validThemeId =
+    id: builtins.match "^[a-z0-9][a-z0-9-]{0,47}$" id != null && !lib.elem id reservedThemeIds;
 
   serverCfg = cfg.server;
 
@@ -166,6 +200,30 @@ in
       '';
     };
 
+    themes = mkOption {
+      type = types.attrsOf (types.either types.path jsonFormat.type);
+      default = { };
+      example.nightfall = {
+        name = "Nightfall";
+        appearance = "dark";
+        canvas = "#1a1b26";
+        accent = "#7aa2f7";
+      };
+      description = ''
+        Environment themes in {file}`~/.t3/userdata/themes`, keyed by theme id.
+
+        Each value is a JSON attribute set or a path to a JSON file. Theme ids
+        must contain 1 to 48 lowercase letters, digits or hyphens, start with
+        a letter or digit, and must not conflict with T3's built-in themes.
+
+        T3 refuses symlinks, so Home Manager copies each theme into a regular
+        file during activation. Unmanaged files are not removed.
+
+        To select a default, set
+        {option}`programs.t3code.userSettings.defaultTheme`.
+      '';
+    };
+
     server = {
       enable = lib.mkEnableOption "the t3code headless server as a user service";
 
@@ -247,6 +305,32 @@ in
           }
         );
       })
+      (mkIf (cfg.themes != { }) {
+        t3codeThemes = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          if [[ ! -v DRY_RUN ]]; then
+            ${lib.getExe' pkgs.coreutils "mkdir"} -p ${lib.escapeShellArg themesDir}
+          fi
+          ${lib.concatStringsSep "\n" (
+            lib.mapAttrsToList (
+              id: source:
+              let
+                target = "${themesDir}/${id}.json";
+              in
+              ''
+                if [ -L ${lib.escapeShellArg target} ] || ! ${lib.getExe' pkgs.diffutils "cmp"} -s ${lib.escapeShellArg (toString source)} ${lib.escapeShellArg target}; then
+                  if [[ -v DRY_RUN ]]; then
+                    echo ${lib.escapeShellArg "Would install T3 Code theme ${target}"}
+                  else
+                    tmp=$(${lib.getExe' pkgs.coreutils "mktemp"} ${lib.escapeShellArg "${themesDir}/.${id}.XXXXXXXX"})
+                    ${lib.getExe' pkgs.coreutils "install"} -m 0644 ${lib.escapeShellArg (toString source)} "$tmp"
+                    ${lib.getExe' pkgs.coreutils "mv"} -fT "$tmp" ${lib.escapeShellArg target}
+                  fi
+                fi
+              ''
+            ) themeFiles
+          )}
+        '';
+      })
     ];
 
     home.file = mkMerge [
@@ -267,6 +351,10 @@ in
       {
         assertion = !serverCfg.enable || cfg.package != null;
         message = "programs.t3code.server.enable requires programs.t3code.package to be set (it is null).";
+      }
+      {
+        assertion = builtins.all validThemeId (lib.attrNames cfg.themes);
+        message = "programs.t3code.themes contains an invalid or reserved theme id.";
       }
     ];
 

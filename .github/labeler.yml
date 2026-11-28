@@ -1071,6 +1071,7 @@
           - modules/programs/terminator.nix
           - modules/programs/termite.nix
           - modules/programs/urxvt.nix
+          - modules/programs/warp-terminal.nix
           - modules/programs/waveterm.nix
           - modules/programs/wezterm.nix
           - modules/services/shpool.nix
@@ -1084,6 +1085,7 @@
           - tests/modules/programs/ptyxis/**/*
           - tests/modules/programs/rio/**/*
           - tests/modules/programs/terminator/**/*
+          - tests/modules/programs/warp-terminal/**/*
           - tests/modules/programs/waveterm/**/*
           - tests/modules/programs/wezterm/**/*
 "video":
@@ -1142,7 +1144,6 @@
           - modules/programs/vicinae/**/*
           - modules/programs/waybar.nix
           - modules/programs/waylogout.nix
-          - modules/programs/wayprompt.nix
           - modules/programs/wleave.nix
           - modules/programs/wlogout.nix
           - modules/programs/wlr-which-key.nix
@@ -1189,7 +1190,6 @@
           - tests/modules/programs/tofi/**/*
           - tests/modules/programs/vicinae/**/*
           - tests/modules/programs/waybar/**/*
-          - tests/modules/programs/wayprompt/**/*
           - tests/modules/programs/wleave/**/*
           - tests/modules/programs/wlogout/**/*
           - tests/modules/programs/wlr-which-key/**/*

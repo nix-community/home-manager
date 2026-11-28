@@ -42,13 +42,11 @@ in
 
   nmt.script = ''
     assertFileExists home-files/.claude/settings.json
-    # The integration wires statusLine, the activity state-marker hook, and the
-    # worktree-isolation hook through the stubbed `wt` binary. We match stable
-    # substrings because WorktreeCreate/Remove also embed the jq store path,
-    # which the test harness does not scrub.
+    # The integration wires statusLine, the best-effort activity hooks, and the
+    # worktree-isolation hooks through the stubbed `wt` binary.
     assertFileRegex home-files/.claude/settings.json '${worktrunkStub}/bin/wt list statusline --format=claude-code'
-    assertFileRegex home-files/.claude/settings.json '${worktrunkStub}/bin/wt config state marker set 🤖'
-    assertFileRegex home-files/.claude/settings.json '${worktrunkStub}/bin/wt switch --create'
+    assertFileRegex home-files/.claude/settings.json '"command": "${worktrunkStub}/bin/wt config plugins claude hook || true"'
+    assertFileRegex home-files/.claude/settings.json '"command": "${worktrunkStub}/bin/wt config plugins claude hook",$'
     # Skills install as symlinked directories under .claude/skills — not as a
     # bogus key in settings.json — and resolve into the package.
     assertFileExists home-files/.claude/skills/wt-switch-create/SKILL.md

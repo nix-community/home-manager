@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ realPkgs, ... }:
 {
   config = {
     targets.darwin.defaults."com.apple.dock" = {
@@ -47,7 +47,7 @@
     nmt.script = ''
       plist=$(grep -oE '/nix/store/[a-z0-9]+-com[.]apple[.]dock[.]plist' "$TESTED/activate")
       test -n "$plist"
-      ${pkgs.python3}/bin/python - "$plist" <<'PY'
+      ${realPkgs.python3}/bin/python - "$plist" <<'PY'
       import plistlib
       import sys
 

@@ -8,6 +8,7 @@
   fontconfig-custom-rendering = ./custom-rendering.nix;
   fontconfig-extra-config-files = ./extra-config-files.nix;
   fontconfig-fonts = ./fonts.nix;
+  fontconfig-force-overwrite = ./force-overwrite.nix;
 
   fontconfig-legacy-default-configFile-toggle = ./legacy-default-configFile-toggle.nix;
 }
