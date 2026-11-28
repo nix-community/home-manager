@@ -9,6 +9,7 @@
     ./i3-sway
     ./labwc
     ./niri.nix
+    ./river-classic.nix
     ./river.nix
     ./spectrwm.nix
     ./wayfire.nix

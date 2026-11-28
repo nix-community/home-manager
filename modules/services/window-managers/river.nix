@@ -15,63 +15,24 @@ let
   systemdActivation = ''
     ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd ${variables} ${extraCommands}
   '';
-
-  toValue =
-    val:
-    if lib.isString val || lib.isDerivation val then
-      toString val
-    else if true == val then
-      "enabled"
-    else if false == val then
-      "disabled"
-    else if lib.isInt val then
-      toString val
-    else if lib.isFloat val then
-      lib.strings.floatToString val
-    else
-      abort "unsupported type ${builtins.typeOf val}";
-
-  # Intermediary function that converts some value (attrs, str, ...) to one or several commands.
-  toArgs =
-    path: value:
-
-    let
-      stringValue = lib.concatStringsSep " " (path ++ [ (toValue value) ]);
-      finalValue =
-        if lib.isAttrs value then
-          toCommand path value
-        else if lib.isList value then
-          lib.lists.flatten (map (x: toArgs path x) value)
-        else if value == null then
-          [ ]
-        else
-          [ stringValue ];
-    in
-    finalValue;
-
-  # toCommand :: [string] -> attrs -> [string]
-  # Recursive function that converts an attrs to a list of commands that can be written to the
-  # config file.
-  toCommand =
-    basePath: attrs:
-    lib.concatLists (
-      lib.mapAttrsToList (
-        key: value:
-        let
-          path = basePath ++ [ key ];
-        in
-        toArgs path value
-      ) attrs
-    );
-
 in
 {
-  meta.maintainers = [ lib.maintainers.GaetanLepage ];
+  meta.maintainers = [ lib.maintainers.shunueda ];
+
+  imports = [
+    (lib.mkRemovedOptionModule [ "wayland" "windowManager" "river" "settings" ] ''
+      River 0.4 and later no longer provide `riverctl`. Use
+      `wayland.windowManager.river-classic` for river 0.3, or start a window
+      manager from `wayland.windowManager.river.extraConfig`.'')
+    (lib.mkRemovedOptionModule [ "wayland" "windowManager" "river" "xwayland" "enable" ] ''
+      XWayland support is built into the river package. Use
+      `wayland.windowManager.river-classic` for river 0.3.'')
+  ];
 
   options.wayland.windowManager.river = {
-    enable = lib.mkEnableOption "the river window manager";
+    enable = lib.mkEnableOption "river, a non-monolithic Wayland compositor";
 
-    package = lib.mkPackageOption pkgs "river-classic" {
+    package = lib.mkPackageOption pkgs "river" {
       nullable = true;
       extraDescription = ''
         Set to `null` to not add any river package to your path.
@@ -79,16 +40,12 @@ in
       '';
     };
 
-    xwayland.enable = lib.mkEnableOption "XWayland" // {
-      default = true;
-    };
-
     systemd = {
       enable = lib.mkEnableOption null // {
         default = true;
         description = ''
           Whether to enable {file}`river-session.target` on
-          river startup. This links to {file}`graphical-session.target`}.
+          river startup. This links to {file}`graphical-session.target`.
           Some important environment variables will be imported to systemd
           and D-Bus user environment before reaching the target, including
           - `DISPLAY`
@@ -136,62 +93,17 @@ in
       };
     };
 
-    settings = lib.mkOption {
-      type =
-        let
-          valueType =
-            with types;
-            nullOr (oneOf [
-              bool
-              int
-              float
-              str
-              path
-              (attrsOf valueType)
-              (listOf valueType)
-            ])
-            // {
-              description = "River configuration value";
-            };
-        in
-        valueType;
-      default = { };
-      description = "General settings given to `riverctl`.";
-      example = {
-        border-width = 2;
-        declare-mode = [
-          "locked"
-          "normal"
-          "passthrough"
-        ];
-        map.normal."Alt Q" = "close";
-        input.pointer-foo-bar = {
-          accel-profile = "flat";
-          events = true;
-          pointer-accel = -0.3;
-          tap = false;
-        };
-        rule-add."-app-id" = {
-          "'bar'" = "csd";
-          "'float*'"."-title"."'foo'" = "float";
-        };
-        set-cursor-warp = "on-output-change";
-        set-repeat = "50 300";
-        xcursor-theme = "someGreatTheme 12";
-        spawn = [
-          "firefox"
-          "'foot -a terminal'"
-        ];
-      };
-    };
-
     extraConfig = lib.mkOption {
       type = types.lines;
       default = "";
       example = ''
-        rivertile -view-padding 6 -outer-padding 6 &
+        exec my-window-manager
       '';
-      description = "Extra lines appended to {file}`$XDG_CONFIG_HOME/river/init`.";
+      description = ''
+        Extra lines appended to {file}`$XDG_CONFIG_HOME/river/init`.
+        River does not manage windows on its own, so this should start a
+        window manager implementing the river-window-management-v1 protocol.
+      '';
     };
   };
 
@@ -200,8 +112,7 @@ in
       (lib.hm.assertions.assertPlatform "wayland.windowManager.river" pkgs lib.platforms.linux)
     ];
 
-    home.packages =
-      lib.optional (cfg.package != null) cfg.package ++ lib.optional cfg.xwayland.enable pkgs.xwayland;
+    home.packages = lib.optional (cfg.package != null) cfg.package;
 
     # Configuration file ~/.config/river/init
     xdg.configFile."river/init".source = pkgs.writeShellScript "init" (
@@ -209,19 +120,16 @@ in
         ### This file was generated with Nix. Don't modify this file directly.
 
         ### SHELL VARIABLES ###
-        ${config.lib.shell.exportAll cfg.extraSessionVariables}
-
-        ### CONFIGURATION ###
-        ${lib.concatStringsSep "\n" (toCommand [ "riverctl" ] cfg.settings)}
-
-        ### EXTRA CONFIGURATION ###
-        ${cfg.extraConfig}
+        ${config.lib.shell.exportAll ({ XDG_CURRENT_DESKTOP = "river"; } // cfg.extraSessionVariables)}
 
       ''
       + (lib.optionalString cfg.systemd.enable ''
         ### SYSTEMD INTEGRATION ###
         ${systemdActivation}
       '')
+      + ''
+        ### EXTRA CONFIGURATION ###
+        ${cfg.extraConfig}''
     );
 
     # Systemd integration
