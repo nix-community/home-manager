@@ -10,5 +10,6 @@
 
     assertFileExists specialisation/test/home-files/testfile
     assertFileContains specialisation/test/home-files/testfile "not special"
+    assertFileContains specialisation/test/home-files/testfile "very special"
   '';
 }
