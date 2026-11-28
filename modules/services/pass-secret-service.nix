@@ -34,6 +34,16 @@ in
         will be checked, if found it will be inherited as the default.
       '';
     };
+
+    keyPath = lib.mkOption {
+      type = lib.types.str;
+      default = "${config.home.homeDirectory}/.gnupg";
+      defaultText = "$GNUPGHOME";
+      example = "/home/user/.config/gnupg";
+      description = ''
+        Absolute path to the directory holding the GnuPG keybox or keyring used to unlock the password store.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -59,13 +69,14 @@ in
           Description = "Pass libsecret service";
           Documentation = "https://github.com/mdellweg/pass_secret_service";
           PartOf = [ "default.target" ];
+          RequiresMountsFor = [ cfg.keyPath ];
         };
 
         Service = {
           Type = "dbus";
           ExecStart = binPath + lib.optionalString (cfg.storePath != null) " --path ${cfg.storePath}";
           BusName = busName;
-          Environment = [ "GNUPGHOME=${config.programs.gpg.homedir}" ];
+          Environment = [ "GNUPGHOME=${cfg.keyPath}" ];
         };
 
         Install.WantedBy = [ "default.target" ];
