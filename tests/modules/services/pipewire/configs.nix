@@ -72,5 +72,11 @@ in
         assertFileContent "$file" "$expected"
       done
     done
+
+    # A files-only activation also performs the reload that the
+    # configuration's onChange hook records.
+    local filesOnly
+    filesOnly=$(grep -m1 -o '[^ ]*-activation-files-only' "$TESTED/activate")
+    assertFileContains "$filesOnly" '"Activating %s" "reloadPipewire"'
   '';
 }

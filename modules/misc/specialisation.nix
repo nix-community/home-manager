@@ -74,6 +74,16 @@
       …
       ```
 
+      When specialisations differ only in their files, such as color
+      themes, and the generation was built by a Home Manager that supports
+      it, you can apply the files first and run the rest of the activation
+      right after, see [](#opt-home.activationFilesOnly):
+
+      ```console
+      $ /nix/store/jy…ac-home-manager-generation/specialisation/dark/activate --files-only
+      $ /nix/store/jy…ac-home-manager-generation/specialisation/dark/activate
+      ```
+
       ::: {.warning}
       Since this option is experimental, the activation process may
       change in backwards incompatible ways.
